@@ -1,7 +1,7 @@
 // تصميم الأرض: ملف مشترك بين مولّد الأرض (tools/genterrain.mjs) والرسم (main.ts). بدون أي رسم.
 // الفكرة (I-027): سهل صحراوي بالوسط للقتال، وديان جافة تقطعه، هضاب غرباً، سلسلتين جبال شمالاً وجنوباً، وقرية على الوادي.
-import type { V3 } from './sim.ts';
-import { SITES, riverX, RIVER_W, HIGHWAY_Z, BERMS, PATRIOT_POS, S400_POS, site, rng } from './sim.ts';
+import type { V3 } from './geo.ts';
+import { SITES, riverX, RIVER_W, HIGHWAY_Z, BERMS, BERMS2, PATRIOT_POS, S400_POS, site, rng } from './geo.ts';
 
 export const LAND = 13000;          // عرض الأرض بالمتر
 export const HN = 1025;             // دقة خريطة الارتفاع
@@ -53,7 +53,7 @@ const clampN = (v: number, a: number, b: number) => (v < a ? a : v > b ? b : v);
 // السواتر الترابية: كومة تراب قدّام كل دبابة (تنضاف فوق خريطة الارتفاع حتى تكون دقيقة)
 export function bermH(x: number, z: number) {
   let h = 0;
-  for (const b of BERMS) { const dx = (x - b[0] - 22) / 3.5, dz = Math.abs(z - b[2]) - 9; const kz = dz < 0 ? 1 : Math.exp(-((dz / 4) ** 2)); h = Math.max(h, 2.1 * Math.exp(-dx * dx) * kz); }
+  for (const b of [...BERMS, ...BERMS2]) { const dx = (x - b[0] - 22) / 3.5, dz = Math.abs(z - b[2]) - 9; const kz = dz < 0 ? 1 : Math.exp(-((dz / 4) ** 2)); h = Math.max(h, 2.1 * Math.exp(-dx * dx) * kz); }
   return h;
 }
 export const groundH = (x: number, z: number) => base(x, z) + bermH(x, z);

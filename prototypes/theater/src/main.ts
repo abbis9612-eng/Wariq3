@@ -8,6 +8,7 @@ import {
 } from '@babylonjs/core';
 import '@babylonjs/loaders/glTF';
 import { SkyMaterial } from '@babylonjs/materials/sky';
+import { CustomMaterial } from '@babylonjs/materials/custom';
 import {
   V3, add, sub, scale, len, norm, lerp, clamp, rng, World, newWorld, step, order, Order, ORDER_CD, Unit, Air, Fx, SITES, riverX, RIVER_W, CITY_R,
   HIGHWAY_Z, BERMS, AIR_AR, SIDE_AR, PATRIOT_POS, S400_POS, S400_SCALE, dist2d, site, angDiff,
@@ -81,24 +82,41 @@ texGround.hasAlpha = false;
 // ===== الخريطة: صحراء غرباً، بساتين على النهر، مدينة بالوسط (مضغوطة) =====
 const inRiver = (x: number, z: number, pad = 0) => Math.abs(x - riverX(z)) < RIVER_W(z) / 2 + pad;
 const groundMats: StandardMaterial[] = [];
+// الأرض: صور أرض حقيقية (Poly Haven، CC0) تنخلط بالشيدر حسب المكان: رمل بحصى بالصحراء، تربة بساتين قرب دجلة، أرض مدينة بالوسط.
+// تنويع كبير (صورة جوية) + طبقتين بمقاسين حتى ما يبين التكرار، وخريطة بروز للرمل حتى يبين خشن من قريب (I-022)
+const texUrls = import.meta.glob('../textures/*.webp', { query: '?url', import: 'default', eager: true }) as Record<string, string>;
+const groundTex = (n: string) => { const t = new Texture(texUrls[`../textures/${n}.webp`], scene, false, true, Texture.TRILINEAR_SAMPLINGMODE); t.anisotropicFilteringLevel = 8; return t; };
 function buildGround() {
   const SIZE = 13000, SUB = HQ ? 180 : 130;
   const g = MeshBuilder.CreateGround('ground', { width: SIZE, height: SIZE, subdivisions: SUB, updatable: true }, scene);
-  const pos = g.getVerticesData(VertexBuffer.PositionKind)!, n = pos.length / 3, col = new Float32Array(n * 4);
-  for (let i = 0; i < n; i++) {
-    const x = pos[i * 3], z = pos[i * 3 + 2], d = Math.hypot(x, z), dr = Math.abs(x - riverX(z));
-    const desert: V3 = [0.8, 0.67, 0.47], farm: V3 = [0.5, 0.58, 0.34], field: V3 = [0.68, 0.64, 0.42], urban: V3 = [0.62, 0.58, 0.51];
-    const farmK = clamp(1 - smooth(260, 1150, dr), 0, 1), plots = (Math.floor(x / 140) + Math.floor(z / 110)) % 3 === 0 ? 1 : 0;
-    const urbanK = 1 - smooth(CITY_R - 300, CITY_R + 500, d);
-    let c = [0, 1, 2].map(k => lerp(desert[k], lerp(farm[k], field[k], plots * 0.6), farmK));
-    c = c.map((cv, k) => lerp(cv, urban[k], urbanK * 0.8));
-    const roadK = Math.abs(z - HIGHWAY_Z) < 26 && x < riverX(z) - 120 ? 0.55 : 1;
-    col.set([c[0] * roadK, c[1] * roadK, c[2] * roadK, 1], i * 4);
-    if (x < -5600) pos[i * 3 + 1] = (Math.sin(x * 0.006) * Math.cos(z * 0.005) + 1) * 14 * smooth(-5600, -6200, x); // كثبان بعيدة (منظر بس)
-  }
-  g.updateVerticesData(VertexBuffer.PositionKind, pos); g.setVerticesData(VertexBuffer.ColorKind, col);
-  const m = new StandardMaterial('groundMat', scene); m.diffuseTexture = texGround; (texGround as Texture).uScale = (texGround as Texture).vScale = SIZE / 40;
-  m.diffuseColor = new Color3(0.85, 0.85, 0.85); m.specularColor = Color3.Black(); m.maxSimultaneousLights = 2 + NL; g.material = m; g.isPickable = false; g.receiveShadows = true; groundMats.push(m);
+  const pos = g.getVerticesData(VertexBuffer.PositionKind)!, n = pos.length / 3;
+  for (let i = 0; i < n; i++) { const x = pos[i * 3], z = pos[i * 3 + 2]; if (x < -5600) pos[i * 3 + 1] = (Math.sin(x * 0.006) * Math.cos(z * 0.005) + 1) * 14 * smooth(-5600, -6200, x); } // كثبان بعيدة
+  g.updateVerticesData(VertexBuffer.PositionKind, pos);
+  const m = new CustomMaterial('groundMat', scene);
+  m.diffuseColor = new Color3(0.85, 0.85, 0.85); m.specularColor = new Color3(0.04, 0.04, 0.035); m.specularPower = 12; m.maxSimultaneousLights = 2 + NL;
+  const nor = groundTex('sand_nor'); nor.uScale = nor.vScale = SIZE / 6; m.bumpTexture = nor; nor.level = 0.9;
+  m.AddUniform('sandT', 'sampler2D', groundTex('sand')); m.AddUniform('macroT', 'sampler2D', groundTex('macro')); m.AddUniform('farmT', 'sampler2D', groundTex('farm'));
+  m.Fragment_Definitions(`
+    float rX(float z){return 260.*sin(z/900.+.6)+110.*sin(z/380.+2.1)+120.;}
+    float h21(vec2 p){return fract(sin(dot(p,vec2(12.9898,78.233)))*43758.5453);}
+  `);
+  m.Fragment_Custom_Diffuse(`
+    vec2 P=vPositionW.xz; float cd=length(vEyePosition.xyz-vPositionW);
+    vec3 sN=texture2D(sandT,P/6.).rgb, sF=texture2D(sandT,P/41.+.37).rgb;
+    vec3 sand=mix(sN,sF,.2+.65*smoothstep(60.,700.,cd));
+    float mac=dot(texture2D(macroT,P/330.).rgb,vec3(.333)), mac2=dot(texture2D(macroT,P/1900.+.5).rgb,vec3(.333));
+    sand*=.62+.55*mac+.25*mac2;
+    vec3 fm=texture2D(farmT,P/7.).rgb, fmF=texture2D(farmT,P/53.).rgb; fm=mix(fm,fmF,.5*smoothstep(80.,800.,cd));
+    float pl=h21(floor(P/vec2(140.,110.)));
+    vec3 crop=fm*vec3(.72,1.3,.55)*1.25; fm=mix(fm*1.35, crop, step(.45,pl)*.85);
+    float farmK=1.-smoothstep(260.,1150.,abs(P.x-rX(P.y)));
+    float urb=1.-smoothstep(2000.,2800.,length(P));
+    vec3 c=mix(sand,fm,farmK*.9);
+    c=mix(c,(sand*vec3(.9,.9,.88)+.06)*1.05,urb*.65);
+    float lum=dot(c,vec3(.3,.55,.15)); c=mix(c,lum*vec3(1.08,.98,.8),.45*(1.-farmK*.7));
+    baseColor.rgb=c*1.42;
+  `);
+  g.material = m; g.isPickable = false; g.receiveShadows = true; groundMats.push(m);
 }
 function ribbon(name: string, pts: V3[], width: number, y: number, mat: StandardMaterial) {
   const L: Vector3[] = [], Rr: Vector3[] = [];
@@ -113,7 +131,7 @@ function buildRiverRoads() {
   const L: Vector3[] = [], Rr: Vector3[] = [];
   for (let z = -6500; z <= 6500; z += 40) { const x = riverX(z), w = RIVER_W(z) / 2; L.push(new Vector3(x - w, 0.4, z)); Rr.push(new Vector3(x + w, 0.4, z)); }
   const river = MeshBuilder.CreateRibbon('river', { pathArray: [L, Rr] }, scene); river.material = water; river.isPickable = false;
-  const asphalt = new StandardMaterial('asphalt', scene); asphalt.diffuseColor = new Color3(0.22, 0.215, 0.2); asphalt.specularColor = Color3.Black(); asphalt.maxSimultaneousLights = 2 + NL;
+  const asphalt = new StandardMaterial('asphalt', scene); asphalt.diffuseColor = new Color3(0.4, 0.39, 0.37); asphalt.specularColor = Color3.Black(); asphalt.maxSimultaneousLights = 2 + NL;
   const line = (a: V3, b: V3, n = 2) => Array.from({ length: n }, (_, i) => [lerp(a[0], b[0], i / (n - 1)), 0, lerp(a[2], b[2], i / (n - 1))] as V3);
   ribbon('highway', line([-6500, 0, HIGHWAY_Z], [riverX(HIGHWAY_Z) - 110, 0, HIGHWAY_Z], 30), 22, 0.3, asphalt);
   const ring: V3[] = []; for (let a = 0; a <= 6.2832 + 0.01; a += 0.04) ring.push([Math.cos(a) * 2550, 0, Math.sin(a) * 2550]);
@@ -276,8 +294,9 @@ const pools: Pool[] = [];
 interface Req { a: V3; b?: V3; n: number; dir?: V3; spd?: [number, number]; life?: number; up?: number; jit?: number; spread?: number }
 class Pool {
   ps: ParticleSystem; q: Req[] = []; cur: Req | null = null; left = 0;
-  constructor(name: string, cap: number, tex: BaseTexture, add: boolean, o: { life: [number, number]; size: [number, number][]; colors: [number, Color4][]; gravity?: number; damp?: number; stretched?: boolean; spin?: number }) {
-    const p = this.ps = new ParticleSystem(name, cap, scene);
+  constructor(name: string, cap: number, tex: BaseTexture, add: boolean, o: { life: [number, number]; size: [number, number][]; colors: [number, Color4][]; gravity?: number; damp?: number; stretched?: boolean; spin?: number; sheet?: { cw: number; ch: number; n: number; rand?: boolean; speed?: number; sy?: number } }) {
+    const p = this.ps = new ParticleSystem(name, cap, scene, null, !!o.sheet);
+    if (o.sheet) { const sh = o.sheet; p.spriteCellWidth = sh.cw; p.spriteCellHeight = sh.ch; p.startSpriteCellID = 0; p.endSpriteCellID = sh.n - 1; p.spriteCellChangeSpeed = sh.speed ?? 1; p.spriteRandomStartCell = !!sh.rand; p.spriteCellLoop = false; if (sh.sy) { p.minScaleY = p.maxScaleY = sh.sy; } }
     p.particleTexture = tex; p.blendMode = add ? ParticleSystem.BLENDMODE_ADD : ParticleSystem.BLENDMODE_STANDARD;
     p.emitter = Vector3.Zero(); p.emitRate = 0; p.manualEmitCount = 0; p.minEmitPower = p.maxEmitPower = 1; p.updateSpeed = 1 / 60;
     p.minLifeTime = o.life[0]; p.maxLifeTime = o.life[1];
@@ -304,13 +323,17 @@ class Pool {
   emit(r: Req) { if (r.n <= 0) return; this.q.push(r); this.ps.manualEmitCount = Math.max(0, this.ps.manualEmitCount) + Math.round(r.n); }
   flush() { this.q.length = 0; this.left = 0; this.cur = null; }
 }
+// فليب بوك حقيقي (Unity Labs، CC0، مسوّى بـ Houdini): انفجارات، كرة نار، دخان متكوّر، لهب (I-023)
+const fxTex = (n: string) => { const t = new Texture(texUrls[`../textures/${n}.webp`], scene, false, true, Texture.TRILINEAR_SAMPLINGMODE); t.hasAlpha = true; return t; };
+const texExplo1 = fxTex('fx_explo1'), texExplo2 = fxTex('fx_explo2'), texCloud = fxTex('fx_cloud'), texFire = fxTex('fx_fire'), texFlame = fxTex('fx_flame');
+const SH_CLOUD = { cw: 128, ch: 128, n: 64, rand: true }, SH_FIRE = { cw: 64, ch: 64, n: 64, rand: true };
 const Qn = (n: number) => Math.max(1, Math.round(n * (HQ ? 1 : 0.55)));
 const C4 = (r: number, g: number, b: number, a: number) => new Color4(r, g, b, a);
-const fireS = new Pool('fireS', 1000, texSmoke, true, { life: [0.3, 0.8], size: [[0, 2], [0.4, 6], [1, 8]], damp: 0.85, colors: [[0, C4(6, 4.5, 2.4, 1)], [0.35, C4(3, 1.2, 0.3, 0.8)], [1, C4(0.2, 0.05, 0.02, 0)]] });
-const fireL = new Pool('fireL', 800, texSmoke, true, { life: [0.6, 1.5], size: [[0, 7], [0.3, 22], [1, 30]], damp: 0.85, colors: [[0, C4(6, 4.6, 2.6, 1)], [0.3, C4(3.2, 1.3, 0.35, 0.9)], [0.7, C4(0.8, 0.22, 0.05, 0.45)], [1, C4(0.1, 0.05, 0.03, 0)]] });
-const fireJet = new Pool('fireJet', 500, texSmoke, true, { life: [0.4, 0.9], size: [[0, 2.5], [1, 6]], colors: [[0, C4(7, 5, 2.4, 1)], [0.5, C4(3.5, 1.4, 0.3, 0.8)], [1, C4(0.4, 0.1, 0.02, 0)]], gravity: -3 });
-const smokeS = new Pool('smokeS', 1800, texSmoke, false, { life: [4, 8], size: [[0, 3], [0.3, 10], [1, 18]], damp: 0.9, gravity: 1.5, colors: [[0, C4(0.3, 0.27, 0.24, 0)], [0.05, C4(0.32, 0.29, 0.26, 0.8)], [1, C4(0.55, 0.52, 0.48, 0)]] });
-const smokeL = new Pool('smokeL', 1400, texSmoke, false, { life: [12, 20], size: [[0, 10], [0.25, 34], [1, 64]], damp: 0.9, gravity: 1.2, colors: [[0, C4(0.18, 0.16, 0.15, 0)], [0.04, C4(0.17, 0.15, 0.14, 0.9)], [0.5, C4(0.33, 0.32, 0.31, 0.55)], [1, C4(0.5, 0.5, 0.5, 0)]] });
+const fireS = new Pool('fireS', 1000, texFire, true, { sheet: SH_FIRE,  life: [0.3, 0.8], size: [[0, 2], [0.4, 6], [1, 8]], damp: 0.85, colors: [[0, C4(2.6, 2.1, 1.6, 1)], [0.5, C4(1.6, 1, 0.6, 0.8)], [1, C4(0.3, 0.15, 0.08, 0)]] });
+const fireL = new Pool('fireL', 800, texFire, true, { sheet: SH_FIRE,  life: [0.6, 1.5], size: [[0, 7], [0.3, 22], [1, 30]], damp: 0.85, colors: [[0, C4(2.6, 2.1, 1.6, 1)], [0.4, C4(1.7, 1, 0.55, 0.85)], [0.8, C4(0.6, 0.3, 0.12, 0.4)], [1, C4(0.1, 0.05, 0.03, 0)]] });
+const fireJet = new Pool('fireJet', 500, texFire, true, { sheet: SH_FIRE,  life: [0.4, 0.9], size: [[0, 2.5], [1, 6]], colors: [[0, C4(7, 5, 2.4, 1)], [0.5, C4(3.5, 1.4, 0.3, 0.8)], [1, C4(0.4, 0.1, 0.02, 0)]], gravity: -3 });
+const smokeS = new Pool('smokeS', 1800, texCloud, false, { sheet: SH_CLOUD,  life: [4, 8], size: [[0, 3], [0.3, 10], [1, 18]], damp: 0.9, gravity: 1.5, colors: [[0, C4(0.3, 0.27, 0.24, 0)], [0.05, C4(0.32, 0.29, 0.26, 0.8)], [1, C4(0.55, 0.52, 0.48, 0)]] });
+const smokeL = new Pool('smokeL', 1400, texCloud, false, { sheet: SH_CLOUD,  life: [9, 14], size: [[0, 8], [0.25, 26], [1, 48]], damp: 0.9, gravity: 1.2, colors: [[0, C4(0.36, 0.32, 0.27, 0)], [0.05, C4(0.34, 0.3, 0.26, 0.7)], [0.5, C4(0.5, 0.47, 0.42, 0.4)], [1, C4(0.62, 0.6, 0.56, 0)]] });
 const dust = new Pool('dust', 2200, texSmoke, false, { life: [2, 4.5], size: [[0, 2.5], [1, 14]], damp: 0.86, gravity: 0.5, colors: [[0, C4(0.72, 0.6, 0.44, 0)], [0.06, C4(0.7, 0.58, 0.43, 0.7)], [1, C4(0.78, 0.68, 0.55, 0)]] });
 const trackDust = new Pool('trackDust', 900, texSmoke, false, { life: [1.5, 3], size: [[0, 1.5], [1, 6]], damp: 0.9, gravity: 0.2, colors: [[0, C4(0.72, 0.62, 0.47, 0)], [0.1, C4(0.72, 0.62, 0.47, 0.32)], [1, C4(0.78, 0.7, 0.58, 0)]] });
 const sparks = new Pool('sparks', 1000, texSoft, true, { life: [0.4, 1.2], size: [[0, 1], [1, 0.35]], gravity: -9.8, stretched: true, colors: [[0, C4(5, 4, 2.4, 1)], [0.6, C4(3, 1.2, 0.3, 0.9)], [1, C4(1, 0.2, 0, 0)]] });
@@ -322,9 +345,13 @@ const flame = new Pool('flame', 1600, texFlare, true, { life: [0.05, 0.12], size
 const rocketTrail = new Pool('rocketTrail', 3500, texSmoke, false, { life: [2.5, 4.5], size: [[0, 0.9], [1, 6]], colors: [[0, C4(0.85, 0.82, 0.78, 0)], [0.05, C4(0.8, 0.78, 0.75, 0.55)], [1, C4(0.8, 0.78, 0.75, 0)]], gravity: 0.5 });
 const bigTrail = new Pool('bigTrail', 6000, texSmoke, false, { life: [12, 18], size: [[0, 2.2], [0.2, 6.5], [1, 15]], colors: [[0, C4(1, 0.92, 0.8, 0)], [0.02, C4(0.97, 0.96, 0.94, 0.8)], [1, C4(0.85, 0.86, 0.88, 0)]], gravity: 0.4 });
 const thinTrail = new Pool('thinTrail', 2500, texSmoke, false, { life: [5, 8], size: [[0, 2], [1, 7]], colors: [[0, C4(0.8, 0.8, 0.8, 0)], [0.04, C4(0.85, 0.85, 0.85, 0.45)], [1, C4(0.9, 0.9, 0.9, 0)]] });
-const burnSmoke = new Pool('burnSmoke', 2600, texSmoke, false, { life: [8, 14], size: [[0, 3], [0.3, 13], [1, 32]], colors: [[0, C4(0.12, 0.1, 0.09, 0)], [0.05, C4(0.1, 0.09, 0.08, 0.85)], [1, C4(0.4, 0.39, 0.38, 0)]] });
-const burnFire = new Pool('burnFire', 600, texSmoke, true, { life: [0.3, 0.7], size: [[0, 2], [1, 4.5]], colors: [[0, C4(5, 3, 1.2, 0.9)], [1, C4(1.2, 0.3, 0.05, 0)]] });
-const cloud = new Pool('cloud', 1400, texSmoke, false, { life: [4, 9], size: [[0, 3], [0.3, 12], [1, 22]], damp: 0.86, gravity: 0.6, colors: [[0, C4(0.95, 0.92, 0.86, 0)], [0.04, C4(0.93, 0.9, 0.85, 0.85)], [1, C4(0.85, 0.82, 0.76, 0)]] });
+const burnSmoke = new Pool('burnSmoke', 2600, texCloud, false, { sheet: SH_CLOUD,  life: [8, 14], size: [[0, 3], [0.3, 13], [1, 32]], colors: [[0, C4(0.12, 0.1, 0.09, 0)], [0.05, C4(0.1, 0.09, 0.08, 0.85)], [1, C4(0.4, 0.39, 0.38, 0)]] });
+const burnFire = new Pool('burnFire', 600, texFlame, true, { sheet: { cw: 64, ch: 128, n: 64, rand: true, sy: 2 },  life: [0.3, 0.7], size: [[0, 2], [1, 4.5]], colors: [[0, C4(5, 3, 1.2, 0.9)], [1, C4(1.2, 0.3, 0.05, 0)]] });
+const EXC: [number, Color4][] = [[0, C4(1.5, 1.4, 1.3, 1)], [0.75, C4(1, 1, 1, 0.95)], [1, C4(1, 1, 1, 0)]], SH_EX = { cw: 200, ch: 200, n: 25, speed: 1 };
+const exS = new Pool('exS', 80, texExplo2, false, { sheet: SH_EX, life: [1.3, 1.7], size: [[0, 9], [1, 15]], colors: EXC, gravity: 1, spin: 0.15 });
+const exM = new Pool('exM', 60, texExplo1, false, { sheet: SH_EX, life: [1.8, 2.3], size: [[0, 20], [1, 32]], colors: EXC, gravity: 1.5, spin: 0.1 });
+const exL = new Pool('exL', 40, texExplo1, false, { sheet: SH_EX, life: [2.4, 3], size: [[0, 38], [1, 60]], colors: EXC, gravity: 2, spin: 0.08 });
+const cloud = new Pool('cloud', 1400, texCloud, false, { sheet: SH_CLOUD,  life: [5, 10], size: [[0, 6], [0.3, 18], [1, 30]], damp: 0.86, gravity: 0.6, colors: [[0, C4(1.15, 1.12, 1.06, 0)], [0.04, C4(1.12, 1.1, 1.05, 0.8)], [1, C4(1, 0.98, 0.92, 0)]] });
 
 // ===== أضواء الانفجارات: تضوي الأرض والبنايات والمجسمات =====
 const lights: { l: PointLight; t: number; dur: number; i0: number }[] = [];
@@ -349,8 +376,18 @@ function addDecal(p: V3, size: number) {
 
 // ===== الصوت (مولّد) =====
 let simSpeed = 2, slowK = 1;
+// أصوات حقيقية مسجّلة (SoundBible CC BY 3.0 + BigSoundBank CC0): تتأخر حسب المسافة (سرعة الصوت) وتنكتم من بعيد (I-024)
+const sndUrls = import.meta.glob('../sounds/*.mp3', { query: '?url', import: 'default', eager: true }) as Record<string, string>;
 const sfx = (() => {
   let ac: AudioContext | null = null, master: GainNode, muted = false, buzz: GainNode | null = null, nb: AudioBuffer;
+  const smp: Record<string, AudioBuffer> = {};
+  function play(name: string, d: number, g0: number, rate = 1, delay = 0) {
+    if (!ac || !smp[name]) return false; const v0 = vol(d) * g0; if (v0 < 0.01) return true;
+    const t = ac.currentTime + delay + Math.min(2.5, d / 343 / Math.max(1, simSpeed * slowK));
+    const s = ac.createBufferSource(); s.buffer = smp[name]; s.playbackRate.value = rate * (slowK < 1 ? 0.7 : 1);
+    const f = ac.createBiquadFilter(); f.type = 'lowpass'; f.frequency.value = clamp(16000 - d * 6, 900, 16000);
+    const g = ac.createGain(); g.gain.value = v0; s.connect(f).connect(g).connect(master); s.start(t); return true;
+  }
   const noise = (sec: number) => { const b = ac!.createBuffer(1, ac!.sampleRate * sec, ac!.sampleRate), d = b.getChannelData(0); for (let i = 0; i < d.length; i++) d[i] = Math.random() * 2 - 1; return b; };
   const vol = (d: number) => clamp(1.1 - d / 3200, 0, 1) ** 2;
   function hit(d: number, dur: number, f0: number, f1: number, g0: number, sub = 0, delay = 0) {
@@ -365,16 +402,17 @@ const sfx = (() => {
       if (ac) { if (ac.state === 'suspended') ac.resume(); return; }
       try { ac = new AudioContext(); } catch { return; }
       master = ac.createGain(); master.gain.value = muted ? 0 : 0.85; master.connect(ac.destination); nb = noise(4);
+      const a = ac; for (const [k, u] of Object.entries(sndUrls)) { const n = k.split('/').pop()!.replace('.mp3', ''); fetch(u).then(r => r.arrayBuffer()).then(b => a.decodeAudioData(b)).then(buf => { smp[n] = buf; }).catch(() => {}); }
       const s = ac.createBufferSource(); s.buffer = nb; s.loop = true; const f = ac.createBiquadFilter(); f.type = 'bandpass'; f.frequency.value = 420; f.Q.value = 3;
       buzz = ac.createGain(); buzz.gain.value = 0; s.connect(f).connect(buzz).connect(master); s.start();
     },
     toggle() { muted = !muted; if (ac) master.gain.setTargetAtTime(muted ? 0 : 0.85, ac.currentTime, 0.05); return muted; },
-    boom(d: number, size: number) { hit(d, 1.1 + size * 0.8, 2400, 55, 0.45 + size * 0.3, 50); },
-    gun(d: number) { hit(d, 0.6, 3200, 140, 0.75, 65); },
-    round(d: number) { hit(d, 0.07, 2600, 500, 0.32, 95); },
-    launch(d: number) { hit(d, 3, 1500, 180, 0.8, 55); },
-    whump(d: number) { hit(d, 0.35, 600, 80, 0.7, 45); },
-    rocket(d: number) { hit(d, 1.2, 2200, 400, 0.35); },
+    boom(d: number, size: number) { const r = 0.9 + Math.random() * 0.2; if (!play(d > 1800 ? 'boom_far' : size >= 1.3 ? 'boom_big' : 'boom_mid', d, d > 1800 ? 1.6 : 0.6 + size * 0.35, size < 0.6 ? r * 1.15 : r)) hit(d, 1.1 + size * 0.8, 2400, 55, 0.45 + size * 0.3, 50); else if (size >= 1) hit(d, 0.9, 300, 40, 0.25 * size, 42); },
+    gun(d: number) { if (!play('tank', d, 1, 0.92 + Math.random() * 0.14)) hit(d, 0.6, 3200, 140, 0.75, 65); },
+    round(d: number) { if (!play('dshk', d, 0.42, 0.85 + Math.random() * 0.12)) hit(d, 0.07, 2600, 500, 0.32, 95); },
+    launch(d: number) { if (!play('launch', d, 1)) hit(d, 3, 1500, 180, 0.8, 55); },
+    whump(d: number) { if (!play('eject', d, 0.9, 0.8)) hit(d, 0.35, 600, 80, 0.7, 45); },
+    rocket(d: number) { if (!play('rocket', d, 0.5, 0.9 + Math.random() * 0.2)) hit(d, 1.2, 2200, 400, 0.35); },
     drones(d: number) { if (ac && buzz) buzz.gain.setTargetAtTime(simSpeed ? vol(d) * 0.12 : 0, ac.currentTime, 0.2); },
   };
 })();
@@ -470,7 +508,7 @@ function handleFx(fx: Fx) {
       // حلقة غبار حول الدبابة من ضغط الطلقة
       const u = W.units.find(x => x.id === fx.unit); if (u) dust.emit({ a: add(u.p, [0, 0.6, 0]), n: Qn(26), spd: [8, 18], up: -0.45, jit: 3 });
       smokeS.emit({ a: add(fx.p, scale(fx.dir, 3)), n: Qn(5), spd: [3, 8], jit: 1.5 });
-      flashLight(fx.p, 6, 70, 0.18); trauma = Math.min(1, trauma + clamp(0.25 - camD(fx.p) / 2000, 0, 0.25)); sfx.gun(camD(fx.p)); break;
+      flashLight(fx.p, 4, 60, 0.15); trauma = Math.min(1, trauma + clamp(0.25 - camD(fx.p) / 2000, 0, 0.25)); sfx.gun(camD(fx.p)); break;
     }
     case 'round': {
       const vis = unitVis.get(fx.unit); if (vis) vis.shake = 1;
@@ -485,11 +523,14 @@ function handleFx(fx: Fx) {
     case 'shell': tracers.emit({ a: fx.a, n: 1, dir: norm(sub(fx.b, fx.a)), spd: [1650, 1650], life: fx.tf, jit: 0 }); break;
     case 'boom': {
       const s = fx.size, big = s >= 1.3, P = big ? fireL : fireS;
-      P.emit({ a: fx.p, n: Qn(big ? 60 * s : 24 * s + 6), spd: [10 * s, 42 * s], jit: 2 * s, up: fx.air ? 0 : 0.35 });
+      // الانفجار نفسه: فليب بوك مصوّر (كرة نار تتحول لدخان أسود)، وفوقه شرار وغبار وكرة نار سريعة
+      const EX = s < 0.7 ? exS : s < 1.3 ? exM : exL, lift = fx.air ? 0 : (s < 0.7 ? 4 : s < 1.3 ? 9 : 16);
+      EX.emit({ a: add(fx.p, [0, lift, 0]), n: big ? 2 : 1, spd: [0, 1.5], up: 1, jit: 3 * s });
+      P.emit({ a: fx.p, n: Qn(big ? 22 * s : 8 * s + 3), spd: [10 * s, 38 * s], jit: 2 * s, up: fx.air ? 0 : 0.35 });
       (big ? smokeL : smokeS).emit({ a: fx.p, n: Qn(big ? 36 * s : 14 * s + 4), spd: [3 * s, 13 * s], jit: 3 * s, up: fx.air ? 0 : 0.5 });
       sparks.emit({ a: fx.p, n: Qn((fx.metal ? 45 : 26) * s), spd: [40, 140 * s], jit: 1 });
       if (!fx.air) { dust.emit({ a: fx.p, n: Qn(14 * s + 4), spd: [8, 26 * s], up: 0.1, jit: 3 }); addDecal(fx.p, 8 + 12 * s); }
-      flashLight(fx.p, 8 + 14 * s, 60 + 110 * s, 0.35 + 0.35 * s);
+      flashLight(fx.p, 3 + 5 * s, 50 + 90 * s, 0.3 + 0.3 * s);
       trauma = Math.min(1, trauma + clamp(0.55 - camD(fx.p) / 3500, 0, 0.55) * s); sfx.boom(camD(fx.p), s); break;
     }
     case 'plaunch': {
@@ -499,7 +540,7 @@ function handleFx(fx: Fx) {
       cloud.emit({ a: fx.muzzle, n: Qn(16), dir: fx.dir, spd: [3, 10], spread: 1.2, jit: 1 });
       fireS.emit({ a: fx.muzzle, n: Qn(12), dir: fx.dir, spd: [8, 25], spread: 0.6, jit: 0.6 });
       throwDebris(capMesh, fx.muzzle, add(scale(fx.dir, 18), [(Math.random() - 0.5) * 6, 6, (Math.random() - 0.5) * 6]), 4);
-      flashLight(fx.muzzle, 14, 160, 0.8); trauma = Math.min(1, trauma + clamp(0.6 - camD(fx.muzzle) / 1500, 0, 0.6)); sfx.launch(camD(fx.muzzle)); break;
+      flashLight(fx.muzzle, 6, 120, 0.7); trauma = Math.min(1, trauma + clamp(0.6 - camD(fx.muzzle) / 1500, 0, 0.6)); sfx.launch(camD(fx.muzzle)); break;
     }
     case 'eject': {
       // إطلاق بارد: «طكّة» غاز بيضاء، والغطا يطير، بدون لهب
@@ -510,7 +551,7 @@ function handleFx(fx: Fx) {
     }
     case 'ignite': {
       fireS.emit({ a: fx.p, n: Qn(20), spd: [6, 22], jit: 1 }); cloud.emit({ a: fx.p, n: Qn(24), spd: [4, 12], jit: 1.5 });
-      flashLight(fx.p, 16, 220, 0.6); sfx.launch(camD(fx.p)); break;
+      flashLight(fx.p, 7, 160, 0.5); sfx.launch(camD(fx.p)); break;
     }
     case 'rlaunch': {
       const vis = unitVis.get(fx.unit); if (vis) vis.shake = 1.2;

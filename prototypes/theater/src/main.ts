@@ -149,11 +149,12 @@ function applyPipe() {
 applyPipe();
 
 // ===== المجسمات =====
-const MODEL: Record<string, { scale: number; yaw: number; y?: number }> = {
+const MODEL: Record<string, { scale: number; yaw: number; y?: number; center?: boolean; off?: V3 }> = {
   // y: المجسم الأصلي نازل تحت الأرض (الجنزير عند -0.8م)؛ T-72 مدفعها على -z بالملف فندوّرها
   abrams: { scale: 1, yaw: 0, y: 0.8 }, t72: { scale: 1, yaw: Math.PI, y: 0.8 }, technical: { scale: 0.8, yaw: 0 }, dshk: { scale: 0.11, yaw: 0, y: 0.5 },
   d30: { scale: 0.22, yaw: Math.PI }, grad: { scale: 1, yaw: 0 }, patriot: { scale: 1, yaw: 0 }, s400: { scale: S400_SCALE, yaw: 0, y: 0.502 * S400_SCALE },
   shahed: { scale: 1.45, yaw: 0 }, kh101: { scale: 1, yaw: Math.PI },
+  bmp: { scale: 0.24, yaw: 0, center: true }, kornet: { scale: 0.2, yaw: Math.PI / 2, center: true },
 };
 const containers: Record<string, AssetContainer> = {};
 async function loadModels(progress: (t: string) => void) {
@@ -162,6 +163,8 @@ async function loadModels(progress: (t: string) => void) {
     const c = await LoadAssetContainerAsync(modelUrl(n), scene, { pluginExtension: '.gltf' });
     c.materials.forEach(m => { if (m instanceof PBRMaterial) { m.environmentIntensity = 0; m.directIntensity = PBR_DIRECT; m.metallic = Math.min(m.metallic ?? 1, 0.15); /* بدون بيئة انعكاس المعدن يطلع أسود */ m.maxSimultaneousLights = 2 + NL; } });
     c.addAllToScene(); c.meshes.forEach(m => { m.isVisible = false; m.isPickable = false; });
+    if (MODEL[n].center) { let mn = new Vector3(1e9, 1e9, 1e9), mx = new Vector3(-1e9, -1e9, -1e9); c.meshes.forEach(m => { if (!m.getTotalVertices()) return; m.computeWorldMatrix(true); const bb = m.getBoundingInfo().boundingBox; mn = Vector3.Minimize(mn, bb.minimumWorld); mx = Vector3.Maximize(mx, bb.maximumWorld); });
+      MODEL[n].off = [-(mn.x + mx.x) / 2, -mn.y, -(mn.z + mx.z) / 2]; }
     containers[n] = c; progress(`يحمّل المجسمات… ${++done}/${names.length}`);
   }));
 }
@@ -170,9 +173,72 @@ function spawnModel(kind: string, wreck = false) {
   const root = new TransformNode('u_' + kind, scene), inner = new TransformNode('in', scene); inner.parent = root;
   const spec = MODEL[kind]; inner.rotation.y = spec.yaw; inner.scaling.setAll(spec.scale); inner.position.y = spec.y ?? 0;
   const inst = containers[kind].instantiateModelsToScene(n => n, wreck, { doNotInstantiate: wreck });
-  inst.rootNodes.forEach(r => { r.parent = inner; });
+  const ofs = new TransformNode('ofs', scene); ofs.parent = inner; if (spec.off) ofs.position.set(...spec.off);
+  inst.rootNodes.forEach(r => { r.parent = ofs; });
   root.getChildMeshes().forEach(m => { m.isPickable = false; m.isVisible = true; if (!wreck || true) caster(m); if (wreck && m.material instanceof PBRMaterial) { m.material.albedoColor = new Color3(0.09, 0.085, 0.08); m.material.metallic = 0; m.material.roughness = 1; m.material.emissiveColor = Color3.Black(); } });
   return { root, inner };
+}
+
+// ===== الجنود: مجسم بحركات (يمشي، يركض، يرمي، ينبطح، يموت)، كل جندي قطعة وحدة بهيكل حركة خاص =====
+type Anim = 'run' | 'simple walk' | 'simple shoot' | 'crouch shoot' | 'pron idle' | 'pron shot' | 'pron walk' | 'simple death' | 'pron death' | 'idle simple';
+let soldierC: AssetContainer | null = null, SOL_S = 1;
+async function loadSoldier() {
+  const c = await LoadAssetContainerAsync(modelUrl('soldier'), scene, { pluginExtension: '.gltf' });
+  c.materials.forEach(m => { if (m instanceof PBRMaterial) { m.environmentIntensity = 0; m.directIntensity = PBR_DIRECT * 1.35; m.metallic = 0; m.roughness = 0.85; m.emissiveColor = new Color3(0.035, 0.035, 0.03); m.maxSimultaneousLights = 2 + NL; } });
+  c.addAllToScene();
+  const ms = c.meshes.filter(m => m.getTotalVertices() > 0) as Mesh[], sk = ms[0].skeleton, par = ms[0].parent;
+  ms.forEach(m => { m.parent = null; m.position.setAll(0); m.rotationQuaternion = null; m.rotation.setAll(0); m.scaling.setAll(1); });
+  const merged = Mesh.MergeMeshes(ms, true, true, undefined, false, false);
+  if (merged) { merged.skeleton = sk; merged.parent = par; merged.name = 'soldierBody'; merged.isPickable = false; c.meshes = c.meshes.filter(m => !m.isDisposed()); c.meshes.push(merged); }
+  c.animationGroups.forEach(g => g.stop());
+  // نقيس طول الجندي ونخليه 1.8 م
+  const body = merged ?? ms[0]; body.refreshBoundingInfo({ applySkeleton: true }); body.computeWorldMatrix(true);
+  const bb = body.getBoundingInfo().boundingBox, h = bb.maximumWorld.y - bb.minimumWorld.y; SOL_S = h > 0.01 ? 1.8 / h : 1;
+  c.meshes.forEach(m => { m.isVisible = false; }); soldierC = c;
+}
+interface Fig { root: TransformNode; groups: Map<string, import('@babylonjs/core').AnimationGroup>; cur: string; dead: boolean; off: V3 }
+const corpses: Fig[] = [];
+function spawnFig(): Fig | null {
+  if (!soldierC) return null;
+  const root = new TransformNode('fig', scene), inner = new TransformNode('fi', scene); inner.parent = root; inner.scaling.setAll(SOL_S);
+  const inst = soldierC.instantiateModelsToScene(n => n, false, { doNotInstantiate: true });
+  inst.rootNodes.forEach(r => { r.parent = inner; });
+  root.getChildMeshes().forEach(m => { m.isVisible = true; m.isPickable = false; m.alwaysSelectAsActiveMesh = false; });
+  const groups = new Map(inst.animationGroups.map(g => [g.name, g]));
+  return { root, groups, cur: '', dead: false, off: [0, 0, 0] };
+}
+function playFig(f: Fig, a: Anim, loop = true, speed = 1) {
+  if (f.cur === a) return; f.groups.get(f.cur)?.stop(); f.cur = a; const g = f.groups.get(a); if (!g) return;
+  g.start(loop, speed * (0.9 + Math.random() * 0.2), g.from, g.to); if (loop) g.goToFrame(g.from + Math.random() * (g.to - g.from));
+}
+function disposeFig(f: Fig) { f.groups.forEach(g => g.dispose()); f.root.dispose(); }
+interface SVis { figs: Fig[]; lastMen: number; kornet?: TransformNode }
+const squadVis = new Map<number, SVis>();
+const FORM = (i: number, n: number, id: number): V3 => { const k = i - (n - 1) / 2, j = ((id * 7 + i * 13) % 10) / 10 - 0.5; return [k * 4.5 + j * 1.5, 0, -Math.abs(k) * 3 + j * 2]; };
+function syncSquads(dt: number) {
+  for (const u of W.units) {
+    if (u.kind !== 'inf' && u.kind !== 'kornet') continue;
+    let sv = squadVis.get(u.id);
+    if (!sv) { sv = { figs: [], lastMen: u.men }; squadVis.set(u.id, sv);
+      if (u.kind === 'kornet') { const m = spawnModel('kornet'); sv.kornet = m.root; } }
+    const hide = !u.alive || u.state === 'mounted' || (u.house >= 0 && u.state === 'house') || (u.kind === 'inf' && u.house >= 0);
+    const far = Vector3.Distance(cam.position, new Vector3(u.p[0], groundH(u.p[0], u.p[2]), u.p[2])) > 900;
+    if (sv.kornet) { sv.kornet.position.set(u.p[0], groundH(u.p[0], u.p[2]), u.p[2]); sv.kornet.rotation.y = u.yaw; sv.kornet.setEnabled(u.alive); }
+    // جندي انصاب: يطيح ويبقى بمكانه
+    while (sv.lastMen > u.men) { sv.lastMen--; const f = sv.figs.pop(); if (f) { playFig(f, u.pose === 'prone' ? 'pron death' : 'simple death', false); f.dead = true; corpses.push(f); if (corpses.length > 36) disposeFig(corpses.shift()!); } }
+    const want = hide || far ? 0 : Math.min(u.kind === 'kornet' ? 2 : 5, u.men);
+    while (sv.figs.length < want) { const f = spawnFig(); if (!f) break; f.off = FORM(sv.figs.length, Math.min(5, u.menMax), u.id); sv.figs.push(f); }
+    while (sv.figs.length > want) disposeFig(sv.figs.pop()!);
+    const moving = u.spd > 0.3, recent = W.T - u.firedT < 2.5;
+    const anim: Anim = u.pose === 'prone' ? (moving ? 'pron walk' : recent ? 'pron shot' : 'pron idle') : u.pose === 'run' || u.spd > 2.5 ? 'run' : moving ? 'simple walk' : recent || u.pose === 'fire' ? (u.kind === 'kornet' ? 'crouch shoot' : 'simple shoot') : 'idle simple';
+    const cs = Math.cos(u.yaw), sn = Math.sin(u.yaw);
+    sv.figs.forEach((f, i) => {
+      const o = u.kind === 'kornet' ? ([i ? -2.2 : 1.6, 0, -1.2] as V3) : f.off, x = u.p[0] + o[0] * cs + o[2] * sn, z = u.p[2] - o[0] * sn + o[2] * cs;
+      f.root.position.set(x, groundH(x, z), z); f.root.rotation.y = u.yaw + (i % 2 ? 0.15 : -0.1);
+      playFig(f, i === 1 && anim === 'simple shoot' ? 'crouch shoot' : anim, true, anim === 'run' ? 1.1 : 1);
+    });
+  }
+  void dt;
 }
 
 // ===== الجسيمات: مجمّعات مشتركة =====
@@ -237,6 +303,8 @@ const EXC: [number, Color4][] = [[0, C4(1.5, 1.4, 1.3, 1)], [0.75, C4(1, 1, 1, 0
 const exS = new Pool('exS', 80, texExplo2, false, { sheet: SH_EX, life: [1.3, 1.7], size: [[0, 9], [1, 15]], colors: EXC, gravity: 1, spin: 0.15 });
 const exM = new Pool('exM', 60, texExplo1, false, { sheet: SH_EX, life: [1.8, 2.3], size: [[0, 20], [1, 32]], colors: EXC, gravity: 1.5, spin: 0.1 });
 const exL = new Pool('exL', 40, texExplo1, false, { sheet: SH_EX, life: [2.4, 3], size: [[0, 38], [1, 60]], colors: EXC, gravity: 2, spin: 0.08 });
+const screen = new Pool('screen', 2400, texCloud, false, { sheet: SH_CLOUD, life: [14, 22], size: [[0, 10], [0.3, 30], [1, 46]], gravity: 0.25, colors: [[0, C4(0.9, 0.9, 0.88, 0)], [0.08, C4(0.88, 0.88, 0.86, 0.62)], [0.8, C4(0.85, 0.85, 0.83, 0.4)], [1, C4(0.85, 0.85, 0.83, 0)]] });
+const screens: { p: V3; r: number; until: number }[] = [];
 const cloud = new Pool('cloud', 1400, texCloud, false, { sheet: SH_CLOUD,  life: [5, 10], size: [[0, 6], [0.3, 18], [1, 30]], damp: 0.86, gravity: 0.6, colors: [[0, C4(1.15, 1.12, 1.06, 0)], [0.04, C4(1.12, 1.1, 1.05, 0.8)], [1, C4(1, 0.98, 0.92, 0)]] });
 
 // ===== أضواء الانفجارات: تضوي الأرض والبنايات والمجسمات =====
@@ -299,6 +367,8 @@ const sfx = (() => {
     round(d: number) { if (!play('dshk', d, 0.42, 0.85 + Math.random() * 0.12)) hit(d, 0.07, 2600, 500, 0.32, 95); },
     launch(d: number) { if (!play('launch', d, 1)) hit(d, 3, 1500, 180, 0.8, 55); },
     whump(d: number) { if (!play('eject', d, 0.9, 0.8)) hit(d, 0.35, 600, 80, 0.7, 45); },
+    rifle(d: number, n: number) { for (let i = 0; i < Math.min(3, n); i++) play('dshk', d, 0.16, 1.7 + Math.random() * 0.4, i * 0.09 + Math.random() * 0.05); },
+    cannon(d: number) { play('dshk', d, 0.5, 0.62 + Math.random() * 0.06); },
     rocket(d: number) { if (!play('rocket', d, 0.5, 0.9 + Math.random() * 0.2)) hit(d, 1.2, 2200, 400, 0.35); },
     drones(d: number) { if (ac && buzz) buzz.gain.setTargetAtTime(simSpeed ? vol(d) * 0.12 : 0, ac.currentTime, 0.2); },
   };
@@ -333,11 +403,12 @@ function makeProcedural() {
 }
 function syncUnits(dt: number) {
   for (const u of W.units) {
+    if (u.kind === 'inf' || u.kind === 'kornet') continue;
     let vis = unitVis.get(u.id);
     if (!vis) {
       const m = spawnModel(u.kind); vis = { ...m, recoil: 0, shake: 0, wreck: false, baseY: m.inner.position.y, yaw: u.yaw }; unitVis.set(u.id, vis);
       const blob = MeshBuilder.CreateGround('blob', { width: 1, height: 1 }, scene); blob.material = blobMat; blob.parent = vis.root; blob.position.y = 0.5; blob.isPickable = false;
-      const s = u.kind === 'patriot' ? 24 : u.kind === 's400' ? 16 : u.kind === 'dshk' ? 3 : u.kind === 'd30' ? 7 : 10; blob.scaling.set(s * 0.55, 1, s);
+      const s = u.kind === 'patriot' ? 24 : u.kind === 's400' ? 16 : u.kind === 'dshk' ? 3 : u.kind === 'd30' ? 7 : u.kind === 'bmp' ? 9 : 10; blob.scaling.set(s * 0.55, 1, s);
     }
     vis.root.position.set(u.p[0], groundH(u.p[0], u.p[2]), u.p[2]);
     if (u.alive) vis.yaw += angDiff(vis.yaw, u.yaw) * Math.min(1, dt * 8);
@@ -363,7 +434,7 @@ function airBody(a: Air): { body: TransformNode | null; glow: AbstractMesh | nul
     if (a.kind === 'n48' && !a.ign) g.isVisible = false;
     return { body: holder, glow: g, L };
   }
-  const g = inst(dotMesh, 'g' + a.id); g.billboardMode = Mesh.BILLBOARDMODE_ALL; g.scaling.setAll(a.kind === 'rocket' ? 2.4 : 1.6); return { body: null, glow: g, L: 2 };
+  const g = inst(dotMesh, 'g' + a.id); g.billboardMode = Mesh.BILLBOARDMODE_ALL; g.scaling.setAll(a.kind === 'rocket' ? 2.4 : a.kind === 'atgm' ? 1.3 : a.kind === 'rpg' ? 1 : a.kind === 'smoke' ? 0.5 : 1.6); return { body: null, glow: g, L: a.kind === 'atgm' || a.kind === 'rpg' ? 1.2 : 2 };
 }
 function syncAir() {
   const seen = new Set<number>(), cp = cam.position;
@@ -385,6 +456,7 @@ function syncAir() {
     if (a.kind === 'n48' && !a.ign) puffs.emit({ a: tail, n: 2, spd: [1, 3], jit: 0.5 });
     if (a.kind === 'iskander') thinTrail.emit({ a: prev, b: lp, n: Qn(dd * 0.06), jit: 1.5, spd: [0, 1] });
     if (a.kind === 'rocket' && a.t < 3) rocketTrail.emit({ a: prev, b: lp, n: Qn(dd * 0.14), jit: 0.3, spd: [0, 1] });
+    if (a.kind === 'atgm' || (a.kind === 'rpg' && a.t > 0.08)) rocketTrail.emit({ a: prev, b: lp, n: Qn(dd * (a.kind === 'atgm' ? 0.25 : 0.4)), jit: 0.15, spd: [0, 0.5] });
     vis.lastP = lp;
   }
   for (const [id, vis] of airVis) if (!seen.has(id)) { vis.n.dispose(); airVis.delete(id); }
@@ -448,6 +520,35 @@ function handleFx(fx: Fx) {
       fireS.emit({ a: fx.p, n: Qn(5), dir: scale(fx.dir, -1), spd: [10, 25], spread: 0.5, jit: 0.4 }); dust.emit({ a: G(fx.p[0], fx.p[2], 0.8), n: Qn(10), spd: [5, 14], up: -0.3, jit: 3 });
       flashLight(fx.p, 5, 60, 0.15); sfx.rocket(camD(fx.p)); break;
     }
+    case 'volley': {
+      // رمي مشاة: ومضات صغيرة عند الرماة، متتبعات أحياناً، وغبار وين تضرب
+      muzzle.emit({ a: fx.p, n: Math.min(4, fx.n), jit: 5 });
+      const dir = norm(sub(fx.to, fx.p)), d = len(sub(fx.to, fx.p)), tf = d / 800, to = fx.to;
+      if (fx.tracer) tracers.emit({ a: fx.p, n: 1, dir, spd: [800, 800], life: tf, jit: 3 });
+      vq.push({ t: W.T + tf, f: () => dust.emit({ a: G(to[0], to[2], 0.4), n: 3, spd: [2, 6], up: 1.2, jit: 5 }) });
+      sfx.rifle(camD(fx.p), fx.n); break;
+    }
+    case 'cannon': {
+      const vis = unitVis.get(fx.unit); if (vis) vis.shake = 0.8;
+      muzzle.emit({ a: fx.p, n: 2, jit: 0.4 }); tracers.emit({ a: fx.p, n: 1, dir: fx.dir, spd: [960, 960], life: fx.tf, jit: 0.1 });
+      const to = fx.to; vq.push({ t: W.T + fx.tf, f: () => { fireS.emit({ a: to, n: 2, spd: [4, 10], jit: 1 }); dust.emit({ a: G(to[0], to[2], 0.5), n: 4, spd: [3, 9], up: 1, jit: 1.5 }); sparks.emit({ a: to, n: 3, spd: [10, 30], jit: 0.5 }); } });
+      sfx.cannon(camD(fx.p)); break;
+    }
+    case 'atgm': {
+      // كورنيت: نفخة من الأنبوب ودخان؛ RPG: نار ودخان من ورا الرامي
+      cloud.emit({ a: fx.p, n: Qn(fx.rpg ? 10 : 18), spd: [2, 7], jit: 1 }); fireS.emit({ a: fx.p, n: 4, dir: fx.dir, spd: [6, 14], spread: 0.4, jit: 0.3 });
+      dust.emit({ a: G(fx.p[0], fx.p[2], 0.5), n: Qn(8), spd: [3, 8], up: 0.2, jit: 2 });
+      if (fx.rpg) fireJet.emit({ a: fx.p, n: 6, dir: scale(fx.dir, -1), spd: [10, 20], spread: 0.4, jit: 0.3 });
+      flashLight(fx.p, 2, 40, 0.15); fx.rpg ? sfx.rocket(camD(fx.p)) : sfx.launch(camD(fx.p) + 300); break;
+    }
+    case 'smoke': screens.push({ p: fx.p, r: fx.r, until: W.T + fx.dur }); cloud.emit({ a: G(fx.p[0], fx.p[2], 3), n: Qn(30), spd: [3, 12], up: 0.3, jit: fx.r * 0.4 }); break;
+    case 'houseHit': {
+      const h = HOUSES[fx.house], c = G(h.x, h.z, h.h * 0.5);
+      dust.emit({ a: c, n: Qn(fx.destroyed ? 60 : 18), spd: [4, fx.destroyed ? 16 : 9], up: 0.3, jit: Math.max(h.w, h.d) * 0.45 });
+      if (fx.destroyed) { houses.damage(fx.house); smokeS.emit({ a: c, n: Qn(16), spd: [2, 6], up: 0.6, jit: h.w * 0.4 }); burning.push({ p: G(h.x, h.z, 1), t: W.T, big: 0.7 }); for (let k = 0; k < 4; k++) throwDebris(chunkMesh, add(c, [0, 2, 0]), [(Math.random() - 0.5) * 14, 6 + Math.random() * 8, (Math.random() - 0.5) * 14], 3); }
+      break;
+    }
+    case 'dismount': dust.emit({ a: G(fx.p[0], fx.p[2], 0.6), n: Qn(10), spd: [2, 5], up: 0.3, jit: 4 }); break;
     case 'kill': killVisual(fx.unit, fx.turret); break;
     case 'siteHit': siteDamage(fx.site, fx.p, fx.big); break;
     case 'mark': marks.push({ p: fx.p, text: fx.text, good: fx.good, t: performance.now() }); break;
@@ -496,6 +597,8 @@ function siteDamage(sid: string, p: V3, big: boolean) {
 let costTimer = 0;
 function showCost(t: string, s: string) { $('costT').textContent = t; $('costS').textContent = s; $('cost').classList.remove('off'); clearTimeout(costTimer); costTimer = window.setTimeout(() => $('cost').classList.add('off'), 5500); }
 function burnFx(simDt: number) {
+  for (let i = screens.length - 1; i >= 0; i--) { const sc = screens[i]; if (W.T > sc.until) { screens.splice(i, 1); continue; } const left = sc.until - W.T;
+    if (left > 12) screen.emit({ a: G(sc.p[0], sc.p[2], 6), n: Qn(simDt * 2.2 * sc.r / 30), spd: [0.5, 2], up: 0.3, jit: sc.r * 1.5 }); }
   for (const b of burning) { const age = W.T - b.t, k = clamp(1 - age / 200, 0.3, 1) * b.big;
     burnSmoke.emit({ a: add(b.p, [0, 2, 0]), n: Qn(12 * simDt * k * 3), spd: [3, 7], dir: norm([0.14, 1, 0.08]), spread: 0.2, jit: 2 * b.big });
     burnFire.emit({ a: add(b.p, [0, 1.5, 0]), n: Qn(10 * simDt * k * 2), spd: [1, 4], up: 1, jit: 1.5 * b.big }); }
@@ -510,7 +613,7 @@ let selected = 0;
 function labelItems(): Item[] {
   const out: Item[] = [], near = camDist < 2600;
   for (const s of SITES) out.push({ key: 's' + s.id, text: s.name, cls: 'site', p: add(s.p, [0, 30, 0]), prio: 1 });
-  if (near) for (const u of W.units) out.push({ key: 'u' + u.id, text: u.alive ? `${u.name} · ${SIDE_AR[u.side]}` : `${u.name} (محطّم)`, cls: `${u.side}${u.alive ? '' : ' dead'}`, p: add(u.p, [0, u.kind === 'patriot' || u.kind === 's400' ? 17 : 9, 0]), prio: u.alive ? 3 : 0, follow: u.id });
+  if (near) for (const u of W.units) if (u.state !== 'mounted' && !(u.kind === 'inf' && !u.alive)) out.push({ key: 'u' + u.id, text: u.alive ? `${u.name} · ${SIDE_AR[u.side]}${u.kind === 'inf' || u.kind === 'kornet' ? ` (${u.men})` : ''}${u.house >= 0 ? ' 🏠' : ''}` : `${u.name} (محطّم)`, cls: `${u.side}${u.alive ? '' : ' dead'}`, p: add(u.p, [0, u.kind === 'patriot' || u.kind === 's400' ? 17 : 9, 0]), prio: u.alive ? 3 : 0, follow: u.id });
   else {
     const groups = new Map<string, Unit[]>(); for (const u of W.units) if (u.alive) { const k = u.side + '|' + u.group; groups.set(k, [...(groups.get(k) ?? []), u]); }
     for (const [k, us] of groups) { const c = us.reduce((s, u) => add(s, u.p), [0, 0, 0] as V3); out.push({ key: 'g' + k, text: `${k.split('|')[1]}${us.length > 1 ? ' ×' + us.length : ''}`, cls: `${us[0].side} group`, p: add(scale(c, 1 / us.length), [0, 20, 0]), prio: 3, follow: us[0].id }); }
@@ -571,6 +674,7 @@ function drawArrows() {
 // ===== التتبّع =====
 function findEntity(id: number): { p: V3; vel?: V3; air: boolean; name: string; info: string } | null {
   const u = W.units.find(x => x.id === id);
+  if (u && (u.kind === 'inf' || u.kind === 'kornet')) return { p: L(add(u.p, [0, 1.5, 0])), air: false, name: `${u.name} · ${SIDE_AR[u.side]}`, info: u.alive ? `${u.group} · ${u.men} جنود · ${({ house: 'يقاتلون من بيت', rush: 'يركضون للساتر الجاي', pin: 'منبطحين تحت النار', fire: 'يرمون', retreat: 'ينسحبون', mounted: 'راكبين بالناقلة', hold: 'بمواقعهم', counter: 'هجوم معاكس' } as Record<string, string>)[u.state] ?? 'بمواقعهم'}${u.supp > 0.6 ? ' · تحت ضغط' : ''}` : 'انقضى عليهم' };
   if (u) return { p: L(add(u.p, [0, 2, 0])), air: false, name: `${u.name} · ${SIDE_AR[u.side]}`, info: u.alive ? `${u.group} · ${u.spd > 1 ? `يتحرك ${Math.round(u.spd * 3.6)} كم/س` : 'بموقعه'}${u.cover ? ' · ورا ساتر' : ''}` : 'محطّمة' };
   const a = W.air.find(x => x.id === id);
   if (a) return { p: L(a.p), vel: a.v, air: true, name: `${AIR_AR[a.kind]} · ${SIDE_AR[a.side]}`, info: `${Math.round(len(a.v) * 3.6).toLocaleString('en')} كم/س · ارتفاع ${Math.round(a.p[1]).toLocaleString('en')} م${a.siteName ? ' · الهدف: ' + a.siteName : ''}${a.kind === 'n48' && !a.ign ? ' · مقذوف بالغاز' : ''}` };
@@ -635,6 +739,9 @@ function directorFx(fx: Fx) {
     case 'eject': if (claim(7, 3)) { endFollow(); view.tx = fx.p[0]; view.tz = fx.p[2]; targetY = 8; view.dist = 70; view.pitch = 0.2; view.yaw = Math.atan2(fx.dir[0], fx.dir[2]) + Math.PI / 2; pendingFollow = { id: fx.air, at: nowS() + 2.2, dist: 45 }; } break;
     case 'intercept': if (view.follow && fx.big) slowWins.push({ t0: W.T - 0.05, t1: W.T + 0.9 }); break;
     case 'rlaunch': { const g = W.units.find(u => u.id === fx.unit); if (g && W.T - lastSalvoShot > 30) { lastSalvoShot = W.T; twoShot(g.p, [-2000, 0, HIGHWAY_Z], 5, 6); } break; }
+    case 'phase': { const vc: V3 = [-1600, 0, HIGHWAY_Z]; if (fx.phase === 'counter') { closeShot(G(fx.p[0], fx.p[2], 3), [-760, 0, 380], 260, 0.3, 7, 8); } else twoShot(fx.p, vc, 5, 7); break; }
+    case 'dismount': if (claim(4, 6)) { endFollow(); view.tx = fx.p[0]; view.tz = fx.p[2]; targetY = 2; view.dist = 90; view.pitch = 0.3; view.yaw = Math.PI / 2 + 0.4; } break;
+    case 'atgm': if (!fx.rpg && claim(6, 1)) { pendingFollow = { id: fx.air, at: nowS() + 0.3, dist: 30 }; } break;
     case 'mark': if (fx.text.includes('انتشر') || fx.text.includes('ينسحب')) { const col = W.units.find(u => u.side === 'en' && u.alive && u.group === 'رتل مدرّع معادي'); if (col) twoShot(col.p, [-2050, 0, -350], 4, 6); } break;
     default: break;
   }
@@ -666,10 +773,11 @@ let tickN = -1;
 function hud() {
   const s = W.stats, mm = `${Math.floor(W.T / 60)}:${String(Math.floor(W.T % 60)).padStart(2, '0')}`;
   $('clock').textContent = mm;
-  $('phase').textContent = W.air.some(a => a.kind === 'iskander') ? '⚠ صاروخ باليستي بالجو' : W.air.some(a => a.kind === 'shahed') ? 'مسيّرات بالجو' : W.air.some(a => a.kind === 'kh101') ? 'صواريخ كروز بالجو' : ({ march: 'رتل على الطريق', deploy: 'العدو ينتشر', bound: 'العدو يتقدم بقفزات', hold: 'اشتباك على خط التماس', retreat: 'العدو ينسحب' } as Record<string, string>)[W.columnPhase];
-  $('tally').innerHTML = `<span>مسيّرات <b class="g">${s.dronesDown}</b>/${s.drones} أُسقطت${s.dronesHit ? ` · <b class="x">${s.dronesHit}</b> أصابت` : ''}</span>`
-    + `<span>كروز <b class="g">${s.cruiseDown}</b>/${s.cruise}</span><span>باليستي <b class="g">${s.ballisticDown}</b>/${s.ballistic}${s.ballisticHit ? ` · <b class="x">${s.ballisticHit}</b>` : ''}</span>`
-    + `<span>T-72 <b class="g">${s.enTanksLost}</b>/${s.enTanks} دُمّرت</span><span>أبرامز <b>${s.iqTanks - s.iqTanksLost}</b>/${s.iqTanks}</span>`;
+  $('phase').textContent = W.air.some(a => a.kind === 'iskander') ? '⚠ صاروخ باليستي بالجو' : W.air.some(a => a.kind === 'shahed') ? 'مسيّرات بالجو' : W.air.some(a => a.kind === 'kh101') ? 'صواريخ كروز بالجو' : ({ march: 'رتل العدو على الطريق', approach: 'العدو يتقدم بقفزات', breach: 'العدو يخترق نحو التلّة', assault: 'اقتحام قرية الطريق', retreat: 'العدو ينسحب' } as Record<string, string>)[W.en] + (W.iq === 'line2' ? ' · خطنا الثاني' : W.iq === 'counter' ? ' · هجومنا المعاكس' : '');
+  const held = W.houseOwner.filter(o => o === 'en').length;
+  $('tally').innerHTML = `<span>T-72 <b class="g">${s.enTanksLost}</b>/${s.enTanks}</span><span>BMP <b class="g">${s.enBmpLost}</b>/${s.enBmp}</span><span>مشاة العدو <b class="g">${s.enMenLost}</b>/${s.enMen}</span>`
+    + `<span>أبرامز <b>${s.iqTanks - s.iqTanksLost}</b>/${s.iqTanks}</span><span>جنودنا <b>${s.iqMen - s.iqMenLost}</b>/${s.iqMen}</span>${held ? `<span>بيوت بيد العدو <b class="x">${held}</b></span>` : ''}`
+    + `<span>جو: <b class="g">${s.dronesDown + s.cruiseDown + s.ballisticDown}</b>/${s.drones + s.cruise + s.ballistic}</span>`;
   if (W.log.length !== tickN) {
     tickN = W.log.length;
     $('ticker').innerHTML = W.log.slice(-2).map((l, i) => `<button data-i="${W.log.length - 2 + i}"><span class="t">${Math.floor(l.t / 60)}:${String(Math.floor(l.t % 60)).padStart(2, '0')}</span><b class="${l.good === true ? 'g' : l.good === false ? 'x' : 'n'}">${l.good === true ? '✓' : l.good === false ? '✗' : '•'}</b><span>${l.text}</span></button>`).join('');
@@ -700,7 +808,7 @@ function frame() {
     if (n === 16) acc = 0;
   }
   ($('slow') as HTMLElement).hidden = slowK === 1;
-  if (W) { syncUnits(dtReal); syncAir(); if (simDt) { burnFx(simDt); tickDebris(simDt); } directorFrame(); }
+  if (W) { syncUnits(dtReal); syncSquads(dtReal); syncAir(); if (simDt) { burnFx(simDt); tickDebris(simDt); } directorFrame(); }
   const k = simDt ? simDt / Math.max(1e-4, engine.getDeltaTime() / 1000) : 0;
   for (const p of pools) p.ps.updateSpeed = k / 60;
   tickLights(dtReal * (simDt ? 1 : 0.3)); updateCamera(dtReal);
@@ -716,17 +824,19 @@ function frame() {
 }
 function setQuality(hq: boolean) { HQ = hq; applyRes(); applyPipe(); setupShadows(); $('bQual').setAttribute('aria-pressed', String(hq)); }
 function showEnd() {
-  const s = W.stats, lost = W.units.filter(u => u.side === 'iq' && !u.alive).length;
-  $('endTitle').textContent = s.enTanksLost >= 3 ? 'انصد الهجوم' : 'المعركة انتهت';
-  $('endSum').innerHTML = `<div>المسيّرات<b>${s.dronesDown} من ${s.drones} أُسقطت</b></div><div>كروز + باليستي<b>${s.cruiseDown + s.ballisticDown} من ${s.cruise + s.ballistic} اعتُرضت</b></div>`
-    + `<div>دبابات العدو<b>${s.enTanksLost} من ${s.enTanks} دُمّرت</b></div><div>خسائرنا<b>${lost} وحدة</b></div>`
-    + `<div>معترضات (باتريوت + S-400)<b>${s.pacFired} + ${s.n48Fired}</b></div><div>طلقات الدوشكا<b>${s.rounds.toLocaleString('en')}</b></div>`;
+  const s = W.stats;
+  $('endTitle').textContent = W.result === 'win' ? 'القرية صمدت: العدو انسحب' : W.result === 'loss' ? 'العدو مسك قرية الطريق' : 'المعركة وگفت: القرية مقسومة';
+  $('endSum').innerHTML = `<div>دبابات العدو<b>${s.enTanksLost} من ${s.enTanks} دُمّرت</b></div><div>ناقلات BMP<b>${s.enBmpLost} من ${s.enBmp}</b></div>`
+    + `<div>مشاة العدو<b>${s.enMenLost} من ${s.enMen}</b></div><div>خسائرنا<b>${s.iqTanksLost} دبابة · ${s.iqMenLost} جندي</b></div>`
+    + `<div>بيوت تهدّمت<b>${s.housesLost}</b></div><div>كورنيت + RPG<b>${s.atgm} + ${s.rpg}</b></div>`
+    + `<div>الجو: أُسقط<b>${s.dronesDown + s.cruiseDown + s.ballisticDown} من ${s.drones + s.cruise + s.ballistic}</b></div><div>مدة المعركة<b>${Math.floor(W.T / 60)}:${String(Math.floor(W.T % 60)).padStart(2, '0')}</b></div>`;
   ($('end') as HTMLElement).hidden = false;
 }
 function toast(m: string) { const t = $('toast'); t.textContent = m; t.classList.add('show'); clearTimeout((toast as any).h); (toast as any).h = setTimeout(() => t.classList.remove('show'), 2600); }
 let seed = 3;
 function start() {
   sfx.init();
+  for (const sv of squadVis.values()) { sv.figs.forEach(disposeFig); sv.kornet?.dispose(); } squadVis.clear(); corpses.forEach(disposeFig); corpses.length = 0; screens.length = 0;
   for (const u of unitVis.values()) u.root.dispose(); unitVis.clear(); for (const a of airVis.values()) a.n.dispose(); airVis.clear();
   debris.forEach(d => d.m.dispose()); debris.length = 0; burning.length = 0; marks = []; vq.length = 0; slowWins.length = 0; decals = [];
   decal.thinInstanceSetBuffer('matrix', new Float32Array(16), 16, false); decal.thinInstanceCount = 0;
@@ -748,6 +858,7 @@ $('bQual').onclick = () => { setQuality(!HQ); toast(HQ ? 'جودة عالية: �
 $('bMute').onclick = () => ($('bMute').textContent = sfx.toggle() ? '🔇' : '🔊');
 $('bCred').onclick = () => (($('credits') as HTMLElement).hidden = false); $('bCredClose').onclick = () => (($('credits') as HTMLElement).hidden = true);
 window.addEventListener('resize', () => engine.resize());
+(window as any).__step = (dt: number) => { step(W, dt); for (const f0 of W.fx) handleFx(liftFx(f0)); W.fx.length = 0; for (let i = vq.length - 1; i >= 0; i--) if (vq[i].t <= W.T) { const f = vq[i].f; vq.splice(i, 1); f(); } };
 (window as any).__follow = startFollow; (window as any).__getW = () => W; (window as any).__view = view; (window as any).__scene = scene; (window as any).__order = (o: Order) => order(W, o);
 
 (async () => {
@@ -757,7 +868,7 @@ window.addEventListener('resize', () => engine.resize());
     await loadHeight();
     ({ houses, siteProps } = await buildWorld(scene, { HQ, NL, caster, texUrls, keepClear, modelUrl, prepMat: m => { if (m instanceof PBRMaterial) { m.environmentIntensity = 0; m.directIntensity = PBR_DIRECT; m.metallic = Math.min(m.metallic ?? 1, 0.15); m.maxSimultaneousLights = 2 + NL; } } }));
     makeProcedural();
-    await loadModels(t => (load.textContent = t));
+    await loadModels(t => (load.textContent = t)); load.textContent = 'يحمّل الجنود…'; await loadSoldier();
     setupShadows(); $('bQual').setAttribute('aria-pressed', String(HQ));
     W = newWorld(3); syncUnits(0);
     await scene.whenReadyAsync();

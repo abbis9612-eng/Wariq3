@@ -54,7 +54,7 @@ button:focus-visible{outline:2px solid var(--brass);outline-offset:2px}
 #tally span{background:rgba(10,12,9,.7);border:1px solid var(--line);border-radius:6px;padding:3px 7px;font-size:11.5px;font-variant-numeric:tabular-nums}
 #tally b{font-weight:600}#tally .g{color:#8fe0a2}#tally .x{color:#ff8a70}
 #orders{display:flex;gap:5px;flex-wrap:wrap}
-#orders button{flex:1 1 22%;min-width:76px;background:rgba(40,36,18,.86);border:1px solid rgba(210,171,51,.55);color:#f3e2a8;border-radius:7px;padding:7px 4px;font-size:12px;font-weight:600;line-height:1.25;position:relative;overflow:hidden}
+#orders button{flex:1 1 18%;min-width:62px;background:rgba(40,36,18,.86);border:1px solid rgba(210,171,51,.55);color:#f3e2a8;border-radius:7px;padding:7px 4px;font-size:12px;font-weight:600;line-height:1.25;position:relative;overflow:hidden}
 #orders button small{display:block;font-weight:400;font-size:10.5px;color:var(--dim)}
 #orders button[disabled]{opacity:.55}
 #orders button[aria-pressed="true"]{background:var(--brass);color:var(--brass-ink)}#orders button[aria-pressed="true"] small{color:#3a3418}
@@ -115,22 +115,23 @@ button:focus-visible{outline:2px solid var(--brass);outline-offset:2px}
   <div id="ticker"></div>
   <div id="tally"></div>
   <div id="orders">
-    <button data-o="barrage">💥 ضربة مدفعية<small>D-30 على الرتل</small><i></i></button>
-    <button data-o="counter">⚔ هجوم مضاد<small>الأبرامز تطلع للقتال</small><i></i></button>
+    <button data-o="barrage">💥 مدفعية<small>على العدو</small><i></i></button>
+    <button data-o="smoke">🌫 دخان<small>ستارة تغطي</small><i></i></button>
     <button data-o="retreat">↩ انسحاب<small>للخط الثاني</small><i></i></button>
-    <button data-o="aaPriority" aria-pressed="false">🛡 حماية القرى<small>باتريوت ضد المسيّرات</small><i></i></button>
+    <button data-o="counter">⚔ هجوم معاكس<small>الاحتياط يطلع</small><i></i></button>
+    <button data-o="aaPriority" aria-pressed="false">🛡 حماية<small>باتريوت للمسيّرات</small><i></i></button>
   </div>
 </div>
 <div id="cost" class="off"><b id="costT"></b><span id="costS"></span></div>
 <div id="follow" hidden><div class="info"><b id="fName"></b><small id="fInfo"></small></div><button id="bBack">رجوع للخريطة</button></div>
 <div class="card" id="intro">
-  <span class="stamp">تجربة 3D — رقم 2 · النسخة 2</span>
-  <h2>مسرح العمليات — غرب بغداد</h2>
-  <p>هجوم من الجو والأرض: مسيّرات، صواريخ كروز، <b>صواريخ باليستية</b>، ورتل دبابات ينتشر ويتقدم بقفزات. دفاعك: <b>S-400</b> و<b>باتريوت</b> ودوشكات وأبرامز ومدفعية.</p>
+  <span class="stamp">تجربة 3D — رقم 2 · النسخة 4</span>
+  <h2>معركة قرية الطريق</h2>
+  <p>العدو يهاجم قرية الطريق غرب بغداد بـ 6 دبابات و4 ناقلات BMP بيها مشاة، ومسيّرات وصواريخ بالجو. دفاعك: أبرامز تختبي ورا التلّة وتطلع ترمي، مشاة بالبيوت، كورنيت، دوشكات، مدفعية، واحتياط ورا التل للهجوم المعاكس. المعركة تطول حوالي 10 دقايق.</p>
   <ul>
     <li><b>🎬 الكاميرا التلقائية</b> تاخذك للإطلاقات والإصابات، وتبطّئ الوقت باللحظة الحاسمة.</li>
     <li><b>إصبع:</b> تحرّك · <b>إصبعين:</b> قرّب ولف · <b>الخريطة المصغرة:</b> اضغط وتنتقل · <b>الأسهم الحمراء</b> بالحافة تأشر للتهديدات البعيدة.</li>
-    <li><b>اضغط على أي اسم</b> والكاميرا تلاحقه. وتحت عندك <b>4 أوامر</b>: ضربة مدفعية، هجوم مضاد، انسحاب، حماية المدينة.</li>
+    <li><b>اضغط على أي اسم</b> والكاميرا تلاحقه. وتحت عندك <b>5 أوامر</b>: مدفعية، دخان، انسحاب للخط الثاني، هجوم معاكس (إنت تختار وقته)، وحماية من الجو. إذا ما تأمر، القائد يقرر وحده.</li>
   </ul>
   <div class="legend"><span><i style="background:var(--iq)"></i>العراق</span><span><i style="background:var(--en)"></i>العدو</span><span><i style="background:var(--site);border-radius:1px"></i>مواقع مهمة</span></div>
   <p id="load">يحمّل الخريطة والمجسمات…</p>
@@ -146,7 +147,7 @@ button:focus-visible{outline:2px solid var(--brass);outline-offset:2px}
 <div class="card" id="credits" hidden>
   <h2>المصادر</h2>
   <p>كل المجسمات من Sketchfab برخصة <a href="https://creativecommons.org/licenses/by/4.0/" target="_blank" rel="noopener">CC BY 4.0</a>:</p>
-  <p>أبرامز M1A1 وT-72B3 وباتريوت: Muhamad Mirza Arrafi · S-400: Chenzoss · البيوت: sechela و123a9el وAvgust9 وyadrogames · بيكب تويوتا وراجمة غراد: LM3D · مدفع D-30: 42manako · دوشكا: hensyu_leader · شاهد-136: faintastic18 · Kh-101: xFORTUNAx.</p>
+  <p>أبرامز M1A1 وT-72B3 وباتريوت: Muhamad Mirza Arrafi · S-400: Chenzoss · البيوت: sechela و123a9el وAvgust9 وyadrogames · BMP-2: unhappy_nation · كورنيت: XEPCOH_552 · الجنود: m152027350 · بيكب تويوتا وراجمة غراد: LM3D · مدفع D-30: 42manako · دوشكا: hensyu_leader · شاهد-136: faintastic18 · Kh-101: xFORTUNAx.</p>
   <p><b>الأرض:</b> صور رمل وصخر وحصى وتراب حقيقية من <a href="https://polyhaven.com" target="_blank" rel="noopener">Poly Haven</a> (CC0). <b>الانفجارات والنار والدخان:</b> فليب بوك من Unity Labs (CC0، مسوّى بـ Houdini).</p>
   <p><b>الأصوات</b> (<a href="https://creativecommons.org/licenses/by/3.0/" target="_blank" rel="noopener">CC BY 3.0</a> من SoundBible): Tank Firing و Mortar Round: snottyboy · M 82 Barrett 50 Cal: JKirsch · Bomb Exploding: Sound Explorer · Grenade Explosion و RPG Plus Shrapnel و Bunker Buster Missile: Mike Koenig. وانفجار بعيد: Joseph SARDIN - <a href="https://bigsoundbank.com" target="_blank" rel="noopener">BigSoundBank.com</a> (CC0).</p>
   <p>شكل الأرض (جبال، وديان، هضاب) مولّد بمحاكاة تعرية مائية. صور الصخر والحصى والتراب من Poly Haven (CC0). القرى والنخل والصخور والمعترضات والصواريخ الباليستية مصنوعة بالكود. المحرك: Babylon.js.</p>

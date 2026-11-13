@@ -21,3 +21,6 @@
 | h_desert.glb | Desert House | Avgust9 | https://sketchfab.com/3d-models/dfd9dd93d3ed4e8eae1b1b4c2659857e |
 | h_low.glb | Low House Building Apocalypse | yadrogames | https://sketchfab.com/3d-models/a4ba41df514e447095c2106f85734093 |
 | h_farm.glb | Low Farm Assembly House | yadrogames | https://sketchfab.com/3d-models/60156c85ad9e43498e15f2fbd529a5da |
+| bmp.glb | BMP-2D - USSR | unhappy_nation | https://sketchfab.com/3d-models/ffba303820664e28a312a1018192d5fb |
+| kornet.glb | 9M133 Kornet / AT-14 Spriggan | XEPCOH_552 | https://sketchfab.com/3d-models/8b1d8e081c9744598b2ec4127d1c72df |
+| soldier.glb | Modern Army Soldier with +24 pro Animations (10 حركات، صور مجموعة بأطلس) | m152027350 | https://sketchfab.com/3d-models/37566d930fa7404f87847b7fca8dca97 |

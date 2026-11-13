@@ -18,17 +18,17 @@ export const KIND_AR: Record<Kind, string> = { abrams: 'أبرامز M1A1', t72:
 export const SIDE_AR: Record<Side, string> = { iq: 'العراق', en: 'العدو' };
 interface KindSpec { hp: number; range: number; reload: number; speed: number; aa: number; armor: number; turn: number; eye: number; tall: number }
 export const SPEC: Record<Kind, KindSpec> = {
-  abrams: { hp: 3, range: 2800, reload: 7, speed: 8, aa: 0, armor: 1, turn: 0.6, eye: 2.7, tall: 2.9 },
-  t72: { hp: 2, range: 2400, reload: 9, speed: 8, aa: 0, armor: 1, turn: 0.55, eye: 2.4, tall: 2.3 },
-  bmp: { hp: 1.3, range: 1600, reload: 4, speed: 9, aa: 0, armor: 0.5, turn: 0.9, eye: 2.2, tall: 2.2 },
-  technical: { hp: 1, range: 1100, reload: 1.2, speed: 12, aa: 1200, armor: 0, turn: 1.2, eye: 2.3, tall: 2.1 },
-  dshk: { hp: 1, range: 1100, reload: 1.0, speed: 2, aa: 1100, armor: 0, turn: 2.5, eye: 1.3, tall: 1.2 },
+  abrams: { hp: 3, range: 1000, reload: 7, speed: 8, aa: 0, armor: 1, turn: 0.6, eye: 2.7, tall: 2.9 },
+  t72: { hp: 2, range: 900, reload: 9, speed: 8, aa: 0, armor: 1, turn: 0.55, eye: 2.4, tall: 2.3 },
+  bmp: { hp: 1.3, range: 650, reload: 4, speed: 9, aa: 0, armor: 0.5, turn: 0.9, eye: 2.2, tall: 2.2 },
+  technical: { hp: 1, range: 700, reload: 1.2, speed: 12, aa: 1200, armor: 0, turn: 1.2, eye: 2.3, tall: 2.1 },
+  dshk: { hp: 1, range: 650, reload: 1.0, speed: 2, aa: 1100, armor: 0, turn: 2.5, eye: 1.3, tall: 1.2 },
   d30: { hp: 1, range: 9000, reload: 6, speed: 0, aa: 0, armor: 0, turn: 0.4, eye: 1.5, tall: 1.6 },
   grad: { hp: 1, range: 12000, reload: 999, speed: 9, aa: 0, armor: 0, turn: 0.5, eye: 3, tall: 3 },
   patriot: { hp: 2, range: 0, reload: 0, speed: 0, aa: 0, armor: 0, turn: 0, eye: 5, tall: 9 },
   s400: { hp: 2, range: 0, reload: 0, speed: 0, aa: 0, armor: 0, turn: 0, eye: 5, tall: 8 },
-  inf: { hp: 7, range: 550, reload: 2.2, speed: 1.6, aa: 0, armor: 0, turn: 3, eye: 1.6, tall: 1.7 },
-  kornet: { hp: 3, range: 5000, reload: 40, speed: 1.3, aa: 0, armor: 0, turn: 2, eye: 1.1, tall: 1.0 },
+  inf: { hp: 7, range: 350, reload: 2.2, speed: 1.6, aa: 0, armor: 0, turn: 3, eye: 1.6, tall: 1.7 },
+  kornet: { hp: 3, range: 1600, reload: 40, speed: 1.3, aa: 0, armor: 0, turn: 2, eye: 1.1, tall: 1.0 },
 };
 export type UState = 'idle' | 'march' | 'deploy' | 'bound' | 'hold' | 'retreat' | 'scoot' | 'return' | 'reposition'
   | 'hide' | 'peek' | 'aim' | 'mounted' | 'dismount' | 'assault' | 'rush' | 'pin' | 'house' | 'counter' | 'overwatch';
@@ -140,12 +140,12 @@ export function newWorld(seed = 11): World {
   U('patriot', 'iq', PATRIOT_POS, [0, 0, 1], 'بطارية باتريوت', { yaw: PATRIOT_YAW, role: 'aa' });
   U('s400', 'iq', S400_POS, [0, 0, 1], 'بطارية S-400', { yaw: S400_YAW, role: 'aa' });
   // --- العدو: سرية دبابات + فصيل BMP بيها مشاة + بيكبات، وراجمتين ---
-  for (let i = 0; i < 6; i++) U('t72', 'en', [-5000 - i * 80, 0, HIGHWAY_Z + (i % 2 ? 8 : -8)], EAST, COLUMN, { state: 'march', team: i % 2, role: 'assault' });
+  for (let i = 0; i < 6; i++) U('t72', 'en', [-3250 - i * 45, 0, HIGHWAY_Z + (i % 2 ? 8 : -8)], EAST, COLUMN, { state: 'march', team: i % 2, role: 'assault' });
   for (let i = 0; i < 4; i++) {
-    const b = U('bmp', 'en', [-5500 - i * 70, 0, HIGHWAY_Z + (i % 2 ? 8 : -8)], EAST, COLUMN, { state: 'march', team: 2, role: 'assault' });
+    const b = U('bmp', 'en', [-3560 - i * 45, 0, HIGHWAY_Z + (i % 2 ? 8 : -8)], EAST, COLUMN, { state: 'march', team: 2, role: 'assault' });
     const s = U('inf', 'en', b.p, EAST, 'مشاة العدو', { state: 'mounted', mount: b.id, role: 'assault', team: i, men: 9, menMax: 9, hp: 9 }); b.carry = s.id;
   }
-  ['technical', 'technical'].forEach((k, i) => U(k as Kind, 'en', [-5800 - i * 70, 0, HIGHWAY_Z + (i ? 8 : -8)], EAST, COLUMN, { state: 'march', team: 3, role: 'support' }));
+  ['technical', 'technical'].forEach((k, i) => U(k as Kind, 'en', [-3760 - i * 45, 0, HIGHWAY_Z + (i ? 8 : -8)], EAST, COLUMN, { state: 'march', team: 3, role: 'support' }));
   U('grad', 'en', [-5100, 0, -1350], EAST, 'راجمات العدو', { role: 'arty' }); U('grad', 'en', [-5060, 0, -1460], EAST, 'راجمات العدو', { role: 'arty' });
   w.stats.enTanks = 6; w.stats.iqTanks = 5; w.stats.enBmp = 4;
   w.stats.enMen = w.units.filter(u => u.side === 'en' && u.kind === 'inf').reduce((s, u) => s + u.men, 0);
@@ -239,7 +239,7 @@ export function hullDownSpot(w: World, from: V3, toward: V3, maxAdv = 60): V3 | 
   const dir = norm([toward[0] - from[0], 0, toward[2] - from[2]]);
   for (let s = 0; s <= maxAdv; s += 2) {
     const p: V3 = [from[0] + dir[0] * s, 0, from[2] + dir[2] * s], g = gh(p);
-    const far: V3 = [p[0] + dir[0] * 1200, 0, p[2] + dir[2] * 1200], ft: V3 = [far[0], gh(far) + 1.5, far[2]];
+    const far: V3 = [p[0] + dir[0] * 500, 0, p[2] + dir[2] * 500], ft: V3 = [far[0], gh(far) + 1.5, far[2]];
     if (lineClear(w, [p[0], g + SPEC.abrams.eye, p[2]], ft)) return p;
   }
   return null;
@@ -341,7 +341,7 @@ function spot(w: World) {
     for (const o of w.units) {
       if (!o.alive || o.side === side || !ground(o) || o.state === 'mounted') continue;
       const loud = w.T - o.firedT < 6 || o.spd > 2;
-      const range = (o.kind === 'inf' || o.kind === 'kornet') ? (loud ? 900 : 500) : (loud ? 4500 : 3200);
+      const range = (o.kind === 'inf' || o.kind === 'kornet') ? (loud ? 450 : 280) : (loud ? 1400 : 1000);
       if (mine.some(m => dist2d(m.p, o.p) < range * (m.kind === 'kornet' ? 1.3 : 1) && visOf(w, m, o) > 0)) { known.set(o.id, w.T); o.seenT = w.T; }
     }
     for (const [id, t] of known) if (w.T - t > 20 || !w.units.find(u => u.id === id)?.alive) known.delete(id);
@@ -374,7 +374,7 @@ function commanders(w: World) {
   }
   // العراق
   const lostLine = w.stats.iqTanksLost >= 1 || iqLine.length < 3;
-  if (w.iq === 'line1' && ((front > -2100 - 900 && (lostLine || w.T > 280)) || front > -2100 - 380 || (w.en === 'breach' && w.T - w.enT > 25))) fallback(w, 'القائد');
+  if (w.iq === 'line1' && ((front > -2100 - 430 && (lostLine || w.T > 280)) || front > -2100 - 230 || (w.en === 'breach' && w.T - w.enT > 25))) fallback(w, 'القائد');
   const enIn = enInf.filter(u => inVillage(u.p) || u.house >= 0).length;
   if (w.iq !== 'counter' && w.T > 330 && ((enIn >= 2 && en.filter(isTank).length <= 3) || (w.en === 'assault' && w.T - w.enT > 100) || w.T > 470)) counter(w, 'القائد');
 }
@@ -416,7 +416,7 @@ function addSmoke(w: World, p: V3, r: number, dur: number) { w.smoke.push({ p, r
 function checkEnd(w: World) {
   if (w.over) return;
   const enAlive = w.units.filter(u => u.side === 'en' && u.alive && ground(u) && u.kind !== 'grad');
-  const enGone = enAlive.every(u => u.state === 'retreat' && (u.p[0] < -3600 || dist2d(u.p, VILLAGE_C) > 1400)) || (w.en === 'retreat' && w.T - w.enT > 100);
+  const enGone = enAlive.every(u => u.state === 'retreat' && (u.p[0] < -3200 || dist2d(u.p, VILLAGE_C) > 1500)) || (w.en === 'retreat' && w.T - w.enT > 100);
   const pendingAir = w.air.some(a => a.alive && a.side === 'en' && (a.kind === 'shahed' || a.kind === 'kh101' || a.kind === 'iskander'));
   const iqLeft = w.units.filter(u => u.side === 'iq' && u.alive && ground(u) && u.role !== 'aa' && u.role !== 'arty').length;
   const held = FRONT_HOUSES.filter(h => w.houseOwner[h.i] === 'en').length, alive = FRONT_HOUSES.filter(h => w.houseHp[h.i] > 0).length;
@@ -437,12 +437,12 @@ function behave(w: World, u: Unit, dt: number) {
     if (w.en === 'approach') {
       // قفزات متبادلة: فريق يتقدم 280 م والثاني يغطي؛ توقف على 1500 م من التلّة
       if (u.kind === 't72' && (u.state === 'march' || ((u.state === 'hold' || u.state === 'overwatch') && u.stateT > 14 + w.r() * 6 && u.team === Math.floor(w.T / 24) % 2))) {
-        if (u.p[0] < -2100 - 1450) { u.state = 'bound'; u.stateT = 0; u.goal = coverNear(w, u, [u.p[0] + 260, 0, HIGHWAY_Z + (u.team ? 1 : -1) * (60 + u.id % 3 * 55)], 70); }
+        if (u.p[0] < -2100 - 520) { u.state = 'bound'; u.stateT = 0; u.goal = coverNear(w, u, [u.p[0] + 120, 0, HIGHWAY_Z + (u.team ? 1 : -1) * (40 + u.id % 3 * 40)], 40); }
         else if (u.state !== 'overwatch') { u.state = 'overwatch'; u.stateT = 0; u.goal = null; }
       }
       if ((u.kind === 'bmp' || u.kind === 'technical') && (u.state === 'march' || u.state === 'hold') && u.stateT > 5) {
-        const tanks = w.units.filter(x => x.alive && x.kind === 't72'); const back = tanks.length ? Math.min(...tanks.map(t => t.p[0])) - 380 : u.p[0];
-        if (u.p[0] < back - 40) { u.state = 'bound'; u.stateT = 0; u.goal = [Math.min(back, u.p[0] + 300), 0, HIGHWAY_Z + (u.id % 3 - 1) * 70]; }
+        const tanks = w.units.filter(x => x.alive && x.kind === 't72'); const back = tanks.length ? Math.min(...tanks.map(t => t.p[0])) - 220 : u.p[0];
+        if (u.p[0] < back - 30) { u.state = 'bound'; u.stateT = 0; u.goal = [Math.min(back, u.p[0] + 150), 0, HIGHWAY_Z + (u.id % 3 - 1) * 55]; }
       }
       return;
     }
@@ -451,16 +451,16 @@ function behave(w: World, u: Unit, dt: number) {
         // الدبابات تطلع للتلّة وتسند المشاة من فوق
         // الدبابات تتقدم بقفزات (300 م) لحد التلّة، وتسند المشاة من فوقها
         const slot: V3 = [-2150 + (u.id % 2) * 40, 0, HIGHWAY_Z + (u.id % 6 - 2.5) * 70];
-        if (dist2d(u.p, slot) > 30) { if (u.state !== 'bound' && (u.state !== 'overwatch' || u.stateT > 6 + (u.id % 3) * 3)) { u.state = 'bound'; u.stateT = 0; u.goal = dist2d(u.p, slot) > 340 ? add(u.p, scale(norm(sub(slot, u.p)), 300)) : slot; } }
+        if (dist2d(u.p, slot) > 30) { if (u.state !== 'bound' && (u.state !== 'overwatch' || u.stateT > 6 + (u.id % 3) * 3)) { u.state = 'bound'; u.stateT = 0; u.goal = dist2d(u.p, slot) > 180 ? add(u.p, scale(norm(sub(slot, u.p)), 150)) : slot; } }
         else if (u.state !== 'overwatch') { u.state = 'overwatch'; u.stateT = 0; u.goal = null; }
       }
       if (u.kind === 'bmp' && u.carry) {
         const s = w.units.find(x => x.id === u.carry && x.alive && x.state === 'mounted');
         const drop: V3 = [-2270, 0, HIGHWAY_Z + (u.id % 4 - 1.5) * 90];
-        const tanksUp = w.units.filter(x => x.alive && x.kind === 't72').some(x => x.p[0] > -2650) || w.T - w.enT > 75;
+        const tanksUp = w.units.filter(x => x.alive && x.kind === 't72').some(x => x.p[0] > -2350) || w.T - w.enT > 75;
         if (s && (dist2d(u.p, drop) < 25 || u.hp < SPEC.bmp.hp * 0.45)) dismount(w, u, s);
         else if (s && tanksUp && u.state !== 'bound') { u.state = 'bound'; u.goal = drop; }
-        else if (s && !tanksUp && u.state !== 'overwatch' && u.state !== 'bound') { u.state = 'bound'; u.goal = [-2900 - (u.id % 3) * 40, 0, HIGHWAY_Z + (u.id % 3 - 1) * 110]; }
+        else if (s && !tanksUp && u.state !== 'overwatch' && u.state !== 'bound') { u.state = 'bound'; u.goal = [-2560 - (u.id % 3) * 30, 0, HIGHWAY_Z + (u.id % 3 - 1) * 90]; }
         else if (!s && u.state !== 'overwatch' && u.state !== 'bound') { u.state = 'bound'; u.goal = [-2000 + (u.id % 3) * 40, 0, HIGHWAY_Z + (u.id % 3 - 1) * 90]; }
       }
       if (u.kind === 'technical' && u.state !== 'overwatch' && u.state !== 'bound') { u.state = 'bound'; u.goal = [-2250, 0, HIGHWAY_Z + (u.id % 2 ? 140 : -140)]; }
@@ -522,7 +522,7 @@ function infAssault(w: World, u: Unit, dt: number) {
   const hp: V3 = [tgtHouse.x, 0, tgtHouse.z], d = dist2d(u.p, hp);
   if (u.supp > 0.65 && u.state !== 'pin') { u.state = 'pin'; u.stateT = 0; u.goal = null; }
   if (u.state === 'pin') { u.pose = 'prone'; if (u.stateT > 5 && (u.supp < 0.45 || u.stateT > 14 + w.r() * 8)) { u.state = 'rush' as UState; u.stateT = 0; u.supp *= 0.5; u.goal = add(u.p, scale(norm(sub(hp, u.p)), Math.min(d, 40))); } return; }
-  const close = w.units.some(o => o.alive && o.side === 'iq' && ground(o) && o.role !== 'aa' && dist2d(o.p, u.p) < 480);
+  const close = w.units.some(o => o.alive && o.side === 'iq' && ground(o) && o.role !== 'aa' && dist2d(o.p, u.p) < 300);
   if (!close && u.state !== 'rush') { u.state = 'rush'; u.stateT = 0; u.goal = add(u.p, scale(norm(sub(hp, u.p)), Math.min(d, 120))); }
   if ((u.state as string) === 'fire' || u.state === 'idle' || u.state === 'hold' || u.state === 'assault') {
     u.pose = 'fire'; u.goal = null;
@@ -583,7 +583,7 @@ function move(w: World, u: Unit, dt: number) {
   const spec = SPEC[u.kind];
   if (u.state === 'mounted' || u.house >= 0 && u.kind === 'inf' && u.state === 'house') { u.spd = 0; return; }
   if (u.state === 'march') u.goal = [u.p[0] + 200, 0, HIGHWAY_Z + (u.team % 2 ? 7 : -7)];
-  if (w.en === 'march' && isColumn(u) && u.p[0] > -4300) u.goal = null;
+  if (w.en === 'march' && isColumn(u) && u.p[0] > -2950) u.goal = null;
   const g = u.goal;
   if (!g || spec.speed === 0) { u.spd = Math.max(0, u.spd - 3 * dt); return; }
   const to = sub(g, u.p), d = dist2d(g, u.p);
@@ -623,7 +623,7 @@ function fight(w: World, u: Unit, dt: number) {
     let tA: Air | null = null, bd = 1e9;
     if (u.side === 'iq') for (const a of w.air) if (a.alive && a.kind === 'shahed') { const d = len(sub(a.p, u.p)); if (d < spec.aa && d < bd) { bd = d; tA = a; } }
     let tU: Unit | null = null;
-    if (!tA) { const t = nearestFoe(w, u, spec.range, o => SPEC[o.kind].armor < 1 && o.state !== 'mounted' && (o.kind !== 'inf' || dist2d(o.p, u.p) < (u.kind === 'dshk' ? 550 : 750))); if (t && visOf(w, u, t) > 0) { tU = t; bd = dist2d(t.p, u.p); } }
+    if (!tA) { const t = nearestFoe(w, u, spec.range, o => SPEC[o.kind].armor < 1 && o.state !== 'mounted' && (o.kind !== 'inf' || dist2d(o.p, u.p) < (u.kind === 'dshk' ? 400 : 500))); if (t && visOf(w, u, t) > 0) { tU = t; bd = dist2d(t.p, u.p); } }
     if (!tA && !tU) return;
     u.target = tA ? -tA.id : tU!.id; u.burst = 5 + Math.floor(w.r() * 5); u.burstT = 0; u.cd = tU ? 2.2 + w.r() * 2 : 0.5 + w.r() * 0.9; u.firedT = w.T;
     if (u.kind === 'dshk') u.yaw = yawOf(sub(tA ? tA.p : tU!.p, u.p));
@@ -631,7 +631,7 @@ function fight(w: World, u: Unit, dt: number) {
   }
   if (u.kind === 'd30') {
     // مدفعية: تضرب تجمعات العدو اللي ينشافون (ما تضرب المنسحبين البعيدين)
-    const t = nearestFoe(w, u, spec.range, o => o.p[0] > -4800 && o.state !== 'retreat' && !(o.house >= 0));
+    const t = nearestFoe(w, u, spec.range, o => o.p[0] > -3600 && o.state !== 'retreat' && !(o.house >= 0));
     if (!t || w.T < 60) return; u.cd = spec.reload * 6 * (0.85 + w.r() * 0.3);
     const lead: V3 = t.spd > 1 ? scale([Math.sin(t.yaw), 0, Math.cos(t.yaw)], t.spd * 9) : [0, 0, 0];
     fireShell(w, u, add(add(t.p, lead), [(w.r() - 0.5) * 170, 0, (w.r() - 0.5) * 170])); return;
@@ -646,13 +646,13 @@ function fight(w: World, u: Unit, dt: number) {
   if (!best) return;
   const bd = dist2d(best.p, u.p), dir = norm(sub(best.p, u.p)), want = yawOf(dir), da = angDiff(u.yaw, want);
   if (Math.abs(da) > 0.12 && u.kind !== 'bmp') { u.yaw += clamp(da, -spec.turn * dt, spec.turn * dt); return; }
-  if (u.kind === 'bmp' || (isTank(u) && best.kind === 'inf' && bd < 800 && w.r() < 0.7)) {
+  if (u.kind === 'bmp' || (isTank(u) && best.kind === 'inf' && bd < 500 && w.r() < 0.7)) {
     // مدفع 30 ملم / رشاش محوري: رشقة
     u.target = best.id; u.burst = u.kind === 'bmp' ? 4 + Math.floor(w.r() * 4) : 6 + Math.floor(w.r() * 5); u.burstT = 0; u.cd = (u.kind === 'bmp' ? spec.reload : 3) * (0.8 + w.r() * 0.5); u.firedT = w.T; return;
   }
   u.cd = spec.reload * (0.85 + w.r() * 0.3) * (1 + u.supp * 0.5); u.target = best.id; u.firedT = w.T; u.shots++; u.peekShots++;
   const muzzle = add(add(u.p, scale(dir, 5.6)), [0, 2.3, 0]);
-  let pHit = (u.kind === 'abrams' ? 0.72 - bd / 5500 : 0.6 - bd / 6000) * (bv >= 0.99 ? 1 : 0.55) * (1 - u.supp * 0.4);
+  let pHit = (u.kind === 'abrams' ? 0.66 - bd / 2400 : 0.55 - bd / 2400) * (bv >= 0.99 ? 1 : 0.55) * (1 - u.supp * 0.4);
   if (best.spd > 2) pHit *= 0.8;
   if (best.kind === 'inf') pHit = 0.75;
   const hit = w.r() < pHit;
@@ -676,11 +676,11 @@ function infFire(w: World, u: Unit) {
   if (u.pose === 'run' && u.state === 'rush') return;
   // RPG على عربة قريبة
   if (u.rpg > 0 && u.rpgCd <= 0) {
-    const v = nearestFoe(w, u, 330, o => isVeh(o) && o.state !== 'mounted');
+    const v = nearestFoe(w, u, 220, o => isVeh(o) && o.state !== 'mounted');
     if (v && visOf(w, u, v) > 0) {
       u.rpg--; u.rpgCd = 18 + w.r() * 10; u.firedT = w.T; w.stats.rpg++;
       const from: V3 = add(u.p, [0, u.house >= 0 ? 3 : 1.4, 0]), d = dist2d(v.p, from), dir = norm(sub(add(v.p, [0, 1.2, 0]), from));
-      const hit = w.r() < clamp(0.62 - d / 600, 0.12, 0.6) * (1 - u.supp * 0.5);
+      const hit = w.r() < clamp(0.6 - d / 450, 0.12, 0.58) * (1 - u.supp * 0.5);
       const a = spawnAir(w, 'rpg', u.side, from, scale(dir, 120), undefined, undefined, hit ? add(v.p, [0, 1.2, 0]) : add(v.p, [(w.r() - 0.5) * 16, -1, (w.r() - 0.5) * 16]));
       a.tgtUnit = v.id; a.owner = u.id; a.hit = hit;
       w.fx.push({ k: 'atgm', unit: u.id, p: from, dir, air: a.id, rpg: true }); return;
@@ -691,7 +691,7 @@ function infFire(w: World, u: Unit) {
   if (!t) return; const v = visOf(w, u, t); if (v <= 0) return;
   u.cd = SPEC.inf.reload * (0.8 + w.r() * 0.6) * (1 + u.supp); u.firedT = w.T; u.target = t.id;
   const d = dist2d(t.p, u.p), cover = t.house >= 0 ? 0.3 : t.pose === 'prone' ? 0.45 : 1;
-  const pk = 0.035 * u.men / 7 * (1 - d / 700) * cover * (1 - u.supp * 0.6) * (0.4 + v);
+  const pk = 0.035 * u.men / 7 * (1 - d / 450) * cover * (1 - u.supp * 0.6) * (0.4 + v);
   w.fx.push({ k: 'volley', unit: u.id, p: add(u.p, [0, u.house >= 0 ? 3 : u.pose === 'prone' ? 0.4 : 1.3, 0]), to: add(t.p, [(w.r() - 0.5) * 6, 1, (w.r() - 0.5) * 6]), n: Math.max(1, Math.round(u.men / 2)), tracer: w.r() < 0.5, inf: true });
   w.stats.rounds += u.men * 3;
   t.supp = Math.min(1, t.supp + 0.16 * (t.house >= 0 ? 0.6 : 1));
@@ -699,8 +699,8 @@ function infFire(w: World, u: Unit) {
 }
 function kornetFire(w: World, u: Unit) {
   if (u.cd > 0 || u.ammo <= 0 || u.supp > 0.6) return;
-  const t = nearestFoe(w, u, SPEC.kornet.range, o => isTank(o) && visOf(w, u, o) >= 0.4) ?? nearestFoe(w, u, 2500, o => o.kind === 'bmp' && o.alive);
-  if (!t || visOf(w, u, t) < 0.4 || dist2d(t.p, u.p) < 400) return;
+  const t = nearestFoe(w, u, SPEC.kornet.range, o => isTank(o) && visOf(w, u, o) >= 0.4) ?? nearestFoe(w, u, 1200, o => o.kind === 'bmp' && o.alive);
+  if (!t || visOf(w, u, t) < 0.4 || dist2d(t.p, u.p) < 150) return;
   u.ammo--; u.cd = SPEC.kornet.reload * (0.9 + w.r() * 0.3); u.firedT = w.T; w.stats.atgm++;
   const from: V3 = add(u.p, [0, 1.1, 0]), dir = norm(sub(add(t.p, [0, 1.5, 0]), from));
   const a = spawnAir(w, 'atgm', 'iq', from, scale(dir, 60), undefined, undefined, add(t.p, [0, 1.5, 0])); a.tgtUnit = t.id; a.owner = u.id; a.phase = 'boost';
@@ -711,7 +711,7 @@ function kornetFire(w: World, u: Unit) {
 }
 function cannonRound(w: World, u: Unit) {
   const o = w.units.find(x => x.id === u.target); if (!o || !o.alive) { u.burst = 0; return; }
-  const muzzle = add(u.p, [0, 2.4, 0]), d = dist2d(o.p, muzzle), tf = d / 960, hit = w.r() < (o.kind === 'inf' ? 0.2 : 0.3) - d / 8000;
+  const muzzle = add(u.p, [0, 2.4, 0]), d = dist2d(o.p, muzzle), tf = d / 960, hit = w.r() < (o.kind === 'inf' ? 0.2 : 0.3) - d / 3500;
   const to: V3 = add(o.p, [(w.r() - 0.5) * (hit ? 2 : 18), hit ? 1 : 0, (w.r() - 0.5) * (hit ? 2 : 18)]);
   w.fx.push({ k: 'cannon', unit: u.id, p: muzzle, dir: norm(sub(to, muzzle)), to, tf }); w.stats.rounds++;
   const by = byName(u);

@@ -72,7 +72,7 @@ const radial = (stops: [number, string][]) => (g: CanvasRenderingContext2D, s: n
 const texSoft = canvasTex('soft', 64, radial([[0, 'rgba(255,255,255,1)'], [0.35, 'rgba(255,255,255,.55)'], [1, 'rgba(255,255,255,0)']]));
 const texFlare = canvasTex('flare', 64, radial([[0, 'rgba(255,255,255,1)'], [0.15, 'rgba(255,235,190,.9)'], [0.4, 'rgba(255,160,60,.3)'], [1, 'rgba(255,120,20,0)']]));
 const texBlob = canvasTex('blob', 64, radial([[0, 'rgba(0,0,0,.55)'], [0.6, 'rgba(0,0,0,.3)'], [1, 'rgba(0,0,0,0)']]));
-const texScorch = canvasTex('scorch', 64, radial([[0, 'rgba(18,14,10,.9)'], [0.45, 'rgba(32,26,18,.6)'], [1, 'rgba(40,30,20,0)']]));
+const texScorch = canvasTex('scorch', 64, radial([[0, 'rgba(30,24,16,.62)'], [0.4, 'rgba(45,36,24,.35)'], [1, 'rgba(60,45,30,0)']]));
 const texSmoke = canvasTex('smoke', 128, (g, s) => {
   for (let i = 0; i < 22; i++) { const a = R() * 6.28, r = R() * s * 0.22, x = s / 2 + Math.cos(a) * r, y = s / 2 + Math.sin(a) * r, rad = s * (0.12 + R() * 0.16), k = 0.75 + R() * 0.25;
     const gr = g.createRadialGradient(x, y, 0, x, y, rad); gr.addColorStop(0, `rgba(${255 * k | 0},${255 * k | 0},${255 * k | 0},.5)`); gr.addColorStop(1, 'rgba(255,255,255,0)'); g.fillStyle = gr; g.beginPath(); g.arc(x, y, rad, 0, 7); g.fill(); }
@@ -87,22 +87,27 @@ let siteProps: SiteProp[] = [];
 // ===== الكاميرا: مايلة من فوق، تجمع الطرفين، تلاحق، ولقطة إصابة =====
 const cam = new FreeCamera('cam', new Vector3(0, 3000, -3000), scene);
 cam.inputs.clear(); cam.minZ = 2; cam.maxZ = 70000; cam.fov = 0.8;
-const view = { tx: -2600, tz: -450, dist: 3000, yaw: 0, pitch: -1, follow: 0, fDist: 0 };
-const pitchFor = (d: number) => lerp(0.5, 1.0, smooth(250, 6500, d));
+const view = { tx: -2300, tz: -380, dist: 1100, yaw: 0, pitch: -1, follow: 0, fDist: 0 };
+// D-018: المعركة القريبة: كاميرا مايلة 50° بعدسة ضيقة (تشبه المنظر الثابت، بدون سما)، ولما تبعّد تنتقل للمنظر العام
+const CLOSE_PITCH = 0.87, CLOSE_FOV = 0.42, WIDE_FOV = 0.8;
+const closeK = (d: number) => 1 - smooth(1300, 3000, d);
+const pitchFor = (d: number) => lerp(lerp(0.95, 1.12, smooth(3000, 7000, d)), CLOSE_PITCH, closeK(d));
 let camTarget = new Vector3(view.tx, 0, view.tz), camDist = view.dist, camPitch = pitchFor(view.dist), camYaw = 0;
-let trauma = 0, shakeT = 0, followBlend = 1, followFrom = new Vector3(), targetY = 0;
+let camFov = CLOSE_FOV, trauma = 0, shakeT = 0, followBlend = 1, followFrom = new Vector3(), targetY = 0;
 const portrait = () => canvas.clientWidth < canvas.clientHeight;
 function updateCamera(dt: number) {
   const k = 1 - Math.exp(-dt * 5);
   let tgt = new Vector3(view.tx, groundH(view.tx, view.tz) + targetY, view.tz), want = view.dist, pitch = view.pitch > 0 ? view.pitch : pitchFor(view.dist);
   const f = view.follow ? findEntity(view.follow) : null;
-  if (f) { tgt = v(f.p); want = view.fDist; pitch = f.air ? 0.2 : 0.42; view.tx = tgt.x; view.tz = tgt.z;
+  if (f) { tgt = v(f.p); want = view.fDist; pitch = f.air ? 0.2 : CLOSE_PITCH; view.tx = tgt.x; view.tz = tgt.z;
     if (f.air && f.vel && len(f.vel) > 5) view.yaw = camYaw + angDiff(camYaw, Math.atan2(f.vel[0], f.vel[2])) * (1 - Math.exp(-dt * 2)); }
   if (f) { followBlend = Math.min(1, followBlend + dt / 0.8); const e = followBlend * followBlend * (3 - 2 * followBlend); camTarget = Vector3.Lerp(followFrom, tgt, e); if (followBlend < 1) followFrom = Vector3.Lerp(followFrom, tgt, k * 0.5); }
   else camTarget = Vector3.Lerp(camTarget, tgt, k);
+  if (!(f && f.air)) pitch = Math.max(pitch, lerp(0.3, 0.78, closeK(want)));   // بالمعركة القريبة ما نخلي الكاميرا تنزل وتبين السما
   camDist = lerp(camDist, want, k); camPitch = lerp(camPitch, pitch, k); camYaw = camYaw + angDiff(camYaw, view.yaw) * k;
+  const fovW = f && f.air ? WIDE_FOV : lerp(WIDE_FOV, CLOSE_FOV, closeK(camDist)); camFov = lerp(camFov, fovW, k);
   // الشاشة بالطول: نثبت الزاوية الأفقية حتى ما يطلع الهدف برّا
-  cam.fovMode = portrait() ? FreeCamera.FOVMODE_HORIZONTAL_FIXED : FreeCamera.FOVMODE_VERTICAL_FIXED; cam.fov = portrait() ? 0.95 : 0.8;
+  cam.fovMode = portrait() ? FreeCamera.FOVMODE_HORIZONTAL_FIXED : FreeCamera.FOVMODE_VERTICAL_FIXED; cam.fov = portrait() ? camFov * 1.15 : camFov;
   const cp = Math.cos(camPitch) * camDist, pos = new Vector3(camTarget.x - Math.sin(camYaw) * cp, camTarget.y + Math.sin(camPitch) * camDist, camTarget.z - Math.cos(camYaw) * cp);
   pos.y = Math.max(pos.y, groundH(pos.x, pos.z) + 4);
   // إذا تلّة تسد النظر بين الكاميرا والهدف، نرفع الكاميرا
@@ -112,7 +117,7 @@ function updateCamera(dt: number) {
   cam.position.copyFrom(pos);
   cam.setTarget(camTarget.add(new Vector3(Math.sin(shakeT * 1.7) * sh, Math.sin(shakeT * 2.3) * sh, Math.sin(shakeT * 1.1) * sh)));
   // الظلال تتبع مكان الكاميرا
-  if (shadows) { const on = camDist < 1100; sun.shadowEnabled = on; if (on) { sun.position = camTarget.add(v(scale(SUN, 700))); sun.shadowFrustumSize = clamp(camDist * 1.3, 90, 1300); } }
+  if (shadows) { const on = camDist < 1500; sun.shadowEnabled = on; if (on) { sun.position = camTarget.add(v(scale(SUN, 700))); sun.shadowFrustumSize = clamp(camDist * Math.tan(camFov) * 2.2, 90, 1300); } }
 }
 // لمس
 const ptrs = new Map<number, { x: number; y: number }>();
@@ -124,7 +129,7 @@ canvas.addEventListener('pointermove', e => {
   if (ptrs.size === 1) {
     if (view.follow && moved > 12) endFollow(); if (view.follow) return;
     view.pitch = -1; targetY = 0;
-    const s = (camDist * 2 * Math.tan(0.4)) / canvas.clientHeight, fx = Math.sin(camYaw), fz = Math.cos(camYaw);
+    const s = (camDist * 2 * Math.tan(camFov / 2)) / canvas.clientHeight, fx = Math.sin(camYaw), fz = Math.cos(camYaw);
     view.tx += (-dx * fz + dy * fx / Math.sin(camPitch) * 0.9) * s; view.tz += (dx * fx + dy * fz / Math.sin(camPitch) * 0.9) * s;
     view.tx = clamp(view.tx, -6000, 6000); view.tz = clamp(view.tz, -6000, 6000);
   } else if (ptrs.size === 2) {
@@ -303,7 +308,7 @@ const EXC: [number, Color4][] = [[0, C4(1.5, 1.4, 1.3, 1)], [0.75, C4(1, 1, 1, 0
 const exS = new Pool('exS', 80, texExplo2, false, { sheet: SH_EX, life: [1.3, 1.7], size: [[0, 9], [1, 15]], colors: EXC, gravity: 1, spin: 0.15 });
 const exM = new Pool('exM', 60, texExplo1, false, { sheet: SH_EX, life: [1.8, 2.3], size: [[0, 20], [1, 32]], colors: EXC, gravity: 1.5, spin: 0.1 });
 const exL = new Pool('exL', 40, texExplo1, false, { sheet: SH_EX, life: [2.4, 3], size: [[0, 38], [1, 60]], colors: EXC, gravity: 2, spin: 0.08 });
-const screen = new Pool('screen', 2400, texCloud, false, { sheet: SH_CLOUD, life: [14, 22], size: [[0, 10], [0.3, 30], [1, 46]], gravity: 0.25, colors: [[0, C4(0.9, 0.9, 0.88, 0)], [0.08, C4(0.88, 0.88, 0.86, 0.62)], [0.8, C4(0.85, 0.85, 0.83, 0.4)], [1, C4(0.85, 0.85, 0.83, 0)]] });
+const screen = new Pool('screen', 3200, texCloud, false, { sheet: SH_CLOUD, life: [16, 24], size: [[0, 16], [0.3, 38], [1, 56]], gravity: 0.2, spin: 0.08, colors: [[0, C4(0.86, 0.86, 0.84, 0)], [0.1, C4(0.84, 0.84, 0.82, 0.36)], [0.8, C4(0.82, 0.82, 0.8, 0.24)], [1, C4(0.82, 0.82, 0.8, 0)]] });
 const screens: { p: V3; r: number; until: number }[] = [];
 const cloud = new Pool('cloud', 1400, texCloud, false, { sheet: SH_CLOUD,  life: [5, 10], size: [[0, 6], [0.3, 18], [1, 30]], damp: 0.86, gravity: 0.6, colors: [[0, C4(1.15, 1.12, 1.06, 0)], [0.04, C4(1.12, 1.1, 1.05, 0.8)], [1, C4(1, 0.98, 0.92, 0)]] });
 
@@ -323,7 +328,7 @@ const decalMat = new StandardMaterial('decalMat', scene); decalMat.diffuseTextur
 decal.material = decalMat; decal.isPickable = false; decal.alwaysSelectAsActiveMesh = true;
 let decals: number[] = [];
 function addDecal(p: V3, size: number) {
-  if (decals.length / 16 > 500) decals.splice(0, 16);
+  if (decals.length / 16 > 160) decals.splice(0, 16);
   const n = groundN(p[0], p[2], Math.max(3, size * 0.3)), q = new Quaternion(); Quaternion.FromUnitVectorsToRef(Vector3.UpReadOnly, new Vector3(n[0], n[1], n[2]), q);
   decals.push(...Matrix.Compose(new Vector3(size, 1, size), q.multiply(Quaternion.RotationAxis(Vector3.UpReadOnly, Math.random() * 6.28)), new Vector3(p[0], groundH(p[0], p[2]) + 0.3, p[2])).asArray());
   decal.thinInstanceSetBuffer('matrix', new Float32Array(decals), 16, false);
@@ -491,7 +496,7 @@ function handleFx(fx: Fx) {
       P.emit({ a: fx.p, n: Qn(big ? 22 * s : 8 * s + 3), spd: [10 * s, 38 * s], jit: 2 * s, up: fx.air ? 0 : 0.35 });
       (big ? smokeL : smokeS).emit({ a: fx.p, n: Qn(big ? 36 * s : 14 * s + 4), spd: [3 * s, 13 * s], jit: 3 * s, up: fx.air ? 0 : 0.5 });
       sparks.emit({ a: fx.p, n: Qn((fx.metal ? 45 : 26) * s), spd: [40, 140 * s], jit: 1 });
-      if (!fx.air) { dust.emit({ a: fx.p, n: Qn(14 * s + 4), spd: [8, 26 * s], up: 0.1, jit: 3 }); addDecal(fx.p, 8 + 12 * s); }
+      if (!fx.air) { dust.emit({ a: fx.p, n: Qn(14 * s + 4), spd: [8, 26 * s], up: 0.1, jit: 3 }); addDecal(fx.p, 4 + 7 * s); }
       flashLight(fx.p, 3 + 5 * s, 50 + 90 * s, 0.3 + 0.3 * s);
       trauma = Math.min(1, trauma + clamp(0.55 - camD(fx.p) / 3500, 0, 0.55) * s); sfx.boom(camD(fx.p), s); break;
     }
@@ -598,7 +603,7 @@ let costTimer = 0;
 function showCost(t: string, s: string) { $('costT').textContent = t; $('costS').textContent = s; $('cost').classList.remove('off'); clearTimeout(costTimer); costTimer = window.setTimeout(() => $('cost').classList.add('off'), 5500); }
 function burnFx(simDt: number) {
   for (let i = screens.length - 1; i >= 0; i--) { const sc = screens[i]; if (W.T > sc.until) { screens.splice(i, 1); continue; } const left = sc.until - W.T;
-    if (left > 12) screen.emit({ a: G(sc.p[0], sc.p[2], 6), n: Qn(simDt * 2.2 * sc.r / 30), spd: [0.5, 2], up: 0.3, jit: sc.r * 1.5 }); }
+    if (left > 12) screen.emit({ a: G(sc.p[0], sc.p[2], 7), n: Qn(simDt * 4 * sc.r / 30), spd: [0.4, 1.6], up: 0.2, jit: sc.r * 1.6 }); }
   for (const b of burning) { const age = W.T - b.t, k = clamp(1 - age / 200, 0.3, 1) * b.big;
     burnSmoke.emit({ a: add(b.p, [0, 2, 0]), n: Qn(12 * simDt * k * 3), spd: [3, 7], dir: norm([0.14, 1, 0.08]), spread: 0.2, jit: 2 * b.big });
     burnFire.emit({ a: add(b.p, [0, 1.5, 0]), n: Qn(10 * simDt * k * 2), spd: [1, 4], up: 1, jit: 1.5 * b.big }); }
@@ -611,7 +616,7 @@ const els = new Map<string, HTMLElement>();
 let marks: { p: V3; text: string; good: boolean; t: number }[] = [];
 let selected = 0;
 function labelItems(): Item[] {
-  const out: Item[] = [], near = camDist < 2600;
+  const out: Item[] = [], near = camDist < 650;
   for (const s of SITES) out.push({ key: 's' + s.id, text: s.name, cls: 'site', p: add(s.p, [0, 30, 0]), prio: 1 });
   if (near) for (const u of W.units) if (u.state !== 'mounted' && !(u.kind === 'inf' && !u.alive)) out.push({ key: 'u' + u.id, text: u.alive ? `${u.name} · ${SIDE_AR[u.side]}${u.kind === 'inf' || u.kind === 'kornet' ? ` (${u.men})` : ''}${u.house >= 0 ? ' 🏠' : ''}` : `${u.name} (محطّم)`, cls: `${u.side}${u.alive ? '' : ' dead'}`, p: add(u.p, [0, u.kind === 'patriot' || u.kind === 's400' ? 17 : 9, 0]), prio: u.alive ? 3 : 0, follow: u.id });
   else {
@@ -682,7 +687,7 @@ function findEntity(id: number): { p: V3; vel?: V3; air: boolean; name: string; 
 }
 function startFollow(id: number, dist?: number) {
   const f = findEntity(id); if (!f) return;
-  view.follow = id; selected = id; view.fDist = dist ?? (f.air ? 34 : 30); followBlend = 0; followFrom = camTarget.clone();
+  view.follow = id; selected = id; view.fDist = dist ?? (f.air ? 34 : 110 * PF()); followBlend = 0; followFrom = camTarget.clone();
   const a = W.air.find(x => x.id === id); if (a) view.yaw = Math.atan2(a.v[0], a.v[2]);
   ($('follow') as HTMLElement).hidden = false; ($('bottom') as HTMLElement).hidden = true;
 }
@@ -707,40 +712,43 @@ function overview(force = false) {
   const gap = lead ? dist2d(lead.p, line) : 9999, drone = W.air.find(a => a.kind === 'shahed' && dist2d(a.p, [-1830, 0, -350]) < 900);
   const b = beat++ % 4;
   if (force || !lead) return twoShot(lead ? lead.p : [-3600, 0, -400], line, 0, 0, true);
-  if (drone && b % 2 === 1) return looseShot([-1830, 4, -350], 210, 0.36, Math.atan2(drone.p[0] + 1830, drone.p[2] + 350) + Math.PI);
-  if (b === 0 || b === 2 && gap > 1500) return looseShot(add(lead.p, [0, 3, 0]), 190, 0.36, lead.yaw + Math.PI * 0.8);
-  if (b === 1) return looseShot([-2085, 3, -350], 170, 0.34, -Math.PI / 2 + 0.6);
+  if (drone && b % 2 === 1) return looseShot([-1830, 4, -350], 260, CLOSE_PITCH, Math.atan2(drone.p[0] + 1830, drone.p[2] + 350) + Math.PI);
+  if (b === 0 || b === 2 && gap > 700) return looseShot(add(lead.p, [0, 3, 0]), 230, CLOSE_PITCH, lead.yaw + Math.PI * 0.8);
+  if (b === 1) return looseShot([-1700, 3, -340], 260, CLOSE_PITCH, -Math.PI / 2 + 0.5);
   twoShot(lead.p, line, 0, 0, true);
 }
-function looseShot(p: V3, dist: number, pitch: number, yaw: number) { endFollow(); view.tx = p[0]; view.tz = p[2]; targetY = p[1]; view.dist = dist; view.pitch = pitch; view.yaw = yaw; }
+const PF = () => (portrait() ? 1.7 : 1);   // بالطول العدسة أضيق أفقياً، فنبعّد شوية
+function looseShot(p: V3, dist: number, pitch: number, yaw: number) { endFollow(); view.tx = p[0]; view.tz = p[2]; targetY = p[1]; view.dist = dist * 0.75 * PF(); view.pitch = pitch; view.yaw = yaw; }
 function twoShot(a: V3, b: V3, prio: number, holdReal: number, force = false) {
   if (!force && !claim(prio, holdReal)) return;
   endFollow(); const m = scale(add(a, b), 0.5), s = Math.max(120, dist2d(a, b)), line = Math.atan2(b[0] - a[0], b[2] - a[2]);
   view.tx = m[0]; view.tz = m[2]; targetY = 0; view.pitch = -1;
-  if (portrait()) { view.yaw = line; view.dist = s * 1.05 + 220; } else { view.yaw = line + Math.PI / 2; view.dist = s * 0.72 + 180; }
+  if (portrait()) { view.yaw = line; view.dist = Math.min(900, s * 1.1 + 220); } else { view.yaw = line + Math.PI / 2; view.dist = Math.min(800, s * 0.85 + 150); }
 }
 function closeShot(p: V3, from: V3 | null, dist: number, pitch: number, prio: number, holdReal: number) {
   if (!claim(prio, holdReal)) return false;
-  endFollow(); view.tx = p[0]; view.tz = p[2]; targetY = p[1] - groundH(p[0], p[2]); view.dist = dist; view.pitch = pitch;
+  endFollow(); view.tx = p[0]; view.tz = p[2]; targetY = p[1] - groundH(p[0], p[2]); view.dist = dist * 0.8 * PF(); view.pitch = pitch;
   if (from) view.yaw = Math.atan2(p[0] - from[0], p[2] - from[2]) + 0.55;
   return true;
 }
 function impactCam(p: V3, from: V3 | null, tImpact: number) {
   if (nowS() < impactReady) return;                                 // حد أقصى لقطة إصابة كل 15 ثانية
-  if (!closeShot(p, from, from ? 80 : 190, from ? 0.32 : 0.42, 8, 3.2)) return;
+  if (!closeShot(p, from, from ? 170 : 360, CLOSE_PITCH, 8, 3.2)) return;
   impactReady = nowS() + 15; slowWins.push({ t0: tImpact - 0.35, t1: tImpact + 1.1 });
 }
+// D-018: المخرج يركّز على المعركة الأرضية؛ إطلاقات الدفاع الجوي البعيدة يتابعها اللاعب بالأسهم
+const AIRCAM = false as boolean;
 function directorFx(fx: Fx) {
   if (!auto) return;
   switch (fx.k) {
     case 'killshot': { const sh = W.units.find(u => u.id === fx.shooter), tg = W.units.find(u => u.id === fx.target); if (sh && tg) impactCam(L(add(tg.p, [0, 2, 0])), sh.p, W.T + fx.tf); break; }
-    case 'threat': { const a = W.air.find(x => x.id === fx.air); if (a && a.kind !== 'iskander') impactCam(L(add(a.aim, [0, 12, 0])), null, W.T + fx.tti); break; }
-    case 'plaunch': if (claim(6, 1.2)) { closeShot(fx.muzzle, add(fx.muzzle, scale(fx.dir, -50)), 85, 0.28, 6, 1.2); pendingFollow = { id: fx.air, at: nowS() + 0.9, dist: 40 }; } break;
-    case 'eject': if (claim(7, 3)) { endFollow(); view.tx = fx.p[0]; view.tz = fx.p[2]; targetY = 8; view.dist = 70; view.pitch = 0.2; view.yaw = Math.atan2(fx.dir[0], fx.dir[2]) + Math.PI / 2; pendingFollow = { id: fx.air, at: nowS() + 2.2, dist: 45 }; } break;
+    case 'threat': { const a = W.air.find(x => x.id === fx.air); if (a && a.kind !== 'iskander' && dist2d(a.aim, [-1800, 0, -340]) < 900) impactCam(L(add(a.aim, [0, 12, 0])), null, W.T + fx.tti); break; }
+    case 'plaunch': if (AIRCAM && claim(6, 1.2)) { closeShot(fx.muzzle, add(fx.muzzle, scale(fx.dir, -50)), 190, 0.6, 6, 1.2); pendingFollow = { id: fx.air, at: nowS() + 0.9, dist: 40 }; } break;
+    case 'eject': if (AIRCAM && claim(7, 3)) { endFollow(); view.tx = fx.p[0]; view.tz = fx.p[2]; targetY = 8; view.dist = 70; view.pitch = 0.2; view.yaw = Math.atan2(fx.dir[0], fx.dir[2]) + Math.PI / 2; pendingFollow = { id: fx.air, at: nowS() + 2.2, dist: 45 }; } break;
     case 'intercept': if (view.follow && fx.big) slowWins.push({ t0: W.T - 0.05, t1: W.T + 0.9 }); break;
     case 'rlaunch': { const g = W.units.find(u => u.id === fx.unit); if (g && W.T - lastSalvoShot > 30) { lastSalvoShot = W.T; twoShot(g.p, [-2000, 0, HIGHWAY_Z], 5, 6); } break; }
-    case 'phase': { const vc: V3 = [-1600, 0, HIGHWAY_Z]; if (fx.phase === 'counter') { closeShot(G(fx.p[0], fx.p[2], 3), [-760, 0, 380], 260, 0.3, 7, 8); } else twoShot(fx.p, vc, 5, 7); break; }
-    case 'dismount': if (claim(4, 6)) { endFollow(); view.tx = fx.p[0]; view.tz = fx.p[2]; targetY = 2; view.dist = 90; view.pitch = 0.3; view.yaw = Math.PI / 2 + 0.4; } break;
+    case 'phase': { const vc: V3 = [-1600, 0, HIGHWAY_Z]; if (fx.phase === 'counter') { closeShot(G(fx.p[0], fx.p[2], 3), [-760, 0, 380], 520, CLOSE_PITCH, 7, 8); } else twoShot(fx.p, vc, 5, 7); break; }
+    case 'dismount': if (claim(4, 6)) { endFollow(); view.tx = fx.p[0]; view.tz = fx.p[2]; targetY = 2; view.dist = 230; view.pitch = CLOSE_PITCH; view.yaw = Math.PI / 2 + 0.4; } break;
     case 'atgm': if (!fx.rpg && claim(6, 1)) { pendingFollow = { id: fx.air, at: nowS() + 0.3, dist: 30 }; } break;
     case 'mark': if (fx.text.includes('انتشر') || fx.text.includes('ينسحب')) { const col = W.units.find(u => u.side === 'en' && u.alive && u.group === 'رتل مدرّع معادي'); if (col) twoShot(col.p, [-2050, 0, -350], 4, 6); } break;
     default: break;
@@ -851,7 +859,7 @@ function start() {
 document.querySelectorAll<HTMLButtonElement>('#spd button').forEach(b => b.onclick = () => { simSpeed = +b.dataset.s!; document.querySelectorAll('#spd button').forEach(x => x.setAttribute('aria-pressed', String(x === b))); });
 $('bStart').onclick = start; $('bAgain').onclick = start;
 $('bExplore').onclick = () => { ($('end') as HTMLElement).hidden = true; setAuto(false); toast('حرّك الخريطة واضغط على أي اسم'); };
-$('bBack').onclick = () => { setAuto(false); endFollow(); }; $('bHome').onclick = () => { setAuto(false); endFollow(); view.tx = -1600; view.tz = -300; view.dist = 5200; view.yaw = 0; view.pitch = -1; targetY = 0; };
+$('bBack').onclick = () => { setAuto(false); endFollow(); }; $('bHome').onclick = () => { setAuto(false); endFollow(); view.tx = -1900; view.tz = -330; view.dist = 1250; view.yaw = 0; view.pitch = -1; targetY = 0; };
 $('bAuto').onclick = () => setAuto(!auto);
 $('bRotL').onclick = () => (view.yaw += 0.5); $('bRotR').onclick = () => (view.yaw -= 0.5);
 $('bQual').onclick = () => { setQuality(!HQ); toast(HQ ? 'جودة عالية: ظلال وأضواء انفجارات' : 'جودة خفيفة: أسرع على التلفون'); };

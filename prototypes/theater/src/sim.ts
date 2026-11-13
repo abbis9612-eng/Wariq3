@@ -41,6 +41,7 @@ export interface Unit {
   // v4
   role: Role; supp: number; pose: Pose; men: number; menMax: number; dead: V3[]; house: number; mount: number; carry: number;
   fire: V3[]; hide: V3 | null; fi: number; ammo: number; rpg: number; rpgCd: number; seenT: number; peekShots: number; aimT: number;
+  tur: number; aimId: number; aimSeen: number;   // TH5.2: البرج يلف وحده (زاوية مطلقة) ويصوّب على الهدف
 }
 export type AirKind = 'shahed' | 'kh101' | 'iskander' | 'pac2' | 'n48' | 'rocket' | 'shell' | 'atgm' | 'rpg' | 'smoke';
 export const AIR_AR: Record<AirKind, string> = { shahed: 'شاهد-136', kh101: 'كروز Kh-101', iskander: 'باليستي إسكندر', pac2: 'معترض PAC-2', n48: 'معترض 48N6 · S-400', rocket: 'صاروخ غراد', shell: 'قذيفة 122 ملم', atgm: 'صاروخ كورنيت', rpg: 'قذيفة RPG-7', smoke: 'قذيفة دخان' };
@@ -69,6 +70,7 @@ export type Fx =
   | { k: 'manDown'; unit: number; p: V3 }                                     // جندي انصاب
   | { k: 'dismount'; unit: number; p: V3 }
   | { k: 'kill'; unit: number; turret: boolean }
+  | { k: 'hit'; unit: number; p: V3; dir: V3; pen: boolean }                   // إصابة مركبة بدون تدمير: pen = خرقت (ضرر) لو ارتدت
   | { k: 'siteHit'; site: string; p: V3; big: boolean }
   | { k: 'threat'; air: number; tti: number }                                 // تهديد قريب يضرب (للمخرج)
   | { k: 'intercept'; p: V3; big: boolean }
@@ -108,7 +110,8 @@ export function newWorld(seed = 11): World {
     const u: Unit = { id: w.nextId++, kind, side, name: KIND_AR[kind], group, p: [...p] as V3, yaw: yawOf(dir), spd: 0, hp: sp.hp, alive: true, cd: 1 + w.r() * 3,
       target: 0, state: 'idle', goal: null, home: [...p] as V3, team: 0, slot: [0, 0, 0], cover: false, burst: 0, burstT: 0, shots: 0, firedT: -99, stateT: 0, burnT: 0,
       role: 'line', supp: 0, pose: 'stand', men: kind === 'inf' ? 7 : kind === 'kornet' ? 3 : 0, menMax: kind === 'inf' ? 7 : kind === 'kornet' ? 3 : 0, dead: [], house: -1, mount: 0, carry: 0,
-      fire: [], hide: null, fi: 0, ammo: kind === 'kornet' ? 4 : 0, rpg: kind === 'inf' ? 3 : 0, rpgCd: 0, seenT: -99, peekShots: 0, aimT: 0, ...extra };
+      fire: [], hide: null, fi: 0, ammo: kind === 'kornet' ? 4 : 0, rpg: kind === 'inf' ? 3 : 0, rpgCd: 0, seenT: -99, peekShots: 0, aimT: 0, tur: 0, aimId: 0, aimSeen: -99, ...extra };
+    u.tur = u.yaw;
     if (kind === 'inf' || kind === 'kornet') u.hp = u.men;
     w.units.push(u); return u;
   };
@@ -328,7 +331,7 @@ export function step(w: World, dt: number) {
   w.T += dt;
   for (const s of w.schedule) if (!s.done && w.T >= s.t) { s.done = true; s.f(w); }
   if (w.T - w.spotT > 1) { w.spotT = w.T; spot(w); commanders(w); }
-  for (const u of w.units) if (u.alive) { u.supp = Math.max(0, u.supp - dt * (isVeh(u) ? 0.35 : 0.16)); behave(w, u, dt); move(w, u, dt); fight(w, u, dt); }
+  for (const u of w.units) if (u.alive) { u.supp = Math.max(0, u.supp - dt * (isVeh(u) ? 0.35 : 0.16)); behave(w, u, dt); move(w, u, dt); fight(w, u, dt); turret(w, u, dt); }
   air(w, dt);
   w.smoke = w.smoke.filter(s => s.until > w.T);
   checkEnd(w);
@@ -644,8 +647,10 @@ function fight(w: World, u: Unit, dt: number) {
   let best: Unit | null = null, bs = -1, bv = 0;
   for (const o of cands) { const v = visOf(w, u, o); if (v <= 0) continue; const s = v * (isTank(o) ? (isTank(u) ? 3 : 0.8) : o.kind === 'bmp' ? 2.2 : o.kind === 'inf' ? (u.kind === 'bmp' ? 2.5 : 1.2) : 1) * (1.6 - dist2d(o.p, u.p) / spec.range); if (s > bs) { bs = s; best = o; bv = v; } }
   if (!best) return;
-  const bd = dist2d(best.p, u.p), dir = norm(sub(best.p, u.p)), want = yawOf(dir), da = angDiff(u.yaw, want);
-  if (Math.abs(da) > 0.12 && u.kind !== 'bmp') { u.yaw += clamp(da, -spec.turn * dt, spec.turn * dt); return; }
+  const bd = dist2d(best.p, u.p), dir = norm(sub(best.p, u.p)), want = yawOf(dir);
+  // البرج يلف للهدف (الجسم يبقى بمكانه ورا الساتر)، وما يرمي إلا لما يصير موجّه
+  u.aimId = best.id; u.aimSeen = w.T;
+  if (Math.abs(angDiff(u.tur, want)) > (u.kind === 'bmp' ? 0.1 : 0.04)) return;
   if (u.kind === 'bmp' || (isTank(u) && best.kind === 'inf' && bd < 500 && w.r() < 0.7)) {
     // مدفع 30 ملم / رشاش محوري: رشقة
     u.target = best.id; u.burst = u.kind === 'bmp' ? 4 + Math.floor(w.r() * 4) : 6 + Math.floor(w.r() * 5); u.burstT = 0; u.cd = (u.kind === 'bmp' ? spec.reload : 3) * (0.8 + w.r() * 0.5); u.firedT = w.T; return;
@@ -668,9 +673,22 @@ function fight(w: World, u: Unit, dt: number) {
     w.fx.push({ k: 'boom', p: impact, size: hit ? 0.7 : 0.45, air: false, metal: hit && tgt.kind !== 'inf' });
     suppress(w, impact, 30, 0.45, side);
     if (tgt.kind === 'inf') { if (tgt.house >= 0) { hitHouse(w, tgt.house, 1); if (w.r() < 0.6) casualty(w, tgt, 1 + Math.floor(w.r() * 2), by); } else casualty(w, tgt, Math.round((tgt.pose === 'prone' ? 0.35 : 0.75) * (0.2 + 0.8 * w.r())), by); }
-    else if (hit) damage(w, tgt, dmg, by);
+    else if (hit) { if (tgt.hp - dmg > 0) w.fx.push({ k: 'hit', unit: tgt.id, p: impact, dir, pen: !(isTank(tgt) && !flank && w.r() < 0.5) }); damage(w, tgt, dmg, by); }
   } });
   if (u.side === 'en' && isTank(u) && w.r() < 0.35) { u.state = 'scoot'; u.stateT = 0; u.goal = add(u.p, scale(dir, -22)); w.schedule.push({ t: w.T + 9, f: () => { if (u.alive && u.state === 'scoot') { u.state = 'overwatch'; u.goal = null; } } }); }
+}
+// ----- البرج: يتابع آخر هدف، وإذا ماكو يدوّر على أقرب عدو معروف، وإلا يرجع لقدّام -----
+const TRAV: Partial<Record<Kind, number>> = { abrams: 0.7, t72: 0.45, bmp: 0.6 };   // راد/ثانية (أبرامز ~40°/ث، T-72 ~24°/ث)
+function turret(w: World, u: Unit, dt: number) {
+  const tr = TRAV[u.kind]; if (!tr) return;
+  let want = u.yaw;
+  const a = w.T - u.aimSeen < 3 || u.burst > 0 ? w.units.find(x => x.id === (u.burst > 0 ? u.target : u.aimId) && x.alive) : undefined;
+  if (a) want = yawOf(sub(a.p, u.p));
+  else if (u.state !== 'march' && u.state !== 'mounted') {
+    let bd = SPEC[u.kind].range * 1.3;
+    for (const id of w.known[u.side].keys()) { const o = w.units.find(x => x.id === id); if (!o || !o.alive || o.state === 'mounted') continue; const d = dist2d(o.p, u.p); if (d < bd && (isVeh(o) || d < 500)) { bd = d; want = yawOf(sub(o.p, u.p)); } }
+  }
+  u.tur += clamp(angDiff(u.tur, want), -tr * dt, tr * dt);
 }
 function infFire(w: World, u: Unit) {
   if (u.pose === 'run' && u.state === 'rush') return;

@@ -1,0 +1,10 @@
+import { createRequire } from 'module'; const require = createRequire(import.meta.url);
+const { chromium } = require('playwright');
+const b = await chromium.launch({ args: ['--use-angle=swiftshader','--enable-unsafe-swiftshader'] });
+const p = await b.newPage({ viewport: { width: 390, height: 844 } });
+const errs = []; p.on('pageerror', e => errs.push(e.message)); p.on('console', m => m.type() === 'error' && errs.push(m.text()));
+await p.goto(process.argv[2]);
+await p.waitForFunction(() => window.__state && window.__state.T > 30, null, { timeout: 400000 });
+await p.screenshot({ path: process.argv[3] });
+console.log('state', JSON.stringify(await p.evaluate(() => ({ T: window.__state.T, log: window.__state.log, stats: window.__state.stats }))).slice(0, 300), '\nerrors:', errs.length ? errs.join(' | ') : 'none');
+await b.close();

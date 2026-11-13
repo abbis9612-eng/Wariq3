@@ -1,0 +1,118 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>مسرح عمليات بغداد</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Arabic:wght@400;600&family=Reem+Kufi:wght@500;700&display=swap" rel="stylesheet">
+<style>
+/* طابع اللعبة: نحاسي + زيتوني؛ أخضر = العراق، أحمر = العدو */
+:root{--bg:#0b0d0a;--panel:rgba(16,19,14,.84);--line:rgba(235,229,210,.16);--ink:#ebe5d2;--dim:#a7a892;--brass:#d2ab33;--brass-ink:#1c1a10;
+ --iq:#5fbf7a;--en:#e0553c;--site:#f0e6c8;--display:"Reem Kufi","IBM Plex Sans Arabic",sans-serif;--body:"IBM Plex Sans Arabic","Noto Sans Arabic",Tahoma,sans-serif;color-scheme:dark}
+*{box-sizing:border-box;margin:0}
+[hidden]{display:none!important}
+html,body{height:100%;background:var(--bg);color:var(--ink);font:400 14px/1.5 var(--body);overflow:hidden;-webkit-tap-highlight-color:transparent;user-select:none}
+button{font:inherit;color:inherit;border:0;background:none;cursor:pointer}
+button:focus-visible{outline:2px solid var(--brass);outline-offset:2px}
+#c{position:fixed;inset:0;width:100%;height:100%;display:block;touch-action:none;outline:none}
+#labels{position:fixed;inset:0;pointer-events:none;overflow:hidden;z-index:2}
+.lb{position:absolute;left:0;top:0;white-space:nowrap;font-size:11.5px;line-height:1;padding:4px 7px 4px 8px;border-radius:10px;background:rgba(10,12,9,.72);border:1px solid var(--line);
+ display:flex;align-items:center;gap:5px;pointer-events:auto;cursor:pointer;will-change:transform;transform-origin:50% 100%}
+.lb i{width:7px;height:7px;border-radius:50%;flex:none}
+.lb.iq i{background:var(--iq)}.lb.en i{background:var(--en)}.lb.en{border-color:rgba(224,85,60,.45)}.lb.iq{border-color:rgba(95,191,122,.35)}
+.lb.air{font-weight:600}.lb.air.en{background:rgba(70,16,10,.78)}
+.lb.site{background:none;border:0;color:var(--site);font:600 12.5px var(--display);text-shadow:0 1px 4px #000,0 0 2px #000;pointer-events:none}
+.lb.site i{background:var(--site);border-radius:1px;transform:rotate(45deg);width:6px;height:6px}
+.lb.group{font-size:12px;font-weight:600;padding:5px 9px}
+.lb.dead{opacity:.55;text-decoration:line-through}
+.lb.mark{background:none;border:0;font:700 14px var(--display);text-shadow:0 1px 6px #000,0 0 3px #000;pointer-events:none}
+.lb.mark.good{color:#8fe0a2}.lb.mark.bad{color:#ff8a70}
+.lb.sel{outline:2px solid var(--brass)}
+.top{position:fixed;top:0;inset-inline:0;z-index:3;display:flex;align-items:center;gap:8px;padding:calc(8px + env(safe-area-inset-top,0px)) max(10px,env(safe-area-inset-right,0px)) 18px max(10px,env(safe-area-inset-left,0px));background:linear-gradient(rgba(0,0,0,.66),transparent)}
+.top h1{font:700 16px/1.2 var(--display);flex:1;min-width:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.top h1 small{display:block;font:400 11px var(--body);color:var(--dim)}
+#clock{font:600 15px ui-monospace,monospace;direction:ltr;color:var(--brass);min-width:46px;text-align:center}
+.spd{display:flex;background:rgba(0,0,0,.5);border:1px solid var(--line);border-radius:7px;overflow:hidden}
+.spd button{padding:6px 9px;font-size:12.5px;min-height:34px}.spd button[aria-pressed="true"]{background:var(--brass);color:var(--brass-ink);font-weight:600}
+#fps{position:fixed;z-index:3;top:calc(48px + env(safe-area-inset-top,0px));left:50%;transform:translateX(-50%);font:600 10.5px ui-monospace,monospace;color:var(--dim);background:rgba(0,0,0,.45);padding:2px 6px;border-radius:4px;direction:ltr;pointer-events:none}
+.side-btns{position:fixed;z-index:3;inset-inline-end:calc(10px + env(safe-area-inset-right,0px));top:calc(62px + env(safe-area-inset-top,0px));display:flex;flex-direction:column;gap:6px}
+.side-btns button{width:40px;height:40px;border-radius:8px;background:rgba(0,0,0,.55);border:1px solid var(--line);font-size:18px}
+.side-btns button[aria-pressed="true"]{border-color:var(--brass);box-shadow:0 0 0 1px var(--brass) inset}
+.bottom{position:fixed;z-index:3;bottom:0;inset-inline:0;padding:14px max(10px,env(safe-area-inset-right,0px)) calc(10px + env(safe-area-inset-bottom,0px)) max(10px,env(safe-area-inset-left,0px));background:linear-gradient(transparent,rgba(0,0,0,.7));display:flex;flex-direction:column;gap:6px;pointer-events:none}
+.bottom>*{pointer-events:auto}
+#ticker{display:flex;flex-direction:column;gap:3px;max-width:560px}
+#ticker button{display:flex;gap:6px;align-items:baseline;text-align:start;font-size:12.5px;background:rgba(10,12,9,.62);border:1px solid var(--line);border-radius:6px;padding:4px 8px;transition:opacity .4s}
+#ticker button b{font-weight:600}#ticker .t{font:600 11px ui-monospace,monospace;color:var(--dim);direction:ltr}
+#ticker .g{color:#8fe0a2}#ticker .x{color:#ff8a70}#ticker .n{color:var(--dim)}
+#tally{display:flex;gap:6px;flex-wrap:wrap}
+#tally span{background:rgba(10,12,9,.7);border:1px solid var(--line);border-radius:6px;padding:4px 8px;font-size:12px;font-variant-numeric:tabular-nums}
+#tally b{font-weight:600}#tally .g{color:#8fe0a2}#tally .x{color:#ff8a70}
+#follow{position:fixed;z-index:4;inset-inline:max(10px,env(safe-area-inset-left,0px));bottom:calc(10px + env(safe-area-inset-bottom,0px));max-width:420px;margin-inline:auto;background:var(--panel);border:1px solid var(--line);border-top:2px solid var(--brass);border-radius:10px;padding:10px 12px;display:flex;gap:10px;align-items:center;backdrop-filter:blur(5px)}
+#follow .info{flex:1;min-width:0}#follow b{font:700 15px var(--display);display:block}#follow small{color:var(--dim);font-size:12px;font-variant-numeric:tabular-nums}
+#follow button{background:var(--brass);color:var(--brass-ink);font-weight:600;padding:8px 12px;border-radius:6px;white-space:nowrap}
+.card{position:fixed;z-index:6;inset-inline:max(16px,env(safe-area-inset-left,0px));top:50%;transform:translateY(-50%);max-width:460px;margin:auto;background:var(--panel);border:1px solid var(--line);border-top:2px solid var(--brass);border-radius:10px;padding:18px;backdrop-filter:blur(6px);max-height:86vh;overflow:auto}
+.card h2{font:700 24px/1.3 var(--display);margin:8px 0 6px}
+.card p{color:var(--dim);font-size:13.5px;margin-top:6px}
+.card ul{margin:8px 0 0;padding-inline-start:18px;color:var(--dim);font-size:13px}.card li{margin-top:3px}.card li b{color:var(--ink)}
+.stamp{display:inline-block;border:2px solid var(--en);color:var(--en);padding:0 10px;font:600 12px/1.6 var(--display);transform:rotate(-3deg);border-radius:3px}
+.go{display:block;width:100%;margin-top:14px;background:var(--brass);color:var(--brass-ink);font-weight:600;font-size:16px;padding:12px;border-radius:6px}
+.go:disabled{opacity:.5}
+.row{display:flex;gap:8px;margin-top:10px}.row button{flex:1;border:1px solid var(--line);padding:10px;border-radius:6px}
+.legend{display:flex;gap:12px;margin-top:10px;font-size:12.5px}.legend i{display:inline-block;width:9px;height:9px;border-radius:50%;margin-inline-end:5px}
+#load{color:var(--brass);font-size:12.5px;margin-top:10px;font-variant-numeric:tabular-nums}
+.sum{display:grid;grid-template-columns:1fr 1fr;gap:6px;margin-top:10px}.sum div{background:rgba(255,255,255,.04);border:1px solid var(--line);border-radius:6px;padding:7px 9px;font-size:12px;color:var(--dim)}
+.sum b{display:block;font:700 17px var(--display);color:var(--ink);font-variant-numeric:tabular-nums}
+#credits a{color:var(--brass)}#credits p{font-size:12.5px}
+#toast{position:fixed;z-index:7;top:calc(70px + env(safe-area-inset-top,0px));left:50%;transform:translateX(-50%);background:var(--ink);color:var(--bg);padding:7px 13px;border-radius:6px;font-size:13px;max-width:88%;text-align:center;opacity:0;transition:opacity .25s;pointer-events:none}
+#toast.show{opacity:1}
+@media (prefers-reduced-motion:reduce){#toast,#ticker button{transition:none}}
+</style>
+</head>
+<body>
+<canvas id="c" aria-label="مسرح عمليات ثلاثي الأبعاد لبغداد"></canvas>
+<div id="labels"></div>
+<div class="top" id="top" hidden>
+  <h1>مسرح العمليات — بغداد<small id="phase">الجو والأرض</small></h1>
+  <div id="clock">0:00</div>
+  <div class="spd" id="spd"><button data-s="0" aria-label="إيقاف">⏸</button><button data-s="1">×1</button><button data-s="2" aria-pressed="true">×2</button><button data-s="4">×4</button></div>
+</div>
+<div id="fps" hidden>—</div>
+<div class="side-btns" id="sideBtns" hidden>
+  <button id="bAuto" aria-label="كاميرا تلقائية" aria-pressed="true">🎬</button><button id="bRotL" aria-label="لف يسار">⟲</button><button id="bRotR" aria-label="لف يمين">⟳</button>
+  <button id="bHome" aria-label="رجوع للمنظر الكامل">◎</button><button id="bMute" aria-label="الصوت">🔊</button><button id="bCred" aria-label="المصادر">ⓘ</button>
+</div>
+<div class="bottom" id="bottom" hidden><div id="ticker"></div><div id="tally"></div></div>
+<div id="follow" hidden><div class="info"><b id="fName"></b><small id="fInfo"></small></div><button id="bBack">رجوع للخريطة</button></div>
+<div class="card" id="intro">
+  <span class="stamp">تجربة 3D — رقم 2</span>
+  <h2>مسرح عمليات بغداد</h2>
+  <p>هجوم على بغداد من الجو والأرض: مسيّرات شاهد وصواريخ كروز تحاول توصل لأهداف بالمدينة، ورتل دبابات معادي جاي على طريق أبو غريب. دفاعك: باتريوت، دوشكات على بيكبات، دبابات أبرامز، ومدفعية.</p>
+  <ul>
+    <li><b>إصبع واحد:</b> تحرّك بالخريطة. <b>إصبعين:</b> قرّب وبعّد ولف.</li>
+    <li><b>اضغط على أي اسم</b> (دبابة، صاروخ، مسيّرة) والكاميرا تنزل تلاحقه.</li>
+    <li>من بعيد تشوف المجموعات، ولما تقرّب تطلع أسماء كل وحدة.</li>
+    <li><b>🎬 الكاميرا التلقائية</b> تاخذك لكل حدث مهم. تلمس الشاشة؟ توقف، وترجعها بنفس الزر.</li>
+  </ul>
+  <div class="legend"><span><i style="background:var(--iq)"></i>العراق</span><span><i style="background:var(--en)"></i>العدو</span><span><i style="background:var(--site);border-radius:1px"></i>مواقع مهمة</span></div>
+  <p id="load">يحمّل الخريطة والمجسمات…</p>
+  <button class="go" id="bStart" disabled>▶ ابدأ المعركة</button>
+</div>
+<div class="card" id="end" hidden>
+  <span class="stamp" style="border-color:var(--brass);color:var(--brass)">نتيجة المعركة</span>
+  <h2 id="endTitle">انصد الهجوم</h2>
+  <div class="sum" id="endSum"></div>
+  <p>باللعبة الحقيقية، هذا اللي تشوفه وقت الحرب، بأرقام جيشك وجيش عدوك. والنتيجة (الخسائر، الضرر، الذخيرة) ترجع للتقرير الشهري.</p>
+  <div class="row"><button id="bAgain">↺ شوفها مرة ثانية</button><button id="bExplore">تجوّل بالخريطة</button></div>
+</div>
+<div class="card" id="credits" hidden>
+  <h2>المصادر</h2>
+  <p>كل المجسمات من Sketchfab برخصة <a href="https://creativecommons.org/licenses/by/4.0/" target="_blank" rel="noopener">CC BY 4.0</a>:</p>
+  <p>أبرامز M1A1 وT-72B3 وباتريوت: Muhamad Mirza Arrafi · بيكب تويوتا وراجمة غراد: LM3D · مدفع D-30: 42manako · دوشكا: hensyu_leader · شاهد-136: faintastic18 · Kh-101: xFORTUNAx.</p>
+  <p>المدينة والنهر والطرق والدخان والنار والأصوات مصنوعة بالكود. الخريطة مبسّطة وتقريبية. المحرك: Babylon.js.</p>
+  <div class="row"><button id="bCredClose">تمام</button></div>
+</div>
+<div id="toast" role="status"></div>
+<script type="module" src="./src/main.ts"></script>
+</body>
+</html>

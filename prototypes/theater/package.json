@@ -1,0 +1,23 @@
+{
+  "name": "wariq-theater-prototype",
+  "private": true,
+  "version": "0.0.1",
+  "type": "module",
+  "scripts": {
+    "models": "node tools/glb2json.mjs",
+    "dev": "npm run models && vite",
+    "build": "npm run models && vite build",
+    "typecheck": "tsc --noEmit",
+    "test:sim": "node tools/simtest.ts"
+  },
+  "dependencies": {
+    "@babylonjs/core": "9.33.1",
+    "@babylonjs/loaders": "9.33.1",
+    "@babylonjs/materials": "9.33.1"
+  },
+  "devDependencies": {
+    "@gltf-transform/cli": "4.5.1",
+    "typescript": "7.0.2",
+    "vite": "8.3.5"
+  }
+}

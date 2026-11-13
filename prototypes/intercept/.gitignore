@@ -1,2 +1,3 @@
 models/*.gltf.json
 shots/
+tools/cand/

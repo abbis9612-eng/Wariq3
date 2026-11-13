@@ -5,6 +5,10 @@
 | textures/sand.webp, sand_nor.webp | gravelly_sand | Poly Haven | CC0 | https://polyhaven.com/a/gravelly_sand |
 | textures/macro.webp | dirt_aerial_02 | Poly Haven | CC0 | https://polyhaven.com/a/dirt_aerial_02 |
 | textures/farm.webp | farm_soil | Poly Haven | CC0 | https://polyhaven.com/a/farm_soil |
+| textures/rock.webp | cliff_side | Poly Haven | CC0 | https://polyhaven.com/a/cliff_side |
+| textures/pebble.webp | dry_river_pebbles | Poly Haven | CC0 | https://polyhaven.com/a/dry_river_pebbles |
+| textures/road.webp (طرق + جدران البيوت) | brown_mud_dry | Poly Haven | CC0 | https://polyhaven.com/a/brown_mud_dry |
+| textures/land_h.png, land_a.webp, land_b.webp | مولّدة بـ `tools/genterrain.mjs` (ارتفاع، اتجاه السطح، ظل، تعتيم) | المشروع | — | — |
 | textures/fx_explo1.webp, fx_explo2.webp | Explosion01, Explosion02 (5×5) | Unity Labs Paris | CC0 | https://unity.com/blog/engine-platform/free-vfx-image-sequences-flipbooks |
 | textures/fx_fire.webp | FireBall02 (8×8) | Unity Labs Paris | CC0 | نفس الرابط |
 | textures/fx_cloud.webp | Cloud02 (8×8) | Unity Labs Paris | CC0 | نفس الرابط |

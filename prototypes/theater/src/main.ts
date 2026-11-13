@@ -1,4 +1,4 @@
-// مسرح عمليات بغداد v2 — رسم Babylon.js فوق منطق sim.ts
+// مسرح العمليات (غرب بغداد) v3 — رسم Babylon.js فوق منطق sim.ts. الأرض: world.ts + land.ts (I-027)
 // v2: كاميرا تجمع الطرفين + أسهم الحافة + خريطة مصغّرة (I-018)، إطلاق ساخن/بارد مرئي ووضوح الصواريخ (I-014، I-017، I-019)،
 //     دوشكا طلقة طلقة (I-015)، كاميرا الإصابة والدمار وبطاقة الثمن (I-012)، أضواء انفجارات وظلال (I-021)، أوامر (I-020)
 import {
@@ -13,6 +13,8 @@ import {
   V3, add, sub, scale, len, norm, lerp, clamp, rng, World, newWorld, step, order, Order, ORDER_CD, Unit, Air, Fx, SITES, riverX, RIVER_W, CITY_R,
   HIGHWAY_Z, BERMS, AIR_AR, SIDE_AR, PATRIOT_POS, S400_POS, S400_SCALE, dist2d, site, angDiff,
 } from './sim';
+import { groundH, groundN, ROADS } from './land';
+import { buildWorld, loadHeight, bldMatrix, Bld, SiteProp } from './world';
 
 const urls = import.meta.glob('../models/*.gltf.json', { query: '?url', import: 'default', eager: true }) as Record<string, string>;
 const modelUrl = (n: string) => urls[`../models/${n}.gltf.json`];
@@ -31,6 +33,12 @@ scene.skipPointerMovePicking = true;
 const v = (a: V3) => new Vector3(a[0], a[1], a[2]);
 const smooth = (e0: number, e1: number, x: number) => { const t = clamp((x - e0) / (e1 - e0), 0, 1); return t * t * (3 - 2 * t); };
 const SUN = norm([0.42, 0.78, 0.46]);
+// المحاكاة مسطّحة (y=0 هو الأرض)؛ وقت الرسم نرفع كل شي على ارتفاع الأرض الحقيقي. الأشياء العالية جداً ما تتأثر.
+const liftK = (y: number) => 1 - smooth(600, 5000, y);
+const L = (p: V3): V3 => [p[0], p[1] + groundH(p[0], p[2]) * liftK(p[1]), p[2]];
+const G = (x: number, z: number, dy = 0): V3 => [x, groundH(x, z) + dy, z];
+function liftFx(f: Fx): Fx { if (f.k === 'mark') return f; const o: any = { ...f }; for (const k of ['p', 'to', 'a', 'b', 'muzzle', 'rear']) if (Array.isArray(o[k])) o[k] = L(o[k] as V3); return o as Fx; }
+const qTilt = new Quaternion();
 const NL = 4; // أضواء الانفجارات
 
 // ===== ضوء وسماء وظلال =====
@@ -43,7 +51,7 @@ const sky = MeshBuilder.CreateBox('sky', { size: 60000 }, scene);
 const skyMat = new SkyMaterial('skyMat', scene);
 Object.assign(skyMat, { backFaceCulling: false, useSunPosition: true, sunPosition: v(scale(SUN, 1000)), turbidity: 5, luminance: 1, rayleigh: 2.4, mieCoefficient: 0.005, mieDirectionalG: 0.8, fogEnabled: false });
 sky.material = skyMat; sky.infiniteDistance = true; sky.isPickable = false;
-scene.fogMode = Scene.FOGMODE_EXP2; scene.fogDensity = 0.00004; scene.fogColor = new Color3(0.8, 0.79, 0.74);
+scene.fogMode = Scene.FOGMODE_EXP2; scene.fogDensity = 0.000052; scene.fogColor = new Color3(0.83, 0.79, 0.71);
 let shadows: ShadowGenerator | null = null;
 function setupShadows() {
   shadows?.dispose(); shadows = null; if (!HQ) return;
@@ -70,135 +78,11 @@ const texSmoke = canvasTex('smoke', 128, (g, s) => {
     const gr = g.createRadialGradient(x, y, 0, x, y, rad); gr.addColorStop(0, `rgba(${255 * k | 0},${255 * k | 0},${255 * k | 0},.5)`); gr.addColorStop(1, 'rgba(255,255,255,0)'); g.fillStyle = gr; g.beginPath(); g.arc(x, y, rad, 0, 7); g.fill(); }
   g.globalCompositeOperation = 'destination-in'; radial([[0, 'rgba(0,0,0,1)'], [0.3, 'rgba(0,0,0,1)'], [1, 'rgba(0,0,0,0)']])(g, s);
 });
-const texGround = canvasTex('ground', 512, (g, s) => {
-  const im = g.createImageData(s, s);
-  for (let y = 0; y < s; y++) for (let x = 0; x < s; x++) {
-    const n = (Math.sin(x * 0.11 + Math.sin(y * 0.05) * 3) + Math.sin(y * 0.09 + Math.sin(x * 0.04) * 2)) * 0.5, r = R(), pebble = r > 0.985 ? -40 : 0;
-    const c = 228 + n * 12 + (r - 0.5) * 26 + pebble, i = (y * s + x) * 4; im.data[i] = c; im.data[i + 1] = c * 0.98; im.data[i + 2] = c * 0.95; im.data[i + 3] = 255; }
-  g.putImageData(im, 0, 0);
-});
-texGround.hasAlpha = false;
-
-// ===== الخريطة: صحراء غرباً، بساتين على النهر، مدينة بالوسط (مضغوطة) =====
-const inRiver = (x: number, z: number, pad = 0) => Math.abs(x - riverX(z)) < RIVER_W(z) / 2 + pad;
-const groundMats: StandardMaterial[] = [];
-// الأرض: صور أرض حقيقية (Poly Haven، CC0) تنخلط بالشيدر حسب المكان: رمل بحصى بالصحراء، تربة بساتين قرب دجلة، أرض مدينة بالوسط.
-// تنويع كبير (صورة جوية) + طبقتين بمقاسين حتى ما يبين التكرار، وخريطة بروز للرمل حتى يبين خشن من قريب (I-022)
 const texUrls = import.meta.glob('../textures/*.webp', { query: '?url', import: 'default', eager: true }) as Record<string, string>;
-const groundTex = (n: string) => { const t = new Texture(texUrls[`../textures/${n}.webp`], scene, false, true, Texture.TRILINEAR_SAMPLINGMODE); t.anisotropicFilteringLevel = 8; return t; };
-function buildGround() {
-  const SIZE = 13000, SUB = HQ ? 180 : 130;
-  const g = MeshBuilder.CreateGround('ground', { width: SIZE, height: SIZE, subdivisions: SUB, updatable: true }, scene);
-  const pos = g.getVerticesData(VertexBuffer.PositionKind)!, n = pos.length / 3;
-  for (let i = 0; i < n; i++) { const x = pos[i * 3], z = pos[i * 3 + 2]; if (x < -5600) pos[i * 3 + 1] = (Math.sin(x * 0.006) * Math.cos(z * 0.005) + 1) * 14 * smooth(-5600, -6200, x); } // كثبان بعيدة
-  g.updateVerticesData(VertexBuffer.PositionKind, pos);
-  const m = new CustomMaterial('groundMat', scene);
-  m.diffuseColor = new Color3(0.85, 0.85, 0.85); m.specularColor = new Color3(0.04, 0.04, 0.035); m.specularPower = 12; m.maxSimultaneousLights = 2 + NL;
-  const nor = groundTex('sand_nor'); nor.uScale = nor.vScale = SIZE / 6; m.bumpTexture = nor; nor.level = 0.9;
-  m.AddUniform('sandT', 'sampler2D', groundTex('sand')); m.AddUniform('macroT', 'sampler2D', groundTex('macro')); m.AddUniform('farmT', 'sampler2D', groundTex('farm'));
-  m.Fragment_Definitions(`
-    float rX(float z){return 260.*sin(z/900.+.6)+110.*sin(z/380.+2.1)+120.;}
-    float h21(vec2 p){return fract(sin(dot(p,vec2(12.9898,78.233)))*43758.5453);}
-  `);
-  m.Fragment_Custom_Diffuse(`
-    vec2 P=vPositionW.xz; float cd=length(vEyePosition.xyz-vPositionW);
-    vec3 sN=texture2D(sandT,P/6.).rgb, sF=texture2D(sandT,P/41.+.37).rgb;
-    vec3 sand=mix(sN,sF,.2+.65*smoothstep(60.,700.,cd));
-    float mac=dot(texture2D(macroT,P/330.).rgb,vec3(.333)), mac2=dot(texture2D(macroT,P/1900.+.5).rgb,vec3(.333));
-    sand*=.62+.55*mac+.25*mac2;
-    vec3 fm=texture2D(farmT,P/7.).rgb, fmF=texture2D(farmT,P/53.).rgb; fm=mix(fm,fmF,.5*smoothstep(80.,800.,cd));
-    float pl=h21(floor(P/vec2(140.,110.)));
-    vec3 crop=fm*vec3(.72,1.3,.55)*1.25; fm=mix(fm*1.35, crop, step(.45,pl)*.85);
-    float farmK=1.-smoothstep(260.,1150.,abs(P.x-rX(P.y)));
-    float urb=1.-smoothstep(2000.,2800.,length(P));
-    vec3 c=mix(sand,fm,farmK*.9);
-    c=mix(c,(sand*vec3(.9,.9,.88)+.06)*1.05,urb*.65);
-    float lum=dot(c,vec3(.3,.55,.15)); c=mix(c,lum*vec3(1.08,.98,.8),.45*(1.-farmK*.7));
-    baseColor.rgb=c*1.42;
-  `);
-  g.material = m; g.isPickable = false; g.receiveShadows = true; groundMats.push(m);
-}
-function ribbon(name: string, pts: V3[], width: number, y: number, mat: StandardMaterial) {
-  const L: Vector3[] = [], Rr: Vector3[] = [];
-  for (let i = 0; i < pts.length; i++) {
-    const a = pts[Math.max(0, i - 1)], b = pts[Math.min(pts.length - 1, i + 1)], t = norm(sub(b, a)), nrm: V3 = [-t[2], 0, t[0]];
-    L.push(v([pts[i][0] + nrm[0] * width / 2, y, pts[i][2] + nrm[2] * width / 2])); Rr.push(v([pts[i][0] - nrm[0] * width / 2, y, pts[i][2] - nrm[2] * width / 2]));
-  }
-  const r = MeshBuilder.CreateRibbon(name, { pathArray: [L, Rr] }, scene); r.material = mat; r.isPickable = false; r.receiveShadows = true; return r;
-}
-function buildRiverRoads() {
-  const water = new StandardMaterial('water', scene); water.diffuseColor = new Color3(0.13, 0.27, 0.3); water.specularColor = new Color3(0.7, 0.7, 0.62); water.specularPower = 120;
-  const L: Vector3[] = [], Rr: Vector3[] = [];
-  for (let z = -6500; z <= 6500; z += 40) { const x = riverX(z), w = RIVER_W(z) / 2; L.push(new Vector3(x - w, 0.4, z)); Rr.push(new Vector3(x + w, 0.4, z)); }
-  const river = MeshBuilder.CreateRibbon('river', { pathArray: [L, Rr] }, scene); river.material = water; river.isPickable = false;
-  const asphalt = new StandardMaterial('asphalt', scene); asphalt.diffuseColor = new Color3(0.4, 0.39, 0.37); asphalt.specularColor = Color3.Black(); asphalt.maxSimultaneousLights = 2 + NL;
-  const line = (a: V3, b: V3, n = 2) => Array.from({ length: n }, (_, i) => [lerp(a[0], b[0], i / (n - 1)), 0, lerp(a[2], b[2], i / (n - 1))] as V3);
-  ribbon('highway', line([-6500, 0, HIGHWAY_Z], [riverX(HIGHWAY_Z) - 110, 0, HIGHWAY_Z], 30), 22, 0.3, asphalt);
-  const ring: V3[] = []; for (let a = 0; a <= 6.2832 + 0.01; a += 0.04) ring.push([Math.cos(a) * 2550, 0, Math.sin(a) * 2550]);
-  ribbon('ring', ring, 16, 0.32, asphalt);
-  ribbon('north', line([-700, 0, -200], [-1000, 0, 6500], 20), 14, 0.31, asphalt);
-  ribbon('south', line([900, 0, -400], [1900, 0, -6500], 20), 14, 0.31, asphalt);
-  const bridgeMat = new StandardMaterial('bridge', scene); bridgeMat.diffuseColor = new Color3(0.6, 0.58, 0.53); bridgeMat.specularColor = Color3.Black();
-  for (const z of [-1300, -150, 700, 1700]) { const b = MeshBuilder.CreateBox('br', { width: RIVER_W(z) + 70, height: 2.5, depth: 15 }, scene); b.position.set(riverX(z), 2, z); b.material = bridgeMat; b.isPickable = false; caster(b); }
-  // سواتر ترابية قدام الأبرامز
-  const dirt = new StandardMaterial('dirt', scene); dirt.diffuseColor = new Color3(0.55, 0.45, 0.32); dirt.specularColor = Color3.Black();
-  for (const b of BERMS) { const m = MeshBuilder.CreateSphere('berm', { diameterX: 9, diameterY: 4.2, diameterZ: 26, segments: 8 }, scene); m.position.set(b[0], 0.2, b[2]); m.material = dirt; m.isPickable = false; m.receiveShadows = true; caster(m); }
-}
-// المدينة: بنايات بنسخ رقيقة، ونحتفظ بمواقعها حتى ندمّرها
-let bld: Mesh, bldMat: Float32Array, bldCol: Float32Array, bldInfo: { x: number; z: number; w: number; d: number; h: number; rot: number; dmg: boolean }[] = [];
+// الأرض والقرى والمواقع تنبني بـ world.ts؛ هنا نحتفظ بالبيوت والمعالم حتى ندمّرها وقت القصف
+let bld: Mesh, bldMat: Float32Array, bldCol: Float32Array, bldInfo: Bld[] = [];
 let keepClear: V3[] = [];
-const siteProps: { site: string; mesh: Mesh; mat: StandardMaterial; hit: boolean }[] = [];
-function buildCity() {
-  bld = MeshBuilder.CreateBox('bld', { size: 1 }, scene); bld.isPickable = false; bld.receiveShadows = true;
-  const m = new StandardMaterial('bldMat', scene); m.specularColor = new Color3(0.05, 0.05, 0.05); m.maxSimultaneousLights = 2 + NL; bld.material = m;
-  const grid = HQ ? 58 : 74, mats: number[] = [], cols: number[] = [], r = rng(31);
-  const palette: V3[] = [[0.88, 0.83, 0.72], [0.82, 0.76, 0.64], [0.92, 0.9, 0.84], [0.76, 0.7, 0.6], [0.7, 0.66, 0.6], [0.84, 0.72, 0.58]];
-  for (let x = -CITY_R - 500; x <= CITY_R + 500; x += grid) for (let z = -CITY_R - 500; z <= CITY_R + 500; z += grid) {
-    const px = x + (r() - 0.5) * grid * 0.45, pz = z + (r() - 0.5) * grid * 0.45, d = Math.hypot(px, pz);
-    if (r() > (1 - smooth(CITY_R * 0.5, CITY_R + 400, d)) * 0.88 + 0.02) continue;
-    if (inRiver(px, pz, 55) || Math.abs(pz - HIGHWAY_Z) < 40 || Math.abs(d - 2550) < 30 || Math.abs(px - (-700 - (pz + 200) * 0.044)) < 26) continue;
-    if (SITES.some(s => dist2d([px, 0, pz], s.p) < 170) || keepClear.some(q => dist2d([px, 0, pz], q) < 110) || px < -1500 && Math.abs(pz - HIGHWAY_Z) < 600) continue;
-    const w = 11 + r() * 20, dp = 11 + r() * 20, h = 4 + r() * 9 + (1 - smooth(0, 1600, d)) * r() * 22, rot = (r() - 0.5) * 0.2 + Math.atan2(px, pz) * 0.05;
-    mats.push(...Matrix.Compose(new Vector3(w, h, dp), Quaternion.RotationAxis(Vector3.Up(), rot), new Vector3(px, h / 2, pz)).asArray());
-    const c = palette[(r() * palette.length) | 0], k = 0.9 + r() * 0.12; cols.push(c[0] * k, c[1] * k, c[2] * k, 1);
-    bldInfo.push({ x: px, z: pz, w, d: dp, h, rot, dmg: false });
-  }
-  bldMat = new Float32Array(mats); bldCol = new Float32Array(cols);
-  bld.thinInstanceSetBuffer('matrix', bldMat, 16, false); bld.thinInstanceRegisterAttribute('color', 4); bld.thinInstanceSetBuffer('color', bldCol, 4, false);
-  caster(bld);
-  // نخيل
-  const trunk = MeshBuilder.CreateCylinder('tr', { height: 8, diameter: 0.6, tessellation: 5 }, scene); trunk.position.y = 4;
-  const crown = MeshBuilder.CreateSphere('cr', { diameter: 6, segments: 3 }, scene); crown.position.y = 8.5; crown.scaling.y = 0.5;
-  const palm = Mesh.MergeMeshes([trunk, crown], true, true)!; palm.isPickable = false;
-  const pm = new StandardMaterial('palmMat', scene); pm.specularColor = Color3.Black(); palm.material = pm;
-  const pmats: number[] = [], pcols: number[] = [];
-  for (let i = 0; i < (HQ ? 4500 : 2200); i++) {
-    const z = (r() - 0.5) * 12000, side = r() < 0.5 ? -1 : 1, off = RIVER_W(z) / 2 + 25 + Math.pow(r(), 1.7) * 1000;
-    const x = riverX(z) + side * off; if (Math.hypot(x, z) < CITY_R * 0.75 && r() < 0.85) continue;
-    const s = 0.8 + r() * 0.5; pmats.push(...Matrix.Compose(new Vector3(s, s, s), Quaternion.Identity(), new Vector3(x, 0, z)).asArray()); pcols.push(0.22, 0.3 + r() * 0.12, 0.14, 1);
-  }
-  palm.thinInstanceSetBuffer('matrix', new Float32Array(pmats), 16, true); palm.thinInstanceRegisterAttribute('color', 4); palm.thinInstanceSetBuffer('color', new Float32Array(pcols), 4, true);
-  caster(palm);
-  // معالم المواقع (قابلة للتدمير)
-  const prop = (sid: string, mk: () => Mesh, x: number, z: number, color: V3) => {
-    const s = site(sid), mesh = mk(), mat = new StandardMaterial('pm' + siteProps.length, scene);
-    mat.diffuseColor = new Color3(...color); mat.specularColor = new Color3(0.08, 0.08, 0.08); mat.maxSimultaneousLights = 2 + NL;
-    mesh.material = mat; mesh.position.x += s.p[0] + x; mesh.position.z += s.p[2] + z; mesh.isPickable = false; mesh.receiveShadows = true; caster(mesh);
-    siteProps.push({ site: sid, mesh, mat, hit: false });
-  };
-  const box = (w: number, h: number, d: number) => () => { const b = MeshBuilder.CreateBox('p', { width: w, height: h, depth: d }, scene); b.position.y = h / 2; return b; };
-  const cyl = (dia: number, h: number) => () => { const c = MeshBuilder.CreateCylinder('p', { diameter: dia, height: h, tessellation: 22 }, scene); c.position.y = h / 2; return c; };
-  const run = new StandardMaterial('run', scene); run.diffuseColor = new Color3(0.27, 0.27, 0.26); run.specularColor = Color3.Black();
-  const ap = site('airport').p; for (const [dx, dz, w] of [[0, 0, 45], [340, -220, 32]]) { const rw = MeshBuilder.CreateGround('rw', { width: w, height: 2300 }, scene); rw.position.set(ap[0] + dx, 0.25, ap[2] + dz); rw.rotation.y = 0.18; rw.material = run; rw.receiveShadows = true; }
-  prop('airport', box(240, 14, 46), 280, 160, [0.86, 0.85, 0.8]); prop('airport', box(30, 32, 30), 120, 230, [0.8, 0.78, 0.72]);
-  const dp = site('dora').p; void dp;
-  for (let i = 0; i < 9; i++) prop('dora', cyl(26, 12), (i % 3) * 40 - 40, Math.floor(i / 3) * 40 - 40, [0.88, 0.88, 0.85]);
-  prop('dora', cyl(5, 46), 70, 50, [0.6, 0.55, 0.5]); prop('dora', cyl(5, 38), 80, 30, [0.6, 0.55, 0.5]);
-  prop('green', box(70, 24, 50), 0, 0, [0.78, 0.74, 0.66]); prop('green', () => { const s = MeshBuilder.CreateSphere('dome', { diameter: 22, segments: 10 }, scene); s.position.y = 25; return s; }, 0, 0, [0.85, 0.75, 0.45]);
-  prop('green', box(40, 14, 30), -70, 50, [0.88, 0.84, 0.76]);
-  for (let i = 0; i < 4; i++) prop('rasheed', box(60, 7, 14), -60, i * 30 - 45, [0.72, 0.68, 0.55]);
-  for (let i = 0; i < 3; i++) prop('taji', () => { const c = MeshBuilder.CreateCylinder('hg', { diameter: 22, height: 50, tessellation: 16, arc: 0.5 }, scene); c.rotation.z = Math.PI / 2; c.rotation.y = Math.PI / 2; c.position.y = 0; return c; }, i * 34 - 34, 0, [0.6, 0.62, 0.58]);
-}
+let siteProps: SiteProp[] = [];
 
 // ===== الكاميرا: مايلة من فوق، تجمع الطرفين، تلاحق، ولقطة إصابة =====
 const cam = new FreeCamera('cam', new Vector3(0, 3000, -3000), scene);
@@ -210,7 +94,7 @@ let trauma = 0, shakeT = 0, followBlend = 1, followFrom = new Vector3(), targetY
 const portrait = () => canvas.clientWidth < canvas.clientHeight;
 function updateCamera(dt: number) {
   const k = 1 - Math.exp(-dt * 5);
-  let tgt = new Vector3(view.tx, targetY, view.tz), want = view.dist, pitch = view.pitch > 0 ? view.pitch : pitchFor(view.dist);
+  let tgt = new Vector3(view.tx, groundH(view.tx, view.tz) + targetY, view.tz), want = view.dist, pitch = view.pitch > 0 ? view.pitch : pitchFor(view.dist);
   const f = view.follow ? findEntity(view.follow) : null;
   if (f) { tgt = v(f.p); want = view.fDist; pitch = f.air ? 0.2 : 0.42; view.tx = tgt.x; view.tz = tgt.z;
     if (f.air && f.vel && len(f.vel) > 5) view.yaw = camYaw + angDiff(camYaw, Math.atan2(f.vel[0], f.vel[2])) * (1 - Math.exp(-dt * 2)); }
@@ -220,7 +104,9 @@ function updateCamera(dt: number) {
   // الشاشة بالطول: نثبت الزاوية الأفقية حتى ما يطلع الهدف برّا
   cam.fovMode = portrait() ? FreeCamera.FOVMODE_HORIZONTAL_FIXED : FreeCamera.FOVMODE_VERTICAL_FIXED; cam.fov = portrait() ? 0.95 : 0.8;
   const cp = Math.cos(camPitch) * camDist, pos = new Vector3(camTarget.x - Math.sin(camYaw) * cp, camTarget.y + Math.sin(camPitch) * camDist, camTarget.z - Math.cos(camYaw) * cp);
-  pos.y = Math.max(pos.y, 3);
+  pos.y = Math.max(pos.y, groundH(pos.x, pos.z) + 4);
+  // إذا تلّة تسد النظر بين الكاميرا والهدف، نرفع الكاميرا
+  for (let it = 0; it < 7; it++) { let blocked = false; for (let q = 0.12; q < 0.95; q += 0.11) { const x = lerp(pos.x, camTarget.x, q), z = lerp(pos.z, camTarget.z, q); if (groundH(x, z) + 2.5 > lerp(pos.y, camTarget.y, q)) { blocked = true; break; } } if (!blocked) break; pos.y += camDist * 0.07 + 2; }
   trauma = Math.max(0, trauma - dt * 1.4); shakeT += dt * 30;
   const sh = trauma * trauma * camDist * 0.007;
   cam.position.copyFrom(pos);
@@ -370,7 +256,8 @@ decal.material = decalMat; decal.isPickable = false; decal.alwaysSelectAsActiveM
 let decals: number[] = [];
 function addDecal(p: V3, size: number) {
   if (decals.length / 16 > 500) decals.splice(0, 16);
-  decals.push(...Matrix.Compose(new Vector3(size, 1, size), Quaternion.RotationAxis(Vector3.Up(), Math.random() * 6.28), new Vector3(p[0], 0.45, p[2])).asArray());
+  const n = groundN(p[0], p[2], Math.max(3, size * 0.3)), q = new Quaternion(); Quaternion.FromUnitVectorsToRef(Vector3.UpReadOnly, new Vector3(n[0], n[1], n[2]), q);
+  decals.push(...Matrix.Compose(new Vector3(size, 1, size), q.multiply(Quaternion.RotationAxis(Vector3.UpReadOnly, Math.random() * 6.28)), new Vector3(p[0], groundH(p[0], p[2]) + 0.3, p[2])).asArray());
   decal.thinInstanceSetBuffer('matrix', new Float32Array(decals), 16, false);
 }
 
@@ -419,7 +306,7 @@ const sfx = (() => {
 
 // ===== ربط المحاكاة بالرسم =====
 let W: World;
-interface UVis { root: TransformNode; inner: TransformNode; recoil: number; shake: number; wreck: boolean; baseY: number }
+interface UVis { root: TransformNode; inner: TransformNode; recoil: number; shake: number; wreck: boolean; baseY: number; yaw: number }
 const unitVis = new Map<number, UVis>();
 interface AVis { n: TransformNode; body: TransformNode | null; glow: AbstractMesh | null; L: number; lastP: V3 }
 const airVis = new Map<number, AVis>();
@@ -448,19 +335,22 @@ function syncUnits(dt: number) {
   for (const u of W.units) {
     let vis = unitVis.get(u.id);
     if (!vis) {
-      const m = spawnModel(u.kind); vis = { ...m, recoil: 0, shake: 0, wreck: false, baseY: m.inner.position.y }; unitVis.set(u.id, vis);
+      const m = spawnModel(u.kind); vis = { ...m, recoil: 0, shake: 0, wreck: false, baseY: m.inner.position.y, yaw: u.yaw }; unitVis.set(u.id, vis);
       const blob = MeshBuilder.CreateGround('blob', { width: 1, height: 1 }, scene); blob.material = blobMat; blob.parent = vis.root; blob.position.y = 0.5; blob.isPickable = false;
       const s = u.kind === 'patriot' ? 24 : u.kind === 's400' ? 16 : u.kind === 'dshk' ? 3 : u.kind === 'd30' ? 7 : 10; blob.scaling.set(s * 0.55, 1, s);
     }
-    vis.root.position.set(u.p[0], 0, u.p[2]);
+    vis.root.position.set(u.p[0], groundH(u.p[0], u.p[2]), u.p[2]);
+    if (u.alive) vis.yaw += angDiff(vis.yaw, u.yaw) * Math.min(1, dt * 8);
+    // الوحدة تميل ويا ميلان الأرض
+    const gn = groundN(u.p[0], u.p[2], 3.5); Quaternion.FromUnitVectorsToRef(Vector3.UpReadOnly, new Vector3(gn[0], gn[1], gn[2]), qTilt);
+    vis.root.rotationQuaternion = qTilt.multiply(Quaternion.RotationAxis(Vector3.UpReadOnly, vis.yaw));
     if (!u.alive) continue;
-    vis.root.rotation.y = vis.root.rotation.y + angDiff(vis.root.rotation.y, u.yaw) * Math.min(1, dt * 8);
     // ارتداد عند الرمي، اهتزاز الرشاش، تمايل الحركة، وغبار الجنازير
     vis.recoil = Math.max(0, vis.recoil - dt * 3.5); vis.shake = Math.max(0, vis.shake - dt * 6);
     const sway = u.spd > 0.5 ? Math.sin(W.T * 9 + u.id) * 0.012 * Math.min(1, u.spd / 6) : 0;
     vis.inner.rotation.x = -0.07 * vis.recoil * vis.recoil + sway;
     vis.inner.position.x = (Math.random() - 0.5) * 0.08 * vis.shake; vis.inner.position.y = vis.baseY + (Math.random() - 0.5) * 0.05 * vis.shake;
-    if (u.spd > 1 && W) { const back = add(u.p, [-Math.sin(u.yaw) * 4, 0.8, -Math.cos(u.yaw) * 4]); trackDust.emit({ a: back, n: Qn(u.spd * 0.07 * slowK * simSpeed), spd: [0.5, 2], up: 0.3, jit: 1.8 }); }
+    if (u.spd > 1 && W) { const back = L(add(u.p, [-Math.sin(u.yaw) * 4, 0.8, -Math.cos(u.yaw) * 4])); trackDust.emit({ a: back, n: Qn(u.spd * 0.07 * slowK * simSpeed), spd: [0.5, 2], up: 0.3, jit: 1.8 }); }
   }
 }
 function airBody(a: Air): { body: TransformNode | null; glow: AbstractMesh | null; L: number } {
@@ -478,24 +368,24 @@ function airBody(a: Air): { body: TransformNode | null; glow: AbstractMesh | nul
 function syncAir() {
   const seen = new Set<number>(), cp = cam.position;
   for (const a of W.air) {
-    seen.add(a.id);
+    seen.add(a.id); const lp = L(a.p);
     let vis = airVis.get(a.id);
-    if (!vis) { const n = new TransformNode('air' + a.id, scene), b = airBody(a); if (b.body) b.body.parent = n; if (b.glow && !b.body) b.glow.parent = n; vis = { n, body: b.body, glow: b.glow, L: b.L, lastP: [...a.p] as V3 }; airVis.set(a.id, vis); }
-    vis.n.position.set(a.p[0], a.p[1], a.p[2]);
+    if (!vis) { const n = new TransformNode('air' + a.id, scene), b = airBody(a); if (b.body) b.body.parent = n; if (b.glow && !b.body) b.glow.parent = n; vis = { n, body: b.body, glow: b.glow, L: b.L, lastP: lp }; airVis.set(a.id, vis); }
+    vis.n.position.set(lp[0], lp[1], lp[2]);
     if (len(a.v) > 1) vis.n.lookAt(vis.n.position.add(v(a.v)));
     // وضوح: الصاروخ ما يصغر أقل من ~1٪ من المسافة للكاميرا (يبين حتى من بعيد)
     const d = Vector3.Distance(cp, vis.n.position), sMin = Math.max(1, (d * 0.011) / vis.L); vis.n.scaling.setAll(sMin);
     if (vis.glow && a.kind === 'n48') vis.glow.isVisible = a.ign;
-    const prev = vis.lastP, dd = len(sub(a.p, prev)), dirV = norm(a.v), sp = len(a.v);
-    const tail = add(a.p, scale(dirV, -(vis.L / 2 + 0.6) * sMin));
+    const prev = vis.lastP, dd = len(sub(lp, prev)), dirV = norm(a.v), sp = len(a.v);
+    const tail = add(lp, scale(dirV, -(vis.L / 2 + 0.6) * sMin));
     if ((a.kind === 'pac2' || (a.kind === 'n48' && a.ign)) && a.t < 10) {
       bigTrail.emit({ a: add(prev, scale(dirV, -(vis.L / 2) * sMin)), b: tail, n: Qn(dd * 0.55), jit: 0.6, spd: [0, 1.5] });
       flame.emit({ a: tail, n: Qn(6), dir: dirV, spd: [Math.max(0, sp - 220), Math.max(0, sp - 120)], spread: 0.15, jit: 0.3 * sMin });
     }
     if (a.kind === 'n48' && !a.ign) puffs.emit({ a: tail, n: 2, spd: [1, 3], jit: 0.5 });
-    if (a.kind === 'iskander') thinTrail.emit({ a: prev, b: a.p, n: Qn(dd * 0.06), jit: 1.5, spd: [0, 1] });
-    if (a.kind === 'rocket' && a.t < 3) rocketTrail.emit({ a: prev, b: a.p, n: Qn(dd * 0.14), jit: 0.3, spd: [0, 1] });
-    vis.lastP = [...a.p] as V3;
+    if (a.kind === 'iskander') thinTrail.emit({ a: prev, b: lp, n: Qn(dd * 0.06), jit: 1.5, spd: [0, 1] });
+    if (a.kind === 'rocket' && a.t < 3) rocketTrail.emit({ a: prev, b: lp, n: Qn(dd * 0.14), jit: 0.3, spd: [0, 1] });
+    vis.lastP = lp;
   }
   for (const [id, vis] of airVis) if (!seen.has(id)) { vis.n.dispose(); airVis.delete(id); }
 }
@@ -506,7 +396,7 @@ function handleFx(fx: Fx) {
       const vis = unitVis.get(fx.unit); if (vis) vis.recoil = 1;
       muzzle.emit({ a: fx.p, n: 4, jit: 0.6 }); fireS.emit({ a: fx.p, n: Qn(8), dir: fx.dir, spd: [20, 45], spread: 0.4, jit: 0.5 });
       // حلقة غبار حول الدبابة من ضغط الطلقة
-      const u = W.units.find(x => x.id === fx.unit); if (u) dust.emit({ a: add(u.p, [0, 0.6, 0]), n: Qn(26), spd: [8, 18], up: -0.45, jit: 3 });
+      const u = W.units.find(x => x.id === fx.unit); if (u) dust.emit({ a: add(L(u.p), [0, 0.6, 0]), n: Qn(26), spd: [8, 18], up: -0.45, jit: 3 });
       smokeS.emit({ a: add(fx.p, scale(fx.dir, 3)), n: Qn(5), spd: [3, 8], jit: 1.5 });
       flashLight(fx.p, 4, 60, 0.15); trauma = Math.min(1, trauma + clamp(0.25 - camD(fx.p) / 2000, 0, 0.25)); sfx.gun(camD(fx.p)); break;
     }
@@ -517,7 +407,7 @@ function handleFx(fx: Fx) {
       if (Math.random() < 0.3) puffs.emit({ a: add(fx.p, scale(fx.dir, 0.6)), n: 1, spd: [0.5, 1.5], jit: 0.2 });
       if (fx.tracer) tracers.emit({ a: fx.p, n: 1, dir: fx.dir, spd: [850, 850], life: fx.tf, jit: 0.05 });
       const to = fx.to, kind = fx.hit;
-      vq.push({ t: W.T + fx.tf, f: () => { if (kind === 'ground') dust.emit({ a: [to[0], 0.4, to[2]], n: 2, spd: [2, 6], up: 1.2, jit: 0.6 }); else if (kind === 'metal') sparks.emit({ a: to, n: 4, spd: [10, 40], jit: 0.3 }); else if (Math.random() < 0.3) puffs.emit({ a: to, n: 1, spd: [0.2, 0.5], jit: 0.3 }); } });
+      vq.push({ t: W.T + fx.tf, f: () => { if (kind === 'ground') dust.emit({ a: G(to[0], to[2], 0.4), n: 2, spd: [2, 6], up: 1.2, jit: 0.6 }); else if (kind === 'metal') sparks.emit({ a: to, n: 4, spd: [10, 40], jit: 0.3 }); else if (Math.random() < 0.3) puffs.emit({ a: to, n: 1, spd: [0.2, 0.5], jit: 0.3 }); } });
       sfx.round(camD(fx.p)); break;
     }
     case 'shell': tracers.emit({ a: fx.a, n: 1, dir: norm(sub(fx.b, fx.a)), spd: [1650, 1650], life: fx.tf, jit: 0 }); break;
@@ -536,7 +426,7 @@ function handleFx(fx: Fx) {
     case 'plaunch': {
       // إطلاق ساخن: غطا الحاوية يطير، لهب من ورا الحاوية، غيمة ضخمة على الأرض
       fireJet.emit({ a: fx.rear, n: Qn(40), dir: norm([-fx.dir[0], -0.35, -fx.dir[2]]), spd: [25, 60], spread: 0.5, jit: 1 });
-      cloud.emit({ a: [fx.rear[0], 1.5, fx.rear[2]], n: Qn(70), spd: [6, 26], up: -0.3, jit: 3 });
+      cloud.emit({ a: G(fx.rear[0], fx.rear[2], 1.5), n: Qn(70), spd: [6, 26], up: -0.3, jit: 3 });
       cloud.emit({ a: fx.muzzle, n: Qn(16), dir: fx.dir, spd: [3, 10], spread: 1.2, jit: 1 });
       fireS.emit({ a: fx.muzzle, n: Qn(12), dir: fx.dir, spd: [8, 25], spread: 0.6, jit: 0.6 });
       throwDebris(capMesh, fx.muzzle, add(scale(fx.dir, 18), [(Math.random() - 0.5) * 6, 6, (Math.random() - 0.5) * 6]), 4);
@@ -555,7 +445,7 @@ function handleFx(fx: Fx) {
     }
     case 'rlaunch': {
       const vis = unitVis.get(fx.unit); if (vis) vis.shake = 1.2;
-      fireS.emit({ a: fx.p, n: Qn(5), dir: scale(fx.dir, -1), spd: [10, 25], spread: 0.5, jit: 0.4 }); dust.emit({ a: [fx.p[0], 0.8, fx.p[2]], n: Qn(10), spd: [5, 14], up: -0.3, jit: 3 });
+      fireS.emit({ a: fx.p, n: Qn(5), dir: scale(fx.dir, -1), spd: [10, 25], spread: 0.5, jit: 0.4 }); dust.emit({ a: G(fx.p[0], fx.p[2], 0.8), n: Qn(10), spd: [5, 14], up: -0.3, jit: 3 });
       flashLight(fx.p, 5, 60, 0.15); sfx.rocket(camD(fx.p)); break;
     }
     case 'kill': killVisual(fx.unit, fx.turret); break;
@@ -571,26 +461,26 @@ function throwDebris(src: Mesh, p: V3, vel: V3, life: number) {
 function tickDebris(simDt: number) {
   for (let i = debris.length - 1; i >= 0; i--) {
     const d = debris[i]; d.v = add(d.v, [0, -9.81 * simDt, 0]); d.p = add(d.p, scale(d.v, simDt));
-    if (d.p[1] < 0.3) { d.p[1] = 0.3; d.v = scale(d.v, 0); }
+    const gy = groundH(d.p[0], d.p[2]) + 0.3; if (d.p[1] < gy) { d.p[1] = gy; d.v = scale(d.v, 0); }
     d.m.position.set(...d.p); d.m.rotation.addInPlace(v(scale(d.spin, simDt)));
     if (W.T > d.until && d.v[1] === 0) { if (d.m.name === 'turret') { dust.emit({ a: d.p, n: Qn(16), spd: [4, 12], up: 0.2, jit: 2 }); } d.until = Infinity; }
   }
 }
 function killVisual(id: number, turret: boolean) {
-  const u = W.units.find(x => x.id === id)!, vis = unitVis.get(id); if (!vis || vis.wreck) return;
+  const u = W.units.find(x => x.id === id)!, up = L(u.p), vis = unitVis.get(id); if (!vis || vis.wreck) return;
   vis.wreck = true; vis.inner.dispose();
   // هيكل محترق (نسخة بخامات غامقة)
   const w = spawnModel(u.kind, true); w.inner.parent = vis.root; w.root.dispose(); vis.inner = w.inner; vis.inner.rotation.z = (Math.random() - 0.5) * 0.12;
-  burning.push({ p: [...u.p] as V3, t: W.T, big: u.kind === 'abrams' || u.kind === 't72' ? 1.3 : 1 });
+  burning.push({ p: [...up] as V3, t: W.T, big: u.kind === 'abrams' || u.kind === 't72' ? 1.3 : 1 });
   if (turret) {
     // انفجار الذخيرة: البرج يطير وعمود نار (jack-in-the-box) وانفجارات متتالية
     const ch = chunkMesh.clone('turret', null)!; ch.isVisible = true; ch.material = (chunkMesh.material as StandardMaterial); caster(ch);
-    const p0 = add(u.p, [0, 2.6, 0]); ch.position.set(...p0);
+    const p0 = add(up, [0, 2.6, 0]); ch.position.set(...p0);
     debris.push({ m: ch, p: p0, v: [(Math.random() - 0.5) * 9, 21 + Math.random() * 6, (Math.random() - 0.5) * 9], spin: [Math.random() * 5, Math.random() * 3, Math.random() * 5], until: W.T + 2 });
-    for (let k = 0; k < 8; k++) vq.push({ t: W.T + k * 0.12, f: () => fireJet.emit({ a: add(u.p, [0, 2.4, 0]), n: Qn(10), dir: [0, 1, 0], spd: [18, 38], spread: 0.35, jit: 0.8 }) });
-    for (let k = 0; k < 4; k++) vq.push({ t: W.T + 1.5 + Math.random() * 5, f: () => { fireS.emit({ a: add(u.p, [0, 1.6, 0]), n: Qn(12), spd: [6, 18], up: 0.5, jit: 1 }); sparks.emit({ a: add(u.p, [0, 1.6, 0]), n: Qn(10), spd: [20, 60], jit: 1 }); flashLight(u.p, 6, 50, 0.25); sfx.boom(camD(u.p), 0.4); } });
+    for (let k = 0; k < 8; k++) vq.push({ t: W.T + k * 0.12, f: () => fireJet.emit({ a: add(up, [0, 2.4, 0]), n: Qn(10), dir: [0, 1, 0], spd: [18, 38], spread: 0.35, jit: 0.8 }) });
+    for (let k = 0; k < 4; k++) vq.push({ t: W.T + 1.5 + Math.random() * 5, f: () => { fireS.emit({ a: add(up, [0, 1.6, 0]), n: Qn(12), spd: [6, 18], up: 0.5, jit: 1 }); sparks.emit({ a: add(up, [0, 1.6, 0]), n: Qn(10), spd: [20, 60], jit: 1 }); flashLight(up, 6, 50, 0.25); sfx.boom(camD(up), 0.4); } });
   }
-  addDecal(u.p, 14);
+  addDecal(up, 14);
 }
 // ===== دمار المواقع + بطاقة الثمن =====
 function siteDamage(sid: string, p: V3, big: boolean) {
@@ -598,12 +488,12 @@ function siteDamage(sid: string, p: V3, big: boolean) {
   bldInfo.forEach((b, i) => {
     if (b.dmg || Math.hypot(b.x - p[0], b.z - p[2]) > R0) return; b.dmg = true; changed = true;
     const h = b.h * (0.25 + Math.random() * 0.25);
-    Matrix.Compose(new Vector3(b.w, h, b.d), Quaternion.RotationAxis(Vector3.Up(), b.rot), new Vector3(b.x, h / 2, b.z)).copyToArray(bldMat, i * 16);
+    bldMatrix(b, h).copyToArray(bldMat, i * 16);
     for (let k = 0; k < 3; k++) bldCol[i * 4 + k] *= 0.28;
   });
   if (changed) { bld.thinInstanceBufferUpdated('matrix'); bld.thinInstanceBufferUpdated('color'); }
   for (const sp of siteProps) {
-    if (sp.hit || sp.site !== sid || Math.hypot(sp.mesh.position.x - p[0], sp.mesh.position.z - p[2]) > R0 + 60) continue;
+    if (sp.hit || sp.site !== sid || Math.hypot(sp.mesh.getAbsolutePosition().x - p[0], sp.mesh.getAbsolutePosition().z - p[2]) > R0 + 60) continue;
     sp.hit = true; sp.mat.diffuseColor = sp.mat.diffuseColor.scale(0.25); sp.mesh.scaling.y *= 0.55; sp.mesh.position.y *= 0.55;
   }
   burning.push({ p: [...p] as V3, t: W.T, big: sid === 'dora' ? 2.6 : big ? 1.8 : 1.4 });
@@ -642,7 +532,7 @@ function labelItems(): Item[] {
 }
 const tmpV = new Vector3();
 function project(p: V3) {
-  Vector3.ProjectToRef(v(p), Matrix.IdentityReadOnly, scene.getTransformMatrix(), cam.viewport.toGlobal(engine.getRenderWidth(), engine.getRenderHeight()), tmpV);
+  Vector3.ProjectToRef(v(L(p)), Matrix.IdentityReadOnly, scene.getTransformMatrix(), cam.viewport.toGlobal(engine.getRenderWidth(), engine.getRenderHeight()), tmpV);
   const sc = engine.getHardwareScalingLevel(); return { x: tmpV.x * sc, y: tmpV.y * sc, z: tmpV.z };
 }
 function drawLabels() {
@@ -687,9 +577,9 @@ function drawArrows() {
 // ===== التتبّع =====
 function findEntity(id: number): { p: V3; vel?: V3; air: boolean; name: string; info: string } | null {
   const u = W.units.find(x => x.id === id);
-  if (u) return { p: add(u.p, [0, 2, 0]), air: false, name: `${u.name} · ${SIDE_AR[u.side]}`, info: u.alive ? `${u.group} · ${u.spd > 1 ? `يتحرك ${Math.round(u.spd * 3.6)} كم/س` : 'بموقعه'}${u.cover ? ' · ورا ساتر' : ''}` : 'محطّمة' };
+  if (u) return { p: L(add(u.p, [0, 2, 0])), air: false, name: `${u.name} · ${SIDE_AR[u.side]}`, info: u.alive ? `${u.group} · ${u.spd > 1 ? `يتحرك ${Math.round(u.spd * 3.6)} كم/س` : 'بموقعه'}${u.cover ? ' · ورا ساتر' : ''}` : 'محطّمة' };
   const a = W.air.find(x => x.id === id);
-  if (a) return { p: a.p, vel: a.v, air: true, name: `${AIR_AR[a.kind]} · ${SIDE_AR[a.side]}`, info: `${Math.round(len(a.v) * 3.6).toLocaleString('en')} كم/س · ارتفاع ${Math.round(a.p[1]).toLocaleString('en')} م${a.siteName ? ' · الهدف: ' + a.siteName : ''}${a.kind === 'n48' && !a.ign ? ' · مقذوف بالغاز' : ''}` };
+  if (a) return { p: L(a.p), vel: a.v, air: true, name: `${AIR_AR[a.kind]} · ${SIDE_AR[a.side]}`, info: `${Math.round(len(a.v) * 3.6).toLocaleString('en')} كم/س · ارتفاع ${Math.round(a.p[1]).toLocaleString('en')} م${a.siteName ? ' · الهدف: ' + a.siteName : ''}${a.kind === 'n48' && !a.ign ? ' · مقذوف بالغاز' : ''}` };
   return null;
 }
 function startFollow(id: number, dist?: number) {
@@ -733,7 +623,7 @@ function twoShot(a: V3, b: V3, prio: number, holdReal: number, force = false) {
 }
 function closeShot(p: V3, from: V3 | null, dist: number, pitch: number, prio: number, holdReal: number) {
   if (!claim(prio, holdReal)) return false;
-  endFollow(); view.tx = p[0]; view.tz = p[2]; targetY = p[1]; view.dist = dist; view.pitch = pitch;
+  endFollow(); view.tx = p[0]; view.tz = p[2]; targetY = p[1] - groundH(p[0], p[2]); view.dist = dist; view.pitch = pitch;
   if (from) view.yaw = Math.atan2(p[0] - from[0], p[2] - from[2]) + 0.55;
   return true;
 }
@@ -745,8 +635,8 @@ function impactCam(p: V3, from: V3 | null, tImpact: number) {
 function directorFx(fx: Fx) {
   if (!auto) return;
   switch (fx.k) {
-    case 'killshot': { const sh = W.units.find(u => u.id === fx.shooter), tg = W.units.find(u => u.id === fx.target); if (sh && tg) impactCam(add(tg.p, [0, 2, 0]), sh.p, W.T + fx.tf); break; }
-    case 'threat': { const a = W.air.find(x => x.id === fx.air); if (a && a.kind !== 'iskander') impactCam(add(a.aim, [0, 12, 0]), null, W.T + fx.tti); break; }
+    case 'killshot': { const sh = W.units.find(u => u.id === fx.shooter), tg = W.units.find(u => u.id === fx.target); if (sh && tg) impactCam(L(add(tg.p, [0, 2, 0])), sh.p, W.T + fx.tf); break; }
+    case 'threat': { const a = W.air.find(x => x.id === fx.air); if (a && a.kind !== 'iskander') impactCam(L(add(a.aim, [0, 12, 0])), null, W.T + fx.tti); break; }
     case 'plaunch': if (claim(6, 1.2)) { closeShot(fx.muzzle, add(fx.muzzle, scale(fx.dir, -50)), 85, 0.28, 6, 1.2); pendingFollow = { id: fx.air, at: nowS() + 0.9, dist: 40 }; } break;
     case 'eject': if (claim(7, 3)) { endFollow(); view.tx = fx.p[0]; view.tz = fx.p[2]; targetY = 8; view.dist = 70; view.pitch = 0.2; view.yaw = Math.atan2(fx.dir[0], fx.dir[2]) + Math.PI / 2; pendingFollow = { id: fx.air, at: nowS() + 2.2, dist: 45 }; } break;
     case 'intercept': if (view.follow && fx.big) slowWins.push({ t0: W.T - 0.05, t1: W.T + 0.9 }); break;
@@ -768,9 +658,8 @@ const mini = $('mini') as HTMLCanvasElement, mg = mini.getContext('2d')!, MW = 1
 const m2px = (x: number, z: number) => [(x + MW / 2) / MW * mini.width, (MW / 2 - z) / MW * mini.height];
 function drawMini() {
   const g = mg, S = mini.width; g.clearRect(0, 0, S, S); g.fillStyle = 'rgba(205,180,130,.18)'; g.fillRect(0, 0, S, S);
-  g.fillStyle = 'rgba(200,195,180,.22)'; const [cx, cy] = m2px(0, 0); g.beginPath(); g.arc(cx, cy, CITY_R / MW * S, 0, 7); g.fill();
-  g.strokeStyle = 'rgba(80,150,170,.9)'; g.lineWidth = 3; g.beginPath(); for (let z = -5000; z <= 5000; z += 200) { const [x, y] = m2px(riverX(z), z); z === -5000 ? g.moveTo(x, y) : g.lineTo(x, y); } g.stroke();
-  g.strokeStyle = 'rgba(40,40,40,.7)'; g.lineWidth = 1.5; g.beginPath(); { const [x1, y1] = m2px(-5000, HIGHWAY_Z), [x2, y2] = m2px(0, HIGHWAY_Z); g.moveTo(x1, y1); g.lineTo(x2, y2); } g.stroke();
+  g.strokeStyle = 'rgba(150,135,100,.95)'; g.lineWidth = 3; g.beginPath(); for (let z = -5000; z <= 5000; z += 200) { const [x, y] = m2px(riverX(z), z); z === -5000 ? g.moveTo(x, y) : g.lineTo(x, y); } g.stroke();
+  g.strokeStyle = 'rgba(235,220,180,.75)'; g.beginPath(); for (const [ax, az, bx, bz, , kd] of ROADS) { if (kd === 2) continue; const [x1, y1] = m2px(Math.max(-5000, ax), az), [x2, y2] = m2px(bx, bz); g.moveTo(x1, y1); g.lineTo(x2, y2); } g.lineWidth = 1.3; g.stroke();
   for (const s of SITES) { const [x, y] = m2px(s.p[0], s.p[2]); g.fillStyle = '#f0e6c8'; g.fillRect(x - 2.5, y - 2.5, 5, 5); }
   for (const u of W.units) { if (!u.alive) continue; const [x, y] = m2px(u.p[0], u.p[2]); g.fillStyle = u.side === 'iq' ? '#5fbf7a' : '#e0553c'; g.beginPath(); g.arc(x, y, u.kind === 'patriot' || u.kind === 's400' ? 4 : 3, 0, 7); g.fill(); }
   for (const a of W.air) { const [x, y] = m2px(a.p[0], a.p[2]); g.fillStyle = a.side === 'iq' ? '#bff5cc' : '#ff8a70'; g.fillRect(x - 2, y - 2, 4, 4); }
@@ -783,7 +672,7 @@ let tickN = -1;
 function hud() {
   const s = W.stats, mm = `${Math.floor(W.T / 60)}:${String(Math.floor(W.T % 60)).padStart(2, '0')}`;
   $('clock').textContent = mm;
-  $('phase').textContent = W.air.some(a => a.kind === 'iskander') ? '⚠ صاروخ باليستي بالجو' : W.air.some(a => a.kind === 'shahed') ? 'مسيّرات فوق المدينة' : W.air.some(a => a.kind === 'kh101') ? 'صواريخ كروز بالجو' : ({ march: 'رتل على الطريق', deploy: 'العدو ينتشر', bound: 'العدو يتقدم بقفزات', hold: 'اشتباك على خط التماس', retreat: 'العدو ينسحب' } as Record<string, string>)[W.columnPhase];
+  $('phase').textContent = W.air.some(a => a.kind === 'iskander') ? '⚠ صاروخ باليستي بالجو' : W.air.some(a => a.kind === 'shahed') ? 'مسيّرات بالجو' : W.air.some(a => a.kind === 'kh101') ? 'صواريخ كروز بالجو' : ({ march: 'رتل على الطريق', deploy: 'العدو ينتشر', bound: 'العدو يتقدم بقفزات', hold: 'اشتباك على خط التماس', retreat: 'العدو ينسحب' } as Record<string, string>)[W.columnPhase];
   $('tally').innerHTML = `<span>مسيّرات <b class="g">${s.dronesDown}</b>/${s.drones} أُسقطت${s.dronesHit ? ` · <b class="x">${s.dronesHit}</b> أصابت` : ''}</span>`
     + `<span>كروز <b class="g">${s.cruiseDown}</b>/${s.cruise}</span><span>باليستي <b class="g">${s.ballisticDown}</b>/${s.ballistic}${s.ballisticHit ? ` · <b class="x">${s.ballisticHit}</b>` : ''}</span>`
     + `<span>T-72 <b class="g">${s.enTanksLost}</b>/${s.enTanks} دُمّرت</span><span>أبرامز <b>${s.iqTanks - s.iqTanksLost}</b>/${s.iqTanks}</span>`;
@@ -811,7 +700,7 @@ function frame() {
     acc += dtReal * simSpeed * slowK; const STEP = 1 / 60; let n = 0;
     while (acc >= STEP && n < 16) {
       step(W, STEP); acc -= STEP; simDt += STEP; n++;
-      for (const f of W.fx) { handleFx(f); directorFx(f); } W.fx.length = 0;
+      for (const f0 of W.fx) { const f = liftFx(f0); handleFx(f); directorFx(f); } W.fx.length = 0;
       for (let i = vq.length - 1; i >= 0; i--) if (vq[i].t <= W.T) { const f = vq[i].f; vq.splice(i, 1); f(); }
     }
     if (n === 16) acc = 0;
@@ -848,7 +737,7 @@ function start() {
   debris.forEach(d => d.m.dispose()); debris.length = 0; burning.length = 0; marks = []; vq.length = 0; slowWins.length = 0; decals = [];
   decal.thinInstanceSetBuffer('matrix', new Float32Array(16), 16, false); decal.thinInstanceCount = 0;
   for (const el of els.values()) el.remove(); els.clear(); for (const el of arrowEls.values()) el.remove(); arrowEls.clear(); pools.forEach(p => p.ps.reset());
-  bldInfo.forEach((b, i) => { if (!b.dmg) return; b.dmg = false; Matrix.Compose(new Vector3(b.w, b.h, b.d), Quaternion.RotationAxis(Vector3.Up(), b.rot), new Vector3(b.x, b.h / 2, b.z)).copyToArray(bldMat, i * 16); for (let k = 0; k < 3; k++) bldCol[i * 4 + k] /= 0.28; });
+  bldInfo.forEach((b, i) => { if (!b.dmg) return; b.dmg = false; bldMatrix(b, b.h).copyToArray(bldMat, i * 16); for (let k = 0; k < 3; k++) bldCol[i * 4 + k] /= 0.28; });
   bld.thinInstanceBufferUpdated('matrix'); bld.thinInstanceBufferUpdated('color');
   siteProps.forEach(sp => { if (!sp.hit) return; sp.hit = false; sp.mat.diffuseColor = sp.mat.diffuseColor.scale(4); sp.mesh.scaling.y /= 0.55; sp.mesh.position.y /= 0.55; });
   W = newWorld(seed); seed = 1 + Math.floor(Math.random() * 9999); running = true; endShown = false; tickN = -1; impactReady = 0; lastSalvoShot = -99;
@@ -872,7 +761,9 @@ window.addEventListener('resize', () => engine.resize());
   const load = $('load');
   try {
     keepClear = newWorld(3).units.map(u => u.p).concat([PATRIOT_POS, S400_POS]);
-    buildGround(); buildRiverRoads(); buildCity(); makeProcedural();
+    await loadHeight();
+    ({ bld, bldMat, bldCol, bldInfo, siteProps } = await buildWorld(scene, { HQ, NL, caster, texUrls, keepClear }));
+    makeProcedural();
     await loadModels(t => (load.textContent = t));
     setupShadows(); $('bQual').setAttribute('aria-pressed', String(HQ));
     W = newWorld(3); syncUnits(0);

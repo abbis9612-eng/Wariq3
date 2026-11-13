@@ -5,6 +5,7 @@
   "type": "module",
   "scripts": {
     "models": "node tools/glb2json.mjs",
+    "land": "node tools/genterrain.mjs",
     "dev": "npm run models && vite",
     "build": "npm run models && vite build",
     "typecheck": "tsc --noEmit",

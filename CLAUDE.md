@@ -46,7 +46,7 @@ CHANGELOG.md                  سجل التغييرات للاعب
 tests/smoke.mjs               اختبار الدخان (Playwright، بدون واجهة)
 docs/TECH_STACK.md            قرار التقنيات (TypeScript + Babylon.js + Vite + Capacitor)
 prototypes/intercept/         تجربة 3D: اعتراض الباتريوت (راجع README داخلها)
-prototypes/theater/           تجربة 3D: مسرح عمليات بغداد (راجع README داخلها)
+prototypes/theater/           تجربة 3D: مسرح العمليات (راجع README داخلها). الأرض: `npm run land` يولّدها من `src/land.ts`
 .claude/skills/               المهارات
 ```
 

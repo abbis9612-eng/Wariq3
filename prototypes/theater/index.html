@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<title>مسرح عمليات بغداد</title>
+<title>مسرح العمليات</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Arabic:wght@400;600&family=Reem+Kufi:wght@500;700&display=swap" rel="stylesheet">
 <style>
@@ -100,7 +100,7 @@ button:focus-visible{outline:2px solid var(--brass);outline-offset:2px}
 <div id="labels"></div>
 <div id="arrows"></div>
 <div class="top" id="top" hidden>
-  <h1>مسرح العمليات — بغداد<small id="phase">الجو والأرض</small></h1>
+  <h1>مسرح العمليات — غرب بغداد<small id="phase">الجو والأرض</small></h1>
   <div id="clock">0:00</div>
   <div class="spd" id="spd"><button data-s="0" aria-label="إيقاف">⏸</button><button data-s="1">×1</button><button data-s="2" aria-pressed="true">×2</button><button data-s="4">×4</button></div>
 </div>
@@ -118,14 +118,14 @@ button:focus-visible{outline:2px solid var(--brass);outline-offset:2px}
     <button data-o="barrage">💥 ضربة مدفعية<small>D-30 على الرتل</small><i></i></button>
     <button data-o="counter">⚔ هجوم مضاد<small>الأبرامز تطلع للقتال</small><i></i></button>
     <button data-o="retreat">↩ انسحاب<small>للخط الثاني</small><i></i></button>
-    <button data-o="aaPriority" aria-pressed="false">🛡 حماية المدينة<small>باتريوت ضد المسيّرات</small><i></i></button>
+    <button data-o="aaPriority" aria-pressed="false">🛡 حماية القرى<small>باتريوت ضد المسيّرات</small><i></i></button>
   </div>
 </div>
 <div id="cost" class="off"><b id="costT"></b><span id="costS"></span></div>
 <div id="follow" hidden><div class="info"><b id="fName"></b><small id="fInfo"></small></div><button id="bBack">رجوع للخريطة</button></div>
 <div class="card" id="intro">
   <span class="stamp">تجربة 3D — رقم 2 · النسخة 2</span>
-  <h2>مسرح عمليات بغداد</h2>
+  <h2>مسرح العمليات — غرب بغداد</h2>
   <p>هجوم من الجو والأرض: مسيّرات، صواريخ كروز، <b>صواريخ باليستية</b>، ورتل دبابات ينتشر ويتقدم بقفزات. دفاعك: <b>S-400</b> و<b>باتريوت</b> ودوشكات وأبرامز ومدفعية.</p>
   <ul>
     <li><b>🎬 الكاميرا التلقائية</b> تاخذك للإطلاقات والإصابات، وتبطّئ الوقت باللحظة الحاسمة.</li>
@@ -147,9 +147,9 @@ button:focus-visible{outline:2px solid var(--brass);outline-offset:2px}
   <h2>المصادر</h2>
   <p>كل المجسمات من Sketchfab برخصة <a href="https://creativecommons.org/licenses/by/4.0/" target="_blank" rel="noopener">CC BY 4.0</a>:</p>
   <p>أبرامز M1A1 وT-72B3 وباتريوت: Muhamad Mirza Arrafi · S-400: Chenzoss · بيكب تويوتا وراجمة غراد: LM3D · مدفع D-30: 42manako · دوشكا: hensyu_leader · شاهد-136: faintastic18 · Kh-101: xFORTUNAx.</p>
-  <p><b>الأرض:</b> صور رمل وتراب حقيقية من <a href="https://polyhaven.com" target="_blank" rel="noopener">Poly Haven</a> (CC0). <b>الانفجارات والنار والدخان:</b> فليب بوك من Unity Labs (CC0، مسوّى بـ Houdini).</p>
+  <p><b>الأرض:</b> صور رمل وصخر وحصى وتراب حقيقية من <a href="https://polyhaven.com" target="_blank" rel="noopener">Poly Haven</a> (CC0). <b>الانفجارات والنار والدخان:</b> فليب بوك من Unity Labs (CC0، مسوّى بـ Houdini).</p>
   <p><b>الأصوات</b> (<a href="https://creativecommons.org/licenses/by/3.0/" target="_blank" rel="noopener">CC BY 3.0</a> من SoundBible): Tank Firing و Mortar Round: snottyboy · M 82 Barrett 50 Cal: JKirsch · Bomb Exploding: Sound Explorer · Grenade Explosion و RPG Plus Shrapnel و Bunker Buster Missile: Mike Koenig. وانفجار بعيد: Joseph SARDIN - <a href="https://bigsoundbank.com" target="_blank" rel="noopener">BigSoundBank.com</a> (CC0).</p>
-  <p>المدينة والنهر والطرق والمعترضات والصواريخ الباليستية والدخان والنار والأصوات مصنوعة بالكود. الخريطة مستوحاة من بغداد ومضغوطة حتى تنشاف بالتلفون. المحرك: Babylon.js.</p>
+  <p>شكل الأرض (جبال، وديان، هضاب) مولّد بمحاكاة تعرية مائية. صور الصخر والحصى والتراب من Poly Haven (CC0). القرى والنخل والصخور والمعترضات والصواريخ الباليستية مصنوعة بالكود. المحرك: Babylon.js.</p>
   <div class="row"><button id="bCredClose">تمام</button></div>
 </div>
 <div id="toast" role="status"></div>

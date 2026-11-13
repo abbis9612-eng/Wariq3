@@ -32,11 +32,11 @@ export const CITY_R = 2300;
 export const HIGHWAY_Z = -350;
 export interface Site { id: string; name: string; p: V3; cost: string }
 export const SITES: Site[] = [
-  { id: 'airport', name: 'مطار بغداد الدولي', p: [-2650, 0, -1250], cost: 'الرحلات متوقفة 3 أيام — خسارة 120 مليون $' },
-  { id: 'green', name: 'المنطقة الخضراء', p: [riverX(-150) - 170, 0, -150], cost: 'الاستقرار −4 والشارع خايف' },
-  { id: 'dora', name: 'مصفى الدورة', p: [950, 0, -1650], cost: 'إنتاج الوقود ينقص 15٪ هذا الشهر' },
-  { id: 'rasheed', name: 'معسكر الرشيد', p: [1750, 0, -2350], cost: 'معنويات الجيش −5' },
-  { id: 'taji', name: 'معسكر التاجي', p: [-950, 0, 3100], cost: 'مخزن ذخيرة احترق — كلفة 60 مليون $' },
+  { id: 'airport', name: 'المهبط الميداني', p: [-2650, 0, -1250], cost: 'طيران الإسناد متوقف 3 أيام — خسارة 120 مليون $' },
+  { id: 'green', name: 'قرية الوادي', p: [riverX(-150) - 170, 0, -150], cost: 'الاستقرار −4 والأهالي ينزحون' },
+  { id: 'dora', name: 'خزانات الوقود', p: [950, 0, -1650], cost: 'إنتاج الوقود ينقص 15٪ هذا الشهر' },
+  { id: 'rasheed', name: 'معسكر الجنوب', p: [1750, 0, -2350], cost: 'معنويات الجيش −5' },
+  { id: 'taji', name: 'معسكر التل', p: [-950, 0, 3100], cost: 'مخزن ذخيرة احترق — كلفة 60 مليون $' },
 ];
 export const site = (id: string) => SITES.find(s => s.id === id)!;
 /** سواتر ترابية أمام خط الأبرامز (الرسم يرسمها، والمحاكاة تقلل الإصابة وراها) */
@@ -126,13 +126,13 @@ export function newWorld(seed = 11): World {
   };
   // --- العراق ---
   BERMS.forEach(b => U('abrams', 'iq', add(b, [35, 0, 0]), WEST, 'خط الأبرامز', { cover: true }));
-  U('dshk', 'iq', [-1870, 0, HIGHWAY_Z - 70], WEST, 'سيطرة أبو غريب'); U('dshk', 'iq', [-1870, 0, HIGHWAY_Z + 70], WEST, 'سيطرة أبو غريب');
-  U('technical', 'iq', [-1790, 0, HIGHWAY_Z - 22], WEST, 'سيطرة أبو غريب');
+  U('dshk', 'iq', [-1870, 0, HIGHWAY_Z - 70], WEST, 'سيطرة الطريق'); U('dshk', 'iq', [-1870, 0, HIGHWAY_Z + 70], WEST, 'سيطرة الطريق');
+  U('technical', 'iq', [-1790, 0, HIGHWAY_Z - 22], WEST, 'سيطرة الطريق');
   U('d30', 'iq', [-1050, 0, -720], WEST, 'كتيبة مدفعية'); U('d30', 'iq', [-1050, 0, -600], WEST, 'كتيبة مدفعية');
-  U('technical', 'iq', add(site('green').p, [-120, 0, 90]), [0, 0, 1], 'دفاع المنطقة الخضراء');
-  U('technical', 'iq', add(site('dora').p, [-140, 0, 110]), [0, 0, 1], 'دفاع الدورة');
-  U('technical', 'iq', add(site('airport').p, [420, 0, 260]), WEST, 'دفاع المطار');
-  U('technical', 'iq', add(site('taji').p, [150, 0, -150]), [0, 0, 1], 'دفاع التاجي');
+  U('technical', 'iq', add(site('green').p, [-120, 0, 90]), [0, 0, 1], 'دفاع القرية');
+  U('technical', 'iq', add(site('dora').p, [-140, 0, 110]), [0, 0, 1], 'دفاع الخزانات');
+  U('technical', 'iq', add(site('airport').p, [420, 0, 260]), WEST, 'دفاع المهبط');
+  U('technical', 'iq', add(site('taji').p, [150, 0, -150]), [0, 0, 1], 'دفاع معسكر التل');
   U('patriot', 'iq', PATRIOT_POS, [0, 0, 1], 'بطارية باتريوت', { yaw: PATRIOT_YAW });
   U('s400', 'iq', S400_POS, [0, 0, 1], 'بطارية S-400', { yaw: S400_YAW });
   // --- العدو: رتل على الطريق (مسير)، وراجمتين ---

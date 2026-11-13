@@ -11,5 +11,6 @@
 | shahed.glb | Shahed 136 | faintastic18 | https://sketchfab.com/3d-models/shahed-136-bc8754128c9d48c48baadeff1db8f0c7 |
 | kh101.glb | Kh-101 Cruise Missile – Textured | xFORTUNAx | https://sketchfab.com/3d-models/6e67414d02f348d28fbe65fa0b6d2de2 |
 | patriot.glb | MIM-104 Patriot Surface-To-Air Missile (SAM) | Muhamad Mirza Arrafi | https://sketchfab.com/3d-models/7a64d0af78514a159877edab1ab2bccb |
+| s400.glb | S-400 Triumf missile launcher truck | Chenzoss | https://sketchfab.com/3d-models/s-400-triumf-missile-launcher-truck-c2631f0da36b49cda7d7f849b373283f |
 
 كلها مخففة للتلفون بـ `tools/prep.mjs` (قوام WebP ≤512، تبسيط هندسي للدبابات والمسيّرة).

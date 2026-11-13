@@ -23,3 +23,8 @@
 | sounds/boom_far.mp3 | Explosion far Away #1 | Joseph SARDIN, BigSoundBank.com | CC0 | https://bigsoundbank.com/explosion-far-away-s1023.html |
 
 التحويل: القوام بـ PIL إلى WebP، الأصوات بـ ffmpeg (قص + تلاشي + loudnorm، أحادي 80kbps).
+
+## مجسمات أشياء الأرض (TH5.3)
+
+نخل، شجر بساتين، أكاسيا، أكياس رمل، حواجز كونكريت، 3 سيارات مهجورة — كلها من Sketchfab (CC BY 4.0). المؤلفين والروابط بـ `models/CREDITS.md`.
+اختيرت بالعين: `tools/propview.html` + `tools/propsheet.mjs` يصوّرون المرشحين، و`tools/propshots.mjs` يصوّر أماكنهم باللعبة.

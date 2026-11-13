@@ -95,7 +95,7 @@ const WEST: V3 = [-1, 0, 0], EAST: V3 = [1, 0, 0];
 const COLUMN = 'رتل مدرّع معادي';
 export const VILLAGE_C: V3 = [-1480, 0, HIGHWAY_Z + 10];
 export const FRONT_HOUSES = HOUSES.filter(h => h.vil === 'front');
-const RESERVE_P: V3 = [-760, 0, 380], COUNTER_P: V3 = [-1260, 0, 60], KORNET_P: V3 = [-2108, 0, 165], KORNET_P2: V3 = [-1640, 0, 85];
+export const RESERVE_P: V3 = [-760, 0, 380], COUNTER_P: V3 = [-1260, 0, 60], KORNET_P: V3 = [-2108, 0, 165], KORNET_P2: V3 = [-1640, 0, 85];
 
 export function newWorld(seed = 11): World {
   const w: World = {

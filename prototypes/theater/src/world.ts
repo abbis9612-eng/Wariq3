@@ -4,8 +4,8 @@ import {
   Scene, Mesh, MeshBuilder, LoadAssetContainerAsync, Material, VertexData, VertexBuffer, StandardMaterial, Color3, Texture, Matrix, Quaternion, Vector3, AbstractMesh, TransformNode,
 } from '@babylonjs/core';
 import { CustomMaterial } from '@babylonjs/materials/custom';
-import { V3, SITES, riverX, RIVER_W, HIGHWAY_Z, BERMS, rng, site, dist2d } from './sim';
-import { LAND, HN, HMIN, HMAX, WADI_FLOOR, ROADS, WADIS, HIGHWAY_END, setHeightData, groundH, groundN, roadDist, wadiDist, STRIP_ROT, HOUSES, HOUSE_TYPES, House } from './land';
+import { V3, SITES, riverX, RIVER_W, HIGHWAY_Z, BERMS, BERMS2, KORNET_P, KORNET_P2, rng, site, dist2d } from './sim';
+import { LAND, HN, HMIN, HMAX, WADI_FLOOR, ROADS, WADIS, HIGHWAY_END, setHeightData, groundH, groundN, roadDist, wadiDist, STRIP_ROT, HOUSES, HOUSE_TYPES, House, VILLAGES } from './land';
 import hUrl from '../textures/land_h.png?url';
 
 export interface SiteProp { site: string; mesh: Mesh; mat: StandardMaterial; hit: boolean }
@@ -134,15 +134,15 @@ export async function buildWorld(scene: Scene, o: { HQ: boolean; NL: number; cas
     palmParts.push(paint(MeshBuilder.CreateRibbon('fr', { pathArray: [pa, pb], sideOrientation: Mesh.DOUBLESIDE }, scene), i % 2 ? [0.52, 0.66, 0.3] : [0.62, 0.74, 0.34])); }
   const palm = Mesh.MergeMeshes(palmParts, true, true)!; palm.material = plain('palmMat'); (palm.material as StandardMaterial).backFaceCulling = false;
   const pm: number[] = [], pcol: number[] = []; const G = site('green').p;
-  for (let i = 0, n = 0; i < 6000 && n < (HQ ? 420 : 220); i++) {
+  for (let i = 0, n = 0; i < 9000 && n < (HQ ? 620 : 320); i++) {
     const z = -1900 + r() * 3500, side = r() < 0.5 ? -1 : 1, x = riverX(z) + side * (RIVER_W(z) / 2 + 12 + Math.pow(r(), 1.6) * 330);
     if (groundH(x, z) < WADI_FLOOR + 2.5 || roadDist(x, z) < 5 || !clear(x, z, 16) || HOUSES.some(h => Math.hypot(h.x - x, h.z - z) < Math.max(h.w, h.d) * 0.7 + 4)) continue;
     const s = 0.75 + r() * 0.6; pm.push(...onGround(x, z, [s, s * (0.85 + r() * 0.4), s], r() * 6.28, 0.2, false)); const k = 0.8 + r() * 0.35; pcol.push(k, k, k, 1); n++; }
   // نخل بين البيوت وحول القرى
-  for (const h of HOUSES) { if (r() > 0.55) continue; for (let q = 0; q < 1 + (r() * 3 | 0); q++) { const a = r() * 6.28, d = Math.max(h.w, h.d) * 0.7 + 4 + r() * 12, x = h.x + Math.cos(a) * d, z = h.z + Math.sin(a) * d;
+  for (const h of HOUSES) { if (r() > 0.75) continue; for (let q = 0; q < 1 + (r() * 3 | 0); q++) { const a = r() * 6.28, d = Math.max(h.w, h.d) * 0.7 + 4 + r() * 12, x = h.x + Math.cos(a) * d, z = h.z + Math.sin(a) * d;
     if (roadDist(x, z) < 4 || HOUSES.some(o => Math.hypot(o.x - x, o.z - z) < Math.max(o.w, o.d) * 0.6 + 1.5)) continue;
     const s = 0.7 + r() * 0.6; pm.push(...onGround(x, z, [s, s * (0.85 + r() * 0.4), s], r() * 6.28, 0.2, false)); const k = 0.8 + r() * 0.35; pcol.push(k, k, k, 1); } }
-  instances(palm, pm, pcol); caster(palm);
+  // (النخلة المرسومة صارت احتياط: تنعرض بس إذا ما تحمّل المجسم الحقيقي — شوف TH5.3 جوّه)
   // شجيرات صحراوية
   const shrub = MeshBuilder.CreateIcoSphere('shrub', { radius: 1, subdivisions: 1, flat: true }, scene); shrub.scaling.y = 0.62; shrub.bakeCurrentTransformIntoVertices(); shrub.material = plain('shrubMat');
   const sh: number[] = [], shc: number[] = [];
@@ -217,6 +217,75 @@ export async function buildWorld(scene: Scene, o: { HQ: boolean; NL: number; cas
     reset() { for (const i of dead) { const h = HOUSES[i], t = h.t, k = slot[i]; (h as House & { dead?: boolean }).dead = false; hMatrix(h).copyToArray(bufs[t].m, k * 16); const g = (0.9 + ((i * 37) % 13) / 60) * TINT[t]; bufs[t].c.set([g, g * 0.95, g * 0.86, 1], k * 4); }
       dead.clear(); typeMeshes.forEach(ms => ms.forEach(m => { if (m.isEnabled()) { m.thinInstanceBufferUpdated('matrix'); m.thinInstanceBufferUpdated('color'); } })); },
   };
+
+  // ---------- أشياء حقيقية (TH5.3): نخل، بساتين، أكاسيا، سيارات مهجورة، أكياس رمل، حواجز (Sketchfab CC BY — models/CREDITS.md) ----------
+  // كل نوع ينقسم لقطع حسب المكان (خلايا 700م)، وكل قطعة تنخفي إذا بعيدة عن الكاميرا: الرسم والظل بس للقريب (أخف على التلفون)
+  const chunks: { ms: Mesh[]; c: Vector3; far: number }[] = [];
+  const loadProp = async (name: string, fit: 'h' | 'len', size: number, yaw0 = 0, bright = 1): Promise<Mesh[]> => {
+    try {
+      const c = await LoadAssetContainerAsync(o.modelUrl(name), scene, { pluginExtension: '.gltf' });
+      c.addAllToScene(); c.materials.forEach(o.prepMat);
+      if (bright !== 1) c.materials.forEach(m => { const a = (m as Material & { albedoColor?: Color3 }).albedoColor; if (a) a.scaleInPlace(bright); });   // أوراق غامقة بدون إضاءة بيئة
+      const ms = c.meshes.filter(m => m.getTotalVertices() > 0) as Mesh[];
+      let mn = new Vector3(1e9, 1e9, 1e9), mx = new Vector3(-1e9, -1e9, -1e9);
+      ms.forEach(m => { m.computeWorldMatrix(true); const bb = m.getBoundingInfo().boundingBox; mn = Vector3.Minimize(mn, bb.minimumWorld); mx = Vector3.Maximize(mx, bb.maximumWorld); });
+      const k = fit === 'h' ? size / (mx.y - mn.y) : size / Math.max(mx.x - mn.x, mx.z - mn.z);
+      const N = Matrix.Translation(-(mn.x + mx.x) / 2, -mn.y, -(mn.z + mx.z) / 2).multiply(Matrix.Scaling(k, k, k)).multiply(Matrix.RotationY(yaw0));
+      for (const m of ms) { const wmx = m.computeWorldMatrix(true).clone(); m.setParent(null); m.position.setAll(0); m.rotationQuaternion = null; m.rotation.setAll(0); m.scaling.setAll(1); m.bakeTransformIntoVertices(wmx.multiply(N)); m.isPickable = false; m.setEnabled(false); }
+      c.meshes.filter(m => m.getTotalVertices() === 0).forEach(m => m.dispose()); c.transformNodes.forEach(t => t.dispose());
+      return ms;
+    } catch (e) { console.warn('prop', name, e); return []; }
+  };
+  const scatter = (base: Mesh[], mats: number[], far: number, cast = true, cell = 700) => {
+    if (!base.length || !mats.length) return 0;
+    const groups = new Map<string, number[]>();
+    for (let i = 0; i < mats.length; i += 16) { const key = `${Math.floor(mats[i + 12] / cell)},${Math.floor(mats[i + 14] / cell)}`; let g = groups.get(key); if (!g) groups.set(key, g = []); for (let q = 0; q < 16; q++) g.push(mats[i + q]); }
+    for (const [key, arr] of groups) { const [gx, gz] = key.split(',').map(Number);
+      const ms = base.map(b => { const m = b.clone(b.name + '_' + key, null, true)!; m.makeGeometryUnique(); /* النسخ تتشارك الهندسة، وأزرار thin instances تنحفظ بالهندسة: بدون هذا آخر قطعة تمسح الباقي */ m.setEnabled(true); m.isVisible = true; m.isPickable = false; m.receiveShadows = true;
+        m.thinInstanceSetBuffer('matrix', new Float32Array(arr), 16, true); m.thinInstanceRefreshBoundingInfo(false); if (cast) caster(m); return m; });
+      chunks.push({ ms, c: new Vector3((gx + 0.5) * cell, 0, (gz + 0.5) * cell), far }); }
+    return mats.length / 16;
+  };
+  scene.onBeforeRenderObservable.add(() => { const cp = scene.activeCamera?.globalPosition; if (!cp) return;
+    for (const ch of chunks) { const v = Math.hypot(cp.x - ch.c.x, cp.z - ch.c.z) < ch.far + cp.y * 0.6; if (ch.ms[0].isVisible !== v) for (const m of ch.ms) m.isVisible = v; } });
+  const [P_PALM, P_TREE, P_ACACIA, P_SAND, P_BAR, P_CAR1, P_CAR2, P_PICK] = await Promise.all([
+    loadProp('p_palm', 'h', 9.5), loadProp('p_tree', 'h', 7.5, 0, 2.1), loadProp('p_acacia', 'h', 6, 0, 1.7), loadProp('p_sandbag', 'len', 4.2),
+    loadProp('p_barrier', 'len', 3.2), loadProp('p_car1', 'len', 4.4), loadProp('p_car2', 'len', 4.3, Math.PI / 2), loadProp('p_pickup', 'len', 5.2)]);
+  const nearHouse = (x: number, z: number, pad: number) => HOUSES.some(h => Math.hypot(h.x - x, h.z - z) < Math.max(h.w, h.d) * 0.6 + pad);
+  const okAt = (x: number, z: number, rad: number, road = 4, houses = true) => roadDist(x, z) > road && clear(x, z, rad) && (!houses || !nearHouse(x, z, rad * 0.5)) && groundN(x, z)[1] > 0.9 && groundH(x, z) > WADI_FLOOR + 1.5;
+  // نخل: نفس أماكن النخل القديم بس بمجسم حقيقي
+  if (P_PALM.length) { scatter(P_PALM, pm, 2600); palm.dispose(); } else { instances(palm, pm, pcol); caster(palm); }
+  // بساتين: صفوف شجر حول القرى + شجر على ضفاف الوادي
+  const orch: number[] = [];
+  for (const v of VILLAGES) { const nb = v.id === 'front' ? 10 : v.id === 'river' ? 7 : 3;
+    for (let b = 0; b < nb; b++) { const a = r() * 6.28, d = v.rad * (0.45 + r() * 0.75), cx = v.x + Math.cos(a) * d, cz = v.z + Math.sin(a) * d, rot = v.rot + (r() < 0.5 ? 0 : Math.PI / 2), nr = 3 + (r() * 3 | 0), nc = 4 + (r() * 4 | 0), sp = 8 + r() * 2;
+      for (let i = 0; i < nr; i++) for (let j = 0; j < nc; j++) { const lx = (j - (nc - 1) / 2) * sp, lz = (i - (nr - 1) / 2) * sp, x = cx + lx * Math.cos(rot) + lz * Math.sin(rot), z = cz - lx * Math.sin(rot) + lz * Math.cos(rot);
+        if (r() < (HQ ? 0.12 : 0.5) || !okAt(x, z, 6)) continue; const s = 0.75 + r() * 0.4; orch.push(...onGround(x + (r() - 0.5) * 1.5, z + (r() - 0.5) * 1.5, [s, s * (0.85 + r() * 0.3), s], r() * 6.28, 0.1, false)); } } }
+  for (let i = 0, n = 0; i < 4000 && n < (HQ ? 160 : 80); i++) { const z = -1800 + r() * 3400, side = r() < 0.5 ? -1 : 1, x = riverX(z) + side * (RIVER_W(z) / 2 + 20 + r() * 220);
+    if (!okAt(x, z, 8)) continue; const s = 0.7 + r() * 0.5; orch.push(...onGround(x, z, [s, s, s], r() * 6.28, 0.1, false)); n++; }
+  // أكاسيا متفرقة بالصحراء (بعيد عن الطرق)
+  const ac: number[] = [];
+  for (let i = 0, n = 0; i < 30000 && n < (HQ ? 320 : 160); i++) { const x = -4800 + r() * 4600, z = -1500 + r() * 2800;
+    if (!okAt(x, z, 14, 22) || Math.min(tribDist(x, z), wadiDist(x, z)) < 6) continue; const s = 0.6 + r() * 0.8; ac.push(...onGround(x, z, [s, s * (0.8 + r() * 0.4), s], r() * 6.28, 0.1, false)); n++; }
+  // سيارات مهجورة: على كتف الطريق السريع، وواكفة جنب البيوت
+  const cars: number[][] = [[], [], []];
+  const car = (x: number, z: number, yaw: number, houses: boolean) => { if (!okAt(x, z, 5, 0, houses)) return; cars[(r() * 3) | 0].push(...onGround(x, z, [1, 1, 1], yaw, 0.05)); };
+  for (let x = -5200; x < HIGHWAY_END - 50; x += 90 + r() * 240) { const side = r() < 0.5 ? -1 : 1; car(x, HIGHWAY_Z + side * (7 + r() * 6), (r() < 0.8 ? Math.PI / 2 : 0) + (r() - 0.5) * 0.9, true); }
+  for (const h of HOUSES) { if (r() > 0.3) continue; const a = h.rot + (r() < 0.5 ? 0 : Math.PI), d = Math.max(h.w, h.d) * 0.5 + 4.5, x = h.x + Math.sin(a) * d, z = h.z + Math.cos(a) * d;
+    if (HOUSES.some(o2 => o2 !== h && Math.hypot(o2.x - x, o2.z - z) < Math.max(o2.w, o2.d) * 0.6 + 2)) continue; car(x, z, h.rot + (r() < 0.5 ? Math.PI / 2 : 0), false); }
+  // أكياس رمل: مواقع الأبرامز ورا السواتر، الكورنيت، الخط الثاني، وطرف القرية الغربي؛ وحواجز كونكريت بالسيطرة
+  const sb: number[] = [], bar: number[] = [];
+  const bag = (x: number, z: number, yaw: number) => { if (roadDist(x, z) < 2) return; sb.push(...onGround(x, z, [1, 1, 1], yaw + (r() - 0.5) * 0.4, 0.15)); };
+  for (const b of BERMS) for (const dz of [-24, 24]) bag(b[0] + 28, b[2] + dz, 0);
+  for (const b of BERMS2) for (const dz of [-22, 0, 22]) bag(b[0] - 6, b[2] + dz, 0);
+  for (const k of [KORNET_P, KORNET_P2]) { bag(k[0] - 4, k[2], 0); bag(k[0] + 2, k[2] + 6, Math.PI / 2); }
+  const FV = VILLAGES[0];
+  for (const h of HOUSES) if (Math.hypot(h.x - FV.x, h.z - FV.z) < FV.rad && h.x < FV.x - FV.rad * 0.35 && r() < 0.6) bag(h.x - Math.max(h.w, h.d) * 0.6 - 3, h.z + (r() - 0.5) * 6, 0);
+  for (const dz of [-6, 6]) bag(-1885 - 10, HIGHWAY_Z + dz * 3.2, 0);
+  for (let i = 0; i < 3; i++) { bar.push(...onGround(-1905, HIGHWAY_Z - 7 + i * 3.3, [1, 1, 1], 0, 0)); bar.push(...onGround(-1875, HIGHWAY_Z + 7 - i * 3.3, [1, 1, 1], 0, 0)); }
+  for (let x = FV.x - FV.rad; x < FV.x + FV.rad; x += 40 + r() * 70) bar.push(...onGround(x, HIGHWAY_Z + (r() < 0.5 ? -9.5 : 9.5), [1, 1, 1], Math.PI / 2 + (r() - 0.5) * 0.2, 0));
+  const nProps = scatter(P_TREE, orch, 2000) + scatter(P_ACACIA, ac, 1800) + scatter(P_CAR1, cars[0], 1500) + scatter(P_CAR2, cars[1], 1500) + scatter(P_PICK, cars[2], 1500) + scatter(P_SAND, sb, 1300) + scatter(P_BAR, bar, 1300);
+  console.log('props', { palms: pm.length / 16, orch: orch.length / 16, acacia: ac.length / 16, cars: cars.map(c => c.length / 16), sandbags: sb.length / 16, barriers: bar.length / 16, total: nProps, chunks: chunks.length });
 
   // ---------- المواقع (تتضرر بالقصف) ----------
   const siteProps: SiteProp[] = [];

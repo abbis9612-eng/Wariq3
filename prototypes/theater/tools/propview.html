@@ -1,0 +1,16 @@
+<!doctype html><meta charset="utf-8"><style>html,body{margin:0;height:100%;background:#c9c2b0}canvas{width:100%;height:100%}</style>
+<canvas id="c"></canvas>
+<script type="module">
+// معاينة مجسم (لاختيار المجسمات قبل إدخالها): /tools/propview.html?m=shots/props/x.glb
+import { Engine, Scene, Vector3, Color4, HemisphericLight, DirectionalLight, ArcRotateCamera, LoadAssetContainerAsync, PBRMaterial } from '@babylonjs/core';
+import '@babylonjs/loaders/glTF';
+const e = new Engine(document.getElementById('c'), true, { preserveDrawingBuffer: true }), s = new Scene(e); s.clearColor = new Color4(0.79, 0.76, 0.69, 1);
+new HemisphericLight('h', new Vector3(0, 1, 0), s).intensity = 0.7; const d = new DirectionalLight('d', new Vector3(-0.5, -1, 0.6), s); d.intensity = 2.2;
+const c = await LoadAssetContainerAsync('/' + new URLSearchParams(location.search).get('m'), s); c.addAllToScene();
+c.materials.forEach(m => { if (m instanceof PBRMaterial) { m.environmentIntensity = 0; m.metallic = Math.min(m.metallic ?? 1, 0.15); } });
+const { min, max } = c.meshes[0].getHierarchyBoundingVectors(true), ctr = min.add(max).scale(0.5), L = max.subtract(min).length();
+const cam = new ArcRotateCamera('a', -Math.PI / 3, 1.2, L * 1.25, ctr, s); s.activeCamera = cam;
+let tris = 0; c.meshes.forEach(m => { const i = m.getTotalIndices(); tris += i / 3; });
+window.info = { size: max.subtract(min).asArray().map(v => +v.toFixed(2)), tris: tris | 0, mats: c.materials.length, tex: c.textures.length };
+s.executeWhenReady(() => { e.runRenderLoop(() => s.render()); setTimeout(() => window.done = true, 800); });
+</script>

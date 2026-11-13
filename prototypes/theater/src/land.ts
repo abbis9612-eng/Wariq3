@@ -1,7 +1,7 @@
 // تصميم الأرض: ملف مشترك بين مولّد الأرض (tools/genterrain.mjs) والرسم (main.ts). بدون أي رسم.
 // الفكرة (I-027): سهل صحراوي بالوسط للقتال، وديان جافة تقطعه، هضاب غرباً، سلسلتين جبال شمالاً وجنوباً، وقرية على الوادي.
 import type { V3 } from './sim.ts';
-import { SITES, riverX, RIVER_W, HIGHWAY_Z, BERMS, PATRIOT_POS, S400_POS, site } from './sim.ts';
+import { SITES, riverX, RIVER_W, HIGHWAY_Z, BERMS, PATRIOT_POS, S400_POS, site, rng } from './sim.ts';
 
 export const LAND = 13000;          // عرض الأرض بالمتر
 export const HN = 1025;             // دقة خريطة الارتفاع
@@ -36,6 +36,7 @@ export const WADIS: { pts: [number, number][]; w: number; d: number }[] = [
 export const PADS: [number, number, number][] = [
   ...SITES.map(s => [s.p[0], s.p[2], s.id === 'airport' ? 120 : 210] as [number, number, number]),
   [PATRIOT_POS[0], PATRIOT_POS[2], 60], [S400_POS[0], S400_POS[2], 55], [-1050, -660, 90], [-1830, HIGHWAY_Z, 70], [-5080, -1400, 90],
+  [-1480, HIGHWAY_Z + 10, 250],   // قرية الطريق (ساحة الاشتباك)
 ];
 export const RIDGE_X = -2100;   // تلّة الدفاع: خط الأبرامز عليها والسواتر فوقها
 
@@ -67,3 +68,62 @@ export function roadDist(x: number, z: number) {
   return best;
 }
 export const wadiDist = (x: number, z: number) => Math.abs(x - riverX(z)) - RIVER_W(z) / 2;
+
+// ===== القرى والبيوت (I-031): بيانات بدون رسم، حتى المحاكاة تعرف وين البيوت (ساتر، يسد النظر) =====
+// أنواع البيوت: مجسمات حقيقية من Sketchfab (CC BY) — المقاسات بعد التكبير (عرض × ارتفاع × عمق بالمتر)
+export interface HouseType { model: string; s: number; w: number; h: number; d: number; weight: number; farm?: boolean }
+export const HOUSE_TYPES: HouseType[] = [
+  { model: 'h_arabic4', s: 1.50, w: 10.6, h: 6.8, d: 9.6, weight: 0.27 },   // بيت طين بباب خشب مقوّس
+  { model: 'h_arab1', s: 1.25, w: 12.0, h: 8.1, d: 11.6, weight: 0.16 },     // بيت بلوك بسياج طابوق
+  { model: 'h_arab2', s: 1.62, w: 6.1, h: 5.6, d: 12.8, weight: 0.14 },    // بيت ضيق ملبّخ
+  { model: 'h_arabic1', s: 1.25, w: 10.1, h: 7.1, d: 14.9, weight: 0.12 },  // بيت أبيض بقبة ودرج
+  { model: 'h_desert', s: 0.75, w: 10.4, h: 10.5, d: 15.8, weight: 0.08 },   // بيت بطابقين وأقواس
+  { model: 'h_low', s: 1.12, w: 16.2, h: 8.1, d: 11.2, weight: 0.14 },          // بيت بسقف جينكو
+  { model: 'h_farm', s: 1.50, w: 6.2, h: 4.1, d: 9.2, weight: 0.09, farm: true }, // سقيفة مزرعة
+];
+export interface House { i: number; x: number; z: number; rot: number; t: number; w: number; d: number; h: number; vil: string; yard: boolean }
+export interface Village { id: string; name: string; x: number; z: number; n: number; rad: number; rot: number; street: boolean }
+const GV = site('green').p;
+export const VILLAGES: Village[] = [
+  { id: 'front', name: 'قرية الطريق', x: -1480, z: HIGHWAY_Z + 10, n: 62, rad: 240, rot: 0, street: true },
+  { id: 'river', name: 'قرية الوادي', x: GV[0] - 30, z: GV[2], n: 52, rad: 190, rot: 0.25, street: false },
+  { id: 'v3', name: 'قرية التل', x: -3080, z: 420, n: 10, rad: 95, rot: 0.6, street: false },
+  { id: 'v4', name: 'قرية الشرق', x: 1330, z: 640, n: 12, rad: 110, rot: -0.3, street: false },
+  { id: 'v5', name: 'قرية الجنوب', x: -640, z: -1560, n: 9, rad: 90, rot: 0.1, street: false },
+  { id: 'v6', name: 'قرية النخيل', x: riverX(1900) - 260, z: 1900, n: 8, rad: 80, rot: 0.4, street: false },
+];
+function pickType(r: () => number, farm: boolean) { const list = HOUSE_TYPES.map((t, i) => [i, t.farm && !farm ? 0 : t.weight] as [number, number]); let x = r() * list.reduce((a, b) => a + b[1], 0); for (const [i, w] of list) { x -= w; if (x <= 0) return i; } return 0; }
+export const HOUSES: House[] = (() => {
+  const r = rng(4242), out: House[] = [];
+  const ok = (x: number, z: number, rad: number) => roadDist(x, z) > rad * 0.75 + 4 && wadiDist(x, z) > 24 && out.every(h => Math.hypot(h.x - x, h.z - z) > rad + Math.max(h.w, h.d) * 0.55 + 2.5);
+  const add = (v: Village, x: number, z: number, rot: number) => {
+    const t = pickType(r, Math.hypot(x - v.x, z - v.z) > v.rad * 0.7), T = HOUSE_TYPES[t], rad = Math.max(T.w, T.d) * 0.55;
+    if (!ok(x, z, rad)) return false;
+    out.push({ i: out.length, x, z, rot, t, w: T.w, d: T.d, h: T.h, vil: v.id, yard: !T.farm && r() < 0.45 }); return true;
+  };
+  for (const v of VILLAGES) {
+    let k = 0;
+    if (v.street) {
+      // قرية على الطريق: صفين بيوت على جانبي الشارع، وأزقة ورا، والبيوت مقابل الشارع
+      for (let i = 0; i < 1500 && k < v.n; i++) {
+        const along = (r() - 0.5) * 2 * v.rad, row = 1 + Math.floor(r() * r() * 4.5), side = r() < 0.5 ? -1 : 1;
+        const off = side * (19 + (row - 1) * 27 + r() * 6) * (1 - 0.3 * Math.abs(along) / v.rad);
+        const x = v.x + along, z = v.z + off;
+        if (add(v, x, z, (side < 0 ? 0 : Math.PI) + (r() - 0.5) * 0.12)) k++;
+      }
+    } else for (let i = 0; i < 900 && k < v.n; i++) {
+      const a = r() * 6.28, d = Math.sqrt(r()) * v.rad;
+      if (add(v, v.x + Math.cos(a) * d, v.z + Math.sin(a) * d, v.rot + (r() < 0.5 ? 0 : Math.PI / 2) + (r() - 0.5) * 0.25)) k++;
+    }
+  }
+  return out;
+})();
+// هل الخط بين نقطتين يمر ببيت؟ (للمحاكاة: خط النظر والساتر)
+export function houseBlocks(ax: number, az: number, bx: number, bz: number, skip = -1) {
+  for (const h of HOUSES) {
+    if (h.i === skip || (h as House & { dead?: boolean }).dead) continue;
+    const vx = bx - ax, vz = bz - az, l2 = vx * vx + vz * vz, t = clampN(((h.x - ax) * vx + (h.z - az) * vz) / l2, 0, 1);
+    if (Math.hypot(h.x - ax - vx * t, h.z - az - vz * t) < Math.min(h.w, h.d) * 0.45 && t > 0.02 && t < 0.98) return h;
+  }
+  return null;
+}

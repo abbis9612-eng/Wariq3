@@ -1,17 +1,15 @@
 // رسم الأرض (I-027): جبال ووديان من خريطة ارتفاع مولّدة بتعرية، خامة تخلط صور حقيقية حسب الميلان والمكان،
 // طرق ترابية بآثار عجلات، قرية طين، نخل، شجيرات، صخور، مواقع، وبغداد بالأفق.
 import {
-  Scene, Mesh, MeshBuilder, VertexData, VertexBuffer, StandardMaterial, Color3, Texture, Matrix, Quaternion, Vector3, AbstractMesh, TransformNode,
+  Scene, Mesh, MeshBuilder, LoadAssetContainerAsync, Material, VertexData, VertexBuffer, StandardMaterial, Color3, Texture, Matrix, Quaternion, Vector3, AbstractMesh, TransformNode,
 } from '@babylonjs/core';
 import { CustomMaterial } from '@babylonjs/materials/custom';
 import { V3, SITES, riverX, RIVER_W, HIGHWAY_Z, BERMS, rng, site, dist2d } from './sim';
-import { LAND, HN, HMIN, HMAX, WADI_FLOOR, ROADS, WADIS, HIGHWAY_END, setHeightData, groundH, groundN, roadDist, wadiDist, STRIP_ROT } from './land';
+import { LAND, HN, HMIN, HMAX, WADI_FLOOR, ROADS, WADIS, HIGHWAY_END, setHeightData, groundH, groundN, roadDist, wadiDist, STRIP_ROT, HOUSES, HOUSE_TYPES, House } from './land';
 import hUrl from '../textures/land_h.png?url';
 
-export interface Bld { x: number; y: number; z: number; w: number; d: number; h: number; rot: number; dmg: boolean }
 export interface SiteProp { site: string; mesh: Mesh; mat: StandardMaterial; hit: boolean }
-export interface WorldOut { bld: Mesh; bldMat: Float32Array; bldCol: Float32Array; bldInfo: Bld[]; siteProps: SiteProp[] }
-export const bldMatrix = (b: Bld, h: number) => Matrix.Compose(new Vector3(b.w, h, b.d), Quaternion.RotationAxis(Vector3.Up(), b.rot), new Vector3(b.x, b.y - 0.4, b.z));
+export interface WorldOut { houses: { damage(i: number): boolean; reset(): void }; siteProps: SiteProp[] }
 const EDGE_Y = -26;
 const sm = (a: number, b: number, v: number) => { const t = Math.min(1, Math.max(0, (v - a) / (b - a))); return t * t * (3 - 2 * t); };
 const edgeK = (x: number, z: number) => sm(LAND / 2 - 520, LAND / 2 - 20, Math.max(Math.abs(x), Math.abs(z)));
@@ -38,7 +36,7 @@ const onGround = (x: number, z: number, s: V3, yaw: number, sink = 0, tilt = tru
   return Matrix.Compose(new Vector3(s[0], s[1], s[2]), q, new Vector3(x, groundH(x, z) - sink, z)).asArray();
 };
 
-export async function buildWorld(scene: Scene, o: { HQ: boolean; NL: number; caster: (m: AbstractMesh) => void; texUrls: Record<string, string>; keepClear: V3[] }): Promise<WorldOut> {
+export async function buildWorld(scene: Scene, o: { HQ: boolean; NL: number; caster: (m: AbstractMesh) => void; texUrls: Record<string, string>; keepClear: V3[]; modelUrl: (n: string) => string; prepMat: (m: Material) => void }): Promise<WorldOut> {
   const { HQ, NL, caster } = o, r = rng(77);
   const tex = (n: string, inv = true) => { const t = new Texture(o.texUrls[`../textures/${n}.webp`], scene, false, inv, Texture.TRILINEAR_SAMPLINGMODE); t.anisotropicFilteringLevel = 8; return t; };
   const mapTex = (n: string) => { const t = tex(n, false); t.wrapU = t.wrapV = Texture.CLAMP_ADDRESSMODE; t.anisotropicFilteringLevel = 1; return t; };
@@ -88,7 +86,8 @@ export async function buildWorld(scene: Scene, o: { HQ: boolean; NL: number; cas
     float wad=smoothstep(.25,.75,la.b+(mac-.5)*.3);
     // حقول صغيرة على ضفة الوادي قرب القرية
     float wd=abs(P.x-rX(P.y));
-    float farmK=(1.-smoothstep(170.,330.,wd+(mac2-.5)*160.))*smoothstep(100.,125.,wd)*(1.-smoothstep(900.,1500.,abs(P.y+150.)))*(1.-rockK)*smoothstep(215.,265.,length(P-vec2(${G0},${G2})));
+    float vfd=length((P-vec2(-1480.,-320.))*vec2(.62,1.)); float farmV=(1.-smoothstep(250.,420.,vfd+(mac2-.5)*120.))*smoothstep(150.,190.,vfd)*smoothstep(10.,30.,abs(P.y+350.));
+    float farmK=max(farmV,1.-smoothstep(170.,330.,wd+(mac2-.5)*160.))*smoothstep(100.,125.,wd)*(1.-smoothstep(900.,1500.,abs(P.y+150.)))*(1.-rockK)*smoothstep(215.,265.,length(P-vec2(${G0},${G2})));
     vec2 pq=vec2(P.x*.96+P.y*.28,P.y*.96-P.x*.28)/vec2(38.,27.); vec2 pf=abs(fract(pq)-.5); float plot=h21(floor(pq));
     vec3 fm=texture2D(farmT,P/7.).rgb*1.5; vec3 crop=mix(fm,vec3(.3,.4,.17)*(.7+.6*mac),.75*(.6+.4*sin(pq.y*40.)));
     fm=mix(fm,crop,step(.5,plot)); fm=mix(fm,sand*.85,smoothstep(.4,.49,max(pf.x,pf.y))); farmK*=step(.18,plot);
@@ -132,13 +131,17 @@ export async function buildWorld(scene: Scene, o: { HQ: boolean; NL: number; cas
   for (let i = 0; i < 9; i++) { const a = i / 9 * 6.283 + (i % 2) * 0.3, droop = 1.6 + (i % 3) * 0.7, pa: Vector3[] = [], pb: Vector3[] = [];
     for (let s = 0; s <= 5; s++) { const u = s / 5, rr = 0.2 + 3.7 * u, y = 7.1 + 1.3 * Math.sin(u * 2.6) - droop * u * u, w = 0.6 * Math.sin(Math.PI * (0.12 + 0.86 * u));
       pa.push(new Vector3(Math.cos(a) * rr - Math.sin(a) * w, y, Math.sin(a) * rr + Math.cos(a) * w)); pb.push(new Vector3(Math.cos(a) * rr + Math.sin(a) * w, y, Math.sin(a) * rr - Math.cos(a) * w)); }
-    palmParts.push(paint(MeshBuilder.CreateRibbon('fr', { pathArray: [pa, pb], sideOrientation: Mesh.DOUBLESIDE }, scene), i % 2 ? [0.4, 0.56, 0.24] : [0.5, 0.64, 0.28])); }
+    palmParts.push(paint(MeshBuilder.CreateRibbon('fr', { pathArray: [pa, pb], sideOrientation: Mesh.DOUBLESIDE }, scene), i % 2 ? [0.52, 0.66, 0.3] : [0.62, 0.74, 0.34])); }
   const palm = Mesh.MergeMeshes(palmParts, true, true)!; palm.material = plain('palmMat'); (palm.material as StandardMaterial).backFaceCulling = false;
   const pm: number[] = [], pcol: number[] = []; const G = site('green').p;
   for (let i = 0, n = 0; i < 6000 && n < (HQ ? 420 : 220); i++) {
     const z = -1900 + r() * 3500, side = r() < 0.5 ? -1 : 1, x = riverX(z) + side * (RIVER_W(z) / 2 + 12 + Math.pow(r(), 1.6) * 330);
-    if (groundH(x, z) < WADI_FLOOR + 2.5 || roadDist(x, z) < 5 || !clear(x, z, 16) || (dist2d([x, 0, z], G) < 215 && r() < 0.6)) continue;
+    if (groundH(x, z) < WADI_FLOOR + 2.5 || roadDist(x, z) < 5 || !clear(x, z, 16) || HOUSES.some(h => Math.hypot(h.x - x, h.z - z) < Math.max(h.w, h.d) * 0.7 + 4)) continue;
     const s = 0.75 + r() * 0.6; pm.push(...onGround(x, z, [s, s * (0.85 + r() * 0.4), s], r() * 6.28, 0.2, false)); const k = 0.8 + r() * 0.35; pcol.push(k, k, k, 1); n++; }
+  // نخل بين البيوت وحول القرى
+  for (const h of HOUSES) { if (r() > 0.55) continue; for (let q = 0; q < 1 + (r() * 3 | 0); q++) { const a = r() * 6.28, d = Math.max(h.w, h.d) * 0.7 + 4 + r() * 12, x = h.x + Math.cos(a) * d, z = h.z + Math.sin(a) * d;
+    if (roadDist(x, z) < 4 || HOUSES.some(o => Math.hypot(o.x - x, o.z - z) < Math.max(o.w, o.d) * 0.6 + 1.5)) continue;
+    const s = 0.7 + r() * 0.6; pm.push(...onGround(x, z, [s, s * (0.85 + r() * 0.4), s], r() * 6.28, 0.2, false)); const k = 0.8 + r() * 0.35; pcol.push(k, k, k, 1); } }
   instances(palm, pm, pcol); caster(palm);
   // شجيرات صحراوية
   const shrub = MeshBuilder.CreateIcoSphere('shrub', { radius: 1, subdivisions: 1, flat: true }, scene); shrub.scaling.y = 0.62; shrub.bakeCurrentTransformIntoVertices(); shrub.material = plain('shrubMat');
@@ -167,14 +170,7 @@ export async function buildWorld(scene: Scene, o: { HQ: boolean; NL: number; cas
   const pl: number[] = []; for (let x = -6100; x < HIGHWAY_END; x += 85) { const z = HIGHWAY_Z + 15 + Math.sin(x) * 0.8; pl.push(...Matrix.Compose(Vector3.One(), Quaternion.RotationAxis(new Vector3(1, 0, 0), Math.sin(x * 3) * 0.04), new Vector3(x, groundH(x, z) + 4.3, z)).asArray()); }
   instances(pole, pl); caster(pole);
 
-  // ---------- البيوت: طين وطابوق، سطح بسياج، باب وشبابيك ----------
-  const hp: Mesh[] = [];
-  const bx = (w: number, h: number, d: number, x: number, y: number, z: number, c: V3) => { const m = MeshBuilder.CreateBox('b', { width: w, height: h, depth: d }, scene); m.position.set(x, y, z); hp.push(paint(m, c)); };
-  bx(1, 0.92, 1, 0, 0.46, 0, [1, 1, 1]);
-  for (const [w, d, x, z] of [[1, 0.06, 0, 0.47], [1, 0.06, 0, -0.47], [0.06, 1, 0.47, 0], [0.06, 1, -0.47, 0]]) bx(w, 0.1, d, x, 0.97, z, [0.93, 0.93, 0.93]);
-  bx(0.13, 0.5, 0.02, 0.12, 0.25, 0.505, [0.3, 0.2, 0.12]); bx(0.11, 0.2, 0.02, -0.24, 0.55, 0.505, [0.1, 0.09, 0.08]); bx(0.02, 0.2, 0.12, 0.505, 0.55, 0.15, [0.1, 0.09, 0.08]);
-  bx(0.02, 0.2, 0.12, -0.505, 0.55, -0.2, [0.1, 0.09, 0.08]); bx(0.11, 0.2, 0.02, 0.2, 0.55, -0.505, [0.1, 0.09, 0.08]);
-  const bld = Mesh.MergeMeshes(hp, true, true)!; bld.name = 'bld'; bld.receiveShadows = true;
+  // ---------- البيوت: مجسمات حقيقية (Sketchfab CC BY) بنسخ رقيقة، وحائط حوش، وحالة مهدّم (I-031) ----------
   const wm = new CustomMaterial('bldMat', scene); wm.specularColor = new Color3(0.03, 0.03, 0.03); wm.maxSimultaneousLights = 2 + NL;
   wm.AddUniform('wallT', 'sampler2D', tex('road')); wm.AddUniform('macT', 'sampler2D', tex('macro'));
   wm.Fragment_Custom_Diffuse(`
@@ -184,25 +180,43 @@ export async function buildWorld(scene: Scene, o: { HQ: boolean; NL: number; cas
     float st=dot(texture2D(macT,vec2(wp.x+wp.z,wp.y*3.)/40.).rgb,vec3(.333));
     baseColor.rgb*=wt*(.8+.36*st)*mix(1.,.88,top);
   `);
-  bld.material = wm;
-  const bldInfo: Bld[] = [], mats: number[] = [], cols: number[] = [];
-  const palette: V3[] = [[0.95, 0.88, 0.74], [0.86, 0.78, 0.64], [1, 0.97, 0.9], [0.8, 0.72, 0.6], [0.9, 0.8, 0.66]];
-  const wallM: number[] = [];
-  const addHouse = (x: number, z: number, rot: number, big = 1) => {
-    if (bldInfo.some(b => Math.hypot(b.x - x, b.z - z) < 21) || roadDist(x, z) < 9 || wadiDist(x, z) < 22 || !clear(x, z, 26)) return false;
-    const b: Bld = { x, z, y: Math.min(groundH(x - 5, z), groundH(x + 5, z), groundH(x, z - 5), groundH(x, z + 5)), w: (8 + r() * 7) * big, d: (7 + r() * 6) * big, h: 3.4 + r() * 1.3 + (r() < 0.22 ? 3 : 0), rot, dmg: false };
-    bldInfo.push(b); mats.push(...bldMatrix(b, b.h).asArray()); const c = palette[(r() * palette.length) | 0], k = 0.88 + r() * 0.14; cols.push(c[0] * k, c[1] * k, c[2] * k, 1);
-    if (r() < 0.6) { const cw = b.w + 9 + r() * 6, cd = b.d + 9 + r() * 7, ox = (r() - 0.5) * 5, oz = (r() - 0.5) * 5, cs = Math.cos(rot), sn = Math.sin(rot);
-      for (const [lx, lz, lw, ld] of [[0, cd / 2, cw, 0.45], [-cw / 2, 0, 0.45, cd], [cw / 2, 0, 0.45, cd], [cw * 0.28, -cd / 2, cw * 0.44, 0.45]]) { const px = x + (lx + ox) * cs + (lz + oz) * sn, pz = z - (lx + ox) * sn + (lz + oz) * cs;
-        wallM.push(...Matrix.Compose(new Vector3(lw, 2.1, ld), Quaternion.RotationAxis(Vector3.Up(), rot), new Vector3(px, groundH(px, pz) + 0.75, pz)).asArray()); } }
-    return true;
-  };
-  const village = (cx: number, cz: number, n: number, rad: number, axis0: number) => { for (let i = 0, k = 0; i < 900 && k < n; i++) { const a = r() * 6.28, d = Math.sqrt(r()) * rad; if (addHouse(cx + Math.cos(a) * d, cz + Math.sin(a) * d, axis0 + (r() < 0.5 ? 0 : Math.PI / 2) + (r() - 0.5) * 0.25)) k++; } };
-  village(G[0] - 30, G[2], HQ ? 46 : 34, 200, 0.25);                 // قرية الوادي
-  village(-3080, 420, 9, 95, 0.6); village(1330, 640, 11, 110, -0.3); village(-640, -1560, 8, 90, 0.1); village(riverX(1900) - 260, 1900, 7, 80, 0.4);   // قرى صغيرة
-  const bldMat = new Float32Array(mats), bldCol = new Float32Array(cols);
-  bld.thinInstanceSetBuffer('matrix', bldMat, 16, false); bld.thinInstanceRegisterAttribute('color', 4); bld.thinInstanceSetBuffer('color', bldCol, 4, false); bld.isPickable = false; bld.alwaysSelectAsActiveMesh = true; caster(bld);
+  const typeMeshes: Mesh[][] = await Promise.all(HOUSE_TYPES.map(async T => {
+    const c = await LoadAssetContainerAsync(o.modelUrl(T.model), scene, { pluginExtension: '.gltf' });
+    c.addAllToScene(); c.materials.forEach(o.prepMat);
+    const ms = c.meshes.filter(m => m.getTotalVertices() > 0) as Mesh[];
+    let mn = new Vector3(1e9, 1e9, 1e9), mx = new Vector3(-1e9, -1e9, -1e9);
+    ms.forEach(m => { m.computeWorldMatrix(true); const bb = m.getBoundingInfo().boundingBox; mn = Vector3.Minimize(mn, bb.minimumWorld); mx = Vector3.Maximize(mx, bb.maximumWorld); });
+    const N = Matrix.Translation(-(mn.x + mx.x) / 2, -mn.y, -(mn.z + mx.z) / 2).multiply(Matrix.Scaling(T.s, T.s, T.s));
+    for (const m of ms) { const wmx = m.computeWorldMatrix(true).clone(); m.setParent(null); m.position.setAll(0); m.rotationQuaternion = null; m.rotation.setAll(0); m.scaling.setAll(1);
+      m.bakeTransformIntoVertices(wmx.multiply(N)); m.receiveShadows = true; m.isPickable = false; }
+    c.meshes.filter(m => m.getTotalVertices() === 0).forEach(m => m.dispose()); c.transformNodes.forEach(t => t.dispose());
+    return ms;
+  }));
+  const TINT = HOUSE_TYPES.map(T => (T.model === 'h_arabic1' ? 0.72 : 1));
+  const slot: number[] = [], byType: number[][] = HOUSE_TYPES.map(() => []);
+  const baseY = (h: House) => Math.min(groundH(h.x - h.w / 2, h.z), groundH(h.x + h.w / 2, h.z), groundH(h.x, h.z - h.d / 2), groundH(h.x, h.z + h.d / 2)) - 0.25;
+  const hMatrix = (h: House, squash = 1) => Matrix.Compose(new Vector3(1, squash, 1), Quaternion.RotationAxis(Vector3.Up(), h.rot), new Vector3(h.x, baseY(h), h.z));
+  for (const h of HOUSES) { slot[h.i] = byType[h.t].length; byType[h.t].push(h.i); }
+  const bufs = byType.map(list => { const m = new Float32Array(list.length * 16), c = new Float32Array(list.length * 4);
+    list.forEach((hi, k) => { hMatrix(HOUSES[hi]).copyToArray(m, k * 16); const g = (0.9 + ((hi * 37) % 13) / 60) * TINT[HOUSES[hi].t]; c.set([g, g * 0.95, g * 0.86, 1], k * 4); }); return { m, c }; });
+  typeMeshes.forEach((ms, t) => ms.forEach(m => { if (!byType[t].length) { m.setEnabled(false); return; }
+    m.thinInstanceSetBuffer('matrix', bufs[t].m, 16, false); m.thinInstanceRegisterAttribute('color', 4); m.thinInstanceSetBuffer('color', bufs[t].c, 4, false);
+    m.alwaysSelectAsActiveMesh = true; caster(m); }));
+  // حائط حوش حول قسم من البيوت (طابوق ملبّخ)
+  const wallM: number[] = [], r2 = rng(99);
+  for (const h of HOUSES) { if (!h.yard) continue; const cw = h.w + 8 + r2() * 6, cd = h.d + 8 + r2() * 6, cs = Math.cos(h.rot), sn = Math.sin(h.rot), gap = r2() < 0.5 ? 1 : -1;
+    for (const [lx, lz, lw, ld] of [[0, -gap * cd / 2, cw, 0.4], [-cw / 2, 0, 0.4, cd], [cw / 2, 0, 0.4, cd], [cw * 0.3, gap * cd / 2, cw * 0.4, 0.4], [-cw * 0.3, gap * cd / 2, cw * 0.4, 0.4]]) {
+      const px = h.x + lx * cs + lz * sn, pz = h.z - lx * sn + lz * cs; if (roadDist(px, pz) < 1) continue;
+      wallM.push(...Matrix.Compose(new Vector3(lw, 2.1, ld), Quaternion.RotationAxis(Vector3.Up(), h.rot), new Vector3(px, groundH(px, pz) + 0.75, pz)).asArray()); } }
   const wall = MeshBuilder.CreateBox('wall', { size: 1 }, scene); paint(wall, [0.9, 0.84, 0.72]); wall.material = wm; wall.receiveShadows = true; instances(wall, wallM); caster(wall);
+  const dead = new Set<number>();
+  const houses = {
+    damage(i: number) { if (dead.has(i)) return false; dead.add(i); const h = HOUSES[i], t = h.t, k = slot[i]; (h as House & { dead?: boolean }).dead = true;
+      hMatrix(h, 0.3).copyToArray(bufs[t].m, k * 16); bufs[t].c.set([0.32, 0.29, 0.26, 1], k * 4);
+      typeMeshes[t].forEach(m => { m.thinInstanceBufferUpdated('matrix'); m.thinInstanceBufferUpdated('color'); }); return true; },
+    reset() { for (const i of dead) { const h = HOUSES[i], t = h.t, k = slot[i]; (h as House & { dead?: boolean }).dead = false; hMatrix(h).copyToArray(bufs[t].m, k * 16); const g = (0.9 + ((i * 37) % 13) / 60) * TINT[t]; bufs[t].c.set([g, g * 0.95, g * 0.86, 1], k * 4); }
+      dead.clear(); typeMeshes.forEach(ms => ms.forEach(m => { if (m.isEnabled()) { m.thinInstanceBufferUpdated('matrix'); m.thinInstanceBufferUpdated('color'); } })); },
+  };
 
   // ---------- المواقع (تتضرر بالقصف) ----------
   const siteProps: SiteProp[] = [];
@@ -239,5 +253,5 @@ export async function buildWorld(scene: Scene, o: { HQ: boolean; NL: number; cas
     sl.push(...Matrix.Compose(new Vector3(w, h, 40 + r() * 70), Quaternion.Identity(), new Vector3(x, EDGE_Y + h / 2, z)).asArray()); }
   instances(sky, sl);
   void SITES;
-  return { bld, bldMat, bldCol, bldInfo, siteProps };
+  return { houses, siteProps };
 }

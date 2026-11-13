@@ -14,3 +14,10 @@
 | s400.glb | S-400 Triumf missile launcher truck | Chenzoss | https://sketchfab.com/3d-models/s-400-triumf-missile-launcher-truck-c2631f0da36b49cda7d7f849b373283f |
 
 كلها مخففة للتلفون بـ `tools/prep.mjs` (قوام WebP ≤512، تبسيط هندسي للدبابات والمسيّرة).
+| h_arabic4.glb | Arabic house 4 | sechela | https://sketchfab.com/3d-models/e4069e94d7b64f8da969b2c1adb3e7b3 |
+| h_arabic1.glb | Arabic house 1 | sechela | https://sketchfab.com/3d-models/c61d02e02b70477f81de6809558d26b7 |
+| h_arab1.glb | Arab house model | 123a9el | https://sketchfab.com/3d-models/83ba2c68075d4d0f862b0069edadb83b |
+| h_arab2.glb | Arab house model 2 | 123a9el | https://sketchfab.com/3d-models/da4172d66b144acbadd9b9e86c39469d |
+| h_desert.glb | Desert House | Avgust9 | https://sketchfab.com/3d-models/dfd9dd93d3ed4e8eae1b1b4c2659857e |
+| h_low.glb | Low House Building Apocalypse | yadrogames | https://sketchfab.com/3d-models/a4ba41df514e447095c2106f85734093 |
+| h_farm.glb | Low Farm Assembly House | yadrogames | https://sketchfab.com/3d-models/60156c85ad9e43498e15f2fbd529a5da |

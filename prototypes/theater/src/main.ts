@@ -13,8 +13,8 @@ import {
   V3, add, sub, scale, len, norm, lerp, clamp, rng, World, newWorld, step, order, Order, ORDER_CD, Unit, Air, Fx, SITES, riverX, RIVER_W, CITY_R,
   HIGHWAY_Z, BERMS, AIR_AR, SIDE_AR, PATRIOT_POS, S400_POS, S400_SCALE, dist2d, site, angDiff,
 } from './sim';
-import { groundH, groundN, ROADS } from './land';
-import { buildWorld, loadHeight, bldMatrix, Bld, SiteProp } from './world';
+import { groundH, groundN, ROADS, HOUSES } from './land';
+import { buildWorld, loadHeight, SiteProp, WorldOut } from './world';
 
 const urls = import.meta.glob('../models/*.gltf.json', { query: '?url', import: 'default', eager: true }) as Record<string, string>;
 const modelUrl = (n: string) => urls[`../models/${n}.gltf.json`];
@@ -80,7 +80,7 @@ const texSmoke = canvasTex('smoke', 128, (g, s) => {
 });
 const texUrls = import.meta.glob('../textures/*.webp', { query: '?url', import: 'default', eager: true }) as Record<string, string>;
 // الأرض والقرى والمواقع تنبني بـ world.ts؛ هنا نحتفظ بالبيوت والمعالم حتى ندمّرها وقت القصف
-let bld: Mesh, bldMat: Float32Array, bldCol: Float32Array, bldInfo: Bld[] = [];
+let houses: WorldOut['houses'];
 let keepClear: V3[] = [];
 let siteProps: SiteProp[] = [];
 
@@ -484,14 +484,8 @@ function killVisual(id: number, turret: boolean) {
 }
 // ===== دمار المواقع + بطاقة الثمن =====
 function siteDamage(sid: string, p: V3, big: boolean) {
-  const R0 = big ? 85 : 55; let changed = false;
-  bldInfo.forEach((b, i) => {
-    if (b.dmg || Math.hypot(b.x - p[0], b.z - p[2]) > R0) return; b.dmg = true; changed = true;
-    const h = b.h * (0.25 + Math.random() * 0.25);
-    bldMatrix(b, h).copyToArray(bldMat, i * 16);
-    for (let k = 0; k < 3; k++) bldCol[i * 4 + k] *= 0.28;
-  });
-  if (changed) { bld.thinInstanceBufferUpdated('matrix'); bld.thinInstanceBufferUpdated('color'); }
+  const R0 = big ? 70 : 45;
+  for (const h of HOUSES) if (Math.hypot(h.x - p[0], h.z - p[2]) < R0 + Math.max(h.w, h.d) / 2 && houses.damage(h.i)) burning.push({ p: G(h.x, h.z, 1), t: W.T, big: 0.8 });
   for (const sp of siteProps) {
     if (sp.hit || sp.site !== sid || Math.hypot(sp.mesh.getAbsolutePosition().x - p[0], sp.mesh.getAbsolutePosition().z - p[2]) > R0 + 60) continue;
     sp.hit = true; sp.mat.diffuseColor = sp.mat.diffuseColor.scale(0.25); sp.mesh.scaling.y *= 0.55; sp.mesh.position.y *= 0.55;
@@ -737,8 +731,7 @@ function start() {
   debris.forEach(d => d.m.dispose()); debris.length = 0; burning.length = 0; marks = []; vq.length = 0; slowWins.length = 0; decals = [];
   decal.thinInstanceSetBuffer('matrix', new Float32Array(16), 16, false); decal.thinInstanceCount = 0;
   for (const el of els.values()) el.remove(); els.clear(); for (const el of arrowEls.values()) el.remove(); arrowEls.clear(); pools.forEach(p => p.ps.reset());
-  bldInfo.forEach((b, i) => { if (!b.dmg) return; b.dmg = false; bldMatrix(b, b.h).copyToArray(bldMat, i * 16); for (let k = 0; k < 3; k++) bldCol[i * 4 + k] /= 0.28; });
-  bld.thinInstanceBufferUpdated('matrix'); bld.thinInstanceBufferUpdated('color');
+  houses.reset();
   siteProps.forEach(sp => { if (!sp.hit) return; sp.hit = false; sp.mat.diffuseColor = sp.mat.diffuseColor.scale(4); sp.mesh.scaling.y /= 0.55; sp.mesh.position.y /= 0.55; });
   W = newWorld(seed); seed = 1 + Math.floor(Math.random() * 9999); running = true; endShown = false; tickN = -1; impactReady = 0; lastSalvoShot = -99;
   setAuto(true); overview(true);
@@ -762,7 +755,7 @@ window.addEventListener('resize', () => engine.resize());
   try {
     keepClear = newWorld(3).units.map(u => u.p).concat([PATRIOT_POS, S400_POS]);
     await loadHeight();
-    ({ bld, bldMat, bldCol, bldInfo, siteProps } = await buildWorld(scene, { HQ, NL, caster, texUrls, keepClear }));
+    ({ houses, siteProps } = await buildWorld(scene, { HQ, NL, caster, texUrls, keepClear, modelUrl, prepMat: m => { if (m instanceof PBRMaterial) { m.environmentIntensity = 0; m.directIntensity = PBR_DIRECT; m.metallic = Math.min(m.metallic ?? 1, 0.15); m.maxSimultaneousLights = 2 + NL; } } }));
     makeProcedural();
     await loadModels(t => (load.textContent = t));
     setupShadows(); $('bQual').setAttribute('aria-pressed', String(HQ));

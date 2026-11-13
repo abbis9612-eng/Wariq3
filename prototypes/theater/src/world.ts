@@ -1,7 +1,7 @@
 // رسم الأرض (I-027): جبال ووديان من خريطة ارتفاع مولّدة بتعرية، خامة تخلط صور حقيقية حسب الميلان والمكان،
 // طرق ترابية بآثار عجلات، قرية طين، نخل، شجيرات، صخور، مواقع، وبغداد بالأفق.
 import {
-  Scene, Mesh, MeshBuilder, VertexData, VertexBuffer, StandardMaterial, Color3, Texture, Matrix, Quaternion, Vector3, AbstractMesh, TransformNode,
+  Scene, Mesh, MeshBuilder, VertexData, VertexBuffer, StandardMaterial, Material, Color3, Texture, DynamicTexture, Matrix, Quaternion, Vector3, AbstractMesh, TransformNode,
 } from '@babylonjs/core';
 import { CustomMaterial } from '@babylonjs/materials/custom';
 import { V3, SITES, riverX, RIVER_W, HIGHWAY_Z, BERMS, rng, site, dist2d } from './sim';
@@ -140,8 +140,29 @@ export async function buildWorld(scene: Scene, o: { HQ: boolean; NL: number; cas
     if (groundH(x, z) < WADI_FLOOR + 2.5 || roadDist(x, z) < 5 || !clear(x, z, 16) || (dist2d([x, 0, z], G) < 215 && r() < 0.6)) continue;
     const s = 0.75 + r() * 0.6; pm.push(...onGround(x, z, [s, s * (0.85 + r() * 0.4), s], r() * 6.28, 0.2, false)); const k = 0.8 + r() * 0.35; pcol.push(k, k, k, 1); n++; }
   instances(palm, pm, pcol); caster(palm);
-  // شجيرات صحراوية
-  const shrub = MeshBuilder.CreateIcoSphere('shrub', { radius: 1, subdivisions: 1, flat: true }, scene); shrub.scaling.y = 0.62; shrub.bakeCurrentTransformIntoVertices(); shrub.material = plain('shrubMat');
+  // شجيرات صحراوية: بطاقتان متقاطعتان بقوام مقصوص. الكرة كانت تقرأ ككتلة من فوق ومن الجنب.
+  const shrubTex = new DynamicTexture('shrubTex', { width: 128, height: 128 }, scene, false);
+  shrubTex.hasAlpha = true;
+  {
+    const g = shrubTex.getContext() as unknown as CanvasRenderingContext2D;
+    g.clearRect(0, 0, 128, 128);
+    const ell = (x: number, y: number, rx: number, ry: number, rot: number, col: string) => {
+      g.save(); g.translate(x, y); g.rotate(rot); g.fillStyle = col; g.beginPath(); g.ellipse(0, 0, rx, ry, 0, 0, 6.283); g.fill(); g.restore();
+    };
+    ell(64, 112, 4, 14, 0, 'rgba(86,62,34,.95)');
+    ell(64, 72, 34, 28, 0, 'rgba(78,96,38,.97)');
+    ell(42, 80, 20, 14, -0.45, 'rgba(104,112,44,.95)');
+    ell(88, 76, 18, 16, 0.4, 'rgba(64,82,32,.96)');
+    ell(58, 50, 16, 12, 0.15, 'rgba(122,126,54,.92)');
+    ell(80, 98, 14, 9, 0.35, 'rgba(92,84,36,.88)');
+    shrubTex.update();
+  }
+  const sA = MeshBuilder.CreatePlane('shA', { width: 2.2, height: 1.55, sideOrientation: Mesh.DOUBLESIDE }, scene); sA.position.y = 0.78;
+  const sB = MeshBuilder.CreatePlane('shB', { width: 2.2, height: 1.55, sideOrientation: Mesh.DOUBLESIDE }, scene); sB.position.y = 0.78; sB.rotation.y = Math.PI / 2;
+  const shrub = Mesh.MergeMeshes([sA, sB], true, true)!;
+  const smat = plain('shrubMat');
+  smat.diffuseTexture = shrubTex; smat.useAlphaFromDiffuseTexture = true; smat.transparencyMode = Material.MATERIAL_ALPHATEST; smat.alphaCutOff = 0.42; smat.backFaceCulling = false;
+  shrub.material = smat;
   const sh: number[] = [], shc: number[] = [];
   for (let i = 0, n = 0; i < 60000 && n < (HQ ? 5200 : 2200); i++) {
     const x = -5600 + r() * 8600, z = -3400 + r() * 6900, td = Math.min(tribDist(x, z), wadiDist(x, z)), near = 1 - sm(0, 260, td);
@@ -160,7 +181,7 @@ export async function buildWorld(scene: Scene, o: { HQ: boolean; NL: number; cas
     if (!(ny < 0.95 || (inW && r() < 0.5) || r() < 0.012) || roadDist(x, z) < 3 || !clear(x, z, 9)) continue;
     const s = (0.4 + r() * r() * (ny < 0.9 ? 4.2 : 1.6)); rk.push(...onGround(x, z, [s * (0.7 + r() * 0.8), s * (0.5 + r() * 0.7), s * (0.7 + r() * 0.8)], r() * 6.28, s * 0.3));
     const k = 0.8 + r() * 0.3; rkc.push(k * 1.05, k * 0.95, k * 0.8, 1); n++; }
-  instances(rock, rk, rkc); if (HQ) caster(rock);
+  instances(rock, rk, rkc); // الصخور ما ترمي ظل: آلاف النسخ تثقل خريطة الظل، وظلها صغير من ارتفاع الكاميرا
   // أعمدة كهرباء على الطريق الرئيسي
   const pole = Mesh.MergeMeshes([MeshBuilder.CreateCylinder('pl', { height: 9, diameter: 0.28, tessellation: 5 }, scene), (() => { const b = MeshBuilder.CreateBox('cb', { width: 0.14, height: 0.14, depth: 2.4 }, scene); b.position.y = 3.9; return b; })()], true)!;
   pole.material = plain('poleMat'); (pole.material as StandardMaterial).diffuseColor = new Color3(0.5, 0.42, 0.33);
@@ -209,13 +230,23 @@ export async function buildWorld(scene: Scene, o: { HQ: boolean; NL: number; cas
   const prop = (sid: string, mk: () => Mesh, x: number, z: number, color: V3, rot = 0) => {
     const s = site(sid), px = s.p[0] + x, pz = s.p[2] + z, node = new TransformNode('pn', scene); node.position.set(px, groundH(px, pz) - 0.2, pz); node.rotation.y = rot;
     const mesh = mk(), mat = new StandardMaterial('pm' + siteProps.length, scene); mat.diffuseColor = new Color3(...color); mat.specularColor = new Color3(0.06, 0.06, 0.06); mat.maxSimultaneousLights = 2 + NL;
-    mesh.material = mat; mesh.parent = node; mesh.isPickable = false; mesh.receiveShadows = true; caster(mesh); siteProps.push({ site: sid, mesh, mat, hit: false });
+    mesh.material = mat; mesh.parent = node; mesh.isPickable = false; mesh.receiveShadows = true; caster(mesh);
+    if (mesh.name === 'dome') mat.emissiveColor = mat.diffuseColor.scale(0.32);
+    siteProps.push({ site: sid, mesh, mat, hit: false });
   };
   const box = (w: number, h: number, d: number) => () => { const b = MeshBuilder.CreateBox('p', { width: w, height: h, depth: d }, scene); b.position.y = h / 2; return b; };
   const cyl = (dia: number, h: number, top = dia) => () => { const c = MeshBuilder.CreateCylinder('p', { diameterBottom: dia, diameterTop: top, height: h, tessellation: 20 }, scene); c.position.y = h / 2; return c; };
   const hangar = (w: number, len: number) => () => { const c = MeshBuilder.CreateCylinder('hg', { diameter: w, height: len, tessellation: 18, arc: 0.5, sideOrientation: Mesh.DOUBLESIDE }, scene); c.rotation.z = Math.PI / 2; c.rotation.y = Math.PI / 2; return c; };
   // جامع القرية
-  prop('green', box(22, 7, 16), 20, 10, [0.9, 0.86, 0.76], 0.25); prop('green', () => { const s = MeshBuilder.CreateSphere('dome', { diameter: 10, segments: 12 }, scene); s.position.y = 7.4; s.scaling.y = 0.8; return s; }, 20, 10, [0.42, 0.62, 0.6]);
+  prop('green', box(22, 7, 16), 20, 10, [0.9, 0.86, 0.76], 0.25);
+  prop('green', () => {
+    // قبة: نص كرة فوق طبل، بدون سحق (السحق كان يقلب الإضاءة وتصير القبة سودا)
+    const drum = MeshBuilder.CreateCylinder('dome', { height: 1.3, diameter: 8.6, tessellation: 16 }, scene); drum.position.y = 7.65;
+    const cap = MeshBuilder.CreateSphere('cap', { diameter: 8.2, segments: 14 }, scene); cap.position.y = 8.15;
+    const fin = MeshBuilder.CreateCylinder('fin', { height: 1.6, diameterTop: 0, diameterBottom: 0.36, tessellation: 6 }, scene); fin.position.y = 12.15;
+    for (const part of [drum, cap, fin]) part.bakeCurrentTransformIntoVertices();
+    const m = Mesh.MergeMeshes([drum, cap, fin], true, true)!; m.name = 'dome'; return m;
+  }, 20, 10, [0.7, 0.74, 0.68]);
   prop('green', cyl(2.6, 21, 1.9), 34, 2, [0.92, 0.88, 0.78]); prop('green', box(26, 5, 12), -60, -40, [0.85, 0.8, 0.68], 0.25);
   // المهبط: حظائر وبرج صغير
   prop('airport', hangar(26, 38), 150, 120, [0.62, 0.6, 0.5], STRIP_ROT); prop('airport', hangar(26, 38), 150, 60, [0.6, 0.58, 0.5], STRIP_ROT); prop('airport', box(9, 13, 9), 110, 190, [0.82, 0.78, 0.68]);

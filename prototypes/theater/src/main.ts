@@ -2,8 +2,8 @@
 // v2: كاميرا تجمع الطرفين + أسهم الحافة + خريطة مصغّرة (I-018)، إطلاق ساخن/بارد مرئي ووضوح الصواريخ (I-014، I-017، I-019)،
 //     دوشكا طلقة طلقة (I-015)، كاميرا الإصابة والدمار وبطاقة الثمن (I-012)، أضواء انفجارات وظلال (I-021)، أوامر (I-020)
 import {
-  Engine, Scene, Vector3, Color3, Color4, FreeCamera, HemisphericLight, DirectionalLight, PointLight, ShadowGenerator, MeshBuilder, Mesh,
-  StandardMaterial, PBRMaterial, DynamicTexture, ParticleSystem, TransformNode, VertexBuffer, DefaultRenderingPipeline, ImageProcessingConfiguration,
+  Engine, Scene, Vector3, Color3, Color4, FreeCamera, HemisphericLight, DirectionalLight, PointLight, ShadowGenerator, CascadedShadowGenerator, MeshBuilder, Mesh,
+  StandardMaterial, PBRMaterial, Material, DynamicTexture, ParticleSystem, TransformNode, VertexBuffer, DefaultRenderingPipeline, ImageProcessingConfiguration,
   LoadAssetContainerAsync, AssetContainer, Matrix, Particle, BaseTexture, Texture, Quaternion, AbstractMesh,
 } from '@babylonjs/core';
 import '@babylonjs/loaders/glTF';
@@ -15,6 +15,7 @@ import {
 } from './sim';
 import { groundH, groundN, ROADS } from './land';
 import { buildWorld, loadHeight, bldMatrix, Bld, SiteProp } from './world';
+import { installDesertIBL } from './ibl';
 
 const urls = import.meta.glob('../models/*.gltf.json', { query: '?url', import: 'default', eager: true }) as Record<string, string>;
 const modelUrl = (n: string) => urls[`../models/${n}.gltf.json`];
@@ -51,12 +52,17 @@ const sky = MeshBuilder.CreateBox('sky', { size: 60000 }, scene);
 const skyMat = new SkyMaterial('skyMat', scene);
 Object.assign(skyMat, { backFaceCulling: false, useSunPosition: true, sunPosition: v(scale(SUN, 1000)), turbidity: 5, luminance: 1, rayleigh: 2.4, mieCoefficient: 0.005, mieDirectionalG: 0.8, fogEnabled: false });
 sky.material = skyMat; sky.infiniteDistance = true; sky.isPickable = false;
-scene.fogMode = Scene.FOGMODE_EXP2; scene.fogDensity = 0.000052; scene.fogColor = new Color3(0.83, 0.79, 0.71);
+scene.fogMode = Scene.FOGMODE_EXP2; scene.fogDensity = 0.00007; scene.fogColor = new Color3(0.8, 0.74, 0.64);
 let shadows: ShadowGenerator | null = null;
 function setupShadows() {
   shadows?.dispose(); shadows = null; if (!HQ) return;
-  shadows = new ShadowGenerator(2048, sun); shadows.usePercentageCloserFiltering = true; shadows.filteringQuality = ShadowGenerator.QUALITY_MEDIUM;
-  shadows.bias = 0.004; shadows.normalBias = 0.02; shadows.frustumEdgeFalloff = 1; sun.autoUpdateExtends = false;
+  // سلسلتان: القريبة للدبابة، والبعيدة لخط الجبهة. خريطة واحدة كانت تنطفي فوق 1100 م.
+  const csm = new CascadedShadowGenerator(1024, sun);
+  csm.numCascades = 2; csm.stabilizeCascades = true; csm.lambda = 0.72; csm.cascadeBlendPercentage = 0.1;
+  csm.filteringQuality = ShadowGenerator.QUALITY_MEDIUM; csm.usePercentageCloserFiltering = true;
+  csm.bias = 0.0025; csm.normalBias = 0.035; csm.depthClamp = true; csm.autoCalcDepthBounds = false;
+  csm.shadowMaxZ = 1400; csm.setMinMaxDistance(1.2, 1400);
+  shadows = csm;
   for (const m of casters) shadows.addShadowCaster(m, false);
 }
 const casters: AbstractMesh[] = [];
@@ -96,7 +102,7 @@ function updateCamera(dt: number) {
   const k = 1 - Math.exp(-dt * 5);
   let tgt = new Vector3(view.tx, groundH(view.tx, view.tz) + targetY, view.tz), want = view.dist, pitch = view.pitch > 0 ? view.pitch : pitchFor(view.dist);
   const f = view.follow ? findEntity(view.follow) : null;
-  if (f) { tgt = v(f.p); want = view.fDist; pitch = f.air ? 0.2 : 0.42; view.tx = tgt.x; view.tz = tgt.z;
+  if (f) { tgt = v(f.p); want = view.fDist; pitch = f.air ? 0.22 : 0.58; view.tx = tgt.x; view.tz = tgt.z;
     if (f.air && f.vel && len(f.vel) > 5) view.yaw = camYaw + angDiff(camYaw, Math.atan2(f.vel[0], f.vel[2])) * (1 - Math.exp(-dt * 2)); }
   if (f) { followBlend = Math.min(1, followBlend + dt / 0.8); const e = followBlend * followBlend * (3 - 2 * followBlend); camTarget = Vector3.Lerp(followFrom, tgt, e); if (followBlend < 1) followFrom = Vector3.Lerp(followFrom, tgt, k * 0.5); }
   else camTarget = Vector3.Lerp(camTarget, tgt, k);
@@ -111,8 +117,13 @@ function updateCamera(dt: number) {
   const sh = trauma * trauma * camDist * 0.007;
   cam.position.copyFrom(pos);
   cam.setTarget(camTarget.add(new Vector3(Math.sin(shakeT * 1.7) * sh, Math.sin(shakeT * 2.3) * sh, Math.sin(shakeT * 1.1) * sh)));
-  // الظلال تتبع مكان الكاميرا
-  if (shadows) { const on = camDist < 1100; sun.shadowEnabled = on; if (on) { sun.position = camTarget.add(v(scale(SUN, 700))); sun.shadowFrustumSize = clamp(camDist * 1.3, 90, 1300); } }
+  // الظلال تتبع الكاميرا. البعيد (خريطة كاملة) يكتفي بظل الجبال المخبوز.
+  if (shadows) {
+    const on = camDist < 2400; sun.shadowEnabled = on;
+    if (on && shadows instanceof CascadedShadowGenerator) {
+      const z = clamp(camDist * 1.2, 240, 2000); shadows.shadowMaxZ = z; shadows.setMinMaxDistance(1.2, z);
+    }
+  }
 }
 // لمس
 const ptrs = new Map<number, { x: number; y: number }>();
@@ -147,6 +158,7 @@ function applyPipe() {
   pipe.sharpenEnabled = HQ; pipe.sharpen.edgeAmount = 0.25;
 }
 applyPipe();
+const reduceMotion = matchMedia('(prefers-reduced-motion: reduce)').matches;
 
 // ===== المجسمات =====
 const MODEL: Record<string, { scale: number; yaw: number; y?: number }> = {
@@ -156,22 +168,43 @@ const MODEL: Record<string, { scale: number; yaw: number; y?: number }> = {
   shahed: { scale: 1.45, yaw: 0 }, kh101: { scale: 1, yaw: Math.PI },
 };
 const containers: Record<string, AssetContainer> = {};
+let vehicleIBL = false;
 async function loadModels(progress: (t: string) => void) {
   const names = Object.keys(MODEL); let done = 0;
   await Promise.all(names.map(async n => {
     const c = await LoadAssetContainerAsync(modelUrl(n), scene, { pluginExtension: '.gltf' });
-    c.materials.forEach(m => { if (m instanceof PBRMaterial) { m.environmentIntensity = 0; m.directIntensity = PBR_DIRECT; m.metallic = Math.min(m.metallic ?? 1, 0.15); /* بدون بيئة انعكاس المعدن يطلع أسود */ m.maxSimultaneousLights = 2 + NL; } });
     c.addAllToScene(); c.meshes.forEach(m => { m.isVisible = false; m.isPickable = false; });
     containers[n] = c; progress(`يحمّل المجسمات… ${++done}/${names.length}`);
   }));
 }
-const blobMat = new StandardMaterial('blobMat', scene); blobMat.diffuseTexture = texBlob; blobMat.opacityTexture = texBlob; blobMat.disableLighting = true; blobMat.emissiveColor = Color3.Black(); blobMat.specularColor = Color3.Black();
+function applyVehicleLook(ibl: boolean) {
+  vehicleIBL = ibl;
+  const dust = ibl ? new Texture(texUrls[`../textures/sand.webp`], scene, false, true, Texture.TRILINEAR_SAMPLINGMODE) : null;
+  if (dust) { dust.uScale = dust.vScale = 3.2; dust.anisotropicFilteringLevel = 8; }
+  for (const c of Object.values(containers)) c.materials.forEach(m => {
+    if (!(m instanceof PBRMaterial)) return;
+    m.maxSimultaneousLights = 2 + NL;
+    if (ibl) {
+      m.environmentIntensity = 1; m.directIntensity = 1.8;
+      m.metallic = Math.min(m.metallic ?? 0, 0.7); m.roughness = Math.max(m.roughness ?? 0.55, 0.4);
+      m.detailMap.isEnabled = true; m.detailMap.texture = dust; m.detailMap.diffuseBlendLevel = 0.14; m.detailMap.roughnessBlendLevel = 0.45;
+    } else {
+      m.environmentIntensity = 0; m.directIntensity = PBR_DIRECT; m.metallic = Math.min(m.metallic ?? 1, 0.15);
+    }
+  });
+}
+const blobMat = new StandardMaterial('blobMat', scene); blobMat.diffuseTexture = texBlob; blobMat.opacityTexture = texBlob; blobMat.disableLighting = true; blobMat.emissiveColor = Color3.Black(); blobMat.specularColor = Color3.Black(); blobMat.alpha = HQ ? 0.32 : 0.55;
 function spawnModel(kind: string, wreck = false) {
   const root = new TransformNode('u_' + kind, scene), inner = new TransformNode('in', scene); inner.parent = root;
   const spec = MODEL[kind]; inner.rotation.y = spec.yaw; inner.scaling.setAll(spec.scale); inner.position.y = spec.y ?? 0;
   const inst = containers[kind].instantiateModelsToScene(n => n, wreck, { doNotInstantiate: wreck });
   inst.rootNodes.forEach(r => { r.parent = inner; });
-  root.getChildMeshes().forEach(m => { m.isPickable = false; m.isVisible = true; if (!wreck || true) caster(m); if (wreck && m.material instanceof PBRMaterial) { m.material.albedoColor = new Color3(0.09, 0.085, 0.08); m.material.metallic = 0; m.material.roughness = 1; m.material.emissiveColor = Color3.Black(); } });
+  root.getChildMeshes().forEach(m => {
+    m.isPickable = false; m.isVisible = true;
+    if (!m.isAnInstance) m.receiveShadows = true;
+    caster(m);
+    if (wreck && m.material instanceof PBRMaterial) { m.material.albedoColor = new Color3(0.09, 0.085, 0.08); m.material.metallic = 0; m.material.roughness = 1; m.material.emissiveColor = Color3.Black(); m.material.environmentIntensity = 0.3; m.material.detailMap.diffuseBlendLevel = 0; }
+  });
   return { root, inner };
 }
 
@@ -259,6 +292,31 @@ function addDecal(p: V3, size: number) {
   const n = groundN(p[0], p[2], Math.max(3, size * 0.3)), q = new Quaternion(); Quaternion.FromUnitVectorsToRef(Vector3.UpReadOnly, new Vector3(n[0], n[1], n[2]), q);
   decals.push(...Matrix.Compose(new Vector3(size, 1, size), q.multiply(Quaternion.RotationAxis(Vector3.UpReadOnly, Math.random() * 6.28)), new Vector3(p[0], groundH(p[0], p[2]) + 0.3, p[2])).asArray());
   decal.thinInstanceSetBuffer('matrix', new Float32Array(decals), 16, false);
+}
+// حلقة غبار تتوسع على الأرض مع الانفجار الكبير — تقرأ كصدمة حتى من الكاميرا المائلة
+const texRing = canvasTex('ring', 128, (g, s) => {
+  g.strokeStyle = 'rgba(255,255,255,.95)'; g.lineWidth = s * 0.1; g.beginPath(); g.arc(s / 2, s / 2, s * 0.36, 0, 6.283); g.stroke();
+  g.globalCompositeOperation = 'destination-in'; radial([[0.2, 'rgba(0,0,0,0)'], [0.55, 'rgba(0,0,0,1)'], [0.78, 'rgba(0,0,0,.4)'], [1, 'rgba(0,0,0,0)']])(g, s);
+});
+const waveMat = new StandardMaterial('waveMat', scene);
+waveMat.emissiveTexture = texRing; waveMat.opacityTexture = texRing; waveMat.disableLighting = true; waveMat.emissiveColor = new Color3(0.78, 0.62, 0.4);
+waveMat.transparencyMode = Material.MATERIAL_ALPHABLEND; waveMat.disableDepthWrite = true; waveMat.backFaceCulling = false; waveMat.zOffset = -3;
+const waveSrc = MeshBuilder.CreateGround('wave', { width: 1, height: 1 }, scene); waveSrc.material = waveMat; waveSrc.isVisible = false; waveSrc.isPickable = false;
+const waves: { m: Mesh; t0: number; dur: number; r1: number }[] = [];
+function shockwave(p: V3, size: number) {
+  if (waves.length > 6) waves.shift()!.m.dispose();
+  const m = waveSrc.clone('wv' + waves.length, null)!; m.material = waveMat.clone('wvm' + waves.length); m.isVisible = true;
+  m.position.set(p[0], p[1] + 0.55, p[2]);
+  const nrmG = groundN(p[0], p[2], 5), q = new Quaternion(); Quaternion.FromUnitVectorsToRef(Vector3.UpReadOnly, new Vector3(nrmG[0], nrmG[1], nrmG[2]), q);
+  m.rotationQuaternion = q; waves.push({ m, t0: W.T, dur: 0.65 + size * 0.22, r1: 16 + size * 24 });
+}
+function tickWaves() {
+  for (let i = waves.length - 1; i >= 0; i--) {
+    const w = waves[i], u = (W.T - w.t0) / w.dur;
+    if (u >= 1) { w.m.dispose(); waves.splice(i, 1); continue; }
+    const e = 1 - (1 - u) * (1 - u), r = 3 + (w.r1 - 3) * e;
+    w.m.scaling.set(r, 1, r); (w.m.material as StandardMaterial).alpha = (1 - u) * 0.7;
+  }
 }
 
 // ===== الصوت (مولّد) =====
@@ -419,7 +477,7 @@ function handleFx(fx: Fx) {
       P.emit({ a: fx.p, n: Qn(big ? 22 * s : 8 * s + 3), spd: [10 * s, 38 * s], jit: 2 * s, up: fx.air ? 0 : 0.35 });
       (big ? smokeL : smokeS).emit({ a: fx.p, n: Qn(big ? 36 * s : 14 * s + 4), spd: [3 * s, 13 * s], jit: 3 * s, up: fx.air ? 0 : 0.5 });
       sparks.emit({ a: fx.p, n: Qn((fx.metal ? 45 : 26) * s), spd: [40, 140 * s], jit: 1 });
-      if (!fx.air) { dust.emit({ a: fx.p, n: Qn(14 * s + 4), spd: [8, 26 * s], up: 0.1, jit: 3 }); addDecal(fx.p, 8 + 12 * s); }
+      if (!fx.air) { dust.emit({ a: fx.p, n: Qn(14 * s + 4), spd: [8, 26 * s], up: 0.1, jit: 3 }); addDecal(fx.p, 8 + 12 * s); if (s >= 0.55) shockwave(fx.p, s); }
       flashLight(fx.p, 3 + 5 * s, 50 + 90 * s, 0.3 + 0.3 * s);
       trauma = Math.min(1, trauma + clamp(0.55 - camD(fx.p) / 3500, 0, 0.55) * s); sfx.boom(camD(fx.p), s); break;
     }
@@ -584,7 +642,7 @@ function findEntity(id: number): { p: V3; vel?: V3; air: boolean; name: string; 
 }
 function startFollow(id: number, dist?: number) {
   const f = findEntity(id); if (!f) return;
-  view.follow = id; selected = id; view.fDist = dist ?? (f.air ? 34 : 30); followBlend = 0; followFrom = camTarget.clone();
+  view.follow = id; selected = id; view.fDist = dist ?? (f.air ? 40 : 46); followBlend = 0; followFrom = camTarget.clone();
   const a = W.air.find(x => x.id === id); if (a) view.yaw = Math.atan2(a.v[0], a.v[2]);
   ($('follow') as HTMLElement).hidden = false; ($('bottom') as HTMLElement).hidden = true;
 }
@@ -627,10 +685,20 @@ function closeShot(p: V3, from: V3 | null, dist: number, pitch: number, prio: nu
   if (from) view.yaw = Math.atan2(p[0] - from[0], p[2] - from[2]) + 0.55;
   return true;
 }
+let cine: { t0: number; dur: number; yaw0: number; dist0: number; dist1: number; pitch0: number; pitch1: number } | null = null;
+function tickCine() {
+  if (!cine || !auto || !W) return;
+  const u = clamp((W.T - cine.t0) / cine.dur, 0, 1);
+  if (u >= 1) { cine = null; return; }
+  const e = u * u * (3 - 2 * u);
+  view.yaw = cine.yaw0 + e * 0.62; view.dist = lerp(cine.dist0, cine.dist1, e); view.pitch = lerp(cine.pitch0, cine.pitch1, e);
+}
 function impactCam(p: V3, from: V3 | null, tImpact: number) {
   if (nowS() < impactReady) return;                                 // حد أقصى لقطة إصابة كل 15 ثانية
-  if (!closeShot(p, from, from ? 80 : 190, from ? 0.32 : 0.42, 8, 3.2)) return;
-  impactReady = nowS() + 15; slowWins.push({ t0: tImpact - 0.35, t1: tImpact + 1.1 });
+  const dist = from ? 110 : 210, pitch = from ? 0.4 : 0.46;
+  if (!closeShot(p, from, dist, pitch, 8, 3.4)) return;
+  impactReady = nowS() + 15; slowWins.push({ t0: tImpact - 0.4, t1: tImpact + 1.35 });
+  if (!reduceMotion) cine = { t0: W.T, dur: 3.15, yaw0: view.yaw, dist0: dist * 1.28, dist1: dist * 0.6, pitch0: pitch + 0.08, pitch1: Math.max(0.2, pitch - 0.14) };
 }
 function directorFx(fx: Fx) {
   if (!auto) return;
@@ -648,6 +716,7 @@ function directorFx(fx: Fx) {
 let pendingFollow: { id: number; at: number; dist: number } | null = null, lastSalvoShot = -99;
 function directorFrame() {
   if (!auto || !W) return;
+  tickCine();
   if (pendingFollow && nowS() > pendingFollow.at) { const p = pendingFollow; pendingFollow = null; if (findEntity(p.id)) { startFollow(p.id, p.dist); shotUntil = nowS() + 9; shotPrio = 6; } }
   if (view.follow && !findEntity(view.follow)) { if (nowS() > shotUntil - 6) { endFollow(); shotUntil = nowS() + 1.5; } }
   if (!view.follow && nowS() > shotUntil + 0.5) { overview(); shotUntil = nowS() + 7; shotPrio = 0; }
@@ -706,7 +775,7 @@ function frame() {
     if (n === 16) acc = 0;
   }
   ($('slow') as HTMLElement).hidden = slowK === 1;
-  if (W) { syncUnits(dtReal); syncAir(); if (simDt) { burnFx(simDt); tickDebris(simDt); } directorFrame(); }
+  if (W) { syncUnits(dtReal); syncAir(); if (simDt) { burnFx(simDt); tickDebris(simDt); } tickWaves(); directorFrame(); }
   const k = simDt ? simDt / Math.max(1e-4, engine.getDeltaTime() / 1000) : 0;
   for (const p of pools) p.ps.updateSpeed = k / 60;
   tickLights(dtReal * (simDt ? 1 : 0.3)); updateCamera(dtReal);
@@ -720,7 +789,7 @@ function frame() {
   if (!autoQ && running && W.T > 22 && !AUTO) { autoQ = true; const a = fpsHist.reduce((x, y) => x + y, 0) / Math.max(1, fpsHist.length); if (HQ && fpsHist.length > 3 && a < 26) { setQuality(false); toast(`خفّضت الجودة تلقائياً (${a.toFixed(0)} إطار/ث) حتى تبقى سلسة`); } }
   (window as any).__state = { T: W?.T ?? 0, over: W?.over, stats: W?.stats, dist: camDist, follow: view.follow, fps, log: W?.log.length, slow: slowK < 1, phase: W?.columnPhase };
 }
-function setQuality(hq: boolean) { HQ = hq; applyRes(); applyPipe(); setupShadows(); $('bQual').setAttribute('aria-pressed', String(hq)); }
+function setQuality(hq: boolean) { HQ = hq; applyRes(); applyPipe(); setupShadows(); blobMat.alpha = hq ? 0.32 : 0.55; $('bQual').setAttribute('aria-pressed', String(hq)); }
 function showEnd() {
   const s = W.stats, lost = W.units.filter(u => u.side === 'iq' && !u.alive).length;
   $('endTitle').textContent = s.enTanksLost >= 3 ? 'انصد الهجوم' : 'المعركة انتهت';
@@ -734,7 +803,8 @@ let seed = 3;
 function start() {
   sfx.init();
   for (const u of unitVis.values()) u.root.dispose(); unitVis.clear(); for (const a of airVis.values()) a.n.dispose(); airVis.clear();
-  debris.forEach(d => d.m.dispose()); debris.length = 0; burning.length = 0; marks = []; vq.length = 0; slowWins.length = 0; decals = [];
+  debris.forEach(d => d.m.dispose()); debris.length = 0; burning.length = 0; marks = []; vq.length = 0; slowWins.length = 0; decals = []; cine = null;
+  waves.forEach(w => w.m.dispose()); waves.length = 0;
   decal.thinInstanceSetBuffer('matrix', new Float32Array(16), 16, false); decal.thinInstanceCount = 0;
   for (const el of els.values()) el.remove(); els.clear(); for (const el of arrowEls.values()) el.remove(); arrowEls.clear(); pools.forEach(p => p.ps.reset());
   bldInfo.forEach((b, i) => { if (!b.dmg) return; b.dmg = false; bldMatrix(b, b.h).copyToArray(bldMat, i * 16); for (let k = 0; k < 3; k++) bldCol[i * 4 + k] /= 0.28; });
@@ -751,7 +821,7 @@ $('bExplore').onclick = () => { ($('end') as HTMLElement).hidden = true; setAuto
 $('bBack').onclick = () => { setAuto(false); endFollow(); }; $('bHome').onclick = () => { setAuto(false); endFollow(); view.tx = -1600; view.tz = -300; view.dist = 5200; view.yaw = 0; view.pitch = -1; targetY = 0; };
 $('bAuto').onclick = () => setAuto(!auto);
 $('bRotL').onclick = () => (view.yaw += 0.5); $('bRotR').onclick = () => (view.yaw -= 0.5);
-$('bQual').onclick = () => { setQuality(!HQ); toast(HQ ? 'جودة عالية: ظلال وأضواء انفجارات' : 'جودة خفيفة: أسرع على التلفون'); };
+$('bQual').onclick = () => { setQuality(!HQ); toast(HQ ? 'جودة عالية: ظلال للجبهة وانعكاس سماء' : 'جودة خفيفة: أسرع على التلفون'); };
 $('bMute').onclick = () => ($('bMute').textContent = sfx.toggle() ? '🔇' : '🔊');
 $('bCred').onclick = () => (($('credits') as HTMLElement).hidden = false); $('bCredClose').onclick = () => (($('credits') as HTMLElement).hidden = true);
 window.addEventListener('resize', () => engine.resize());
@@ -764,7 +834,12 @@ window.addEventListener('resize', () => engine.resize());
     await loadHeight();
     ({ bld, bldMat, bldCol, bldInfo, siteProps } = await buildWorld(scene, { HQ, NL, caster, texUrls, keepClear }));
     makeProcedural();
+    scene.activeCamera = cam;
+    load.textContent = 'يحضّر إضاءة المجسمات…';
+    const iblP = installDesertIBL(scene, SUN);
     await loadModels(t => (load.textContent = t));
+    const ibl = await iblP;
+    applyVehicleLook(ibl);
     setupShadows(); $('bQual').setAttribute('aria-pressed', String(HQ));
     W = newWorld(3); syncUnits(0);
     await scene.whenReadyAsync();

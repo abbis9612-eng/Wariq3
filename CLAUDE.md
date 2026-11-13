@@ -44,6 +44,8 @@ docs/IDEAS.md                 صندوق الأفكار
 docs/DECISIONS.md             سجل القرارات
 CHANGELOG.md                  سجل التغييرات للاعب
 tests/smoke.mjs               اختبار الدخان (Playwright، بدون واجهة)
+docs/TECH_STACK.md            قرار التقنيات (TypeScript + Babylon.js + Vite + Capacitor)
+prototypes/intercept/         تجربة 3D: اعتراض الباتريوت (راجع README داخلها)
 .claude/skills/               المهارات
 ```
 
@@ -51,3 +53,6 @@ tests/smoke.mjs               اختبار الدخان (Playwright، بدون �
 
 - اختبار الدخان: `node tests/smoke.mjs index.html 36 IQ` (الوسائط: الملف، عدد الأشهر، الدولة)
 - Playwright وChromium مثبتين مسبقاً بالبيئة السحابية؛ لا تثبتهم من جديد.
+- رسم 3D بدون شاشة: `chromium.launch({ args: ['--use-angle=swiftshader','--enable-unsafe-swiftshader'] })` (الإطارات هنا بطيئة لأنها بالمعالج، مو مقياس للتلفون).
+- النشر كصفحة: ملفات `.glb` مرفوضة؛ حوّلها لـ glTF نصي `.json` (`tools/glb2json.mjs`).
+- قبل أي مشهد 3D: افحص المنطق بـ `sim.ts` رياضياً (D-011)، وبعدين صوّر كل مرحلة وشوف الصور بعينك.

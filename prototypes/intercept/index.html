@@ -1,0 +1,84 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>اعتراض الباتريوت</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Arabic:wght@400;600&family=Reem+Kufi:wght@500;700&display=swap" rel="stylesheet">
+<style>
+/* طابع اللعبة: نحاسي + زيتوني، شاشة سينمائية داكنة واحدة */
+:root{--bg:#0b0d0a;--panel:rgba(18,21,16,.86);--line:rgba(235,229,210,.18);--ink:#ebe5d2;--dim:#a7a892;--brass:#d2ab33;--brass-ink:#1c1a10;--foe:#c2452f;
+ --display:"Reem Kufi","IBM Plex Sans Arabic",sans-serif;--body:"IBM Plex Sans Arabic","Noto Sans Arabic",Tahoma,sans-serif;color-scheme:dark}
+*{box-sizing:border-box;margin:0}
+html,body{height:100%;background:var(--bg);color:var(--ink);font:400 15px/1.55 var(--body);overflow:hidden;-webkit-tap-highlight-color:transparent}
+button{font:inherit;color:inherit;border:0;background:none;cursor:pointer}
+button:focus-visible{outline:2px solid var(--brass);outline-offset:2px}
+#c{position:fixed;inset:0;width:100%;height:100%;display:block;touch-action:none;outline:none}
+.top{position:fixed;top:0;inset-inline:0;padding:calc(30px + env(safe-area-inset-top,0px)) max(16px,env(safe-area-inset-right,0px)) 28px max(16px,env(safe-area-inset-left,0px));background:linear-gradient(rgba(0,0,0,.62),transparent);text-align:center;pointer-events:none}
+#cap{font:700 clamp(20px,5.4vw,30px)/1.3 var(--display);text-shadow:0 2px 12px #000;min-height:1.3em;text-wrap:balance}
+#sub{font-size:13.5px;color:var(--dim);margin-top:2px;font-variant-numeric:tabular-nums;min-height:1.5em;text-shadow:0 1px 6px #000}
+.stamp{display:inline-block;border:2px solid var(--foe);color:var(--foe);padding:0 10px;font:600 12px/1.6 var(--display);transform:rotate(-3deg);border-radius:3px}
+#fps{position:fixed;top:calc(8px + env(safe-area-inset-top,0px));inset-inline-start:calc(10px + env(safe-area-inset-left,0px));font:600 11px/1.4 ui-monospace,monospace;color:var(--dim);background:rgba(0,0,0,.45);padding:3px 7px;border-radius:4px;direction:ltr;pointer-events:none;z-index:3}
+.ctl{position:fixed;bottom:0;inset-inline:0;padding:22px max(12px,env(safe-area-inset-right,0px)) calc(12px + env(safe-area-inset-bottom,0px)) max(12px,env(safe-area-inset-left,0px));display:flex;gap:6px;justify-content:center;flex-wrap:wrap;background:linear-gradient(transparent,rgba(0,0,0,.6))}
+.ctl button{background:rgba(0,0,0,.55);border:1px solid var(--line);padding:8px 12px;border-radius:6px;font-size:13px;min-height:40px}
+.ctl button[aria-pressed="true"]{border-color:var(--brass);color:var(--brass)}
+.card{position:fixed;inset-inline:max(16px,env(safe-area-inset-left,0px));top:50%;transform:translateY(-50%);max-width:440px;margin:auto;background:var(--panel);border:1px solid var(--line);border-top:2px solid var(--brass);border-radius:10px;padding:20px 18px;backdrop-filter:blur(6px);z-index:5}
+.card h1{font:700 30px/1.25 var(--display);margin:10px 0 6px}
+.card h2{font:700 22px/1.3 var(--display);margin:8px 0 6px}
+.card p{color:var(--dim);font-size:14px}
+.card .go{display:block;width:100%;margin-top:16px;background:var(--brass);color:var(--brass-ink);font-weight:600;font-size:17px;padding:13px;border-radius:6px}
+.card .row{display:flex;gap:8px;margin-top:10px}.card .row button{flex:1;border:1px solid var(--line);padding:10px;border-radius:6px}
+.facts{display:grid;grid-template-columns:1fr 1fr;gap:6px;margin-top:12px;font-size:12.5px}
+.facts div{background:rgba(255,255,255,.04);border:1px solid var(--line);border-radius:6px;padding:6px 8px}.facts b{display:block;font:600 16px var(--display);color:var(--ink);font-variant-numeric:tabular-nums}
+.facts span{color:var(--dim)}
+#credits p{margin-top:8px;font-size:13px}#credits a{color:var(--brass)}
+#toast{position:fixed;bottom:calc(84px + env(safe-area-inset-bottom,0px));left:50%;transform:translateX(-50%);background:var(--ink);color:var(--bg);padding:8px 14px;border-radius:6px;font-size:13.5px;max-width:88%;text-align:center;opacity:0;transition:opacity .25s;pointer-events:none;z-index:6}
+#toast.show{opacity:1}
+#load{color:var(--brass);font-size:13px;margin-top:10px;font-variant-numeric:tabular-nums}
+@media (prefers-reduced-motion:reduce){#toast{transition:none}}
+</style>
+</head>
+<body>
+<canvas id="c" aria-label="مشهد اعتراض صاروخ كروز بمنظومة باتريوت"></canvas>
+<div class="top"><div id="cap"></div><div id="sub"></div></div>
+<div id="fps">—</div>
+<div class="ctl" id="ctl" hidden>
+  <button id="bReplay">↺ إعادة</button>
+  <button id="bCam" aria-pressed="false">كاميرا حرة</button>
+  <button id="bSlow" aria-pressed="false">بطيء ×½</button>
+  <button id="bQual">الجودة: عالية</button>
+  <button id="bMute" aria-pressed="false">🔊 الصوت</button>
+  <button id="bCred">المصادر</button>
+</div>
+<div class="card" id="intro">
+  <span class="stamp">تجربة 3D — رقم 1</span>
+  <h1>اعتراض الباتريوت</h1>
+  <p>صاروخ كروز Kh-101 جاي على ارتفاع واطي بين الجبال، ومنظومة باتريوت ترصده وتطلق عليه معترضين. الفيزياء والتوجيه محسوبة، مو رسوم متحركة جاهزة.</p>
+  <div class="facts">
+    <div><span>سرعة الكروز</span><b>830 كم/س</b></div>
+    <div><span>سرعة المعترض</span><b>≈ 4,700 كم/س</b></div>
+    <div><span>مسافة الإطلاق</span><b>≈ 7.5 كم</b></div>
+    <div><span>التوجيه</span><b>تناسبي N=4</b></div>
+  </div>
+  <p style="margin-top:10px;font-size:13px">💡 لف التلفون بالعرض حتى تشوفها سينمائية أكثر.</p>
+  <p id="load">يحمّل المجسمات…</p>
+  <button class="go" id="bStart" disabled>▶ ابدأ (شغّل الصوت)</button>
+</div>
+<div class="card" id="end" hidden>
+  <span class="stamp" style="border-color:var(--brass);color:var(--brass)">تم الاعتراض</span>
+  <h2>انتهت التجربة</h2>
+  <p id="endTxt"></p>
+  <div class="row"><button id="bAgain">↺ شوفها مرة ثانية</button><button id="bFree">جرّب الكاميرا الحرة</button></div>
+</div>
+<div class="card" id="credits" hidden>
+  <h2>المصادر</h2>
+  <p>«Kh-101 Cruise Missile – Textured» من <a href="https://sketchfab.com/xFORTUNAx" target="_blank" rel="noopener">xFORTUNAx</a> — رخصة <a href="https://creativecommons.org/licenses/by/4.0/" target="_blank" rel="noopener">CC BY 4.0</a>.</p>
+  <p>«MIM-104 Patriot Surface-To-Air Missile (SAM)» من <a href="https://sketchfab.com/MirzaArrafiERV_45" target="_blank" rel="noopener">Muhamad Mirza Arrafi</a> — رخصة <a href="https://creativecommons.org/licenses/by/4.0/" target="_blank" rel="noopener">CC BY 4.0</a>.</p>
+  <p>المعترض والأرض والسماء والدخان والنار والأصوات مصنوعة بالكود. المحرك: Babylon.js.</p>
+  <div class="row"><button id="bCredClose">تمام</button></div>
+</div>
+<div id="toast" role="status"></div>
+<script type="module" src="./src/main.ts"></script>
+</body>
+</html>

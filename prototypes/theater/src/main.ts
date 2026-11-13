@@ -87,7 +87,7 @@ function buildGround() {
   const pos = g.getVerticesData(VertexBuffer.PositionKind)!, n = pos.length / 3, col = new Float32Array(n * 4);
   for (let i = 0; i < n; i++) {
     const x = pos[i * 3], z = pos[i * 3 + 2], d = Math.hypot(x, z), dr = Math.abs(x - riverX(z));
-    const desert: V3 = [0.8, 0.67, 0.47], farm: V3 = [0.36, 0.47, 0.25], field: V3 = [0.56, 0.55, 0.32], urban: V3 = [0.62, 0.58, 0.51];
+    const desert: V3 = [0.8, 0.67, 0.47], farm: V3 = [0.5, 0.58, 0.34], field: V3 = [0.68, 0.64, 0.42], urban: V3 = [0.62, 0.58, 0.51];
     const farmK = clamp(1 - smooth(260, 1150, dr), 0, 1), plots = (Math.floor(x / 140) + Math.floor(z / 110)) % 3 === 0 ? 1 : 0;
     const urbanK = 1 - smooth(CITY_R - 300, CITY_R + 500, d);
     let c = [0, 1, 2].map(k => lerp(desert[k], lerp(farm[k], field[k], plots * 0.6), farmK));
@@ -246,7 +246,8 @@ applyPipe();
 
 // ===== المجسمات =====
 const MODEL: Record<string, { scale: number; yaw: number; y?: number }> = {
-  abrams: { scale: 1, yaw: 0 }, t72: { scale: 1, yaw: 0 }, technical: { scale: 0.8, yaw: 0 }, dshk: { scale: 0.11, yaw: 0 },
+  // y: المجسم الأصلي نازل تحت الأرض (الجنزير عند -0.8م)؛ T-72 مدفعها على -z بالملف فندوّرها
+  abrams: { scale: 1, yaw: 0, y: 0.8 }, t72: { scale: 1, yaw: Math.PI, y: 0.8 }, technical: { scale: 0.8, yaw: 0 }, dshk: { scale: 0.11, yaw: 0, y: 0.5 },
   d30: { scale: 0.22, yaw: Math.PI }, grad: { scale: 1, yaw: 0 }, patriot: { scale: 1, yaw: 0 }, s400: { scale: S400_SCALE, yaw: 0, y: 0.502 * S400_SCALE },
   shahed: { scale: 1.45, yaw: 0 }, kh101: { scale: 1, yaw: Math.PI },
 };
@@ -255,7 +256,7 @@ async function loadModels(progress: (t: string) => void) {
   const names = Object.keys(MODEL); let done = 0;
   await Promise.all(names.map(async n => {
     const c = await LoadAssetContainerAsync(modelUrl(n), scene, { pluginExtension: '.gltf' });
-    c.materials.forEach(m => { if (m instanceof PBRMaterial) { m.environmentIntensity = 0; m.directIntensity = PBR_DIRECT; m.maxSimultaneousLights = 2 + NL; } });
+    c.materials.forEach(m => { if (m instanceof PBRMaterial) { m.environmentIntensity = 0; m.directIntensity = PBR_DIRECT; m.metallic = Math.min(m.metallic ?? 1, 0.15); /* بدون بيئة انعكاس المعدن يطلع أسود */ m.maxSimultaneousLights = 2 + NL; } });
     c.addAllToScene(); c.meshes.forEach(m => { m.isVisible = false; m.isPickable = false; });
     containers[n] = c; progress(`يحمّل المجسمات… ${++done}/${names.length}`);
   }));
@@ -311,6 +312,7 @@ const fireJet = new Pool('fireJet', 500, texSmoke, true, { life: [0.4, 0.9], siz
 const smokeS = new Pool('smokeS', 1800, texSmoke, false, { life: [4, 8], size: [[0, 3], [0.3, 10], [1, 18]], damp: 0.9, gravity: 1.5, colors: [[0, C4(0.3, 0.27, 0.24, 0)], [0.05, C4(0.32, 0.29, 0.26, 0.8)], [1, C4(0.55, 0.52, 0.48, 0)]] });
 const smokeL = new Pool('smokeL', 1400, texSmoke, false, { life: [12, 20], size: [[0, 10], [0.25, 34], [1, 64]], damp: 0.9, gravity: 1.2, colors: [[0, C4(0.18, 0.16, 0.15, 0)], [0.04, C4(0.17, 0.15, 0.14, 0.9)], [0.5, C4(0.33, 0.32, 0.31, 0.55)], [1, C4(0.5, 0.5, 0.5, 0)]] });
 const dust = new Pool('dust', 2200, texSmoke, false, { life: [2, 4.5], size: [[0, 2.5], [1, 14]], damp: 0.86, gravity: 0.5, colors: [[0, C4(0.72, 0.6, 0.44, 0)], [0.06, C4(0.7, 0.58, 0.43, 0.7)], [1, C4(0.78, 0.68, 0.55, 0)]] });
+const trackDust = new Pool('trackDust', 900, texSmoke, false, { life: [1.5, 3], size: [[0, 1.5], [1, 6]], damp: 0.9, gravity: 0.2, colors: [[0, C4(0.72, 0.62, 0.47, 0)], [0.1, C4(0.72, 0.62, 0.47, 0.32)], [1, C4(0.78, 0.7, 0.58, 0)]] });
 const sparks = new Pool('sparks', 1000, texSoft, true, { life: [0.4, 1.2], size: [[0, 1], [1, 0.35]], gravity: -9.8, stretched: true, colors: [[0, C4(5, 4, 2.4, 1)], [0.6, C4(3, 1.2, 0.3, 0.9)], [1, C4(1, 0.2, 0, 0)]] });
 const muzzle = new Pool('muzzle', 600, texFlare, true, { life: [0.04, 0.09], size: [[0, 2.5], [1, 4]], colors: [[0, C4(7, 5.5, 3, 1)], [1, C4(3, 1.4, 0.3, 0)]] });
 const tracers = new Pool('tracers', 900, texSoft, true, { life: [0.4, 0.4], size: [[0, 0.8], [1, 0.8]], stretched: true, colors: [[0, C4(7, 4, 1.4, 1)], [1, C4(6, 3, 0.8, 1)]] });
@@ -420,7 +422,7 @@ function syncUnits(dt: number) {
     const sway = u.spd > 0.5 ? Math.sin(W.T * 9 + u.id) * 0.012 * Math.min(1, u.spd / 6) : 0;
     vis.inner.rotation.x = -0.07 * vis.recoil * vis.recoil + sway;
     vis.inner.position.x = (Math.random() - 0.5) * 0.08 * vis.shake; vis.inner.position.y = vis.baseY + (Math.random() - 0.5) * 0.05 * vis.shake;
-    if (u.spd > 1 && W) { const back = add(u.p, [-Math.sin(u.yaw) * 4, 0.8, -Math.cos(u.yaw) * 4]); dust.emit({ a: back, n: Qn(u.spd * 0.18 * slowK * simSpeed), spd: [1, 3], up: 0.5, jit: 2.5 }); }
+    if (u.spd > 1 && W) { const back = add(u.p, [-Math.sin(u.yaw) * 4, 0.8, -Math.cos(u.yaw) * 4]); trackDust.emit({ a: back, n: Qn(u.spd * 0.07 * slowK * simSpeed), spd: [0.5, 2], up: 0.3, jit: 1.8 }); }
   }
 }
 function airBody(a: Air): { body: TransformNode | null; glow: AbstractMesh | null; L: number } {
@@ -784,8 +786,8 @@ function frame() {
     if ((miniT += dtReal) > 0.25) { miniT = 0; drawMini(); } }
   if (W?.over && !endShown) { endShown = true; setTimeout(showEnd, 3000); }
   const fps = engine.getFps(); fpsAcc += fps; fpsN++; fpsT += dtReal;
-  if (fpsT > 0.5) { const avg = fpsAcc / fpsN; fpsEl.textContent = `${avg.toFixed(0)} FPS · ${HQ ? 'عالية' : 'خفيفة'}`; if (running && W.T > 2 && W.T < 9) fpsHist.push(avg); fpsAcc = fpsN = fpsT = 0; }
-  if (!autoQ && running && W.T > 9 && !AUTO) { autoQ = true; const a = fpsHist.reduce((x, y) => x + y, 0) / Math.max(1, fpsHist.length); if (HQ && a < 30) { setQuality(false); toast(`خفّضت الجودة تلقائياً (${a.toFixed(0)} إطار/ث) حتى تبقى سلسة`); } }
+  if (fpsT > 0.5) { const avg = fpsAcc / fpsN; fpsEl.textContent = `${avg.toFixed(0)} FPS · ${HQ ? 'عالية' : 'خفيفة'}`; if (running && W.T > 12 && W.T < 22) fpsHist.push(avg); /* بعد ما يخلص تجهيز الرسم أول مرة */ fpsAcc = fpsN = fpsT = 0; }
+  if (!autoQ && running && W.T > 22 && !AUTO) { autoQ = true; const a = fpsHist.reduce((x, y) => x + y, 0) / Math.max(1, fpsHist.length); if (HQ && fpsHist.length > 3 && a < 26) { setQuality(false); toast(`خفّضت الجودة تلقائياً (${a.toFixed(0)} إطار/ث) حتى تبقى سلسة`); } }
   (window as any).__state = { T: W?.T ?? 0, over: W?.over, stats: W?.stats, dist: camDist, follow: view.follow, fps, log: W?.log.length, slow: slowK < 1, phase: W?.columnPhase };
 }
 function setQuality(hq: boolean) { HQ = hq; applyRes(); applyPipe(); setupShadows(); $('bQual').setAttribute('aria-pressed', String(hq)); }

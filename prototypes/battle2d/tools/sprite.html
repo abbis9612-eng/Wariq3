@@ -1,0 +1,20 @@
+<!doctype html><meta charset="utf-8"><style>html,body{margin:0;background:transparent}canvas{width:512px;height:512px}</style>
+<canvas id="c" width="512" height="512"></canvas>
+<script type="module">
+// يخبز صورة من فوق لمجسم حقيقي (خلفية شفافة): /tools/sprite.html?m=<glb>&len=<متر>&yaw=<راديان>&hide=<أجزاء>
+import { Engine, Scene, Vector3, Color4, Color3, HemisphericLight, DirectionalLight, FreeCamera, Camera, LoadAssetContainerAsync, PBRMaterial, TransformNode } from '@babylonjs/core';
+import '@babylonjs/loaders/glTF';
+const q = new URLSearchParams(location.search);
+const e = new Engine(document.getElementById('c'), true, { preserveDrawingBuffer: true, premultipliedAlpha: false, alpha: true }), s = new Scene(e); s.clearColor = new Color4(0, 0, 0, 0);
+const h = new HemisphericLight('h', new Vector3(0, 1, 0), s); h.intensity = 0.55; h.groundColor = new Color3(0.3, 0.28, 0.25);
+const d = new DirectionalLight('d', new Vector3(0.45, -1, -0.55), s); d.intensity = 2.4; d.diffuse = new Color3(1, 0.94, 0.84);
+const c = await LoadAssetContainerAsync('/' + q.get('m'), s); c.addAllToScene();
+c.materials.forEach(m => { if (m instanceof PBRMaterial) { m.environmentIntensity = 0; m.directIntensity = 1.6; m.metallic = Math.min(m.metallic ?? 1, 0.1); } });
+const root = new TransformNode('r', s); c.rootNodes.forEach(n => n.parent = root); root.rotation.y = +(q.get('yaw') || 0);
+root.computeWorldMatrix(true); c.meshes.forEach(m => m.computeWorldMatrix(true));
+const { min, max } = root.getHierarchyBoundingVectors(true), ctr = min.add(max).scale(0.5), ext = Math.max(max.x - min.x, max.z - min.z) * 0.52;
+const cam = new FreeCamera('c', new Vector3(ctr.x, max.y + 50, ctr.z), s); cam.mode = Camera.ORTHOGRAPHIC_CAMERA; cam.orthoLeft = -ext; cam.orthoRight = ext; cam.orthoTop = ext; cam.orthoBottom = -ext; cam.minZ = 0.1; cam.maxZ = 500;
+cam.upVector = new Vector3(0, 0, 1); cam.setTarget(ctr); s.activeCamera = cam;
+window.info = { ext: +ext.toFixed(2) };
+s.executeWhenReady(() => { s.render(); s.render(); setTimeout(() => window.done = true, 300); });
+</script>

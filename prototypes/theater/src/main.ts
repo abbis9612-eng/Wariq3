@@ -95,17 +95,22 @@ const pitchFor = (d: number) => lerp(lerp(0.95, 1.12, smooth(3000, 7000, d)), CL
 let camTarget = new Vector3(view.tx, 0, view.tz), camDist = view.dist, camPitch = pitchFor(view.dist), camYaw = 0;
 let camFov = CLOSE_FOV, trauma = 0, shakeT = 0, followBlend = 1, followFrom = new Vector3(), targetY = 0;
 const portrait = () => canvas.clientWidth < canvas.clientHeight;
+// I-037: منظر جانبي بزر: الكاميرا تنزل قريب الأرض وتشوف المعركة من الجنب (الأفق والجبال بالخلفية). نفس المخرج والتلاحق.
+let sideView = false, sideDist = 220;
+const SIDE_PITCH = 0.13, SIDE_FOV = 0.62;
 function updateCamera(dt: number) {
   const k = 1 - Math.exp(-dt * 5);
   let tgt = new Vector3(view.tx, groundH(view.tx, view.tz) + targetY, view.tz), want = view.dist, pitch = view.pitch > 0 ? view.pitch : pitchFor(view.dist);
   const f = view.follow ? findEntity(view.follow) : null;
   if (f) { tgt = v(f.p); want = view.fDist; pitch = f.air ? 0.2 : CLOSE_PITCH; view.tx = tgt.x; view.tz = tgt.z;
+    if (sideView && !f.air) { want = Math.min(view.fDist, 75); pitch = SIDE_PITCH; }
     if (f.air && f.vel && len(f.vel) > 5) view.yaw = camYaw + angDiff(camYaw, Math.atan2(f.vel[0], f.vel[2])) * (1 - Math.exp(-dt * 2)); }
   if (f) { followBlend = Math.min(1, followBlend + dt / 0.8); const e = followBlend * followBlend * (3 - 2 * followBlend); camTarget = Vector3.Lerp(followFrom, tgt, e); if (followBlend < 1) followFrom = Vector3.Lerp(followFrom, tgt, k * 0.5); }
   else camTarget = Vector3.Lerp(camTarget, tgt, k);
-  if (!(f && f.air)) pitch = Math.max(pitch, lerp(0.3, 0.78, closeK(want)));   // بالمعركة القريبة ما نخلي الكاميرا تنزل وتبين السما
+  if (sideView && !f) { want = sideDist; pitch = SIDE_PITCH; tgt.y += 3; }
+  if (!(f && f.air) && !sideView) pitch = Math.max(pitch, lerp(0.3, 0.78, closeK(want)));   // بالمعركة القريبة ما نخلي الكاميرا تنزل وتبين السما
   camDist = lerp(camDist, want, k); camPitch = lerp(camPitch, pitch, k); camYaw = camYaw + angDiff(camYaw, view.yaw) * k;
-  const fovW = f && f.air ? WIDE_FOV : lerp(WIDE_FOV, CLOSE_FOV, closeK(camDist)); camFov = lerp(camFov, fovW, k);
+  const fovW = f && f.air ? WIDE_FOV : sideView ? SIDE_FOV : lerp(WIDE_FOV, CLOSE_FOV, closeK(camDist)); camFov = lerp(camFov, fovW, k);
   // الشاشة بالطول: نثبت الزاوية الأفقية حتى ما يطلع الهدف برّا
   cam.fovMode = portrait() ? FreeCamera.FOVMODE_HORIZONTAL_FIXED : FreeCamera.FOVMODE_VERTICAL_FIXED; cam.fov = portrait() ? camFov * 1.15 : camFov;
   const cp = Math.cos(camPitch) * camDist, pos = new Vector3(camTarget.x - Math.sin(camYaw) * cp, camTarget.y + Math.sin(camPitch) * camDist, camTarget.z - Math.cos(camYaw) * cp);
@@ -117,7 +122,7 @@ function updateCamera(dt: number) {
   cam.position.copyFrom(pos);
   cam.setTarget(camTarget.add(new Vector3(Math.sin(shakeT * 1.7) * sh, Math.sin(shakeT * 2.3) * sh, Math.sin(shakeT * 1.1) * sh)));
   // الظلال تتبع مكان الكاميرا
-  if (shadows) { const on = camDist < 1500; sun.shadowEnabled = on; if (on) { sun.position = camTarget.add(v(scale(SUN, 700))); sun.shadowFrustumSize = clamp(camDist * Math.tan(camFov) * 2.2, 90, 1300); } }
+  if (shadows) { const on = camDist < 1500; sun.shadowEnabled = on; if (on) { sun.position = camTarget.add(v(scale(SUN, 700))); sun.shadowFrustumSize = sideView ? 650 : clamp(camDist * Math.tan(camFov) * 2.2, 90, 1300); } }
 }
 // لمس
 const ptrs = new Map<number, { x: number; y: number }>();
@@ -130,7 +135,7 @@ canvas.addEventListener('pointermove', e => {
     if (view.follow && moved > 12) endFollow(); if (view.follow) return;
     view.pitch = -1; targetY = 0;
     const s = (camDist * 2 * Math.tan(camFov / 2)) / canvas.clientHeight, fx = Math.sin(camYaw), fz = Math.cos(camYaw);
-    view.tx += (-dx * fz + dy * fx / Math.sin(camPitch) * 0.9) * s; view.tz += (dx * fx + dy * fz / Math.sin(camPitch) * 0.9) * s;
+    const sp = Math.max(Math.sin(camPitch), 0.35); view.tx += (-dx * fz + dy * fx / sp * 0.9) * s; view.tz += (dx * fx + dy * fz / sp * 0.9) * s;
     view.tx = clamp(view.tx, -6000, 6000); view.tz = clamp(view.tz, -6000, 6000);
   } else if (ptrs.size === 2) {
     const [a, b] = [...ptrs.values()], d = Math.hypot(a.x - b.x, a.y - b.y), ang = Math.atan2(b.y - a.y, b.x - a.x);
@@ -141,7 +146,7 @@ canvas.addEventListener('pointermove', e => {
 const up = (e: PointerEvent) => { ptrs.delete(e.pointerId); pinch0 = 0; };
 canvas.addEventListener('pointerup', up); canvas.addEventListener('pointercancel', up);
 canvas.addEventListener('wheel', e => { e.preventDefault(); setAuto(false); zoomBy(Math.exp(e.deltaY * 0.0012)); }, { passive: false });
-function zoomBy(f: number) { if (view.follow) view.fDist = clamp(view.fDist * f, 25, 1500); else { view.pitch = -1; view.dist = clamp(view.dist * f, 120, 9000); } }
+function zoomBy(f: number) { if (view.follow) view.fDist = clamp(view.fDist * f, 25, 1500); else if (sideView) sideDist = clamp(sideDist * f, 50, 800); else { view.pitch = -1; view.dist = clamp(view.dist * f, 120, 9000); } }
 
 // ===== معالجة الصورة =====
 const pipe = new DefaultRenderingPipeline('pipe', true, scene, [cam]);
@@ -464,7 +469,7 @@ function makeProcedural() {
   capMesh = MeshBuilder.CreateBox('cap', { width: 0.9, height: 0.06, depth: 0.9 }, scene); const capm = new StandardMaterial('capMat', scene); capm.diffuseColor = new Color3(0.85, 0.84, 0.8); capMesh.material = capm; capMesh.isVisible = false;
 }
 // تكبير بصري (TH5.2): من بعيد المركبات والجنود يكبرون شوية حتى ينقرون (مثل ألعاب الاستراتيجية)، ومن قريب حجمهم الحقيقي
-const visScale = (k: number) => 1 + k * smooth(40, 450, camDist);
+const visScale = (k: number) => 1 + k * smooth(40, 450, camDist) * (sideView ? 0.25 : 1);   // من الجنب التكبير يبين غريب جنب البيوت
 let curVS = 1;
 // فوهة المركبة المكبّرة بصرياً: نمد نقطة الطلقة من مركز الوحدة بنفس التكبير حتى اللهب يطلع من راس السبطانة
 function muzzleAt(id: number, p: V3): V3 { const u = W.units.find(x => x.id === id); if (!u || curVS === 1) return p; const c = L(u.p); return add(c, scale(sub(p, c), curVS)); }
@@ -945,6 +950,7 @@ $('bStart').onclick = start; $('bAgain').onclick = start;
 $('bExplore').onclick = () => { ($('end') as HTMLElement).hidden = true; setAuto(false); toast('حرّك الخريطة واضغط على أي اسم'); };
 $('bBack').onclick = () => { setAuto(false); endFollow(); }; $('bHome').onclick = () => { setAuto(false); endFollow(); view.tx = -1900; view.tz = -330; view.dist = 1000; view.yaw = 0; view.pitch = -1; targetY = 0; };
 $('bAuto').onclick = () => setAuto(!auto);
+$('bSide').onclick = () => { sideView = !sideView; $('bSide').setAttribute('aria-pressed', String(sideView)); };
 $('bRotL').onclick = () => (view.yaw += 0.5); $('bRotR').onclick = () => (view.yaw -= 0.5);
 $('bQual').onclick = () => { setQuality(!HQ); toast(HQ ? 'جودة عالية: ظلال وأضواء انفجارات' : 'جودة خفيفة: أسرع على التلفون'); };
 $('bMute').onclick = () => ($('bMute').textContent = sfx.toggle() ? '🔇' : '🔊');

@@ -101,7 +101,8 @@ export interface World {
     enTanks: number; enTanksLost: number; iqTanks: number; iqTanksLost: number; pacFired: number; n48Fired: number; rockets: number; shells: number; rounds: number;
     enBmpLost: number; enBmp: number; enMen: number; enMenLost: number; iqMen: number; iqMenLost: number; housesLost: number; atgm: number; rpg: number; counterT: number; fallbackT: number };
   schedule: { t: number; f: (w: World) => void; done?: boolean }[];
-  orderCd: Record<Order, number>; aaPriority: boolean; columnPhase: string; boundTeam: number; boundT: number;
+  orderCd: Record<Order, number>; aaPriority: boolean;
+  /* TH6.8: القيادة تلقائي/يدوي، عدد المدفعية والدخان، وقت قرار القائد الآلي */ cmd: 'auto' | 'manual'; ammo: { barrage: number; smoke: number }; aiT: number; columnPhase: string; boundTeam: number; boundT: number;
   en: EnPhase; iq: IqPhase; enT: number; iqT: number; smoke: Smoke[]; known: Record<Side, Map<number, number>>; houseHp: number[]; houseOwner: (Side | '')[]; spotT: number; dbg: Record<string, number>; coverOwner: Map<number, number>; r2: () => number; nextSol: number; solCover: Map<number, number>;
 }
 const WEST: V3 = [-1, 0, 0], EAST: V3 = [1, 0, 0];
@@ -115,7 +116,7 @@ export function newWorld(seed = 11): World {
     T: 0, units: [], air: [], fx: [], log: [], r: rng(seed), nextId: 1, schedule: [], over: false, result: '',
     stats: { drones: 0, dronesDown: 0, dronesHit: 0, cruise: 0, cruiseDown: 0, cruiseHit: 0, ballistic: 0, ballisticDown: 0, ballisticHit: 0, enTanks: 0, enTanksLost: 0, iqTanks: 0, iqTanksLost: 0, pacFired: 0, n48Fired: 0, rockets: 0, shells: 0, rounds: 0,
       enBmpLost: 0, enBmp: 0, enMen: 0, enMenLost: 0, iqMen: 0, iqMenLost: 0, housesLost: 0, atgm: 0, rpg: 0, counterT: 0, fallbackT: 0 },
-    orderCd: { barrage: 0, smoke: 0, retreat: 0, counter: 0, aaPriority: 0 }, aaPriority: false, columnPhase: 'march', boundTeam: 0, boundT: 0,
+    orderCd: { barrage: 0, smoke: 0, retreat: 0, counter: 0, aaPriority: 0 }, aaPriority: false, cmd: 'auto', ammo: { barrage: 4, smoke: 3 }, aiT: 0, columnPhase: 'march', boundTeam: 0, boundT: 0,
     en: 'march', iq: 'line1', enT: 0, iqT: 0, smoke: [], known: { iq: new Map(), en: new Map() }, houseHp: HOUSES.map(() => 3), houseOwner: HOUSES.map(() => ''), spotT: 0, dbg: {}, coverOwner: new Map(), r2: rng(seed * 7 + 991), nextSol: 1, solCover: new Map(),
   };
   const U = (kind: Kind, side: Side, p: V3, dir: V3, group: string, extra: Partial<Unit> = {}) => {
@@ -320,23 +321,26 @@ function blast(w: World, p: V3, rSoft: number, rHard: number, dmgSoft: number, d
 }
 
 // ===== أوامر اللاعب (I-033): خمسة أوامر قليلة =====
-export function order(w: World, o: Order, at?: V3): string | null {
+export const AMMO_MAX = { barrage: 4, smoke: 3 };
+export function order(w: World, o: Order, at?: V3, by = 'أمرك'): string | null {
+  if ((o === 'barrage' || o === 'smoke') && w.ammo[o] <= 0) return o === 'barrage' ? 'المدفعية خلّصت رماياتها' : 'قذائف الدخان خلصت';
   if (w.orderCd[o] > w.T) return o === 'counter' ? 'الهجوم المعاكس صار أو الاحتياط ما بقى' : `الأمر يرجع متاح بعد ${Math.ceil(w.orderCd[o] - w.T)} ثانية`;
   if (o === 'counter' && w.iq === 'counter') return 'الهجوم المعاكس شغّال';
   if (o === 'retreat' && w.iq !== 'line1') return 'المدافعين أصلاً بالخط الثاني';
   const foes = w.units.filter(u => u.side === 'en' && u.alive && ground(u) && u.kind !== 'grad' && u.state !== 'mounted');
   const target = at ?? (foes.length ? scale(foes.reduce((s, u) => add(s, u.p), [0, 0, 0] as V3), 1 / foes.length) : null);
   if ((o === 'barrage' || o === 'smoke') && !target) return 'ماكو هدف';
-  w.orderCd[o] = w.T + ORDER_CD[o];
+  if (o === 'smoke' && !w.units.some(u => u.kind === 'd30' && u.alive)) return 'المدفعية ما بقت';
+  w.orderCd[o] = w.T + ORDER_CD[o]; if (o === 'barrage' || o === 'smoke') w.ammo[o]--;
   if (o === 'barrage') {
     w.units.filter(u => u.kind === 'd30' && u.alive).forEach((g, gi) => { for (let i = 0; i < 6; i++) w.schedule.push({ t: w.T + i * 1.4 + gi * 0.5, f: (w) => { if (g.alive) fireShell(w, g, add(target!, [(w.r() - 0.5) * 110, 0, (w.r() - 0.5) * 110])); } }); });
-    w.log.push({ t: w.T, text: 'أمرك: رشقة مدفعية مركّزة', good: null, p: target! });
+    w.log.push({ t: w.T, text: `${by}: رشقة مدفعية مركّزة (باقي ${w.ammo.barrage})`, good: null, p: target! });
   }
   if (o === 'smoke') { const g = w.units.find(u => u.kind === 'd30' && u.alive); if (!g) return 'المدفعية ما بقت';
     for (let i = 0; i < 4; i++) w.schedule.push({ t: w.T + i * 0.9, f: (w) => fireShell(w, g, add(target!, [(i - 1.5) * 45, 0, (w.r() - 0.5) * 30]), 'smoke') });
-    w.log.push({ t: w.T, text: 'أمرك: ستارة دخان', good: null, p: target! }); }
-  if (o === 'retreat') fallback(w, 'أمرك');
-  if (o === 'counter') counter(w, 'أمرك');
+    w.log.push({ t: w.T, text: `${by}: ستارة دخان (باقي ${w.ammo.smoke})`, good: null, p: target! }); }
+  if (o === 'retreat') fallback(w, by);
+  if (o === 'counter') counter(w, by, at);
   if (o === 'aaPriority') { w.aaPriority = !w.aaPriority; w.log.push({ t: w.T, text: w.aaPriority ? 'أمرك: الباتريوت يضرب المسيّرات هم (حماية أكثر، بس صواريخ غالية)' : 'أمرك: الباتريوت يرجع للكروز والباليستي بس', good: null, p: PATRIOT_POS }); }
   return null;
 }
@@ -393,9 +397,29 @@ function commanders(w: World) {
   }
   // العراق
   const lostLine = w.stats.iqTanksLost >= 1 || iqLine.length < 3;
-  if (w.iq === 'line1' && ((front > -2100 - 430 && (lostLine || w.T > 280)) || front > -2100 - 230 || (w.en === 'breach' && w.T - w.enT > 25))) fallback(w, 'القائد');
-  const enIn = enInf.filter(u => inVillage(u.p) || u.house >= 0).length;
-  if (w.iq !== 'counter' && w.T > 330 && ((enIn >= 2 && en.filter(isTank).length <= 3) || (w.en === 'assault' && w.T - w.enT > 100) || w.T > 470)) counter(w, 'القائد');
+  // TH6.8: بالتلقائي القائد الآلي يقرر الانسحاب والهجوم المعاكس والإسناد؛ باليدوي كلها بيد اللاعب (إلا انسحاب اضطراري إذا الخط انهار)
+  if (w.cmd === 'auto') {
+    if (w.iq === 'line1' && ((front > -2100 - 430 && (lostLine || w.T > 280)) || front > -2100 - 230 || (w.en === 'breach' && w.T - w.enT > 25))) fallback(w, 'القائد');
+    const enIn = enInf.filter(u => inVillage(u.p) || u.house >= 0).length;
+    if (w.iq !== 'counter' && w.T > 330 && ((enIn >= 2 && en.filter(isTank).length <= 3) || (w.en === 'assault' && w.T - w.enT > 100) || w.T > 470)) counter(w, 'القائد');
+    aiSupport(w);
+  } else if (w.iq === 'line1' && lostLine && front > -2100 - 200) fallback(w, 'انسحاب اضطراري — الخط انهار');
+}
+/** القائد الآلي (تلقائي): مدفعية على أكبر تجمع للعدو بعيد عن جماعتنا، ودخان يغطي الانسحاب — بنفس العدد المحدود اللي عند اللاعب */
+function aiSupport(w: World) {
+  if (w.T < w.aiT) return; w.aiT = w.T + 4;
+  const foes = w.units.filter(u => u.side === 'en' && u.alive && ground(u) && u.state !== 'mounted' && u.kind !== 'grad' && w.known.iq.has(u.id));
+  const ours = w.units.filter(u => u.side === 'iq' && u.alive && ground(u) && u.kind !== 'd30' && u.role !== 'aa');
+  if (w.ammo.barrage > 0 && w.orderCd.barrage <= w.T && w.T > 120) {
+    let best: V3 | null = null, bs = 0;
+    for (const f of foes) { const near = foes.filter(o => dist2d(o.p, f.p) < 120); const sc = near.reduce((a, o) => a + (isVeh(o) ? 1.2 : o.kind === 'inf' ? 1 : 0.5), 0);
+      if (sc > bs && sc >= 3 && !ours.some(o => dist2d(o.p, f.p) < 160)) { bs = sc; best = scale(near.reduce((a, o) => add(a, o.p), [0, 0, 0] as V3), 1 / near.length); } }
+    if (best) { order(w, 'barrage', best, 'القائد'); return; }
+  }
+  if (w.ammo.smoke > 0 && w.orderCd.smoke <= w.T) {
+    const fleeing = w.units.find(u => u.side === 'iq' && u.alive && u.state === 'retreat' && u.kind === 'inf' && foes.some(f => dist2d(f.p, u.p) < 320));
+    if (fleeing) { const f = foes.reduce((a, b) => (dist2d(a.p, fleeing.p) < dist2d(b.p, fleeing.p) ? a : b)); order(w, 'smoke', scale(add(f.p, fleeing.p), 0.5), 'القائد'); }
+  }
 }
 function setEn(w: World, ph: EnPhase, text: string, good: boolean) {
   w.en = ph; w.enT = w.T; const c = w.units.find(u => u.side === 'en' && u.alive && isColumn(u))?.p ?? [-3000, 0, HIGHWAY_Z];
@@ -422,14 +446,16 @@ function fallback(w: World, by: string) {
   w.log.push({ t: w.T, text: `${by}: الأبرامز تنسحب من التلّة لخط ثاني ورا بيوت القرية`, good: null, p: [-2050, 0, HIGHWAY_Z] });
   w.fx.push({ k: 'phase', side: 'iq', phase: 'line2', p: [-1700, 0, HIGHWAY_Z] }, { k: 'mark', p: [-2000, 40, HIGHWAY_Z], text: '↩ انسحاب للخط الثاني', good: false });
 }
-function counter(w: World, by: string) {
+function counter(w: World, by: string, at?: V3) {
   if (w.iq === 'counter') return; const res = w.units.filter(u => u.side === 'iq' && u.alive && u.role === 'reserve');
   if (!res.length) return; w.iq = 'counter'; w.iqT = w.T; w.stats.counterT = w.T; w.orderCd.counter = w.T + 9999;
-  // الهجوم يكون أقوى إذا العدو متشتت داخل القرية
-  for (const u of res) { if (u.state === 'mounted') continue; u.state = 'counter'; u.stateT = 0; u.goal = add(COUNTER_P, [(w.r() - 0.5) * 80, 0, (w.r() - 0.5) * 40]); }
+  // TH6.8: الاتجاه: شمال القرية (الأساسي، من الجنب)، أو قدامها (الطريق)، أو جنوبها — حسب وين ضغط اللاعب
+  const dir = !at ? 'north' : at[2] > VILLAGE_C[2] + 70 ? 'north' : at[2] < VILLAGE_C[2] - 70 ? 'south' : 'center';
+  const P: V3 = dir === 'north' ? COUNTER_P : dir === 'south' ? [-1260, 0, VILLAGE_C[2] - 330] : [-1180, 0, HIGHWAY_Z + 30];
+  for (const u of res) { if (u.state === 'mounted') continue; u.state = 'counter'; u.stateT = 0; u.goal = add(P, [(w.r() - 0.5) * 80, 0, (w.r() - 0.5) * 40]); }
   for (const u of w.units) if (u.side === 'iq' && u.alive && u.role === 'line' && isTank(u)) { u.state = 'counter'; u.goal = add(u.p, [-220, 0, 0]); }
-  w.log.push({ t: w.T, text: `${by}: هجوم معاكس! الاحتياط يضرب العدو من الجنب الشمالي`, good: true, p: RESERVE_P });
-  w.fx.push({ k: 'phase', side: 'iq', phase: 'counter', p: COUNTER_P }, { k: 'mark', p: add(COUNTER_P, [0, 40, 0]), text: '⚔ هجوم معاكس', good: true });
+  w.log.push({ t: w.T, text: `${by}: هجوم معاكس! الاحتياط يضرب العدو ${dir === 'north' ? 'من الجنب الشمالي' : dir === 'south' ? 'من الجنب الجنوبي' : 'من قدام على الطريق'}`, good: true, p: RESERVE_P });
+  w.fx.push({ k: 'phase', side: 'iq', phase: 'counter', p: P }, { k: 'mark', p: add(P, [0, 40, 0]), text: '⚔ هجوم معاكس', good: true });
 }
 function popSmoke(w: World, v: Unit, from: V3) {
   if (!v.alive || v.smokeN <= 0) return; v.smokeN--;
@@ -709,7 +735,10 @@ function infAssault(w: World, u: Unit, dt: number) {
     if (u.stateT > 25 + w.r() * 20 && u.supp < 0.5) { u.house = -1; u.state = 'rush'; u.stateT = 0; } else { u.pose = 'fire'; return; } }
   const tgtHouse = nextHouse(w, u);
   if (!tgtHouse) { u.state = 'hold'; u.pose = 'fire'; return; }
-  const hp: V3 = [tgtHouse.x, 0, tgtHouse.z], d = dist2d(u.p, hp);
+  // TH6.8: حضيرة الالتفاف (team 1) تمر أول على الجنب الشمالي للقرية، وبعدين تقتحم من الطرف
+  const flankP: V3 = [VILLAGE_C[0] - 140, 0, VILLAGE_C[2] + 200];
+  if (u.team === 1 && !u.fi && dist2d(u.p, flankP) < 35) u.fi = 1;
+  const hp: V3 = u.team === 1 && !u.fi ? flankP : [tgtHouse.x, 0, tgtHouse.z], d = dist2d(u.p, hp);
   if (u.supp > 0.65 && u.state !== 'pin') { u.state = 'pin'; u.stateT = 0; u.goal = null; }
   if (u.state === 'pin') { u.pose = 'prone';
     // تحت النار: يزحفون لأقرب ستر (10م) إذا أكو
@@ -735,7 +764,9 @@ function infAssault(w: World, u: Unit, dt: number) {
 }
 function nextHouse(w: World, u: Unit) {
   let best: House | null = null, bs = 1e9;
-  for (const h of FRONT_HOUSES) { if (w.houseHp[h.i] <= 0 || w.houseOwner[h.i] === 'en') continue; const s = Math.hypot(h.x - u.p[0], h.z - u.p[2]) + (h.x - u.p[0]) * 0.6 + (w.houseOwner[h.i] === 'iq' ? -60 : 0); if (s < bs) { bs = s; best = h; } }
+  // TH6.8: يركّز على البيت الضعيف (مدافعيه قليلين)
+  for (const h of FRONT_HOUSES) { if (w.houseHp[h.i] <= 0 || w.houseOwner[h.i] === 'en') continue; const def = w.units.find(o => o.alive && o.side === 'iq' && o.house === h.i);
+    const s = Math.hypot(h.x - u.p[0], h.z - u.p[2]) + (h.x - u.p[0]) * 0.6 + (w.houseOwner[h.i] === 'iq' ? -60 : 0) - (def ? (7 - def.men) * 14 : 0); if (s < bs) { bs = s; best = h; } }
   return best;
 }
 function closeFight(w: World, a: Unit, b: Unit, dt: number) {

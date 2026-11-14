@@ -10,7 +10,7 @@ import '@babylonjs/loaders/glTF';
 import { SkyMaterial } from '@babylonjs/materials/sky';
 import { CustomMaterial } from '@babylonjs/materials/custom';
 import {
-  V3, add, sub, scale, len, norm, lerp, clamp, rng, World, newWorld, step, order, Order, ORDER_CD, Unit, Air, Fx, SITES, riverX, RIVER_W, CITY_R,
+  V3, add, sub, scale, len, norm, lerp, clamp, rng, World, newWorld, step, order, Order, ORDER_CD, AMMO_MAX, Unit, Air, Fx, SITES, riverX, RIVER_W, CITY_R,
   HIGHWAY_Z, BERMS, AIR_AR, SIDE_AR, PATRIOT_POS, S400_POS, S400_SCALE, dist2d, site, angDiff,
 } from './sim';
 import type { Sol } from './sim';
@@ -150,6 +150,15 @@ canvas.addEventListener('pointermove', e => {
   }
 });
 const up = (e: PointerEvent) => { ptrs.delete(e.pointerId); pinch0 = 0; };
+// اختيار مكان الأمر: على مستوى الصفحة (حتى لو الإصبع نزل فوق اسم وحدة)، بس إذا ما سحب
+let tapX = 0, tapY = 0;
+document.addEventListener('pointerdown', e => { tapX = e.clientX; tapY = e.clientY; }, true);
+document.addEventListener('pointerup', e => {
+  if (!pendingOrder || Math.hypot(e.clientX - tapX, e.clientY - tapY) > 14) return;
+  if ((e.target as HTMLElement).closest('#orders, #sideBtns, #spd, #follow, #ticker, #toast, .side-btns')) return;
+  const r = canvas.getBoundingClientRect(), g = groundAt(e.clientX - r.left, e.clientY - r.top);   /* createPickingRay يقسم على مقياس الدقة بنفسه */
+  if (g) { e.stopPropagation(); placeOrder(g); }
+}, true);
 canvas.addEventListener('pointerup', up); canvas.addEventListener('pointercancel', up);
 canvas.addEventListener('wheel', e => { e.preventDefault(); setAuto(false); zoomBy(Math.exp(e.deltaY * 0.0012)); }, { passive: false });
 function zoomBy(f: number) { if (view.follow) view.fDist = clamp(view.fDist * f, classic ? 8 : 25, 1500); else if (sideView) sideDist = clamp(sideDist * f, 50, 800); else if (classic) { view.pitch = -1; view.dist = clamp(view.dist * f, 25, 9000); } else { view.pitch = -1; view.dist = clamp(view.dist * f, 120, 9000); } }
@@ -1074,14 +1083,44 @@ function hud() {
     tickN = W.log.length;
     $('ticker').innerHTML = W.log.slice(-2).map((l, i) => `<button data-i="${W.log.length - 2 + i}"><span class="t">${Math.floor(l.t / 60)}:${String(Math.floor(l.t % 60)).padStart(2, '0')}</span><b class="${l.good === true ? 'g' : l.good === false ? 'x' : 'n'}">${l.good === true ? '✓' : l.good === false ? '✗' : '•'}</b><span>${l.text}</span></button>`).join('');
   }
-  document.querySelectorAll<HTMLButtonElement>('#orders button').forEach(b => {
-    const o = b.dataset.o as Order, left = Math.max(0, W.orderCd[o] - W.T);
+  // TH6.8: زر القيادة + الباقي من المدفعية/الدخان
+  $('bCmd').innerHTML = W.cmd === 'auto' ? '🤖 تلقائي<small>القائد يقرر</small>' : '✋ يدوي<small>القرار بيدك</small>'; $('bCmd').setAttribute('aria-pressed', String(W.cmd === 'manual'));
+  document.querySelectorAll<HTMLButtonElement>('#orders button[data-o]').forEach(b => {
+    const o = b.dataset.o as Order, left = Math.max(0, W.orderCd[o] - W.T), sm = b.querySelector('small');
+    if (sm && (o === 'barrage' || o === 'smoke')) sm.textContent = pendingOrder === o ? 'اضغط على الأرض' : `باقي ${W.ammo[o]}/${AMMO_MAX[o]}`;
+    if (sm && o === 'counter') sm.textContent = pendingOrder === o ? 'اضغط الجهة' : 'الاحتياط يطلع';
+    if (o !== 'aaPriority') b.setAttribute('aria-pressed', String(pendingOrder === o));
     (b.lastChild as HTMLElement).style.width = `${(left / ORDER_CD[o]) * 100}%`; b.disabled = left > 0 && o !== 'aaPriority';
     if (o === 'aaPriority') b.setAttribute('aria-pressed', String(W.aaPriority));
   });
 }
 $('ticker').addEventListener('click', e => { setAuto(false); const b = (e.target as HTMLElement).closest('button'); if (!b) return; const l = W.log[+b.dataset.i!]; if (l) { endFollow(); view.tx = l.p[0]; view.tz = l.p[2]; view.dist = 900; view.pitch = -1; targetY = 0; } });
-document.querySelectorAll<HTMLButtonElement>('#orders button').forEach(b => b.onclick = () => { const msg = order(W, b.dataset.o as Order); toast(msg ?? '✓ انطلق الأمر'); });
+// TH6.8: المدفعية والدخان والهجوم المعاكس: تضغط الزر، وبعدين تضغط على الأرض وين تريد (دائرة توريك المكان). تضغط الزر مرة ثانية = إلغاء
+let pendingOrder: Order | null = null;
+document.querySelectorAll<HTMLButtonElement>('#orders button[data-o]').forEach(b => b.onclick = () => {
+  const o = b.dataset.o as Order;
+  if (o === 'barrage' || o === 'smoke' || o === 'counter') {
+    if (pendingOrder === o) { pendingOrder = null; toast('انلغى الأمر'); return; }
+    if ((o === 'barrage' || o === 'smoke') && W.ammo[o] <= 0) { toast(o === 'barrage' ? 'المدفعية خلّصت رماياتها' : 'قذائف الدخان خلصت'); return; }
+    if (W.orderCd[o] > W.T) { toast(order(W, o) ?? ''); return; }
+    pendingOrder = o; setAuto(false); toast(o === 'barrage' ? '💥 اضغط على الأرض وين تنزل المدفعية' : o === 'smoke' ? '🌫 اضغط وين تنحط ستارة الدخان' : '⚔ اضغط من وين يهجم الاحتياط: شمال القرية، قدامها، أو جنوبها', 6000); return;
+  }
+  const msg = order(W, o); toast(msg ?? '✓ انطلق الأمر');
+});
+$('bCmd').onclick = () => { W.cmd = W.cmd === 'auto' ? 'manual' : 'auto'; toast(W.cmd === 'auto' ? '🤖 القيادة تلقائية: القائد يقرر، وإنت تكدر تتدخل' : '✋ القيادة يدوية: المدفعية والدخان والانسحاب والهجوم المعاكس بيدك', 3500); };
+/** وين ضغط الإصبع على الأرض: نمشي على شعاع الكاميرا لحد ما ينزل تحت الأرض */
+function groundAt(x: number, y: number): V3 | null {
+  const ray = scene.createPickingRay(x, y, Matrix.Identity(), cam); let prev = 0;
+  for (let t = 5; t < 20000; t *= 1.04) { const p = ray.origin.add(ray.direction.scale(t)); if (p.y < groundH(p.x, p.z)) { let a = prev, b = t; for (let i = 0; i < 12; i++) { const m = (a + b) / 2, q = ray.origin.add(ray.direction.scale(m)); if (q.y < groundH(q.x, q.z)) b = m; else a = m; } const q = ray.origin.add(ray.direction.scale(b)); return [q.x, 0, q.z]; } prev = t; }
+  return null;
+}
+const ring = MeshBuilder.CreateTorus('orderRing', { diameter: 2, thickness: 0.06, tessellation: 48 }, scene); { const m = new StandardMaterial('ringMat', scene); m.emissiveColor = new Color3(1, 0.75, 0.2); m.disableLighting = true; m.alpha = 0.85; ring.material = m; ring.isPickable = false; ring.setEnabled(false); }
+let ringUntil = 0;
+function placeOrder(p: V3) {
+  const o = pendingOrder!; pendingOrder = null;
+  const msg = order(W, o, p); toast(msg ?? (o === 'barrage' ? '💥 المدفعية جاية — ابتعد جماعتنا عن الدائرة' : o === 'smoke' ? '🌫 قذائف الدخان بالطريق' : '⚔ الهجوم المعاكس انطلق'));
+  if (!msg) { const r = o === 'barrage' ? 80 : o === 'smoke' ? 70 : 40; ring.position.set(p[0], groundH(p[0], p[2]) + 1.5, p[2]); ring.scaling.set(r, 30, r); (ring.material as StandardMaterial).emissiveColor = o === 'barrage' ? new Color3(1, 0.35, 0.15) : o === 'smoke' ? new Color3(0.85, 0.9, 1) : new Color3(0.4, 1, 0.5); ring.setEnabled(true); ringUntil = W.T + 10; }
+}
 
 // ===== الحلقة =====
 let running = false, endShown = false, acc = 0, autoQ = false;
@@ -1100,6 +1139,7 @@ function frame() {
     if (n === 16) acc = 0;
   }
   ($('slow') as HTMLElement).hidden = slowK === 1;
+  if (ring.isEnabled()) { ring.rotation.y += dtReal * 0.6; if (W && W.T > ringUntil) ring.setEnabled(false); }
   if (W) { syncUnits(dtReal); syncSquads(dtReal); drawSoldiers(dtReal); syncAir(); if (simDt) { burnFx(simDt); tickDebris(simDt); } directorFrame(); }
   const k = simDt ? simDt / Math.max(1e-4, engine.getDeltaTime() / 1000) : 0;
   for (const p of pools) p.ps.updateSpeed = k / 60;
@@ -1124,7 +1164,7 @@ function showEnd() {
     + `<div>الجو: أُسقط<b>${s.dronesDown + s.cruiseDown + s.ballisticDown} من ${s.drones + s.cruise + s.ballistic}</b></div><div>مدة المعركة<b>${Math.floor(W.T / 60)}:${String(Math.floor(W.T % 60)).padStart(2, '0')}</b></div>`;
   ($('end') as HTMLElement).hidden = false;
 }
-function toast(m: string) { const t = $('toast'); t.textContent = m; t.classList.add('show'); clearTimeout((toast as any).h); (toast as any).h = setTimeout(() => t.classList.remove('show'), 2600); }
+function toast(m: string, ms = 2600) { const t = $('toast'); t.textContent = m; t.classList.add('show'); clearTimeout((toast as any).h); (toast as any).h = setTimeout(() => t.classList.remove('show'), ms); }
 let seed = 3;
 function start() {
   sfx.init();

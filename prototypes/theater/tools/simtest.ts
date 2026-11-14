@@ -1,4 +1,4 @@
-// فحص المحاكاة بدون رسم (D-011): node tools/simtest.ts [seed|all] [-q] [-o]
+// فحص المحاكاة بدون رسم (D-011): node tools/simtest.ts [seed|all] [-q] [-o] [-m]
 // all = 20 معركة ويطلع ملخص: المدة، النتيجة، وقت الانسحاب والهجوم المعاكس، الخسائر.
 import sharp from 'sharp';
 import { HN, HMIN, HMAX, setHeightData } from '../src/land.ts';
@@ -7,11 +7,11 @@ const h = new Float32Array(HN * HN); for (let i = 0; i < HN * HN; i++) h[i] = ((
 setHeightData(h);
 const { newWorld, step, order } = await import('../src/sim.ts');
 
-const arg = process.argv[2] || '11', quiet = process.argv.includes('-q'), orders = process.argv.includes('-o');
+const arg = process.argv[2] || '11', quiet = process.argv.includes('-q'), orders = process.argv.includes('-o'), manual = process.argv.includes('-m');   // -m: قيادة يدوية بدون أوامر
 const seeds = arg === 'all' ? Array.from({ length: 20 }, (_, i) => i + 1) : [+arg];
 const rows: Record<string, number | string>[] = []; const dbgAll: Record<string, number> = {};
 for (const seed of seeds) {
-  const w = newWorld(seed), dt = 1 / 60, t0 = performance.now(); let maxStep = 0, logN = 0; const phases: string[] = []; let lastEn = '', lastIq = '';
+  const w = newWorld(seed); if (manual) w.cmd = 'manual'; const dt = 1 / 60, t0 = performance.now(); let maxStep = 0, logN = 0; const phases: string[] = []; let lastEn = '', lastIq = '';
   while (!w.over && w.T < 900) {
     const a = performance.now(); step(w, dt); maxStep = Math.max(maxStep, performance.now() - a);
     if (orders && Math.abs(w.T - 200) < dt / 2) order(w, 'smoke');

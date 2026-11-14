@@ -98,20 +98,25 @@ let camFov = CLOSE_FOV, trauma = 0, shakeT = 0, followBlend = 1, followFrom = ne
 const portrait = () => canvas.clientWidth < canvas.clientHeight;
 // I-037: منظر جانبي بزر: الكاميرا تنزل قريب الأرض وتشوف المعركة من الجنب (الأفق والجبال بالخلفية). نفس المخرج والتلاحق.
 let sideView = false, sideDist = 220;
+// كاميرا «قديمة» (قبل D-018) بزر جانبي: عدسة واسعة، تنزل قريب الأرض، وتلاحق إطلاقات الصواريخ — المالك طلب يرجعها كخيار
+let classic = false;
+const oldPitchFor = (d: number) => lerp(0.5, 1.0, smooth(250, 6500, d));
 const SIDE_PITCH = 0.13, SIDE_FOV = 0.62;
 function updateCamera(dt: number) {
   const k = 1 - Math.exp(-dt * 5);
-  let tgt = new Vector3(view.tx, groundH(view.tx, view.tz) + targetY, view.tz), want = view.dist, pitch = view.pitch > 0 ? view.pitch : pitchFor(view.dist);
+  let tgt = new Vector3(view.tx, groundH(view.tx, view.tz) + targetY, view.tz), want = view.dist, pitch = view.pitch > 0 ? view.pitch : classic ? oldPitchFor(view.dist) : pitchFor(view.dist);
   const f = view.follow ? findEntity(view.follow) : null;
   if (f) { tgt = v(f.p); want = view.fDist; pitch = f.air ? 0.2 : CLOSE_PITCH; view.tx = tgt.x; view.tz = tgt.z;
     if (sideView && !f.air) { want = Math.min(view.fDist, 75); pitch = SIDE_PITCH; }
+    if (classic && !f.air) pitch = 0.42;
     if (f.air && f.vel && len(f.vel) > 5) view.yaw = camYaw + angDiff(camYaw, Math.atan2(f.vel[0], f.vel[2])) * (1 - Math.exp(-dt * 2)); }
   if (f) { followBlend = Math.min(1, followBlend + dt / 0.8); const e = followBlend * followBlend * (3 - 2 * followBlend); camTarget = Vector3.Lerp(followFrom, tgt, e); if (followBlend < 1) followFrom = Vector3.Lerp(followFrom, tgt, k * 0.5); }
   else camTarget = Vector3.Lerp(camTarget, tgt, k);
   if (sideView && !f) { want = sideDist; pitch = SIDE_PITCH; tgt.y += 3; }
-  if (!(f && f.air) && !sideView) pitch = Math.max(pitch, lerp(0.3, 0.78, closeK(want)));   // بالمعركة القريبة ما نخلي الكاميرا تنزل وتبين السما
+  if (classic && !f) { if (view.pitch > 0) pitch = Math.min(view.pitch, 0.45); if (auto) want *= 0.55; }   // لقطات المخرج القديمة: أوطى وأقرب
+  if (!(f && f.air) && !sideView && !classic) pitch = Math.max(pitch, lerp(0.3, 0.78, closeK(want)));   // بالمعركة القريبة ما نخلي الكاميرا تنزل وتبين السما
   camDist = lerp(camDist, want, k); camPitch = lerp(camPitch, pitch, k); camYaw = camYaw + angDiff(camYaw, view.yaw) * k;
-  const fovW = f && f.air ? WIDE_FOV : sideView ? SIDE_FOV : lerp(WIDE_FOV, CLOSE_FOV, closeK(camDist)); camFov = lerp(camFov, fovW, k);
+  const fovW = f && f.air || classic ? WIDE_FOV : sideView ? SIDE_FOV : lerp(WIDE_FOV, CLOSE_FOV, closeK(camDist)); camFov = lerp(camFov, fovW, k);
   // الشاشة بالطول: نثبت الزاوية الأفقية حتى ما يطلع الهدف برّا
   cam.fovMode = portrait() ? FreeCamera.FOVMODE_HORIZONTAL_FIXED : FreeCamera.FOVMODE_VERTICAL_FIXED; cam.fov = portrait() ? camFov * 1.15 : camFov;
   const cp = Math.cos(camPitch) * camDist, pos = new Vector3(camTarget.x - Math.sin(camYaw) * cp, camTarget.y + Math.sin(camPitch) * camDist, camTarget.z - Math.cos(camYaw) * cp);
@@ -147,7 +152,7 @@ canvas.addEventListener('pointermove', e => {
 const up = (e: PointerEvent) => { ptrs.delete(e.pointerId); pinch0 = 0; };
 canvas.addEventListener('pointerup', up); canvas.addEventListener('pointercancel', up);
 canvas.addEventListener('wheel', e => { e.preventDefault(); setAuto(false); zoomBy(Math.exp(e.deltaY * 0.0012)); }, { passive: false });
-function zoomBy(f: number) { if (view.follow) view.fDist = clamp(view.fDist * f, 25, 1500); else if (sideView) sideDist = clamp(sideDist * f, 50, 800); else { view.pitch = -1; view.dist = clamp(view.dist * f, 120, 9000); } }
+function zoomBy(f: number) { if (view.follow) view.fDist = clamp(view.fDist * f, classic ? 8 : 25, 1500); else if (sideView) sideDist = clamp(sideDist * f, 50, 800); else if (classic) { view.pitch = -1; view.dist = clamp(view.dist * f, 25, 9000); } else { view.pitch = -1; view.dist = clamp(view.dist * f, 120, 9000); } }
 
 // ===== معالجة الصورة =====
 const pipe = new DefaultRenderingPipeline('pipe', true, scene, [cam]);
@@ -252,12 +257,12 @@ type Anim = 'run' | 'simple walk' | 'simple shoot' | 'crouch shoot' | 'pron idle
 const SOL_FPS = 30, SOL_CAP = 700;
 let solMesh: Mesh | null = null, SOL_S = 1, vatTime = 0;
 const solW0 = Matrix.Identity(), animRange = new Map<string, { s: number; e: number; fps: number; dur: number }>();
-let solMat = new Float32Array(16), solSet = new Float32Array(4), solMan: BakedVertexAnimationManager | null = null;
+let solMat = new Float32Array(16), solSet = new Float32Array(4), solCol = new Float32Array(4), solMan: BakedVertexAnimationManager | null = null;
 // TH6.2: نقاط التعليق لكل لقطة (بإحداثيات الجندي): الكتف اليمين، اليد اليمين، اليد اليسار — للسلاح وفوهته
 let solAtt = new Float32Array(9);
 async function loadSoldier() {
   const c = await LoadAssetContainerAsync(modelUrl('soldier'), scene, { pluginExtension: '.gltf' });
-  c.materials.forEach(m => { if (m instanceof PBRMaterial) { m.environmentIntensity = 0; m.directIntensity = PBR_DIRECT * 1.35; m.metallic = 0; m.roughness = 0.85; m.emissiveColor = new Color3(0.035, 0.035, 0.03); m.maxSimultaneousLights = 2 + NL; } });
+  c.materials.forEach(m => { if (m instanceof PBRMaterial) { m.environmentIntensity = 0; m.directIntensity = PBR_DIRECT * 1.8; m.metallic = 0; m.roughness = 0.8; m.emissiveColor = new Color3(0.07, 0.07, 0.06); m.maxSimultaneousLights = 2 + NL; } });
   c.addAllToScene();
   const ms = c.meshes.filter(m => m.getTotalVertices() > 0) as Mesh[], sk = ms[0].skeleton!, par = ms[0].parent;
   ms.forEach(m => { m.parent = null; m.position.setAll(0); m.rotationQuaternion = null; m.rotation.setAll(0); m.scaling.setAll(1); });
@@ -285,9 +290,10 @@ async function loadSoldier() {
   c.animationGroups.forEach(g => g.dispose());
   body.parent = null; body.position.setAll(0); body.rotationQuaternion = null; body.rotation.setAll(0); body.scaling.setAll(1);
   c.meshes.forEach(m => { if (m !== body) m.isVisible = false; });
-  solMat = new Float32Array(SOL_CAP * 16); solSet = new Float32Array(SOL_CAP * 4);
+  solMat = new Float32Array(SOL_CAP * 16); solSet = new Float32Array(SOL_CAP * 4); solCol = new Float32Array(SOL_CAP * 4).fill(1);
   body.thinInstanceSetBuffer('matrix', solMat, 16, false);
   body.thinInstanceRegisterAttribute('bakedVertexAnimationSettingsInstanced', 4); body.thinInstanceSetBuffer('bakedVertexAnimationSettingsInstanced', solSet, 4, false);
+  body.thinInstanceRegisterAttribute('color', 4); body.thinInstanceSetBuffer('color', solCol, 4, false);   // لون البدلة حسب الطرف
   body.thinInstanceCount = 0; body.alwaysSelectAsActiveMesh = true; body.isVisible = true; body.receiveShadows = true; caster(body);
   solMesh = body;
   // آر بي جي-7 (TastyTony، CC BY): طوله على x (القذيفة لـ +x بـ glTF = −x ببابلون) ← نلفه للـ +z
@@ -321,7 +327,7 @@ interface SVis { kornet?: TransformNode }
 const squadVis = new Map<number, SVis>();
 const TRANS: Record<string, Anim> = { 'stand>crouch': 'simple to crouch', 'crouch>prone': 'crouch to pron', 'stand>prone': 'crouch to pron', 'prone>crouch': 'pron to crouch' };
 function syncSquads(dt: number) {
-  const VS = visScale(0.6);
+  const VS = visScale(0.85);
   for (const u of W.units) {
     if (u.kind !== 'kornet') continue;
     let sv = squadVis.get(u.id); if (!sv) { sv = { kornet: spawnModel('kornet').root }; squadVis.set(u.id, sv); }
@@ -350,7 +356,7 @@ const solAt = (u: Unit, p: V3, VS: number): [number, number] => [u.p[0] + (p[0] 
 function drawSoldiers(dt: number) {
   if (!solMesh || !solMan) return;
   vatTime += dt * slowK * simSpeed; solMan.time = vatTime;
-  const VS = visScale(0.6), cp = cam.globalPosition; let n = 0, nR = 0;
+  const VS = visScale(0.85), cp = cam.globalPosition; let n = 0, nR = 0;
   const once = (k: number, a: Anim, t0: number) => { const r = animRange.get(a)!, tot = r.e - r.s + 1; if (vatTime - t0 < r.dur) { solSet[k] = r.s; solSet[k + 1] = r.e; solSet[k + 2] = ((-t0 * r.fps) % tot + tot) % tot; solSet[k + 3] = r.fps; return true; } return false; };
   const hold = (k: number, a: Anim) => { const r = animRange.get(a)!; solSet[k] = r.e - 1; solSet[k + 1] = r.e; solSet[k + 2] = 1.5; solSet[k + 3] = 0.0001; };
   const lim = new Set(deadOrder.slice(-160));
@@ -366,6 +372,8 @@ function drawSoldiers(dt: number) {
       if (Math.abs(x - cp.x) + Math.abs(z - cp.z) > 3200) continue;
       tS.setAll(SOL_S * VS); tT.set(x, groundH(x, z), z); Quaternion.RotationYawPitchRollToRef(s.yaw, 0, 0, tQ); Matrix.ComposeToRef(tS, tQ, tT, tM); solW0.multiplyToRef(tM, tO); tO.copyToArray(solMat, n * 16);
       const k = n * 4;
+      // البدلة: العراق صحراوي فاتح، العدو زيتوني مخضر — حتى تميّز الطرفين من بعيد
+      if (u.side === 'iq') { solCol[k] = 1.3; solCol[k + 1] = 1.18; solCol[k + 2] = 0.92; } else { solCol[k] = 0.85; solCol[k + 1] = 1.02; solCol[k + 2] = 0.78; } solCol[k + 3] = 1;
       if (!s.alive) { if (!once(k, v.die as Anim, v.dieT)) hold(k, v.die as Anim); }
       else {
         if (v.pose !== s.pose) { const t = TRANS[v.pose + '>' + s.pose]; if (t && s.act !== 'rush' && s.act !== 'move') { v.tr = t; v.trT = vatTime; } v.pose = s.pose; }   // انتقال طبيعي بين الوضعيات
@@ -389,7 +397,7 @@ function drawSoldiers(dt: number) {
       n++;
     }
   }
-  solMesh.thinInstanceCount = n; solMesh.thinInstanceBufferUpdated('matrix'); solMesh.thinInstanceBufferUpdated('bakedVertexAnimationSettingsInstanced');
+  solMesh.thinInstanceCount = n; solMesh.thinInstanceBufferUpdated('matrix'); solMesh.thinInstanceBufferUpdated('bakedVertexAnimationSettingsInstanced'); solMesh.thinInstanceBufferUpdated('color');
   for (const m of rpgMeshes) { m.thinInstanceCount = nR; m.thinInstanceBufferUpdated('matrix'); }
 }
 
@@ -577,7 +585,7 @@ function makeProcedural() {
   capMesh = MeshBuilder.CreateBox('cap', { width: 0.9, height: 0.06, depth: 0.9 }, scene); const capm = new StandardMaterial('capMat', scene); capm.diffuseColor = new Color3(0.85, 0.84, 0.8); capMesh.material = capm; capMesh.isVisible = false;
 }
 // تكبير بصري (TH5.2): من بعيد المركبات والجنود يكبرون شوية حتى ينقرون (مثل ألعاب الاستراتيجية)، ومن قريب حجمهم الحقيقي
-const visScale = (k: number) => 1 + k * smooth(40, 450, camDist) * (sideView ? 0.25 : 1);   // من الجنب التكبير يبين غريب جنب البيوت
+const visScale = (k: number) => 1 + k * smooth(40, 450, camDist) * (sideView ? 0.25 : classic ? 0.5 : 1);   // من الجنب التكبير يبين غريب جنب البيوت
 let curVS = 1;
 // فوهة المركبة المكبّرة بصرياً: نمد نقطة الطلقة من مركز الوحدة بنفس التكبير حتى اللهب يطلع من راس السبطانة
 function muzzleAt(id: number, p: V3): V3 { const u = W.units.find(x => x.id === id); if (!u || curVS === 1) return p; const c = L(u.p); return add(c, scale(sub(p, c), curVS)); }
@@ -740,7 +748,7 @@ function handleFx(fx: Fx) {
     }
     case 'shot': {
       // طلقة/رشقة من جندي معيّن: ومضة من مكانه، متتبع أحياناً، وغبار وين توصل (TH6.1؛ الأشكال الحقيقية لكل سلاح بـ TH6.3)
-      const u = W.units.find(x => x.id === fx.unit), VS = visScale(0.6); let p = fx.p;
+      const u = W.units.find(x => x.id === fx.unit), VS = visScale(0.85); let p = fx.p;
       const sv = solVis.get(fx.sid); if (sv?.mz) p = sv.mz; else if (u) { const [x, z] = solAt(u, fx.p, VS); p = [x, fx.p[1], z]; }
       // كل طلقة من الرشقة: ومضة بوقتها (كلاشنكوف ~600/د، بي كي إم ~650/د)، ظرف فارغ يطير لليمين، والمتتبع كل رابعة (بي كي إم)
       const dir = norm(sub(fx.to, p)), d = len(sub(fx.to, p)), tf = d / 850, to = fx.to, FL = fx.mg ? mgFlash : rifleFlash, TR = tracerFor(fx.unit), rate = fx.mg ? 0.092 : 0.1;
@@ -937,7 +945,7 @@ function findEntity(id: number): { p: V3; vel?: V3; air: boolean; name: string; 
 }
 function startFollow(id: number, dist?: number) {
   const f = findEntity(id); if (!f) return;
-  view.follow = id; selected = id; view.fDist = dist ?? (f.air ? 34 : 110 * PF()); followBlend = 0; followFrom = camTarget.clone();
+  view.follow = id; selected = id; view.fDist = dist ?? (f.air ? 34 : classic ? 30 : 110 * PF()); followBlend = 0; followFrom = camTarget.clone();
   const a = W.air.find(x => x.id === id); if (a) view.yaw = Math.atan2(a.v[0], a.v[2]);
   ($('follow') as HTMLElement).hidden = false; ($('bottom') as HTMLElement).hidden = true;
 }
@@ -987,14 +995,14 @@ function impactCam(p: V3, from: V3 | null, tImpact: number) {
   impactReady = nowS() + 15; slowWins.push({ t0: tImpact - 0.35, t1: tImpact + 1.1 });
 }
 // D-018: المخرج يركّز على المعركة الأرضية؛ إطلاقات الدفاع الجوي البعيدة يتابعها اللاعب بالأسهم
-const AIRCAM = false as boolean;
+const AIRCAM = false as boolean;   // بالكاميرا القديمة (classic) يرجع يلاحق الإطلاقات
 function directorFx(fx: Fx) {
   if (!auto) return;
   switch (fx.k) {
     case 'killshot': { const sh = W.units.find(u => u.id === fx.shooter), tg = W.units.find(u => u.id === fx.target); if (sh && tg) impactCam(L(add(tg.p, [0, 2, 0])), sh.p, W.T + fx.tf); break; }
     case 'threat': { const a = W.air.find(x => x.id === fx.air); if (a && a.kind !== 'iskander' && dist2d(a.aim, [-1800, 0, -340]) < 900) impactCam(L(add(a.aim, [0, 12, 0])), null, W.T + fx.tti); break; }
-    case 'plaunch': if (AIRCAM && claim(6, 1.2)) { closeShot(fx.muzzle, add(fx.muzzle, scale(fx.dir, -50)), 190, 0.6, 6, 1.2); pendingFollow = { id: fx.air, at: nowS() + 0.9, dist: 40 }; } break;
-    case 'eject': if (AIRCAM && claim(7, 3)) { endFollow(); view.tx = fx.p[0]; view.tz = fx.p[2]; targetY = 8; view.dist = 70; view.pitch = 0.2; view.yaw = Math.atan2(fx.dir[0], fx.dir[2]) + Math.PI / 2; pendingFollow = { id: fx.air, at: nowS() + 2.2, dist: 45 }; } break;
+    case 'plaunch': if ((AIRCAM || classic) && claim(6, 1.2)) { closeShot(fx.muzzle, add(fx.muzzle, scale(fx.dir, -50)), 190, 0.6, 6, 1.2); pendingFollow = { id: fx.air, at: nowS() + 0.9, dist: 40 }; } break;
+    case 'eject': if ((AIRCAM || classic) && claim(7, 3)) { endFollow(); view.tx = fx.p[0]; view.tz = fx.p[2]; targetY = 8; view.dist = 70; view.pitch = 0.2; view.yaw = Math.atan2(fx.dir[0], fx.dir[2]) + Math.PI / 2; pendingFollow = { id: fx.air, at: nowS() + 2.2, dist: 45 }; } break;
     case 'intercept': if (view.follow && fx.big) slowWins.push({ t0: W.T - 0.05, t1: W.T + 0.9 }); break;
     case 'rlaunch': { const g = W.units.find(u => u.id === fx.unit); if (g && W.T - lastSalvoShot > 30) { lastSalvoShot = W.T; twoShot(g.p, [-2000, 0, HIGHWAY_Z], 5, 6); } break; }
     case 'phase': { const vc: V3 = [-1600, 0, HIGHWAY_Z]; if (fx.phase === 'counter') { closeShot(G(fx.p[0], fx.p[2], 3), [-760, 0, 380], 520, CLOSE_PITCH, 7, 8); } else twoShot(fx.p, vc, 5, 7); break; }
@@ -1111,7 +1119,8 @@ $('bStart').onclick = start; $('bAgain').onclick = start;
 $('bExplore').onclick = () => { ($('end') as HTMLElement).hidden = true; setAuto(false); toast('حرّك الخريطة واضغط على أي اسم'); };
 $('bBack').onclick = () => { setAuto(false); endFollow(); }; $('bHome').onclick = () => { setAuto(false); endFollow(); view.tx = -1900; view.tz = -330; view.dist = 1000; view.yaw = 0; view.pitch = -1; targetY = 0; };
 $('bAuto').onclick = () => setAuto(!auto);
-$('bSide').onclick = () => { sideView = !sideView; $('bSide').setAttribute('aria-pressed', String(sideView)); };
+$('bSide').onclick = () => { sideView = !sideView; if (sideView) classic = false; $('bSide').setAttribute('aria-pressed', String(sideView)); $('bClassic').setAttribute('aria-pressed', String(classic)); };
+$('bClassic').onclick = () => { classic = !classic; if (classic) sideView = false; $('bClassic').setAttribute('aria-pressed', String(classic)); $('bSide').setAttribute('aria-pressed', String(sideView)); if (!classic) view.dist = Math.max(view.dist, 300); };
 $('bRotL').onclick = () => (view.yaw += 0.5); $('bRotR').onclick = () => (view.yaw -= 0.5);
 $('bQual').onclick = () => { setQuality(!HQ); toast(HQ ? 'جودة عالية: ظلال وأضواء انفجارات' : 'جودة خفيفة: أسرع على التلفون'); };
 $('bMute').onclick = () => ($('bMute').textContent = sfx.toggle() ? '🔇' : '🔊');

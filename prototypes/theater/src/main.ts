@@ -444,6 +444,23 @@ const sparks = new Pool('sparks', 1000, texSoft, true, { life: [0.4, 1.2], size:
 const muzzle = new Pool('muzzle', 600, texFlare, true, { life: [0.04, 0.09], size: [[0, 2.5], [1, 4]], colors: [[0, C4(7, 5.5, 3, 1)], [1, C4(3, 1.4, 0.3, 0)]] });
 // TH6.4: أجزاء حاضن القذيفة الخارقة (3 قطع تنفصل قرب الفوهة) + خط مضيء أقوى لقذيفة الدبابة
 const petals = new Pool('petals', 240, texSoft, false, { life: [0.9, 1.4], size: [[0, 0.55], [1, 0.45]], gravity: -9.8, spin: 6, colors: [[0, C4(0.12, 0.11, 0.1, 1)], [0.85, C4(0.15, 0.14, 0.12, 1)], [1, C4(0.15, 0.14, 0.12, 0)]] });
+// ===== TH6.3: الطلقات حسب السلاح — ومضات بحجم كل سلاح، متتبعات خضر (ذخيرة روسية/العدو) وحمر (العراق)، وأثر حسب السطح =====
+const rifleFlash = new Pool('rifleFlash', 500, texFlare, true, { life: [0.025, 0.05], size: [[0, 0.45], [1, 0.75]], colors: [[0, C4(8, 6.5, 3.5, 1)], [1, C4(4, 2, 0.5, 0)]] });
+const mgFlash = new Pool('mgFlash', 400, texFlare, true, { life: [0.03, 0.06], size: [[0, 0.8], [1, 1.2]], colors: [[0, C4(8, 6, 3, 1)], [1, C4(4, 1.8, 0.4, 0)]] });
+const hmgFlash = new Pool('hmgFlash', 300, texFlare, true, { life: [0.04, 0.07], size: [[0, 1.6], [1, 2.4]], colors: [[0, C4(8, 6, 3, 1)], [1, C4(4, 1.6, 0.3, 0)]] });
+const canFlash = new Pool('canFlash', 200, texFlare, true, { life: [0.05, 0.09], size: [[0, 2.6], [1, 3.6]], colors: [[0, C4(8, 6, 3, 1)], [1, C4(4, 1.5, 0.3, 0)]] });
+const tracerG = new Pool('tracerG', 600, texSoft, true, { life: [0.4, 0.4], size: [[0, 0.32], [1, 0.32]], stretched: true, colors: [[0, C4(1.6, 7, 2, 1)], [1, C4(1.2, 5, 1.4, 1)]] });
+const tracerR = new Pool('tracerR', 600, texSoft, true, { life: [0.4, 0.4], size: [[0, 0.32], [1, 0.32]], stretched: true, colors: [[0, C4(8, 2.2, 1, 1)], [1, C4(6, 1.4, 0.6, 1)]] });
+const chips = new Pool('chips', 500, texSoft, false, { life: [0.5, 1.1], size: [[0, 0.22], [1, 0.16]], gravity: -9.8, colors: [[0, C4(0.82, 0.78, 0.7, 1)], [0.8, C4(0.78, 0.74, 0.66, 1)], [1, C4(0.78, 0.74, 0.66, 0)]] });
+const spurt = new Pool('spurt', 900, texSmoke, false, { life: [0.5, 1], size: [[0, 0.4], [1, 1.6]], damp: 0.8, gravity: -2, colors: [[0, C4(0.7, 0.6, 0.45, 0.85)], [1, C4(0.72, 0.64, 0.5, 0)]] });
+const tracerFor = (unitId: number) => (W.units.find(x => x.id === unitId)?.side === 'en' ? tracerG : tracerR);
+/** وين توصل الطلقة: تراب = نافورة غبار صغيرة، حايط = شظايا + غبرة، حديد = شرار، وأحياناً ترتد مضيئة */
+function bulletHit(to: V3, surf: string, spread: number, tr: Pool | null) {
+  const q: V3 = surf === 'ground' ? G(to[0] + (Math.random() - 0.5) * spread, to[2] + (Math.random() - 0.5) * spread, 0.15) : add(to, [(Math.random() - 0.5) * spread * 0.4, (Math.random() - 0.5) * 1.2, (Math.random() - 0.5) * spread * 0.4]);
+  if (surf === 'metal') { sparks.emit({ a: q, n: 3, spd: [10, 35], jit: 0.2 }); if (tr && Math.random() < 0.3) tr.emit({ a: q, n: 1, dir: norm([Math.random() - 0.5, 0.6 + Math.random() * 0.5, Math.random() - 0.5]), spd: [300, 400], life: 0.25, jit: 0 }); }
+  else if (surf === 'wall') { chips.emit({ a: q, n: 3, dir: [0, 0.6, 0], spd: [2, 6], spread: 2, jit: 0.2 }); spurt.emit({ a: q, n: 1, spd: [0.3, 1], jit: 0.2 }); }
+  else { spurt.emit({ a: q, n: 2, dir: [0, 1, 0], spd: [2, 5], spread: 0.6, jit: 0.15 }); if (tr && Math.random() < 0.15) tr.emit({ a: q, n: 1, dir: norm([Math.random() - 0.5, 0.4 + Math.random() * 0.4, Math.random() - 0.5]), spd: [200, 300], life: 0.3, jit: 0 }); }
+}
 const motorFlame = new Pool('motorFlame', 400, texFlare, true, { life: [0.04, 0.1], size: [[0, 0.7], [1, 0.25]], colors: [[0, C4(6, 4.5, 2.2, 1)], [1, C4(3, 1, 0.2, 0)]] });   // لهب محرك صاروخ صغير (آر بي جي/كورنيت)
 const apTracer = new Pool('apTracer', 200, texSoft, true, { life: [0.3, 0.3], size: [[0, 1.5], [1, 1.2]], stretched: true, colors: [[0, C4(9, 7, 3.5, 1)], [1, C4(7, 4.5, 1.6, 1)]] });
 const tracers = new Pool('tracers', 900, texSoft, true, { life: [0.4, 0.4], size: [[0, 0.8], [1, 0.8]], stretched: true, colors: [[0, C4(7, 4, 1.4, 1)], [1, C4(6, 3, 0.8, 1)]] });
@@ -664,12 +681,14 @@ function handleFx(fx: Fx) {
     }
     case 'round': {
       const vis = unitVis.get(fx.unit); if (vis) vis.shake = 1; fx.p = muzzleAt(fx.unit, fx.p);
-      muzzle.emit({ a: fx.p, n: 1, jit: 0.1 });
+      // دوشكا 12.7 / رشاش محوري: ومضة كبيرة (الدوشكا) أو متوسطة، ظرف كبير، متتبع بلون الطرف، والإصابة حسب السطح
+      const sk = W.units.find(x => x.id === fx.unit)?.kind, hmg = sk !== 'abrams' && sk !== 't72', TR = tracerFor(fx.unit);
+      (hmg ? hmgFlash : mgFlash).emit({ a: fx.p, n: 1, jit: 0.1 });
       const side = norm([fx.dir[2], 0.8, -fx.dir[0]]); casings.emit({ a: add(fx.p, [0, -0.2, 0]), n: 1, dir: side, spd: [3, 5], spread: 0.6, jit: 0.1 });
       if (Math.random() < 0.3) puffs.emit({ a: add(fx.p, scale(fx.dir, 0.6)), n: 1, spd: [0.5, 1.5], jit: 0.2 });
-      if (fx.tracer) tracers.emit({ a: fx.p, n: 1, dir: fx.dir, spd: [850, 850], life: fx.tf, jit: 0.05 });
+      if (fx.tracer) TR.emit({ a: fx.p, n: 1, dir: fx.dir, spd: [850, 850], life: fx.tf, jit: 0.05 });
       const to = fx.to, kind = fx.hit;
-      vq.push({ t: W.T + fx.tf, f: () => { if (kind === 'ground') dust.emit({ a: G(to[0], to[2], 0.4), n: 2, spd: [2, 6], up: 1.2, jit: 0.6 }); else if (kind === 'metal') sparks.emit({ a: to, n: 4, spd: [10, 40], jit: 0.3 }); else if (Math.random() < 0.3) puffs.emit({ a: to, n: 1, spd: [0.2, 0.5], jit: 0.3 }); } });
+      vq.push({ t: W.T + fx.tf, f: () => { if (kind !== 'air') bulletHit(to, kind, 2, fx.tracer ? TR : null); } });
       sfx.round(camD(fx.p)); break;
     }
     case 'shell': apTracer.emit({ a: fx.a, n: 1, dir: norm(sub(fx.b, fx.a)), spd: [1650, 1650], life: fx.tf, jit: 0 }); break;
@@ -723,24 +742,29 @@ function handleFx(fx: Fx) {
       // طلقة/رشقة من جندي معيّن: ومضة من مكانه، متتبع أحياناً، وغبار وين توصل (TH6.1؛ الأشكال الحقيقية لكل سلاح بـ TH6.3)
       const u = W.units.find(x => x.id === fx.unit), VS = visScale(0.6); let p = fx.p;
       const sv = solVis.get(fx.sid); if (sv?.mz) p = sv.mz; else if (u) { const [x, z] = solAt(u, fx.p, VS); p = [x, fx.p[1], z]; }
-      muzzle.emit({ a: p, n: fx.mg ? 2 : 1, jit: 0.15 }); if (Math.random() < 0.4) puffs.emit({ a: p, n: 1, spd: [0.3, 1], jit: 0.2 });
-      const dir = norm(sub(fx.to, p)), d = len(sub(fx.to, p)), tf = d / 850, to = fx.to;
-      if (fx.tracer) for (let i = 0; i < (fx.mg ? Math.ceil(fx.n / 4) : 1); i++) vq.push({ t: W.T + i * 0.09, f: () => tracers.emit({ a: p, n: 1, dir, spd: [850, 850], life: tf, jit: 0.4 }) });
-      for (let i = 0; i < Math.min(4, fx.n); i++) vq.push({ t: W.T + tf + i * 0.08, f: () => dust.emit({ a: G(to[0] + (Math.random() - 0.5) * 3, to[2] + (Math.random() - 0.5) * 3, 0.3), n: 2, spd: [1.5, 5], up: 1.2, jit: 0.5 }) });
+      // كل طلقة من الرشقة: ومضة بوقتها (كلاشنكوف ~600/د، بي كي إم ~650/د)، ظرف فارغ يطير لليمين، والمتتبع كل رابعة (بي كي إم)
+      const dir = norm(sub(fx.to, p)), d = len(sub(fx.to, p)), tf = d / 850, to = fx.to, FL = fx.mg ? mgFlash : rifleFlash, TR = tracerFor(fx.unit), rate = fx.mg ? 0.092 : 0.1;
+      const right = norm([dir[2], 0.6, -dir[0]]), surf = fx.surf ?? 'ground', spread = 1.5 + d / 90;
+      for (let i = 0; i < fx.n; i++) vq.push({ t: W.T + i * rate, f: () => { FL.emit({ a: p, n: 1, jit: 0.05 }); casings.emit({ a: p, n: 1, dir: right, spd: [2, 4], spread: 0.5, jit: 0.05 });
+        if (fx.tracer && (fx.mg ? i % 4 === 0 : i === 0)) TR.emit({ a: p, n: 1, dir, spd: [850, 850], life: tf, jit: 0.15 }); } });
+      for (let i = 0; i < Math.min(5, fx.n); i++) vq.push({ t: W.T + tf + i * rate, f: () => bulletHit(to, surf, spread, fx.tracer ? TR : null) });
+      if (Math.random() < 0.5) vq.push({ t: W.T + fx.n * rate, f: () => puffs.emit({ a: p, n: 1, spd: [0.3, 0.8], jit: 0.1 }) });
       sfx.rifle(camD(p), fx.mg ? Math.min(3, fx.n) : 1); break;
     }
     case 'volley': {
       // رمي مشاة: ومضات صغيرة عند الرماة، متتبعات أحياناً، وغبار وين تضرب
-      muzzle.emit({ a: fx.p, n: Math.min(4, fx.n), jit: 5 });
-      const dir = norm(sub(fx.to, fx.p)), d = len(sub(fx.to, fx.p)), tf = d / 800, to = fx.to;
-      if (fx.tracer) tracers.emit({ a: fx.p, n: 1, dir, spd: [800, 800], life: tf, jit: 3 });
-      vq.push({ t: W.T + tf, f: () => dust.emit({ a: G(to[0], to[2], 0.4), n: 3, spd: [2, 6], up: 1.2, jit: 5 }) });
+      const dir = norm(sub(fx.to, fx.p)), d = len(sub(fx.to, fx.p)), tf = d / 800, to = fx.to, TR = tracerFor(fx.unit);
+      for (let i = 0; i < Math.min(6, fx.n * 2); i++) vq.push({ t: W.T + i * 0.11, f: () => rifleFlash.emit({ a: add(fx.p, [(Math.random() - 0.5) * 6, (Math.random() - 0.5) * 2, (Math.random() - 0.5) * 6]), n: 1, jit: 0.05 }) });
+      if (fx.tracer) TR.emit({ a: fx.p, n: 1, dir, spd: [800, 800], life: tf, jit: 3 });
+      for (let i = 0; i < 3; i++) vq.push({ t: W.T + tf + i * 0.1, f: () => bulletHit(to, 'ground', 6, null) });
       sfx.rifle(camD(fx.p), fx.n); break;
     }
     case 'cannon': {
       const vis = unitVis.get(fx.unit); if (vis) vis.shake = 0.8; fx.p = muzzleAt(fx.unit, fx.p);
-      muzzle.emit({ a: fx.p, n: 2, jit: 0.4 }); tracers.emit({ a: fx.p, n: 1, dir: fx.dir, spd: [960, 960], life: fx.tf, jit: 0.1 });
-      const to = fx.to; vq.push({ t: W.T + fx.tf, f: () => { fireS.emit({ a: to, n: 2, spd: [4, 10], jit: 1 }); dust.emit({ a: G(to[0], to[2], 0.5), n: 4, spd: [3, 9], up: 1, jit: 1.5 }); sparks.emit({ a: to, n: 3, spd: [10, 30], jit: 0.5 }); } });
+      // 2A42 عيار 30: ومضة ضخمة + دخان من الفوهة، متتبع (HE-T) بلون الطرف، والقذيفة المتفجرة: ومضة صغيرة + غبار + شظايا
+      canFlash.emit({ a: fx.p, n: 1, jit: 0.2 }); smokeS.emit({ a: add(fx.p, scale(fx.dir, 1.5)), n: 1, spd: [1, 3], jit: 0.4 }); casings.emit({ a: add(fx.p, [0, -0.5, 0]), n: 1, dir: norm([fx.dir[2], 0.5, -fx.dir[0]]), spd: [3, 5], spread: 0.5, jit: 0.1 });
+      tracerFor(fx.unit).emit({ a: fx.p, n: 1, dir: fx.dir, spd: [960, 960], life: fx.tf, jit: 0.1 });
+      const to = fx.to; vq.push({ t: W.T + fx.tf, f: () => { exS.emit({ a: add(to, [0, 1, 0]), n: 1, spd: [0, 1], jit: 0.5 }); fireS.emit({ a: to, n: 2, spd: [4, 10], jit: 1 }); spurt.emit({ a: G(to[0], to[2], 0.3), n: Qn(6), dir: [0, 1, 0], spd: [4, 9], spread: 1, jit: 1 }); sparks.emit({ a: to, n: 4, spd: [10, 35], jit: 0.5 }); } });
       sfx.cannon(camD(fx.p)); break;
     }
     case 'atgm': {

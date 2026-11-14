@@ -79,7 +79,7 @@ export type Fx =
   | { k: 'houseHit'; house: number; p: V3; destroyed: boolean }
   | { k: 'manDown'; unit: number; p: V3 }                                     // جندي انصاب
   | { k: 'smokeLaunch'; unit: number; p: V3; to: V3 }                        // قاذفات دخان المدرعة (902B)
-  | { k: 'shot'; unit: number; sid: number; p: V3; to: V3; n: number; tracer: boolean; mg: boolean } // طلقة/رشقة من جندي معيّن (TH6.1)
+  | { k: 'shot'; unit: number; sid: number; p: V3; to: V3; n: number; tracer: boolean; mg: boolean; surf: 'ground' | 'wall' | 'metal' } // طلقة/رشقة من جندي معيّن (TH6.1)
   | { k: 'dismount'; unit: number; p: V3 }
   | { k: 'kill'; unit: number; turret: boolean }
   | { k: 'hit'; unit: number; p: V3; dir: V3; pen: boolean }                   // إصابة مركبة بدون تدمير: pen = خرقت (ضرر) لو ارتدت
@@ -615,7 +615,7 @@ function solStep(w: World, u: Unit, dt: number) {
       const mg = s.role === 'mg', n = mg ? 5 + ((r() * 5) | 0) : 1 + ((r() * 3) | 0);
       let aim: V3 = tgtU.p; if (tgtU.sol.length) { const al = tgtU.sol.filter(q => q.alive); if (al.length) aim = al[(r() * al.length) | 0].p; }
       const spread = 3 + dist2d(aim, s.p) / 60;
-      w.fx.push({ k: 'shot', unit: u.id, sid: s.id, p: add(s.p, [0, SOL_H[s.pose], 0]), to: add(aim, [(r() - 0.5) * spread, tgtU.house >= 0 ? 3 : 0.8, (r() - 0.5) * spread]), n, tracer: mg || r() < 0.12, mg });
+      w.fx.push({ k: 'shot', unit: u.id, sid: s.id, p: add(s.p, [0, SOL_H[s.pose], 0]), to: add(aim, [(r() - 0.5) * spread, tgtU.house >= 0 ? 3 : 0.8, (r() - 0.5) * spread]), n, tracer: mg || r() < 0.12, mg, surf: tgtU.house >= 0 ? 'wall' : isVeh(tgtU) ? 'metal' : 'ground' });
       s.mag -= n; s.lastShot = w.T;
       s.nextShot = w.T + (mg ? 2.2 + r() * 2.5 : 1.1 + r() * 2.6) * (1 + u.supp * 1.2) * (pinned ? 1.8 : 1);
       if (s.mag <= 0) { s.act = 'reload'; s.nextShot = w.T + (mg ? 5 : 2.6) + r(); }

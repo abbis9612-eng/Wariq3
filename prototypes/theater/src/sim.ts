@@ -121,7 +121,7 @@ export function newWorld(seed = 11): World {
   };
   const U = (kind: Kind, side: Side, p: V3, dir: V3, group: string, extra: Partial<Unit> = {}) => {
     const sp = SPEC[kind];
-    const u: Unit = { id: w.nextId++, kind, side, name: KIND_AR[kind], group, p: [...p] as V3, yaw: yawOf(dir), spd: 0, hp: sp.hp, alive: true, cd: 1 + w.r() * 3,
+    const u: Unit = { id: w.nextId++, kind, side, name: KIND_AR[kind], group, p: [...p] as V3, yaw: yawOf(dir), spd: 0, hp: sp.hp * (side === 'en' && sp.armor > 0 ? BAL.enArmor : 1), alive: true, cd: 1 + w.r() * 3,
       target: 0, state: 'idle', goal: null, home: [...p] as V3, team: 0, slot: [0, 0, 0], cover: false, burst: 0, burstT: 0, shots: 0, firedT: -99, stateT: 0, burnT: 0,
       role: 'line', supp: 0, pose: 'stand', men: kind === 'inf' ? 7 : kind === 'kornet' ? 3 : 0, menMax: kind === 'inf' ? 7 : kind === 'kornet' ? 3 : 0, dead: [], house: -1, mount: 0, carry: 0,
       fire: [], hide: null, fi: 0, ammo: kind === 'kornet' ? 4 : 0, rpg: kind === 'inf' ? 3 : 0, rpgCd: 0, seenT: -99, peekShots: 0, aimT: 0, tur: 0, aimId: 0, aimSeen: -99, cv: -1, sol: [], bt: 0, bT: 0, ct: false, haltT: -99, smokeN: kind === 't72' || kind === 'abrams' || kind === 'bmp' ? 2 : 0, ...extra };
@@ -162,7 +162,7 @@ export function newWorld(seed = 11): World {
   for (let i = 0; i < 6; i++) U('t72', 'en', [-3250 - i * 45, 0, HIGHWAY_Z + (i % 2 ? 8 : -8)], EAST, COLUMN, { state: 'march', team: i % 2, role: 'assault' });
   for (let i = 0; i < 4; i++) {
     const b = U('bmp', 'en', [-3560 - i * 45, 0, HIGHWAY_Z + (i % 2 ? 8 : -8)], EAST, COLUMN, { state: 'march', team: 2, role: 'assault' });
-    const s = U('inf', 'en', b.p, EAST, 'مشاة العدو', { state: 'mounted', mount: b.id, role: 'assault', team: i, men: 9, menMax: 9, hp: 9 }); b.carry = s.id;
+    const s = U('inf', 'en', b.p, EAST, 'مشاة العدو', { state: 'mounted', mount: b.id, role: 'assault', team: i, men: BAL.enMen, menMax: BAL.enMen, hp: BAL.enMen }); b.carry = s.id;
   }
   ['technical', 'technical'].forEach((k, i) => U(k as Kind, 'en', [-3760 - i * 45, 0, HIGHWAY_Z + (i ? 8 : -8)], EAST, COLUMN, { state: 'march', team: 3, role: 'support' }));
   U('grad', 'en', [-5100, 0, -1350], EAST, 'راجمات العدو', { role: 'arty' }); U('grad', 'en', [-5060, 0, -1460], EAST, 'راجمات العدو', { role: 'arty' });
@@ -322,6 +322,8 @@ function blast(w: World, p: V3, rSoft: number, rHard: number, dmgSoft: number, d
 
 // ===== أوامر اللاعب (I-033): خمسة أوامر قليلة =====
 export const AMMO_MAX = { barrage: 4, smoke: 3 };
+/** TH6.9: مقابض التوازن (تتضبط بالمسح: tools/balance.ts). 1 = القيم الأصلية */
+export const BAL = { enInf: 1.6, iqInf: 0.8, house: 0.4, abrams: 0.9, t72Dmg: 1.3, enMen: 9, enBreak: 0.22, enArmor: 1.1 };   // مضبوطة بالمسح: يدوي بدون أوامر ~نص بنص، تلقائي ~80٪ فوز
 export function order(w: World, o: Order, at?: V3, by = 'أمرك'): string | null {
   if ((o === 'barrage' || o === 'smoke') && w.ammo[o] <= 0) return o === 'barrage' ? 'المدفعية خلّصت رماياتها' : 'قذائف الدخان خلصت';
   if (w.orderCd[o] > w.T) return o === 'counter' ? 'الهجوم المعاكس صار أو الاحتياط ما بقى' : `الأمر يرجع متاح بعد ${Math.ceil(w.orderCd[o] - w.T)} ثانية`;
@@ -391,7 +393,7 @@ function commanders(w: World) {
     for (const t0 of [0, 85]) for (let i = 0; i < 6; i++) w.schedule.push({ t: w.T + t0 + i * 0.7, f: (w) => addSmoke(w, [(i % 2 ? -1830 : -1990) + (w.r() - 0.5) * 40, 0, HIGHWAY_Z + (Math.floor(i / 2) - 1) * 105 + (w.r() - 0.5) * 30], 62, 95) });
   }
   const heldEn = FRONT_HOUSES.filter(h => w.houseOwner[h.i] === 'en').length;
-  if (w.en !== 'retreat' && w.en !== 'march' && ((sEn < s0 * 0.26 && w.T > 300) || (w.iq === 'counter' && w.T - w.iqT > 80 && sEn < s0 * 0.45) || (w.T > 610 && heldEn < FRONT_HOUSES.length * 0.35))) {
+  if (w.en !== 'retreat' && w.en !== 'march' && ((sEn < s0 * BAL.enBreak && w.T > 300) || (w.iq === 'counter' && w.T - w.iqT > 80 && sEn < s0 * 0.45) || (w.T > 760 && heldEn < FRONT_HOUSES.length * 0.35 && iqHeld(w) >= 2))) {
     setEn(w, 'retreat', 'العدو خسر أغلب قوته وبدأ ينسحب غرباً', true);
     for (const u of w.units) if (u.side === 'en' && u.alive && ground(u) && u.kind !== 'grad') { u.state = 'retreat'; u.goal = [-5400, 0, u.p[2] + (w.r() - 0.5) * 200]; u.house = -1; }
   }
@@ -465,6 +467,8 @@ function popSmoke(w: World, v: Unit, from: V3) {
   w.log.push({ t: w.T, text: `${v.name} ${v.side === 'en' ? 'معادية ' : ''}أطلقت قاذفات الدخان ورجعت لورا`, good: v.side === 'iq' ? true : null, p: v.p });
 }
 function addSmoke(w: World, p: V3, r: number, dur: number) { w.smoke.push({ p, r, t0: w.T, until: w.T + dur }); w.fx.push({ k: 'smoke', p, r, dur }); }
+const iqHeld = (w: World) => FRONT_HOUSES.filter(h => w.houseOwner[h.i] === 'iq').length;
+const iqInVillage = (w: World) => w.units.filter(u => u.side === 'iq' && u.alive && u.kind === 'inf' && (u.house >= 0 || inVillage(u.p))).reduce((a, u) => a + u.men, 0) >= 6;   // باقين 6 جنود أو أكثر بالقرية
 function checkEnd(w: World) {
   if (w.over) return;
   const enAlive = w.units.filter(u => u.side === 'en' && u.alive && ground(u) && u.kind !== 'grad');
@@ -474,8 +478,9 @@ function checkEnd(w: World) {
   const held = FRONT_HOUSES.filter(h => w.houseOwner[h.i] === 'en').length, alive = FRONT_HOUSES.filter(h => w.houseHp[h.i] > 0).length;
   let res: World['result'] = '', text = '';
   if (w.en === 'retreat' && enGone && !pendingAir) { res = 'win'; text = 'انتهت المعركة: العدو انسحب والقرية بيدنا'; }
-  else if (iqLeft === 0 || (w.T > 420 && held > alive * 0.6 && w.iq === 'counter' && w.T - w.iqT > 120)) { res = 'loss'; text = 'انتهت المعركة: العدو مسك قرية الطريق'; }
-  else if (w.T > 780) { res = 'draw'; text = 'انتهت المعركة: الطرفين منهكين والقرية مقسومة'; }
+  // TH6.9: الخسارة: العدو ماسك أغلب البيوت ومدافعينا ما بقوا بالقرية، والهجوم المعاكس فشل أو ما صار (باليدوي بدون أمر)
+  else if (iqLeft === 0 || (w.T > 420 && held >= 6 && iqHeld(w) === 0 && !iqInVillage(w) && (w.iq !== 'counter' || w.T - w.iqT > 120))) { res = 'loss'; text = 'انتهت المعركة: العدو مسك قرية الطريق'; }
+  else if (w.T > 1200) { res = 'draw'; text = 'انتهت المعركة: الطرفين منهكين والقرية مقسومة'; }
   if (res) { w.over = true; w.result = res; w.log.push({ t: w.T, text, good: res === 'win' ? true : res === 'loss' ? false : null, p: VILLAGE_C }); }
 }
 
@@ -771,7 +776,7 @@ function nextHouse(w: World, u: Unit) {
 }
 function closeFight(w: World, a: Unit, b: Unit, dt: number) {
   // قتال من مسافة قريبة: كل ثانية خسائر حسب العدد والكبت؛ المدافع داخل البيت عنده أفضلية
-  const pa = 0.09 * dt * a.men * (1 - a.supp * 0.5), pb = 0.12 * dt * b.men * (1 - b.supp * 0.5);
+  const pa = 0.09 * dt * a.men * (1 - a.supp * 0.5) * (a.side === 'en' ? BAL.enInf : BAL.iqInf), pb = 0.12 * dt * b.men * (1 - b.supp * 0.5) * (b.side === 'en' ? BAL.enInf : BAL.iqInf);
   if (w.r() < pb) casualty(w, a, 1, byName(b)); if (w.r() < pa) casualty(w, b, 1, byName(a));
   if (w.r() < dt * 2) w.fx.push({ k: 'volley', unit: a.id, p: add(a.p, [0, 1.3, 0]), to: add(b.p, [0, 1.5, 0]), n: 3, tracer: true, inf: true }, { k: 'volley', unit: b.id, p: add(b.p, [0, 2, 0]), to: add(a.p, [0, 1, 0]), n: 3, tracer: false, inf: true });
   if (b.alive && (b.men <= 2 || (b.men < a.men * 0.5 && w.r() < dt * 0.2))) { b.house = -1; b.state = 'retreat'; b.supp = 1; w.houseOwner[a.house >= 0 ? a.house : 0] = w.houseOwner[a.house >= 0 ? a.house : 0]; }
@@ -891,14 +896,14 @@ function fight(w: World, u: Unit, dt: number) {
   if (onMove && isTank(u) && w.T - u.haltT > 8 && w.r2() < 0.6) { u.haltT = w.T + 2.2 + w.r2() * 1.2; return; }
   u.cd = spec.reload * (0.85 + w.r() * 0.3) * (1 + u.supp * 0.5) * (onMove ? 1.3 : 1); u.target = best.id; u.firedT = w.T; u.shots++; u.peekShots++;
   const muzzle = add(add(u.p, scale(dir, 5.6)), [0, 2.3, 0]);
-  let pHit = (u.kind === 'abrams' ? 0.66 - bd / 2400 : 0.55 - bd / 2400) * (bv >= 0.99 ? 1 : 0.55) * (1 - u.supp * 0.4);
+  let pHit = (u.kind === 'abrams' ? (0.66 - bd / 2400) * BAL.abrams : 0.55 - bd / 2400) * (bv >= 0.99 ? 1 : 0.55) * (1 - u.supp * 0.4);
   if (best.spd > 2) pHit *= 0.8;
   if (onMove) pHit *= 0.4;
   if (best.kind === 'inf') pHit = 0.75;
   const hit = w.r() < pHit;
   const impact: V3 = hit ? add(best.p, [0, best.kind === 'inf' ? 0 : 1.3, 0]) : add(best.p, [(w.r() - 0.5) * 40, 0, (w.r() - 0.5) * 40]);
   const tf = bd / 1650, flank = Math.abs(angDiff(best.yaw, yawOf(scale(dir, -1)))) > 1.1;
-  let dmg = u.kind === 'abrams' ? (SPEC[best.kind].armor ? 2.1 : 3) : (best.kind === 'abrams' ? 1.05 : 3);
+  let dmg = u.kind === 'abrams' ? (SPEC[best.kind].armor ? 2.1 : 3) : (best.kind === 'abrams' ? BAL.t72Dmg : 3);
   if (flank && SPEC[best.kind].armor) dmg *= 1.35;
   const kills = hit && best.kind !== 'inf' && best.hp - dmg <= 0;
   w.fx.push({ k: 'gun', unit: u.id, p: muzzle, dir, big: true, ap: best.kind !== 'inf' }, { k: 'shell', a: muzzle, b: impact, tf });
@@ -944,8 +949,8 @@ function infFire(w: World, u: Unit) {
   const t = nearestFoe(w, u, SPEC.inf.range, o => o.kind === 'inf' || o.kind === 'kornet' || o.kind === 'technical' || o.kind === 'dshk');
   if (!t) return; const v = visOf(w, u, t); if (v <= 0) return;
   u.cd = SPEC.inf.reload * (0.8 + w.r() * 0.6) * (1 + u.supp); u.firedT = w.T; u.target = t.id;
-  const d = dist2d(t.p, u.p), cover = t.house >= 0 ? 0.3 : (t.pose === 'prone' ? 0.45 : 1) * coverK(t, 0.5);
-  const pk = 0.035 * u.men / 7 * (1 - d / 450) * cover * (1 - u.supp * 0.6) * (0.4 + v);
+  const d = dist2d(t.p, u.p), cover = t.house >= 0 ? BAL.house : (t.pose === 'prone' ? 0.45 : 1) * coverK(t, 0.5);
+  const pk = 0.035 * u.men / 7 * (1 - d / 450) * cover * (1 - u.supp * 0.6) * (0.4 + v) * (u.side === 'en' ? BAL.enInf : BAL.iqInf);
   if (!u.sol.length) w.fx.push({ k: 'volley', unit: u.id, p: add(u.p, [0, u.house >= 0 ? 3 : u.pose === 'prone' ? 0.4 : 1.3, 0]), to: add(t.p, [(w.r() - 0.5) * 6, 1, (w.r() - 0.5) * 6]), n: Math.max(1, Math.round(u.men / 2)), tracer: w.r() < 0.5, inf: true });
   w.stats.rounds += u.men * 3;
   t.supp = Math.min(1, t.supp + 0.16 * (t.house >= 0 ? 0.6 : 1));

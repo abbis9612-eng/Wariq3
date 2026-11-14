@@ -28,3 +28,19 @@
 
 نخل، شجر بساتين، أكاسيا، أكياس رمل، حواجز كونكريت، 3 سيارات مهجورة — كلها من Sketchfab (CC BY 4.0). المؤلفين والروابط بـ `models/CREDITS.md`.
 اختيرت بالعين: `tools/propview.html` + `tools/propsheet.mjs` يصوّرون المرشحين، و`tools/propshots.mjs` يصوّر أماكنهم باللعبة.
+
+## أصوات الأسلحة (TH6.7) — SoundBible، المسجّل Mike Koenig
+
+| الملف | الأصل | الرخصة | الرابط | القص |
+|---|---|---|---|---|
+| sounds/ak1.mp3 | AK47 Assault Rifle (طلقة وحدة) | CC BY 3.0 | https://soundbible.com/987-AK47-Assault-Rifle.html | 0.02–0.135 ث |
+| sounds/akburst.mp3 | AK47 Assault Rifle (رشقة قصيرة) | CC BY 3.0 | https://soundbible.com/987-AK47-Assault-Rifle.html | 0.02–0.45 ث |
+| sounds/mg.mp3 | High Definition Machine Gun | CC BY 3.0 | https://soundbible.com/1575-High-Definition-Machine-Gun.html | 0–0.95 ث |
+| sounds/can30.mp3 | Anti Aircraft Gun (مدفع 30مم) | CC BY 3.0 | https://soundbible.com/7-Anti-Aircraft-Gun.html | 0–0.26 ث |
+| sounds/ricochet.mp3 | Ricochet Rapid Fire | CC BY 3.0 | https://soundbible.com/2051-Ricochet-Rapid-Fire.html | 0.10–0.70 ث |
+| sounds/whiz.mp3 | Bullet Whizzing By | CC BY 3.0 | https://soundbible.com/1875-Bullet-Whizzing-By.html | 0–1.0 ث |
+| sounds/incoming.mp3 | Bomb Drop (الصفير قبل الانفجار) | Public Domain | https://soundbible.com/1582-Bomb-Drop.html | 3.2–7.75 ث |
+| sounds/atgm.mp3 | Missle Launch (إطلاق كورنيت) | Public Domain | https://soundbible.com/1794-Missle-Launch.html | 0–2.6 ث |
+| sounds/grenade.mp3 | Grenade Explosion | CC BY 3.0 | https://soundbible.com/1467-Grenade-Explosion.html | 0–2.0 ث |
+
+التحويل: ffmpeg (قص + تلاشي + loudnorm I=−16، أحادي 80kbps). الأصوات الحالية بنفس الطريقة.

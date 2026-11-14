@@ -461,11 +461,18 @@ const tracerG = new Pool('tracerG', 600, texSoft, true, { life: [0.4, 0.4], size
 const tracerR = new Pool('tracerR', 600, texSoft, true, { life: [0.4, 0.4], size: [[0, 0.32], [1, 0.32]], stretched: true, colors: [[0, C4(8, 2.2, 1, 1)], [1, C4(6, 1.4, 0.6, 1)]] });
 const chips = new Pool('chips', 500, texSoft, false, { life: [0.5, 1.1], size: [[0, 0.22], [1, 0.16]], gravity: -9.8, colors: [[0, C4(0.82, 0.78, 0.7, 1)], [0.8, C4(0.78, 0.74, 0.66, 1)], [1, C4(0.78, 0.74, 0.66, 0)]] });
 const spurt = new Pool('spurt', 900, texSmoke, false, { life: [0.5, 1], size: [[0, 0.4], [1, 1.6]], damp: 0.8, gravity: -2, colors: [[0, C4(0.7, 0.6, 0.45, 0.85)], [1, C4(0.72, 0.64, 0.5, 0)]] });
+/** صفير الطلقة: إذا الطلقة تعبر قريب من الكاميرا (أقل من 18م) نسمع «فيييو» — مرة كل 0.35 ث بالكثير */
+let lastWhiz = 0;
+function whizCheck(a: V3, b: V3) {
+  const c = cam.globalPosition, ab = sub(b, a), l2 = ab[0] ** 2 + ab[1] ** 2 + ab[2] ** 2; if (!l2) return;
+  const t = clamp(((c.x - a[0]) * ab[0] + (c.y - a[1]) * ab[1] + (c.z - a[2]) * ab[2]) / l2, 0, 1), d = Math.hypot(a[0] + ab[0] * t - c.x, a[1] + ab[1] * t - c.y, a[2] + ab[2] * t - c.z);
+  const now = performance.now(); if (d < 18 && t > 0.15 && now - lastWhiz > 350) { lastWhiz = now; sfx.whiz(d); }
+}
 const tracerFor = (unitId: number) => (W.units.find(x => x.id === unitId)?.side === 'en' ? tracerG : tracerR);
 /** وين توصل الطلقة: تراب = نافورة غبار صغيرة، حايط = شظايا + غبرة، حديد = شرار، وأحياناً ترتد مضيئة */
 function bulletHit(to: V3, surf: string, spread: number, tr: Pool | null) {
   const q: V3 = surf === 'ground' ? G(to[0] + (Math.random() - 0.5) * spread, to[2] + (Math.random() - 0.5) * spread, 0.15) : add(to, [(Math.random() - 0.5) * spread * 0.4, (Math.random() - 0.5) * 1.2, (Math.random() - 0.5) * spread * 0.4]);
-  if (surf === 'metal') { sparks.emit({ a: q, n: 3, spd: [10, 35], jit: 0.2 }); if (tr && Math.random() < 0.3) tr.emit({ a: q, n: 1, dir: norm([Math.random() - 0.5, 0.6 + Math.random() * 0.5, Math.random() - 0.5]), spd: [300, 400], life: 0.25, jit: 0 }); }
+  if (surf === 'metal') { sparks.emit({ a: q, n: 3, spd: [10, 35], jit: 0.2 }); if (Math.random() < 0.3) { tr?.emit({ a: q, n: 1, dir: norm([Math.random() - 0.5, 0.6 + Math.random() * 0.5, Math.random() - 0.5]), spd: [300, 400], life: 0.25, jit: 0 }); sfx.ricochet(camD(q)); } }
   else if (surf === 'wall') { chips.emit({ a: q, n: 3, dir: [0, 0.6, 0], spd: [2, 6], spread: 2, jit: 0.2 }); spurt.emit({ a: q, n: 1, spd: [0.3, 1], jit: 0.2 }); }
   else { spurt.emit({ a: q, n: 2, dir: [0, 1, 0], spd: [2, 5], spread: 0.6, jit: 0.15 }); if (tr && Math.random() < 0.15) tr.emit({ a: q, n: 1, dir: norm([Math.random() - 0.5, 0.4 + Math.random() * 0.4, Math.random() - 0.5]), spd: [200, 300], life: 0.3, jit: 0 }); }
 }
@@ -518,12 +525,18 @@ const sndUrls = import.meta.glob('../sounds/*.mp3', { query: '?url', import: 'de
 const sfx = (() => {
   let ac: AudioContext | null = null, master: GainNode, muted = false, buzz: GainNode | null = null, nb: AudioBuffer;
   const smp: Record<string, AudioBuffer> = {};
-  function play(name: string, d: number, g0: number, rate = 1, delay = 0) {
+  let active = 0;
+  function play(name: string, d: number, g0: number, rate = 1, delay = 0, echo = false) {
     if (!ac || !smp[name]) return false; const v0 = vol(d) * g0; if (v0 < 0.01) return true;
+    if (active > 28 && g0 < 0.7) return true;   // حد للأصوات الصغيرة بنفس اللحظة (40 جندي يرمون) حتى ما يتشوش ويثقل
     const t = ac.currentTime + delay + Math.min(2.5, d / 343 / Math.max(1, simSpeed * slowK));
     const s = ac.createBufferSource(); s.buffer = smp[name]; s.playbackRate.value = rate * (slowK < 1 ? 0.7 : 1);
     const f = ac.createBiquadFilter(); f.type = 'lowpass'; f.frequency.value = clamp(16000 - d * 6, 900, 16000);
-    const g = ac.createGain(); g.gain.value = v0; s.connect(f).connect(g).connect(master); s.start(t); return true;
+    const g = ac.createGain(); g.gain.value = v0; s.connect(f).connect(g).connect(master); s.start(t); active++; s.onended = () => { active--; };
+    // صدى بين البيوت والتلال: نسخة أوطى ومكتومة بعد 0.15–0.35 ث
+    if (echo && d > 120) { const e = ac.createBufferSource(); e.buffer = smp[name]; e.playbackRate.value = s.playbackRate.value; const ef = ac.createBiquadFilter(); ef.type = 'lowpass'; ef.frequency.value = clamp(4000 - d, 600, 4000);
+      const eg = ac.createGain(); eg.gain.value = v0 * 0.28; e.connect(ef).connect(eg).connect(master); e.start(t + 0.15 + Math.random() * 0.2); }
+    return true;
   }
   const noise = (sec: number) => { const b = ac!.createBuffer(1, ac!.sampleRate * sec, ac!.sampleRate), d = b.getChannelData(0); for (let i = 0; i < d.length; i++) d[i] = Math.random() * 2 - 1; return b; };
   const vol = (d: number) => clamp(1.1 - d / 3200, 0, 1) ** 2;
@@ -545,12 +558,19 @@ const sfx = (() => {
     },
     toggle() { muted = !muted; if (ac) master.gain.setTargetAtTime(muted ? 0 : 0.85, ac.currentTime, 0.05); return muted; },
     boom(d: number, size: number) { const r = 0.9 + Math.random() * 0.2; if (!play(d > 1800 ? 'boom_far' : size >= 1.3 ? 'boom_big' : 'boom_mid', d, d > 1800 ? 1.6 : 0.6 + size * 0.35, size < 0.6 ? r * 1.15 : r)) hit(d, 1.1 + size * 0.8, 2400, 55, 0.45 + size * 0.3, 50); else if (size >= 1) hit(d, 0.9, 300, 40, 0.25 * size, 42); },
-    gun(d: number) { if (!play('tank', d, 1, 0.92 + Math.random() * 0.14)) hit(d, 0.6, 3200, 140, 0.75, 65); },
+    gun(d: number) { if (!play('tank', d, 1, 0.92 + Math.random() * 0.14, 0, true)) hit(d, 0.6, 3200, 140, 0.75, 65); },
     round(d: number) { if (!play('dshk', d, 0.42, 0.85 + Math.random() * 0.12)) hit(d, 0.07, 2600, 500, 0.32, 95); },
     launch(d: number) { if (!play('launch', d, 1)) hit(d, 3, 1500, 180, 0.8, 55); },
     whump(d: number) { if (!play('eject', d, 0.9, 0.8)) hit(d, 0.35, 600, 80, 0.7, 45); },
-    rifle(d: number, n: number) { for (let i = 0; i < Math.min(3, n); i++) play('dshk', d, 0.16, 1.7 + Math.random() * 0.4, i * 0.09 + Math.random() * 0.05); },
-    cannon(d: number) { play('dshk', d, 0.5, 0.62 + Math.random() * 0.06); },
+    // TH6.7: أصوات حقيقية (SoundBible، Mike Koenig) — كلاشنكوف، رشاش، 30مم، ارتداد، صفير الطلقة، صفير القذيفة الجاية، إطلاق كورنيت، رمانة
+    rifle(d: number, n: number) { if (n >= 3) play('akburst', d, 0.4, 0.95 + Math.random() * 0.1, 0, true); else for (let i = 0; i < n; i++) play('ak1', d, 0.42, 0.94 + Math.random() * 0.12, i * 0.1, i === 0); },
+    mg(d: number, n: number) { play('mg', d, 0.48, 0.96 + Math.random() * 0.08, 0, true); void n; },
+    cannon(d: number) { play('can30', d, 0.7, 0.95 + Math.random() * 0.1, 0, true); },
+    ricochet(d: number) { play('ricochet', d, 0.3, 0.85 + Math.random() * 0.35); },
+    whiz(d: number) { play('whiz', d, 0.55, 0.9 + Math.random() * 0.25); },
+    incoming(d: number) { play('incoming', d, 0.9, 1); },
+    atgm(d: number) { if (!play('atgm', d, 0.9, 0.95 + Math.random() * 0.1)) play('launch', d, 0.8); },
+    grenade(d: number) { play('grenade', d, 0.8, 0.9 + Math.random() * 0.2, 0, true); },
     rocket(d: number) { if (!play('rocket', d, 0.5, 0.9 + Math.random() * 0.2)) hit(d, 1.2, 2200, 400, 0.35); },
     drones(d: number) { if (ac && buzz) buzz.gain.setTargetAtTime(simSpeed ? vol(d) * 0.12 : 0, ac.currentTime, 0.2); },
   };
@@ -671,9 +691,13 @@ function syncAir() {
     if (a.kind === 'atgm') { thinTrail.emit({ a: prev, b: tail, n: Qn(dd * 0.18), jit: 0.15, spd: [0, 0.4] }); if (a.t > 0.25) motorFlame.emit({ a: tail, n: 1, dir: scale(dirV, -1), spd: [3, 8], spread: 0.15, jit: 0.03 }); }
     vis.lastP = lp;
   }
-  for (const [id, vis] of airVis) if (!seen.has(id)) { vis.n.dispose(); airVis.delete(id); }
+  // صفير القذيفة الجاية (مدفعية/غراد): يبدي ~4.5 ث قبل السقوط إذا السقوط قريب من الكاميرا
+  for (const a of W.air) if ((a.kind === 'shell' || a.kind === 'rocket') && !whistled.has(a.id)) { const sp = len(a.v), rem = sp > 1 ? len(sub(a.aim, a.p)) / sp : 99, d = camD(L(a.aim));
+    if (rem < 4.6 && d < 900) { whistled.add(a.id); sfx.incoming(d * 0.5); } }
+  for (const [id, vis] of airVis) if (!seen.has(id)) { vis.n.dispose(); airVis.delete(id); whistled.delete(id); }
 }
 const camD = (p: V3) => Vector3.Distance(cam.position, v(p));
+const whistled = new Set<number>();
 function handleFx(fx: Fx) {
   switch (fx.k) {
     case 'gun': {
@@ -697,6 +721,7 @@ function handleFx(fx: Fx) {
       if (fx.tracer) TR.emit({ a: fx.p, n: 1, dir: fx.dir, spd: [850, 850], life: fx.tf, jit: 0.05 });
       const to = fx.to, kind = fx.hit;
       vq.push({ t: W.T + fx.tf, f: () => { if (kind !== 'air') bulletHit(to, kind, 2, fx.tracer ? TR : null); } });
+      if (!hmg) { sfx.mg(camD(fx.p), 3); whizCheck(fx.p, to); break; }   // الرشاش المحوري (PKT) بصوت الرشاش
       sfx.round(camD(fx.p)); break;
     }
     case 'shell': apTracer.emit({ a: fx.a, n: 1, dir: norm(sub(fx.b, fx.a)), spd: [1650, 1650], life: fx.tf, jit: 0 }); break;
@@ -757,7 +782,8 @@ function handleFx(fx: Fx) {
         if (fx.tracer && (fx.mg ? i % 4 === 0 : i === 0)) TR.emit({ a: p, n: 1, dir, spd: [850, 850], life: tf, jit: 0.15 }); } });
       for (let i = 0; i < Math.min(5, fx.n); i++) vq.push({ t: W.T + tf + i * rate, f: () => bulletHit(to, surf, spread, fx.tracer ? TR : null) });
       if (Math.random() < 0.5) vq.push({ t: W.T + fx.n * rate, f: () => puffs.emit({ a: p, n: 1, spd: [0.3, 0.8], jit: 0.1 }) });
-      sfx.rifle(camD(p), fx.mg ? Math.min(3, fx.n) : 1); break;
+      if (fx.mg) sfx.mg(camD(p), fx.n); else sfx.rifle(camD(p), fx.n);
+      whizCheck(p, to); break;
     }
     case 'volley': {
       // رمي مشاة: ومضات صغيرة عند الرماة، متتبعات أحياناً، وغبار وين تضرب
@@ -789,7 +815,7 @@ function handleFx(fx: Fx) {
         cloud.emit({ a: fx.p, n: Qn(10), dir: fx.dir, spd: [2, 6], spread: 1, jit: 0.6 }); cloud.emit({ a: add(fx.p, scale(back, 1.2)), n: Qn(8), dir: back, spd: [3, 8], spread: 0.6, jit: 0.6 });
         dust.emit({ a: G(fx.p[0], fx.p[2], 0.5), n: Qn(8), spd: [3, 8], up: 0.2, jit: 2 }); fireS.emit({ a: add(fx.p, scale(back, 1)), n: 3, dir: back, spd: [6, 12], spread: 0.4, jit: 0.2 });
       }
-      flashLight(fx.p, 2, 40, 0.15); fx.rpg ? sfx.rocket(camD(fx.p)) : sfx.launch(camD(fx.p) + 300); break;
+      flashLight(fx.p, 2, 40, 0.15); fx.rpg ? sfx.rocket(camD(fx.p)) : sfx.atgm(camD(fx.p)); break;
     }
     case 'smoke': screens.push({ p: fx.p, r: fx.r, until: W.T + fx.dur }); cloud.emit({ a: G(fx.p[0], fx.p[2], 3), n: Qn(30), spd: [3, 12], up: 0.3, jit: fx.r * 0.4 }); break;
     case 'houseHit': {

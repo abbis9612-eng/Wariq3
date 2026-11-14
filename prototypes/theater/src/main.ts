@@ -4,7 +4,7 @@
 import {
   Engine, Scene, Vector3, Color3, Color4, FreeCamera, HemisphericLight, DirectionalLight, PointLight, ShadowGenerator, MeshBuilder, Mesh,
   StandardMaterial, PBRMaterial, DynamicTexture, ParticleSystem, TransformNode, VertexBuffer, DefaultRenderingPipeline, ImageProcessingConfiguration,
-  LoadAssetContainerAsync, AssetContainer, Matrix, Particle, BaseTexture, Texture, Quaternion, AbstractMesh, VertexData,
+  LoadAssetContainerAsync, AssetContainer, Matrix, Particle, BaseTexture, Texture, Quaternion, AbstractMesh, VertexData, VertexAnimationBaker, BakedVertexAnimationManager,
 } from '@babylonjs/core';
 import '@babylonjs/loaders/glTF';
 import { SkyMaterial } from '@babylonjs/materials/sky';
@@ -244,39 +244,50 @@ function spawnModel(kind: string, wreck = false): { root: TransformNode; inner: 
   return { root, inner, tur: null };
 }
 
-// ===== الجنود: مجسم بحركات (يمشي، يركض، يرمي، ينبطح، يموت)، كل جندي قطعة وحدة بهيكل حركة خاص =====
+// ===== الجنود (TH5.4): حركات مخبوزة بقوام (VAT). كل الجنود نسخ رقيقة (thin instances) لقطعة وحدة؛
+// وضع العظام لكل لقطة محفوظ بقوام، والكارت يقراه — فـ 300 جندي تقريباً بكلفة جندي واحد على المعالج.
 type Anim = 'run' | 'simple walk' | 'simple shoot' | 'crouch shoot' | 'pron idle' | 'pron shot' | 'pron walk' | 'simple death' | 'pron death' | 'idle simple';
-let soldierC: AssetContainer | null = null, SOL_S = 1;
+const SOL_FPS = 30, SOL_CAP = 700;
+let solMesh: Mesh | null = null, SOL_S = 1, vatTime = 0;
+const solW0 = Matrix.Identity(), animRange = new Map<string, { s: number; e: number; fps: number; dur: number }>();
+let solMat = new Float32Array(16), solSet = new Float32Array(4), solMan: BakedVertexAnimationManager | null = null;
 async function loadSoldier() {
   const c = await LoadAssetContainerAsync(modelUrl('soldier'), scene, { pluginExtension: '.gltf' });
   c.materials.forEach(m => { if (m instanceof PBRMaterial) { m.environmentIntensity = 0; m.directIntensity = PBR_DIRECT * 1.35; m.metallic = 0; m.roughness = 0.85; m.emissiveColor = new Color3(0.035, 0.035, 0.03); m.maxSimultaneousLights = 2 + NL; } });
   c.addAllToScene();
-  const ms = c.meshes.filter(m => m.getTotalVertices() > 0) as Mesh[], sk = ms[0].skeleton, par = ms[0].parent;
+  const ms = c.meshes.filter(m => m.getTotalVertices() > 0) as Mesh[], sk = ms[0].skeleton!, par = ms[0].parent;
   ms.forEach(m => { m.parent = null; m.position.setAll(0); m.rotationQuaternion = null; m.rotation.setAll(0); m.scaling.setAll(1); });
   const merged = Mesh.MergeMeshes(ms, true, true, undefined, false, false);
-  if (merged) { merged.skeleton = sk; merged.parent = par; merged.name = 'soldierBody'; merged.isPickable = false; c.meshes = c.meshes.filter(m => !m.isDisposed()); c.meshes.push(merged); }
+  const body = merged ?? ms[0]; body.skeleton = sk; body.parent = par; body.name = 'soldierBody'; body.isPickable = false;
   c.animationGroups.forEach(g => g.stop());
   // نقيس طول الجندي ونخليه 1.8 م
-  const body = merged ?? ms[0]; body.refreshBoundingInfo({ applySkeleton: true }); body.computeWorldMatrix(true);
+  body.refreshBoundingInfo({ applySkeleton: true }); body.computeWorldMatrix(true);
   const bb = body.getBoundingInfo().boundingBox, h = bb.maximumWorld.y - bb.minimumWorld.y; SOL_S = h > 0.01 ? 1.8 / h : 1;
-  c.meshes.forEach(m => { m.isVisible = false; }); soldierC = c;
+  // خبز الحركات: كل حركة نمشي لقطاتها (30 بالثانية) ونحفظ مصفوفات العظام
+  solW0.copyFrom(body.getWorldMatrix());
+  const frames: Float32Array[] = [];
+  for (const g of c.animationGroups) {
+    const fps = g.targetedAnimations[0]?.animation.framePerSecond ?? 60, dur = Math.max(0.05, (g.to - g.from) / fps), n = Math.max(2, Math.round(dur * SOL_FPS) + 1), s0 = frames.length;
+    g.start(false, 1, g.from, g.to); g.pause();
+    for (let i = 0; i < n; i++) { g.goToFrame(g.from + (g.to - g.from) * i / (n - 1)); sk.bones.forEach(b => b.getTransformNode()?.computeWorldMatrix(true)); sk.prepare(true); frames.push(sk.getTransformMatrices(body).slice()); }
+    g.stop(); animRange.set(g.name, { s: s0, e: frames.length - 1, fps: (n - 1) / dur, dur });
+  }
+  const data = new Float32Array(frames.length * frames[0].length); frames.forEach((f, i) => data.set(f, i * f.length));
+  solMan = new BakedVertexAnimationManager(scene); solMan.texture = new VertexAnimationBaker(scene, body).textureFromBakedVertexData(data); body.bakedVertexAnimationManager = solMan;
+  c.animationGroups.forEach(g => g.dispose());
+  body.parent = null; body.position.setAll(0); body.rotationQuaternion = null; body.rotation.setAll(0); body.scaling.setAll(1);
+  c.meshes.forEach(m => { if (m !== body) m.isVisible = false; });
+  solMat = new Float32Array(SOL_CAP * 16); solSet = new Float32Array(SOL_CAP * 4);
+  body.thinInstanceSetBuffer('matrix', solMat, 16, false);
+  body.thinInstanceRegisterAttribute('bakedVertexAnimationSettingsInstanced', 4); body.thinInstanceSetBuffer('bakedVertexAnimationSettingsInstanced', solSet, 4, false);
+  body.thinInstanceCount = 0; body.alwaysSelectAsActiveMesh = true; body.isVisible = true; body.receiveShadows = true; caster(body);
+  solMesh = body;
+  console.log('soldier VAT', { frames: frames.length, bones: sk.bones.length, anims: [...animRange.keys()].join(',') });
 }
-interface Fig { root: TransformNode; groups: Map<string, import('@babylonjs/core').AnimationGroup>; cur: string; dead: boolean; off: V3 }
+// جندي = بيانات بس (مكان، اتجاه، حركة)؛ الرسم كله بـ drawSoldiers
+interface Fig { x: number; z: number; yaw: number; anim: Anim; off: V3; ph: number; spd: number; dead: boolean; dieT: number }
 const corpses: Fig[] = [];
-function spawnFig(): Fig | null {
-  if (!soldierC) return null;
-  const root = new TransformNode('fig', scene), inner = new TransformNode('fi', scene); inner.parent = root; inner.scaling.setAll(SOL_S);
-  const inst = soldierC.instantiateModelsToScene(n => n, false, { doNotInstantiate: true });
-  inst.rootNodes.forEach(r => { r.parent = inner; });
-  root.getChildMeshes().forEach(m => { m.isVisible = true; m.isPickable = false; m.alwaysSelectAsActiveMesh = false; });
-  const groups = new Map(inst.animationGroups.map(g => [g.name, g]));
-  return { root, groups, cur: '', dead: false, off: [0, 0, 0] };
-}
-function playFig(f: Fig, a: Anim, loop = true, speed = 1) {
-  if (f.cur === a) return; f.groups.get(f.cur)?.stop(); f.cur = a; const g = f.groups.get(a); if (!g) return;
-  g.start(loop, speed * (0.9 + Math.random() * 0.2), g.from, g.to); if (loop) g.goToFrame(g.from + Math.random() * (g.to - g.from));
-}
-function disposeFig(f: Fig) { f.groups.forEach(g => g.dispose()); f.root.dispose(); }
+const newFig = (off: V3): Fig => ({ x: 0, z: 0, yaw: 0, anim: 'idle simple', off, ph: Math.random() * 60, spd: 0.9 + Math.random() * 0.2, dead: false, dieT: 0 });
 interface SVis { figs: Fig[]; lastMen: number; kornet?: TransformNode }
 const squadVis = new Map<number, SVis>();
 const FORM = (i: number, n: number, id: number): V3 => { const k = i - (n - 1) / 2, j = ((id * 7 + i * 13) % 10) / 10 - 0.5; return [k * 4.5 + j * 1.5, 0, -Math.abs(k) * 3 + j * 2]; };
@@ -288,23 +299,41 @@ function syncSquads(dt: number) {
     if (!sv) { sv = { figs: [], lastMen: u.men }; squadVis.set(u.id, sv);
       if (u.kind === 'kornet') { const m = spawnModel('kornet'); sv.kornet = m.root; } }
     const hide = !u.alive || u.state === 'mounted' || (u.house >= 0 && u.state === 'house') || (u.kind === 'inf' && u.house >= 0);
-    const far = Vector3.Distance(cam.position, new Vector3(u.p[0], groundH(u.p[0], u.p[2]), u.p[2])) > 900;
     if (sv.kornet) { sv.kornet.position.set(u.p[0], groundH(u.p[0], u.p[2]), u.p[2]); sv.kornet.scaling.setAll(VS); sv.kornet.rotation.y = u.yaw; sv.kornet.setEnabled(u.alive); }
     // جندي انصاب: يطيح ويبقى بمكانه
-    while (sv.lastMen > u.men) { sv.lastMen--; const f = sv.figs.pop(); if (f) { playFig(f, u.pose === 'prone' ? 'pron death' : 'simple death', false); f.dead = true; corpses.push(f); if (corpses.length > 36) disposeFig(corpses.shift()!); } }
-    const want = hide || far ? 0 : Math.min(u.kind === 'kornet' ? 2 : 5, u.men);
-    while (sv.figs.length < want) { const f = spawnFig(); if (!f) break; f.off = FORM(sv.figs.length, Math.min(5, u.menMax), u.id); sv.figs.push(f); }
-    while (sv.figs.length > want) disposeFig(sv.figs.pop()!);
+    while (sv.lastMen > u.men) { sv.lastMen--; const f = sv.figs.pop(); if (f) { f.anim = u.pose === 'prone' ? 'pron death' : 'simple death'; f.dead = true; f.dieT = vatTime; corpses.push(f); if (corpses.length > 160) corpses.shift(); } }
+    const want = hide ? 0 : u.men;   // كل جندي بالحضيرة يبين (قبل: 5 بالكثير)
+    while (sv.figs.length < want) sv.figs.push(newFig(FORM(sv.figs.length, u.menMax, u.id)));
+    while (sv.figs.length > want) sv.figs.pop();
     const moving = u.spd > 0.3, recent = W.T - u.firedT < 2.5;
     const anim: Anim = u.pose === 'prone' ? (moving ? 'pron walk' : recent ? 'pron shot' : 'pron idle') : u.pose === 'run' || u.spd > 2.5 ? 'run' : moving ? 'simple walk' : recent || u.pose === 'fire' ? (u.kind === 'kornet' ? 'crouch shoot' : 'simple shoot') : 'idle simple';
     const cs = Math.cos(u.yaw), sn = Math.sin(u.yaw);
     sv.figs.forEach((f, i) => {
-      const o = u.kind === 'kornet' ? ([i ? -2.2 : 1.6, 0, -1.2] as V3) : f.off, x = u.p[0] + (o[0] * cs + o[2] * sn) * VS, z = u.p[2] + (-o[0] * sn + o[2] * cs) * VS;
-      f.root.position.set(x, groundH(x, z), z); f.root.scaling.setAll(VS); f.root.rotation.y = u.yaw + (i % 2 ? 0.15 : -0.1);
-      playFig(f, i === 1 && anim === 'simple shoot' ? 'crouch shoot' : anim, true, anim === 'run' ? 1.1 : 1);
+      const o = u.kind === 'kornet' ? ([i ? -2.2 : 1.6, 0, -1.2] as V3) : f.off;
+      f.x = u.p[0] + (o[0] * cs + o[2] * sn) * VS; f.z = u.p[2] + (-o[0] * sn + o[2] * cs) * VS; f.yaw = u.yaw + (i % 2 ? 0.15 : -0.1);
+      f.anim = i % 3 === 1 && anim === 'simple shoot' ? 'crouch shoot' : anim;
     });
   }
   void dt;
+}
+const tS = new Vector3(), tT = new Vector3(), tQ = new Quaternion(), tM = new Matrix(), tO = new Matrix();
+function drawSoldiers(dt: number) {
+  if (!solMesh || !solMan) return;
+  vatTime += dt * slowK * simSpeed; solMan.time = vatTime;
+  const VS = visScale(0.6), cp = cam.globalPosition; let n = 0;
+  const put = (f: Fig) => {
+    if (n >= SOL_CAP) return; const y = groundH(f.x, f.z); if (Math.abs(f.x - cp.x) + Math.abs(f.z - cp.z) > 3200) return;
+    tS.setAll(SOL_S * VS); tT.set(f.x, y, f.z); Quaternion.RotationYawPitchRollToRef(f.yaw, 0, 0, tQ); Matrix.ComposeToRef(tS, tQ, tT, tM); solW0.multiplyToRef(tM, tO); tO.copyToArray(solMat, n * 16);
+    const r = animRange.get(f.anim) ?? animRange.get('idle simple')!, tot = r.e - r.s + 1, k = n * 4;
+    if (f.dead) {
+      if (vatTime - f.dieT < r.dur) { const sp = r.fps; solSet[k] = r.s; solSet[k + 1] = r.e; solSet[k + 2] = ((-f.dieT * sp) % tot + tot) % tot; solSet[k + 3] = sp; }
+      else { solSet[k] = r.e - 1; solSet[k + 1] = r.e; solSet[k + 2] = 1.5; solSet[k + 3] = 0.0001; }   // جثة: آخر لقطة ثابتة
+    } else { solSet[k] = r.s; solSet[k + 1] = r.e; solSet[k + 2] = f.ph % tot; solSet[k + 3] = r.fps * f.spd; }
+    n++;
+  };
+  for (const sv of squadVis.values()) sv.figs.forEach(put);
+  corpses.forEach(put);
+  solMesh.thinInstanceCount = n; solMesh.thinInstanceBufferUpdated('matrix'); solMesh.thinInstanceBufferUpdated('bakedVertexAnimationSettingsInstanced');
 }
 
 // ===== الجسيمات: مجمّعات مشتركة =====
@@ -905,7 +934,7 @@ function frame() {
     if (n === 16) acc = 0;
   }
   ($('slow') as HTMLElement).hidden = slowK === 1;
-  if (W) { syncUnits(dtReal); syncSquads(dtReal); syncAir(); if (simDt) { burnFx(simDt); tickDebris(simDt); } directorFrame(); }
+  if (W) { syncUnits(dtReal); syncSquads(dtReal); drawSoldiers(dtReal); syncAir(); if (simDt) { burnFx(simDt); tickDebris(simDt); } directorFrame(); }
   const k = simDt ? simDt / Math.max(1e-4, engine.getDeltaTime() / 1000) : 0;
   for (const p of pools) p.ps.updateSpeed = k / 60;
   tickLights(dtReal * (simDt ? 1 : 0.3)); updateCamera(dtReal);
@@ -933,7 +962,7 @@ function toast(m: string) { const t = $('toast'); t.textContent = m; t.classList
 let seed = 3;
 function start() {
   sfx.init();
-  for (const sv of squadVis.values()) { sv.figs.forEach(disposeFig); sv.kornet?.dispose(); } squadVis.clear(); corpses.forEach(disposeFig); corpses.length = 0; screens.length = 0;
+  for (const sv of squadVis.values()) sv.kornet?.dispose(); squadVis.clear(); corpses.length = 0; screens.length = 0;
   for (const u of unitVis.values()) u.root.dispose(); unitVis.clear(); for (const a of airVis.values()) a.n.dispose(); airVis.clear();
   debris.forEach(d => d.m.dispose()); debris.length = 0; burning.length = 0; marks = []; vq.length = 0; slowWins.length = 0; decals = [];
   decal.thinInstanceSetBuffer('matrix', new Float32Array(16), 16, false); decal.thinInstanceCount = 0;

@@ -1,0 +1,82 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>معركة الهجوم</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Arabic:wght@400;600&family=Reem+Kufi:wght@500;700&display=swap" rel="stylesheet">
+<style>
+/* نفس شاشة المعركة باللعبة الأساسية (#battle) + ساعة وسرعات وشريط أحداث */
+:root{--bg:#0b0d0a;--ink:#f1ecda;--brass:#d2ab33;--red:#c2452f;--display:"Reem Kufi","IBM Plex Sans Arabic",sans-serif;--body:"IBM Plex Sans Arabic","Noto Sans Arabic",Tahoma,sans-serif;color-scheme:dark}
+*{box-sizing:border-box;margin:0}
+[hidden]{display:none!important}
+html,body{height:100%;background:var(--bg);color:var(--ink);font:400 14px/1.5 var(--body);overflow:hidden;-webkit-tap-highlight-color:transparent;user-select:none}
+button{font:inherit;color:inherit;cursor:pointer}
+button:focus-visible{outline:2px solid var(--brass);outline-offset:2px}
+#c{position:fixed;inset:0;width:100%;height:100%;display:block;touch-action:none}
+.btop{position:fixed;top:env(safe-area-inset-top,0px);inset-inline:0;padding:8px 10px 14px;background:linear-gradient(rgba(0,0,0,.75),transparent);pointer-events:none;z-index:2}
+.bsides{display:flex;justify-content:space-between;gap:10px;font-weight:600;font-size:14px}.bsides>div{flex:1}.bsides>div:last-child{text-align:end}
+.bbar{height:5px;background:rgba(255,255,255,.2);border-radius:3px;margin-top:3px;overflow:hidden}.bbar i{display:block;height:100%;background:var(--brass);transition:width .4s;width:100%}.bsides>div:last-child .bbar i{background:var(--red);margin-inline-start:auto}
+#bwhere{font-size:12px;opacity:.85;text-align:center;margin-top:4px}#bwhere b{font-variant-numeric:tabular-nums;font-weight:600;margin-inline-start:6px;color:var(--brass)}
+#bphase{text-align:center;font:600 21px var(--display);margin-top:4px;text-shadow:0 1px 6px #000;min-height:32px;transition:opacity .3s}
+#feed{position:fixed;inset-inline-start:10px;bottom:calc(64px + env(safe-area-inset-bottom,0px));z-index:2;pointer-events:none;display:flex;flex-direction:column;gap:3px;max-width:78%}
+#feed div{font-size:12px;background:rgba(10,12,9,.72);border-inline-start:3px solid #888;padding:3px 8px;border-radius:4px;transition:opacity .6s}
+#feed .s0{border-color:var(--brass)}#feed .s1{border-color:var(--red)}
+.bctl{position:fixed;bottom:calc(8px + env(safe-area-inset-bottom,0px));inset-inline:8px;display:flex;gap:5px;justify-content:center;z-index:2;flex-wrap:wrap}
+.bctl button{background:rgba(0,0,0,.62);border:1px solid rgba(255,255,255,.3);color:#fff;padding:7px 10px;border-radius:6px;font-size:13px;min-height:40px;min-width:40px}
+.bctl button[aria-pressed=true]{border-color:var(--brass);color:var(--brass);background:rgba(210,171,51,.14)}
+.spd{display:flex;border:1px solid rgba(255,255,255,.3);border-radius:6px;overflow:hidden}.spd button{border:0;border-radius:0;min-width:38px;padding:7px 6px;font-variant-numeric:tabular-nums}
+#bend{position:fixed;inset-inline:16px;top:50%;transform:translateY(-50%);background:rgba(20,22,18,.94);border:2px solid var(--brass);border-radius:8px;padding:18px;text-align:center;max-width:460px;margin:auto;z-index:4}
+#bend.lose{border-color:var(--red)}#bend h2{margin:4px 0;font-family:var(--display)}#bend p{font-size:14px;opacity:.9;margin:6px 0 12px}
+.stamp{display:inline-block;border:3px solid var(--red);color:var(--red);font:700 20px var(--display);padding:2px 14px;border-radius:4px;transform:rotate(-4deg)}
+#bend.win .stamp{border-color:var(--brass);color:var(--brass)}
+.btn{display:block;width:100%;padding:12px;border-radius:6px;border:1px solid rgba(255,255,255,.3);background:rgba(255,255,255,.06);font-weight:600;margin-top:8px}
+.btn.go{background:var(--brass);color:#1c1a10;border-color:var(--brass)}
+#start{position:fixed;inset:0;z-index:5;display:flex;align-items:center;justify-content:center;padding:16px;background:radial-gradient(ellipse at center,rgba(20,22,16,.85),rgba(6,7,5,.97))}
+#start .card{max-width:420px;width:100%;text-align:center}
+#start h1{font:700 30px var(--display);color:var(--brass)}
+#start p{opacity:.85;margin:6px 0 10px;font-size:13.5px}
+.seg{display:flex;gap:6px;margin:5px 0}.seg button{flex:1;padding:9px 4px;border-radius:6px;border:1px solid rgba(255,255,255,.25);background:rgba(255,255,255,.05);font-size:13px}
+.seg button[aria-pressed=true]{border-color:var(--brass);color:var(--brass);background:rgba(210,171,51,.12)}
+.lbl{font-size:12px;opacity:.7;text-align:start;margin-top:9px}
+#load{font-size:12px;opacity:.75;margin-top:8px;min-height:18px}
+#credBtn{background:none;border:0;opacity:.6;font-size:12px;margin-top:8px;text-decoration:underline}
+#credits{position:fixed;inset:0;z-index:6;background:rgba(6,7,5,.97);overflow:auto;padding:20px 16px;font-size:12.5px;line-height:1.7}
+#credits h3{font-family:var(--display);color:var(--brass);margin:12px 0 4px}
+#credits .x{position:sticky;top:0;float:inline-end;padding:6px 14px;border-radius:6px;border:1px solid rgba(255,255,255,.3);background:#111}
+@media (prefers-reduced-motion:reduce){.bbar i,#feed div{transition:none}}
+</style>
+</head>
+<body>
+<canvas id="c"></canvas>
+<div class="btop" id="hud" hidden><div class="bsides"><div><span id="bna"></span><div class="bbar"><i id="bla"></i></div></div><div><span id="bnd"></span><div class="bbar"><i id="bld"></i></div></div></div><div id="bwhere"></div><div id="bphase"></div></div>
+<div id="feed"></div>
+<div class="bctl" id="ctl" hidden>
+  <div class="spd" id="spd" role="group" aria-label="السرعة" dir="ltr"><button data-s="1" aria-pressed="true">×1</button><button data-s="2">×2</button><button data-s="4">×4</button><button data-s="6">×6</button><button data-s="8">×8</button></div>
+  <button id="bSkip">تخطّي</button><button id="bCam" aria-pressed="true" aria-label="المخرج">🎬</button><button id="bMute" aria-label="الصوت">🔊</button>
+</div>
+<div id="bend" hidden></div>
+<div id="start"><div class="card">
+  <h1>معركة الهجوم</h1>
+  <p>قتال حقيقي من فوق، حوالي 9 دقايق: مسيّرات تكشف، مدفعية، طيران ودفاع جوي، دخان، دروع بقفزات، مشاة يقتحمون بيت بيت. النتيجة من حساب قوة الدولتين.</p>
+  <div class="lbl">نتيجة الحساب (عتاد، أجيال، تدريب، أرض…)</div>
+  <div class="seg" id="sRes"><button data-v="win" aria-pressed="true">نجاح</button><button data-v="lose">فشل</button><button data-v="capital">سقوط العاصمة</button></div>
+  <div class="lbl">التكتيك</div>
+  <div class="seg" id="sTac"><button data-v="direct" aria-pressed="true">مباشر</button><button data-v="flank">التفاف</button><button data-v="siege">حصار</button></div>
+  <div class="lbl">الأرض</div>
+  <div class="seg" id="sTerr"><button data-v="desert" aria-pressed="true">صحراء</button><button data-v="plain">سهل</button><button data-v="hills">تلال</button><button data-v="mount">جبال</button></div>
+  <button class="btn go" id="bGo" disabled>يحمّل…</button>
+  <div id="load"></div>
+  <button id="credBtn">مصادر الصور والأصوات</button>
+</div></div>
+<div id="credits" hidden><button class="x" id="credX">إغلاق</button>
+<h3>الصور مخبوزة من مجسمات حقيقية (CC BY 4.0، Sketchfab)</h3>
+<div>M1A1 Abrams و T-72B3 و AH-64D Apache و Patriot — Muhamad Mirza Arrafi · D-30 و Su-25 — 42manako · BM-21 Grad و تويوتا — LM3D · S-400 — Chenzoss · BMP-2 — unhappy_nation · Shahed 136 — faintastic18 · F-16 — iedalton · Bayraktar TB2 — Kellot</div>
+<div>البيوت: sechela، 123a9el، yadrogames · الأشجار والسيارات: 00amza، andreysouzanascimento692، evolveduk، Rashad Ibrahimli، Skeleton_games</div>
+<h3>المؤثرات والأرض</h3><div>انفجارات ودخان ونار — Unity Labs (CC0) · قوام الأرض والطريق — Poly Haven (CC0)</div>
+<h3>الأصوات</h3><div>SoundBible (Mike Koenig وغيره، CC BY 3.0) · BigSoundBank (CC0)</div>
+</div>
+<script type="module" src="./src/main.ts"></script>
+</body>
+</html>

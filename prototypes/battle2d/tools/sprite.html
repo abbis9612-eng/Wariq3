@@ -1,20 +1,45 @@
 <!doctype html><meta charset="utf-8"><style>html,body{margin:0;background:transparent}canvas{width:512px;height:512px}</style>
 <canvas id="c" width="512" height="512"></canvas>
 <script type="module">
-// يخبز صورة من فوق لمجسم حقيقي (خلفية شفافة): /tools/sprite.html?m=<glb>&len=<متر>&yaw=<راديان>&hide=<أجزاء>
-import { Engine, Scene, Vector3, Color4, Color3, HemisphericLight, DirectionalLight, FreeCamera, Camera, LoadAssetContainerAsync, PBRMaterial, TransformNode } from '@babylonjs/core';
+// يخبز صورة من فوق لمجسم حقيقي (خلفية شفافة). فوق الصورة = قدّام المجسم (+z بعد yaw).
+// /tools/sprite.html?m=<glb>&yaw=<راديان>&part=all|hull|tur&split=abrams|t72
+import { Engine, Scene, Vector3, Color4, Color3, HemisphericLight, DirectionalLight, FreeCamera, Camera, LoadAssetContainerAsync, PBRMaterial, TransformNode, Mesh, VertexData } from '@babylonjs/core';
 import '@babylonjs/loaders/glTF';
-const q = new URLSearchParams(location.search);
+const q = new URLSearchParams(location.search), part = q.get('part') || 'all', split = q.get('split');
 const e = new Engine(document.getElementById('c'), true, { preserveDrawingBuffer: true, premultipliedAlpha: false, alpha: true }), s = new Scene(e); s.clearColor = new Color4(0, 0, 0, 0);
-const h = new HemisphericLight('h', new Vector3(0, 1, 0), s); h.intensity = 0.55; h.groundColor = new Color3(0.3, 0.28, 0.25);
-const d = new DirectionalLight('d', new Vector3(0.45, -1, -0.55), s); d.intensity = 2.4; d.diffuse = new Color3(1, 0.94, 0.84);
+const h = new HemisphericLight('h', new Vector3(0, 1, 0), s); h.intensity = 0.6; h.groundColor = new Color3(0.3, 0.28, 0.25);
+// الشمس من فوق-يسار-قدّام (نفس اتجاه الظل باللعبة: الظل لتحت-يمين)
+const d = new DirectionalLight('d', new Vector3(0.5, -1, -0.45), s); d.intensity = 2.3; d.diffuse = new Color3(1, 0.94, 0.84);
 const c = await LoadAssetContainerAsync('/' + q.get('m'), s); c.addAllToScene();
 c.materials.forEach(m => { if (m instanceof PBRMaterial) { m.environmentIntensity = 0; m.directIntensity = 1.6; m.metallic = Math.min(m.metallic ?? 1, 0.1); } });
 const root = new TransformNode('r', s); c.rootNodes.forEach(n => n.parent = root); root.rotation.y = +(q.get('yaw') || 0);
 root.computeWorldMatrix(true); c.meshes.forEach(m => m.computeWorldMatrix(true));
-const { min, max } = root.getHierarchyBoundingVectors(true), ctr = min.add(max).scale(0.5), ext = Math.max(max.x - min.x, max.z - min.z) * 0.52;
-const cam = new FreeCamera('c', new Vector3(ctr.x, max.y + 50, ctr.z), s); cam.mode = Camera.ORTHOGRAPHIC_CAMERA; cam.orthoLeft = -ext; cam.orthoRight = ext; cam.orthoTop = ext; cam.orthoBottom = -ext; cam.minZ = 0.1; cam.maxZ = 500;
-cam.upVector = new Vector3(0, 0, 1); cam.setTarget(ctr); s.activeCamera = cam;
-window.info = { ext: +ext.toFixed(2) };
+const all = root.getHierarchyBoundingVectors(true);
+// تقسيم البرج (نفس قواعد المسرح TH5.2؛ بإحداثيات glTF: x معكوس)
+const TURRET = {
+  abrams: { piv: [0, -0.7], f: (x, y, z) => (y > 1.3 && Math.abs(x) < 1.9 && z > -3.7 && z < 1.95) || (y > 1.12 && Math.abs(x) < 0.2 && z > 1.9) },
+  t72: { piv: [0, 0.85], f: (x, y, z) => (y > 0.9 && Math.hypot(x, z - 0.85) < 1.75) || (y > 1.25 && Math.abs(x) < 2.05 && z > -1 && z < 3) || (y > 0.9 && Math.abs(x) < 0.3 && z < 0.85) },
+};
+let pivW = null;
+if (split && part !== 'all') {
+  const T = TURRET[split], keepTur = part === 'tur';
+  for (const m of c.meshes) {
+    if (!(m instanceof Mesh) || !m.getTotalVertices()) continue;
+    const Wm = m.computeWorldMatrix(true), pos = m.getVerticesData('position'), nv = pos.length / 3, idx = m.getIndices() ?? Array.from({ length: nv }, (_, i) => i);
+    // نقيس بإحداثيات المجسم قبل yaw: نعكس دوران الجذر
+    const inv = root.getWorldMatrix().clone().invert(), tv = new Vector3(), keep = [];
+    const P = (i) => { Vector3.TransformCoordinatesFromFloatsToRef(pos[i * 3], pos[i * 3 + 1], pos[i * 3 + 2], Wm, tv); return Vector3.TransformCoordinates(tv, inv); };
+    for (let t = 0; t < idx.length; t += 3) { const a = P(idx[t]), b = P(idx[t + 1]), cc = P(idx[t + 2]); const cx = (a.x + b.x + cc.x) / 3, cy = (a.y + b.y + cc.y) / 3, cz = (a.z + b.z + cc.z) / 3; if (T.f(-cx, cy, cz) === keepTur) keep.push(idx[t], idx[t + 1], idx[t + 2]); }
+    m.setIndices(keep);
+  }
+  pivW = Vector3.TransformCoordinates(new Vector3(-T.piv[0], 0, T.piv[1]), root.getWorldMatrix());
+}
+// الإطار: كل الصور (الجسم والبرج) بنفس الحجم؛ البرج يتوسّط على محور دورانه
+const ext = +(q.get('ext') || Math.max(all.max.x - all.min.x, all.max.z - all.min.z) * 0.52);
+const ctr = pivW && part === 'tur' ? pivW : all.min.add(all.max).scale(0.5);
+const cam = new FreeCamera('c', new Vector3(ctr.x, all.max.y + 50, ctr.z), s); cam.mode = Camera.ORTHOGRAPHIC_CAMERA; cam.orthoLeft = -ext; cam.orthoRight = ext; cam.orthoTop = ext; cam.orthoBottom = -ext; cam.minZ = 0.1; cam.maxZ = 500;
+cam.upVector = new Vector3(0, 0, 1); cam.setTarget(new Vector3(ctr.x, 0, ctr.z)); s.activeCamera = cam;
+const hc = all.min.add(all.max).scale(0.5);
+window.info = { ext, piv: pivW ? [pivW.x - hc.x, pivW.z - hc.z] : null, h: all.max.y - all.min.y };
 s.executeWhenReady(() => { s.render(); s.render(); setTimeout(() => window.done = true, 300); });
 </script>

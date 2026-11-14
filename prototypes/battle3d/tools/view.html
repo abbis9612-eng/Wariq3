@@ -1,0 +1,19 @@
+<!doctype html><meta charset="utf-8"><style>html,body{margin:0;height:100%;background:#c9c2b0}canvas{width:100%;height:100%}</style>
+<canvas id="c"></canvas>
+<script type="module">
+// معاينة مجسم من فوق (z لفوق بالصورة = +z) مع أسهم: أحمر +x، أزرق +z. /tools/view.html?m=models/x.glb&v=top|side
+import { Engine, Scene, Vector3, Color4, Color3, HemisphericLight, DirectionalLight, ArcRotateCamera, LoadAssetContainerAsync, PBRMaterial, MeshBuilder, StandardMaterial } from '@babylonjs/core';
+import '@babylonjs/loaders/glTF';
+const q = new URLSearchParams(location.search);
+const e = new Engine(document.getElementById('c'), true, { preserveDrawingBuffer: true }), s = new Scene(e); s.clearColor = new Color4(0.79, 0.76, 0.69, 1);
+new HemisphericLight('h', new Vector3(0, 1, 0), s).intensity = 0.8; const d = new DirectionalLight('d', new Vector3(-0.5, -1, 0.6), s); d.intensity = 2;
+const c = await LoadAssetContainerAsync('/' + q.get('m'), s); c.addAllToScene();
+c.materials.forEach(m => { if (m instanceof PBRMaterial) { m.environmentIntensity = 0; m.metallic = Math.min(m.metallic ?? 1, 0.15); } });
+const { min, max } = c.meshes[0].getHierarchyBoundingVectors(true), ctr = min.add(max).scale(0.5), L = max.subtract(min).length();
+const ax = (dir, col) => { const m = MeshBuilder.CreateTube('t', { path: [ctr, ctr.add(dir.scale(L * 0.6))], radius: L * 0.01 }, s); const mt = new StandardMaterial('m', s); mt.emissiveColor = col; m.material = mt; };
+ax(new Vector3(1, 0, 0), new Color3(1, 0, 0)); ax(new Vector3(0, 0, 1), new Color3(0, 0, 1)); ax(new Vector3(0, 1, 0), new Color3(0, 1, 0));
+const top = q.get('v') !== 'side';
+const cam = new ArcRotateCamera('a', -Math.PI / 2, top ? 0.01 : Math.PI / 2 - 0.05, L * 1.3, ctr, s); s.activeCamera = cam;
+window.info = { min: min.asArray().map(v => +v.toFixed(2)), max: max.asArray().map(v => +v.toFixed(2)), meshes: c.meshes.map(m => m.name + ':' + m.getTotalVertices()).join(' ') };
+s.executeWhenReady(() => { e.runRenderLoop(() => s.render()); setTimeout(() => window.done = true, 800); });
+</script>

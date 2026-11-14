@@ -3,7 +3,13 @@ import { NodeIO } from '@gltf-transform/core';
 import { ALL_EXTENSIONS } from '@gltf-transform/extensions';
 import fs from 'fs';
 const [src, dst] = process.argv.slice(2);
-if (!src) { for (const n of fs.readdirSync("models").filter(f => f.endsWith(".glb"))) await convert("models/" + n, "models/" + n.replace(".glb", ".gltf.json")); process.exit(0); }
+// بدون وسائط: مجسماتنا + اللي نحتاجه من المسرح المجمّد (D-023) بأسماء t_* — قراءة بس
+const THEATER = ['abrams', 't72', 'd30', 'grad', 'patriot', 's400', 'shahed', 'soldier', 'h_arabic4', 'h_arab1', 'h_arab2', 'h_arabic1', 'h_desert', 'h_low', 'p_palm', 'p_tree', 'p_acacia', 'p_car1', 'p_car2', 'p_pickup'];
+if (!src) {
+  for (const n of fs.readdirSync("models").filter(f => f.endsWith(".glb"))) await convert("models/" + n, "models/" + n.replace(".glb", ".gltf.json"));
+  for (const n of THEATER) { const d = `models/t_${n}.gltf.json`; if (!fs.existsSync(d)) await convert(`../theater/models/${n}.glb`, d); }
+  process.exit(0);
+}
 await convert(src, dst);
 async function convert(src, dst) {
 const io = new NodeIO().registerExtensions(ALL_EXTENSIONS);

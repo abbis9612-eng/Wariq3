@@ -301,6 +301,16 @@ async function loadSoldier() {
       m.thinInstanceSetBuffer('matrix', rpgMat, 16, false); m.thinInstanceCount = 0; m.alwaysSelectAsActiveMesh = true; caster(m); }
     rc.meshes.filter(m => m.getTotalVertices() === 0).forEach(m => m.dispose()); rc.transformNodes.forEach(t => t.dispose()); rpgMeshes = rms;
   } catch (e) { console.warn('rpg', e); }
+  // قذيفة PG-7V (D_U، CC BY): الرأس الحربي على −x بـ glTF (= +x ببابلون) ← نلفها للـ +z، طولها الحقيقي ~0.93م
+  try {
+    const pc = await LoadAssetContainerAsync(modelUrl('p_pg7'), scene, { pluginExtension: '.gltf' }); pc.addAllToScene();
+    pc.materials.forEach(m => { if (m instanceof PBRMaterial) { m.environmentIntensity = 0; m.directIntensity = PBR_DIRECT; m.metallic = 0.1; m.albedoColor = new Color3(0.36, 0.38, 0.27); m.maxSimultaneousLights = 2 + NL; } });
+    const pms = pc.meshes.filter(m => m.getTotalVertices() > 0) as Mesh[]; pms.forEach(m => m.computeWorldMatrix(true));
+    const k = 0.93 / 10.07, N = Matrix.RotationY(-Math.PI / 2).multiply(Matrix.Scaling(k, k, k));
+    for (const m of pms) { const wmx = m.computeWorldMatrix(true).clone(); m.setParent(null); m.position.setAll(0); m.rotationQuaternion = null; m.rotation.setAll(0); m.scaling.setAll(1); m.bakeTransformIntoVertices(wmx.multiply(N)); }
+    pg7Mesh = pms.length > 1 ? Mesh.MergeMeshes(pms, true, true, undefined, false, true) : pms[0]; if (pg7Mesh) { pg7Mesh.isVisible = false; pg7Mesh.isPickable = false; }
+    pc.transformNodes.forEach(t => t.dispose());
+  } catch (e) { console.warn('pg7', e); }
   console.log('soldier VAT', { frames: frames.length, bones: sk.bones.length, anims: [...animRange.keys()].join(',') });
 }
 // جندي = بيانات بس (مكان، اتجاه، حركة)؛ الرسم كله بـ drawSoldiers
@@ -432,6 +442,10 @@ const dust = new Pool('dust', 2200, texSmoke, false, { life: [2, 4.5], size: [[0
 const trackDust = new Pool('trackDust', 900, texSmoke, false, { life: [1.5, 3], size: [[0, 1.5], [1, 6]], damp: 0.9, gravity: 0.2, colors: [[0, C4(0.72, 0.62, 0.47, 0)], [0.1, C4(0.72, 0.62, 0.47, 0.32)], [1, C4(0.78, 0.7, 0.58, 0)]] });
 const sparks = new Pool('sparks', 1000, texSoft, true, { life: [0.4, 1.2], size: [[0, 1], [1, 0.35]], gravity: -9.8, stretched: true, colors: [[0, C4(5, 4, 2.4, 1)], [0.6, C4(3, 1.2, 0.3, 0.9)], [1, C4(1, 0.2, 0, 0)]] });
 const muzzle = new Pool('muzzle', 600, texFlare, true, { life: [0.04, 0.09], size: [[0, 2.5], [1, 4]], colors: [[0, C4(7, 5.5, 3, 1)], [1, C4(3, 1.4, 0.3, 0)]] });
+// TH6.4: أجزاء حاضن القذيفة الخارقة (3 قطع تنفصل قرب الفوهة) + خط مضيء أقوى لقذيفة الدبابة
+const petals = new Pool('petals', 240, texSoft, false, { life: [0.9, 1.4], size: [[0, 0.55], [1, 0.45]], gravity: -9.8, spin: 6, colors: [[0, C4(0.12, 0.11, 0.1, 1)], [0.85, C4(0.15, 0.14, 0.12, 1)], [1, C4(0.15, 0.14, 0.12, 0)]] });
+const motorFlame = new Pool('motorFlame', 400, texFlare, true, { life: [0.04, 0.1], size: [[0, 0.7], [1, 0.25]], colors: [[0, C4(6, 4.5, 2.2, 1)], [1, C4(3, 1, 0.2, 0)]] });   // لهب محرك صاروخ صغير (آر بي جي/كورنيت)
+const apTracer = new Pool('apTracer', 200, texSoft, true, { life: [0.3, 0.3], size: [[0, 1.5], [1, 1.2]], stretched: true, colors: [[0, C4(9, 7, 3.5, 1)], [1, C4(7, 4.5, 1.6, 1)]] });
 const tracers = new Pool('tracers', 900, texSoft, true, { life: [0.4, 0.4], size: [[0, 0.8], [1, 0.8]], stretched: true, colors: [[0, C4(7, 4, 1.4, 1)], [1, C4(6, 3, 0.8, 1)]] });
 const casings = new Pool('casings', 600, texSoft, false, { life: [0.5, 0.8], size: [[0, 0.22], [1, 0.22]], gravity: -9.8, stretched: true, colors: [[0, C4(0.95, 0.75, 0.3, 1)], [1, C4(0.8, 0.6, 0.25, 1)]] });
 const exhaust = new Pool('exhaust', 400, texSmoke, false, { life: [1.2, 2.4], size: [[0, 0.8], [1, 4.5]], damp: 0.9, gravity: 0.8, colors: [[0, C4(0.2, 0.19, 0.18, 0)], [0.1, C4(0.22, 0.21, 0.2, 0.45)], [1, C4(0.4, 0.38, 0.36, 0)]] });
@@ -526,7 +540,7 @@ const airVis = new Map<number, AVis>();
 const burning: { p: V3; t: number; big: number }[] = [];
 const vq: { t: number; f: () => void }[] = [];               // مؤثرات مؤجلة بزمن المحاكاة (ارتطام الرصاص…)
 const debris: { m: TransformNode; p: V3; v: V3; spin: V3; until: number }[] = [];
-let interMesh: Mesh, n48Mesh: Mesh, iskMesh: Mesh, dotMesh: Mesh, chunkMesh: Mesh, capMesh: Mesh;
+let interMesh: Mesh, n48Mesh: Mesh, iskMesh: Mesh, dotMesh: Mesh, chunkMesh: Mesh, capMesh: Mesh, kornetMsl: Mesh, pg7Mesh: Mesh | null = null;
 function makeProcedural() {
   const missile = (name: string, Lh: number, dia: number, col: Color3, fins = true) => {
     const parts: Mesh[] = [];
@@ -537,6 +551,7 @@ function makeProcedural() {
   };
   interMesh = missile('pac', 4.6, 0.41, new Color3(0.92, 0.92, 0.88));
   n48Mesh = missile('n48', 6.4, 0.52, new Color3(0.88, 0.89, 0.86));
+  kornetMsl = missile('kor', 1.15, 0.152, new Color3(0.33, 0.36, 0.26));   // 9M133: طول ~1.2م، قطر 152ملم، لون زيتوني
   iskMesh = missile('isk', 6.2, 0.92, new Color3(0.32, 0.34, 0.3), false);
   dotMesh = MeshBuilder.CreatePlane('dot', { size: 1 }, scene); const dm = new StandardMaterial('dotMat', scene);
   dm.emissiveTexture = texFlare; dm.opacityTexture = texFlare; dm.emissiveColor = new Color3(5, 3.4, 1.6); dm.disableLighting = true; dm.alphaMode = Engine.ALPHA_ADD; dm.fogEnabled = false;
@@ -592,7 +607,14 @@ function airBody(a: Air): { body: TransformNode | null; glow: AbstractMesh | nul
     if (a.kind === 'n48' && !a.ign) g.isVisible = false;
     return { body: holder, glow: g, L };
   }
-  const g = inst(dotMesh, 'g' + a.id); g.billboardMode = Mesh.BILLBOARDMODE_ALL; g.scaling.setAll(a.kind === 'rocket' ? 2.4 : a.kind === 'atgm' ? 1.3 : a.kind === 'rpg' ? 1 : a.kind === 'smoke' ? 0.5 : 1.6); return { body: null, glow: g, L: a.kind === 'atgm' || a.kind === 'rpg' ? 1.2 : 2 };
+  if ((a.kind === 'rpg' && pg7Mesh) || a.kind === 'atgm') {
+    // TH6.4: مجسم الصاروخ نفسه (PG-7V حقيقي / كورنيت 9M133) + لهب المحرك بالذيل
+    const holder = new TransformNode('mb' + a.id, scene), m = inst(a.kind === 'rpg' ? pg7Mesh! : kornetMsl, 'm' + a.id); m.parent = holder; caster(m);
+    const L = a.kind === 'rpg' ? 0.93 : 1.2, g = inst(dotMesh, 'g' + a.id); g.billboardMode = Mesh.BILLBOARDMODE_ALL; g.parent = holder; g.position.z = -L / 2 - 0.15; g.scaling.setAll(a.kind === 'rpg' ? 0.5 : 0.4);
+    if (a.kind === 'rpg') g.isVisible = false;   // المحرك يشتغل بعد ~11م
+    return { body: holder, glow: g, L };
+  }
+  const g = inst(dotMesh, 'g' + a.id); g.billboardMode = Mesh.BILLBOARDMODE_ALL; g.scaling.setAll(a.kind === 'rocket' ? 2.4 : a.kind === 'smoke' ? 0.5 : 1.6); return { body: null, glow: g, L: 2 };
 }
 function syncAir() {
   const seen = new Set<number>(), cp = cam.position;
@@ -614,7 +636,14 @@ function syncAir() {
     if (a.kind === 'n48' && !a.ign) puffs.emit({ a: tail, n: 2, spd: [1, 3], jit: 0.5 });
     if (a.kind === 'iskander') thinTrail.emit({ a: prev, b: lp, n: Qn(dd * 0.06), jit: 1.5, spd: [0, 1] });
     if (a.kind === 'rocket' && a.t < 3) rocketTrail.emit({ a: prev, b: lp, n: Qn(dd * 0.14), jit: 0.3, spd: [0, 1] });
-    if (a.kind === 'atgm' || (a.kind === 'rpg' && a.t > 0.08)) rocketTrail.emit({ a: prev, b: lp, n: Qn(dd * (a.kind === 'atgm' ? 0.25 : 0.4)), jit: 0.15, spd: [0, 0.5] });
+    if (a.kind === 'rpg') {
+      // PG-7V: بشحنة الطرد بس نفخة رمادية؛ بعد ~11م المحرك: لهب ودخان أبيض كثيف، والقذيفة تلف حول نفسها
+      if (vis.glow) vis.glow.isVisible = a.t > 0.1 && a.t < 0.75;
+      if (vis.body) vis.body.getChildMeshes()[0]?.addRotation(0, 0, 0.6);
+      if (a.t <= 0.1) puffs.emit({ a: lp, n: 1, spd: [0.2, 0.6], jit: 0.1 });
+      else { rocketTrail.emit({ a: prev, b: tail, n: Qn(dd * 0.7), jit: 0.2, spd: [0, 0.6] }); if (a.t < 0.75) motorFlame.emit({ a: tail, n: 2, dir: scale(dirV, -1), spd: [6, 14], spread: 0.15, jit: 0.04 }); }
+    }
+    if (a.kind === 'atgm') { thinTrail.emit({ a: prev, b: tail, n: Qn(dd * 0.18), jit: 0.15, spd: [0, 0.4] }); if (a.t > 0.25) motorFlame.emit({ a: tail, n: 1, dir: scale(dirV, -1), spd: [3, 8], spread: 0.15, jit: 0.03 }); }
     vis.lastP = lp;
   }
   for (const [id, vis] of airVis) if (!seen.has(id)) { vis.n.dispose(); airVis.delete(id); }
@@ -625,6 +654,9 @@ function handleFx(fx: Fx) {
     case 'gun': {
       const vis = unitVis.get(fx.unit); if (vis) vis.recoil = 1; fx.p = muzzleAt(fx.unit, fx.p);
       muzzle.emit({ a: fx.p, n: 4, jit: 0.6 }); fireS.emit({ a: fx.p, n: Qn(8), dir: fx.dir, spd: [20, 45], spread: 0.4, jit: 0.5 });
+      // عصفة الفوهة: كرة نار قصيرة + حلقة دخان من فتحات كابح الارتداد؛ والخارق: الحاضن يتطاير 3 قطع
+      exS.emit({ a: add(fx.p, scale(fx.dir, 2.5)), n: 1, spd: [0, 1], jit: 0.3 }); smokeS.emit({ a: fx.p, n: Qn(4), dir: [fx.dir[2], 0.2, -fx.dir[0]], spd: [4, 9], spread: 2, jit: 0.4 });
+      if (fx.ap) for (let i = 0; i < 3; i++) { const a = i * 2.094 + Math.random(), side: V3 = [Math.cos(a) * fx.dir[2], Math.sin(a) * 0.8 + 0.3, -Math.cos(a) * fx.dir[0]]; petals.emit({ a: add(fx.p, scale(fx.dir, 6)), n: 1, dir: norm(add(scale(fx.dir, 3), side)), spd: [45, 70], spread: 0.2, jit: 0.2 }); }
       // حلقة غبار حول الدبابة من ضغط الطلقة
       const u = W.units.find(x => x.id === fx.unit); if (u) dust.emit({ a: add(L(u.p), [0, 0.6, 0]), n: Qn(26), spd: [8, 18], up: -0.45, jit: 3 });
       smokeS.emit({ a: add(fx.p, scale(fx.dir, 3)), n: Qn(5), spd: [3, 8], jit: 1.5 });
@@ -640,7 +672,7 @@ function handleFx(fx: Fx) {
       vq.push({ t: W.T + fx.tf, f: () => { if (kind === 'ground') dust.emit({ a: G(to[0], to[2], 0.4), n: 2, spd: [2, 6], up: 1.2, jit: 0.6 }); else if (kind === 'metal') sparks.emit({ a: to, n: 4, spd: [10, 40], jit: 0.3 }); else if (Math.random() < 0.3) puffs.emit({ a: to, n: 1, spd: [0.2, 0.5], jit: 0.3 }); } });
       sfx.round(camD(fx.p)); break;
     }
-    case 'shell': tracers.emit({ a: fx.a, n: 1, dir: norm(sub(fx.b, fx.a)), spd: [1650, 1650], life: fx.tf, jit: 0 }); break;
+    case 'shell': apTracer.emit({ a: fx.a, n: 1, dir: norm(sub(fx.b, fx.a)), spd: [1650, 1650], life: fx.tf, jit: 0 }); break;
     case 'boom': {
       const s = fx.size, big = s >= 1.3, P = big ? fireL : fireS;
       // الانفجار نفسه: فليب بوك مصوّر (كرة نار تتحول لدخان أسود)، وفوقه شرار وغبار وكرة نار سريعة
@@ -713,9 +745,18 @@ function handleFx(fx: Fx) {
     }
     case 'atgm': {
       // كورنيت: نفخة من الأنبوب ودخان؛ RPG: نار ودخان من ورا الرامي
-      cloud.emit({ a: fx.p, n: Qn(fx.rpg ? 10 : 18), spd: [2, 7], jit: 1 }); fireS.emit({ a: fx.p, n: 4, dir: fx.dir, spd: [6, 14], spread: 0.4, jit: 0.3 });
-      dust.emit({ a: G(fx.p[0], fx.p[2], 0.5), n: Qn(8), spd: [3, 8], up: 0.2, jit: 2 });
-      if (fx.rpg) fireJet.emit({ a: fx.p, n: 6, dir: scale(fx.dir, -1), spd: [10, 20], spread: 0.4, jit: 0.3 });
+      const back = scale(fx.dir, -1);
+      if (fx.rpg) {
+        // آر بي جي: عصفة خلفية (منطقة خطر ~20م ورا الرامي): لهب قصير + غبار ودخان يرتفع ورا، ونفخة من الفوهة
+        fireJet.emit({ a: fx.p, n: Qn(10), dir: back, spd: [14, 28], spread: 0.35, jit: 0.2 });
+        for (let k = 1; k <= 4; k++) { const q = add(fx.p, scale(back, k * 2.5)); dust.emit({ a: G(q[0], q[2], 0.6), n: Qn(5), spd: [2, 6], up: 0.4, jit: 1 + k * 0.4 }); }
+        cloud.emit({ a: add(fx.p, scale(back, 3)), n: Qn(14), dir: back, spd: [3, 9], spread: 0.8, jit: 1 });
+        puffs.emit({ a: add(fx.p, scale(fx.dir, 1)), n: 4, spd: [1, 3], jit: 0.3 }); muzzle.emit({ a: fx.p, n: 2, jit: 0.3 });
+      } else {
+        // كورنيت: شحنة طرد تدفع الصاروخ من الأنبوب (نفخة من القدام والورا)، والمحرك يشتغل بعدين
+        cloud.emit({ a: fx.p, n: Qn(10), dir: fx.dir, spd: [2, 6], spread: 1, jit: 0.6 }); cloud.emit({ a: add(fx.p, scale(back, 1.2)), n: Qn(8), dir: back, spd: [3, 8], spread: 0.6, jit: 0.6 });
+        dust.emit({ a: G(fx.p[0], fx.p[2], 0.5), n: Qn(8), spd: [3, 8], up: 0.2, jit: 2 }); fireS.emit({ a: add(fx.p, scale(back, 1)), n: 3, dir: back, spd: [6, 12], spread: 0.4, jit: 0.2 });
+      }
       flashLight(fx.p, 2, 40, 0.15); fx.rpg ? sfx.rocket(camD(fx.p)) : sfx.launch(camD(fx.p) + 300); break;
     }
     case 'smoke': screens.push({ p: fx.p, r: fx.r, until: W.T + fx.dur }); cloud.emit({ a: G(fx.p[0], fx.p[2], 3), n: Qn(30), spd: [3, 12], up: 0.3, jit: fx.r * 0.4 }); break;

@@ -63,7 +63,7 @@ export interface Sol {
 }
 // ===== أحداث للرسم =====
 export type Fx =
-  | { k: 'gun'; unit: number; p: V3; dir: V3; big: boolean }                  // مدفع دبابة/هاوتزر: لهب + غبار + ارتداد
+  | { k: 'gun'; unit: number; p: V3; dir: V3; big: boolean; ap?: boolean }    // مدفع دبابة/هاوتزر: لهب + غبار + ارتداد؛ ap = خارق (حاضن يتطاير)
   | { k: 'round'; unit: number; p: V3; dir: V3; to: V3; tracer: boolean; tf: number; hit: 'air' | 'metal' | 'ground' } // طلقة رشاش
   | { k: 'volley'; unit: number; p: V3; to: V3; n: number; tracer: boolean; inf: boolean }  // رمي بنادق/رشاش خفيف (مشاة)
   | { k: 'cannon'; unit: number; p: V3; dir: V3; to: V3; tf: number }        // مدفع 30 ملم (BMP)
@@ -822,7 +822,7 @@ function fight(w: World, u: Unit, dt: number) {
   let dmg = u.kind === 'abrams' ? (SPEC[best.kind].armor ? 2.1 : 3) : (best.kind === 'abrams' ? 1.05 : 3);
   if (flank && SPEC[best.kind].armor) dmg *= 1.35;
   const kills = hit && best.kind !== 'inf' && best.hp - dmg <= 0;
-  w.fx.push({ k: 'gun', unit: u.id, p: muzzle, dir, big: true }, { k: 'shell', a: muzzle, b: impact, tf });
+  w.fx.push({ k: 'gun', unit: u.id, p: muzzle, dir, big: true, ap: best.kind !== 'inf' }, { k: 'shell', a: muzzle, b: impact, tf });
   if (kills) w.fx.push({ k: 'killshot', shooter: u.id, target: best.id, tf });
   const tgt = best, by = byName(u), side = u.side;
   w.schedule.push({ t: w.T + tf, f: (w) => {
@@ -856,7 +856,7 @@ function infFire(w: World, u: Unit) {
       const rs = u.house < 0 ? u.sol.find(q => q.alive && q.role === 'rpg') ?? u.sol.find(q => q.alive) : undefined; if (rs) { rs.act = 'fire'; rs.pose = 'crouch'; rs.lastShot = w.T; rs.nextShot = w.T + 4; rs.yaw = Math.atan2(v.p[0] - rs.p[0], v.p[2] - rs.p[2]); }
       const from: V3 = rs ? add(rs.p, [0, 1.2, 0]) : add(u.p, [0, u.house >= 0 ? 3 : 1.4, 0]), d = dist2d(v.p, from), dir = norm(sub(add(v.p, [0, 1.2, 0]), from));
       const hit = w.r() < clamp(0.6 - d / 450, 0.12, 0.58) * (1 - u.supp * 0.5);
-      const a = spawnAir(w, 'rpg', u.side, from, scale(dir, 120), undefined, undefined, hit ? add(v.p, [0, 1.2, 0]) : add(v.p, [(w.r() - 0.5) * 16, -1, (w.r() - 0.5) * 16]));
+      const a = spawnAir(w, 'rpg', u.side, from, scale(dir, 115), undefined, undefined, hit ? add(v.p, [0, 1.2, 0]) : add(v.p, [(w.r() - 0.5) * 16, -1, (w.r() - 0.5) * 16]));
       a.tgtUnit = v.id; a.owner = u.id; a.hit = hit;
       w.fx.push({ k: 'atgm', unit: u.id, p: from, dir, air: a.id, rpg: true }); return;
     }
@@ -1038,7 +1038,8 @@ function missile(w: World, a: Air, dt: number) {
     if (a.t > 30) { a.alive = false; w.fx.push({ k: 'boom', p: a.p, size: 0.4, air: false }); }
     return;
   }
-  // RPG: خط مستقيم وجاذبية خفيفة
+  // RPG (PG-7V): تطلع 115م/ث بشحنة الطرد، وبعد ~11م (0.1ث) يشتغل المحرك ويسرّعها لحد ~295م/ث؛ جاذبية خفيفة
+  if (a.t > 0.1 && a.t < 0.7) a.v = scale(norm(a.v), Math.min(295, len(a.v) + 300 * dt));
   a.v = add(a.v, [0, -1.5 * dt, 0]);
   if (len(sub(a.aim, a.p)) < 3.5 || a.t > 4) {
     a.alive = false; w.fx.push({ k: 'boom', p: a.p, size: 0.5, air: false, metal: !!a.hit });

@@ -321,7 +321,7 @@ async function loadSoldier() {
 }
 // جندي = بيانات بس (مكان، اتجاه، حركة)؛ الرسم كله بـ drawSoldiers
 // ===== رسم الجنود (TH6.1): كل جندي من مكانه ووضعيته وحالته بالمحاكاة؛ هنا بس اختيار الحركة والانتقالات =====
-interface SV { ph: number; spd: number; dieT: number; die: Anim | ''; pose: string; tr: Anim | ''; trT: number; dx: number; dz: number; mz: V3 | null }
+interface SV { ph: number; spd: number; dieT: number; die: Anim | ''; pose: string; tr: Anim | ''; trT: number; dx: number; dz: number; dy: number; mz: V3 | null }
 const solVis = new Map<number, SV>(), deadOrder: number[] = [];
 interface SVis { kornet?: TransformNode }
 const squadVis = new Map<number, SVis>();
@@ -364,13 +364,13 @@ function drawSoldiers(dt: number) {
     if (u.kind !== 'inf' && u.kind !== 'kornet') continue;
     for (const s of u.sol) {
       if (n >= SOL_CAP) break;
-      let v = solVis.get(s.id); if (!v) { v = { ph: Math.random() * 60, spd: 0.9 + Math.random() * 0.2, dieT: -1, die: '', pose: s.pose, tr: '', trT: 0, dx: 0, dz: 0, mz: null }; solVis.set(s.id, v); }
-      if (!s.alive && v.dieT < 0) { if (s.hidden || u.state === 'mounted') continue; v.dieT = vatTime; v.die = v.pose === 'prone' ? 'pron death' : v.pose === 'crouch' ? 'crouch death' : 'simple death'; [v.dx, v.dz] = solAt(u, s.p, VS); deadOrder.push(s.id); }
+      let v = solVis.get(s.id); if (!v) { v = { ph: Math.random() * 60, spd: 0.9 + Math.random() * 0.2, dieT: -1, die: '', pose: s.pose, tr: '', trT: 0, dx: 0, dz: 0, dy: 0, mz: null }; solVis.set(s.id, v); }
+      if (!s.alive && v.dieT < 0) { if (s.hidden || u.state === 'mounted') continue; v.dieT = vatTime; v.die = v.pose === 'prone' ? 'pron death' : v.pose === 'crouch' ? 'crouch death' : 'simple death'; [v.dx, v.dz] = u.house >= 0 || s.y ? [s.p[0], s.p[2]] : solAt(u, s.p, VS); v.dy = s.y; deadOrder.push(s.id); }
       if (!s.alive && !lim.has(s.id)) continue;
       if (s.alive && s.hidden) continue;
-      const [x, z] = s.alive ? solAt(u, s.p, VS) : [v.dx, v.dz];
+      const [x, z] = s.alive ? (u.house >= 0 || s.y ? [s.p[0], s.p[2]] : solAt(u, s.p, VS)) : [v.dx, v.dz];   // بالبيت/السطح/الخندق: مكانه بالضبط
       if (Math.abs(x - cp.x) + Math.abs(z - cp.z) > 3200) continue;
-      tS.setAll(SOL_S * VS); tT.set(x, groundH(x, z), z); Quaternion.RotationYawPitchRollToRef(s.yaw, 0, 0, tQ); Matrix.ComposeToRef(tS, tQ, tT, tM); solW0.multiplyToRef(tM, tO); tO.copyToArray(solMat, n * 16);
+      tS.setAll(SOL_S * VS); tT.set(x, groundH(x, z) + (s.alive ? s.y : v.dy), z); Quaternion.RotationYawPitchRollToRef(s.yaw, 0, 0, tQ); Matrix.ComposeToRef(tS, tQ, tT, tM); solW0.multiplyToRef(tM, tO); tO.copyToArray(solMat, n * 16);
       const k = n * 4;
       // البدلة: العراق صحراوي فاتح، العدو زيتوني مخضر — حتى تميّز الطرفين من بعيد
       if (u.side === 'iq') { solCol[k] = 1.3; solCol[k + 1] = 1.18; solCol[k + 2] = 0.92; } else { solCol[k] = 0.85; solCol[k + 1] = 1.02; solCol[k + 2] = 0.78; } solCol[k + 3] = 1;

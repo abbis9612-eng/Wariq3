@@ -150,7 +150,13 @@ export const MOUNDS: Mound[] = (() => {
   return out;
 })();
 // نقاط الستر: n = اتجاه التهديد اللي النقطة محمية منه (الساتر بين النقطة والتهديد)
-export interface Cover { x: number; z: number; nx: number; nz: number }
+// خنادق (حُفر قتال) على طرف قرية الطريق الغربي: خط الدفاع الأول قبل البيوت (TH6.6)
+export const TRENCHES: [number, number, number, number][] = (() => {
+  const fv = HOUSES.filter(h => h.vil === 'front'), x0 = Math.min(...fv.map(h => h.x)) - 48, zc = VILLAGES[0].z, out: [number, number, number, number][] = [];
+  for (const [za, zb] of [[-95, -35], [30, 90]]) { const zm = (za + zb) / 2; out.push([x0, zc + za, x0 + 5, zc + zm], [x0 + 5, zc + zm, x0, zc + zb]); }   // متعرّج (زيگزاگ) مثل الحقيقي
+  return out;
+})();
+export interface Cover { x: number; z: number; nx: number; nz: number; trench?: boolean }
 export const COVER: Cover[] = (() => {
   const out: Cover[] = [];
   for (const wl of WALLS) { const cs = Math.cos(wl.rot), sn = Math.sin(wl.rot), alongX = wl.w > wl.d, L = Math.max(wl.w, wl.d);
@@ -159,6 +165,7 @@ export const COVER: Cover[] = (() => {
       const x = wl.x + ax[0] * t + nr[0] * sd * 1.1, z = wl.z + ax[1] * t + nr[1] * sd * 1.1; if (roadDist(x, z) < 0.5) continue; out.push({ x, z, nx: -nr[0] * sd, nz: -nr[1] * sd }); } }
   for (const m of MOUNDS) { const ax: [number, number] = [Math.sin(m.rot), Math.cos(m.rot)], nr: [number, number] = [Math.cos(m.rot), -Math.sin(m.rot)];
     for (let t = -m.len / 2 + 1.5; t <= m.len / 2 - 1.5; t += 3) for (const sd of [-1, 1]) out.push({ x: m.x + ax[0] * t + nr[0] * sd * 2.6, z: m.z + ax[1] * t + nr[1] * sd * 2.6, nx: -nr[0] * sd, nz: -nr[1] * sd }); }
+  for (const [ax, az, bx, bz] of TRENCHES) { const L = Math.hypot(bx - ax, bz - az); for (let t = 1.5; t < L - 1; t += 2.6) out.push({ x: ax + (bx - ax) * t / L, z: az + (bz - az) * t / L, nx: -1, nz: 0, trench: true }); }
   for (const b of SANDBAGS) { const lx: [number, number] = [Math.cos(b.yaw), -Math.sin(b.yaw)]; out.push({ x: b.x + lx[0] * 1.4, z: b.z + lx[1] * 1.4, nx: -lx[0], nz: -lx[1] }); }
   return out;
 })();

@@ -5,7 +5,7 @@ import {
 } from '@babylonjs/core';
 import { CustomMaterial } from '@babylonjs/materials/custom';
 import { V3, SITES, riverX, RIVER_W, HIGHWAY_Z, BERMS, rng, site, dist2d } from './sim';
-import { LAND, HN, HMIN, HMAX, WADI_FLOOR, ROADS, WADIS, HIGHWAY_END, setHeightData, groundH, groundN, roadDist, wadiDist, STRIP_ROT, HOUSES, HOUSE_TYPES, House, VILLAGES, WALLS, SANDBAGS, MOUNDS } from './land';
+import { LAND, HN, HMIN, HMAX, WADI_FLOOR, ROADS, WADIS, HIGHWAY_END, setHeightData, groundH, groundN, roadDist, wadiDist, STRIP_ROT, HOUSES, HOUSE_TYPES, House, VILLAGES, WALLS, SANDBAGS, MOUNDS, TRENCHES } from './land';
 import hUrl from '../textures/land_h.png?url';
 
 export interface SiteProp { site: string; mesh: Mesh; mat: StandardMaterial; hit: boolean }
@@ -314,6 +314,13 @@ export async function buildWorld(scene: Scene, o: { HQ: boolean; NL: number; cas
     mound.updateVerticesData(VertexBuffer.PositionKind, p); const nn: number[] = []; VertexData.ComputeNormals(p, mound.getIndices()!, nn); mound.setVerticesData(VertexBuffer.NormalKind, nn);
     const mm = plain('moundMat'); const st = tex('sand'); st.uScale = 2; st.vScale = 3; mm.diffuseTexture = st; mm.diffuseColor = new Color3(0.6, 0.56, 0.5); mm.emissiveColor = new Color3(0.06, 0.055, 0.05); mound.material = mm; mound.receiveShadows = true; }
   const mdm: number[] = []; for (const m of MOUNDS) mdm.push(...Matrix.Compose(new Vector3(5, 2.6, m.len), Quaternion.RotationAxis(Vector3.Up(), m.rot), new Vector3(m.x, groundH(m.x, m.z) - 0.05, m.z)).asArray());
+  // خنادق طرف القرية (TH6.6): شق ترابي غامق + ساتر من تراب الحفر على جهة العدو (الغرب)
+  const trM: number[] = [], trMat = plain('trenchMat'); trMat.diffuseColor = new Color3(0.26, 0.21, 0.16); trMat.emissiveColor = new Color3(0.02, 0.016, 0.012);
+  const trench = MeshBuilder.CreateBox('trench', { size: 1 }, scene); trench.material = trMat; trench.receiveShadows = true;
+  for (const [ax, az, bx, bz] of TRENCHES) { const L = Math.hypot(bx - ax, bz - az), cx = (ax + bx) / 2, cz = (az + bz) / 2, rot = Math.atan2(bx - ax, bz - az);
+    trM.push(...Matrix.Compose(new Vector3(1.4, 0.06, L + 0.6), Quaternion.RotationAxis(Vector3.Up(), rot), new Vector3(cx, groundH(cx, cz) + 0.02, cz)).asArray());
+    mdm.push(...Matrix.Compose(new Vector3(2.6, 1.3, L + 1), Quaternion.RotationAxis(Vector3.Up(), rot), new Vector3(cx - 2.1, groundH(cx - 2.1, cz) - 0.05, cz)).asArray()); }
+  instances(trench, trM);
   instances(mound, mdm); caster(mound);
   const nProps = scatter(P_TREE, orch, 2000) + scatter(P_ACACIA, ac, 1800) + scatter(P_CAR1, cars[0], 1500) + scatter(P_CAR2, cars[1], 1500) + scatter(P_PICK, cars[2], 1500) + scatter(P_SAND, sb, 1300) + scatter(P_BAR, bar, 1300);
   console.log('props', { palms: pm.length / 16, orch: orch.length / 16, acacia: ac.length / 16, cars: cars.map(c => c.length / 16), sandbags: sb.length / 16, barriers: bar.length / 16, total: nProps, chunks: chunks.length });

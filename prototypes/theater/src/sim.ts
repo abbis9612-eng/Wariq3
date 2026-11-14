@@ -8,7 +8,7 @@ import {
   add, sub, scale, dot, cross, len, dist2d, norm, clamp, lerp, rotY, yawOf, angDiff, rng, HIGHWAY_Z, SITES, site, BERMS, BERMS2, KORNET_P, KORNET_P2,
   PATRIOT_POS, PATRIOT_YAW, PATRIOT_MUZZLES, PATRIOT_REAR, PATRIOT_LAUNCH_LOCAL, S400_POS, S400_YAW, S400_MUZZLES, S400_LAUNCH_LOCAL,
 } from './geo.ts';
-import { groundH, houseBlocks, HOUSES, COVER } from './land.ts';
+import { groundH, houseBlocks, HOUSES, HOUSE_TYPES, COVER, TRENCHES } from './land.ts';
 import type { House } from './land.ts';
 
 // ===== الوحدات =====
@@ -60,6 +60,7 @@ export type SAct = 'idle' | 'move' | 'rush' | 'fire' | 'reload' | 'crawl';
 export interface Sol {
   id: number; p: V3; tgt: V3; off: V3; pose: SPose; act: SAct; team: 0 | 1; role: 'rifle' | 'mg' | 'rpg' | 'at';
   alive: boolean; mag: number; nextShot: number; lastShot: number; react: number; yaw: number; cv: number; dieT: number; hidden: boolean;
+  y: number; slot: number; cyc: number; peek: boolean;   // TH6.6: ارتفاع (سطح/خندق)، موقع بالبيت، وقت التبديل، طالع يرمي؟
 }
 // ===== أحداث للرسم =====
 export type Fx =
@@ -140,9 +141,11 @@ export function newWorld(seed = 11): World {
   // مشاة بالبيوت الغربية من قرية الطريق (كل حضيرة ببيت)
   const westHouses = [...FRONT_HOUSES].sort((a, b) => a.x - b.x);
   const pickHouse = (zSign: number, k: number) => westHouses.filter(h => Math.sign(h.z - VILLAGE_C[2]) === zSign)[k];
-  [pickHouse(-1, 0), pickHouse(1, 0), pickHouse(-1, 2), pickHouse(1, 3)].forEach((h, i) => {
+  [pickHouse(-1, 0), pickHouse(1, 0), pickHouse(1, 3)].forEach((h, i) => {
     if (!h) return; const s = U('inf', 'iq', [h.x, 0, h.z], WEST, 'مشاة القرية', { state: 'house', house: h.i, role: 'line', team: i }); w.houseOwner[h.i] = 'iq'; void s;
   });
+  // TH6.6: حضيرة بالخنادق على طرف القرية الغربي (خط الدفاع الأول)، تنسحب للبيوت إذا انضغطت
+  { const t = TRENCHES[0]; U('inf', 'iq', [(t[0] + t[2]) / 2 + 2, 0, (t[1] + t[3]) / 2], WEST, 'مشاة الخندق', { state: 'hold', role: 'line', team: 2 }); }
   U('kornet', 'iq', KORNET_P, WEST, 'فريق كورنيت', { role: 'flank', state: 'hold' });
   // الاحتياط: دبابتين و BMP بيها حضيرة، ورا التل شمال القرية
   U('abrams', 'iq', add(RESERVE_P, [0, 0, -30]), [0, 0, -1], 'الاحتياط', { role: 'reserve', state: 'hold' });
@@ -542,8 +545,31 @@ function initSols(w: World, u: Unit) {
     const team = (i % 2) as 0 | 1, role: Sol['role'] = u.kind === 'kornet' ? (i === 0 ? 'at' : 'rifle') : i === 1 && n >= 5 ? 'mg' : i === 2 && u.rpg > 0 ? 'rpg' : 'rifle';
     const off: V3 = u.kind === 'kornet' ? [i === 0 ? 0 : (i % 2 ? -2.5 : 2.5), 0, i === 0 ? 0 : -1.5 - r()] : [(team ? 1 : -1) * (2.5 + r() * 8), 0, -r() * 12]   /* فواصل 5–10م غير منتظمة (ATP 3-21.8) */;
     u.sol.push({ id: w.nextSol++, p: add(u.p, rotY(off, u.yaw)), tgt: [...u.p] as V3, off, pose: 'stand', act: 'idle', team, role, alive: i < u.men, mag: role === 'mg' ? 100 : 30,
-      nextShot: w.T + r() * 3, lastShot: -99, react: r() * 1.2, yaw: u.yaw, cv: -1, dieT: i < u.men ? -1 : w.T, hidden: false });
+      nextShot: w.T + r() * 3, lastShot: -99, react: r() * 1.2, yaw: u.yaw, cv: -1, dieT: i < u.men ? -1 : w.T, hidden: false, y: 0, slot: -1, cyc: 0, peek: false });
   }
+}
+// TH6.6: مواقع رمي لكل بيت: حافة السطح (البيوت ذات السطح المستوي) وزوايا البيت من برّا
+interface HSlot { x: number; z: number; y: number; nx: number; nz: number; roof: boolean }
+const FLAT_ROOF = new Set(['h_arabic4', 'h_arab1', 'h_arab2', 'h_arabic1', 'h_desert']);
+const slotCache = new Map<number, HSlot[]>();
+export function houseSlots(hi: number): HSlot[] {
+  let out = slotCache.get(hi); if (out) return out; out = [];
+  const h = HOUSES[hi], cs = Math.cos(h.rot), sn = Math.sin(h.rot), W2 = h.w / 2, D2 = h.d / 2;
+  const P = (lx: number, lz: number, y: number, nx: number, nz: number, roof: boolean) => { const l = Math.hypot(nx, nz) || 1; out!.push({ x: h.x + lx * cs + lz * sn, z: h.z - lx * sn + lz * cs, y, nx: (nx * cs + nz * sn) / l, nz: (-nx * sn + nz * cs) / l, roof }); };
+  if (FLAT_ROOF.has(HOUSE_TYPES[h.t].model)) { const y = h.h - 0.3;   // أرضية السطح تحت حافة الستارة بشوية
+    for (const t of [-0.28, 0.28]) { P(W2 - 0.9, t * h.d, y, 1, 0, true); P(-W2 + 0.9, t * h.d, y, -1, 0, true); P(t * h.w, D2 - 0.9, y, 0, 1, true); P(t * h.w, -D2 + 0.9, y, 0, -1, true); } }
+  for (const [a, b] of [[1, 1], [1, -1], [-1, 1], [-1, -1]]) P(a * (W2 + 0.8), b * (D2 + 0.8), 0, a, b, false);
+  slotCache.set(hi, out); return out;
+}
+/** رمي جندي (الشكل والصوت؛ الضرر بحساب الحضيرة) */
+function solFire(w: World, u: Unit, s: Sol, tgtU: Unit, pinned: boolean) {
+  const r = w.r2, mg = s.role === 'mg', n = mg ? 5 + ((r() * 5) | 0) : 1 + ((r() * 3) | 0);
+  let aim: V3 = tgtU.p; if (tgtU.sol.length) { const al = tgtU.sol.filter(q => q.alive && !q.hidden); if (al.length) aim = al[(r() * al.length) | 0].p; }
+  const spread = 3 + dist2d(aim, s.p) / 60;
+  w.fx.push({ k: 'shot', unit: u.id, sid: s.id, p: add(s.p, [0, SOL_H[s.pose] + s.y, 0]), to: add(aim, [(r() - 0.5) * spread, tgtU.house >= 0 ? 3 : 0.8, (r() - 0.5) * spread]), n, tracer: mg || r() < 0.12, mg, surf: tgtU.house >= 0 ? 'wall' : isVeh(tgtU) ? 'metal' : 'ground' });
+  s.mag -= n; s.lastShot = w.T;
+  s.nextShot = w.T + (mg ? 2.2 + r() * 2.5 : 1.1 + r() * 2.6) * (1 + u.supp * 1.2) * (pinned ? 1.8 : 1);
+  if (s.mag <= 0) { s.act = 'reload'; s.nextShot = w.T + (mg ? 5 : 2.6) + r(); }
 }
 /** منو ينصاب: المكشوف أكثر (واقف/يركض، مو ورا ستر) */
 function pickVictim(w: World, u: Unit) {
@@ -568,8 +594,10 @@ function outOfHouse(p: V3): V3 {
 function solStep(w: World, u: Unit, dt: number) {
   if (!u.sol.length) { if (!u.alive) return; initSols(w, u); }
   const r = w.r2, think = ((w.T * 10) | 0) !== (((w.T - dt) * 10) | 0);
+  const inHouse = u.alive && u.house >= 0 && u.state !== 'mounted';
   const hidden = !u.alive || u.state === 'mounted' || u.house >= 0;
-  if (think && u.alive && !hidden) u.ct = u.supp > 0.15 || w.T - u.firedT < 6 || !!nearestFoe(w, u, 420);
+  if (think && u.alive && (!hidden || inHouse)) u.ct = u.supp > 0.15 || w.T - u.firedT < 6 || !!nearestFoe(w, u, 420);
+  if (inHouse) { houseStep(w, u, dt, think); return; }
   const moving = u.spd > 0.5, running = u.pose === 'run' || u.state === 'retreat', pinned = u.state === 'pin';
   const bounding = moving && u.ct && running && u.state !== 'retreat' && u.kind === 'inf';
   if (bounding && w.T > u.bT) { u.bt = (1 - u.bt) as 0 | 1; u.bT = w.T + 3 + r() * 2.2;   // «أگوم، يشوفني، أنزل»: ركضة 3–5 ث ثم يتبادلون
@@ -610,17 +638,30 @@ function solStep(w: World, u: Unit, dt: number) {
       if (engaged && tgtU) s.yaw = Math.atan2(tgtU.p[0] - s.p[0], tgtU.p[2] - s.p[2]); else if (s.cv >= 0) s.yaw = Math.atan2(COVER[s.cv].nx, COVER[s.cv].nz);
     }
     // الرمي: كل جندي على كيفه (الضرر يبقى بحساب الحضيرة، هذا الشكل والصوت)
+    s.y = s.cv >= 0 && COVER[s.cv].trench && dist2d(s.p, s.tgt) < 1.2 ? -0.9 : 0;   // بالخندق: نازل لنص جسمه
     if (s.act === 'reload' && w.T >= s.nextShot) { s.act = 'idle'; s.mag = s.role === 'mg' ? 100 : 30; }
-    if (engaged && tgtU && s.act !== 'rush' && s.act !== 'reload' && s.role !== 'at' && w.T >= s.nextShot && s.react <= 0 && (arrived || s.act === 'move')) {
-      const mg = s.role === 'mg', n = mg ? 5 + ((r() * 5) | 0) : 1 + ((r() * 3) | 0);
-      let aim: V3 = tgtU.p; if (tgtU.sol.length) { const al = tgtU.sol.filter(q => q.alive); if (al.length) aim = al[(r() * al.length) | 0].p; }
-      const spread = 3 + dist2d(aim, s.p) / 60;
-      w.fx.push({ k: 'shot', unit: u.id, sid: s.id, p: add(s.p, [0, SOL_H[s.pose], 0]), to: add(aim, [(r() - 0.5) * spread, tgtU.house >= 0 ? 3 : 0.8, (r() - 0.5) * spread]), n, tracer: mg || r() < 0.12, mg, surf: tgtU.house >= 0 ? 'wall' : isVeh(tgtU) ? 'metal' : 'ground' });
-      s.mag -= n; s.lastShot = w.T;
-      s.nextShot = w.T + (mg ? 2.2 + r() * 2.5 : 1.1 + r() * 2.6) * (1 + u.supp * 1.2) * (pinned ? 1.8 : 1);
-      if (s.mag <= 0) { s.act = 'reload'; s.nextShot = w.T + (mg ? 5 : 2.6) + r(); }
-    }
+    if (engaged && tgtU && s.act !== 'rush' && s.act !== 'reload' && s.role !== 'at' && w.T >= s.nextShot && s.react <= 0 && (arrived || s.act === 'move')) solFire(w, u, s, tgtU, pinned);
   }
+}
+/** حضيرة ببيت: كل جندي يطلع بموقع (سطح/زاوية) باتجاه العدو، يرمي 2–4 ث، ينزل يتخبى 3–6 ث، ويطلع من مكان ثاني */
+function houseStep(w: World, u: Unit, dt: number, think: boolean) {
+  const r = w.r2, slots = houseSlots(u.house), td = threatDir(w, u);
+  const engaged = w.T - u.firedT < 6 && u.ct, tgtU = engaged ? w.units.find(x => x.id === u.target && x.alive) : undefined;
+  for (const s of u.sol) {
+    if (!s.alive) continue; if (s.cv >= 0) { w.solCover.delete(s.cv); s.cv = -1; }
+    if (!u.ct) { s.hidden = true; s.peek = false; s.p = [...u.p] as V3; s.y = 0; s.act = 'idle'; continue; }   // ماكو عدو قريب: جوّه البيت
+    if (s.slot >= slots.length) { s.slot = -1; s.peek = false; }   // انتقلوا لبيت ثاني
+    if (s.slot < 0 || w.T > s.cyc) {
+      if (s.peek && s.slot >= 0) { s.peek = false; s.cyc = w.T + 3 + r() * 3.5; }
+      else { const cand = slots.map((q, i) => [i, q.nx * td[0] + q.nz * td[1]] as [number, number]).filter(q => q[1] > 0.1);
+        const pool = cand.length ? cand : slots.map((_, i) => [i, 0] as [number, number]); s.slot = pool[(r() * pool.length) | 0][0]; s.peek = true; s.cyc = w.T + 2 + r() * 2.5; s.react = r() * 0.6; }
+    }
+    const q = slots[s.slot]; s.hidden = !s.peek; s.p = [q.x, 0, q.z]; s.y = q.y; s.pose = q.roof ? 'crouch' : 'stand'; s.yaw = Math.atan2(q.nx, q.nz);
+    if (s.act === 'reload' && w.T >= s.nextShot) { s.act = 'idle'; s.mag = s.role === 'mg' ? 100 : 30; }
+    if (s.act !== 'reload') s.act = s.peek && engaged ? 'fire' : 'idle';
+    if (s.peek && engaged && tgtU) { s.yaw = Math.atan2(tgtU.p[0] - s.p[0], tgtU.p[2] - s.p[2]); s.react -= dt; if (s.act === 'fire' && w.T >= s.nextShot && s.react <= 0 && s.role !== 'at') solFire(w, u, s, tgtU, false); }
+  }
+  void think;
 }
 // ----- الستر (TH5.5): حيطان الأحواش وأكياس الرمل. الحضيرة الواكفة تروح لأقرب ستر يواجه العدو؛ وإذا وراه تقل إصاباتها -----
 function threatDir(w: World, u: Unit): [number, number] {
@@ -716,6 +757,13 @@ function infDefend(w: World, u: Unit, dt: number) {
     if (u.state !== 'rush' && u.stateT > 6 + w.r() * 4) { u.state = 'rush'; u.stateT = 0; u.goal = add(u.p, scale(norm(sub(e.p, u.p)), Math.min(d, 50))); }
     else if (u.state === 'rush' && (!u.goal || dist2d(u.p, u.goal) < 3)) { u.state = 'hold'; u.stateT = 0; }
     u.pose = u.state === 'rush' ? 'run' : 'fire'; if (u.state === 'hold') seekCover(w, u); return;
+  }
+  if (u.state === 'hold' && u.role === 'line') {   // بالخندق: يبقون يرمون، وينسحبون للبيوت إذا انضغطوا أو العدو وصل
+    u.pose = u.supp > 0.6 ? 'prone' : 'fire';
+    const close = w.units.some(o => o.alive && o.side === 'en' && o.kind === 'inf' && dist2d(o.p, u.p) < 70 && o.men > u.men);
+    /* الخندق ما ينترك ويا انسحاب الدبابات: بس لما ينضغط أو العدو يوصل */
+    if ((u.men <= 3 && u.supp > 0.5) || close) { u.state = 'retreat'; u.stateT = 0; u.goal = null; releaseCover(w, u); }
+    return;
   }
   if (u.state === 'house' && u.house >= 0) {
     u.pose = 'fire';
@@ -867,7 +915,7 @@ function infFire(w: World, u: Unit) {
   u.cd = SPEC.inf.reload * (0.8 + w.r() * 0.6) * (1 + u.supp); u.firedT = w.T; u.target = t.id;
   const d = dist2d(t.p, u.p), cover = t.house >= 0 ? 0.3 : (t.pose === 'prone' ? 0.45 : 1) * coverK(t, 0.5);
   const pk = 0.035 * u.men / 7 * (1 - d / 450) * cover * (1 - u.supp * 0.6) * (0.4 + v);
-  if (u.house >= 0 || !u.sol.length) w.fx.push({ k: 'volley', unit: u.id, p: add(u.p, [0, u.house >= 0 ? 3 : u.pose === 'prone' ? 0.4 : 1.3, 0]), to: add(t.p, [(w.r() - 0.5) * 6, 1, (w.r() - 0.5) * 6]), n: Math.max(1, Math.round(u.men / 2)), tracer: w.r() < 0.5, inf: true });
+  if (!u.sol.length) w.fx.push({ k: 'volley', unit: u.id, p: add(u.p, [0, u.house >= 0 ? 3 : u.pose === 'prone' ? 0.4 : 1.3, 0]), to: add(t.p, [(w.r() - 0.5) * 6, 1, (w.r() - 0.5) * 6]), n: Math.max(1, Math.round(u.men / 2)), tracer: w.r() < 0.5, inf: true });
   w.stats.rounds += u.men * 3;
   t.supp = Math.min(1, t.supp + 0.16 * (t.house >= 0 ? 0.6 : 1));
   if (w.r() < pk * 4) { const by = byName(u); w.schedule.push({ t: w.T + d / 800, f: (w) => casualty(w, t, 1, by) }); }

@@ -6,7 +6,9 @@ import { prune, dedup, join, flatten, weld, resample } from '@gltf-transform/fun
 import sharp from 'sharp';
 import fs from 'fs';
 const [src, dst] = process.argv.slice(2);
-const KEEP = ['run', 'simple walk', 'simple shoot', 'crouch shoot', 'pron idle', 'pron shot', 'pron walk', 'simple death', 'pron death', 'idle simple'];
+// TH6.2: كل الحركات ما عدا القفز (مگعمز، مشي مگعمز، تبديل مخزن، تحولات بين الوضعيات، موت مگعمز)
+const KEEP = ['run', 'simple walk', 'simple shoot', 'crouch shoot', 'pron idle', 'pron shot', 'pron walk', 'simple death', 'pron death', 'idle simple',
+  'crouch idle', 'walk crouch', 'crouch death', 'reload idle', 'reload crouch', 'pron reload', 'reload walk', 'reload run', 'simple to crouch', 'idle simple to crouch', 'crouch to pron', 'pron to crouch'];
 const io = new NodeIO().registerExtensions(ALL_EXTENSIONS);
 const doc = await io.read(src), root = doc.getRoot();
 for (const a of root.listAnimations()) if (!KEEP.includes(a.getName())) a.dispose();

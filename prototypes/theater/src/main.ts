@@ -13,6 +13,7 @@ import {
   V3, add, sub, scale, len, norm, lerp, clamp, rng, World, newWorld, step, order, Order, ORDER_CD, Unit, Air, Fx, SITES, riverX, RIVER_W, CITY_R,
   HIGHWAY_Z, BERMS, AIR_AR, SIDE_AR, PATRIOT_POS, S400_POS, S400_SCALE, dist2d, site, angDiff,
 } from './sim';
+import type { Sol } from './sim';
 import { groundH, groundN, ROADS, HOUSES, COVER } from './land';
 import { buildWorld, loadHeight, SiteProp, WorldOut } from './world';
 
@@ -246,11 +247,14 @@ function spawnModel(kind: string, wreck = false): { root: TransformNode; inner: 
 
 // ===== الجنود (TH5.4): حركات مخبوزة بقوام (VAT). كل الجنود نسخ رقيقة (thin instances) لقطعة وحدة؛
 // وضع العظام لكل لقطة محفوظ بقوام، والكارت يقراه — فـ 300 جندي تقريباً بكلفة جندي واحد على المعالج.
-type Anim = 'run' | 'simple walk' | 'simple shoot' | 'crouch shoot' | 'pron idle' | 'pron shot' | 'pron walk' | 'simple death' | 'pron death' | 'idle simple';
+type Anim = 'run' | 'simple walk' | 'simple shoot' | 'crouch shoot' | 'pron idle' | 'pron shot' | 'pron walk' | 'simple death' | 'pron death' | 'idle simple'
+  | 'crouch idle' | 'walk crouch' | 'crouch death' | 'reload idle' | 'reload crouch' | 'pron reload' | 'reload walk' | 'reload run' | 'simple to crouch' | 'idle simple to crouch' | 'crouch to pron' | 'pron to crouch';
 const SOL_FPS = 30, SOL_CAP = 700;
 let solMesh: Mesh | null = null, SOL_S = 1, vatTime = 0;
 const solW0 = Matrix.Identity(), animRange = new Map<string, { s: number; e: number; fps: number; dur: number }>();
 let solMat = new Float32Array(16), solSet = new Float32Array(4), solMan: BakedVertexAnimationManager | null = null;
+// TH6.2: نقاط التعليق لكل لقطة (بإحداثيات الجندي): الكتف اليمين، اليد اليمين، اليد اليسار — للسلاح وفوهته
+let solAtt = new Float32Array(9);
 async function loadSoldier() {
   const c = await LoadAssetContainerAsync(modelUrl('soldier'), scene, { pluginExtension: '.gltf' });
   c.materials.forEach(m => { if (m instanceof PBRMaterial) { m.environmentIntensity = 0; m.directIntensity = PBR_DIRECT * 1.35; m.metallic = 0; m.roughness = 0.85; m.emissiveColor = new Color3(0.035, 0.035, 0.03); m.maxSimultaneousLights = 2 + NL; } });
@@ -265,13 +269,17 @@ async function loadSoldier() {
   const bb = body.getBoundingInfo().boundingBox, h = bb.maximumWorld.y - bb.minimumWorld.y; SOL_S = h > 0.01 ? 1.8 / h : 1;
   // خبز الحركات: كل حركة نمشي لقطاتها (30 بالثانية) ونحفظ مصفوفات العظام
   solW0.copyFrom(body.getWorldMatrix());
-  const frames: Float32Array[] = [];
+  const frames: Float32Array[] = [], att: number[] = [];
+  const boneNode = (nm: string) => sk.bones.find(b => b.name.startsWith('mixamorig:' + nm + '_'))?.getTransformNode() ?? null;
+  const attN = ['RightShoulder', 'RightHand', 'LeftHand'].map(boneNode), invB = Matrix.Invert(body.getWorldMatrix());
   for (const g of c.animationGroups) {
     const fps = g.targetedAnimations[0]?.animation.framePerSecond ?? 60, dur = Math.max(0.05, (g.to - g.from) / fps), n = Math.max(2, Math.round(dur * SOL_FPS) + 1), s0 = frames.length;
     g.start(false, 1, g.from, g.to); g.pause();
-    for (let i = 0; i < n; i++) { g.goToFrame(g.from + (g.to - g.from) * i / (n - 1)); sk.bones.forEach(b => b.getTransformNode()?.computeWorldMatrix(true)); sk.prepare(true); frames.push(sk.getTransformMatrices(body).slice()); }
+    for (let i = 0; i < n; i++) { g.goToFrame(g.from + (g.to - g.from) * i / (n - 1)); sk.bones.forEach(b => b.getTransformNode()?.computeWorldMatrix(true)); sk.prepare(true); frames.push(sk.getTransformMatrices(body).slice());
+      for (const nd of attN) { const q = nd ? Vector3.TransformCoordinates(nd.getAbsolutePosition(), invB) : Vector3.Zero(); att.push(q.x, q.y, q.z); } }
     g.stop(); animRange.set(g.name, { s: s0, e: frames.length - 1, fps: (n - 1) / dur, dur });
   }
+  solAtt = new Float32Array(att);
   const data = new Float32Array(frames.length * frames[0].length); frames.forEach((f, i) => data.set(f, i * f.length));
   solMan = new BakedVertexAnimationManager(scene); solMan.texture = new VertexAnimationBaker(scene, body).textureFromBakedVertexData(data); body.bakedVertexAnimationManager = solMan;
   c.animationGroups.forEach(g => g.dispose());
@@ -282,69 +290,97 @@ async function loadSoldier() {
   body.thinInstanceRegisterAttribute('bakedVertexAnimationSettingsInstanced', 4); body.thinInstanceSetBuffer('bakedVertexAnimationSettingsInstanced', solSet, 4, false);
   body.thinInstanceCount = 0; body.alwaysSelectAsActiveMesh = true; body.isVisible = true; body.receiveShadows = true; caster(body);
   solMesh = body;
+  // آر بي جي-7 (TastyTony، CC BY): طوله على x (القذيفة لـ +x بـ glTF = −x ببابلون) ← نلفه للـ +z
+  try {
+    const rc = await LoadAssetContainerAsync(modelUrl('p_rpg'), scene, { pluginExtension: '.gltf' }); rc.addAllToScene();
+    rc.materials.forEach(m => { if (m instanceof PBRMaterial) { m.environmentIntensity = 0; m.directIntensity = PBR_DIRECT; m.metallic = Math.min(m.metallic ?? 1, 0.15); m.maxSimultaneousLights = 2 + NL; } });
+    const rms = rc.meshes.filter(m => m.getTotalVertices() > 0) as Mesh[]; let mn = new Vector3(1e9, 1e9, 1e9), mx = new Vector3(-1e9, -1e9, -1e9);
+    rms.forEach(m => { m.computeWorldMatrix(true); const bb = m.getBoundingInfo().boundingBox; mn = Vector3.Minimize(mn, bb.minimumWorld); mx = Vector3.Maximize(mx, bb.maximumWorld); });
+    const N = Matrix.Translation(-(mn.x + mx.x) / 2, -(mn.y + mx.y) / 2, -(mn.z + mx.z) / 2).multiply(Matrix.RotationY(Math.PI / 2)).multiply(Matrix.Scaling(1.25 / 1.33, 1.25 / 1.33, 1.25 / 1.33));
+    for (const m of rms) { const wmx = m.computeWorldMatrix(true).clone(); m.setParent(null); m.position.setAll(0); m.rotationQuaternion = null; m.rotation.setAll(0); m.scaling.setAll(1); m.bakeTransformIntoVertices(wmx.multiply(N)); m.isPickable = false;
+      m.thinInstanceSetBuffer('matrix', rpgMat, 16, false); m.thinInstanceCount = 0; m.alwaysSelectAsActiveMesh = true; caster(m); }
+    rc.meshes.filter(m => m.getTotalVertices() === 0).forEach(m => m.dispose()); rc.transformNodes.forEach(t => t.dispose()); rpgMeshes = rms;
+  } catch (e) { console.warn('rpg', e); }
   console.log('soldier VAT', { frames: frames.length, bones: sk.bones.length, anims: [...animRange.keys()].join(',') });
 }
 // جندي = بيانات بس (مكان، اتجاه، حركة)؛ الرسم كله بـ drawSoldiers
-interface Fig { x: number; z: number; yaw: number; anim: Anim; off: V3; ph: number; spd: number; dead: boolean; dieT: number; freeze: boolean }
-const corpses: Fig[] = [];
-const newFig = (off: V3): Fig => ({ x: 0, z: 0, yaw: 0, anim: 'idle simple', off, ph: Math.random() * 60, spd: 0.9 + Math.random() * 0.2, dead: false, dieT: 0, freeze: false });
-interface SVis { figs: Fig[]; lastMen: number; kornet?: TransformNode }
+// ===== رسم الجنود (TH6.1): كل جندي من مكانه ووضعيته وحالته بالمحاكاة؛ هنا بس اختيار الحركة والانتقالات =====
+interface SV { ph: number; spd: number; dieT: number; die: Anim | ''; pose: string; tr: Anim | ''; trT: number; dx: number; dz: number; mz: V3 | null }
+const solVis = new Map<number, SV>(), deadOrder: number[] = [];
+interface SVis { kornet?: TransformNode }
 const squadVis = new Map<number, SVis>();
-const FORM = (i: number, n: number, id: number): V3 => { const k = i - (n - 1) / 2, j = ((id * 7 + i * 13) % 10) / 10 - 0.5; return [k * 4.5 + j * 1.5, 0, -Math.abs(k) * 3 + j * 2]; };
+const TRANS: Record<string, Anim> = { 'stand>crouch': 'simple to crouch', 'crouch>prone': 'crouch to pron', 'stand>prone': 'crouch to pron', 'prone>crouch': 'pron to crouch' };
 function syncSquads(dt: number) {
   const VS = visScale(0.6);
   for (const u of W.units) {
-    if (u.kind !== 'inf' && u.kind !== 'kornet') continue;
-    let sv = squadVis.get(u.id);
-    if (!sv) { sv = { figs: [], lastMen: u.men }; squadVis.set(u.id, sv);
-      if (u.kind === 'kornet') { const m = spawnModel('kornet'); sv.kornet = m.root; } }
-    const hide = !u.alive || u.state === 'mounted' || (u.house >= 0 && u.state === 'house') || (u.kind === 'inf' && u.house >= 0);
-    if (sv.kornet) { sv.kornet.position.set(u.p[0], groundH(u.p[0], u.p[2]), u.p[2]); sv.kornet.scaling.setAll(VS); sv.kornet.rotation.y = u.yaw; sv.kornet.setEnabled(u.alive); }
-    // جندي انصاب: يطيح ويبقى بمكانه
-    while (sv.lastMen > u.men) { sv.lastMen--; const f = sv.figs.pop(); if (f) { f.anim = u.pose === 'prone' ? 'pron death' : 'simple death'; f.dead = true; f.dieT = vatTime; corpses.push(f); if (corpses.length > 160) corpses.shift(); } }
-    const want = hide ? 0 : u.men;   // كل جندي بالحضيرة يبين (قبل: 5 بالكثير)
-    while (sv.figs.length < want) sv.figs.push(newFig(FORM(sv.figs.length, u.menMax, u.id)));
-    while (sv.figs.length > want) sv.figs.pop();
-    const moving = u.spd > 0.3, recent = W.T - u.firedT < 2.5;
-    const anim: Anim = u.pose === 'prone' ? (moving ? 'pron walk' : recent ? 'pron shot' : 'pron idle') : u.pose === 'run' || u.spd > 2.5 ? 'run' : moving ? 'simple walk' : recent || u.pose === 'fire' ? (u.kind === 'kornet' ? 'crouch shoot' : 'simple shoot') : 'idle simple';
-    const cs = Math.cos(u.yaw), sn = Math.sin(u.yaw);
-    const c = u.cover && u.cv >= 0 && u.kind === 'inf' && !moving ? COVER[u.cv] : null;
-    sv.figs.forEach((f, i) => {
-      f.freeze = false;
-      if (c) {
-        // ورا الستر (TH5.5): صف مگعمز على طول الحايط/الأكياس، وجوههم للتهديد؛ اللي ما يرمي ثابت مگعمز
-        const n1 = Math.min(5, sv!.figs.length), row = i < n1 ? 0 : 1, j = row ? i - n1 : i, nr = row ? sv!.figs.length - n1 : n1;   // صفين: الأول لازق بالستر، الثاني وراه
-        const k = (j - (nr - 1) / 2 + row * 0.5) * 1.6 * VS, tx = -c.nz, tz = c.nx, back = 0.2 + row * 1.6 * VS;
-        f.x = c.x + tx * k - c.nx * back; f.z = c.z + tz * k - c.nz * back; f.yaw = Math.atan2(c.nx, c.nz) + (i % 2 ? 0.12 : -0.1);
-        f.anim = 'crouch shoot'; f.freeze = !(recent && (i + Math.floor(W.T / 3)) % 3 !== 0);
-        return;
-      }
-      const o = u.kind === 'kornet' ? ([i ? -2.2 : 1.6, 0, -1.2] as V3) : f.off;
-      f.x = u.p[0] + (o[0] * cs + o[2] * sn) * VS; f.z = u.p[2] + (-o[0] * sn + o[2] * cs) * VS; f.yaw = u.yaw + (i % 2 ? 0.15 : -0.1);
-      f.anim = i % 3 === 1 && anim === 'simple shoot' ? 'crouch shoot' : anim;
-    });
+    if (u.kind !== 'kornet') continue;
+    let sv = squadVis.get(u.id); if (!sv) { sv = { kornet: spawnModel('kornet').root }; squadVis.set(u.id, sv); }
+    const g = u.sol.find(s => s.role === 'at') , p = g ? g.p : u.p;
+    sv.kornet!.position.set(p[0] + 0.8, groundH(p[0], p[2]), p[2]); sv.kornet!.scaling.setAll(VS); sv.kornet!.rotation.y = g ? g.yaw : u.yaw; sv.kornet!.setEnabled(u.alive && u.state !== 'mounted');
   }
   void dt;
 }
+function solAnim(u: Unit, s: Sol): Anim {
+  const P = s.pose;
+  if (s.act === 'rush') return 'run';
+  if (s.act === 'crawl') return 'pron walk';
+  if (s.act === 'move') return P === 'crouch' ? 'walk crouch' : u.pose === 'run' || u.state === 'retreat' ? 'run' : 'simple walk';
+  if (s.act === 'reload') return P === 'prone' ? 'pron reload' : P === 'crouch' ? 'reload crouch' : 'reload idle';
+  if (s.act === 'fire' && W.T - s.lastShot < 0.8) return P === 'prone' ? 'pron shot' : P === 'crouch' ? 'crouch shoot' : 'simple shoot';
+  return P === 'prone' ? 'pron idle' : P === 'crouch' ? 'crouch idle' : 'idle simple';
+}
 const tS = new Vector3(), tT = new Vector3(), tQ = new Quaternion(), tM = new Matrix(), tO = new Matrix();
+const rpgMat = new Float32Array(64 * 16); let rpgMeshes: Mesh[] = [];
+/** نفس حساب الكارت لرقم اللقطة (bakedVertexAnimation)، حتى نعرف وين اليد بهاللحظة */
+function vatFrame(k: number) { const st = solSet[k], en = solSet[k + 1], off = solSet[k + 2], sp = solSet[k + 3], tot = en - st + 1, t = vatTime * sp / tot, corr = t < 1 ? 0 : 1, num = tot - corr;
+  return Math.max(0, Math.floor(((((t - Math.floor(t)) * num + off) % num) + num) % num) + st + corr); }
+const aS = new Vector3(), aR = new Vector3(), aL = new Vector3(), aV = new Vector3();
+/** مكان الجندي بالرسم: نفس مكانه بالمحاكاة، بس البعد عن مركز الحضيرة يتكبر ويا التكبير البصري */
+const solAt = (u: Unit, p: V3, VS: number): [number, number] => [u.p[0] + (p[0] - u.p[0]) * VS, u.p[2] + (p[2] - u.p[2]) * VS];
 function drawSoldiers(dt: number) {
   if (!solMesh || !solMan) return;
   vatTime += dt * slowK * simSpeed; solMan.time = vatTime;
-  const VS = visScale(0.6), cp = cam.globalPosition; let n = 0;
-  const put = (f: Fig) => {
-    if (n >= SOL_CAP) return; const y = groundH(f.x, f.z); if (Math.abs(f.x - cp.x) + Math.abs(f.z - cp.z) > 3200) return;
-    tS.setAll(SOL_S * VS); tT.set(f.x, y, f.z); Quaternion.RotationYawPitchRollToRef(f.yaw, 0, 0, tQ); Matrix.ComposeToRef(tS, tQ, tT, tM); solW0.multiplyToRef(tM, tO); tO.copyToArray(solMat, n * 16);
-    const r = animRange.get(f.anim) ?? animRange.get('idle simple')!, tot = r.e - r.s + 1, k = n * 4;
-    if (f.dead) {
-      if (vatTime - f.dieT < r.dur) { const sp = r.fps; solSet[k] = r.s; solSet[k + 1] = r.e; solSet[k + 2] = ((-f.dieT * sp) % tot + tot) % tot; solSet[k + 3] = sp; }
-      else { solSet[k] = r.e - 1; solSet[k + 1] = r.e; solSet[k + 2] = 1.5; solSet[k + 3] = 0.0001; }   // جثة: آخر لقطة ثابتة
-    } else if (f.freeze) { solSet[k] = r.s; solSet[k + 1] = r.e; solSet[k + 2] = Math.floor(tot * 0.15) + 0.5; solSet[k + 3] = 0.0001; }   // وضعية مگعمز ثابتة
-    else { solSet[k] = r.s; solSet[k + 1] = r.e; solSet[k + 2] = f.ph % tot; solSet[k + 3] = r.fps * f.spd; }
-    n++;
-  };
-  for (const sv of squadVis.values()) sv.figs.forEach(put);
-  corpses.forEach(put);
+  const VS = visScale(0.6), cp = cam.globalPosition; let n = 0, nR = 0;
+  const once = (k: number, a: Anim, t0: number) => { const r = animRange.get(a)!, tot = r.e - r.s + 1; if (vatTime - t0 < r.dur) { solSet[k] = r.s; solSet[k + 1] = r.e; solSet[k + 2] = ((-t0 * r.fps) % tot + tot) % tot; solSet[k + 3] = r.fps; return true; } return false; };
+  const hold = (k: number, a: Anim) => { const r = animRange.get(a)!; solSet[k] = r.e - 1; solSet[k + 1] = r.e; solSet[k + 2] = 1.5; solSet[k + 3] = 0.0001; };
+  const lim = new Set(deadOrder.slice(-160));
+  for (const u of W.units) {
+    if (u.kind !== 'inf' && u.kind !== 'kornet') continue;
+    for (const s of u.sol) {
+      if (n >= SOL_CAP) break;
+      let v = solVis.get(s.id); if (!v) { v = { ph: Math.random() * 60, spd: 0.9 + Math.random() * 0.2, dieT: -1, die: '', pose: s.pose, tr: '', trT: 0, dx: 0, dz: 0, mz: null }; solVis.set(s.id, v); }
+      if (!s.alive && v.dieT < 0) { if (s.hidden || u.state === 'mounted') continue; v.dieT = vatTime; v.die = v.pose === 'prone' ? 'pron death' : v.pose === 'crouch' ? 'crouch death' : 'simple death'; [v.dx, v.dz] = solAt(u, s.p, VS); deadOrder.push(s.id); }
+      if (!s.alive && !lim.has(s.id)) continue;
+      if (s.alive && s.hidden) continue;
+      const [x, z] = s.alive ? solAt(u, s.p, VS) : [v.dx, v.dz];
+      if (Math.abs(x - cp.x) + Math.abs(z - cp.z) > 3200) continue;
+      tS.setAll(SOL_S * VS); tT.set(x, groundH(x, z), z); Quaternion.RotationYawPitchRollToRef(s.yaw, 0, 0, tQ); Matrix.ComposeToRef(tS, tQ, tT, tM); solW0.multiplyToRef(tM, tO); tO.copyToArray(solMat, n * 16);
+      const k = n * 4;
+      if (!s.alive) { if (!once(k, v.die as Anim, v.dieT)) hold(k, v.die as Anim); }
+      else {
+        if (v.pose !== s.pose) { const t = TRANS[v.pose + '>' + s.pose]; if (t && s.act !== 'rush' && s.act !== 'move') { v.tr = t; v.trT = vatTime; } v.pose = s.pose; }   // انتقال طبيعي بين الوضعيات
+        if (!(v.tr && once(k, v.tr, v.trT))) { v.tr = ''; const a = solAnim(u, s), r = animRange.get(a) ?? animRange.get('idle simple')!, tot = r.e - r.s + 1;
+          solSet[k] = r.s; solSet[k + 1] = r.e; solSet[k + 2] = v.ph % tot; solSet[k + 3] = r.fps * v.spd * (a === 'run' && s.act !== 'rush' ? 0.9 : 1); }
+        // نقاط اليد والكتف بهاللقطة ← فوهة السلاح، والآر بي جي على الكتف
+        const f = vatFrame(k) * 9;
+        if (f + 8 < solAtt.length) {
+          Vector3.TransformCoordinatesFromFloatsToRef(solAtt[f], solAtt[f + 1], solAtt[f + 2], tO, aS); Vector3.TransformCoordinatesFromFloatsToRef(solAtt[f + 3], solAtt[f + 4], solAtt[f + 5], tO, aR); Vector3.TransformCoordinatesFromFloatsToRef(solAtt[f + 6], solAtt[f + 7], solAtt[f + 8], tO, aL);
+          aL.subtractToRef(aR, aV); const l = aV.length(), fy = Math.sin(s.yaw), fz = Math.cos(s.yaw);
+          if (l < 0.12 * VS) aV.set(fy, 0, fz); else aV.scaleInPlace(1 / l);
+          v.mz = [aL.x + aV.x * 0.45 * VS, aL.y + aV.y * 0.45 * VS, aL.z + aV.z * 0.45 * VS];
+          if (s.role === 'rpg' && u.rpg > 0 && nR < 64) {
+            // يرمي/ينشن: القاذفة على الكتف باتجاه اليدين؛ يمشي/يركض: معلّقة على الظهر بميلان
+            const aiming = s.act === 'fire' || s.act === 'idle', yaw = aiming ? Math.atan2(aV.x, aV.z) : s.yaw + 0.3, pitch = aiming ? -Math.asin(Math.max(-0.5, Math.min(0.5, aV.y))) : -1.0;
+            const px = aiming ? aS.x : aS.x - fy * 0.18 * VS, py = aS.y + (aiming ? 0.08 : -0.15) * VS, pz = aiming ? aS.z : aS.z - fz * 0.18 * VS;
+            Matrix.ComposeToRef(new Vector3(VS, VS, VS), Quaternion.RotationYawPitchRoll(yaw, pitch, 0), new Vector3(px, py, pz), tM); tM.copyToArray(rpgMat, nR * 16); nR++;
+          }
+        }
+      }
+      n++;
+    }
+  }
   solMesh.thinInstanceCount = n; solMesh.thinInstanceBufferUpdated('matrix'); solMesh.thinInstanceBufferUpdated('bakedVertexAnimationSettingsInstanced');
+  for (const m of rpgMeshes) { m.thinInstanceCount = nR; m.thinInstanceBufferUpdated('matrix'); }
 }
 
 // ===== الجسيمات: مجمّعات مشتركة =====
@@ -641,6 +677,16 @@ function handleFx(fx: Fx) {
       const vis = unitVis.get(fx.unit); if (vis) vis.shake = 1.2;
       fireS.emit({ a: fx.p, n: Qn(5), dir: scale(fx.dir, -1), spd: [10, 25], spread: 0.5, jit: 0.4 }); dust.emit({ a: G(fx.p[0], fx.p[2], 0.8), n: Qn(10), spd: [5, 14], up: -0.3, jit: 3 });
       flashLight(fx.p, 5, 60, 0.15); sfx.rocket(camD(fx.p)); break;
+    }
+    case 'shot': {
+      // طلقة/رشقة من جندي معيّن: ومضة من مكانه، متتبع أحياناً، وغبار وين توصل (TH6.1؛ الأشكال الحقيقية لكل سلاح بـ TH6.3)
+      const u = W.units.find(x => x.id === fx.unit), VS = visScale(0.6); let p = fx.p;
+      const sv = solVis.get(fx.sid); if (sv?.mz) p = sv.mz; else if (u) { const [x, z] = solAt(u, fx.p, VS); p = [x, fx.p[1], z]; }
+      muzzle.emit({ a: p, n: fx.mg ? 2 : 1, jit: 0.15 }); if (Math.random() < 0.4) puffs.emit({ a: p, n: 1, spd: [0.3, 1], jit: 0.2 });
+      const dir = norm(sub(fx.to, p)), d = len(sub(fx.to, p)), tf = d / 850, to = fx.to;
+      if (fx.tracer) for (let i = 0; i < (fx.mg ? Math.ceil(fx.n / 4) : 1); i++) vq.push({ t: W.T + i * 0.09, f: () => tracers.emit({ a: p, n: 1, dir, spd: [850, 850], life: tf, jit: 0.4 }) });
+      for (let i = 0; i < Math.min(4, fx.n); i++) vq.push({ t: W.T + tf + i * 0.08, f: () => dust.emit({ a: G(to[0] + (Math.random() - 0.5) * 3, to[2] + (Math.random() - 0.5) * 3, 0.3), n: 2, spd: [1.5, 5], up: 1.2, jit: 0.5 }) });
+      sfx.rifle(camD(p), fx.mg ? Math.min(3, fx.n) : 1); break;
     }
     case 'volley': {
       // رمي مشاة: ومضات صغيرة عند الرماة، متتبعات أحياناً، وغبار وين تضرب
@@ -974,7 +1020,7 @@ function toast(m: string) { const t = $('toast'); t.textContent = m; t.classList
 let seed = 3;
 function start() {
   sfx.init();
-  for (const sv of squadVis.values()) sv.kornet?.dispose(); squadVis.clear(); corpses.length = 0; screens.length = 0;
+  for (const sv of squadVis.values()) sv.kornet?.dispose(); squadVis.clear(); solVis.clear(); deadOrder.length = 0; screens.length = 0;
   for (const u of unitVis.values()) u.root.dispose(); unitVis.clear(); for (const a of airVis.values()) a.n.dispose(); airVis.clear();
   debris.forEach(d => d.m.dispose()); debris.length = 0; burning.length = 0; marks = []; vq.length = 0; slowWins.length = 0; decals = [];
   decal.thinInstanceSetBuffer('matrix', new Float32Array(16), 16, false); decal.thinInstanceCount = 0;

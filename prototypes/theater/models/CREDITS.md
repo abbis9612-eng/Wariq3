@@ -37,3 +37,4 @@
 | p_car1.glb | Crashed Abandoned Car - Game Ready | Rashad Ibrahimli | https://sketchfab.com/3d-models/66ef51a84c9843dda53bf0b4b9020011 |
 | p_car2.glb | Abandoned Car | Leandro Andrade | https://sketchfab.com/3d-models/c25ccc5a116342218d02dd57607e3f71 |
 | p_pickup.glb | destroyed pickup blue | Skeleton_games | https://sketchfab.com/3d-models/69efb7596fc44b1ea98d42805af9addd |
+| p_rpg.glb | Low-Poly RPG-7 | TastyTony | https://sketchfab.com/3d-models/5243ac034391491f9a47f797ea212afe |

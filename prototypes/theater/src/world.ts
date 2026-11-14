@@ -312,7 +312,7 @@ export async function buildWorld(scene: Scene, o: { HQ: boolean; NL: number; cas
   const mound = MeshBuilder.CreateIcoSphere('mound', { radius: 0.5, subdivisions: 3, updatable: true }, scene);
   { const p = mound.getVerticesData(VertexBuffer.PositionKind)!; for (let i = 0; i < p.length; i += 3) { const h = Math.sin(p[i] * 41.3 + p[i + 1] * 17.9 + p[i + 2] * 63.1) * 43758.5453, k = 0.86 + (h - Math.floor(h)) * 0.28; p[i] *= k; p[i + 2] *= k; p[i + 1] = Math.max(-0.05, p[i + 1] * k); }
     mound.updateVerticesData(VertexBuffer.PositionKind, p); const nn: number[] = []; VertexData.ComputeNormals(p, mound.getIndices()!, nn); mound.setVerticesData(VertexBuffer.NormalKind, nn);
-    const mm = plain('moundMat'); const st = tex('sand'); st.uScale = 2; st.vScale = 3; mm.diffuseTexture = st; mm.diffuseColor = new Color3(0.74, 0.69, 0.6); mm.emissiveColor = new Color3(0.05, 0.045, 0.035); mound.material = mm; mound.receiveShadows = true; }
+    const mm = plain('moundMat'); const st = tex('sand'); st.uScale = 2; st.vScale = 3; mm.diffuseTexture = st; mm.diffuseColor = new Color3(0.6, 0.56, 0.5); mm.emissiveColor = new Color3(0.06, 0.055, 0.05); mound.material = mm; mound.receiveShadows = true; }
   const mdm: number[] = []; for (const m of MOUNDS) mdm.push(...Matrix.Compose(new Vector3(5, 2.6, m.len), Quaternion.RotationAxis(Vector3.Up(), m.rot), new Vector3(m.x, groundH(m.x, m.z) - 0.05, m.z)).asArray());
   instances(mound, mdm); caster(mound);
   const nProps = scatter(P_TREE, orch, 2000) + scatter(P_ACACIA, ac, 1800) + scatter(P_CAR1, cars[0], 1500) + scatter(P_CAR2, cars[1], 1500) + scatter(P_PICK, cars[2], 1500) + scatter(P_SAND, sb, 1300) + scatter(P_BAR, bar, 1300);

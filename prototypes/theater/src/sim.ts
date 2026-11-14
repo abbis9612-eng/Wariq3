@@ -41,6 +41,7 @@ export interface Unit {
   // v4
   role: Role; supp: number; pose: Pose; men: number; menMax: number; dead: V3[]; house: number; mount: number; carry: number;
   fire: V3[]; hide: V3 | null; fi: number; ammo: number; rpg: number; rpgCd: number; seenT: number; peekShots: number; aimT: number;
+  sol: Sol[]; bt: 0 | 1; bT: number; ct: boolean;  // TH6.1: جنود الحضيرة، الفريق اللي يتحرك بالتبادل، وقت التبديل، باشتباك؟
   cv: number;                                     // TH5.5: رقم نقطة الستر (COVER) اللي ماسكيها الحضيرة، −1 ماكو
   tur: number; aimId: number; aimSeen: number;   // TH5.2: البرج يلف وحده (زاوية مطلقة) ويصوّب على الهدف
 }
@@ -52,6 +53,13 @@ export interface Air {
   tgtUnit?: number; owner?: number; hit?: boolean;
 }
 export interface Smoke { p: V3; r: number; t0: number; until: number }
+// ===== TH6.1 (D-019): كل جندي بحاله — الحضيرة تقرر والجنود ينفذون =====
+export type SPose = 'stand' | 'crouch' | 'prone';
+export type SAct = 'idle' | 'move' | 'rush' | 'fire' | 'reload' | 'crawl';
+export interface Sol {
+  id: number; p: V3; tgt: V3; off: V3; pose: SPose; act: SAct; team: 0 | 1; role: 'rifle' | 'mg' | 'rpg' | 'at';
+  alive: boolean; mag: number; nextShot: number; lastShot: number; react: number; yaw: number; cv: number; dieT: number; hidden: boolean;
+}
 // ===== أحداث للرسم =====
 export type Fx =
   | { k: 'gun'; unit: number; p: V3; dir: V3; big: boolean }                  // مدفع دبابة/هاوتزر: لهب + غبار + ارتداد
@@ -69,6 +77,7 @@ export type Fx =
   | { k: 'smoke'; p: V3; r: number; dur: number }                             // ستارة دخان
   | { k: 'houseHit'; house: number; p: V3; destroyed: boolean }
   | { k: 'manDown'; unit: number; p: V3 }                                     // جندي انصاب
+  | { k: 'shot'; unit: number; sid: number; p: V3; to: V3; n: number; tracer: boolean; mg: boolean } // طلقة/رشقة من جندي معيّن (TH6.1)
   | { k: 'dismount'; unit: number; p: V3 }
   | { k: 'kill'; unit: number; turret: boolean }
   | { k: 'hit'; unit: number; p: V3; dir: V3; pen: boolean }                   // إصابة مركبة بدون تدمير: pen = خرقت (ضرر) لو ارتدت
@@ -90,7 +99,7 @@ export interface World {
     enBmpLost: number; enBmp: number; enMen: number; enMenLost: number; iqMen: number; iqMenLost: number; housesLost: number; atgm: number; rpg: number; counterT: number; fallbackT: number };
   schedule: { t: number; f: (w: World) => void; done?: boolean }[];
   orderCd: Record<Order, number>; aaPriority: boolean; columnPhase: string; boundTeam: number; boundT: number;
-  en: EnPhase; iq: IqPhase; enT: number; iqT: number; smoke: Smoke[]; known: Record<Side, Map<number, number>>; houseHp: number[]; houseOwner: (Side | '')[]; spotT: number; dbg: Record<string, number>; coverOwner: Map<number, number>;
+  en: EnPhase; iq: IqPhase; enT: number; iqT: number; smoke: Smoke[]; known: Record<Side, Map<number, number>>; houseHp: number[]; houseOwner: (Side | '')[]; spotT: number; dbg: Record<string, number>; coverOwner: Map<number, number>; r2: () => number; nextSol: number; solCover: Map<number, number>;
 }
 const WEST: V3 = [-1, 0, 0], EAST: V3 = [1, 0, 0];
 const COLUMN = 'رتل مدرّع معادي';
@@ -104,14 +113,14 @@ export function newWorld(seed = 11): World {
     stats: { drones: 0, dronesDown: 0, dronesHit: 0, cruise: 0, cruiseDown: 0, cruiseHit: 0, ballistic: 0, ballisticDown: 0, ballisticHit: 0, enTanks: 0, enTanksLost: 0, iqTanks: 0, iqTanksLost: 0, pacFired: 0, n48Fired: 0, rockets: 0, shells: 0, rounds: 0,
       enBmpLost: 0, enBmp: 0, enMen: 0, enMenLost: 0, iqMen: 0, iqMenLost: 0, housesLost: 0, atgm: 0, rpg: 0, counterT: 0, fallbackT: 0 },
     orderCd: { barrage: 0, smoke: 0, retreat: 0, counter: 0, aaPriority: 0 }, aaPriority: false, columnPhase: 'march', boundTeam: 0, boundT: 0,
-    en: 'march', iq: 'line1', enT: 0, iqT: 0, smoke: [], known: { iq: new Map(), en: new Map() }, houseHp: HOUSES.map(() => 3), houseOwner: HOUSES.map(() => ''), spotT: 0, dbg: {}, coverOwner: new Map(),
+    en: 'march', iq: 'line1', enT: 0, iqT: 0, smoke: [], known: { iq: new Map(), en: new Map() }, houseHp: HOUSES.map(() => 3), houseOwner: HOUSES.map(() => ''), spotT: 0, dbg: {}, coverOwner: new Map(), r2: rng(seed * 7 + 991), nextSol: 1, solCover: new Map(),
   };
   const U = (kind: Kind, side: Side, p: V3, dir: V3, group: string, extra: Partial<Unit> = {}) => {
     const sp = SPEC[kind];
     const u: Unit = { id: w.nextId++, kind, side, name: KIND_AR[kind], group, p: [...p] as V3, yaw: yawOf(dir), spd: 0, hp: sp.hp, alive: true, cd: 1 + w.r() * 3,
       target: 0, state: 'idle', goal: null, home: [...p] as V3, team: 0, slot: [0, 0, 0], cover: false, burst: 0, burstT: 0, shots: 0, firedT: -99, stateT: 0, burnT: 0,
       role: 'line', supp: 0, pose: 'stand', men: kind === 'inf' ? 7 : kind === 'kornet' ? 3 : 0, menMax: kind === 'inf' ? 7 : kind === 'kornet' ? 3 : 0, dead: [], house: -1, mount: 0, carry: 0,
-      fire: [], hide: null, fi: 0, ammo: kind === 'kornet' ? 4 : 0, rpg: kind === 'inf' ? 3 : 0, rpgCd: 0, seenT: -99, peekShots: 0, aimT: 0, tur: 0, aimId: 0, aimSeen: -99, cv: -1, ...extra };
+      fire: [], hide: null, fi: 0, ammo: kind === 'kornet' ? 4 : 0, rpg: kind === 'inf' ? 3 : 0, rpgCd: 0, seenT: -99, peekShots: 0, aimT: 0, tur: 0, aimId: 0, aimSeen: -99, cv: -1, sol: [], bt: 0, bT: 0, ct: false, ...extra };
     u.tur = u.yaw;
     if (kind === 'inf' || kind === 'kornet') u.hp = u.men;
     w.units.push(u); return u;
@@ -268,7 +277,7 @@ function kill(w: World, u: Unit, by: string) {
 }
 function casualty(w: World, u: Unit, n: number, by: string) {
   n = Math.min(n, u.men); if (n <= 0) return;
-  for (let i = 0; i < n; i++) { const p = add(u.p, [(w.r() - 0.5) * 14, 0, (w.r() - 0.5) * 14]); u.dead.push(p); w.fx.push({ k: 'manDown', unit: u.id, p }); }
+  for (let i = 0; i < n; i++) { const s = pickVictim(w, u); const p: V3 = s ? [...s.p] as V3 : add(u.p, [(w.r2() - 0.5) * 14, 0, (w.r2() - 0.5) * 14]); if (s) { s.alive = false; s.dieT = w.T; if (s.cv >= 0) w.solCover.delete(s.cv); } u.dead.push(p); w.fx.push({ k: 'manDown', unit: u.id, p }); }
   u.men -= n; u.hp = u.men; if (u.side === 'en') w.stats.enMenLost += n; else w.stats.iqMenLost += n;
   const kk = u.side + ':' + by.replace(/ معادية| \(RPG\)/g, ''); w.dbg[kk] = (w.dbg[kk] ?? 0) + n;
   if (u.men <= 0) {
@@ -333,6 +342,7 @@ export function step(w: World, dt: number) {
   for (const s of w.schedule) if (!s.done && w.T >= s.t) { s.done = true; s.f(w); }
   if (w.T - w.spotT > 1) { w.spotT = w.T; spot(w); commanders(w); }
   for (const u of w.units) if (u.alive) { u.supp = Math.max(0, u.supp - dt * (isVeh(u) ? 0.35 : 0.16)); behave(w, u, dt); move(w, u, dt); fight(w, u, dt); turret(w, u, dt); if ((u.kind === 'inf' || u.kind === 'kornet') && ((w.T * 4) | 0) !== (((w.T - dt) * 4) | 0)) updateCover(w, u); }
+  for (const u of w.units) if (u.kind === 'inf' || u.kind === 'kornet') solStep(w, u, dt);
   air(w, dt);
   w.smoke = w.smoke.filter(s => s.until > w.T);
   checkEnd(w);
@@ -512,6 +522,94 @@ function peekCycle(w: World, u: Unit) {
   if (u.state === 'aim' && (u.peekShots >= 1 + (w.r() < 0.4 ? 1 : 0) || u.stateT > 11 || u.supp > 0.7)) { u.state = 'scoot'; u.stateT = 0; u.goal = u.hide; }
   if (u.state === 'scoot' && u.goal && dist2d(u.p, u.goal) < 8) { u.state = 'hide'; u.stateT = 0; u.goal = null; }
 }
+// ----- TH6.1: الجنود — كل واحد بمكانه ووضعيته وطلقاته. (المولد w.r2 منفصل: شكل الجنود ما يغيّر نتيجة المعركة) -----
+const SOL_H: Record<SPose, number> = { stand: 1.45, crouch: 0.95, prone: 0.3 };
+function initSols(w: World, u: Unit) {
+  const n = u.menMax, r = w.r2;
+  for (let i = 0; i < n; i++) {
+    const team = (i % 2) as 0 | 1, role: Sol['role'] = u.kind === 'kornet' ? (i === 0 ? 'at' : 'rifle') : i === 1 && n >= 5 ? 'mg' : i === 2 && u.rpg > 0 ? 'rpg' : 'rifle';
+    const off: V3 = u.kind === 'kornet' ? [i === 0 ? 0 : (i % 2 ? -2.5 : 2.5), 0, i === 0 ? 0 : -1.5 - r()] : [(team ? 1 : -1) * (2.5 + r() * 8), 0, -r() * 12]   /* فواصل 5–10م غير منتظمة (ATP 3-21.8) */;
+    u.sol.push({ id: w.nextSol++, p: add(u.p, rotY(off, u.yaw)), tgt: [...u.p] as V3, off, pose: 'stand', act: 'idle', team, role, alive: i < u.men, mag: role === 'mg' ? 100 : 30,
+      nextShot: w.T + r() * 3, lastShot: -99, react: r() * 1.2, yaw: u.yaw, cv: -1, dieT: i < u.men ? -1 : w.T, hidden: false });
+  }
+}
+/** منو ينصاب: المكشوف أكثر (واقف/يركض، مو ورا ستر) */
+function pickVictim(w: World, u: Unit) {
+  const al = u.sol.filter(s => s.alive); if (!al.length) return null;
+  const wt = al.map(s => (s.pose === 'stand' ? 1 : s.pose === 'crouch' ? 0.6 : 0.35) * (s.cv >= 0 && dist2d(s.p, s.tgt) < 1.5 ? 0.45 : 1) * (s.act === 'rush' ? 1.3 : 1));
+  let x = w.r2() * wt.reduce((a, b) => a + b, 0); for (let i = 0; i < al.length; i++) { x -= wt[i]; if (x <= 0) return al[i]; } return al[al.length - 1];
+}
+/** ستر شخصي قريب من مكان الجندي (زاوية حايط، أكياس، تل) */
+function solCoverNear(w: World, s: Sol, at: V3, td: [number, number], rad: number) {
+  let best = -1, bs = 1e9;
+  for (let i = 0; i < COVER.length; i++) { const c = COVER[i], dx = c.x - at[0], dz = c.z - at[2]; if (Math.abs(dx) > rad || Math.abs(dz) > rad) continue;
+    const d = Math.hypot(dx, dz), f = c.nx * td[0] + c.nz * td[1]; if (d > rad || f < 0.3) continue; const own = w.solCover.get(i); if (own !== undefined && own !== s.id) continue;
+    const sc = d - f * 3; if (sc < bs) { bs = sc; best = i; } }
+  return best;
+}
+/** ما نخلي الجندي يوقف داخل بيت */
+function outOfHouse(p: V3): V3 {
+  for (const h of HOUSES) { const dx = p[0] - h.x, dz = p[2] - h.z, r0 = Math.max(h.w, h.d) * 0.62 + 1; if (Math.abs(dx) > r0 || Math.abs(dz) > r0) continue;
+    const d = Math.hypot(dx, dz); if (d < r0 && !(h as House & { dead?: boolean }).dead) { const k = r0 / (d || 1); return [h.x + dx * k, 0, h.z + dz * k]; } }
+  return p;
+}
+function solStep(w: World, u: Unit, dt: number) {
+  if (!u.sol.length) { if (!u.alive) return; initSols(w, u); }
+  const r = w.r2, think = ((w.T * 10) | 0) !== (((w.T - dt) * 10) | 0);
+  const hidden = !u.alive || u.state === 'mounted' || u.house >= 0;
+  if (think && u.alive && !hidden) u.ct = u.supp > 0.15 || w.T - u.firedT < 6 || !!nearestFoe(w, u, 420);
+  const moving = u.spd > 0.5, running = u.pose === 'run' || u.state === 'retreat', pinned = u.state === 'pin';
+  const bounding = moving && u.ct && running && u.state !== 'retreat' && u.kind === 'inf';
+  if (bounding && w.T > u.bT) { u.bt = (1 - u.bt) as 0 | 1; u.bT = w.T + 3 + r() * 2.2;   // «أگوم، يشوفني، أنزل»: ركضة 3–5 ث ثم يتبادلون
+    for (const s of u.sol) if (s.team === u.bt) { s.off = [s.off[0] + (r() - 0.5) * 3, 0, Math.max(-11, Math.min(0, s.off[2] + (r() - 0.5) * 3))]; s.react = r() * 0.9; } }
+  const engaged = u.alive && !hidden && (w.T - u.firedT < 5) && (u.ct || pinned);
+  const tgtU = engaged ? w.units.find(x => x.id === u.target && x.alive) : undefined;
+  const td: [number, number] = think && !hidden ? threatDir(w, u) : [Math.sin(u.yaw), Math.cos(u.yaw)];
+  const fwd = rotY([0, 0, 7], u.yaw);
+  for (const s of u.sol) {
+    if (!s.alive) continue;
+    s.hidden = hidden;
+    if (hidden) { s.p = [...u.p] as V3; s.act = 'idle'; s.pose = 'stand'; if (s.cv >= 0) { w.solCover.delete(s.cv); s.cv = -1; } continue; }
+    s.react -= dt;
+    const slot = add(u.p, rotY(s.off, u.yaw));
+    const goes = (moving && (!bounding || s.team === u.bt)) || dist2d(s.p, slot) > 16;   // المتأخر يركض يلحگ
+    if (think) {
+      if (goes) { if (s.cv >= 0) { w.solCover.delete(s.cv); s.cv = -1; } s.tgt = outOfHouse(bounding ? add(slot, fwd) : slot); }
+      else if (s.cv < 0 || dist2d(s.tgt, slot) > 14) {   // واكف: ستر شخصي قريب، وإلا مكانه
+        if (s.cv >= 0) { w.solCover.delete(s.cv); s.cv = -1; }
+        const ci = u.ct ? solCoverNear(w, s, bounding ? s.p : slot, td, pinned ? 6 : 8) : -1;
+        if (ci >= 0) { s.cv = ci; w.solCover.set(ci, s.id); const c = COVER[ci]; s.tgt = [c.x + (r() - 0.5) * 0.8, 0, c.z + (r() - 0.5) * 0.8]; }
+        else if (!bounding) s.tgt = outOfHouse(slot);
+        else s.tgt = [...s.p] as V3;
+      }
+    }
+    // الحركة
+    const d = dist2d(s.p, s.tgt), arrived = d < 0.6;
+    if (!arrived && s.react <= 0) {
+      const v = pinned ? 0.8 : goes ? (bounding ? 4.6 : running ? 3.9 : 1.6) * (u.supp > 0.6 ? 0.8 : 1) : 2.2;
+      const k = Math.min(d, v * dt) / d; s.p = [s.p[0] + (s.tgt[0] - s.p[0]) * k, 0, s.p[2] + (s.tgt[2] - s.p[2]) * k];
+      s.act = pinned ? 'crawl' : goes && (bounding || dist2d(s.p, slot) > 16) ? 'rush' : 'move'; s.pose = pinned ? 'prone' : goes && !bounding && !u.ct ? 'stand' : s.act === 'rush' ? 'stand' : s.pose === 'prone' ? 'crouch' : s.pose;
+      if (s.act === 'move' && running) s.pose = 'stand';
+      s.yaw = Math.atan2(s.tgt[0] - s.p[0], s.tgt[2] - s.p[2]);
+    } else if (arrived || s.react > 0) {
+      // وصل/واكف: وضعيته حسب الستر والكبت
+      if (think) s.pose = pinned || u.supp > 0.55 ? 'prone' : s.role === 'mg' ? 'prone' : s.cv >= 0 ? 'crouch' : u.ct ? (s.pose === 'stand' ? (r() < 0.5 ? 'crouch' : 'prone') : s.pose) : 'stand';
+      s.act = s.act === 'reload' && w.T < s.nextShot ? 'reload' : engaged ? 'fire' : 'idle';
+      if (engaged && tgtU) s.yaw = Math.atan2(tgtU.p[0] - s.p[0], tgtU.p[2] - s.p[2]); else if (s.cv >= 0) s.yaw = Math.atan2(COVER[s.cv].nx, COVER[s.cv].nz);
+    }
+    // الرمي: كل جندي على كيفه (الضرر يبقى بحساب الحضيرة، هذا الشكل والصوت)
+    if (s.act === 'reload' && w.T >= s.nextShot) { s.act = 'idle'; s.mag = s.role === 'mg' ? 100 : 30; }
+    if (engaged && tgtU && s.act !== 'rush' && s.act !== 'reload' && s.role !== 'at' && w.T >= s.nextShot && s.react <= 0 && (arrived || s.act === 'move')) {
+      const mg = s.role === 'mg', n = mg ? 5 + ((r() * 5) | 0) : 1 + ((r() * 3) | 0);
+      let aim: V3 = tgtU.p; if (tgtU.sol.length) { const al = tgtU.sol.filter(q => q.alive); if (al.length) aim = al[(r() * al.length) | 0].p; }
+      const spread = 3 + dist2d(aim, s.p) / 60;
+      w.fx.push({ k: 'shot', unit: u.id, sid: s.id, p: add(s.p, [0, SOL_H[s.pose], 0]), to: add(aim, [(r() - 0.5) * spread, tgtU.house >= 0 ? 3 : 0.8, (r() - 0.5) * spread]), n, tracer: mg || r() < 0.12, mg });
+      s.mag -= n; s.lastShot = w.T;
+      s.nextShot = w.T + (mg ? 2.2 + r() * 2.5 : 1.1 + r() * 2.6) * (1 + u.supp * 1.2) * (pinned ? 1.8 : 1);
+      if (s.mag <= 0) { s.act = 'reload'; s.nextShot = w.T + (mg ? 5 : 2.6) + r(); }
+    }
+  }
+}
 // ----- الستر (TH5.5): حيطان الأحواش وأكياس الرمل. الحضيرة الواكفة تروح لأقرب ستر يواجه العدو؛ وإذا وراه تقل إصاباتها -----
 function threatDir(w: World, u: Unit): [number, number] {
   const f = nearestFoe(w, u, 900); if (f) { const d = Math.hypot(f.p[0] - u.p[0], f.p[2] - u.p[2]) || 1; return [(f.p[0] - u.p[0]) / d, (f.p[2] - u.p[2]) / d]; }
@@ -640,7 +738,8 @@ function move(w: World, u: Unit, dt: number) {
     return;
   }
   if (u.kind === 'inf' || u.kind === 'kornet') {
-    const v = (u.pose === 'run' || u.state === 'retreat' ? 3.8 : 1.4) * (1 - u.supp * 0.6);
+    // باشتباك الحضيرة تتقدم بالتبادل (نص الجنود يركضون بكل لحظة) فالمركز يمشي بسرعة معدلهم (TH6.1)
+    const v = (u.pose === 'run' || u.state === 'retreat' ? (u.ct && u.state !== 'retreat' && u.kind === 'inf' ? 2.1 : 3.8) : 1.4) * (1 - u.supp * 0.6);
     u.yaw = yawOf(to); u.spd = v; u.p = add(u.p, scale(norm([to[0], 0, to[2]]), Math.min(d, v * dt))); return;
   }
   const reverse = u.state === 'scoot' || (u.state === 'peek' && u.side === 'iq' && isTank(u) && Math.abs(angDiff(u.yaw, yawOf(to))) > 2.2) || (u.state === 'retreat' && !!u.hide && Math.abs(angDiff(u.yaw, yawOf(to))) > 2.2 && d < 140);
@@ -737,7 +836,8 @@ function infFire(w: World, u: Unit) {
     const v = nearestFoe(w, u, 220, o => isVeh(o) && o.state !== 'mounted');
     if (v && visOf(w, u, v) > 0) {
       u.rpg--; u.rpgCd = 18 + w.r() * 10; u.firedT = w.T; w.stats.rpg++;
-      const from: V3 = add(u.p, [0, u.house >= 0 ? 3 : 1.4, 0]), d = dist2d(v.p, from), dir = norm(sub(add(v.p, [0, 1.2, 0]), from));
+      const rs = u.house < 0 ? u.sol.find(q => q.alive && q.role === 'rpg') ?? u.sol.find(q => q.alive) : undefined; if (rs) { rs.act = 'fire'; rs.pose = 'crouch'; rs.lastShot = w.T; rs.nextShot = w.T + 4; rs.yaw = Math.atan2(v.p[0] - rs.p[0], v.p[2] - rs.p[2]); }
+      const from: V3 = rs ? add(rs.p, [0, 1.2, 0]) : add(u.p, [0, u.house >= 0 ? 3 : 1.4, 0]), d = dist2d(v.p, from), dir = norm(sub(add(v.p, [0, 1.2, 0]), from));
       const hit = w.r() < clamp(0.6 - d / 450, 0.12, 0.58) * (1 - u.supp * 0.5);
       const a = spawnAir(w, 'rpg', u.side, from, scale(dir, 120), undefined, undefined, hit ? add(v.p, [0, 1.2, 0]) : add(v.p, [(w.r() - 0.5) * 16, -1, (w.r() - 0.5) * 16]));
       a.tgtUnit = v.id; a.owner = u.id; a.hit = hit;
@@ -750,7 +850,7 @@ function infFire(w: World, u: Unit) {
   u.cd = SPEC.inf.reload * (0.8 + w.r() * 0.6) * (1 + u.supp); u.firedT = w.T; u.target = t.id;
   const d = dist2d(t.p, u.p), cover = t.house >= 0 ? 0.3 : (t.pose === 'prone' ? 0.45 : 1) * coverK(t, 0.5);
   const pk = 0.035 * u.men / 7 * (1 - d / 450) * cover * (1 - u.supp * 0.6) * (0.4 + v);
-  w.fx.push({ k: 'volley', unit: u.id, p: add(u.p, [0, u.house >= 0 ? 3 : u.pose === 'prone' ? 0.4 : 1.3, 0]), to: add(t.p, [(w.r() - 0.5) * 6, 1, (w.r() - 0.5) * 6]), n: Math.max(1, Math.round(u.men / 2)), tracer: w.r() < 0.5, inf: true });
+  if (u.house >= 0 || !u.sol.length) w.fx.push({ k: 'volley', unit: u.id, p: add(u.p, [0, u.house >= 0 ? 3 : u.pose === 'prone' ? 0.4 : 1.3, 0]), to: add(t.p, [(w.r() - 0.5) * 6, 1, (w.r() - 0.5) * 6]), n: Math.max(1, Math.round(u.men / 2)), tracer: w.r() < 0.5, inf: true });
   w.stats.rounds += u.men * 3;
   t.supp = Math.min(1, t.supp + 0.16 * (t.house >= 0 ? 0.6 : 1));
   if (w.r() < pk * 4) { const by = byName(u); w.schedule.push({ t: w.T + d / 800, f: (w) => casualty(w, t, 1, by) }); }

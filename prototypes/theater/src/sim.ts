@@ -41,7 +41,8 @@ export interface Unit {
   // v4
   role: Role; supp: number; pose: Pose; men: number; menMax: number; dead: V3[]; house: number; mount: number; carry: number;
   fire: V3[]; hide: V3 | null; fi: number; ammo: number; rpg: number; rpgCd: number; seenT: number; peekShots: number; aimT: number;
-  sol: Sol[]; bt: 0 | 1; bT: number; ct: boolean;  // TH6.1: جنود الحضيرة، الفريق اللي يتحرك بالتبادل، وقت التبديل، باشتباك؟
+  sol: Sol[]; bt: 0 | 1; bT: number; ct: boolean;
+  haltT: number; smokeN: number;                  // TH6.5: وقفة قصيرة للرمي، وقاذفات دخان باقية  // TH6.1: جنود الحضيرة، الفريق اللي يتحرك بالتبادل، وقت التبديل، باشتباك؟
   cv: number;                                     // TH5.5: رقم نقطة الستر (COVER) اللي ماسكيها الحضيرة، −1 ماكو
   tur: number; aimId: number; aimSeen: number;   // TH5.2: البرج يلف وحده (زاوية مطلقة) ويصوّب على الهدف
 }
@@ -77,6 +78,7 @@ export type Fx =
   | { k: 'smoke'; p: V3; r: number; dur: number }                             // ستارة دخان
   | { k: 'houseHit'; house: number; p: V3; destroyed: boolean }
   | { k: 'manDown'; unit: number; p: V3 }                                     // جندي انصاب
+  | { k: 'smokeLaunch'; unit: number; p: V3; to: V3 }                        // قاذفات دخان المدرعة (902B)
   | { k: 'shot'; unit: number; sid: number; p: V3; to: V3; n: number; tracer: boolean; mg: boolean } // طلقة/رشقة من جندي معيّن (TH6.1)
   | { k: 'dismount'; unit: number; p: V3 }
   | { k: 'kill'; unit: number; turret: boolean }
@@ -120,7 +122,7 @@ export function newWorld(seed = 11): World {
     const u: Unit = { id: w.nextId++, kind, side, name: KIND_AR[kind], group, p: [...p] as V3, yaw: yawOf(dir), spd: 0, hp: sp.hp, alive: true, cd: 1 + w.r() * 3,
       target: 0, state: 'idle', goal: null, home: [...p] as V3, team: 0, slot: [0, 0, 0], cover: false, burst: 0, burstT: 0, shots: 0, firedT: -99, stateT: 0, burnT: 0,
       role: 'line', supp: 0, pose: 'stand', men: kind === 'inf' ? 7 : kind === 'kornet' ? 3 : 0, menMax: kind === 'inf' ? 7 : kind === 'kornet' ? 3 : 0, dead: [], house: -1, mount: 0, carry: 0,
-      fire: [], hide: null, fi: 0, ammo: kind === 'kornet' ? 4 : 0, rpg: kind === 'inf' ? 3 : 0, rpgCd: 0, seenT: -99, peekShots: 0, aimT: 0, tur: 0, aimId: 0, aimSeen: -99, cv: -1, sol: [], bt: 0, bT: 0, ct: false, ...extra };
+      fire: [], hide: null, fi: 0, ammo: kind === 'kornet' ? 4 : 0, rpg: kind === 'inf' ? 3 : 0, rpgCd: 0, seenT: -99, peekShots: 0, aimT: 0, tur: 0, aimId: 0, aimSeen: -99, cv: -1, sol: [], bt: 0, bT: 0, ct: false, haltT: -99, smokeN: kind === 't72' || kind === 'abrams' || kind === 'bmp' ? 2 : 0, ...extra };
     u.tur = u.yaw;
     if (kind === 'inf' || kind === 'kornet') u.hp = u.men;
     w.units.push(u); return u;
@@ -426,6 +428,13 @@ function counter(w: World, by: string) {
   w.log.push({ t: w.T, text: `${by}: هجوم معاكس! الاحتياط يضرب العدو من الجنب الشمالي`, good: true, p: RESERVE_P });
   w.fx.push({ k: 'phase', side: 'iq', phase: 'counter', p: COUNTER_P }, { k: 'mark', p: add(COUNTER_P, [0, 40, 0]), text: '⚔ هجوم معاكس', good: true });
 }
+function popSmoke(w: World, v: Unit, from: V3) {
+  if (!v.alive || v.smokeN <= 0) return; v.smokeN--;
+  const d = norm(sub(from, v.p)), p = add(v.p, scale(d, 28));
+  w.fx.push({ k: 'smokeLaunch', unit: v.id, p: add(v.p, [0, 2.4, 0]), to: p }); w.schedule.push({ t: w.T + 0.8, f: (w) => addSmoke(w, p, 24, 40) });
+  if (v.side === 'en' && v.state !== 'retreat') { v.state = 'scoot'; v.stateT = 0; v.goal = add(v.p, scale(d, -35)); w.schedule.push({ t: w.T + 10, f: () => { if (v.alive && v.state === 'scoot') { v.state = 'overwatch'; v.goal = null; } } }); }
+  w.log.push({ t: w.T, text: `${v.name} ${v.side === 'en' ? 'معادية ' : ''}أطلقت قاذفات الدخان ورجعت لورا`, good: v.side === 'iq' ? true : null, p: v.p });
+}
 function addSmoke(w: World, p: V3, r: number, dur: number) { w.smoke.push({ p, r, t0: w.T, until: w.T + dur }); w.fx.push({ k: 'smoke', p, r, dur }); }
 function checkEnd(w: World) {
   if (w.over) return;
@@ -464,8 +473,10 @@ function behave(w: World, u: Unit, dt: number) {
       if (u.kind === 't72' && (u.state !== 'bound' || u.stateT > 40) && u.state !== 'scoot' && u.state !== 'return') {
         // الدبابات تطلع للتلّة وتسند المشاة من فوق
         // الدبابات تتقدم بقفزات (300 م) لحد التلّة، وتسند المشاة من فوقها
-        const slot: V3 = [-2150 + (u.id % 2) * 40, 0, HIGHWAY_Z + (u.id % 6 - 2.5) * 70];
-        if (dist2d(u.p, slot) > 30) { if (u.state !== 'bound' && (u.state !== 'overwatch' || u.stateT > 6 + (u.id % 3) * 3)) { u.state = 'bound'; u.stateT = 0; u.goal = dist2d(u.p, slot) > 180 ? add(u.p, scale(norm(sub(slot, u.p)), 150)) : slot; } }
+        let slot: V3 = [-2150 + (u.id % 2) * 40, 0, HIGHWAY_Z + (u.id % 6 - 2.5) * 70];
+        // TH6.5: بالاقتحام نص الدبابات تلف على الجنب الشمالي للقرية وترمي على البيوت من الطرف (نار جانبية)
+        if (w.en === 'assault' && u.team === 1) slot = coverNear(w, u, [-1950 - (u.id % 3) * 30, 0, HIGHWAY_Z + 230 + (u.id % 3) * 35], 35);
+        if (dist2d(u.p, slot) > 40) { if (u.state !== 'bound' && (u.state !== 'overwatch' || u.stateT > 6 + (u.id % 3) * 3)) { u.state = 'bound'; u.stateT = 0; u.goal = dist2d(u.p, slot) > 180 ? add(u.p, scale(norm(sub(slot, u.p)), 150)) : slot; } }
         else if (u.state !== 'overwatch') { u.state = 'overwatch'; u.stateT = 0; u.goal = null; }
       }
       if (u.kind === 'bmp' && u.carry) {
@@ -506,7 +517,8 @@ function dismount(w: World, b: Unit, s: Unit) {
   s.state = 'pin'; s.stateT = 0; s.mount = 0; b.carry = 0; s.p = add(b.p, rotY([0, 0, -6], b.yaw)); s.pose = 'prone';
   w.fx.push({ k: 'dismount', unit: s.id, p: s.p });
   if (s.side === 'en') w.log.push({ t: w.T, text: 'مشاة العدو نزلوا من BMP وانبطحوا', good: false, p: s.p });
-  b.state = 'overwatch'; b.goal = null; b.stateT = 0;
+  // TH6.5: الـBMP ما يبقى مكشوف بنقطة الإنزال: يروح لموقع ستر قريب (تل/بيت) ويسند المشاة بالنار (قاعدة نار)
+  b.state = 'bound'; b.stateT = 0; b.goal = coverNear(w, b, add(b.p, [30 + w.r2() * 30, 0, (b.id % 2 ? 1 : -1) * (30 + w.r2() * 30)]), 45);
 }
 /** دبابة دفاعية: تختبي ← تطلع لموقع رمي ← تنشن ← ترمي طلقة/طلقتين ← ترجع تختبي ← تطلع من مكان ثاني */
 function peekCycle(w: World, u: Unit) {
@@ -747,7 +759,7 @@ function move(w: World, u: Unit, dt: number) {
   const da = angDiff(u.yaw, wantYaw), maxTurn = spec.turn * dt;
   u.yaw += clamp(da, -maxTurn, maxTurn);
   const align = Math.max(0, Math.cos(da));
-  const vmax = (u.state === 'march' ? spec.speed * 1.1 : reverse ? 3.2 : u.state === 'peek' ? 3.5 : spec.speed * 0.9) * align * (1 - u.supp * 0.3);
+  const vmax = w.T < u.haltT ? 0 : (u.state === 'march' ? spec.speed * 1.1 : reverse ? 3.2 : u.state === 'peek' ? 3.5 : spec.speed * 0.9) * align * (1 - u.supp * 0.3);   // وقفة قصيرة: توقف وترمي وتكمل
   u.spd += clamp(vmax - u.spd, -4 * dt, 1.6 * dt);
   const fwd: V3 = [Math.sin(u.yaw), 0, Math.cos(u.yaw)];
   u.p = add(u.p, scale(fwd, (reverse ? -1 : 1) * u.spd * dt));
@@ -779,8 +791,10 @@ function fight(w: World, u: Unit, dt: number) {
     fireShell(w, u, add(add(t.p, lead), [(w.r() - 0.5) * 170, 0, (w.r() - 0.5) * 170])); return;
   }
   // الدبابات والـ BMP: لازم تكون واقفة تقريباً وموجّهة
-  if (u.state === 'bound' || u.state === 'march' || u.state === 'reposition' || u.state === 'retreat' || u.state === 'peek' || u.state === 'scoot' || u.state === 'hide') return;
-  if (u.spd > (u.kind === 'bmp' ? 3 : 1.4)) return;
+  // TH6.5: المدافع مثبّتة — ترمي وهي تتحرك (بدقة أقل)؛ الـBMP-2 دقيق لحد ~35 كم/س. ما ترمي بالمسير البعيد أو وهي تتخبى/تهرب
+  if (u.state === 'march' || u.state === 'scoot' || u.state === 'hide' || u.state === 'retreat') return;
+  if (u.kind === 'bmp' && u.spd > 9.7) return;
+  const onMove = u.spd > 1.4;
   // اختيار الهدف: دبابة للدبابة، والمشاة للرشاش المحوري
   const cands = [...w.known[u.side].keys()].map(id => w.units.find(x => x.id === id)!).filter(o => o && o.alive && o.state !== 'mounted' && dist2d(o.p, u.p) < spec.range);
   let best: Unit | null = null, bs = -1, bv = 0;
@@ -794,10 +808,13 @@ function fight(w: World, u: Unit, dt: number) {
     // مدفع 30 ملم / رشاش محوري: رشقة
     u.target = best.id; u.burst = u.kind === 'bmp' ? 4 + Math.floor(w.r() * 4) : 6 + Math.floor(w.r() * 5); u.burstT = 0; u.cd = (u.kind === 'bmp' ? spec.reload : 3) * (0.8 + w.r() * 0.5); u.firedT = w.T; return;
   }
-  u.cd = spec.reload * (0.85 + w.r() * 0.3) * (1 + u.supp * 0.5); u.target = best.id; u.firedT = w.T; u.shots++; u.peekShots++;
+  // دبابة ماشية: أغلب الأحيان «وقفة قصيرة» 2–3 ث (توقف، ترمي بدقة، تكمل)، وأحياناً ترمي وهي ماشية
+  if (onMove && isTank(u) && w.T - u.haltT > 8 && w.r2() < 0.6) { u.haltT = w.T + 2.2 + w.r2() * 1.2; return; }
+  u.cd = spec.reload * (0.85 + w.r() * 0.3) * (1 + u.supp * 0.5) * (onMove ? 1.3 : 1); u.target = best.id; u.firedT = w.T; u.shots++; u.peekShots++;
   const muzzle = add(add(u.p, scale(dir, 5.6)), [0, 2.3, 0]);
   let pHit = (u.kind === 'abrams' ? 0.66 - bd / 2400 : 0.55 - bd / 2400) * (bv >= 0.99 ? 1 : 0.55) * (1 - u.supp * 0.4);
   if (best.spd > 2) pHit *= 0.8;
+  if (onMove) pHit *= 0.4;
   if (best.kind === 'inf') pHit = 0.75;
   const hit = w.r() < pHit;
   const impact: V3 = hit ? add(best.p, [0, best.kind === 'inf' ? 0 : 1.3, 0]) : add(best.p, [(w.r() - 0.5) * 40, 0, (w.r() - 0.5) * 40]);
@@ -862,6 +879,8 @@ function kornetFire(w: World, u: Unit) {
   u.ammo--; u.cd = SPEC.kornet.reload * (0.9 + w.r() * 0.3); u.firedT = w.T; w.stats.atgm++;
   const from: V3 = add(u.p, [0, 1.1, 0]), dir = norm(sub(add(t.p, [0, 1.5, 0]), from));
   const a = spawnAir(w, 'atgm', 'iq', from, scale(dir, 60), undefined, undefined, add(t.p, [0, 1.5, 0])); a.tgtUnit = t.id; a.owner = u.id; a.phase = 'boost';
+  // TH6.5: الدبابة/الـBMP تحس بالصاروخ (منظومة إنذار/الطاقم يشوف الإطلاق) وتطلق قاذفات الدخان وترجع لورا
+  if (t.smokeN > 0 && w.r2() < 0.7) { const tgt = t, shooter = u.p; w.schedule.push({ t: w.T + 1.2 + w.r2() * 1.3, f: (w) => popSmoke(w, tgt, shooter) }); }
   w.fx.push({ k: 'atgm', unit: u.id, p: from, dir, air: a.id, rpg: false });
   w.log.push({ t: w.T, text: `فريق الكورنيت أطلق صاروخ موجّه على ${t.name} معادية (${(dist2d(t.p, u.p) / 1000).toFixed(1)} كم)`, good: null, p: u.p });
   // بعد طلقتين يغيّر مكانه حتى ما ينكشف
@@ -869,7 +888,7 @@ function kornetFire(w: World, u: Unit) {
 }
 function cannonRound(w: World, u: Unit) {
   const o = w.units.find(x => x.id === u.target); if (!o || !o.alive) { u.burst = 0; return; }
-  const muzzle = add(u.p, [0, 2.4, 0]), d = dist2d(o.p, muzzle), tf = d / 960, hit = w.r() < (o.kind === 'inf' ? 0.2 : 0.3) - d / 3500;
+  const muzzle = add(u.p, [0, 2.4, 0]), d = dist2d(o.p, muzzle), tf = d / 960, hit = w.r() < ((o.kind === 'inf' ? 0.2 : 0.3) - d / 3500) * (u.spd > 1.4 ? 0.6 : 1);
   const to: V3 = add(o.p, [(w.r() - 0.5) * (hit ? 2 : 18), hit ? 1 : 0, (w.r() - 0.5) * (hit ? 2 : 18)]);
   w.fx.push({ k: 'cannon', unit: u.id, p: muzzle, dir: norm(sub(to, muzzle)), to, tf }); w.stats.rounds++;
   const by = byName(u);

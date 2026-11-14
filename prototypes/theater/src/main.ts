@@ -678,6 +678,15 @@ function handleFx(fx: Fx) {
       fireS.emit({ a: fx.p, n: Qn(5), dir: scale(fx.dir, -1), spd: [10, 25], spread: 0.5, jit: 0.4 }); dust.emit({ a: G(fx.p[0], fx.p[2], 0.8), n: Qn(10), spd: [5, 14], up: -0.3, jit: 3 });
       flashLight(fx.p, 5, 60, 0.15); sfx.rocket(camD(fx.p)); break;
     }
+    case 'smokeLaunch': {
+      // قاذفات الدخان (902B): 6 قنابل تطلع بقوس من البرج، كل وحدة تخلي خيط دخان وتنفجر غيمة قدّام المدرعة
+      const vis = unitVis.get(fx.unit); if (vis) vis.shake = 0.6;
+      for (let i = 0; i < 6; i++) { const side = (i - 2.5) * 5, to = add(fx.to, [side * Math.cos(0.3), 0, side * Math.sin(0.3)]), a0 = fx.p;
+        for (let k = 1; k <= 8; k++) { const t = k / 8, q: V3 = [lerp(a0[0], to[0], t), lerp(a0[1], groundH(to[0], to[2]) + 1, t) + Math.sin(t * Math.PI) * 9, lerp(a0[2], to[2], t)];
+          vq.push({ t: W.T + t * 0.7 + i * 0.05, f: () => puffs.emit({ a: q, n: 1, spd: [0.2, 0.6], jit: 0.2 }) }); }
+        vq.push({ t: W.T + 0.75 + i * 0.05, f: () => cloud.emit({ a: G(to[0], to[2], 2), n: Qn(6), spd: [2, 7], up: 0.3, jit: 3 }) }); }
+      muzzle.emit({ a: fx.p, n: 3, jit: 0.6 }); sfx.whump(camD(fx.p)); break;
+    }
     case 'shot': {
       // طلقة/رشقة من جندي معيّن: ومضة من مكانه، متتبع أحياناً، وغبار وين توصل (TH6.1؛ الأشكال الحقيقية لكل سلاح بـ TH6.3)
       const u = W.units.find(x => x.id === fx.unit), VS = visScale(0.6); let p = fx.p;

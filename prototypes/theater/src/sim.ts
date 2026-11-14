@@ -5,10 +5,10 @@
 export * from './geo.ts';
 import type { V3, Site } from './geo.ts';
 import {
-  add, sub, scale, dot, cross, len, dist2d, norm, clamp, lerp, rotY, yawOf, angDiff, rng, HIGHWAY_Z, SITES, site, BERMS, BERMS2,
+  add, sub, scale, dot, cross, len, dist2d, norm, clamp, lerp, rotY, yawOf, angDiff, rng, HIGHWAY_Z, SITES, site, BERMS, BERMS2, KORNET_P, KORNET_P2,
   PATRIOT_POS, PATRIOT_YAW, PATRIOT_MUZZLES, PATRIOT_REAR, PATRIOT_LAUNCH_LOCAL, S400_POS, S400_YAW, S400_MUZZLES, S400_LAUNCH_LOCAL,
 } from './geo.ts';
-import { groundH, houseBlocks, HOUSES } from './land.ts';
+import { groundH, houseBlocks, HOUSES, COVER } from './land.ts';
 import type { House } from './land.ts';
 
 // ===== الوحدات =====
@@ -41,6 +41,7 @@ export interface Unit {
   // v4
   role: Role; supp: number; pose: Pose; men: number; menMax: number; dead: V3[]; house: number; mount: number; carry: number;
   fire: V3[]; hide: V3 | null; fi: number; ammo: number; rpg: number; rpgCd: number; seenT: number; peekShots: number; aimT: number;
+  cv: number;                                     // TH5.5: رقم نقطة الستر (COVER) اللي ماسكيها الحضيرة، −1 ماكو
   tur: number; aimId: number; aimSeen: number;   // TH5.2: البرج يلف وحده (زاوية مطلقة) ويصوّب على الهدف
 }
 export type AirKind = 'shahed' | 'kh101' | 'iskander' | 'pac2' | 'n48' | 'rocket' | 'shell' | 'atgm' | 'rpg' | 'smoke';
@@ -89,13 +90,13 @@ export interface World {
     enBmpLost: number; enBmp: number; enMen: number; enMenLost: number; iqMen: number; iqMenLost: number; housesLost: number; atgm: number; rpg: number; counterT: number; fallbackT: number };
   schedule: { t: number; f: (w: World) => void; done?: boolean }[];
   orderCd: Record<Order, number>; aaPriority: boolean; columnPhase: string; boundTeam: number; boundT: number;
-  en: EnPhase; iq: IqPhase; enT: number; iqT: number; smoke: Smoke[]; known: Record<Side, Map<number, number>>; houseHp: number[]; houseOwner: (Side | '')[]; spotT: number; dbg: Record<string, number>;
+  en: EnPhase; iq: IqPhase; enT: number; iqT: number; smoke: Smoke[]; known: Record<Side, Map<number, number>>; houseHp: number[]; houseOwner: (Side | '')[]; spotT: number; dbg: Record<string, number>; coverOwner: Map<number, number>;
 }
 const WEST: V3 = [-1, 0, 0], EAST: V3 = [1, 0, 0];
 const COLUMN = 'رتل مدرّع معادي';
 export const VILLAGE_C: V3 = [-1480, 0, HIGHWAY_Z + 10];
 export const FRONT_HOUSES = HOUSES.filter(h => h.vil === 'front');
-export const RESERVE_P: V3 = [-760, 0, 380], COUNTER_P: V3 = [-1260, 0, 60], KORNET_P: V3 = [-2108, 0, 165], KORNET_P2: V3 = [-1640, 0, 85];
+export const RESERVE_P: V3 = [-760, 0, 380], COUNTER_P: V3 = [-1260, 0, 60];
 
 export function newWorld(seed = 11): World {
   const w: World = {
@@ -103,14 +104,14 @@ export function newWorld(seed = 11): World {
     stats: { drones: 0, dronesDown: 0, dronesHit: 0, cruise: 0, cruiseDown: 0, cruiseHit: 0, ballistic: 0, ballisticDown: 0, ballisticHit: 0, enTanks: 0, enTanksLost: 0, iqTanks: 0, iqTanksLost: 0, pacFired: 0, n48Fired: 0, rockets: 0, shells: 0, rounds: 0,
       enBmpLost: 0, enBmp: 0, enMen: 0, enMenLost: 0, iqMen: 0, iqMenLost: 0, housesLost: 0, atgm: 0, rpg: 0, counterT: 0, fallbackT: 0 },
     orderCd: { barrage: 0, smoke: 0, retreat: 0, counter: 0, aaPriority: 0 }, aaPriority: false, columnPhase: 'march', boundTeam: 0, boundT: 0,
-    en: 'march', iq: 'line1', enT: 0, iqT: 0, smoke: [], known: { iq: new Map(), en: new Map() }, houseHp: HOUSES.map(() => 3), houseOwner: HOUSES.map(() => ''), spotT: 0, dbg: {},
+    en: 'march', iq: 'line1', enT: 0, iqT: 0, smoke: [], known: { iq: new Map(), en: new Map() }, houseHp: HOUSES.map(() => 3), houseOwner: HOUSES.map(() => ''), spotT: 0, dbg: {}, coverOwner: new Map(),
   };
   const U = (kind: Kind, side: Side, p: V3, dir: V3, group: string, extra: Partial<Unit> = {}) => {
     const sp = SPEC[kind];
     const u: Unit = { id: w.nextId++, kind, side, name: KIND_AR[kind], group, p: [...p] as V3, yaw: yawOf(dir), spd: 0, hp: sp.hp, alive: true, cd: 1 + w.r() * 3,
       target: 0, state: 'idle', goal: null, home: [...p] as V3, team: 0, slot: [0, 0, 0], cover: false, burst: 0, burstT: 0, shots: 0, firedT: -99, stateT: 0, burnT: 0,
       role: 'line', supp: 0, pose: 'stand', men: kind === 'inf' ? 7 : kind === 'kornet' ? 3 : 0, menMax: kind === 'inf' ? 7 : kind === 'kornet' ? 3 : 0, dead: [], house: -1, mount: 0, carry: 0,
-      fire: [], hide: null, fi: 0, ammo: kind === 'kornet' ? 4 : 0, rpg: kind === 'inf' ? 3 : 0, rpgCd: 0, seenT: -99, peekShots: 0, aimT: 0, tur: 0, aimId: 0, aimSeen: -99, ...extra };
+      fire: [], hide: null, fi: 0, ammo: kind === 'kornet' ? 4 : 0, rpg: kind === 'inf' ? 3 : 0, rpgCd: 0, seenT: -99, peekShots: 0, aimT: 0, tur: 0, aimId: 0, aimSeen: -99, cv: -1, ...extra };
     u.tur = u.yaw;
     if (kind === 'inf' || kind === 'kornet') u.hp = u.men;
     w.units.push(u); return u;
@@ -297,7 +298,7 @@ function blast(w: World, p: V3, rSoft: number, rHard: number, dmgSoft: number, d
   for (const u of w.units) {
     if (!u.alive || u.side === side || !ground(u) || u.state === 'mounted') continue;
     const d = dist2d(u.p, p), hard = SPEC[u.kind].armor > 0;
-    if (u.kind === 'inf' || u.kind === 'kornet') { if (d < rSoft * 1.6) { const exp = u.house >= 0 ? 0.25 : u.pose === 'prone' ? 0.45 : 1; const n = Math.round((1 - d / (rSoft * 1.6)) * 3 * exp * dmgSoft * w.r() * 1.4); if (n > 0) casualty(w, u, n, by); } }
+    if (u.kind === 'inf' || u.kind === 'kornet') { if (d < rSoft * 1.6) { const exp = (u.house >= 0 ? 0.25 : u.pose === 'prone' ? 0.45 : 1) * coverK(u, 0.55); const n = Math.round((1 - d / (rSoft * 1.6)) * 3 * exp * dmgSoft * w.r() * 1.4); if (n > 0) casualty(w, u, n, by); } }
     else if (hard ? d < rHard : d < rSoft) damage(w, u, hard ? dmgHard : dmgSoft, by);
   }
   suppress(w, p, rSoft * 2.5, 0.5, side);
@@ -331,7 +332,7 @@ export function step(w: World, dt: number) {
   w.T += dt;
   for (const s of w.schedule) if (!s.done && w.T >= s.t) { s.done = true; s.f(w); }
   if (w.T - w.spotT > 1) { w.spotT = w.T; spot(w); commanders(w); }
-  for (const u of w.units) if (u.alive) { u.supp = Math.max(0, u.supp - dt * (isVeh(u) ? 0.35 : 0.16)); behave(w, u, dt); move(w, u, dt); fight(w, u, dt); turret(w, u, dt); }
+  for (const u of w.units) if (u.alive) { u.supp = Math.max(0, u.supp - dt * (isVeh(u) ? 0.35 : 0.16)); behave(w, u, dt); move(w, u, dt); fight(w, u, dt); turret(w, u, dt); if ((u.kind === 'inf' || u.kind === 'kornet') && ((w.T * 4) | 0) !== (((w.T - dt) * 4) | 0)) updateCover(w, u); }
   air(w, dt);
   w.smoke = w.smoke.filter(s => s.until > w.T);
   checkEnd(w);
@@ -511,6 +512,41 @@ function peekCycle(w: World, u: Unit) {
   if (u.state === 'aim' && (u.peekShots >= 1 + (w.r() < 0.4 ? 1 : 0) || u.stateT > 11 || u.supp > 0.7)) { u.state = 'scoot'; u.stateT = 0; u.goal = u.hide; }
   if (u.state === 'scoot' && u.goal && dist2d(u.p, u.goal) < 8) { u.state = 'hide'; u.stateT = 0; u.goal = null; }
 }
+// ----- الستر (TH5.5): حيطان الأحواش وأكياس الرمل. الحضيرة الواكفة تروح لأقرب ستر يواجه العدو؛ وإذا وراه تقل إصاباتها -----
+function threatDir(w: World, u: Unit): [number, number] {
+  const f = nearestFoe(w, u, 900); if (f) { const d = Math.hypot(f.p[0] - u.p[0], f.p[2] - u.p[2]) || 1; return [(f.p[0] - u.p[0]) / d, (f.p[2] - u.p[2]) / d]; }
+  return u.side === 'en' ? [1, 0] : [-1, 0];
+}
+function coverFor(w: World, u: Unit, maxD: number, td: [number, number]) {
+  let best = -1, bs = 1e9;
+  for (let i = 0; i < COVER.length; i++) { const c = COVER[i], dx = c.x - u.p[0], dz = c.z - u.p[2]; if (Math.abs(dx) > maxD || Math.abs(dz) > maxD) continue;
+    const d = Math.hypot(dx, dz), facing = c.nx * td[0] + c.nz * td[1]; if (d > maxD || facing < 0.45) continue;
+    const own = w.coverOwner.get(i); if (own !== undefined && own !== u.id) continue;
+    const sc = d - facing * 5 - (dx * td[0] + dz * td[1] > 0 ? 4 : 0); if (sc < bs) { bs = sc; best = i; } }
+  return best;
+}
+function releaseCover(w: World, u: Unit) { if (u.cv >= 0 && w.coverOwner.get(u.cv) === u.id) w.coverOwner.delete(u.cv); u.cv = -1; u.cover = false; }
+function claimCover(w: World, u: Unit, i: number) { releaseCover(w, u); u.cv = i; w.coverOwner.set(i, u.id); }
+function updateCover(w: World, u: Unit) {
+  if (!u.alive || u.house >= 0 || u.state === 'mounted' || u.state === 'retreat') { releaseCover(w, u); return; }
+  if (u.pose === 'run') { u.cover = false; return; }   // يركضون لستر محجوز: يبقى محجوز
+  const td = threatDir(w, u);
+  if (u.cv < 0 && u.spd < 0.5) { const i = coverFor(w, u, 6, td); if (i >= 0) claimCover(w, u, i); }   // ستر قريب بدون ما يتحركون
+  if (u.cv >= 0) { const c = COVER[u.cv]; u.cover = Math.hypot(c.x - u.p[0], c.z - u.p[2]) < 4 && c.nx * td[0] + c.nz * td[1] > 0.2; }
+}
+/** حضيرة وقفت ترمي: تدوّر ستر قريب (24م) وتروحله */
+function seekCover(w: World, u: Unit) {
+  if (u.cv < 0 && u.stateT < 0.3) { const i = coverFor(w, u, 24, threatDir(w, u)); if (i >= 0) claimCover(w, u, i); }
+  if (u.cv >= 0) { const c = COVER[u.cv]; u.goal = Math.hypot(c.x - u.p[0], c.z - u.p[2]) > 1.2 ? [c.x, 0, c.z] : null; } else u.goal = null;
+}
+const coverK = (t: Unit, k: number) => (t.cover ? k : 1);
+/** نقلة من ستر لستر: إذا أكو ستر قرب نقطة الهدف (20م) يواجه اتجاه الهجوم، نروح إله بدال النقطة المكشوفة */
+function bound(w: World, u: Unit, goal: V3, toward: V3): V3 {
+  const d = Math.hypot(toward[0] - u.p[0], toward[2] - u.p[2]) || 1, td: [number, number] = [(toward[0] - u.p[0]) / d, (toward[2] - u.p[2]) / d];
+  const save = u.p; u.p = goal; const i = coverFor(w, u, 35, td); u.p = save;
+  if (i < 0) { releaseCover(w, u); return goal; }
+  claimCover(w, u, i); return [COVER[i].x, 0, COVER[i].z];
+}
 function nearestFoe(w: World, u: Unit, range: number, filt?: (o: Unit) => boolean) {
   let best: Unit | null = null, bd = range;
   for (const id of w.known[u.side].keys()) { const o = w.units.find(x => x.id === id); if (!o || !o.alive || (filt && !filt(o))) continue; const d = dist2d(o.p, u.p); if (d < bd) { bd = d; best = o; } }
@@ -524,12 +560,16 @@ function infAssault(w: World, u: Unit, dt: number) {
   if (!tgtHouse) { u.state = 'hold'; u.pose = 'fire'; return; }
   const hp: V3 = [tgtHouse.x, 0, tgtHouse.z], d = dist2d(u.p, hp);
   if (u.supp > 0.65 && u.state !== 'pin') { u.state = 'pin'; u.stateT = 0; u.goal = null; }
-  if (u.state === 'pin') { u.pose = 'prone'; if (u.stateT > 5 && (u.supp < 0.45 || u.stateT > 14 + w.r() * 8)) { u.state = 'rush' as UState; u.stateT = 0; u.supp *= 0.5; u.goal = add(u.p, scale(norm(sub(hp, u.p)), Math.min(d, 40))); } return; }
+  if (u.state === 'pin') { u.pose = 'prone';
+    // تحت النار: يزحفون لأقرب ستر (10م) إذا أكو
+    if (u.cv < 0 && u.stateT < 0.3) { const i = coverFor(w, u, 26, threatDir(w, u)); if (i >= 0) claimCover(w, u, i); }
+    u.goal = u.cv >= 0 && Math.hypot(COVER[u.cv].x - u.p[0], COVER[u.cv].z - u.p[2]) > 1.2 ? [COVER[u.cv].x, 0, COVER[u.cv].z] : null;
+    if (u.stateT > 5 && (u.supp < 0.45 || u.stateT > 14 + w.r() * 8)) { u.state = 'rush' as UState; u.stateT = 0; u.supp *= 0.5; u.goal = bound(w, u, add(u.p, scale(norm(sub(hp, u.p)), Math.min(d, 40))), hp); } return; }
   const close = w.units.some(o => o.alive && o.side === 'iq' && ground(o) && o.role !== 'aa' && dist2d(o.p, u.p) < 300);
   if (!close && u.state !== 'rush') { u.state = 'rush'; u.stateT = 0; u.goal = add(u.p, scale(norm(sub(hp, u.p)), Math.min(d, 120))); }
   if ((u.state as string) === 'fire' || u.state === 'idle' || u.state === 'hold' || u.state === 'assault') {
-    u.pose = 'fire'; u.goal = null;
-    if (u.stateT > 6 + w.r() * 5) { u.state = 'rush'; u.stateT = 0; u.goal = add(u.p, scale(norm(sub(hp, u.p)), Math.min(d, 45 + w.r() * 25))); }
+    u.pose = 'fire'; seekCover(w, u);
+    if (u.stateT > 6 + w.r() * 5) { u.state = 'rush'; u.stateT = 0; u.goal = bound(w, u, add(u.p, scale(norm(sub(hp, u.p)), Math.min(d, 45 + w.r() * 25))), hp); }
     return;
   }
   if (u.state === 'rush') {
@@ -565,7 +605,7 @@ function infDefend(w: World, u: Unit, dt: number) {
     if (u.supp > 0.65) { u.pose = 'prone'; return; }
     if (u.state !== 'rush' && u.stateT > 6 + w.r() * 4) { u.state = 'rush'; u.stateT = 0; u.goal = add(u.p, scale(norm(sub(e.p, u.p)), Math.min(d, 50))); }
     else if (u.state === 'rush' && (!u.goal || dist2d(u.p, u.goal) < 3)) { u.state = 'hold'; u.stateT = 0; }
-    u.pose = u.state === 'rush' ? 'run' : 'fire'; return;
+    u.pose = u.state === 'rush' ? 'run' : 'fire'; if (u.state === 'hold') seekCover(w, u); return;
   }
   if (u.state === 'house' && u.house >= 0) {
     u.pose = 'fire';
@@ -672,7 +712,7 @@ function fight(w: World, u: Unit, dt: number) {
   w.schedule.push({ t: w.T + tf, f: (w) => {
     w.fx.push({ k: 'boom', p: impact, size: hit ? 0.7 : 0.45, air: false, metal: hit && tgt.kind !== 'inf' });
     suppress(w, impact, 30, 0.45, side);
-    if (tgt.kind === 'inf') { if (tgt.house >= 0) { hitHouse(w, tgt.house, 1); if (w.r() < 0.6) casualty(w, tgt, 1 + Math.floor(w.r() * 2), by); } else casualty(w, tgt, Math.round((tgt.pose === 'prone' ? 0.35 : 0.75) * (0.2 + 0.8 * w.r())), by); }
+    if (tgt.kind === 'inf') { if (tgt.house >= 0) { hitHouse(w, tgt.house, 1); if (w.r() < 0.6) casualty(w, tgt, 1 + Math.floor(w.r() * 2), by); } else casualty(w, tgt, Math.round((tgt.pose === 'prone' ? 0.35 : 0.75) * coverK(tgt, 0.6) * (0.2 + 0.8 * w.r())), by); }
     else if (hit) { if (tgt.hp - dmg > 0) w.fx.push({ k: 'hit', unit: tgt.id, p: impact, dir, pen: !(isTank(tgt) && !flank && w.r() < 0.5) }); damage(w, tgt, dmg, by); }
   } });
   if (u.side === 'en' && isTank(u) && w.r() < 0.35) { u.state = 'scoot'; u.stateT = 0; u.goal = add(u.p, scale(dir, -22)); w.schedule.push({ t: w.T + 9, f: () => { if (u.alive && u.state === 'scoot') { u.state = 'overwatch'; u.goal = null; } } }); }
@@ -708,7 +748,7 @@ function infFire(w: World, u: Unit) {
   const t = nearestFoe(w, u, SPEC.inf.range, o => o.kind === 'inf' || o.kind === 'kornet' || o.kind === 'technical' || o.kind === 'dshk');
   if (!t) return; const v = visOf(w, u, t); if (v <= 0) return;
   u.cd = SPEC.inf.reload * (0.8 + w.r() * 0.6) * (1 + u.supp); u.firedT = w.T; u.target = t.id;
-  const d = dist2d(t.p, u.p), cover = t.house >= 0 ? 0.3 : t.pose === 'prone' ? 0.45 : 1;
+  const d = dist2d(t.p, u.p), cover = t.house >= 0 ? 0.3 : (t.pose === 'prone' ? 0.45 : 1) * coverK(t, 0.5);
   const pk = 0.035 * u.men / 7 * (1 - d / 450) * cover * (1 - u.supp * 0.6) * (0.4 + v);
   w.fx.push({ k: 'volley', unit: u.id, p: add(u.p, [0, u.house >= 0 ? 3 : u.pose === 'prone' ? 0.4 : 1.3, 0]), to: add(t.p, [(w.r() - 0.5) * 6, 1, (w.r() - 0.5) * 6]), n: Math.max(1, Math.round(u.men / 2)), tracer: w.r() < 0.5, inf: true });
   w.stats.rounds += u.men * 3;
@@ -734,7 +774,7 @@ function cannonRound(w: World, u: Unit) {
   w.fx.push({ k: 'cannon', unit: u.id, p: muzzle, dir: norm(sub(to, muzzle)), to, tf }); w.stats.rounds++;
   const by = byName(u);
   w.schedule.push({ t: w.T + tf, f: (w) => { suppress(w, to, 12, 0.18, u.side); if (!hit) return;
-    if (o.kind === 'inf') { if (o.house >= 0) { hitHouse(w, o.house, 0.15); if (w.r() < 0.25) casualty(w, o, 1, by); } else casualty(w, o, w.r() < 0.35 ? 1 : 0, by); } else damage(w, o, isTank(o) ? 0.03 : 0.25, by); } });
+    if (o.kind === 'inf') { if (o.house >= 0) { hitHouse(w, o.house, 0.15); if (w.r() < 0.25) casualty(w, o, 1, by); } else casualty(w, o, w.r() < 0.35 * coverK(o, 0.55) ? 1 : 0, by); } else damage(w, o, isTank(o) ? 0.03 : 0.25, by); } });
 }
 function mgRound(w: World, u: Unit) {
   const muzzle = add(u.p, [0, u.kind === 'dshk' ? 1.1 : 2.4, 0]); w.stats.rounds++;
@@ -750,7 +790,7 @@ function mgRound(w: World, u: Unit) {
       w.log.push({ t: w.T, text: `${u.name} أسقطت ${AIR_AR.shahed} كانت متجهة نحو ${a.siteName}`, good: true, p: a.p }); } });
   } else {
     const o = w.units.find(x => x.id === u.target); if (!o || !o.alive) { u.burst = 0; return; }
-    const d = dist2d(o.p, muzzle), tf = d / 850, hit = w.r() < (o.kind === 'inf' ? (o.pose === 'prone' ? 0.004 : 0.008) : 0.16 - d / 14000);
+    const d = dist2d(o.p, muzzle), tf = d / 850, hit = w.r() < (o.kind === 'inf' ? (o.pose === 'prone' ? 0.004 : 0.008) * coverK(o, 0.5) : 0.16 - d / 14000);
     const to: V3 = add(o.p, [(w.r() - 0.5) * (hit ? 2 : 24), hit ? 1.2 : 0, (w.r() - 0.5) * (hit ? 2 : 24)]);
     w.fx.push({ k: 'round', unit: u.id, p: muzzle, dir: norm(sub(to, muzzle)), to, tracer, tf, hit: hit && o.kind !== 'inf' ? 'metal' : 'ground' });
     const by = byName(u);

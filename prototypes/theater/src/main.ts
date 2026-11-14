@@ -13,7 +13,7 @@ import {
   V3, add, sub, scale, len, norm, lerp, clamp, rng, World, newWorld, step, order, Order, ORDER_CD, Unit, Air, Fx, SITES, riverX, RIVER_W, CITY_R,
   HIGHWAY_Z, BERMS, AIR_AR, SIDE_AR, PATRIOT_POS, S400_POS, S400_SCALE, dist2d, site, angDiff,
 } from './sim';
-import { groundH, groundN, ROADS, HOUSES } from './land';
+import { groundH, groundN, ROADS, HOUSES, COVER } from './land';
 import { buildWorld, loadHeight, SiteProp, WorldOut } from './world';
 
 const urls = import.meta.glob('../models/*.gltf.json', { query: '?url', import: 'default', eager: true }) as Record<string, string>;
@@ -285,9 +285,9 @@ async function loadSoldier() {
   console.log('soldier VAT', { frames: frames.length, bones: sk.bones.length, anims: [...animRange.keys()].join(',') });
 }
 // جندي = بيانات بس (مكان، اتجاه، حركة)؛ الرسم كله بـ drawSoldiers
-interface Fig { x: number; z: number; yaw: number; anim: Anim; off: V3; ph: number; spd: number; dead: boolean; dieT: number }
+interface Fig { x: number; z: number; yaw: number; anim: Anim; off: V3; ph: number; spd: number; dead: boolean; dieT: number; freeze: boolean }
 const corpses: Fig[] = [];
-const newFig = (off: V3): Fig => ({ x: 0, z: 0, yaw: 0, anim: 'idle simple', off, ph: Math.random() * 60, spd: 0.9 + Math.random() * 0.2, dead: false, dieT: 0 });
+const newFig = (off: V3): Fig => ({ x: 0, z: 0, yaw: 0, anim: 'idle simple', off, ph: Math.random() * 60, spd: 0.9 + Math.random() * 0.2, dead: false, dieT: 0, freeze: false });
 interface SVis { figs: Fig[]; lastMen: number; kornet?: TransformNode }
 const squadVis = new Map<number, SVis>();
 const FORM = (i: number, n: number, id: number): V3 => { const k = i - (n - 1) / 2, j = ((id * 7 + i * 13) % 10) / 10 - 0.5; return [k * 4.5 + j * 1.5, 0, -Math.abs(k) * 3 + j * 2]; };
@@ -308,7 +308,17 @@ function syncSquads(dt: number) {
     const moving = u.spd > 0.3, recent = W.T - u.firedT < 2.5;
     const anim: Anim = u.pose === 'prone' ? (moving ? 'pron walk' : recent ? 'pron shot' : 'pron idle') : u.pose === 'run' || u.spd > 2.5 ? 'run' : moving ? 'simple walk' : recent || u.pose === 'fire' ? (u.kind === 'kornet' ? 'crouch shoot' : 'simple shoot') : 'idle simple';
     const cs = Math.cos(u.yaw), sn = Math.sin(u.yaw);
+    const c = u.cover && u.cv >= 0 && u.kind === 'inf' && !moving ? COVER[u.cv] : null;
     sv.figs.forEach((f, i) => {
+      f.freeze = false;
+      if (c) {
+        // ورا الستر (TH5.5): صف مگعمز على طول الحايط/الأكياس، وجوههم للتهديد؛ اللي ما يرمي ثابت مگعمز
+        const n1 = Math.min(5, sv!.figs.length), row = i < n1 ? 0 : 1, j = row ? i - n1 : i, nr = row ? sv!.figs.length - n1 : n1;   // صفين: الأول لازق بالستر، الثاني وراه
+        const k = (j - (nr - 1) / 2 + row * 0.5) * 1.6 * VS, tx = -c.nz, tz = c.nx, back = 0.2 + row * 1.6 * VS;
+        f.x = c.x + tx * k - c.nx * back; f.z = c.z + tz * k - c.nz * back; f.yaw = Math.atan2(c.nx, c.nz) + (i % 2 ? 0.12 : -0.1);
+        f.anim = 'crouch shoot'; f.freeze = !(recent && (i + Math.floor(W.T / 3)) % 3 !== 0);
+        return;
+      }
       const o = u.kind === 'kornet' ? ([i ? -2.2 : 1.6, 0, -1.2] as V3) : f.off;
       f.x = u.p[0] + (o[0] * cs + o[2] * sn) * VS; f.z = u.p[2] + (-o[0] * sn + o[2] * cs) * VS; f.yaw = u.yaw + (i % 2 ? 0.15 : -0.1);
       f.anim = i % 3 === 1 && anim === 'simple shoot' ? 'crouch shoot' : anim;
@@ -328,7 +338,8 @@ function drawSoldiers(dt: number) {
     if (f.dead) {
       if (vatTime - f.dieT < r.dur) { const sp = r.fps; solSet[k] = r.s; solSet[k + 1] = r.e; solSet[k + 2] = ((-f.dieT * sp) % tot + tot) % tot; solSet[k + 3] = sp; }
       else { solSet[k] = r.e - 1; solSet[k + 1] = r.e; solSet[k + 2] = 1.5; solSet[k + 3] = 0.0001; }   // جثة: آخر لقطة ثابتة
-    } else { solSet[k] = r.s; solSet[k + 1] = r.e; solSet[k + 2] = f.ph % tot; solSet[k + 3] = r.fps * f.spd; }
+    } else if (f.freeze) { solSet[k] = r.s; solSet[k + 1] = r.e; solSet[k + 2] = Math.floor(tot * 0.15) + 0.5; solSet[k + 3] = 0.0001; }   // وضعية مگعمز ثابتة
+    else { solSet[k] = r.s; solSet[k + 1] = r.e; solSet[k + 2] = f.ph % tot; solSet[k + 3] = r.fps * f.spd; }
     n++;
   };
   for (const sv of squadVis.values()) sv.figs.forEach(put);
@@ -656,6 +667,7 @@ function handleFx(fx: Fx) {
     case 'houseHit': {
       const h = HOUSES[fx.house], c = G(h.x, h.z, h.h * 0.5);
       dust.emit({ a: c, n: Qn(fx.destroyed ? 60 : 18), spd: [4, fx.destroyed ? 16 : 9], up: 0.3, jit: Math.max(h.w, h.d) * 0.45 });
+      if (!fx.destroyed) { const own = W.houseOwner[fx.house], d = own === 'en' ? 1 : -1; houses.hole(fx.house, d, (Math.random() - 0.5) * 0.6); if (W.houseHp[fx.house] <= 1.2) houses.crack(fx.house); }   // الضرب جاي من الطرف الثاني
       if (fx.destroyed) { houses.damage(fx.house); smokeS.emit({ a: c, n: Qn(16), spd: [2, 6], up: 0.6, jit: h.w * 0.4 }); burning.push({ p: G(h.x, h.z, 1), t: W.T, big: 0.7 }); for (let k = 0; k < 4; k++) throwDebris(chunkMesh, add(c, [0, 2, 0]), [(Math.random() - 0.5) * 14, 6 + Math.random() * 8, (Math.random() - 0.5) * 14], 3); }
       break;
     }
@@ -986,7 +998,7 @@ $('bMute').onclick = () => ($('bMute').textContent = sfx.toggle() ? '🔇' : '�
 $('bCred').onclick = () => (($('credits') as HTMLElement).hidden = false); $('bCredClose').onclick = () => (($('credits') as HTMLElement).hidden = true);
 window.addEventListener('resize', () => engine.resize());
 (window as any).__step = (dt: number) => { step(W, dt); for (const f0 of W.fx) handleFx(liftFx(f0)); W.fx.length = 0; for (let i = vq.length - 1; i >= 0; i--) if (vq[i].t <= W.T) { const f = vq[i].f; vq.splice(i, 1); f(); } };
-(window as any).__follow = startFollow; (window as any).__getW = () => W; (window as any).__view = view; (window as any).__scene = scene; (window as any).__order = (o: Order) => order(W, o);
+(window as any).__follow = startFollow; (window as any).__getW = () => W; (window as any).__houses = HOUSES; (window as any).__view = view; (window as any).__scene = scene; (window as any).__order = (o: Order) => order(W, o);
 
 (async () => {
   const load = $('load');

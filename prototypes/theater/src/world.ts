@@ -4,12 +4,12 @@ import {
   Scene, Mesh, MeshBuilder, LoadAssetContainerAsync, Material, VertexData, VertexBuffer, StandardMaterial, Color3, Texture, Matrix, Quaternion, Vector3, AbstractMesh, TransformNode,
 } from '@babylonjs/core';
 import { CustomMaterial } from '@babylonjs/materials/custom';
-import { V3, SITES, riverX, RIVER_W, HIGHWAY_Z, BERMS, BERMS2, KORNET_P, KORNET_P2, rng, site, dist2d } from './sim';
-import { LAND, HN, HMIN, HMAX, WADI_FLOOR, ROADS, WADIS, HIGHWAY_END, setHeightData, groundH, groundN, roadDist, wadiDist, STRIP_ROT, HOUSES, HOUSE_TYPES, House, VILLAGES } from './land';
+import { V3, SITES, riverX, RIVER_W, HIGHWAY_Z, BERMS, rng, site, dist2d } from './sim';
+import { LAND, HN, HMIN, HMAX, WADI_FLOOR, ROADS, WADIS, HIGHWAY_END, setHeightData, groundH, groundN, roadDist, wadiDist, STRIP_ROT, HOUSES, HOUSE_TYPES, House, VILLAGES, WALLS, SANDBAGS, MOUNDS } from './land';
 import hUrl from '../textures/land_h.png?url';
 
 export interface SiteProp { site: string; mesh: Mesh; mat: StandardMaterial; hit: boolean }
-export interface WorldOut { houses: { damage(i: number): boolean; reset(): void }; siteProps: SiteProp[] }
+export interface WorldOut { houses: { damage(i: number): boolean; hole(i: number, dx: number, dz: number): void; crack(i: number): void; reset(): void }; siteProps: SiteProp[] }
 const EDGE_Y = -26;
 const sm = (a: number, b: number, v: number) => { const t = Math.min(1, Math.max(0, (v - a) / (b - a))); return t * t * (3 - 2 * t); };
 const edgeK = (x: number, z: number) => sm(LAND / 2 - 520, LAND / 2 - 20, Math.max(Math.abs(x), Math.abs(z)));
@@ -203,19 +203,49 @@ export async function buildWorld(scene: Scene, o: { HQ: boolean; NL: number; cas
     m.thinInstanceSetBuffer('matrix', bufs[t].m, 16, false); m.thinInstanceRegisterAttribute('color', 4); m.thinInstanceSetBuffer('color', bufs[t].c, 4, false);
     m.alwaysSelectAsActiveMesh = true; caster(m); }));
   // حائط حوش حول قسم من البيوت (طابوق ملبّخ)
-  const wallM: number[] = [], r2 = rng(99);
-  for (const h of HOUSES) { if (!h.yard) continue; const cw = h.w + 8 + r2() * 6, cd = h.d + 8 + r2() * 6, cs = Math.cos(h.rot), sn = Math.sin(h.rot), gap = r2() < 0.5 ? 1 : -1;
-    for (const [lx, lz, lw, ld] of [[0, -gap * cd / 2, cw, 0.4], [-cw / 2, 0, 0.4, cd], [cw / 2, 0, 0.4, cd], [cw * 0.3, gap * cd / 2, cw * 0.4, 0.4], [-cw * 0.3, gap * cd / 2, cw * 0.4, 0.4]]) {
-      const px = h.x + lx * cs + lz * sn, pz = h.z - lx * sn + lz * cs; if (roadDist(px, pz) < 1) continue;
-      wallM.push(...Matrix.Compose(new Vector3(lw, 2.1, ld), Quaternion.RotationAxis(Vector3.Up(), h.rot), new Vector3(px, groundH(px, pz) + 0.75, pz)).asArray()); } }
+  // الحيطان من land.WALLS (نفسها اللي المحاكاة تستعملها ستر)
+  const wallM: number[] = [];
+  for (const wl of WALLS) wallM.push(...Matrix.Compose(new Vector3(wl.w, 2.1, wl.d), Quaternion.RotationAxis(Vector3.Up(), wl.rot), new Vector3(wl.x, groundH(wl.x, wl.z) + 0.75, wl.z)).asArray());
   const wall = MeshBuilder.CreateBox('wall', { size: 1 }, scene); paint(wall, [0.9, 0.84, 0.72]); wall.material = wm; wall.receiveShadows = true; instances(wall, wallM); caster(wall);
-  const dead = new Set<number>();
+  // ---------- دمار البيوت (TH5.5): ثقوب بالحيطان ← انهيار جزئي ← ركام ----------
+  const dead = new Set<number>(), cracked = new Set<number>();
+  const holeTex = (() => { const c = document.createElement('canvas'); c.width = c.height = 128; const g = c.getContext('2d')!, hr = rng(5);
+    // ثقب قذيفة: حافة مكسرة غير منتظمة، قلب أسود، وهالة سخام
+    const ring = (rad: number, jag: number, col: string) => { g.beginPath(); for (let a = 0; a <= 26; a++) { const t = a / 26 * 6.283, rr = rad * (1 - jag + hr() * jag * 2); g.lineTo(64 + Math.cos(t) * rr, 64 + Math.sin(t) * rr); } g.closePath(); g.fillStyle = col; g.fill(); };
+    ring(60, 0.25, 'rgba(40,34,28,0.35)'); ring(44, 0.3, 'rgba(70,60,50,0.9)'); ring(30, 0.35, 'rgba(14,12,10,1)');
+    const t = new Texture(c.toDataURL(), scene); t.hasAlpha = true; return t; })();
+  const holeMat = new StandardMaterial('holeMat', scene); holeMat.diffuseTexture = holeTex; holeMat.useAlphaFromDiffuseTexture = true; holeMat.specularColor = Color3.Black(); holeMat.backFaceCulling = false; holeMat.zOffset = -1; holeMat.maxSimultaneousLights = 2 + NL;
+  const holeMesh = MeshBuilder.CreatePlane('hole', { size: 1 }, scene); holeMesh.material = holeMat; holeMesh.isPickable = false;
+  const holes: { i: number; m: number[] }[] = [];
+  const rub = MeshBuilder.CreateBox('rubble', { size: 1 }, scene); paint(rub, [0.78, 0.72, 0.62]); rub.material = wm; rub.isPickable = false; rub.receiveShadows = true; caster(rub);
+  const rubble: number[] = [], rr = rng(17);
+  const flushHoles = () => { const a = holes.flatMap(h => h.m); holeMesh.thinInstanceSetBuffer('matrix', new Float32Array(a.length ? a : Matrix.Scaling(0, 0, 0).asArray()), 16, false); holeMesh.alwaysSelectAsActiveMesh = true; };
+  const flushRubble = () => { rub.thinInstanceSetBuffer('matrix', new Float32Array(rubble.length ? rubble : Matrix.Scaling(0, 0, 0).asArray()), 16, true); rub.alwaysSelectAsActiveMesh = true; };
+  flushHoles(); flushRubble();
+  const setHouse = (i: number, squash: number, tilt: number, col: number) => { const h = HOUSES[i], t = h.t, k = slot[i];
+    Matrix.Compose(new Vector3(1, squash, 1), Quaternion.RotationAxis(Vector3.Up(), h.rot).multiply(Quaternion.RotationAxis(new Vector3(1, 0, 0), tilt)), new Vector3(h.x, baseY(h), h.z)).copyToArray(bufs[t].m, k * 16);
+    const g = (0.9 + ((i * 37) % 13) / 60) * TINT[t] * col; bufs[t].c.set([g, g * 0.95, g * 0.86, 1], k * 4);
+    typeMeshes[t].forEach(m => { m.thinInstanceBufferUpdated('matrix'); m.thinInstanceBufferUpdated('color'); }); };
   const houses = {
-    damage(i: number) { if (dead.has(i)) return false; dead.add(i); const h = HOUSES[i], t = h.t, k = slot[i]; (h as House & { dead?: boolean }).dead = true;
-      hMatrix(h, 0.3).copyToArray(bufs[t].m, k * 16); bufs[t].c.set([0.32, 0.29, 0.26, 1], k * 4);
-      typeMeshes[t].forEach(m => { m.thinInstanceBufferUpdated('matrix'); m.thinInstanceBufferUpdated('color'); }); return true; },
-    reset() { for (const i of dead) { const h = HOUSES[i], t = h.t, k = slot[i]; (h as House & { dead?: boolean }).dead = false; hMatrix(h).copyToArray(bufs[t].m, k * 16); const g = (0.9 + ((i * 37) % 13) / 60) * TINT[t]; bufs[t].c.set([g, g * 0.95, g * 0.86, 1], k * 4); }
-      dead.clear(); typeMeshes.forEach(ms => ms.forEach(m => { if (m.isEnabled()) { m.thinInstanceBufferUpdated('matrix'); m.thinInstanceBufferUpdated('color'); } })); },
+    damage(i: number) { if (dead.has(i)) return false; dead.add(i); const h = HOUSES[i]; (h as House & { dead?: boolean }).dead = true;
+      setHouse(i, 0.3, (rr() - 0.5) * 0.08, 0.36);
+      // ركام: كتل طابوق/كونكريت حول الأساس، تبقى
+      const R = Math.max(h.w, h.d) * 0.6; for (let q = 0; q < 14; q++) { const a = rr() * 6.28, d = Math.sqrt(rr()) * R, x = h.x + Math.cos(a) * d, z = h.z + Math.sin(a) * d, sz = 0.6 + rr() * 1.8;
+        rubble.push(...Matrix.Compose(new Vector3(sz, sz * (0.4 + rr() * 0.5), sz * (0.6 + rr() * 0.8)), Quaternion.FromEulerAngles((rr() - 0.5) * 0.9, rr() * 6.28, (rr() - 0.5) * 0.9), new Vector3(x, groundH(x, z) + sz * 0.15, z)).asArray()); }
+      flushRubble();
+      for (let q = holes.length - 1; q >= 0; q--) if (holes[q].i === i) holes.splice(q, 1); flushHoles(); return true; },
+    /** ثقب على الوجه اللي يقابل اتجاه الضرب (dx,dz = من وين جاية الضربة) */
+    hole(i: number, dx: number, dz: number) { if (dead.has(i)) return; const h = HOUSES[i], cs = Math.cos(h.rot), sn = Math.sin(h.rot);
+      const faces: [number, number, number][] = [[1, 0, h.w / 2], [-1, 0, h.w / 2], [0, 1, h.d / 2], [0, -1, h.d / 2]];
+      let best = faces[0], bs = -9; for (const f of faces) { const nx = f[0] * cs + f[1] * sn, nz = -f[0] * sn + f[1] * cs, sc = nx * dx + nz * dz + rr() * 0.6; if (sc > bs) { bs = sc; best = f; } }
+      const along = (rr() - 0.5) * ((best[0] ? h.d : h.w) - 2.5), lx = best[0] ? best[0] * (best[2] + 0.06) : along, lz = best[1] ? best[1] * (best[2] + 0.06) : along;
+      const x = h.x + lx * cs + lz * sn, z = h.z - lx * sn + lz * cs, y = baseY(h) + 1.3 + rr() * Math.max(0.5, h.h - 3.2), nx = best[0] * cs + best[1] * sn, nz = -best[0] * sn + best[1] * cs, sz = 1 + rr() * 1.4;
+      const m = Matrix.Compose(new Vector3(sz, sz * (0.8 + rr() * 0.4), 1), Quaternion.RotationYawPitchRoll(Math.atan2(nx, nz) + Math.PI, 0, rr() * 6.28), new Vector3(x, y, z)).asArray();
+      if (holes.filter(q => q.i === i).length >= 9) return; holes.push({ i, m: [...m] }); if (holes.length > 420) holes.shift(); flushHoles(); },
+    /** انهيار جزئي: البيت يميل وينزل شوية ويسود */
+    crack(i: number) { if (dead.has(i) || cracked.has(i)) return; cracked.add(i); setHouse(i, 0.8, (rr() < 0.5 ? -1 : 1) * (0.04 + rr() * 0.04), 0.72); },
+    reset() { for (const i of new Set([...dead, ...cracked])) { (HOUSES[i] as House & { dead?: boolean }).dead = false; setHouse(i, 1, 0, 1); }
+      dead.clear(); cracked.clear(); holes.length = 0; rubble.length = 0; flushHoles(); flushRubble(); },
   };
 
   // ---------- أشياء حقيقية (TH5.3): نخل، بساتين، أكاسيا، سيارات مهجورة، أكياس رمل، حواجز (Sketchfab CC BY — models/CREDITS.md) ----------
@@ -274,16 +304,17 @@ export async function buildWorld(scene: Scene, o: { HQ: boolean; NL: number; cas
   for (const h of HOUSES) { if (r() > 0.3) continue; const a = h.rot + (r() < 0.5 ? 0 : Math.PI), d = Math.max(h.w, h.d) * 0.5 + 4.5, x = h.x + Math.sin(a) * d, z = h.z + Math.cos(a) * d;
     if (HOUSES.some(o2 => o2 !== h && Math.hypot(o2.x - x, o2.z - z) < Math.max(o2.w, o2.d) * 0.6 + 2)) continue; car(x, z, h.rot + (r() < 0.5 ? Math.PI / 2 : 0), false); }
   // أكياس رمل: مواقع الأبرامز ورا السواتر، الكورنيت، الخط الثاني، وطرف القرية الغربي؛ وحواجز كونكريت بالسيطرة
-  const sb: number[] = [], bar: number[] = [];
-  const bag = (x: number, z: number, yaw: number) => { if (roadDist(x, z) < 2) return; sb.push(...onGround(x, z, [1, 1, 1], yaw + (r() - 0.5) * 0.4, 0.15)); };
-  for (const b of BERMS) for (const dz of [-24, 24]) bag(b[0] + 28, b[2] + dz, 0);
-  for (const b of BERMS2) for (const dz of [-22, 0, 22]) bag(b[0] - 6, b[2] + dz, 0);
-  for (const k of [KORNET_P, KORNET_P2]) { bag(k[0] - 4, k[2], 0); bag(k[0] + 2, k[2] + 6, Math.PI / 2); }
-  const FV = VILLAGES[0];
-  for (const h of HOUSES) if (Math.hypot(h.x - FV.x, h.z - FV.z) < FV.rad && h.x < FV.x - FV.rad * 0.35 && r() < 0.6) bag(h.x - Math.max(h.w, h.d) * 0.6 - 3, h.z + (r() - 0.5) * 6, 0);
-  for (const dz of [-6, 6]) bag(-1885 - 10, HIGHWAY_Z + dz * 3.2, 0);
+  const sb: number[] = [], bar: number[] = [], FV = VILLAGES[0];
+  for (const b of SANDBAGS) sb.push(...onGround(b.x, b.z, [1, 1, 1], b.yaw, 0.15));   // من land.SANDBAGS (ستر بالمحاكاة)
   for (let i = 0; i < 3; i++) { bar.push(...onGround(-1905, HIGHWAY_Z - 7 + i * 3.3, [1, 1, 1], 0, 0)); bar.push(...onGround(-1875, HIGHWAY_Z + 7 - i * 3.3, [1, 1, 1], 0, 0)); }
   for (let x = FV.x - FV.rad; x < FV.x + FV.rad; x += 40 + r() * 70) bar.push(...onGround(x, HIGHWAY_Z + (r() < 0.5 ? -9.5 : 9.5), [1, 1, 1], Math.PI / 2 + (r() - 0.5) * 0.2, 0));
+  // تلال ترابية صغيرة بطريق الهجوم (ستر بالمحاكاة): بيضاوي مسطّح بخامة الرمل
+  const mound = MeshBuilder.CreateIcoSphere('mound', { radius: 0.5, subdivisions: 3, updatable: true }, scene);
+  { const p = mound.getVerticesData(VertexBuffer.PositionKind)!; for (let i = 0; i < p.length; i += 3) { const h = Math.sin(p[i] * 41.3 + p[i + 1] * 17.9 + p[i + 2] * 63.1) * 43758.5453, k = 0.86 + (h - Math.floor(h)) * 0.28; p[i] *= k; p[i + 2] *= k; p[i + 1] = Math.max(-0.05, p[i + 1] * k); }
+    mound.updateVerticesData(VertexBuffer.PositionKind, p); const nn: number[] = []; VertexData.ComputeNormals(p, mound.getIndices()!, nn); mound.setVerticesData(VertexBuffer.NormalKind, nn);
+    const mm = plain('moundMat'); const st = tex('sand'); st.uScale = 2; st.vScale = 3; mm.diffuseTexture = st; mm.diffuseColor = new Color3(0.74, 0.69, 0.6); mm.emissiveColor = new Color3(0.05, 0.045, 0.035); mound.material = mm; mound.receiveShadows = true; }
+  const mdm: number[] = []; for (const m of MOUNDS) mdm.push(...Matrix.Compose(new Vector3(5, 2.6, m.len), Quaternion.RotationAxis(Vector3.Up(), m.rot), new Vector3(m.x, groundH(m.x, m.z) - 0.05, m.z)).asArray());
+  instances(mound, mdm); caster(mound);
   const nProps = scatter(P_TREE, orch, 2000) + scatter(P_ACACIA, ac, 1800) + scatter(P_CAR1, cars[0], 1500) + scatter(P_CAR2, cars[1], 1500) + scatter(P_PICK, cars[2], 1500) + scatter(P_SAND, sb, 1300) + scatter(P_BAR, bar, 1300);
   console.log('props', { palms: pm.length / 16, orch: orch.length / 16, acacia: ac.length / 16, cars: cars.map(c => c.length / 16), sandbags: sb.length / 16, barriers: bar.length / 16, total: nProps, chunks: chunks.length });
 

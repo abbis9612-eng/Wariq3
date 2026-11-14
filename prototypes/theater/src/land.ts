@@ -1,7 +1,7 @@
 // تصميم الأرض: ملف مشترك بين مولّد الأرض (tools/genterrain.mjs) والرسم (main.ts). بدون أي رسم.
 // الفكرة (I-027): سهل صحراوي بالوسط للقتال، وديان جافة تقطعه، هضاب غرباً، سلسلتين جبال شمالاً وجنوباً، وقرية على الوادي.
 import type { V3 } from './geo.ts';
-import { SITES, riverX, RIVER_W, HIGHWAY_Z, BERMS, BERMS2, PATRIOT_POS, S400_POS, site, rng } from './geo.ts';
+import { SITES, riverX, RIVER_W, HIGHWAY_Z, BERMS, BERMS2, KORNET_P, KORNET_P2, PATRIOT_POS, S400_POS, site, rng } from './geo.ts';
 
 export const LAND = 13000;          // عرض الأرض بالمتر
 export const HN = 1025;             // دقة خريطة الارتفاع
@@ -116,6 +116,50 @@ export const HOUSES: House[] = (() => {
       if (add(v, v.x + Math.cos(a) * d, v.z + Math.sin(a) * d, v.rot + (r() < 0.5 ? 0 : Math.PI / 2) + (r() - 0.5) * 0.25)) k++;
     }
   }
+  return out;
+})();
+// ===== الستر (TH5.5): حيطان الأحواش وأكياس الرمل — بيانات ثابتة يشوفها الرسم والمحاكاة سوا =====
+export interface Wall { x: number; z: number; w: number; d: number; rot: number }   // w على المحور المحلي x، d على z
+export const WALLS: Wall[] = (() => {
+  const r2 = rng(99), out: Wall[] = [];
+  for (const h of HOUSES) { if (!h.yard) continue; const cw = h.w + 8 + r2() * 6, cd = h.d + 8 + r2() * 6, cs = Math.cos(h.rot), sn = Math.sin(h.rot), gap = r2() < 0.5 ? 1 : -1;
+    for (const [lx, lz, lw, ld] of [[0, -gap * cd / 2, cw, 0.4], [-cw / 2, 0, 0.4, cd], [cw / 2, 0, 0.4, cd], [cw * 0.3, gap * cd / 2, cw * 0.4, 0.4], [-cw * 0.3, gap * cd / 2, cw * 0.4, 0.4]]) {
+      const px = h.x + lx * cs + lz * sn, pz = h.z - lx * sn + lz * cs; if (roadDist(px, pz) < 1) continue; out.push({ x: px, z: pz, w: lw, d: ld, rot: h.rot }); } }
+  return out;
+})();
+// أكياس رمل (مجسم مقوّس 4.2م، طوله على z المحلي): مواقع الأبرامز، الخط الثاني، الكورنيت، طرف القرية الغربي، السيطرة
+export interface Bag { x: number; z: number; yaw: number }
+export const SANDBAGS: Bag[] = (() => {
+  const out: Bag[] = [], hsh = (i: number) => { const v = Math.sin(i * 127.1 + 311.7) * 43758.5453; return v - Math.floor(v); };
+  const bag = (x: number, z: number, yaw: number) => { if (roadDist(x, z) < 2) return; out.push({ x, z, yaw: yaw + (hsh(out.length) - 0.5) * 0.4 }); };
+  for (const b of BERMS) for (const dz of [-24, 24]) bag(b[0] + 28, b[2] + dz, 0);
+  for (const b of BERMS2) for (const dz of [-22, 0, 22]) bag(b[0] - 6, b[2] + dz, 0);
+  for (const k of [KORNET_P, KORNET_P2]) { bag(k[0] - 4, k[2], 0); bag(k[0] + 2, k[2] + 6, Math.PI / 2); }
+  const FV = VILLAGES[0];
+  for (const h of HOUSES) if (Math.hypot(h.x - FV.x, h.z - FV.z) < FV.rad && h.x < FV.x - FV.rad * 0.35 && hsh(h.i + 7) < 0.6) bag(h.x - Math.max(h.w, h.d) * 0.6 - 3, h.z + (hsh(h.i) - 0.5) * 6, 0);
+  for (const dz of [-6, 6]) bag(-1885 - 10, HIGHWAY_Z + dz * 3.2, 0);
+  return out;
+})();
+// تلال ترابية صغيرة (1.3م) متفرقة بطريق الهجوم: ستر للمتقدم والمدافع (الصحراء ما بيها حيطان)
+export interface Mound { x: number; z: number; len: number; rot: number }
+export const MOUNDS: Mound[] = (() => {
+  const r = rng(31), out: Mound[] = [];
+  for (let i = 0; i < 9000 && out.length < 210; i++) { const x = -3250 + r() * 1500, z = HIGHWAY_Z - 230 + r() * 460, len = 6 + r() * 7;   // ممر الهجوم حول الطريق
+    if (roadDist(x, z) < 10 || wadiDist(x, z) < 15 || out.some(m => Math.hypot(m.x - x, m.z - z) < 18) || HOUSES.some(h => Math.hypot(h.x - x, h.z - z) < 25)) continue;
+    out.push({ x, z, len, rot: (r() - 0.5) * 0.7 }); }   // rot≈0: طولها شمال-جنوب، يعني تحمي من الشرق والغرب
+  return out;
+})();
+// نقاط الستر: n = اتجاه التهديد اللي النقطة محمية منه (الساتر بين النقطة والتهديد)
+export interface Cover { x: number; z: number; nx: number; nz: number }
+export const COVER: Cover[] = (() => {
+  const out: Cover[] = [];
+  for (const wl of WALLS) { const cs = Math.cos(wl.rot), sn = Math.sin(wl.rot), alongX = wl.w > wl.d, L = Math.max(wl.w, wl.d);
+    const ax: [number, number] = alongX ? [cs, -sn] : [sn, cs], nr: [number, number] = alongX ? [sn, cs] : [cs, -sn];
+    for (let t = -L / 2 + 1.8; t <= L / 2 - 1.8; t += 3.5) for (const sd of [-1, 1]) {
+      const x = wl.x + ax[0] * t + nr[0] * sd * 1.1, z = wl.z + ax[1] * t + nr[1] * sd * 1.1; if (roadDist(x, z) < 0.5) continue; out.push({ x, z, nx: -nr[0] * sd, nz: -nr[1] * sd }); } }
+  for (const m of MOUNDS) { const ax: [number, number] = [Math.sin(m.rot), Math.cos(m.rot)], nr: [number, number] = [Math.cos(m.rot), -Math.sin(m.rot)];
+    for (let t = -m.len / 2 + 1.5; t <= m.len / 2 - 1.5; t += 3) for (const sd of [-1, 1]) out.push({ x: m.x + ax[0] * t + nr[0] * sd * 2.6, z: m.z + ax[1] * t + nr[1] * sd * 2.6, nx: -nr[0] * sd, nz: -nr[1] * sd }); }
+  for (const b of SANDBAGS) { const lx: [number, number] = [Math.cos(b.yaw), -Math.sin(b.yaw)]; out.push({ x: b.x + lx[0] * 1.4, z: b.z + lx[1] * 1.4, nx: -lx[0], nz: -lx[1] }); }
   return out;
 })();
 // هل الخط بين نقطتين يمر ببيت؟ (للمحاكاة: خط النظر والساتر)

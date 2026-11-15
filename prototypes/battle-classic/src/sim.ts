@@ -18,8 +18,8 @@ export interface Unit { id: number; side: 0 | 1; type: Kind; x: number; y: numbe
 export interface Bld { id: number; x: number; y: number; w: number; h: number; r: number; c: number; dead: boolean }
 export interface Air { id: number; kind: 'drone' | 'jet'; x: number; y: number; vx: number; vy: number; side: 0 | 1; drop: boolean }
 export interface Heli { id: number; side: 0; x: number; y: number; ty: number; t0: number; cd: number; alive: boolean; rot: number; fireT: number }
-export type PKind = 'shell' | 'tank' | 'rocket' | 'msl' | 'atgm' | 'mg';
-export interface Proj { id: number; x: number; y: number; sx: number; sy: number; tx: number; ty: number; t: number; dur: number; kind: PKind }
+export type PKind = 'shell' | 'tank' | 'rocket' | 'msl' | 'atgm' | 'mg' | 'bomb';
+export interface Proj { id: number; x: number; y: number; sx: number; sy: number; tx: number; ty: number; t: number; dur: number; kind: PKind; side?: number }
 
 export type Fx =
   | { k: 'boom'; x: number; y: number; cal: number }                 // explode(): انفجار + حفرة + اهتزاز
@@ -77,7 +77,7 @@ function jet(w: World, side: 0 | 1, x: number) {
 }
 function enemyOf(w: World, side: number) { const l = w.u.filter(x => x.side !== side && x.alive); return l.length ? l[Math.floor(w.r() * l.length)] : null; }
 function fire(w: World, from: { x: number; y: number; id: number }, tx: number, ty: number, kind: PKind) {
-  const sp = ({ shell: 520, tank: 1500, rocket: 420, msl: 650, atgm: 300, mg: 1 } as const)[kind] * PPM, d = Math.hypot(tx - from.x, ty - from.y);
+  const sp = ({ shell: 520, tank: 1500, rocket: 420, msl: 650, atgm: 300, mg: 1, bomb: 1 } as const)[kind] * PPM, d = Math.hypot(tx - from.x, ty - from.y);
   w.pr.push({ id: w.nid++, x: from.x, y: from.y, sx: from.x, sy: from.y, tx, ty, t: 0, dur: Math.max(.08, d / sp), kind });
   const a = Math.atan2(ty - from.y, tx - from.x); w.fx.push({ k: 'muzzle', x: from.x, y: from.y, a, kind, src: from.id });
 }
@@ -112,12 +112,12 @@ export function step(w: World, dt: number) {
   w.heli.forEach(h => { if (t < h.t0 || !h.alive) return; h.rot += dt * 40; if (h.y > h.ty) h.y -= 70 * ppm * 3 * dt; else { h.x += Math.sin(t + h.t0) * 8 * dt; h.cd -= dt; if (h.cd <= 0 && t < 31 * K) { const e = enemyOf(w, 0); if (e) { fire(w, h, e.x, e.y, 'atgm'); h.fireT = t; h.cd = R(2.5, 4); } } } });
   w.air = w.air.filter(j => {
     j.x += j.vx * dt; j.y += j.vy * dt;
-    if (j.kind === 'jet' && !j.drop && (j.side ? j.y > H * .7 : j.y < H * .3)) { j.drop = true; for (let i = 0; i < 3; i++) { const e = enemyOf(w, j.side); if (e) w.ev.push({ t: w.T + i * .2, f: () => explode(w, e.x + R(-30, 30), e.y + R(-30, 30), 3) }); } }
+    if (j.kind === 'jet' && !j.drop && (j.side ? j.y > H * .7 : j.y < H * .3)) { j.drop = true; for (let i = 0; i < 3; i++) { const e = enemyOf(w, j.side); if (e) w.pr.push({ id: w.nid++, x: j.x, y: j.y, sx: j.x, sy: j.y, tx: e.x + R(-30, 30), ty: e.y + R(-30, 30), t: -i * .2, dur: 1.4, kind: 'bomb', side: j.side }); } }
     return j.y > -80 && j.y < H + 80;
   });
   w.pr = w.pr.filter(p => {
-    p.t += dt; const k = p.t / p.dur; p.x = p.sx + (p.tx - p.sx) * k; p.y = p.sy + (p.ty - p.sy) * k;
-    if (k >= 1) { if (p.kind === 'mg') w.fx.push({ k: 'mghit', x: p.tx, y: p.ty }); else if (p.kind === 'msl') w.fx.push({ k: 'mslhit', x: p.tx, y: p.ty }); else explode(w, p.tx, p.ty, p.kind === 'shell' ? 2.4 : p.kind === 'rocket' ? 2 : 1.3); return false; }
+    p.t += dt; const k = Math.max(0, p.t / p.dur); p.x = p.sx + (p.tx - p.sx) * k; p.y = p.sy + (p.ty - p.sy) * k;
+    if (k >= 1) { if (p.kind === 'mg') w.fx.push({ k: 'mghit', x: p.tx, y: p.ty }); else if (p.kind === 'msl') w.fx.push({ k: 'mslhit', x: p.tx, y: p.ty }); else explode(w, p.tx, p.ty, p.kind === 'bomb' ? 3 : p.kind === 'shell' ? 2.4 : p.kind === 'rocket' ? 2 : 1.3); return false; }
     return true;
   });
   u.forEach(x => { if (x.burn! > 0) x.burn! -= dt; });

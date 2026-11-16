@@ -327,7 +327,8 @@ let fadeT = 0;
 const HOUSE = ['h1', 'h2', 'h3', 'h4', 'h6'];
 const cam = { x: MW / 2, y: MH / 2, z: 1.7, auto: true };
 const hot: { x: number; y: number; t: number; w: number }[] = [];
-const CLOSE = 1.75;   // تقريب المتابعة (1 = الساحة بالعرض كلها)
+const CLOSE = 2.1;
+let focusY = 1100;   // تقريب المتابعة (1 = الساحة بالعرض كلها)
 function sprite(sp: Spr, x: number, y: number, ang: number, size: number, side: number, dead: boolean) { g.save(); g.translate(x, y); g.rotate(ang + Math.PI / 2); g.drawImage(dead ? sp.dark : side < 0 ? sp.plain : sp.side[side], -size / 2, -size / 2, size, size); g.restore(); }
 function shadowOf(sp: Spr, x: number, y: number, ang: number, size: number, ox: number, oy: number, a = .38) { g.save(); g.translate(x + ox, y + oy); g.rotate(ang + Math.PI / 2); g.globalAlpha = a; g.drawImage(sp.shadow, -size / 2, -size / 2, size, size); g.restore(); g.globalAlpha = 1; }
 const UN: Record<string, [string, string, number]> = { tank: ['abrams', 't72', 18], ifv: ['bmp', 'bmp', 14], truck: ['technical', 'technical', 10], arty: ['d30', 'd30', 13], mlrs: ['grad', 'grad', 15], ad: ['patriot', 's400', 17] };
@@ -444,13 +445,19 @@ function draw(T: number) {
 function camFollow(w: World, dt: number) {
   if (!cam.auto) return;
   // الكاميرا تتبع الجبهة: النص بين خط الهجوم وخط الدفاع، والصورة تبقى ضمن الخريطة
-  // «مخرج»: مركز القتال الحار (رميات وانفجارات وتدمير بآخر 5 ث)، ممزوج بمنتصف الجبهة حتى ما يقفز
-  while (hot.length && w.T - hot[0].t > 5) hot.shift();
-  let sx = 0, sy = 0, sw = 0; for (const h of hot) { const k = h.w * (1 - (w.T - h.t) / 5); sx += h.x * k; sy += h.y * k; sw += k; }
-  const fy = (w.frontA + w.frontD) / 2 + 60, ax = sw > 0 ? sx / sw : MW / 2, ay = sw > 0 ? sy / sw : fy;
+  // «مخرج»: الساحة مقسومة شرائح (عرض الشاشة)؛ يختار الشريحة الأحر (رميات، انفجارات، تدمير بآخر 6 ث)
+  // ويبقى عليها، وما يبدّل إلا إذا غيرها صار أحر بوضوح — فما يصوّر الأرض الفاضية بين الطرفين
+  while (hot.length && w.T - hot[0].t > 6) hot.shift();
   cam.z += (CLOSE - cam.z) * Math.min(1, dt * .5);
-  const z = baseZ() * cam.z, halfH = SH / 2 / z, halfW = SW / 2 / z;
-  const tx = clamp(ax * .6 + MW / 2 * .4, halfW - 30, MW - halfW + 30), ty = clamp(ay * .55 + fy * .45, halfH - 60, MH - halfH + 60);
+  const z = baseZ() * cam.z, halfH = SH / 2 / z, halfW = SW / 2 / z, band = halfH * 1.3;
+  const score = (cy: number) => { let s2 = 0; for (const h of hot) if (Math.abs(h.y - cy) < band) s2 += h.w * (1 - (w.T - h.t) / 6); return s2; };
+  let best = focusY, bs = score(focusY);
+  for (const h of hot) { const sc = score(h.y); if (sc > bs * 1.6 + .5) { bs = sc; best = h.y; } }
+  if (!hot.length) best = (w.frontA + w.frontD) / 2;
+  focusY += (best - focusY) * Math.min(1, dt * 1.5);
+  let sx = 0, sw = 0, sy = 0; for (const h of hot) if (Math.abs(h.y - focusY) < band) { const k2 = h.w * (1 - (w.T - h.t) / 6); sx += h.x * k2; sy += h.y * k2; sw += k2; }
+  const ax = sw > 0 ? sx / sw : MW / 2, ay = sw > 0 ? sy / sw : focusY;
+  const tx = clamp(ax * .55 + MW / 2 * .45, halfW - 30, MW - halfW + 30), ty = clamp(ay, halfH - 60, MH - halfH + 60);
   const k = 1 - Math.exp(-dt * .7); cam.x += (tx - cam.x) * k; cam.y += (ty - cam.y) * k;
 }
 
@@ -476,7 +483,7 @@ function hud() {
 function startBattle() {
   const res: Res = { ...structuredClone(SAMPLES[curRes]), terr, an: 'العراق', bn: 'العدو' };
   W = create(res); fx = []; trails = []; lights = []; shake = 0; recoil.clear(); mun.clear(); turretFly.length = 0; feed.forEach(f => f.el.remove()); feed.length = 0;
-  buildGround(terr, W as any); cam.x = MW / 2; cam.y = 1050; cam.z = CLOSE; cam.auto = true; hot.length = 0;
+  buildGround(terr, W as any); cam.x = MW / 2; cam.y = 1050; cam.z = CLOSE; cam.auto = true; hot.length = 0; focusY = 1100;
   $('bna').textContent = res.an!; $('bnd').textContent = res.bn!; endShown = false; lastPh = ''; setSpeed(1);
   ($('start') as HTMLElement).hidden = true; $('hud').hidden = false; $('ctl').hidden = false; $('bend').hidden = true; running = true; audio(); startLoops();
 }

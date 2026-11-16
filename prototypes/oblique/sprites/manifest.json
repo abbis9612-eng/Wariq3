@@ -1,0 +1,26 @@
+{
+ "f16": {
+  "mpp": 0.0926,
+  "H": 5.23,
+  "kind": "dirs",
+  "head": null
+ },
+ "patriot": {
+  "mpp": 0.0634,
+  "H": 5.1,
+  "kind": "dirs",
+  "head": null
+ },
+ "s400": {
+  "mpp": 0.0902,
+  "H": 8.23,
+  "kind": "anim",
+  "head": 20
+ },
+ "zolf": {
+  "mpp": 0.0998,
+  "H": 4.59,
+  "kind": "anim",
+  "head": 205
+ }
+}

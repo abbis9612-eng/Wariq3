@@ -1,0 +1,40 @@
+<!doctype html><meta charset="utf-8"><style>html,body{margin:0;background:transparent}canvas{width:256px;height:256px}</style>
+<canvas id="c" width="256" height="256"></canvas>
+<script type="module">
+// يخبز صور مجسم من زاوية مايلة (نفس زاوية المشهد) بعدة اتجاهات، كل وحدة إطار بخلفية شفافة.
+// ?m=<glb>&yaw=<راديان: قدّام المجسم يصير شرق>&len=<أطول طول أفقي بالمتر>&el=<زاوية الميل درجات>&hide=<أرقام مجسمات>&shadow=1
+import { Engine, Scene, Vector3, Color4, Color3, HemisphericLight, DirectionalLight, FreeCamera, Camera, LoadAssetContainerAsync, PBRMaterial, TransformNode, MeshBuilder, ShadowGenerator } from '@babylonjs/core';
+import { ShadowOnlyMaterial } from '@babylonjs/materials';
+import '@babylonjs/loaders/glTF';
+const q = new URLSearchParams(location.search), EL = +(q.get('el') || 50) * Math.PI / 180, LEN = +(q.get('len') || 10), hide = (q.get('hide') || '').split(',').filter(Boolean).map(Number);
+const e = new Engine(document.getElementById('c'), true, { preserveDrawingBuffer: true, premultipliedAlpha: false, alpha: true, antialias: true }), s = new Scene(e); s.clearColor = new Color4(0, 0, 0, 0);
+const h = new HemisphericLight('h', new Vector3(0, 1, 0), s); h.intensity = .55; h.diffuse = new Color3(.86, .9, 1); h.groundColor = new Color3(.32, .27, .22);
+const sun = new DirectionalLight('d', new Vector3(.45, -1, .35), s); sun.position = new Vector3(-60, 120, -50); sun.intensity = 2.4; sun.diffuse = new Color3(1, .95, .86);   // شمس من فوق-يسار-ورا: الظل لليمين-قدّام
+const c = await LoadAssetContainerAsync('/' + q.get('m'), s); c.addAllToScene();
+c.meshes.forEach((m, i) => { if (hide.includes(i)) m.setEnabled(false); });
+// حركات المجسم الجاهزة: ?anim=Raise&at=0..1 (توقف كل الحركات، وتثبّت وحدة على لحظة)
+c.animationGroups.forEach(a => a.stop()); const an = q.get('anim'); if (an) { const g = c.animationGroups.find(a => a.name === an); if (g) { g.start(false, 1); g.pause(); g.goToFrame(g.from + (g.to - g.from) * +(q.get('at') || 0)); } }
+const only = q.get('only'); if (only !== null) c.meshes.forEach((m, i) => { if (i > 0 && i !== +only) m.setEnabled(false); });
+const hideN = (q.get('hideN') || '').split(',').filter(Boolean); c.transformNodes.forEach(n => { if (hideN.some(p => n.name.startsWith(p))) n.setEnabled(false); });
+const onlyN = q.get('onlyN'); if (onlyN) { const keep = c.transformNodes.find(t => t.name === onlyN); c.meshes.forEach(m => { if (m.name !== '__root__' && !(keep && m.isDescendantOf(keep))) m.setEnabled(false); }); }
+// رفع جزء (أنابيب الإطلاق): ?piv=<اسم العقدة>&ang=<درجات>&ax=x
+const piv = q.get('piv'); if (piv) { const n = c.transformNodes.find(t => t.name === piv); if (n) { const a = +(q.get('ang') || 0) * Math.PI / 180, ax = q.get('ax') || 'x'; n.rotationQuaternion = null; n.rotation[ax] += a; } }
+// رفع مجسم بمحور طرفه الخلفي (صاروخ ذو الفقار): ?erect=<رقم>&ang=<درجات>
+const er = q.get('erect'); if (er !== null) { const m = c.meshes[+er]; m.computeWorldMatrix(true); const bb = m.getBoundingInfo().boundingBox; const pv = new TransformNode('pv', s); pv.position.copyFrom(new Vector3(bb.minimumWorld.x, bb.minimumWorld.y, (bb.minimumWorld.z + bb.maximumWorld.z) / 2)); pv.parent = m.parent; m.setParent(pv); pv.rotationQuaternion = null; pv.rotation[q.get('ax') || 'z'] = +(q.get('ang') || 0) * Math.PI / 180; }
+c.materials.forEach(m => { if (m instanceof PBRMaterial) { m.environmentIntensity = 0; m.directIntensity = 1.6; m.metallic = Math.min(m.metallic ?? 1, .25); m.roughness = Math.max(.45, Math.min(m.roughness ?? 1, .85)); } });
+const inner = new TransformNode('in', s); c.rootNodes.forEach(n => n.parent = inner); inner.rotation.y = +(q.get('yaw') || 0);
+const root = new TransformNode('r', s); inner.parent = root;
+let b = root.getHierarchyBoundingVectors(true); const L = Math.max(b.max.x - b.min.x, b.max.z - b.min.z), sc = LEN / L; root.scaling.setAll(sc);
+b = root.getHierarchyBoundingVectors(true); root.position.set(-(b.max.x + b.min.x) / 2, -b.min.y, -(b.max.z + b.min.z) / 2);
+b = root.getHierarchyBoundingVectors(true); const rh = Math.hypot(b.max.x - b.min.x, b.max.z - b.min.z) / 2, H = b.max.y;
+const R = +(q.get('R') || 0) || Math.max(rh, rh * Math.sin(EL) + H * Math.cos(EL)) * 1.06;
+const spin = new TransformNode('s', s); root.parent = spin;
+if (q.get('shadow')) { const gp = MeshBuilder.CreateGround('g', { width: R * 6, height: R * 6 }, s); gp.material = new ShadowOnlyMaterial('so', s); gp.material.activeLight = sun; gp.material.alpha = .55; gp.receiveShadows = true;
+  const sg = new ShadowGenerator(2048, sun); sg.useBlurExponentialShadowMap = true; sg.blurKernel = 16; c.meshes.forEach(m => sg.addShadowCaster(m)); }
+const cam = new FreeCamera('c', new Vector3(0, Math.sin(EL) * 500, -Math.cos(EL) * 500), s); cam.setTarget(Vector3.Zero()); cam.mode = Camera.ORTHOGRAPHIC_CAMERA;
+cam.orthoLeft = -R; cam.orthoRight = R; cam.orthoTop = R; cam.orthoBottom = -R; cam.minZ = 1; cam.maxZ = 2000;
+await s.whenReadyAsync();
+window.info = { R, mpp: 2 * R / 256, H, rh };
+window.frame = (deg) => { spin.rotation.y = -deg * Math.PI / 180; s.render(); s.render(); return true; };   // الاتجاه بالدرجات: 0 شرق، 90 شمال (عكس عقارب الساعة من فوق)
+window.done = true;
+</script>

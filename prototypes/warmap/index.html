@@ -39,6 +39,7 @@ button:focus-visible{outline:2px solid var(--brass);outline-offset:2px}
 #start p{opacity:.85;margin:6px 0 10px;font-size:13.5px}
 .seg{display:flex;gap:6px;margin:5px 0}.seg button{flex:1;padding:9px 4px;border-radius:6px;border:1px solid rgba(255,255,255,.25);background:rgba(255,255,255,.05);font-size:13px}
 .seg button[aria-pressed=true]{border-color:var(--brass);color:var(--brass);background:rgba(210,171,51,.12)}
+.cred{font-size:10.5px!important;opacity:.55!important;margin-top:12px!important;line-height:1.6}
 .lbl{font-size:12px;opacity:.7;text-align:start;margin-top:9px}
 </style>
 </head>
@@ -46,7 +47,7 @@ button:focus-visible{outline:2px solid var(--brass);outline-offset:2px}
 <canvas id="c"></canvas>
 <div class="btop" id="hud" hidden><div id="month">العراق ← إيران · شهر الهجوم</div><div id="phase"></div><div id="cnt"></div></div>
 <div id="feed"></div>
-<div id="legend" hidden><div><i style="background:#f2cf4a"></i>قواتنا (العراق)</div><div><i style="background:#ff5638"></i>العدو (إيران)</div><div>◌ مدى الدفاع الجوي · ✈ مطار · ▲ قاعدة صواريخ</div></div>
+<div id="legend" hidden><div>العراق: F-16 · Su-25 · أبرامز · باتريوت</div><div>إيران: F-14 · T-72 · S-300 · شاهد · باليستي</div><div>◌ مدى الدفاع الجوي · ▲ قاعدة صواريخ</div></div>
 <div class="bctl" id="ctl" hidden>
   <div class="spd" id="spd" role="group" aria-label="السرعة" dir="ltr"><button data-s="1" aria-pressed="true">×1</button><button data-s="2">×2</button><button data-s="4">×4</button></div>
   <button id="bSkip">تخطّي</button><button id="bFit" aria-label="الخريطة كلها" aria-pressed="false">⤢</button><button id="bMute" aria-label="الصوت">🔊</button>
@@ -54,10 +55,11 @@ button:focus-visible{outline:2px solid var(--brass);outline-offset:2px}
 <div id="bend" hidden></div>
 <div id="start"><div class="card">
   <h1>الحرب على الخريطة</h1>
-  <p>شهر هجوم كامل يتعرض حي على خريطة الدول: طيارات تقلع من مطاراتها، دفاع جوي يرمي ويسقط، معترضات، صواريخ باليستية وباتريوت، مدفعية، ورتل دروع يتقدم وخط الجبهة يتحرك. النتيجة من نفس حساب اللعبة. حوالي دقيقة.</p>
+  <p>شهر هجوم كامل على صور أقمار صناعية حقيقية للمنطقة: طيارات تقلع من مطاراتها، S-300 يطلع عمودي وبعدين ينطلق، باتريوت يعترض الباليستي بالجو، مسيّرات، مدفعية وراجمات، ورتل دروع يتقدم وخط التماس يتحرك. النتيجة من نفس حساب اللعبة. حوالي دقيقة وربع. شغّل الصوت.</p>
   <div class="lbl">نتيجة الحساب (من قوة الدولتين)</div>
   <div class="seg" id="sRes"><button data-v="win" aria-pressed="true">نجاح</button><button data-v="lose">فشل</button></div>
   <button class="btn go" id="bGo" disabled>يحمّل…</button>
+  <p class="cred">صور الأرض: Sentinel-2 cloudless 2016 — EOX IT Services (CC BY 4.0، فيها بيانات Copernicus Sentinel معدّلة) · F-14: MirzaArrafiERV_45 (CC BY 4.0، Sketchfab) · باقي المجسمات والأصوات: نفس مصادر المعركة الكلاسيكية</p>
 </div></div>
 <script type="module" src="./src/main.ts"></script>
 </body>

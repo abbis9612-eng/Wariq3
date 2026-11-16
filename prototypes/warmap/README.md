@@ -3,7 +3,8 @@
 شهر هجوم واحد يتعرض حي على خريطة الدول نفسها اللي باللعبة. المرحلة الأولى «شكل بس»: النتيجة من نفس حساب الحرب، والمشهد يرسمها.
 
 - **شوفها:** https://claude.ai/artifact/6HGueBuM8pecXSRJcSd4Dq
-- **صورة:** `preview.png` (نجاح، من ث 2 لحد بطاقة النهاية)
+- **صورة:** `preview.png` (v2، نجاح)
+- **v2 (I-057):** صور أقمار صناعية حقيقية (`tools/tiles.py`)، بدون ألوان فرق، F-14 جديدة (`tools/sprites.mjs` + `tools/camo.py`)، كل شي بارتفاع z (منظور مائل)، إطلاقات حقيقية (S-300 بارد عمودي، باتريوت مائل، باليستي بقوس)، خطوط دخان مع الريح، صوت بتأخير المسافة. المصادر: `ASSETS.md`
 
 ## شنو بيها
 - خريطة الدول من بيانات اللعبة (`MAPD`، نفس الإسقاط) مقصوصة لمنطقة العراق–إيران: `tools/extract.mjs` ← `src/mapdata.json`.
@@ -24,6 +25,8 @@
 npm ci
 npm run dev                         # http://localhost:5173/?auto&r=win|lose
 node tools/shots.mjs win 2,8,16     # صور لحظات (السيرفر على 5181)
+node tools/zoom.mjs win 8,9 48.8,31.5,1.1   # لقطات مقرّبة بنفس التشغيلة (?cam=lon,lat,نص_العرض)
+python3 tools/tiles.py              # ينزّل صور الأقمار ويدمجها
 npm run build                       # dist/ ← artifact.html للنشر
 ```
 

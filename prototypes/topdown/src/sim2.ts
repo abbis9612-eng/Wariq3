@@ -15,6 +15,9 @@ const scl = (a: V3, k: number): V3 => ({ x: a.x * k, y: a.y * k, z: a.z * k });
 const clamp = (x: number, a: number, b: number) => x < a ? a : x > b ? b : x;
 const angd = (a: number, b: number) => Math.atan2(Math.sin(a - b), Math.cos(a - b));
 const G = 9.81;
+// سرعة لف الجناح (راد/ث)، أقصى تسارع بالمحرك (م/ث²)، سرعة الانهيار (م/ث) [ASSUMPTION تقريبية]
+const ROLL: Record<string, number> = { f16: 3.4, su25: 1.9, f14: 2.3 }, THR: Record<string, number> = { f16: 11, su25: 6, f14: 9 }, VSTALL: Record<string, number> = { f16: 72, su25: 62, f14: 68 };
+const TURRET_RATE: Record<string, number> = { abrams: .73, t72: .42, bmp: .6 };   // سرعة لف البرج راد/ث [ASSUMPTION]
 
 export const REF = { lat: 31.45, lon: 47.95 };
 const MX = (lon: number) => (lon + 180) / 360, MY = (lat: number) => (1 - Math.log(Math.tan(Math.PI / 4 + lat * Math.PI / 360)) / Math.PI) / 2;
@@ -27,9 +30,9 @@ export const SITES = {
 export const RUNWAY = .3, OMID_RW = .2;
 export function rng(seed: number) { let s = seed >>> 0; return () => { s = (s * 1664525 + 1013904223) >>> 0; return s / 4294967296; }; }
 
-export interface Jet { id: number; type: string; side: Side; p: V3; hd: number; spd: number; vz: number; bank: number; st: string; mission: 'sead' | 'strike' | 'cap'; slot: number; lead: number; home: { x: number; y: number }; rw: number; ammo: string[]; t0: number; roll: number; fired: number; tgt: number; faf: number; cmT: number }
+export interface Jet { id: number; type: string; side: Side; p: V3; hd: number; spd: number; vz: number; bank: number; st: string; mission: 'sead' | 'strike' | 'cap'; slot: number; lead: number; home: { x: number; y: number }; rw: number; ammo: string[]; t0: number; roll: number; fired: number; tgt: number; faf: number; cmT: number; gam: number; n: number; man: string; manT: number; manH: number }
 export interface Msl { id: number; type: string; side: Side; p: V3; vel: V3; ph: 'eject' | 'drop' | 'boost' | 'coast' | 'dead'; t: number; tgtJet?: number; tgtMsl?: number; tgtGnd?: number; tgtPt?: V3; miss: boolean; bestD: number; from: string; lastT?: V3; lastP?: V3; lostAt?: number; plan?: { dir: V3; k: number; p0: V3 } }
-export interface Gnd { id: number; type: string; side: Side; p: V3; hd: number; st: 'idle' | 'move' | 'dead' | 'gone'; goal: V3 | null; reload: number; hp: number; burnT: number; plt: number; dug: boolean; turret: number; shotsAt: number }
+export interface Gnd { id: number; type: string; side: Side; p: V3; hd: number; st: 'idle' | 'move' | 'dead' | 'gone'; goal: V3 | null; reload: number; hp: number; burnT: number; plt: number; dug: boolean; turret: number; shotsAt: number; spd: number; rev: boolean; man: string; manP: V3 | null; manT: number }
 export interface Battery { id: number; type: string; side: Side; p: V3; hd: number; launchers: { p: V3; alive: boolean; raise: number; hd: number }[]; ammo: number; alert: boolean; next: number }
 export interface Ev { t: number; type: string; p: V3; id?: number; data?: any }
 export interface Debris { p: V3; vel: V3; t: number; burn: boolean }
@@ -38,7 +41,7 @@ export interface Chute { p: V3; t: number; landed: number }
 export class World {
   t = 0; ev: Ev[] = []; jets: Jet[] = []; msls: Msl[] = []; gnd: Gnd[] = []; bats: Battery[] = []; debris: Debris[] = []; chutes: Chute[] = []; nid = 1; r: () => number;
   stats = { lostA: [0, 0], lostG: [0, 0], bm: 0, bmShot: 0, reinf: 0 }; phase = 'air'; won = false; endT = -1; nextReinf = 1e9; bmT = [240, 300]; tels: { p: V3; erect: number; fired: boolean; t: number }[] = [];
-  constructor(seed = 2) {
+  constructor(seed = 3) {
     this.r = rng(seed);
     // طيارات العراق: 4×F-16 إخماد (أزواج كل 40 ث) + 4×Su-25 قصف (بعد 100 ث)
     for (let i = 0; i < 4; i++) this.jets.push(this.mkJet('f16', 0, 'sead', i, SITES.base, RUNWAY, 6 + i * 20, ['AGM-88', 'AIM-120', 'AIM-120']));
@@ -58,12 +61,13 @@ export class World {
   }
   mkJet(type: string, side: Side, mission: Jet['mission'], slot: number, home: { x: number; y: number }, rw: number, t0: number, ammo: string[]): Jet {
     const back = slot * 350, p = v(home.x - Math.cos(rw) * (1400 + back), home.y - Math.sin(rw) * (1400 + back), 0);
-    return { id: this.nid++, type, side, p, hd: rw, spd: 0, vz: 0, bank: 0, st: 'parked', mission, slot, lead: 0, home, rw, ammo: [...ammo], t0, roll: 0, fired: 0, tgt: 0, faf: 0, cmT: 0 };
+    return { id: this.nid++, type, side, p, hd: rw, spd: 0, vz: 0, bank: 0, st: 'parked', mission, slot, lead: 0, home, rw, ammo: [...ammo], t0, roll: 0, fired: 0, tgt: 0, faf: 0, cmT: 0, gam: 0, n: 1, man: '', manT: 0, manH: 0 };
   }
   mkBat(type: string, side: Side, c: { x: number; y: number }, hd: number, offs: number[][], ammo: number): Battery { return { id: this.nid++, type, side, p: { ...c, z: 0 }, hd, launchers: offs.map(o => ({ p: { x: c.x + o[0], y: c.y + o[1], z: 0 }, alive: true, raise: type === 'patriot' ? 1 : 0, hd })), ammo, alert: false, next: 0 }; }
-  mkGnd(type: string, side: Side, p: V3, hd: number, plt: number): Gnd { return { id: this.nid++, type, side, p, hd, st: 'idle', goal: null, reload: 3 + this.r() * 4, hp: 1, burnT: 0, plt, dug: false, turret: hd, shotsAt: 0 }; }
+  mkGnd(type: string, side: Side, p: V3, hd: number, plt: number): Gnd { return { id: this.nid++, type, side, p, hd, st: 'idle', goal: null, reload: 3 + this.r() * 4, hp: 1, burnT: 0, plt, dug: false, turret: hd, shotsAt: 0, spd: 0, rev: false, man: '', manP: null, manT: 0 }; }
   emit(type: string, p: { x: number; y: number; z?: number }, id?: number, data?: any) { this.ev.push({ t: this.t, type, p: { z: 0, ...p }, id, data }); }
   jet(id: number) { return this.jets.find(j => j.id === id); }
+  pend(dly: number, go: () => void) { (this as any).pending = [...((this as any).pending || []), { at: this.t + dly, go }]; }
   alive(j: Jet) { return !['hit', 'gone', 'landed', 'parked'].includes(j.st); }
 
   step(dt: number) {
@@ -80,13 +84,33 @@ export class World {
     this.msls = this.msls.filter(m => m.ph !== 'dead' || this.t - m.t < 0);
     if (!this.won && this.gnd.some(g => g.side === 0 && g.type !== 'grad' && g.type !== 'truck' && g.st !== 'dead' && Math.hypot(g.p.x - SITES.objective.x, g.p.y - SITES.objective.y) < 1500)) { this.won = true; this.endT = this.t + 20; this.emit('objective', SITES.objective); }
   }
-  // ---------- الطيارات ----------
-  flyTo(j: Jet, wantHd: number, wantZ: number, wantSpd: number, dt: number, gMax?: number) {
-    const ty = AIR[j.type], g = gMax ?? ty.maxG * .6, rate = Math.min(.35, g * G / Math.max(80, j.spd));
-    const d = angd(wantHd, j.hd), dh = clamp(d, -rate * dt, rate * dt); j.hd += dh; j.bank += (clamp(dh / dt / .3, -1.3, 1.3) - j.bank) * Math.min(1, dt * 3);
-    j.spd += (wantSpd - j.spd) * Math.min(1, dt * .5); j.vz += (clamp((wantZ - j.p.z) * .12, -90, 60) - j.vz) * Math.min(1, dt * 1.2);
-    j.p = add(j.p, v(Math.cos(j.hd) * j.spd, Math.sin(j.hd) * j.spd, j.vz), dt); if (j.p.z < 0) j.p.z = 0;
+  // ---------- الطيارات (WM10.2، I-064): فيزياء نقطة كتلة بلفّات منسّقة ----------
+  // الطيارة تلف فقط لما تميل: معدل الدوران = g·n·sinφ / (V·cosγ)، والأنف يرفع/ينزل بـ g/V·(n·cosφ − cosγ).
+  // الطيار يختار الحمل n (≤ حد الـG) واتجاه الرفع φ؛ لازم يلف الجناح أول (سرعة لف محدودة) قبل ما تبدي اللفة.
+  // للنزول الحاد يقلب الطيارة على ظهرها ويسحب (Split-S)، والصعود يأكل سرعة والغطس يزيدها.
+  fly(j: Jet, wantHd: number, wantZ: number, wantSpd: number, dt: number, o: { g?: number; bank?: number; gam?: number; inv?: boolean; gamCmd?: number } = {}) {
+    const ty = AIR[j.type], V = Math.max(50, j.spd), cg = Math.cos(j.gam), nMax = Math.min(ty.maxG, o.g ?? ty.maxG * .55), bankMax = o.bank ?? 1.05;
+    const wMax = G * Math.tan(bankMax) / V, w = clamp(angd(wantHd, j.hd) * .45, -wMax, wMax);
+    const gamMax = o.gam ?? .3; let gc = o.gamCmd ?? clamp(Math.atan2(wantZ - j.p.z, V * 10), -gamMax, gamMax);
+    if (j.p.z < 120 && j.st !== 'land' && j.st !== 'roll') gc = Math.max(gc, .06);   // ما تدخل بالأرض
+    if (j.p.z + j.vz * 4 < 60 && j.st !== 'land') gc = Math.max(gc, .2);
+    const nh = w * V * cg / G, nv = clamp(cg + V * .55 * (gc - j.gam) / G, o.inv ? -nMax : .25, nMax);
+    let n = Math.hypot(nh, nv); const phiCmd = Math.atan2(nh, nv); if (n > nMax) n = nMax;
+    const R = ROLL[j.type], dphi = angd(phiCmd, j.bank); j.bank += clamp(dphi * 5, -R, R) * dt; j.bank = angd(j.bank, 0);
+    const al = Math.max(0, Math.cos(angd(phiCmd, j.bank))), nAct = al * n + (1 - al) * Math.min(1, n);   // يلف الجناح أول وبعدين يسحب
+    this.dyn(j, nAct, wantSpd, dt);
   }
+  dyn(j: Jet, n: number, wantSpd: number, dt: number) {
+    const V = Math.max(50, j.spd), cg = Math.cos(j.gam);
+    j.n += clamp(n - j.n, -9 * dt, 9 * dt);   // الـG يتبنى بثانية تقريباً
+    j.gam = clamp(j.gam + (G / V) * (j.n * Math.cos(j.bank) - cg) * dt, -1.45, 1.45);
+    j.hd = angd(j.hd + G * j.n * Math.sin(j.bank) / (V * Math.max(.15, Math.cos(j.gam))) * dt, 0);
+    j.spd = clamp(j.spd + (clamp(.4 * (wantSpd - j.spd), -7, THR[j.type]) - G * Math.sin(j.gam) - .32 * (j.n - 1) * (j.n - 1)) * dt, VSTALL[j.type], 650);
+    j.vz = j.spd * Math.sin(j.gam); const hs = j.spd * Math.cos(j.gam);
+    j.p = add(j.p, v(Math.cos(j.hd) * hs, Math.sin(j.hd) * hs, j.vz), dt); if (j.p.z < 0) j.p.z = 0;
+  }
+  // تتبّع خط (مدرج، رجل هبوط): يرجع اتجاه يقرّب الطيارة من الخط
+  track(j: Jet, p: { x: number; y: number }, h: number, k = 700) { const e = -(j.p.x - p.x) * Math.sin(h) + (j.p.y - p.y) * Math.cos(h); return h - Math.atan(e / k); }
   stepJet(j: Jet, dt: number) {
     const ty = AIR[j.type];
     if (j.st === 'gone' || j.st === 'landed') return;
@@ -94,54 +118,92 @@ export class World {
       if (j.side === 1 && j.t0 > 1e8 && this.jets.some(q => q.side === 0 && this.alive(q) && Math.hypot(q.p.x - j.home.x, q.p.y - j.home.y) < 150000)) { j.t0 = this.t + j.slot * 15; this.emit('scramble', j.p, j.id); }
       if (this.t >= j.t0) { j.st = 'roll'; this.emit('takeoff', j.p, j.id, { type: j.type, mission: j.mission, slot: j.slot }); } return;
     }
-    if (j.st === 'hit') { j.roll += dt * 2.4; j.vz -= G * dt * .9; j.spd *= 1 - .1 * dt; j.p = add(j.p, v(Math.cos(j.hd) * j.spd, Math.sin(j.hd) * j.spd, j.vz), dt); if (j.p.z <= 0) { j.p.z = 0; j.st = 'gone'; this.emit('crash', j.p, j.id); } return; }
-    if (j.st === 'roll') { j.spd = Math.min(85, j.spd + 3.5 * dt); j.p = add(j.p, v(Math.cos(j.hd) * j.spd, Math.sin(j.hd) * j.spd, 0), dt); if (j.spd >= 85) { j.st = 'climb'; this.emit('liftoff', j.p, j.id); } return; }
-    const cruiseZ = j.type === 'su25' ? (j.ammo.length && this.missionTarget(j) && Math.hypot(this.missionTarget(j)!.x - j.p.x, this.missionTarget(j)!.y - j.p.y) < 6000 ? 800 : 150) : 7000,   // Su-25 واطية تحت الرادار وتطلع قبل الهدف (pop-up)
+    if (j.st === 'hit') { // دوامة سقوط: تلف على نفسها والأنف ينزل
+      j.roll += dt * 2.4; j.bank = angd(j.bank + dt * 2.2, 0); j.gam = Math.max(-1.25, j.gam - dt * .35); j.spd = Math.max(120, j.spd * (1 - .05 * dt)); j.vz = j.spd * Math.sin(j.gam); j.hd += dt * .25;
+      const hs = j.spd * Math.cos(j.gam); j.p = add(j.p, v(Math.cos(j.hd) * hs, Math.sin(j.hd) * hs, j.vz), dt); if (j.p.z <= 0) { j.p.z = 0; j.st = 'gone'; this.emit('crash', j.p, j.id); } return; }
+    if (j.st === 'roll') { // ركض على المدرج، رفع الأنف عند 75 م/ث، إقلاع عند 88
+      j.spd = Math.min(95, j.spd + 4 * dt); j.hd = j.rw; if (j.spd > 75) j.gam = Math.min(.17, j.gam + dt * .1);
+      j.p = add(j.p, v(Math.cos(j.hd) * j.spd, Math.sin(j.hd) * j.spd, j.spd > 88 ? j.spd * Math.sin(j.gam) : 0), dt);
+      if (j.spd >= 88) { j.st = 'climb'; this.emit('liftoff', j.p, j.id); } return; }
+    const tgtNow = this.missionTarget(j), cruiseZ = j.type === 'su25' ? 150 : 7000,
       threat = this.msls.find(m => m.tgtJet === j.id && m.ph !== 'dead'), tD = threat ? len(sub(threat.p, j.p)) : 1e9;
-    // مراوغة: لفة حادة ونزول ومشاعل/شرائح لما الصاروخ يقرب
-    if (threat && tD < 14000 && j.st !== 'land') { if (j.st !== 'evade') { j.st = 'evade'; if (this.t - ((j as any).evT ?? -99) > 6) { (j as any).evT = this.t; this.emit('evade', j.p, j.id); } } const a = Math.atan2(threat.p.y - j.p.y, threat.p.x - j.p.x); this.flyTo(j, a + Math.PI * .58 * (j.slot % 2 ? -1 : 1), Math.max(300, j.p.z - 3000), ty.cruise * 1.15, dt, ty.maxG); if (tD < 8000 && this.t - j.cmT > .25) { j.cmT = this.t; this.emit('cm', j.p, j.id, { hd: j.hd }); } return; }
+    // مراوغة: كسر حاد عمودي على الصاروخ (beam) بكل الـG، نزول، مشاعل؛ لو قريب وفوق 2.5 كم: يقلب ويغطس (Split-S)
+    if (threat && tD < 14000 && j.st !== 'land') {
+      if (j.st !== 'evade') { j.st = 'evade'; j.manH = j.slot % 2 ? -1 : 1; if (this.t - ((j as any).evT ?? -99) > 6) { (j as any).evT = this.t; this.emit('evade', j.p, j.id, { split: j.p.z > 2500 && tD < 7000 }); } }
+      const a = Math.atan2(threat.p.y - j.p.y, threat.p.x - j.p.x), split = j.p.z > 2500 && tD < 7000;
+      this.fly(j, a + Math.PI / 2 * j.manH * 1.15, split ? j.p.z - 5000 : Math.max(300, j.p.z - 2500), ty.cruise * 1.3, dt, { g: ty.maxG, bank: 1.45, gam: split ? 1 : .5, inv: split });
+      if (tD < 8000 && this.t - j.cmT > .25) { j.cmT = this.t; this.emit('cm', j.p, j.id, { hd: j.hd }); } return; }
     if (j.st === 'evade') j.st = j.ammo.length ? 'transit' : 'rtb';
-    if (j.st === 'climb') { this.flyTo(j, j.hd + angd(this.missionHd(j), j.hd) * (j.p.z > 300 ? 1 : 0), cruiseZ, ty.cruise, dt, 3); if (j.p.z > cruiseZ * .7) j.st = 'transit'; return; }
+    if (j.st === 'climb') { // صعود 10°، لفة هادية (≤30°) نحو المهمة بعد 300 م
+      const want = j.p.z > 300 ? this.missionHd(j) : j.rw; this.fly(j, want, cruiseZ, ty.cruise, dt, { bank: .52, gam: .2, g: 3 });
+      if (j.p.z > Math.min(cruiseZ * .7, 2500) || (j.type === 'su25' && j.p.z > 120)) j.st = 'transit'; return; }
     if (j.st === 'transit') {
-      const tgt = this.missionTarget(j);
-      if (!tgt) { j.st = 'rtb'; return; }
-      // تشكيل: الجناح يمشي ورا القائد يمين/يسار
-      let want = Math.atan2(tgt.y - j.p.y, tgt.x - j.p.x); const d = Math.hypot(tgt.x - j.p.x, tgt.y - j.p.y);
-      const leader = this.jets.find(q => q.mission === j.mission && q.side === j.side && q.slot === j.slot - (j.slot % 2) && q !== j && this.alive(q));
-      if (leader && j.slot % 2) { const off = { x: leader.p.x - Math.cos(leader.hd) * 700 + Math.sin(leader.hd) * 600, y: leader.p.y - Math.sin(leader.hd) * 700 - Math.cos(leader.hd) * 600 }; if (Math.hypot(off.x - j.p.x, off.y - j.p.y) > 300) want = Math.atan2(off.y - j.p.y, off.x - j.p.x); }
-      this.flyTo(j, want, cruiseZ, ty.cruise * (leader && j.slot % 2 ? 1.08 : 1), dt);
-      this.weaponRelease(j, tgt, d); return;
+      if (!tgtNow) { j.st = 'rtb'; j.man = ''; return; }
+      const d = Math.hypot(tgtNow.x - j.p.x, tgtNow.y - j.p.y), brg = Math.atan2(tgtNow.y - j.p.y, tgtNow.x - j.p.x);
+      if (j.man === 'crank') { if (this.t > j.manT) j.man = ''; else { this.fly(j, brg + j.manH, Math.max(3000, j.p.z - 1500), ty.cruise, dt, { bank: 1.1, g: 4 }); return; } }
+      if (j.type === 'su25') return this.strike(j, tgtNow, d, brg, dt);
+      // صواريخ بعيدة: رفع الأنف (loft) قبل الرمي حتى يروح الصاروخ أبعد
+      const w = j.ammo[0], rng = w === 'AGM-88' ? 72000 : w === 'AIM-54' ? 70000 : w === 'AIM-120' ? 35000 : 0;
+      if (rng && d < rng + 9000 && w !== 'AIM-120') { this.fly(j, brg, Math.min(j.p.z + 4000, ty.ceiling), ty.cruise * 1.1, dt, { gam: .4, g: 4 }); if (d < rng && (j.gam > .18 || j.p.z > ty.ceiling - 500)) this.weaponRelease(j, tgtNow, d); return; }
+      // تشكيل: الجناح يمسك مكانه يمين ورا القائد ويعدّل سرعته
+      let want = brg, spd = ty.cruise; const leader = this.jets.find(q => q.mission === j.mission && q.side === j.side && q.slot === j.slot - (j.slot % 2) && q !== j && this.alive(q) && q.st !== 'roll');
+      if (leader && j.slot % 2) { const ch = Math.cos(leader.hd), sh = Math.sin(leader.hd), off = { x: leader.p.x - ch * 700 + sh * 600, y: leader.p.y - sh * 700 - ch * 600 }, ex = off.x - j.p.x, ey = off.y - j.p.y, along = ex * ch + ey * sh;
+        if (Math.hypot(ex, ey) > 250) want = Math.atan2(ey, ex); spd = clamp(leader.spd + along * .08, ty.cruise * .8, ty.cruise * 1.3); if (Math.hypot(ex, ey) <= 250) want = leader.hd; }
+      this.fly(j, want, cruiseZ, spd, dt, { bank: .9 }); this.weaponRelease(j, tgtNow, d); return;
     }
-    if (j.st === 'rtb') { const h = j.home, d = Math.hypot(h.x - j.p.x, h.y - j.p.y); this.flyTo(j, Math.atan2(h.y - j.p.y, h.x - j.p.x), Math.min(cruiseZ, 4000), ty.cruise, dt); if (d < 28000) { j.st = 'land'; j.faf = 0; this.emit('approach', j.p, j.id); } return; }
-    if (j.st === 'land') { // اقتراب حقيقي: نقطة على امتداد المدرج ← اصطفاف ← 3° ← هبوط وفرملة
-      const b = j.home, ux = Math.cos(j.rw), uy = Math.sin(j.rw), rx = j.p.x - b.x, ry = j.p.y - b.y, along = rx * ux + ry * uy, crs = -rx * uy + ry * ux;
-      const faf = { x: b.x - ux * (9000 + j.slot * 2500), y: b.y - uy * (9000 + j.slot * 2500) }, dF = Math.hypot(faf.x - j.p.x, faf.y - j.p.y);
-      if (!j.faf && dF < 1500) j.faf = 1;
-      if (!j.faf) this.flyTo(j, Math.atan2(faf.y - j.p.y, faf.x - j.p.x), 700, 150, dt, 3);
-      else { const wantZ = Math.max(0, -along * .052); this.flyTo(j, j.rw - clamp(crs / 1500, -.6, .6), wantZ, along < 0 ? 78 : 25, dt, 3); j.vz = clamp((wantZ - j.p.z) * .3, -25, 15); }
-      if (j.faf && along > 0 && j.p.z <= 1 && j.spd < 34) { j.st = 'landed'; this.emit('landed', j.p, j.id); }
-      return;
-    }
+    if (j.st === 'rtb' && j.ammo.some(a2 => a2.startsWith('AIM')) && this.nearestEnemyJet(j, 45000)) { j.st = 'transit'; j.t0 = this.t - 400; }   // عدو قريب وهي راجعة: تلتفت وتشتبك
+    if (j.st === 'rtb') { const h = j.home, d = Math.hypot(h.x - j.p.x, h.y - j.p.y); this.fly(j, Math.atan2(h.y - j.p.y, h.x - j.p.x), Math.min(j.type === 'su25' ? 1500 : 6000, 4000), ty.cruise, dt, { bank: .8 }); if (d < 30000) { j.st = 'land'; j.man = 'ip'; this.emit('approach', j.p, j.id); } return; }
+    if (j.st === 'land') return this.land(j, dt);
+  }
+  // Su-25: دخول واطي ← طلعة (pop-up) مع ميلان على جنب ← قلب وغطس 30° على الهدف ← رمي ← سحب 5G وكسر ومشاعل ← خروج واطي ← لفة ثانية
+  strike(j: Jet, tgt: V3, d: number, brg: number, dt: number) {
+    const ty = AIR[j.type], side = j.slot % 2 ? 1 : -1;
+    if (!j.man) j.man = 'ingress';
+    if (j.man === 'ingress') { this.fly(j, brg, 120, 200, dt, { bank: .9 }); if (d < 7500 && Math.abs(angd(brg, j.hd)) < .5) { j.man = 'popup'; this.emit('popup', j.p, j.id); } return; }
+    if (j.man === 'popup') { this.fly(j, brg + side * .55, 2600, 210, dt, { gam: .55, g: 4.5, bank: .7 }); if (j.p.z > 2000 || d < 3000) { j.man = 'dive'; this.emit('rollin', j.p, j.id); } return; }
+    if (j.man === 'dive') { const dive = clamp(-Math.atan2(j.p.z, d), -.62, -.05); this.fly(j, brg, 0, 230, dt, { gamCmd: dive, g: 4.5, bank: 1.5, inv: true });
+      const slant = Math.hypot(d, j.p.z); if ((slant < 1700 && j.gam < -.2) || j.p.z < 450 || d < 500) { this.weaponRelease(j, tgt, 0, true); j.man = 'pull'; j.manT = this.t + 5; j.manH = j.hd + side * 1.7; } return; }
+    if (j.man === 'pull') { this.fly(j, j.manH, 900, 220, dt, { gamCmd: .3, g: 5.5, bank: 1.3 }); if (this.t - j.cmT > .3) { j.cmT = this.t; this.emit('cm', j.p, j.id, { hd: j.hd }); } if (this.t > j.manT) { j.man = 'egress'; j.manT = this.t + 30; } return; }
+    if (j.man === 'egress') { this.fly(j, j.manH, 120, 210, dt, { bank: .8 }); if (this.t > j.manT || d > 9000) { j.man = j.ammo.length ? 'ingress' : ''; if (!j.ammo.length) j.st = 'rtb'; } return; }
+  }
+  // هبوط حقيقي «overhead break»: نقطة دخول ورا المدرج بـ 8 كم على 450 م ← فوق المدرج ← كسر 180° بـ 4G ← رجل موازية ← لفة 180° نازلة ← نهائي 3° ← لمس وفرملة
+  land(j: Jet, dt: number) {
+    const b = j.home, h = j.rw, ux = Math.cos(h), uy = Math.sin(h), rx = j.p.x - b.x, ry = j.p.y - b.y, along = rx * ux + ry * uy, crs = -rx * uy + ry * ux, lane = 1 + j.slot * .25, side = j.side ? -1 : 1;
+    if (j.man === 'ip') { // لو جاي من قدّام المدرج يلف لفة واسعة لنقطة جانبية أول، حتى يدخل على الخط بدون دوران
+      const far = along > -7000, ip = far ? { x: b.x - ux * 12000 * lane + uy * 3000 * side, y: b.y - uy * 12000 * lane - ux * 3000 * side } : { x: b.x - ux * 8000 * lane, y: b.y - uy * 8000 * lane };
+      this.fly(j, Math.atan2(ip.y - j.p.y, ip.x - j.p.x), 450, 190, dt, { bank: 1 });
+      if ((along < -7000 && Math.abs(crs) < 4000 && Math.abs(angd(j.hd, h)) < 1.2) || Math.hypot(ip.x - j.p.x, ip.y - j.p.y) < 1200) j.man = far ? 'ip' : 'initial'; return; }
+    if (j.man === 'initial') { this.fly(j, this.track(j, b, h, 1200), 450, 180, dt, { bank: 1 }); if (along > -200 && Math.abs(crs) < 600) { j.man = 'break'; this.emit('break', j.p, j.id); } else if (along > 1500) j.man = 'ip'; return; }
+    if (j.man === 'break') { this.fly(j, h + Math.PI * .999 * side, 300, 120, dt, { g: 2.6, bank: 1.2 }); if (Math.abs(angd(j.hd, h + Math.PI)) < .25) j.man = 'downwind'; return; }
+    if (j.man === 'downwind') { const p0 = { x: b.x - uy * 1800 * side, y: b.y + ux * 1800 * side }; this.fly(j, this.track(j, p0, h + Math.PI, 500), 300, 105, dt, { bank: .7 }); if (along < -1800 && Math.abs(crs - 1800 * side) < 350) j.man = 'base'; return; }
+    if (j.man === 'base') { this.fly(j, h, 180, 90, dt, { bank: .75, g: 2.5 }); if (Math.abs(angd(j.hd, h)) < .35) j.man = 'final'; return; }
+    // نهائي: 3° (z = −along·tan3°) وتصحيح جانبي، لمس وفرملة
+    const wantZ = Math.max(0, -along * .052), onRw = j.p.z <= .5 && along > -200;
+    if (!onRw && j.p.z < 40 && Math.abs(crs) > 120) { j.man = 'ip'; this.emit('goaround', j.p, j.id); return; }   // ما مصطفّة: دورة ثانية
+    if (!onRw) { this.fly(j, this.track(j, b, h, 500), wantZ, 78, dt, { bank: .6, gamCmd: clamp(Math.atan2(wantZ - j.p.z, 600) - .02, -.12, .05) }); if (j.p.z < 1.5 && along > -300) { j.p.z = 0; j.gam = 0; j.bank = 0; } }
+    else { j.p.z = 0; j.gam = 0; j.bank = 0; j.n = 1; j.spd = Math.max(0, j.spd - 6 * dt); j.hd += angd(h, j.hd) * dt; j.p = add(j.p, v(Math.cos(j.hd) * j.spd, Math.sin(j.hd) * j.spd, 0), dt); }
+    if (onRw && j.spd < 12) { j.st = 'landed'; this.emit('landed', j.p, j.id); }
   }
   missionHd(j: Jet) { const t = this.missionTarget(j); return t ? Math.atan2(t.y - j.p.y, t.x - j.p.x) : j.hd; }
   missionTarget(j: Jet): V3 | null {
-    if (this.t - j.t0 > 560) return null;   // وقت المهمة خلص: رجوع
+    if (this.t - j.t0 > (j.mission === 'sead' ? 760 : 560)) return null;   // وقت المهمة خلص: رجوع
     if (j.mission === 'sead') { if (j.ammo.includes('AGM-88')) { const l = this.bats[0].launchers.find(l2 => l2.alive); return l ? l.p : null; }
-      const e = this.nearestEnemyJet(j, 90000); return e ? e.p : j.ammo.length ? { x: SITES.defense.x - 15000, y: SITES.defense.y + 25000, z: 0 } : null; }
+      const e = this.nearestEnemyJet(j, 120000); return e ? e.p : j.ammo.length ? { x: SITES.defense.x - 15000, y: SITES.defense.y + 25000, z: 0 } : null; }
     if (j.mission === 'strike') { if (!j.ammo.length) return null; const tg = this.gnd.filter(g => g.side !== j.side && g.st !== 'dead' && g.type === 't72'); return tg.length ? tg[(j.slot + j.fired) % tg.length].p : null; }
     const e = this.nearestEnemyJet(j, 180000); return e && j.ammo.length ? e.p : null;
   }
   nearestEnemyJet(j: Jet, r: number) { let b: Jet | null = null, bd = r; for (const q of this.jets) { if (q.side === j.side || !this.alive(q) || q.st === 'roll') continue; const d = len(sub(q.p, j.p)); if (d < bd) { bd = d; b = q; } } return b; }
-  weaponRelease(j: Jet, tgt: V3, d: number) {
+  weaponRelease(j: Jet, tgt: V3, d: number, force = false) {
     if (this.t - (j as any).lastShot < 3) return;
     const w = j.ammo[0]; if (!w) return;
-    if (w === 'AGM-88' && d < 70000) { const l = this.bats[0].launchers.find(l2 => l2.alive && l2.p === tgt) ?? this.bats[0].launchers.find(l2 => l2.alive); if (l) this.fireAt(j, w, { pt: l.p }); }
-    else if (w === 'FAB-500' && d < 1200) { const g = this.gnd.find(q => q.p === tgt); this.fireAt(j, w, { gnd: g?.id, pt: tgt }); }
-    else if ((w === 'AIM-120' || w === 'AIM-54') && d < (w === 'AIM-54' ? 70000 : 35000)) { const e = this.nearestEnemyJet(j, d + 1); if (e && !this.msls.some(m => m.tgtJet === e.id && m.ph !== 'dead')) this.fireAt(j, w, { jet: e }); }
+    if (w === 'FAB-500') { if (force) { const g = this.gnd.find(q => q.p === tgt); this.fireAt(j, w, { gnd: g?.id, pt: tgt }); if (j.ammo[0] === 'FAB-500') { const g2 = g; this.pend(.35, () => { if (this.alive(j) && j.ammo[0] === 'FAB-500') this.fireAt(j, 'FAB-500', { gnd: g2?.id, pt: { x: tgt.x + Math.cos(j.hd) * 40, y: tgt.y + Math.sin(j.hd) * 40, z: 0 } }); }); } } return; }
+    const crank = () => { j.man = 'crank'; j.manT = this.t + (w === 'AIM-120' ? 15 : 28); j.manH = (j.slot % 2 ? -1 : 1) * (w === 'AIM-120' ? .8 : 1); };
+    if (w === 'AGM-88' && d < 72000) { const l = this.bats[0].launchers.find(l2 => l2.alive && l2.p === tgt) ?? this.bats[0].launchers.find(l2 => l2.alive); if (l) { this.fireAt(j, w, { pt: l.p }); crank(); } }
+    else if ((w === 'AIM-120' || w === 'AIM-54') && d < (w === 'AIM-54' ? 70000 : 35000)) { const e = this.nearestEnemyJet(j, Math.hypot(d, 20000)); if (e && !this.msls.some(m => m.tgtJet === e.id && m.ph !== 'dead')) { this.fireAt(j, w, { jet: e }); crank(); } }
   }
   fireAt(j: Jet, w: string, t: { jet?: Jet; pt?: V3; gnd?: number }) {
     const M = MSL[w], miss = this.r() > M.pk * (t.jet ? 1 - (AIR[t.jet.type].gen - 3) * .1 : 1);
-    const m: Msl = { id: this.nid++, type: w, side: j.side, p: add(j.p, v(0, 0, -2)), vel: v(Math.cos(j.hd) * j.spd, Math.sin(j.hd) * j.spd, 0), ph: M.drop ? 'drop' : 'coast', t: 0, tgtJet: t.jet?.id, tgtPt: t.pt ? { ...t.pt } : undefined, tgtGnd: t.gnd, miss, bestD: 1e9, from: j.type };
+    const m: Msl = { id: this.nid++, type: w, side: j.side, p: add(j.p, v(0, 0, -2)), vel: v(Math.cos(j.hd) * j.spd * Math.cos(j.gam), Math.sin(j.hd) * j.spd * Math.cos(j.gam), j.vz), ph: M.drop ? 'drop' : 'coast', t: 0, tgtJet: t.jet?.id, tgtPt: t.pt ? { ...t.pt } : undefined, tgtGnd: t.gnd, miss, bestD: 1e9, from: j.type };
     this.msls.push(m); j.ammo.shift(); j.fired++; (j as any).lastShot = this.t; this.emit('air_launch', j.p, m.id, { w, by: j.type, side: j.side });
   }
   // ---------- الدفاع الجوي ----------
@@ -204,7 +266,7 @@ export class World {
       const tp = m.tgtPt!, h = norm(v(tp.x - m.p.x, tp.y - m.p.y, 0)), hs = Math.hypot(m.vel.x, m.vel.y); m.vel.x += (h.x * hs - m.vel.x) * dt * .8; m.vel.y += (h.y * hs - m.vel.y) * dt * .8; m.vel.z -= G * dt; m.p = add(m.p, m.vel, dt);
       if (m.p.z <= 0) { m.p.z = 0; m.ph = 'dead'; this.groundBlast(m.p, 60, m.miss ? -1 : m.tgtGnd ?? -1, 'bomb'); } return; }
     const tj = m.tgtJet ? this.jets.find(j => j.id === m.tgtJet && this.alive(j)) : null, tm = m.tgtMsl ? this.msls.find(b => b.id === m.tgtMsl && b.ph !== 'dead') : null;
-    const tgtP = tj ? tj.p : tm ? tm.p : m.tgtPt ?? null, tgtV = tj ? v(Math.cos(tj.hd) * tj.spd, Math.sin(tj.hd) * tj.spd, tj.vz) : tm ? tm.vel : v();
+    const tgtP = tj ? tj.p : tm ? tm.p : m.tgtPt ?? null, tgtV = tj ? v(Math.cos(tj.hd) * tj.spd * Math.cos(tj.gam), Math.sin(tj.hd) * tj.spd * Math.cos(tj.gam), tj.vz) : tm ? tm.vel : v();
     if (m.t < M.burn) m.vel = add(m.vel, norm(len(m.vel) === 0 ? v(0, 0, 1) : m.vel), M.acc * dt); else { m.vel = add(m.vel, m.vel, -.012 * dt); if (len(m.vel) < 160 && m.ph === 'coast') { m.ph = 'dead'; this.emit('selfdestruct', m.p, m.id); return; } }
     if (m.ph === 'boost' && m.t >= M.burn) { m.ph = 'coast'; this.emit('burnout', m.p, m.id); }
     m.vel.z -= G * dt * .3;
@@ -247,15 +309,45 @@ export class World {
     // راجمات: رشقة على أكثف تجمّع للعدو
     if (g.type === 'grad') { g.reload -= dt; if (g.reload <= 0 && (g as any).shots !== 0 && this.t > (g.side ? 290 : 230) && near && near.d < ty.range) { (g as any).shots = ((g as any).shots ?? 3) - 1; g.reload = 90 + this.r() * 30; this.salvo(g, near.q.p); } return; }
     if (g.type === 'truck') { if (g.goal) { this.drive(g, g.goal, ty.speed, dt); if (Math.hypot(g.goal.x - g.p.x, g.goal.y - g.p.y) < 60) { g.goal = g.goal === (g as any).back ? null : (g as any).back; if (!g.goal) g.st = 'gone'; } } return; }
-    const engaging = near && ty.gun && near.d < ty.range;
-    if (engaging) { g.turret += clamp(angd(Math.atan2(near.q.p.y - g.p.y, near.q.p.x - g.p.x), g.turret), -.6 * dt, .6 * dt); g.reload -= dt;
-      if (g.reload <= 0 && Math.abs(angd(Math.atan2(near.q.p.y - g.p.y, near.q.p.x - g.p.x), g.turret)) < .05) { g.reload = 6 + this.r() * 4; this.shoot(g, near.q, near.d); } }
-    else g.turret += clamp(angd(g.hd, g.turret), -.4 * dt, .4 * dt);
-    if (g.st === 'move' && g.goal) { const halt = engaging && near!.d < ty.range * .8 && (g.id + Math.floor(this.t / 8)) % 2 === 0;   // قفزات: نص الفصيل يوقف ويرمي والنص يتقدم
-      if (!halt) this.drive(g, g.goal, ty.speed * (engaging ? .6 : 1), dt); if (Math.hypot(g.goal.x - g.p.x, g.goal.y - g.p.y) < 80) g.st = 'idle'; }
+    const engaging = !!(near && ty.gun && near.d < ty.range), aimA = engaging ? Math.atan2(near!.q.p.y - g.p.y, near!.q.p.x - g.p.x) : g.hd, TR = TURRET_RATE[g.type] ?? .5;
+    // البرج يلف بسرعته الحقيقية (أبرامز 42°/ث، T-72 24°/ث) مستقل عن الجسم
+    g.turret = angd(g.turret + clamp(angd(aimA, g.turret) * 3, -TR, TR) * dt, 0);
+    if (engaging) g.reload -= dt;
+    // T-72 بموضعها: ترمي وترجع لورا من الحفرة، تتحرك على جنب وتطلع من مكان ثاني (shoot-and-scoot)
+    if (g.man === 'back' || g.man === 'shift') {
+      if (this.drive(g, g.manP!, g.man === 'back' ? 5 : ty.speed * .6, dt, true)) { if (g.man === 'back') { const s2 = g.plt % 2 ? 1 : -1; g.man = 'shift'; g.manP = { x: g.p.x + Math.cos(g.hd + Math.PI / 2 * s2) * 70 - Math.cos(g.hd) * 0, y: g.p.y + Math.sin(g.hd + Math.PI / 2 * s2) * 70, z: 0 }; } else { g.man = 'face'; } }
+      return; }
+    if (g.man === 'face') { const want = engaging ? aimA : Math.PI; this.stop(g, dt); g.hd = angd(g.hd + clamp(angd(want, g.hd), -.45 * dt, .45 * dt), 0); if (Math.abs(angd(want, g.hd)) < .1) { g.man = ''; g.dug = true; } return; }
+    const aligned = engaging && Math.abs(angd(aimA, g.turret)) < .03;
+    // رمي من توقف قصير: يفرمل لحد ما يوقف وبعدين يرمي
+    const wantFire = engaging && g.reload <= 0 && aligned;
+    if (wantFire && Math.abs(g.spd) < 1) { g.reload = (g.type === 'abrams' ? 6 : 6.5) + this.r() * 3; this.shoot(g, near!.q, near!.d); g.manT = this.t + 1.5;
+      if (g.side === 1 && g.dug && this.r() < .3) { g.dug = false; g.man = 'back'; g.manP = { x: g.p.x - Math.cos(g.hd) * 40, y: g.p.y - Math.sin(g.hd) * 40, z: 0 }; } return; }
+    if (wantFire || this.t < g.manT) { this.stop(g, dt); return; }
+    if (g.st === 'move' && g.goal) {
+      // قفزات (bounding overwatch): فصيل يغطي واقف وفصيل يتقدم، يتبادلون كل 14 ث
+      const halt = engaging && near!.d < ty.range * .85 && (g.plt + Math.floor(this.t / 14)) % 2 === 0;
+      // تشكيل سهم: القائد يروح للهدف والباقين بأماكنهم ورا يمين/يسار
+      const mates = this.gnd.filter(q => q.side === g.side && q.plt === g.plt && q.st === 'move' && q.type === g.type), rank = mates.indexOf(g), lead = mates[0];
+      let goal = g.goal, vmax = ty.speed * (engaging ? .7 : 1);
+      if (lead && lead !== g) { const ch = Math.cos(lead.hd), sh = Math.sin(lead.hd), back = 55 * Math.ceil(rank / 2), side = 60 * Math.ceil(rank / 2) * (rank % 2 ? 1 : -1); goal = { x: lead.p.x - ch * back - sh * side, y: lead.p.y - sh * back + ch * side, z: 0 }; vmax *= 1.25; if (Math.hypot(goal.x - g.p.x, goal.y - g.p.y) < 20) vmax = Math.abs(lead.spd); }
+      if (halt) this.stop(g, dt); else this.drive(g, goal, vmax, dt);
+      if (Math.hypot(g.goal.x - g.p.x, g.goal.y - g.p.y) < 80) g.st = 'idle'; }
+    else this.stop(g, dt);
   }
-  drive(g: Gnd, goal: V3, spd: number, dt: number) { const a = Math.atan2(goal.y - g.p.y, goal.x - g.p.x); g.hd += clamp(angd(a, g.hd), -.5 * dt, .5 * dt); g.p.x += Math.cos(g.hd) * spd * dt; g.p.y += Math.sin(g.hd) * spd * dt;
-    for (const q of this.gnd) { if (q === g || q.st === 'dead') continue; const dx = g.p.x - q.p.x, dy = g.p.y - q.p.y, d = Math.hypot(dx, dy); if (d < 45 && d > 0) { g.p.x += dx / d * (45 - d) * .5; g.p.y += dy / d * (45 - d) * .5; } } }
+  // سياقة دبابة: تسارع وفرملة، تلف بمكانها لما بطيئة وبنصف قطر لما سريعة، بدون انزلاق؛ تتجنب الجيران بالتوجيه؛ ترجع لورا لو الهدف خلفها وقريب
+  drive(g: Gnd, goal: V3, vmax: number, dt: number, allowRev = false): boolean {
+    const dx = goal.x - g.p.x, dy = goal.y - g.p.y, d = Math.hypot(dx, dy); if (d < 6) { this.stop(g, dt); return true; }
+    let ax = dx / d, ay = dy / d;
+    for (const q of this.gnd) { if (q === g || q.st === 'dead' || q.st === 'gone') continue; const ox = g.p.x - q.p.x, oy = g.p.y - q.p.y, od = Math.hypot(ox, oy); if (od < 55 && od > .1) { const w = (55 - od) / 55; ax += ox / od * w * 1.3; ay += oy / od * w * 1.3; } }
+    const a = Math.atan2(ay, ax); let err = angd(a, g.hd); const rev = allowRev && Math.abs(err) > 2 && d < 150; g.rev = rev; if (rev) err = angd(a + Math.PI, g.hd);
+    const w = Math.abs(g.spd) < 2.5 ? .45 : Math.min(.45, Math.abs(g.spd) / 10);
+    g.hd = angd(g.hd + clamp(err * 1.8, -w, w) * dt, 0);
+    let vt = (rev ? -Math.min(5, vmax) : vmax) * Math.max(0, Math.cos(err)); if (Math.abs(err) > 1.1) vt = 0; if (d < 40) vt *= d / 40;
+    g.spd += clamp(vt - g.spd, -3.5 * dt, 1.6 * dt); g.p.x += Math.cos(g.hd) * g.spd * dt; g.p.y += Math.sin(g.hd) * g.spd * dt;
+    return false;
+  }
+  stop(g: Gnd, dt: number) { g.spd -= clamp(g.spd, -3.5 * dt, 3.5 * dt); g.p.x += Math.cos(g.hd) * g.spd * dt; g.p.y += Math.sin(g.hd) * g.spd * dt; }
   shoot(g: Gnd, q: Gnd, d: number) {
     const M = MSL[GROUND[g.type].gun!], hitP = M.pk * (1 - d / 6000) * (q.dug ? .8 : 1) * (1 - GROUND[q.type].armor * .3) + (GROUND[g.type].gen - GROUND[q.type].gen) * .06;
     const hit = this.r() < hitP, tgt = hit ? { ...q.p } : { x: q.p.x + (this.r() - .5) * 60, y: q.p.y + (this.r() - .5) * 60, z: 0 };

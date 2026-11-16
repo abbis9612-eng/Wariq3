@@ -23,8 +23,9 @@ const EL = 50 * Math.PI / 180, SE = Math.sin(EL), CE = Math.cos(EL);
 const app = new Application();
 await app.init({ resizeTo: window, background: '#0d1218', antialias: !LITE, resolution: LITE ? 1 : Math.min(2, devicePixelRatio), autoDensity: true, preference: 'webgl' });
 $('stage').appendChild(app.canvas);
+const trackG = new Graphics();
 const mapL = new Container(), vecC = new Container(), vec = new Graphics(), wreckL = new Container(), smokeL = new Container(), trailsG = new Graphics(), unitL = new Container(), fxL = new Container(), flagL = new Container(), labL = new Container(), pipL = new Container();
-vecC.addChild(vec); app.stage.addChild(mapL, vecC, wreckL, trailsG, smokeL, unitL, fxL, flagL, labL, pipL);
+vecC.addChild(vec); app.stage.addChild(mapL, vecC, trackG, wreckL, trailsG, smokeL, unitL, fxL, flagL, labL, pipL);
 const bloom = new AdvancedBloomFilter({ threshold: .35, bloomScale: 1.3, brightness: 1.1, blur: 8, quality: 5 }); if (!LITE) fxL.filters = [bloom];
 
 // ===== الأصول =====
@@ -33,10 +34,16 @@ const SPRU = import.meta.glob('../sprites/*.png', { query: '?url', import: 'defa
 const MAPU = import.meta.glob('../textures/map_*_[01].webp', { query: '?url', import: 'default', eager: true }) as Record<string, string>;
 const FXU = import.meta.glob('../../theater/textures/{fx_cloud,fx_explo1}.webp', { query: '?url', import: 'default', eager: true }) as Record<string, string>;
 const OBU = import.meta.glob('../../oblique/sprites/{s400,zolf,patriot,f16}.webp', { query: '?url', import: 'default', eager: true }) as Record<string, string>;
+const SHU = import.meta.glob('../sprites/*_sheet.webp', { query: '?url', import: 'default', eager: true }) as Record<string, string>;
+const SHEET: Record<string, Texture[]> = {};
+// محور البرج بالصورة (نسبة) — من tools/bl_sheet.py
+const PIV: Record<string, { u: number; v: number }> = { abrams: { u: .4722, v: .4985 }, t72: { u: .4033, v: .5005 } };
 const T: Record<string, Texture> = {}, MAPT: Record<string, Texture> = {}, OB: Record<string, Texture[]> = {};
 let CELLS: Texture[] = [], EXF: Texture[] = [], glowT: Texture, FLAG: Texture[] = [], grainT: Texture;
 async function loadAll(prog: (s: string) => void) {
-  for (const n of ['f16', 'su25', 'f14', 's400', 'zolf', 'patriot', 'abrams', 't72', 'bmp', 'grad', 'truck']) { T[n] = await Assets.load(G(SPRU, `${n}.png`)); prog('المجسمات'); }
+  for (const n of ['f16', 'su25', 'f14', 's400', 'zolf', 'patriot', 'abrams', 't72', 'bmp', 'grad', 'truck', 'abrams_t', 't72_t']) { T[n] = await Assets.load(G(SPRU, `${n}.png`)); prog('المجسمات'); }
+  // كل طيارة 54 صورة من Blender: 18 ميلان × 3 أنف
+  for (const n of ['f16', 'su25', 'f14']) { const t: Texture = await Assets.load(G(SHU, `${n}_sheet.webp`)); SHEET[n] = Array.from({ length: 54 }, (_, i) => new Texture({ source: t.source, frame: new Rectangle((i % 8) * 256, Math.floor(i / 8) * 256, 256, 256) })); prog('وضعيات الطيارات'); }
   for (const th of ['light', 'dark']) for (const l of [0, 1]) { MAPT[`${th}${l}`] = await Assets.load(G(MAPU, `map_${th}_${l}.webp`)); prog('الخريطة'); }
   for (const n of ['s400', 'zolf', 'patriot', 'f16']) { const t: Texture = await Assets.load(G(OBU, `${n}.webp`)); OB[n] = Array.from({ length: 16 }, (_, i) => new Texture({ source: t.source, frame: new Rectangle((i % 4) * 256, Math.floor(i / 4) * 256, 256, 256) })); prog('اللقطة القريبة'); }
   const cloud: Texture = await Assets.load(G(FXU, 'fx_cloud.webp')), explo: Texture = await Assets.load(G(FXU, 'fx_explo1.webp'));
@@ -100,24 +107,36 @@ function updateLabels() {
 
 // ===== الوحدات =====
 const LEN: Record<string, number> = { f16: 15.1, su25: 15.5, f14: 19.1, s400: 13.5, zolf: 13.2, patriot: 10.4, abrams: 9.8, t72: 9.5, bmp: 6.7, grad: 7.4, truck: 5.3 };
-interface USpr { s: Sprite; sh: Sprite; f: Sprite; seen: number }
+interface USpr { s: Sprite; sh: Sprite; f: Sprite; t?: Sprite; seen: number }
 const uMap = new Map<string, USpr>(); let frameNo = 0;
-function drawUnit(key: string, n: string, side: 0 | 1, p: V3, hd: number, o: { bank?: number; alpha?: number; roll?: number; dead?: boolean; tint?: number; ground?: boolean } = {}) {
-  let u = uMap.get(key); if (!u) { const sh = new Sprite(T[n]); sh.anchor.set(.5); sh.tint = 0; sh.alpha = .25; const s = new Sprite(T[n]); s.anchor.set(.5); const f = new Sprite(FLAG[side]); f.anchor.set(.5); (o.ground ? wreckL : unitL).addChild(sh, s); flagL.addChild(f); u = { s, sh, f, seen: 0 }; uMap.set(key, u); }
-  u.seen = frameNo; const U = Uof(), sc = LEN[n] * 1.18 * k * U / T[n].width, x = sx(p.x), y = sy(p.y);
-  if (x < -200 || x > SW + 200 || y < -200 || y > SH + 200) { u.s.visible = u.sh.visible = u.f.visible = false; return; }
-  u.s.visible = true; u.s.position.set(x, y); u.s.rotation = -hd + (o.roll ?? 0); u.s.scale.set(sc, sc * (1 - Math.min(.3, Math.abs(o.bank ?? 0) * .25))); u.s.alpha = o.alpha ?? 1; u.s.tint = o.dead ? 0x3a3530 : o.tint ?? 0xffffff;
+interface UOpt { bank?: number; alpha?: number; dead?: boolean; tint?: number; ground?: boolean; tex?: Texture; zs?: number; tur?: { n: string; a: number; recoil: number; toss?: { dx: number; dy: number; r: number } } }
+function drawUnit(key: string, n: string, side: 0 | 1, p: V3, hd: number, o: UOpt = {}) {
+  const tex = o.tex ?? T[n];
+  let u = uMap.get(key); if (!u) { const sh = new Sprite(tex); sh.anchor.set(.5); sh.tint = 0; sh.alpha = .25; const s2 = new Sprite(tex); s2.anchor.set(.5); const f = new Sprite(FLAG[side]); f.anchor.set(.5); (o.ground ? wreckL : unitL).addChild(sh, s2); flagL.addChild(f); u = { s: s2, sh, f, seen: 0 }; uMap.set(key, u); }
+  if (u.s.texture !== tex) { u.s.texture = tex; u.sh.texture = tex; }
+  u.seen = frameNo; const U = Uof(), sc = LEN[n] * 1.18 * k * U / tex.width * (o.zs ?? 1), x = sx(p.x), y = sy(p.y);
+  if (x < -200 || x > SW + 200 || y < -200 || y > SH + 200) { u.s.visible = u.sh.visible = u.f.visible = false; if (u.t) u.t.visible = false; return; }
+  u.s.visible = true; u.s.position.set(x, y); u.s.rotation = -hd; u.s.scale.set(sc, sc * (o.tex ? 1 : 1 - Math.min(.3, Math.abs(o.bank ?? 0) * .25))); u.s.alpha = o.alpha ?? 1; u.s.tint = o.dead ? 0x3a3530 : o.tint ?? 0xffffff;
   const off = Math.min(60, p.z * k * .35 + (p.z > 5 ? 6 : 0)); u.sh.visible = p.z > 5; u.sh.position.set(x + off, y + off * .6); u.sh.rotation = -hd; u.sh.scale.set(sc * .95);
-  u.f.visible = !o.dead && sc * T[n].width > 6; const fs = clamp(sc * T[n].width / 120, .38, .7); u.f.scale.set(fs); u.f.position.set(x + LEN[n] * .5 * k * U + 8, y - LEN[n] * .45 * k * U - 6);
+  // البرج: يلف حول محوره فوق الجسم، وبعد الرمي يرتد لورا شوي
+  if (o.tur) { const tt = T[o.tur.n], pv = PIV[n]; if (!u.t) { u.t = new Sprite(tt); u.t.anchor.set(pv.u, pv.v); u.s.parent!.addChildAt(u.t, u.s.parent!.getChildIndex(u.s) + 1); }
+    const W0 = tt.width * sc, ox = (pv.u - .5) * W0, oy = (pv.v - .5) * W0, r = -hd, ta = -o.tur.a, rc = o.tur.recoil * .7 * k * U;
+    let tx = x + ox * Math.cos(r) - oy * Math.sin(r) - Math.cos(ta) * rc, ty = y + ox * Math.sin(r) + oy * Math.cos(r) - Math.sin(ta) * rc, trot = ta;
+    if (o.tur.toss) { tx += o.tur.toss.dx * k * U; ty -= o.tur.toss.dy * k * U; trot += o.tur.toss.r; }
+    u.t.visible = true; u.t.position.set(tx, ty); u.t.rotation = trot; u.t.scale.set(sc); u.t.tint = u.s.tint; }
+  u.f.visible = !o.dead && sc * tex.width > 6; const fs = clamp(sc * tex.width / 120, .38, .7); u.f.scale.set(fs); u.f.position.set(x + LEN[n] * .5 * k * U + 8, y - LEN[n] * .45 * k * U - 6);
 }
-function sweepUnits() { for (const [, u] of uMap) if (u.seen !== frameNo) { u.s.visible = u.sh.visible = u.f.visible = false; } }
+function sweepUnits() { for (const [, u] of uMap) if (u.seen !== frameNo) { u.s.visible = u.sh.visible = u.f.visible = false; if (u.t) u.t.visible = false; } }
+// إطار الطيارة: الميلان (الجناح اليمين نازل = لفة يمين) × الأنف
+const jetFrame = (bank: number, gam: number) => { const ri = (((Math.round((-bank * 180 / Math.PI + 180) / 20)) % 18) + 18) % 18, pi = gam < -.3 ? 0 : gam > .3 ? 2 : 1; return pi * 18 + ri; };
+const lastGun = new Map<number, number>(), tossed = new Map<number, { dx: number; dy: number; r: number }>();
 
 // ===== المؤثرات =====
 interface Puff { x: number; y: number; r: number; gr: number; t: number; life: number; a: number; s: Sprite; vx: number; vy: number; minPx: number }
 interface Fx { x: number; y: number; t: number; life: number; size: number; minPx: number; kind: 'glow' | 'ex' | 'ring' | 'flare' | 'fire' | 'tracer' | 'spark'; tint: number; vx: number; vy: number; s?: Sprite; g?: Graphics; x2?: number; y2?: number }
 interface Trail { pts: { x: number; y: number; t: number }[]; r0: number; gr: number; life: number; a: number; dark: boolean; live: boolean }
 const WIND = { x: 3.5, y: 1.2 };
-let puffs: Puff[] = [], fxs: Fx[] = [], trails: Trail[] = [], mTrail = new Map<number, Trail>(), dTrail = new Map<object, Trail>();
+let puffs: Puff[] = [], fxs: Fx[] = [], trails: Trail[] = [], mTrail = new Map<number, Trail>(), dTrail = new Map<object, Trail>(), vTrail = new Map<number, Trail>(), tracks = new Map<number, { x: number; y: number; hd: number; t: number }[]>();
 function puff(p: { x: number; y: number }, r: number, gr: number, life: number, a: number, tint: number, minPx = 4, vx = 0, vy = 0) {
   if (puffs.length > 1400) { const o = puffs.shift()!; o.s.destroy(); }
   const s = new Sprite(CELLS[Math.floor(R(0, 64))]); s.anchor.set(.5); s.tint = tint; s.rotation = R(0, 6.28); smokeL.addChild(s); puffs.push({ x: p.x, y: p.y, r, gr, t: 0, life, a, s, vx, vy, minPx });
@@ -168,7 +187,11 @@ function onEvent(e: { type: string; p: V3; id?: number; data?: any }) {
       if (m && D.w !== 'FAB-500') { followMissile(m, 4); const j = W.jets.filter(q => q.side === D.side && q.type === D.by).sort((a, c) => hyp(a.p.x - p.x, a.p.y - p.y) - hyp(c.p.x - p.x, c.p.y - p.y))[0]; if (!PIP || W.t - PIP.t0 > 6) startPip(m, p, 'air', undefined, j?.id); }
       else focus('bomb' + e.id, () => gf(p), 3500, .7, 6, 4); break; }
     case 'ignite_air': fx('glow', p, 30, .3, 20); snd('rocket', p, .5, 1.3); break;
-    case 'evade': caption('مراوغة! لفة حادة ونزول ومشاعل'); snd('sonic', p, .5); break;
+    case 'evade': caption(D.split ? 'Split-S: تنقلب على ظهرها وتسحب لتحت هرباً من الصاروخ' : 'مراوغة! كسر حاد بكل الـG عمودي على الصاروخ ومشاعل'); snd('sonic', p, .5); focus('ev' + e.id, jetPos(e.id!), 3500, .7, 5, 6); break;
+    case 'popup': caption('Su-25 تطلع لفوق فجأة (pop-up) قبل الهدف…'); focus('pu' + e.id, jetPos(e.id!), 3000, 1, 9, 5); break;
+    case 'rollin': caption('…تقلب على جنبها وتغطس 30° على الدبابات'); focus('ri' + e.id, jetPos(e.id!), 2600, .8, 10, 6); break;
+    case 'break': { const j = W.jets.find(q => q.id === e.id); if (j && j.slot === 0) { caption('كسر فوق المدرج: لفة 180° حادة ثم دورة الهبوط'); focus('br' + e.id, jetPos(e.id!), 4500, 2, 14, 2); } break; }
+    case 'goaround': caption('ما اصطفّت على المدرج — ترجع تدور مرة ثانية'); break;
     case 'cm': for (let i = 0; i < 4; i++) { const s2 = i % 2 ? 1 : -1, h = D.hd; fx('flare', p, 14, 3.5, 7, 0xffffff, -Math.cos(h) * 60 + Math.sin(h) * s2 * 45, -Math.sin(h) * 60 - Math.cos(h) * s2 * 45); } break;
     case 'kill_jet': blast(p, 60, false, 1.3); snd('boom_big', p, 1, .9); caption(D.side ? 'أسقطنا F-14 للعدو!' : `خسرنا ${AIR[D.type].name} — الطيار قفز بالمظلة`); focus('kj' + e.id, () => gf(p), 5000, .6, 6, 8); break;
     case 'crash': case 'debris_land': blast(p, 40, true); fx('fire', p, 18, 40, 10); snd('boom_mid', p, .7); break;
@@ -184,13 +207,13 @@ function onEvent(e: { type: string; p: V3; id?: number; data?: any }) {
     case 'kill_bm': blast(p, 220, false, 1.5); fx('glow', p, 1500, 1.2, 150); snd('boom_huge', p, 1, .9); caption(`اعتراض! ضربة مباشرة على ارتفاع ${(p.z / 1000).toFixed(1)} كم`); focus('kb' + e.id, () => gf(p), 9000, .6, 6, 8); break;
     case 'bm_impact': blast(p, 180, true, 2); fx('fire', p, 60, 200, 20); fx('fire', { x: p.x + 60, y: p.y - 40 }, 40, 160, 14); snd('boom_huge', p, 1, .8); caption('الباليستي الثاني نزل على قاعدة البصرة — حريق'); focus('bi' + e.id, () => gf(p), 3500, .5, 7, 8); break;
     case 'advance': caption('الهجوم البري بدأ: دبابات أبرامز وعربات BMP تعبر الحدود'); focus('adv', () => gf(SITES.stage), 9000, 3, 12, 3); break;
-    case 'gun': { const g = W.gnd.find(q => q.id === e.id); if (!g) break; const h = D.hd, mz = { x: p.x + Math.cos(h) * 8, y: p.y + Math.sin(h) * 8 }; fx('glow', mz, 14, .18, 12); puff(mz, 6, 3, 4, .4, 0xc9b48e, 4); const m = W.msls.filter(q => q.from === g.type && q.ph !== 'dead').pop(); if (m?.tgtPt) fx('tracer', mz, 0, Math.max(.4, hyp(m.tgtPt.x - p.x, m.tgtPt.y - p.y) / 1650), 0, 0xffd28a, 0, 0, m.tgtPt); snd('tank', p, .5); break; }
+    case 'gun': { const g = W.gnd.find(q => q.id === e.id); if (!g) break; lastGun.set(g.id, W.t); const h = D.hd, mz = { x: p.x + Math.cos(h) * 8, y: p.y + Math.sin(h) * 8 }; fx('glow', mz, 14, .18, 12); puff(mz, 6, 3, 4, .4, 0xc9b48e, 4); const m = W.msls.filter(q => q.from === g.type && q.ph !== 'dead').pop(); if (m?.tgtPt) fx('tracer', mz, 0, Math.max(.4, hyp(m.tgtPt.x - p.x, m.tgtPt.y - p.y) / 1650), 0, 0xffd28a, 0, 0, m.tgtPt); snd('tank', p, .5); break; }
     case 'salvo': caption(D.side ? 'راجمات العدو تضرب' : 'راجماتنا تمهّد على خط الدفاع'); snd('rocket', p, .7, 1.3); break;
     case 'rocket': fx('glow', p, 12, .15, 10); puff(p, 8, 3, 8, .4, 0xc9b48e, 4); break;
     case 'blast': { const r = D.r ?? 10; if (D.kind === 'shell') { fx('glow', p, r * 2, .2, 10); for (let i = 0; i < 3; i++) puff(p, r, 2, 5, .5, 0xa8957a, 4); }
       else if (D.kind === 'rocket') { fx('glow', p, 40, .25, 14); fx('spark', p, 20, .5, 0, 0xffc070, R(-40, 40), R(-40, 40)); for (let i = 0; i < 4; i++) puff(p, 16, 3, 8, .5, 0x3a332c, 5); if (Math.random() < .3) snd('boom_mid', p, .4); }
       else blast(p, r, true, D.kind === 'bomb' ? 1.1 : .8); if (D.kind === 'bomb') snd('boom_bomb', p, .9); break; }
-    case 'kill_gnd': blast(p, 18, true, .8); fx('fire', p, 14, 90, 8); snd('boom_mid', p, .8); if (D.side === 0) caption(`خسرنا ${GROUND[D.type].name}`); break;
+    case 'kill_gnd': if (D.type === 't72') { const a = R(0, 6.28), d = R(6, 14); tossed.set(e.id!, { dx: Math.cos(a) * d, dy: Math.sin(a) * d, r: R(-2, 2) }); } blast(p, 18, true, .8); fx('fire', p, 14, 90, 8); snd('boom_mid', p, .8); if (D.side === 0) caption(`خسرنا ${GROUND[D.type].name}`); break;
     case 'reinforce': caption(`تعزيزات: ${D.n} دبابات جديدة ورتل إمداد بالطريق`); focus('rf' + Math.round(W.t), () => gf(p), 6000, 4, 10, 4); break;
     case 'landed': { const j = W.jets.find(q => q.id === e.id); if (j && j.side === 0) caption(`${AIR[j.type].name} رجعت وهبطت بالقاعدة`); break; }
     case 'objective': caption('قواتنا وصلت خرمشهر — الهدف تحقق'); focus('obj', () => gf(SITES.objective), 9000, 2, 20, 9); break;
@@ -207,6 +230,18 @@ function fxStep(dt: number) {
   }
   for (const d of W.debris) { let tr = dTrail.get(d); if (!d.burn) { if (tr) tr.live = false; continue; } if (!tr) { tr = { pts: [], r0: 2, gr: 4, life: 30, a: .65, dark: true, live: true }; dTrail.set(d, tr); trails.push(tr); } const l = tr.pts[tr.pts.length - 1]; if (!l || hyp(d.p.x - l.x, d.p.y - l.y) > 20) tr.pts.push({ x: d.p.x, y: d.p.y, t: W.t }); }
   for (const j of W.jets) if (j.st === 'hit' && Math.random() < dt * 20) puff(j.p, R(6, 12), R(3, 6), R(14, 22), .7, 0x2b2724, 4);
+  // بخار أطراف الأجنحة بالـG العالي، وخيط تكثيف (contrail) فوق 8.5 كم
+  for (const j of W.jets) { const fly = W.alive(j), L2 = LEN[AIR[j.type].sprite], span = L2 * .34 * Math.abs(Math.cos(j.bank)), nx = -Math.sin(j.hd), ny = Math.cos(j.hd);
+    for (const sd of [-1, 1]) { const key = j.id * 10 + (sd + 1), on = fly && j.n > 4.2; let tr = vTrail.get(key);
+      if (on) { if (!tr) { tr = { pts: [], r0: .5, gr: .9, life: 2.2, a: .55, dark: false, live: true }; vTrail.set(key, tr); trails.push(tr); } const q = { x: j.p.x + nx * span * sd, y: j.p.y + ny * span * sd }, l = tr.pts[tr.pts.length - 1]; if (!l || hyp(q.x - l.x, q.y - l.y) > 8) tr.pts.push({ ...q, t: W.t }); }
+      else if (tr) { tr.live = false; vTrail.delete(key); } }
+    const key = j.id * 10 + 5, on = fly && j.p.z > 8500; let tr = vTrail.get(key);
+    if (on) { if (!tr) { tr = { pts: [], r0: 1.5, gr: 2.5, life: 50, a: .5, dark: false, live: true }; vTrail.set(key, tr); trails.push(tr); } const l = tr.pts[tr.pts.length - 1]; if (!l || hyp(j.p.x - l.x, j.p.y - l.y) > 30) tr.pts.push({ x: j.p.x - Math.cos(j.hd) * L2 * 2, y: j.p.y - Math.sin(j.hd) * L2 * 2, t: W.t }); }
+    else if (tr) { tr.live = false; vTrail.delete(key); } }
+  // الدبابات: غبار ورا الجنزير، وآثار جنزير تبقى بالأرض
+  for (const g of W.gnd) { if (g.st === 'dead' || g.st === 'gone' || Math.abs(g.spd) < 1.5) continue; const L2 = LEN[GROUND[g.type].sprite] * .5, dir = Math.sign(g.spd);
+    if (Math.random() < dt * Math.abs(g.spd) * .35) puff({ x: g.p.x - Math.cos(g.hd) * L2 * dir + R(-2, 2), y: g.p.y - Math.sin(g.hd) * L2 * dir + R(-2, 2) }, R(2.5, 4), R(1.2, 2.2), R(5, 9), .35, DARK() ? 0x8a7c66 : 0xd8c8a4, 3, R(-1, 1), R(-1, 1));
+    if (g.type === 'truck') continue; let tk = tracks.get(g.id); if (!tk) { tk = []; tracks.set(g.id, tk); } const l = tk[tk.length - 1]; if (!l || hyp(g.p.x - l.x, g.p.y - l.y) > 7) { tk.push({ x: g.p.x, y: g.p.y, hd: g.hd, t: W.t }); if (tk.length > 500) tk.shift(); } }
   for (const f of fxs) if (f.kind === 'flare') { let tr = dTrail.get(f); if (!tr) { tr = { pts: [], r0: .8, gr: 1.8, life: 10, a: .6, dark: false, live: true }; dTrail.set(f, tr); trails.push(tr); } const l = tr.pts[tr.pts.length - 1]; if (!l || hyp(f.x - l.x, f.y - l.y) > 6) tr.pts.push({ x: f.x, y: f.y, t: W.t }); if (f.t > f.life - .1) tr.live = false; }
 }
 // تعمير المؤثرات مرة بالإطار (بقطع ≤ ربع ثانية) — حتى السرعات العالية ما تثقل
@@ -230,6 +265,8 @@ function drawFx() {
     if (f.kind === 'ex') { f.s!.texture = EXF[Math.min(24, Math.floor(q * 25))]; f.s!.width = f.s!.height = px; }
     else if (f.kind === 'fire') { const fl = (Math.max(f.minPx, f.size * k * Uof() * .5)) * (1 + Math.sin(W.t * 13 + f.x) * .15) * (1 - q * .6); f.s!.width = f.s!.height = fl; f.s!.alpha = .9; f.s!.tint = 0xffb050; }
     else { f.s!.width = f.s!.height = px; f.s!.alpha = f.kind === 'flare' ? 1 - q * .7 : 1 - q; } }
+  trackG.clear();
+  if (cam.w < 20000) for (const [, tk] of tracks) { if (tk.length < 2) continue; for (const sd of [-1.7, 1.7]) { trackG.moveTo(sx(tk[0].x - Math.sin(tk[0].hd) * sd), sy(tk[0].y + Math.cos(tk[0].hd) * sd)); for (let i = 1; i < tk.length; i++) trackG.lineTo(sx(tk[i].x - Math.sin(tk[i].hd) * sd), sy(tk[i].y + Math.cos(tk[i].hd) * sd)); trackG.stroke({ width: Math.max(1, .9 * k * Uof()), color: DARK() ? 0x1a1814 : 0x6b5a40, alpha: .32 }); } }
   trailsG.clear(); const sc = smokeCol();
   for (const r of trails) { const P = r.pts; if (P.length < 2) continue;
     for (let i0 = 0; i0 < P.length - 1; i0 += 4) { const i1 = Math.min(P.length - 1, i0 + 4), am = W.t - P[Math.floor((i0 + i1) / 2)].t; if (am > r.life) continue;
@@ -238,7 +275,7 @@ function drawFx() {
       for (let i = i0 + 1; i <= i1; i++) trailsG.lineTo(sx(P[i].x + WIND.x * (W.t - P[i].t)), sy(P[i].y + WIND.y * (W.t - P[i].t)));
       trailsG.stroke({ width: Math.max(1.6, rad * 2 * k), color: r.dark ? 0x2d2925 : sc, alpha: al * .85, cap: 'round', join: 'round' }); } }
 }
-const mG = new Graphics(); unitL.addChild(mG); const mGlow: Sprite[] = [];
+const mG = new Graphics(); unitL.addChild(mG); const mGlow: Sprite[] = [], abPool: Sprite[] = [];
 function drawMissiles() {
   mG.clear(); let gi = 0; const U = Uof();
   for (const m of W.msls) { if (m.ph === 'dead' || m.type === '125mm' || m.type === '120mm') continue; const M = MSL[m.type], sp = hyp(m.vel.x, m.vel.y), ang = sp > 1 ? Math.atan2(m.vel.y, m.vel.x) : -Math.PI / 2, x = sx(m.p.x), y = sy(m.p.y);
@@ -345,7 +382,7 @@ function director(): { x: number; y: number; w: number; ts: number; key: string 
   const f = focuses.sort((a, c) => c.pri - a.pri)[0];
   if (f) { const p = f.pos()!; return { ...p, w: f.w(), ts: f.ts, key: f.key }; }
   const fight = W.gnd.filter(g => g.st === 'move' && g.side === 0);
-  if (fight.length) { const c = fight.reduce((a, g) => ({ x: a.x + g.p.x / fight.length, y: a.y + g.p.y / fight.length }), { x: 0, y: 0 }); return { ...c, x: c.x + 1500, w: 11000, ts: 6, key: 'ground' }; }
+  if (fight.length) { const c = fight.reduce((a, g) => ({ x: a.x + g.p.x / fight.length, y: a.y + g.p.y / fight.length }), { x: 0, y: 0 }); return { ...c, x: c.x + 900, w: 6500, ts: 5, key: 'ground' }; }
   const air = W.jets.filter(j => j.side === 0 && W.alive(j));
   if (air.length) { const c = air.reduce((a, j) => ({ x: a.x + j.p.x / air.length, y: a.y + j.p.y / air.length }), { x: 0, y: 0 }); const spread = Math.max(...air.map(j => hyp(j.p.x - c.x, j.p.y - c.y))); return { ...c, w: clamp(spread * 2.4 + 30000, 30000, 160000), ts: 14, key: 'air' }; }
   return { x: (SITES.stage.x + SITES.base.x) / 2, y: SITES.stage.y, w: 60000, ts: 16, key: 'idle' };
@@ -371,17 +408,24 @@ app.canvas.addEventListener('wheel', e => { e.preventDefault(); setFollow(false)
 
 // ===== الحلقة =====
 let W = new World(), speed = 1, paused = false, running = false, ended = false;
-function reset() { W = new World(); for (const p of puffs) p.s.destroy(); for (const f of fxs) { f.s?.destroy(); f.g?.destroy(); } puffs = []; fxs = []; trails = []; mTrail = new Map(); dTrail = new Map(); focuses = []; PIP = null; pipPuffs.forEach(p => p.s.destroy()); pipPuffs = []; ended = false; shotKey = ''; fly = null; uMap.forEach(u => { u.s.destroy(); u.sh.destroy(); u.f.destroy(); }); uMap.clear(); }
+function reset() { W = new World(); for (const p of puffs) p.s.destroy(); for (const f of fxs) { f.s?.destroy(); f.g?.destroy(); } puffs = []; fxs = []; trails = []; mTrail = new Map(); dTrail = new Map(); vTrail = new Map(); tracks = new Map(); lastGun.clear(); tossed.clear(); focuses = []; PIP = null; pipPuffs.forEach(p => p.s.destroy()); pipPuffs = []; ended = false; shotKey = ''; fly = null; uMap.forEach(u => { u.s.destroy(); u.sh.destroy(); u.f.destroy(); u.t?.destroy(); }); uMap.clear(); }
 function start() { reset(); const s = director(); cam.x = s.x; cam.y = s.y; cam.w = s.w; setFollow(true); running = true; $('start').hidden = true; $('ui').hidden = false; $('end').hidden = true; audio(); caption('العملية بدأت: الهدف خرمشهر'); }
 // ميزانية وقت بالإطار (14 ملي ثانية): بالسرعات العالية على تلفون ضعيف تتباطأ اللعبة شوي بدل ما تقطّع
 function stepSim(simDt: number, budget = 14) { let left = simDt, n = 0; const t0 = performance.now(); while (left > 1e-6 && n < 3000 && (n % 50 || performance.now() - t0 < budget)) { const d = Math.min(.02, left); left -= d; n++; W.step(d); fxStep(d); pipStep(); for (const e of W.ev.splice(0)) onEvent(e); } const done = simDt - Math.max(0, left); fxAge(done); pipAge(done); }
 function render() {
   SW = app.screen.width; SH = app.screen.height; k = SW / cam.w; frameNo++;
   updateMap(); updateLabels();
-  for (const j of W.jets) { if (j.st === 'gone') continue; const air = j.st !== 'landed' && j.st !== 'parked'; drawUnit('j' + j.id, AIR[j.type].sprite, j.side, j.p, j.hd, air ? { bank: j.bank, roll: j.st === 'hit' ? Math.sin(j.roll) * .5 : 0, alpha: j.st === 'hit' ? .85 : 1 } : { ground: true }); }
+  let ab = 0;
+  for (const j of W.jets) { if (j.st === 'gone') continue; const air = j.st !== 'landed' && j.st !== 'parked', spr = AIR[j.type].sprite;
+    drawUnit('j' + j.id, spr, j.side, j.p, j.hd, { tex: SHEET[spr][air ? jetFrame(j.bank, j.gam) : 27], zs: 1 + Math.min(.2, j.p.z / 50000), alpha: j.st === 'hit' ? .9 : 1, ground: !air });
+    // حارق خلفي: بالإقلاع والصعود وبالسحب القوي
+    if (air && j.st !== 'hit' && (j.st === 'roll' || j.st === 'climb' || j.n > 5.5)) { const g = abPool[ab] ?? (() => { const q = new Sprite(glowT); q.anchor.set(.5); q.blendMode = 'add'; q.tint = 0xffb070; fxL.addChild(q); abPool.push(q); return q; })(); ab++;
+      const L2 = LEN[spr] * .52 * k * Uof() * Math.cos(j.gam); g.visible = true; g.position.set(sx(j.p.x) - Math.cos(j.hd) * L2, sy(j.p.y) + Math.sin(j.hd) * L2); g.width = g.height = Math.max(9, 4.5 * k * Uof()) * R(.85, 1.15); } }
+  for (; ab < abPool.length; ab++) abPool[ab].visible = false;
   for (const bt of W.bats) bt.launchers.forEach((l, i) => drawUnit(`b${bt.id}_${i}`, bt.type, bt.side, l.p, l.hd, { dead: !l.alive, ground: true }));
   W.tels.forEach((tl, i) => drawUnit('tel' + i, 'zolf', 1, tl.p, 3.6, { ground: true }));
-  for (const g of W.gnd) { if (g.st === 'gone') continue; drawUnit('g' + g.id, GROUND[g.type].sprite, g.side, g.p, g.hd, { dead: g.st === 'dead', tint: g.type === 'truck' ? 0x9aa07a : undefined, ground: true }); }
+  for (const g of W.gnd) { if (g.st === 'gone') continue; const hasT = g.type === 'abrams' || g.type === 't72', lg = lastGun.get(g.id);
+    drawUnit('g' + g.id, GROUND[g.type].sprite, g.side, g.p, g.hd, { dead: g.st === 'dead', tint: g.type === 'truck' ? 0x9aa07a : undefined, ground: true, tur: hasT ? { n: g.type + '_t', a: g.turret, recoil: lg !== undefined ? Math.max(0, 1 - (W.t - lg) / .5) : 0, toss: tossed.get(g.id) } : undefined }); }
   sweepUnits(); drawMissiles(); drawFx(); drawChutes(); drawPip(); hud();
 }
 function hud() {
@@ -419,3 +463,4 @@ if (AUTO) { start(); (window as any).ready = true; }
 (window as any).seek = (t: number) => { while (W.t < t - 1e-4) stepSim(Math.min(2, t - W.t), 1e9); const sh = director(); shotKey = sh.key; fly = null; cam.x = sh.x; cam.y = sh.y; cam.w = sh.w; curTs = sh.ts; render(); app.render(); };
 (window as any).opts = (th: string, sz: number) => { THEME = th as any; SIZE = sz; themeBtn(); sizeBtn(); render(); app.render(); };
 (window as any).W = () => W; (window as any).freeze = () => app.ticker.stop(); (window as any).pip = (big: boolean) => { pipBig = big; render(); app.render(); };
+(window as any).camAt = (x: number, y: number, w: number) => { setFollow(false); cam.x = x; cam.y = y; cam.w = w; render(); app.render(); };

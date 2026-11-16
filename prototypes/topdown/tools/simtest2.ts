@@ -1,7 +1,7 @@
 // فحص «العملية الكاملة» (D-011): node tools/simtest2.ts
 import { World } from '../src/sim2.ts';
 let ok = true; const chk = (c: boolean, m: string) => { console.log((c ? 'PASS ' : 'FAIL ') + m); if (!c) ok = false; };
-const w = new World(2), dt = .02, cnt: Record<string, number> = {}; let maxTurn = 0, ign: any = null, ej: any = null; const prev = new Map<number, number>();
+const w = new World(3), dt = .02, cnt: Record<string, number> = {}; let maxTurn = 0, ign: any = null, ej: any = null; const prev = new Map<number, number>();
 while (w.t < 2600 && !(w.endT > 0 && w.t > w.endT)) { w.step(dt);
   for (const j of w.jets) { if (['transit', 'climb', 'rtb', 'land', 'evade'].includes(j.st)) { const p = prev.get(j.id); if (p !== undefined) maxTurn = Math.max(maxTurn, Math.abs(Math.atan2(Math.sin(j.hd - p), Math.cos(j.hd - p))) / dt); } prev.set(j.id, j.hd); }
   for (const e of w.ev.splice(0)) { cnt[e.type] = (cnt[e.type] || 0) + 1; if (e.type === 'sam_eject' && !ej) ej = e; if (e.type === 'ignite' && !ign) ign = e; } }

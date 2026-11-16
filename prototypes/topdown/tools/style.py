@@ -7,7 +7,7 @@ wat = np.asarray(Image.open('textures/water.png')).astype(np.float32) / 255
 veg = np.asarray(Image.open('textures/veg.png')).astype(np.float32) / 255
 TH = {
   'light': dict(land=(222, 208, 176), land2=(206, 188, 150), veg=(170, 182, 128), water=(110, 160, 196), shade=(120, 100, 80), hi=(255, 248, 230), shore=(70, 110, 140)),
-  'dark':  dict(land=(58, 64, 70), land2=(48, 54, 60), veg=(48, 70, 56), water=(18, 62, 98), shade=(10, 12, 16), hi=(120, 132, 146), shore=(80, 180, 230)),
+  'dark':  dict(land=(58, 64, 70), land2=(48, 54, 60), veg=(48, 70, 56), water=(18, 62, 98), shade=(10, 12, 16), hi=(120, 132, 146), shore=(40, 110, 150)),
 }
 H, W = rel.shape
 rng = np.random.default_rng(3)

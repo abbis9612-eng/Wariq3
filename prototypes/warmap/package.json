@@ -1,0 +1,22 @@
+{
+  "name": "wariq-warmap",
+  "private": true,
+  "version": "0.0.1",
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "typecheck": "tsc --noEmit",
+    "extract": "node tools/extract.mjs"
+  },
+  "dependencies": {
+    "@babylonjs/core": "9.33.1",
+    "@babylonjs/loaders": "9.33.1",
+    "@babylonjs/materials": "9.33.1"
+  },
+  "devDependencies": {
+    "@gltf-transform/cli": "4.5.1",
+    "typescript": "7.0.2",
+    "vite": "8.3.5"
+  }
+}

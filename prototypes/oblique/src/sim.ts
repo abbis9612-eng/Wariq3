@@ -26,7 +26,7 @@ export const HEAD = { s400: 20, zolf: 205 };   // نفس اتجاه الصور �
 export function rng(seed: number) { let s = seed >>> 0; return () => { s = (s * 1664525 + 1013904223) >>> 0; return s / 4294967296; }; }
 
 export interface Jet { id: number; name: string; p: V3; hd: number; pitch: number; spd: number; bank: number; st: 'ingress' | 'break' | 'notch' | 'egress' | 'hit' | 'gone'; t0: number; vz: number; roll: number }
-export interface Msl { id: number; kind: 'sam' | 'pac' | 'bm'; p: V3; vel: V3; ph: 'eject' | 'boost' | 'coast' | 'dead'; t: number; burn: number; acc: number; tgtJet?: number; tgtMsl?: number; miss: boolean; bestD: number; from: string; lastT?: V3; lastP?: V3 }
+export interface Msl { id: number; kind: 'sam' | 'pac' | 'bm'; p: V3; vel: V3; ph: 'eject' | 'boost' | 'coast' | 'dead'; t: number; burn: number; acc: number; tgtJet?: number; tgtMsl?: number; miss: boolean; bestD: number; from: string; lastT?: V3; lastP?: V3; lostAt?: number }
 export interface Ev { t: number; type: string; p: V3; id?: number; data?: any }
 export interface Debris { p: V3; vel: V3; t: number; life: number; burn: boolean }
 
@@ -134,7 +134,7 @@ export class World {
         return;
       }
       if (m.miss && d2 > prevBest && prevBest < 3000) { m.ph = 'dead'; this.emit('selfdestruct', m.p, m.id, { miss: prevBest }); return; }
-    } else { m.p = add(m.p, m.vel, dt); if (m.t > 3) { m.ph = 'dead'; this.emit('selfdestruct', m.p, m.id); } }
+    } else { m.p = add(m.p, m.vel, dt); m.lostAt ??= this.t; if (this.t - m.lostAt > 1.6) { m.ph = 'dead'; this.emit('selfdestruct', m.p, m.id); } }
     if (m.p.z < 0) { m.ph = 'dead'; this.emit('ground', m.p, m.id); }
   }
   breakUp(j: Jet) {

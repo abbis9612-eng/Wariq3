@@ -1,0 +1,64 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>المشهد المايل</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Arabic:wght@400;600&family=Reem+Kufi:wght@500;700&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#0b0d0a;--ink:#f1ecda;--brass:#d2ab33;--display:"Reem Kufi","IBM Plex Sans Arabic",sans-serif;--body:"IBM Plex Sans Arabic","Noto Sans Arabic",Tahoma,sans-serif;color-scheme:dark}
+*{box-sizing:border-box;margin:0}
+[hidden]{display:none!important}
+html,body{height:100%;background:var(--bg);color:var(--ink);font:400 14px/1.5 var(--body);overflow:hidden;-webkit-tap-highlight-color:transparent;user-select:none}
+button{font:inherit;color:inherit;cursor:pointer}
+button:focus-visible{outline:2px solid var(--brass);outline-offset:2px}
+#c{position:fixed;inset:0;width:100%;height:100%;display:block;touch-action:none}
+#top{position:fixed;top:env(safe-area-inset-top,0px);inset-inline:0;padding:8px 12px 22px;background:linear-gradient(rgba(0,0,0,.7),transparent);pointer-events:none;z-index:2;text-align:center}
+#cap{font:600 16px var(--display);text-shadow:0 1px 6px #000;min-height:26px;transition:opacity .5s}
+#read{font-size:11.5px;opacity:.9;font-variant-numeric:tabular-nums;margin-top:2px;min-height:17px}
+#slow{display:inline-block;font-size:11px;color:#111;background:var(--brass);border-radius:4px;padding:0 6px;margin-top:4px}
+.ctl{position:fixed;bottom:calc(10px + env(safe-area-inset-bottom,0px));inset-inline:8px;display:flex;gap:6px;justify-content:center;z-index:2;flex-wrap:wrap}
+.ctl button{background:rgba(0,0,0,.6);border:1px solid rgba(255,255,255,.3);color:#fff;padding:7px 11px;border-radius:7px;font-size:13px;min-height:42px;min-width:42px}
+.ctl button[aria-pressed=true]{border-color:var(--brass);color:var(--brass);background:rgba(210,171,51,.15)}
+.spd{display:flex;border:1px solid rgba(255,255,255,.3);border-radius:7px;overflow:hidden}.spd button{border:0;border-radius:0;min-width:40px;padding:7px 6px;font-variant-numeric:tabular-nums}
+#hint{position:fixed;bottom:calc(62px + env(safe-area-inset-bottom,0px));inset-inline:0;text-align:center;font-size:11px;opacity:.7;pointer-events:none;z-index:2;text-shadow:0 1px 3px #000}
+#start,#end{position:fixed;inset:0;z-index:5;display:flex;align-items:center;justify-content:center;padding:16px;background:radial-gradient(ellipse at center,rgba(16,18,14,.82),rgba(6,7,5,.96))}
+#end{background:rgba(6,7,5,.6)}
+.card{max-width:430px;width:100%;text-align:center}
+.card h1{font:700 28px var(--display);color:var(--brass)}
+.card p{opacity:.88;margin:8px 0 12px;font-size:13.5px}
+.card ul{text-align:start;font-size:13px;opacity:.9;margin:0 0 12px;padding-inline-start:18px;line-height:1.8}
+.btn{display:block;width:100%;padding:12px;border-radius:7px;border:1px solid rgba(255,255,255,.3);background:rgba(255,255,255,.06);font-weight:600;margin-top:8px}
+.btn.go{background:var(--brass);color:#1c1a10;border-color:var(--brass)}
+#load{font-size:12px;opacity:.7;min-height:18px;margin-top:6px}
+.cred{font-size:10.5px;opacity:.5;margin-top:12px;line-height:1.6}
+</style>
+</head>
+<body>
+<canvas id="c"></canvas>
+<div id="ui" hidden>
+  <div id="top"><div id="cap"></div><div id="read"></div><div id="slow" hidden>تبطيء</div></div>
+  <div id="hint">اسحب بإصبع · كبّر وصغّر بإصبعين · «تابع» يرجع المخرج</div>
+  <div class="ctl">
+    <button id="bFollow" aria-pressed="true">🎥 تابع</button>
+    <div class="spd" id="spd" role="group" aria-label="السرعة" dir="ltr"><button data-s="1" aria-pressed="true">×1</button><button data-s="2">×2</button><button data-s="4">×4</button></div>
+    <button id="bPause" aria-label="إيقاف">⏸</button><button id="bMute" aria-label="الصوت">🔊</button>
+  </div>
+</div>
+<div id="start"><div class="card">
+  <h1>المشهد المايل — تجربة</h1>
+  <p>منطقة الأهواز ودزفول والبصرة على صور أقمار صناعية حقيقية. الكاميرا مايلة، وكل شي بحجمه وسرعته الحقيقية.</p>
+  <ul>
+    <li>S-400 يرفع أنابيبه ويطلق «بارد»: الصاروخ يطّرد لفوق بالغاز، يشتعل، يميل، ويلحق F-16</li>
+    <li>ذو الفقار يرتفع وينطلق من منصته، وباتريوت PAC-3 يعترضه بالجو</li>
+    <li>المخرج يقرّب ويبطّئ وقت الإطلاق. وإنت تكدر تسحب وتكبّر بإصبعك بأي وقت</li>
+  </ul>
+  <button class="btn go" id="bGo" disabled>يحمّل…</button>
+  <div id="load"></div>
+  <p class="cred">صور الأرض: Sentinel-2 cloudless 2016 — EOX (CC BY 4.0) · S-400 على MAZ: xFORTUNAx · ذو الفقار: 42manako · باتريوت: Muhamad Mirza Arrafi · F-16: iedalton (كلها CC BY 4.0، Sketchfab) · دخان وانفجارات: Unity Labs (CC0) · تراب: Poly Haven (CC0) · أصوات: SoundBible و BigSoundBank</p>
+</div></div>
+<div id="end" hidden><div class="card"><h1>انتهت التجربة</h1><p>هذا شكل «2D المايل». جربت التقريب بإصبعك؟ قلي شنو عجبك وشنو لا.</p><button class="btn go" id="bAgain">مرة ثانية</button></div></div>
+<script type="module" src="./src/main.ts"></script>
+</body>
+</html>

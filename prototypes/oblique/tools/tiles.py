@@ -17,6 +17,7 @@ def grab(name, z, lon0, lon1, lat0, lat1, q):
     im.save(f'textures/{name}.webp', quality=q, method=6)
     out[name] = {'z': z, 'b': [tx0 / n, ty0 / n, (tx1 + 1) / n, (ty1 + 1) / n]}
     print(name, im.size, os.path.getsize(f'textures/{name}.webp') // 1024, 'KB')
+grab('wide', 8, 43.5, 53.5, 27.5, 37.5, 78)   # خلفية واسعة (لما الكاميرا تبعد وتطلع ويا الباليستي)
 grab('base', 10, 47.4, 49.5, 30.1, 32.9, 80)
 SITES = {'s400': (31.30, 48.80), 'zolf': (32.42, 48.45), 'pat': (30.58, 47.72)}
 for k, (la, lo) in SITES.items():

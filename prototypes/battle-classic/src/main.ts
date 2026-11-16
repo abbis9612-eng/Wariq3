@@ -5,15 +5,15 @@
 // - إضاءة (نهار/غروب/ليل) والوهج يضوّي الأرض، ظلال غيوم
 // - أرض من صور جوية حقيقية (Poly Haven)، وادي، سواتر وخنادق، أسوار بيوت، بساتين
 // - أصوات حقيقية + يمين/يسار + صدى + تأخير بالمسافة
-import { create, step, bars, phaseName, skip, stamp, SAMPLES, MW, MH, S, END, DEF_LINE, VILL_Y, roadX } from './sim3';
-import type { World, Res, Unit, Proj, Terr, Air } from './sim3';
-import manifest from '../../battle2d/sprites/manifest.json';
+import { create, step, bars, phaseName, skip, stamp, SAMPLES, MW, MH, S, END, DEF_LINE, VILL_Y, roadX } from './sim4';
+import type { World, Res, Unit, Proj, Terr, Air } from './sim4';
+import manifest from '../sprites/manifest.json';
 
 const $ = (id: string) => document.getElementById(id)!;
 const clamp = (v: number, a: number, b: number) => v < a ? a : v > b ? b : v;
 const R = (a: number, b: number) => a + Math.random() * (b - a);
 const lerp = (a: number, b: number, t: number) => a + (b - a) * t;
-const sprUrls = import.meta.glob('../../battle2d/sprites/*.png', { query: '?url', import: 'default', eager: true }) as Record<string, string>;
+const sprUrls = import.meta.glob('../sprites/*.png', { query: '?url', import: 'default', eager: true }) as Record<string, string>;
 const fxUrls = import.meta.glob('../../theater/textures/{fx_explo1,fx_explo2,fx_fire}.webp', { query: '?url', import: 'default', eager: true }) as Record<string, string>;
 const groundUrls = import.meta.glob('../textures/*.webp', { query: '?url', import: 'default', eager: true }) as Record<string, string>;
 const oldSnd = import.meta.glob('../../theater/sounds/{boom_big,boom_mid,boom_far,tank,akburst,mg,rocket,launch,atgm,incoming,ricochet}.mp3', { query: '?url', import: 'default', eager: true }) as Record<string, string>;
@@ -36,7 +36,7 @@ const SPR: Record<string, Spr> = {};
 const TEX: Record<string, HTMLImageElement> = {};
 let puff: Record<string, HTMLCanvasElement> = {}, glow: HTMLCanvasElement, flameC: HTMLCanvasElement;
 function variants(img: HTMLImageElement, m: number, piv?: number[], side2 = false): Spr {
-  const n = side2 ? 240 : 160, base = mk(n, n), bg = base.getContext('2d')!; bg.drawImage(img, 0, 0, n, n);
+  const n = side2 ? 256 : 160, base = mk(n, n), bg = base.getContext('2d')!; bg.drawImage(img, 0, 0, n, n);
   const sil = (col: string, blur = 0) => { const c = mk(n, n), x = c.getContext('2d')!; if (blur) x.filter = `blur(${blur}px)`; x.drawImage(base, 0, 0); x.filter = 'none'; x.globalCompositeOperation = 'source-in'; x.fillStyle = col; x.fillRect(0, 0, n, n); return c; };
   const side = TEAM.map(col => { const s = sil(col), c = mk(n, n), x = c.getContext('2d')!; for (let a = 0; a < 8; a++) x.drawImage(s, Math.cos(a * Math.PI / 4) * n / 44, Math.sin(a * Math.PI / 4) * n / 44); x.drawImage(base, 0, 0); return c; });
   const dark = mk(n, n), dx = dark.getContext('2d')!; dx.drawImage(base, 0, 0); dx.globalCompositeOperation = 'source-atop'; dx.fillStyle = 'rgba(26,20,15,.66)'; dx.fillRect(0, 0, n, n);
@@ -44,7 +44,7 @@ function variants(img: HTMLImageElement, m: number, piv?: number[], side2 = fals
 }
 async function loadAll(say: (t: string) => void) {
   const names = Object.keys(MAN).filter(n => n !== 'h5'); let k = 0;
-  await Promise.all(names.map(async n => { SPR[n] = variants(await loadImg(sprUrls[`../../battle2d/sprites/${n}.png`]), MAN[n].m, MAN[n].piv, /^(abrams|t72|bmp)/.test(n)); say(`يحمّل الصور… ${++k}/${names.length}`); }));
+  await Promise.all(names.map(async n => { SPR[n] = variants(await loadImg(sprUrls[`../sprites/${n}.png`]), MAN[n].m, MAN[n].piv, /^(abrams|t72|bmp|su25|f16|ah64|tb2|d30|grad)/.test(n)); say(`يحمّل الصور… ${++k}/${names.length}`); }));
   for (const [k2, u] of Object.entries({ ...fxUrls, ...groundUrls })) TEX[k2.split('/').pop()!.replace('.webp', '')] = await loadImg(u);
   // غيوم دخان ناعمة (16 شكل)
   const sheet = mk(512, 512), sx = sheet.getContext('2d')!; let sd = 7; const rr = () => { sd = (sd * 16807) % 2147483647; return sd / 2147483647; };
@@ -257,6 +257,8 @@ function explosion(x: number, y: number, cal: number, airZ = 0) {
 }
 function handle(e: World['fx'][0]) {
   const w = W!;
+  if (e.k === 'fire' && e.kind !== 'mg') hot.push({ x: e.x, y: e.y, t: w.T, w: e.kind === 'ap' ? 1.5 : 1 }); else if (e.k === 'boom' && e.cal >= 1) hot.push({ x: e.x, y: e.y, t: w.T, w: e.z > 0 ? .6 : 1.2 }); else if (e.k === 'kill' && e.type !== 'sol') hot.push({ x: (w.u.find(q => q.id === e.id)?.x ?? MW / 2), y: (w.u.find(q => q.id === e.id)?.y ?? MH / 2), t: w.T, w: 4 });
+  if (hot.length > 200) hot.splice(0, 50);
   switch (e.k) {
     case 'boom': if (e.cal > 0) explosion(e.x, e.y, e.cal, e.z); break;
     case 'fire': {
@@ -323,10 +325,12 @@ let fadeT = 0;
 
 // ===== الرسم =====
 const HOUSE = ['h1', 'h2', 'h3', 'h4', 'h6'];
-const cam = { x: MW / 2, y: MH / 2, z: 1, auto: true };
+const cam = { x: MW / 2, y: MH / 2, z: 1.7, auto: true };
+const hot: { x: number; y: number; t: number; w: number }[] = [];
+const CLOSE = 1.75;   // تقريب المتابعة (1 = الساحة بالعرض كلها)
 function sprite(sp: Spr, x: number, y: number, ang: number, size: number, side: number, dead: boolean) { g.save(); g.translate(x, y); g.rotate(ang + Math.PI / 2); g.drawImage(dead ? sp.dark : side < 0 ? sp.plain : sp.side[side], -size / 2, -size / 2, size, size); g.restore(); }
 function shadowOf(sp: Spr, x: number, y: number, ang: number, size: number, ox: number, oy: number, a = .38) { g.save(); g.translate(x + ox, y + oy); g.rotate(ang + Math.PI / 2); g.globalAlpha = a; g.drawImage(sp.shadow, -size / 2, -size / 2, size, size); g.restore(); g.globalAlpha = 1; }
-const UN: Record<string, [string, string, number]> = { tank: ['abrams', 't72', 18], ifv: ['bmp', 'bmp', 14], arty: ['d30', 'd30', 13], mlrs: ['grad', 'grad', 15], ad: ['patriot', 's400', 17] };
+const UN: Record<string, [string, string, number]> = { tank: ['abrams', 't72', 18], ifv: ['bmp', 'bmp', 14], truck: ['technical', 'technical', 10], arty: ['d30', 'd30', 13], mlrs: ['grad', 'grad', 15], ad: ['patriot', 's400', 17] };
 function drawUnit(x: Unit, T: number, pass: 0 | 1) {
   if (x.type === 'inf' || x.type === 'heli') return;
   const [n0, n1, sz] = UN[x.type], name = x.side ? n1 : n0, sp = SPR[name], size = sz * S, dead = !x.alive;
@@ -430,7 +434,8 @@ function draw(T: number) {
   for (const t of turretFly) if (t.name === 'ah64') { const sp = SPR.ah64, s = 20 * S; shadowOf(sp, t.x + t.z * .28, t.y + t.z * .16, t.a, s, 0, 0, .25); sprite(sp, t.x, t.y - lift(t.z), t.a, s, -1, t.z <= 0); if (t.z > 0 && Math.random() < .5) add('black', t.x, t.y - lift(t.z), { max: 4, size: 3, grow: 4, a: .8 }); }
   // طيارات ومسيّرات
   for (const j of w.air) { if (!j.alive && j.state !== 'down') continue; const jet = j.kind === 'jet', sp = SPR[j.model], size = (jet ? 17 : j.side ? 9 : 16) * S, a = Math.atan2(j.vy, j.vx) + (j.state === 'down' ? j.spin : 0), jy = j.y - lift(j.alt);
-    shadowOf(sp, j.x + j.alt * .28, j.y + j.alt * .16, a, size, 0, 0, .22); sprite(sp, j.x, jy, a, size * (j.state === 'down' ? .9 : 1), j.side, j.state === 'down');
+    const bk = 1 - Math.min(.45, Math.abs(j.bank) * .45); g.save(); g.translate(j.x + j.alt * .28, j.y + j.alt * .16); g.rotate(a + Math.PI / 2); g.globalAlpha = .22; g.drawImage(sp.shadow, -size * bk / 2, -size / 2, size * bk, size); g.restore(); g.globalAlpha = 1;
+    g.save(); g.translate(j.x, jy); g.rotate(a + Math.PI / 2); g.drawImage(j.state === 'down' ? sp.dark : sp.side[j.side], -size * bk / 2, -size / 2, size * bk, size * (j.state === 'down' ? .9 : 1)); g.restore();
     if (jet && j.state !== 'down') { const tx = j.x - Math.cos(a) * size * .46, ty2 = jy - Math.sin(a) * size * .46, fl = 8 + R(-1.5, 1.5); g.globalCompositeOperation = 'lighter'; g.drawImage(glow, tx - fl / 2, ty2 - fl / 2, fl, fl); g.globalCompositeOperation = 'source-over'; light(tx, ty2, 20, .5, .04, '255,180,110'); } }
   drawParts(true);
   if (tod !== 'night') for (const c of clouds) { const gr = g.createRadialGradient(c.x, c.y, 0, c.x, c.y, c.r); gr.addColorStop(0, 'rgba(20,18,30,.15)'); gr.addColorStop(1, 'rgba(20,18,30,0)'); g.fillStyle = gr; g.fillRect(c.x - c.r, c.y - c.r, c.r * 2, c.r * 2); }
@@ -439,8 +444,14 @@ function draw(T: number) {
 function camFollow(w: World, dt: number) {
   if (!cam.auto) return;
   // الكاميرا تتبع الجبهة: النص بين خط الهجوم وخط الدفاع، والصورة تبقى ضمن الخريطة
-  const z = baseZ() * cam.z, half = SH / 2 / z, ty = clamp((w.frontA + w.frontD) / 2 + 40, half - 40, MH - half + 40), tx = MW / 2;
-  const k = 1 - Math.exp(-dt * .8); cam.y += (ty - cam.y) * k; cam.x += (tx - cam.x) * k;
+  // «مخرج»: مركز القتال الحار (رميات وانفجارات وتدمير بآخر 5 ث)، ممزوج بمنتصف الجبهة حتى ما يقفز
+  while (hot.length && w.T - hot[0].t > 5) hot.shift();
+  let sx = 0, sy = 0, sw = 0; for (const h of hot) { const k = h.w * (1 - (w.T - h.t) / 5); sx += h.x * k; sy += h.y * k; sw += k; }
+  const fy = (w.frontA + w.frontD) / 2 + 60, ax = sw > 0 ? sx / sw : MW / 2, ay = sw > 0 ? sy / sw : fy;
+  cam.z += (CLOSE - cam.z) * Math.min(1, dt * .5);
+  const z = baseZ() * cam.z, halfH = SH / 2 / z, halfW = SW / 2 / z;
+  const tx = clamp(ax * .6 + MW / 2 * .4, halfW - 30, MW - halfW + 30), ty = clamp(ay * .55 + fy * .45, halfH - 60, MH - halfH + 60);
+  const k = 1 - Math.exp(-dt * .7); cam.x += (tx - cam.x) * k; cam.y += (ty - cam.y) * k;
 }
 
 // ===== الشريط =====
@@ -453,7 +464,7 @@ function hud() {
   const cnt = (s: 0 | 1) => { const t = w.u.filter(u => u.side === s && u.type === 'tank' && u.alive).length, j = w.air.filter(a => a.side === s && a.kind === 'jet' && a.alive && a.state !== 'down').length; return `دبابات ${t}<small>+${w.pool[s].tank}</small> · طائرات ${w.pool[s].jet + j}`; };
   $('cna').innerHTML = cnt(0); $('cnd').innerHTML = cnt(1);
   $('bwhere').innerHTML = `${w.res.rname} — ${TERR_N[w.res.terr]} <b>${mmss(Math.min(w.T, END))}</b>`;
-  if (ac && amb) amb.gain.setTargetAtTime(w.T > 105 && !w.over ? .2 : w.T > 25 && !w.over ? .07 : 0, ac.currentTime, .8);
+  if (ac && amb) amb.gain.setTargetAtTime(w.T > 135 && !w.over ? .2 : w.T > 30 && !w.over ? .07 : 0, ac.currentTime, .8);
   if (ac && heliG) { const n = w.u.filter(h => h.type === 'heli' && h.alive && h.alt > 5).length; heliG.gain.setTargetAtTime(Math.min(.45, n * .12), ac.currentTime, .6); }
   const now = performance.now(); for (const f of feed) f.el.style.opacity = String(clamp(1 - (now - f.t - 4500) / 1200, 0, 1));
   if (w.over && !endShown) {
@@ -465,7 +476,7 @@ function hud() {
 function startBattle() {
   const res: Res = { ...structuredClone(SAMPLES[curRes]), terr, an: 'العراق', bn: 'العدو' };
   W = create(res); fx = []; trails = []; lights = []; shake = 0; recoil.clear(); mun.clear(); turretFly.length = 0; feed.forEach(f => f.el.remove()); feed.length = 0;
-  buildGround(terr, W as any); cam.x = MW / 2; cam.y = 1000; cam.z = 1; cam.auto = true;
+  buildGround(terr, W as any); cam.x = MW / 2; cam.y = 1050; cam.z = CLOSE; cam.auto = true; hot.length = 0;
   $('bna').textContent = res.an!; $('bnd').textContent = res.bn!; endShown = false; lastPh = ''; setSpeed(1);
   ($('start') as HTMLElement).hidden = true; $('hud').hidden = false; $('ctl').hidden = false; $('bend').hidden = true; running = true; audio(); startLoops();
 }
@@ -473,7 +484,7 @@ function showStart() { running = false; ($('start') as HTMLElement).hidden = fal
 function setSpeed(s: number) { speed = s; $('spd').querySelectorAll('button').forEach(b => b.setAttribute('aria-pressed', String(+(b as HTMLElement).dataset.s! === s))); }
 $('spd').querySelectorAll('button').forEach(b => b.addEventListener('click', () => setSpeed(+(b as HTMLElement).dataset.s!)));
 $('bSkip').onclick = () => { if (W && !W.over) { setSpeed(1); skip(W); } };
-$('bFit').onclick = () => { cam.z = 1; cam.auto = true; };
+$('bFit').onclick = () => { if (cam.auto && cam.z > 1.2) { cam.auto = false; cam.z = 1; cam.x = MW / 2; cam.y = W ? clamp((W.frontA + W.frontD) / 2, SH / 2 / baseZ(), MH - SH / 2 / baseZ()) : MH / 2; } else { cam.auto = true; } };   // ⤢: الساحة كلها ↔ متابعة القتال
 $('bMute').onclick = () => { muted = !muted; $('bMute').textContent = muted ? '🔇' : '🔊'; if (muted && ac) ac.suspend(); else if (ac) ac.resume(); };
 const seg = (id: string, f: (v: string) => void) => $(id).querySelectorAll('button').forEach(b => b.addEventListener('click', () => { $(id).querySelectorAll('button').forEach(x => x.setAttribute('aria-pressed', String(x === b))); f((b as HTMLElement).dataset.v!); }));
 seg('sRes', v => { curRes = v; terr = SAMPLES[v].terr; $('sTerr').querySelectorAll('button').forEach(x => x.setAttribute('aria-pressed', String((x as HTMLElement).dataset.v === terr))); });

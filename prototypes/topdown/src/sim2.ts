@@ -62,7 +62,7 @@ export class World {
   }
   mkBat(type: string, side: Side, c: { x: number; y: number }, hd: number, offs: number[][], ammo: number): Battery { return { id: this.nid++, type, side, p: { ...c, z: 0 }, hd, launchers: offs.map(o => ({ p: { x: c.x + o[0], y: c.y + o[1], z: 0 }, alive: true, raise: type === 'patriot' ? 1 : 0, hd })), ammo, alert: false, next: 0 }; }
   mkGnd(type: string, side: Side, p: V3, hd: number, plt: number): Gnd { return { id: this.nid++, type, side, p, hd, st: 'idle', goal: null, reload: 3 + this.r() * 4, hp: 1, burnT: 0, plt, dug: false, turret: hd, shotsAt: 0 }; }
-  emit(type: string, p: V3, id?: number, data?: any) { this.ev.push({ t: this.t, type, p: { ...p }, id, data }); }
+  emit(type: string, p: { x: number; y: number; z?: number }, id?: number, data?: any) { this.ev.push({ t: this.t, type, p: { z: 0, ...p }, id, data }); }
   jet(id: number) { return this.jets.find(j => j.id === id); }
   alive(j: Jet) { return !['hit', 'gone', 'landed', 'parked'].includes(j.st); }
 
@@ -151,7 +151,7 @@ export class World {
     for (const l of b.launchers) if (b.alert && l.alive) l.raise = Math.min(1, l.raise + dt / 9);
     // HARM بالطريق: الرادار يطفي (إخماد) لحد ما يوصل أو يفوت
     const harm = this.msls.some(m => m.type === 'AGM-88' && m.ph !== 'dead' && m.tgtPt && Math.hypot(m.tgtPt.x - b.p.x, m.tgtPt.y - b.p.y) < 2000);
-    if (harm !== (b as any).silent) { (b as any).silent = harm; this.emit(harm ? 'sam_silent' : 'sam_resume', b.p, b.id); }
+    if (harm !== !!(b as any).silent) { (b as any).silent = harm; this.emit(harm ? 'sam_silent' : 'sam_resume', b.p, b.id); }
     if (harm || this.t < b.next || b.ammo <= 0) return;
     const L = b.launchers.filter(l => l.alive && l.raise >= 1); if (!L.length) return;
     // باتريوت: الأولوية للباليستي النازل

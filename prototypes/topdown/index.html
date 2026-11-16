@@ -15,6 +15,7 @@ button{font:inherit;color:inherit;cursor:pointer}
 #top{position:fixed;top:env(safe-area-inset-top,0px);inset-inline:0;padding:8px 12px 22px;background:linear-gradient(rgba(0,0,0,.72),transparent);pointer-events:none;z-index:2;text-align:center}
 #cap{font:600 16px var(--display);text-shadow:0 1px 6px #000;min-height:26px;transition:opacity .5s}
 #read{font-size:11.5px;opacity:.92;font-variant-numeric:tabular-nums;min-height:17px}
+#stats{font-size:12px;opacity:.95;font-variant-numeric:tabular-nums;margin-bottom:2px}#stats b{color:var(--brass)}.tag.slow{background:#e0573a;color:#fff}.tag.clk{background:rgba(255,255,255,.18);color:#fff}
 .tag{display:inline-block;font-size:11px;color:#111;background:var(--brass);border-radius:4px;padding:0 6px;margin-top:4px}
 .ctl{position:fixed;bottom:calc(10px + env(safe-area-inset-bottom,0px));inset-inline:8px;display:flex;gap:6px;justify-content:center;z-index:2;flex-wrap:wrap}
 .ctl button{background:rgba(0,0,0,.62);border:1px solid rgba(255,255,255,.3);color:#fff;padding:6px 8px;border-radius:7px;font-size:12.5px;min-height:42px;min-width:40px}
@@ -31,29 +32,30 @@ button{font:inherit;color:inherit;cursor:pointer}
 <body>
 <div id="stage"></div>
 <div id="ui" hidden>
-  <div id="top"><div id="cap"></div><div id="read"></div><span class="tag" id="slow" hidden>تبطيء</span><span class="tag" id="fast" hidden></span></div>
+  <div id="top"><div id="stats"></div><div id="cap"></div><div id="read"></div><span class="tag" id="rate"></span> <span class="tag clk" id="clock"></span></div>
   <div class="ctl">
     <button id="bFollow" aria-pressed="true">🎥 تابع</button>
-    <div class="spd" id="spd" dir="ltr"><button data-s="1" aria-pressed="true">×1</button><button data-s="2">×2</button><button data-s="4">×4</button></div>
+    <div class="spd" id="spd" dir="ltr"><button data-s="1" aria-pressed="true">×1</button><button data-s="2">×2</button><button data-s="4">×4</button><button data-s="8">×8</button><button data-s="16">×16</button><button data-s="32">×32</button></div>
     <button id="bPause" aria-label="إيقاف">⏸</button>
-    <button id="bTheme" aria-label="الثيم"></button><button id="bSize" aria-label="حجم الوحدات"></button>
+    <button id="bPip" aria-pressed="true" aria-label="اللقطة القريبة"></button><button id="bTheme" aria-label="الثيم"></button><button id="bSize" aria-label="حجم الوحدات"></button>
     <button id="bMute" aria-label="الصوت">🔊</button>
   </div>
 </div>
 <div id="start"><div class="card">
-  <h1>الحرب من فوق — نموذج</h1>
-  <p>قطاع الأهواز والبصرة ودزفول على خريطة مرسومة، والكاميرا من فوق.</p>
+  <h1>الحرب من فوق — العملية</h1>
+  <p>هجوم عراقي على خرمشهر: جو وأرض وصواريخ، كله بالمتر والثانية الحقيقية.</p>
   <ul>
-    <li>طيارتين F-16 تقلع من قاعدة البصرة، وS-400 يرفع أنابيبه ويرمي عليهن. وحدة تنضرب والثانية تنجو وترجع تهبط</li>
-    <li>ذو الفقار ينطلق من دزفول، وباتريوت يعترضه بالجو</li>
-    <li>«تابع» يخلي المخرج يلاحق الأحداث ويسرّع ويبطّئ. اسحب وكبّر بإصبعك بأي وقت</li>
-    <li>غيّر الثيم (فاتح/غامق) وحجم الوحدات من الأزرار تحت</li>
+    <li>F-16 تقلع وتطفّي رادار S-400 بصواريخ HARM، والـS-400 يرفع أنابيبه ويطلق بارد: الصاروخ ينطرد لفوق ثم يشتعل</li>
+    <li>Su-25 تطير واطي وتطلع قبل الهدف وتقصف الدروع، وF-14 إيرانية تقلع تعترض</li>
+    <li>ذو الفقار ينطلق على قاعدة البصرة والباتريوت يعترضه، والثاني ممكن يوصل</li>
+    <li>أبرامز وBMP يتقدمون بقفزات ويتبادلون الرمي مع T-72، وتوصل تعزيزات ورتل إمداد</li>
+    <li>«لقطة قريبة» تطلع لحالها عند كل إطلاق؛ اضغطها تكبر. السرعات لحد ×32</li>
   </ul>
   <button class="btn go" id="bGo" disabled>يحمّل…</button>
   <div id="load"></div>
   <p class="cred">الخريطة: تضاريس من AWS Terrain Tiles، ومياه ومزارع مستخرجة من Sentinel-2 cloudless 2016 (EOX، CC BY 4.0)، وأنهار وطرق Natural Earth، وأسماء مدن © مساهمي OpenStreetMap · المجسمات (CC BY 4.0، Sketchfab): F-16 iedalton · S-400 xFORTUNAx · ذو الفقار 42manako · باتريوت و F-14 MirzaArrafi · دبابات Muhamad Mirza Arrafi وغيره — صُوّرت بـ Blender · دخان وانفجارات Unity Labs (CC0) · أصوات SoundBible و BigSoundBank</p>
 </div></div>
-<div id="end" hidden><div class="card"><h1>انتهى النموذج</h1><p>جرّبت تكبّر وتصغّر بإصبعك، وتغيّر الثيم والحجم؟ قلي شنو عجبك وشنو لا.</p><button class="btn go" id="bAgain">مرة ثانية</button></div></div>
+<div id="end" hidden><div class="card"><h1>انتهت العملية</h1><p id="endTxt"></p><p>قلي شنو عجبك وشنو لا.</p><button class="btn go" id="bAgain">مرة ثانية</button></div></div>
 <script type="module" src="./src/main.ts"></script>
 </body>
 </html>

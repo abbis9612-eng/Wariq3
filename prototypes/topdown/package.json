@@ -1,0 +1,20 @@
+{
+  "name": "wariq-topdown",
+  "private": true,
+  "version": "0.0.1",
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "typecheck": "tsc --noEmit",
+    "map": "python3 tools/mapdata.py && python3 tools/basemap.py && python3 tools/style.py"
+  },
+  "dependencies": {
+    "pixi.js": "8.23.0",
+    "pixi-filters": "6.1.5"
+  },
+  "devDependencies": {
+    "typescript": "7.0.2",
+    "vite": "8.3.5"
+  }
+}

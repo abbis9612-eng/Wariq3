@@ -416,7 +416,7 @@ await buildTerrain(scene, THEME, prog);
 buildLabels(document.body, [['قاعدة البصرة', SITES.base], ['S-400', SITES.s400], ['باتريوت', SITES.pat], ['ذو الفقار', SITES.zolf], ['أميدية', SITES.omid], ['شلامجة', SITES.stage], ['خرمشهر ← الهدف', SITES.objective], ['خط دفاعهم', SITES.defense]]);
 cam.x = SITES.stage.x; cam.y = SITES.stage.y; cam.D = 2.6e7;
 await loadModels(scene, prog); unitsReady = true;
-$('load').textContent = ''; ($('bGo') as HTMLButtonElement).disabled = false; ($('bFront') as HTMLButtonElement).disabled = false; $('bGo').textContent = '✈ عملية شلامجة';
+$('load').textContent = ''; ($('bGo') as HTMLButtonElement).disabled = false; ($('bFront') as HTMLButtonElement).disabled = false; $('bGo').textContent = 'ابدأ العملية';
 if (AUTO) { start(qs.get('mode') === 'front' ? 'front' : 'op'); (window as any).ready = true; }
 (window as any).seek = async (t: number) => { while (W.t < t - 1e-4) stepSim(Math.min(2, t - W.t), 1e9); const sh = director(); shotKey = sh.key; fly = null; cam.x = sh.x; cam.y = sh.y; cam.z = sh.z; cam.D = D_of(sh.w); curTs = sh.ts; camAngles(sh, 10); frame(); await scene.whenReadyAsync(); frame(); };
 (window as any).opts = async (th: string, sz: number) => { THEME = th as any; SIZE = sz; themeBtn(); sizeBtn(); await setTheme(scene, THEME); frame(); };

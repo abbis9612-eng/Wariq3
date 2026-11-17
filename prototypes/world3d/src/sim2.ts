@@ -189,7 +189,7 @@ export class World {
     if (this.t - j.t0 > (j.mission === 'sead' ? 760 : 560)) return null;   // وقت المهمة خلص: رجوع
     if (j.mission === 'sead') { if (j.ammo.includes('AGM-88')) { const l = this.bats[0].launchers.find(l2 => l2.alive); return l ? l.p : null; }
       const e = this.nearestEnemyJet(j, 120000); return e ? e.p : j.ammo.length ? { x: SITES.defense.x - 15000, y: SITES.defense.y + 25000, z: 0 } : null; }
-    if (j.mission === 'strike') { if (!j.ammo.length) return null; const tg = this.gnd.filter(g => g.side !== j.side && g.st !== 'dead' && g.type === 't72'); return tg.length ? tg[(j.slot + j.fired) % tg.length].p : null; }
+    if (j.mission === 'strike') { if (!j.ammo.length) return null; /* WM15.2: القصف على الراجمات والفصيل الخلفي، وخط الدبابات الأمامي يبقى لمعركة الدروع */ let tg = this.gnd.filter(g => g.side !== j.side && g.st !== 'dead' && (g.type === 'grad' || (g.type === 't72' && g.plt === 12))); if (!tg.length) tg = this.gnd.filter(g => g.side !== j.side && g.st !== 'dead' && g.type === 't72'); return tg.length ? tg[(j.slot + j.fired) % tg.length].p : null; }
     const e = this.nearestEnemyJet(j, 180000); return e && j.ammo.length ? e.p : null;
   }
   nearestEnemyJet(j: Jet, r: number) { let b: Jet | null = null, bd = r; for (const q of this.jets) { if (q.side === j.side || !this.alive(q) || q.st === 'roll') continue; const d = len(sub(q.p, j.p)); if (d < bd) { bd = d; b = q; } } return b; }
@@ -318,10 +318,10 @@ export class World {
       if (this.drive(g, g.manP!, g.man === 'back' ? 5 : ty.speed * .6, dt, true)) { if (g.man === 'back') { const s2 = g.plt % 2 ? 1 : -1; g.man = 'shift'; g.manP = { x: g.p.x + Math.cos(g.hd + Math.PI / 2 * s2) * 70 - Math.cos(g.hd) * 0, y: g.p.y + Math.sin(g.hd + Math.PI / 2 * s2) * 70, z: 0 }; } else { g.man = 'face'; } }
       return; }
     if (g.man === 'face') { const want = engaging ? aimA : Math.PI; this.stop(g, dt); g.hd = angd(g.hd + clamp(angd(want, g.hd), -.45 * dt, .45 * dt), 0); if (Math.abs(angd(want, g.hd)) < .1) { g.man = ''; g.dug = true; } return; }
-    const aligned = engaging && Math.abs(angd(aimA, g.turret)) < .03;
+    const aligned = engaging && Math.abs(angd(aimA, g.turret)) < .06;
     // رمي من توقف قصير: يفرمل لحد ما يوقف وبعدين يرمي
     const wantFire = engaging && g.reload <= 0 && aligned;
-    if (wantFire && Math.abs(g.spd) < 1) { g.reload = (g.type === 'abrams' ? 6 : 6.5) + this.r() * 3; this.shoot(g, near!.q, near!.d); g.manT = this.t + 1.5;
+    if (wantFire && (Math.abs(g.spd) < 1 || (g.type === 'abrams' && Math.abs(g.spd) < 6))) {   /* أبرامز مدفعه مثبّت: يرمي وهو ماشي ببطء (WM15.2) */ g.reload = (g.type === 'abrams' ? 6 : 6.5) + this.r() * 3; this.shoot(g, near!.q, near!.d); g.manT = this.t + 1.5;
       if (g.side === 1 && g.dug && this.r() < .3) { g.dug = false; g.man = 'back'; g.manP = { x: g.p.x - Math.cos(g.hd) * 40, y: g.p.y - Math.sin(g.hd) * 40, z: 0 }; } return; }
     if (wantFire || this.t < g.manT) { this.stop(g, dt); return; }
     if (g.st === 'move' && g.goal) {
@@ -349,7 +349,7 @@ export class World {
   }
   stop(g: Gnd, dt: number) { g.spd -= clamp(g.spd, -3.5 * dt, 3.5 * dt); g.p.x += Math.cos(g.hd) * g.spd * dt; g.p.y += Math.sin(g.hd) * g.spd * dt; }
   shoot(g: Gnd, q: Gnd, d: number) {
-    const M = MSL[GROUND[g.type].gun!], hitP = M.pk * (1 - d / 6000) * (q.dug ? .8 : 1) * (1 - GROUND[q.type].armor * .3) + (GROUND[g.type].gen - GROUND[q.type].gen) * .06;
+    const M = MSL[GROUND[g.type].gun!], hitP = M.pk * (1 - d / 6000) * (q.dug ? .62 : 1) * (Math.abs(g.spd) > 1 ? .75 : 1) * (1 - GROUND[q.type].armor * .3) + (GROUND[g.type].gen - GROUND[q.type].gen) * .06;
     const hit = this.r() < hitP, tgt = hit ? { ...q.p } : { x: q.p.x + (this.r() - .5) * 60, y: q.p.y + (this.r() - .5) * 60, z: 0 };
     const m: Msl = { id: this.nid++, type: GROUND[g.type].gun!, side: g.side, p: { ...g.p, z: 2 }, vel: scl(norm(sub(tgt, g.p)), M.vmax), ph: 'coast', t: 0, tgtGnd: hit ? q.id : undefined, tgtPt: tgt, miss: !hit, bestD: 1e9, from: g.type };
     this.msls.push(m); this.emit('gun', g.p, g.id, { hd: g.turret, side: g.side });

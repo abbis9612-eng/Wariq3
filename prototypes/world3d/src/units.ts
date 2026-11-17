@@ -2,6 +2,7 @@
 // الدبابات: البرج ينفصل عن الجسم (نفس حدود المسرح) ويلف حول محوره. S-400 يبقى بهيكله حتى حركة رفع الأنابيب تشتغل.
 import { SceneLoader, Mesh, VertexData, Vector3, Matrix, Quaternion, StandardMaterial, Color3, PBRMaterial, TransformNode, type AssetContainer, type Scene, type AnimationGroup, type Material } from '@babylonjs/core';
 import '@babylonjs/loaders/glTF';
+import '@babylonjs/core/Rendering/outlineRenderer';
 const MURL = import.meta.glob('../models/*.gltf.json', { query: '?url', import: 'default', eager: true }) as Record<string, string>;
 // [ملف، لف حتى قدّامه يصير +z، الطول بالمتر]
 export const MODELS: Record<string, { yaw: number; len: number }> = {
@@ -16,16 +17,21 @@ const TURRET: Record<string, { piv: [number, number]; f: (x: number, y: number, 
 export interface Proto { hull: Mesh; tur?: Mesh; dead: Mesh; deadTur?: Mesh; shadow: Mesh; piv?: Vector3; h: number; cont?: AssetContainer; scale?: number; yawFix?: number; off?: Vector3 }
 export const PROTO: Record<string, Proto> = {};
 let darkMat: StandardMaterial, shadowMat: StandardMaterial;
-function fixMats(c: AssetContainer) { for (const m of c.materials) if (m instanceof PBRMaterial) { m.metallic = Math.min(m.metallic ?? 0, .15); m.roughness = Math.max(m.roughness ?? .8, .65); m.environmentIntensity = 0; } }
+function fixMats(c: AssetContainer, n = '') { for (const m of c.materials) if (m instanceof PBRMaterial) { if (n === 'truck') { m.albedoColor = new Color3(.5, .55, .38); }   /* بيكب الإمداد بلون عسكري */ m.metallic = Math.min(m.metallic ?? 0, .15); m.roughness = Math.max(m.roughness ?? .8, .65); m.environmentIntensity = 0; } }
 export async function loadModels(scene: Scene, prog: (s: string) => void) {
   darkMat = new StandardMaterial('dark', scene); darkMat.diffuseColor = new Color3(.08, .075, .07); darkMat.specularColor = Color3.Black();
   shadowMat = new StandardMaterial('shadow', scene); shadowMat.diffuseColor = Color3.Black(); shadowMat.disableLighting = true; shadowMat.alpha = .28; shadowMat.backFaceCulling = false;
   await Promise.all(Object.keys(MODELS).map(async n => {
     const url = Object.entries(MURL).find(([k]) => k.endsWith(`/${n}.gltf.json`))![1];
-    const c = await SceneLoader.LoadAssetContainerAsync(url, '', scene, null, '.gltf'); fixMats(c); prog('المجسمات');
+    const c = await SceneLoader.LoadAssetContainerAsync(url, '', scene, null, '.gltf'); fixMats(c, n); prog('المجسمات');
     if (n === 's400') return animated(n, c, scene);
     bake(n, c, scene);
   }));
+  // نجهّز (نترجم) كل مواد المجسمات أثناء التحميل: بدونها الآلية تختفي أول ما تظهر لحد ما الشيدر يجهز (ونقطة تقطيع بالتلفون)
+  const jobs: Promise<void>[] = [];
+  for (const P of Object.values(PROTO)) for (const m of [P.hull, P.tur, P.dead, P.deadTur].filter(Boolean) as Mesh[]) {
+    const mats = (m.material as any)?.subMaterials ?? [m.material]; for (const mt of mats) if (mt) jobs.push(mt.forceCompilationAsync(m).catch(() => {})); }
+  await Promise.all(jobs); prog('تجهيز');
 }
 // يخبز كل الأجزاء بإحداثيات العالم، يقص البرج إذا موجود، ويرجّع شبكة واحدة لكل جزء بعد اللف والتحجيم
 function bake(n: string, c: AssetContainer, scene: Scene) {
@@ -70,16 +76,21 @@ function animated(n: string, c: AssetContainer, scene: Scene) {
   PROTO[n] = { hull: null as any, dead: null as any, shadow: null as any, cont: c, scale: s, yawFix: cfg.yaw, off: new Vector3(-(min.x + max.x) / 2, -min.y, -(min.z + max.z) / 2), h: (max.y - min.y) * s };
   void scene;
 }
+// حافة حول كل آلية حتى تبين على الخريطة (فاتحة بالثيم الغامق، غامقة بالفاتح) — I-066
+const OUT = { col: new Color3(.92, .9, .82), on: [] as Mesh[] };
+export function setOutline(dark: boolean) { OUT.col = dark ? new Color3(.92, .9, .82) : new Color3(.12, .11, .1); for (const m of OUT.on) if (!m.isDisposed()) m.outlineColor = OUT.col; }
+const outline = (m: Mesh) => { m.renderOutline = true; m.outlineWidth = .07; m.outlineColor = OUT.col; OUT.on.push(m); };
 export interface UnitVis { node: TransformNode; hull: Mesh; tur?: Mesh; sh: Mesh; dead: boolean; anim?: AnimationGroup; n: string }
 export function makeUnit(n: string, scene: Scene, dead = false): UnitVis {
   const P = PROTO[n], node = new TransformNode('u_' + n, scene);
   if (P.cont) { const inst = P.cont.instantiateModelsToScene(nm => nm, false, { doNotInstantiate: true }); const r = inst.rootNodes[0] as TransformNode;
     const inner = new TransformNode('in', scene); inner.parent = node; inner.rotation.y = P.yawFix!; r.parent = inner; r.scaling.scaleInPlace(P.scale!); r.position = P.off!.scale(P.scale!);
     for (const m of r.getChildMeshes(false)) { let q: any = m, hide = false; while (q) { if (/^(msl_show|stand_|V55_)/.test(q.name)) hide = true; q = q.parent; } if (hide) m.setEnabled(false); }   // نفس الأجزاء المخفية بصور WM8
-    const anim = inst.animationGroups.find(a => a.name === 'Raise'); inst.animationGroups.forEach(a => a.stop());
+    const anim = inst.animationGroups.find(a => a.name === 'Raise'); inst.animationGroups.forEach(a => a.stop()); for (const m of r.getChildMeshes(false)) if (m instanceof Mesh && m.isEnabled()) outline(m);
     const sh = new Mesh('nosh', scene); return { node, hull: r as any, sh, dead, anim, n }; }
   const hull = (dead ? P.dead : P.hull).clone(`h_${n}`, node)!; hull.setEnabled(true);
   let tur: Mesh | undefined; if (P.tur) { tur = (dead ? P.deadTur! : P.tur).clone(`t_${n}`, node)!; tur.setEnabled(true); tur.position.copyFrom(P.piv!); }
+  if (!dead) { outline(hull); if (tur) outline(tur); }
   const sh = P.shadow.clone(`s_${n}`)!; sh.setEnabled(false);
   return { node, hull, tur, sh, dead, n };
 }

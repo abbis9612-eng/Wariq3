@@ -2,7 +2,7 @@
 // إصبع يسحب الأرض، إصبعين: تكبير (قرصة)، لف (تدوير)، ميلان (سحب الإصبعين سوا لفوق/تحت). الماوس: عجلة تكبير، زر يمين/Ctrl للف والميلان.
 import { FreeCamera, Vector3, Matrix, type Scene } from '@babylonjs/core';
 import { clamp, WORLD } from './geo';
-export const cam = { x: 0, y: 0, D: 3e7, head: 0, tilt: 0 };   // x,y بمتر المحاكاة؛ D بعد الكاميرا عن الهدف؛ head راد (0 = شمال فوق)؛ tilt راد (0 = عمودي)
+export const cam = { x: 0, y: 0, z: 0, D: 3e7, head: 0, tilt: 0 };   // z: ارتفاع الهدف فوق الأرض (حتى تتابع طيارة بالجو)   // x,y بمتر المحاكاة؛ D بعد الكاميرا عن الهدف؛ head راد (0 = شمال فوق)؛ tilt راد (0 = عمودي)
 export const DMIN = 12, DMAX = 4.2e7, TMAX = 1.25;
 export let camera: FreeCamera;
 export function makeCamera(scene: Scene) { camera = new FreeCamera('cam', new Vector3(0, 1000, 0), scene); camera.fov = .8; camera.inputs.clear(); return camera; }

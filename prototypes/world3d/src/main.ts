@@ -5,7 +5,7 @@ import { buildTerrain, setTheme, placeTerrain, exagOf, groundH, LEVELS } from '.
 import { cam, camera, makeCamera, applyCamera, attachGestures, limit } from './cam';
 import { buildLabels, updateLabels } from './labels';
 import { clamp, lerp } from './geo';
-import { loadModels, makeUnit, orient, PROTO, MODELS, type UnitVis } from './units';
+import { loadModels, makeUnit, orient, PROTO, MODELS, setOutline, type UnitVis } from './units';
 import { FX, C, SMOKE, type Trail } from './fx';
 import { World, SITES, type V3, type Msl } from './sim2';
 import { MSL, AIR, GROUND } from './catalog';
@@ -15,7 +15,7 @@ const hyp = Math.hypot;
 const qs = new URLSearchParams(location.search), AUTO = qs.has('auto'), LITE = qs.has('lite');
 const store = { get: (k: string) => { try { return localStorage.getItem(k); } catch { return null; } }, set: (k: string, v: string) => { try { localStorage.setItem(k, v); } catch { /* */ } } };
 let THEME: 'light' | 'dark' = (store.get('w3_theme') as any) || 'dark', SIZE = +(store.get('w3_size') || 1), PIPON = store.get('w3_pip') !== '0';
-const SIZES = [1, 1.5, 2.2];
+const SIZES = [1, 1.6, 2.4];
 let SW = innerWidth, SH = innerHeight;
 const DARK = () => THEME === 'dark';
 const canvas = document.createElement('canvas'); $('stage').appendChild(canvas);
@@ -25,8 +25,8 @@ const SKY = { dark: new Color4(.05, .07, .1, 1), light: new Color4(.72, .8, .86,
 const applyTheme = () => { scene.clearColor = SKY[THEME]; scene.fogColor = new Color3(SKY[THEME].r, SKY[THEME].g, SKY[THEME].b); document.documentElement.classList.toggle('light', !DARK()); };
 scene.fogMode = Scene.FOGMODE_EXP2; applyTheme();
 makeCamera(scene);
-const hemi = new HemisphericLight('h', new Vector3(0, 1, 0), scene); hemi.intensity = .8; hemi.groundColor = new Color3(.35, .33, .3);
-const sun = new DirectionalLight('sun', new Vector3(-.5, -1, .4), scene); sun.intensity = 1.7;
+const hemi = new HemisphericLight('h', new Vector3(0, 1, 0), scene); hemi.intensity = 1.1; hemi.groundColor = new Color3(.35, .33, .3);
+const sun = new DirectionalLight('sun', new Vector3(-.5, -1, .4), scene); sun.intensity = 2.3;
 let exag = 1;
 const Y = (x: number, y: number, z: number) => groundH(x, y) * exag + z;   // ارتفاع العرض: الأرض المضخّمة + الارتفاع فوقها
 const F = new FX(scene, groundH, () => cam, () => exag);
@@ -54,11 +54,11 @@ function caption(t: string) { const el = $('cap'); el.textContent = t; el.style.
 interface Focus { key: string; pos: () => { x: number; y: number } | null; w: () => number; ts: number; until: number; pri: number }
 let focuses: Focus[] = [];
 function focus(key: string, pos: Focus['pos'], w: number | (() => number), ts: number, dur: number, pri: number) { focuses = focuses.filter(f => f.key !== key); focuses.push({ key, pos, w: typeof w === 'number' ? () => w : w, ts, until: W.t + dur, pri }); }
-const gf = (p: { x: number; y: number }) => ({ x: p.x, y: p.y });
+const gf = (p: { x: number; y: number; z?: number }) => ({ x: p.x, y: p.y, z: p.z ?? 0 });
 const jetPos = (id: number) => () => { const j = W.jets.find(q => q.id === id); return j && j.st !== 'gone' ? gf(j.p) : null; };
 function followMissile(m: Msl, pri: number) {
   const tgtOf = () => { const q = W.msls.find(x => x.id === m.id); if (!q) return null; const tj = q.tgtJet ? W.jets.find(j => j.id === q.tgtJet) : null, tm = q.tgtMsl ? W.msls.find(x => x.id === q.tgtMsl) : null; return tj ? tj.p : tm ? tm.p : q.tgtPt ?? null; };
-  focus('m' + m.id, () => { const q = W.msls.find(x => x.id === m.id && x.ph !== 'dead'); if (!q) return null; const t = tgtOf(); return t ? { x: (q.p.x + t.x) / 2, y: (q.p.y + t.y) / 2 } : gf(q.p); },
+  focus('m' + m.id, () => { const q = W.msls.find(x => x.id === m.id && x.ph !== 'dead'); if (!q) return null; const t = tgtOf(); return t ? { x: (q.p.x + t.x) / 2, y: (q.p.y + t.y) / 2, z: (q.p.z + (t.z ?? 0)) / 2 } : gf(q.p); },
     () => { const q = W.msls.find(x => x.id === m.id); const t = tgtOf(); return q && t ? clamp(hyp(q.p.x - t.x, q.p.y - t.y) * 1.5, 2500, 120000) : 8000; }, 1.5, 400, pri);
 }
 function onEvent(e: { type: string; p: V3; id?: number; data?: any }) {
@@ -126,15 +126,17 @@ function snd(n: string, p: V3, v: number, rate = 1) {
 }
 
 // ===== المخرج =====
-function director(): { x: number; y: number; w: number; ts: number; key: string } {
+function director(): { x: number; y: number; z: number; w: number; ts: number; key: string } {
   focuses = focuses.filter(f => W.t < f.until && f.pos());
   const f = focuses.sort((a, c) => c.pri - a.pri)[0];
-  if (f) { const p = f.pos()!; return { ...p, w: f.w(), ts: f.ts, key: f.key }; }
+  if (f) { const p = f.pos()! as { x: number; y: number; z?: number }; return { x: p.x, y: p.y, z: p.z ?? 0, w: f.w(), ts: f.ts, key: f.key }; }
   const fight = W.gnd.filter(g => g.st === 'move' && g.side === 0);
-  if (fight.length) { const c = fight.reduce((a, g) => ({ x: a.x + g.p.x / fight.length, y: a.y + g.p.y / fight.length }), { x: 0, y: 0 }); return { ...c, x: c.x + 900, w: 6500, ts: 5, key: 'ground' }; }
+  // قريب على الآليات (I-066): يتابع دبابة وحدة ويتنقل بينهن كل 15 ث، بدل المجموعة من بعيد
+  const tanks = fight.filter(g => g.type !== 'truck').sort((a, b) => a.id - b.id);
+  if (tanks.length) { const g = tanks[Math.floor(W.t / 15) % tanks.length]; return { x: g.p.x + Math.cos(g.hd) * 120, y: g.p.y + Math.sin(g.hd) * 120, z: 0, w: 650, ts: 3, key: 'g' + g.id }; }
   const air = W.jets.filter(j => j.side === 0 && W.alive(j));
-  if (air.length) { const c = air.reduce((a, j) => ({ x: a.x + j.p.x / air.length, y: a.y + j.p.y / air.length }), { x: 0, y: 0 }); const spread = Math.max(...air.map(j => hyp(j.p.x - c.x, j.p.y - c.y))); return { ...c, w: clamp(spread * 2.4 + 30000, 30000, 160000), ts: 14, key: 'air' }; }
-  return { x: (SITES.stage.x + SITES.base.x) / 2, y: SITES.stage.y, w: 60000, ts: 16, key: 'idle' };
+  if (air.length) { const ls = air.filter(j => j.slot % 2 === 0).sort((a, b) => a.id - b.id), j = (ls.length ? ls : air)[Math.floor(W.t / 30) % (ls.length || air.length)]; return { x: j.p.x, y: j.p.y, z: j.p.z, w: 3200, ts: 8, key: 'a' + j.id }; }   // يتابع طيارة قائدة وجناحها جنبها
+  return { x: (SITES.stage.x + SITES.base.x) / 2, y: SITES.stage.y, z: 0, w: 60000, ts: 16, key: 'idle' };
 }
 function hud() {
   if (performance.now() - capAt > 4500) $('cap').style.opacity = '0';
@@ -195,10 +197,10 @@ function placeUnits() {
   for (const [, u] of UV) if (u.seen !== frameNo) { u.node.setEnabled(false); u.sh.setEnabled(false); u.flag.isVisible = false; }
 }
 // الحجم لكل كاميرا: حقيقي من قريب، ومن بعيد حد أدنى بالبكسل حتى تنشاف (حجم ١/٢/٣)
-function scaleUnits(c: Camera) { const cp = c.position, showUnits = cam.D < 2.2e6, big = c === camera ? SIZES[SIZE] : 1, minPx = c === camera ? 16 : 0;
+function scaleUnits(c: Camera) { const cp = c.position, showUnits = cam.D < 2.2e6, big = c === camera ? SIZES[SIZE] : 1, minPx = c === camera ? 34 : 0;
   for (const [, u] of UV) { if (u.seen !== frameNo) continue; const p = u.node.position, px = mppAt(p.x - cp.x, p.y - cp.y, p.z - cp.z), S = Math.max(1, minPx * px / u.len) * big;
     u.node.setEnabled(showUnits || c !== camera); u.node.scaling.setAll(S); u.sh.scaling.set(S, .02, S);
-    u.flag.isVisible = c === camera && showUnits && !u.dk; u.flag.position.set(p.x + 1.2 * px * 14, p.y + PROTO[u.n].h * S + 8 * px, p.z); u.flag.width = 18 * px; u.flag.height = 12 * px; } }
+    u.flag.isVisible = c === camera && showUnits && !u.dk; u.flag.position.set(p.x + 1.2 * px * 14, p.y + PROTO[u.n].h * S + 8 * px, p.z); u.flag.width = 18 * px * Math.sqrt(big); u.flag.height = 12 * px * Math.sqrt(big); } }
 // ===== الصواريخ (جسم + لهب)، المظلات =====
 const mPool: Mesh[] = [], gPool: Sprite[] = [], chPool: Mesh[] = [];
 const mMat = new StandardMaterial('mm', scene); mMat.diffuseColor = new Color3(.93, .93, .9); mMat.emissiveColor = new Color3(.35, .35, .33);
@@ -252,26 +254,26 @@ function placePip() {
   $('piptitle').textContent = ({ s400: 'S-400 إطلاق بارد', patriot: 'باتريوت PAC-3', zolf: 'ذو الفقار', air: 'صاروخ من الطيارة' } as Record<string, string>)[PIP.kind] + st; $('piphint').hidden = pipBig;
 }
 // ===== الكاميرا تتبع المخرج =====
-let follow = true, fly: { x0: number; y0: number; w0: number; t: number; d: number } | null = null, shotKey = '';
+let follow = true, fly: { x0: number; y0: number; z0: number; w0: number; t: number; d: number } | null = null, shotKey = '';
 function setFollow(on: boolean) { follow = on; $('bFollow').setAttribute('aria-pressed', String(on)); if (on) shotKey = ''; }
 const D_of = (w: number) => w / (2 * Math.tan(hfov() / 2));
 function camUpdate(sh: ReturnType<typeof director>, rdt: number) {
   if (!follow) return; const w0 = camW();
-  if (sh.key !== shotKey) { const d = hyp(sh.x - cam.x, sh.y - cam.y); if (shotKey && d > Math.max(w0, sh.w) * .8) fly = { x0: cam.x, y0: cam.y, w0, t: 0, d: shotKey === 'world' ? 4.5 : clamp(.8 + Math.log10(d / Math.min(w0, sh.w) + 1) * .45, .8, 2.2) }; shotKey = sh.key; }
+  if (sh.key !== shotKey) { const d = hyp(sh.x - cam.x, sh.y - cam.y); if (shotKey && d > Math.max(w0, sh.w) * .8) fly = { x0: cam.x, y0: cam.y, z0: cam.z, w0, t: 0, d: shotKey === 'world' ? 4.5 : clamp(.8 + Math.log10(d / Math.min(w0, sh.w) + 1) * .45, .8, 2.2) }; shotKey = sh.key; }
   if (fly) { fly.t += rdt; const u = clamp(fly.t / fly.d, 0, 1), e = u * u * (3 - 2 * u), dist = hyp(sh.x - fly.x0, sh.y - fly.y0), l0 = Math.log(fly.w0), l1 = Math.log(sh.w), bump = Math.max(0, Math.log(dist * 1.3) - Math.max(l0, l1));
-    cam.x = lerp(fly.x0, sh.x, e); cam.y = lerp(fly.y0, sh.y, e); cam.D = D_of(Math.exp(lerp(l0, l1, e) + bump * Math.sin(Math.PI * e))); if (u >= 1) fly = null; return; }
-  const a = 1 - Math.exp(-rdt * 3), z = 1 - Math.exp(-rdt * 2.4); cam.x = lerp(cam.x, sh.x, a); cam.y = lerp(cam.y, sh.y, a); cam.D = D_of(Math.exp(lerp(Math.log(w0), Math.log(sh.w), z)));
+    cam.x = lerp(fly.x0, sh.x, e); cam.y = lerp(fly.y0, sh.y, e); cam.z = lerp(fly.z0, sh.z, e); cam.D = D_of(Math.exp(lerp(l0, l1, e) + bump * Math.sin(Math.PI * e))); if (u >= 1) fly = null; return; }
+  const a = 1 - Math.exp(-rdt * 3), z = 1 - Math.exp(-rdt * 2.4); cam.x = lerp(cam.x, sh.x, a); cam.y = lerp(cam.y, sh.y, a); cam.z = lerp(cam.z, sh.z, a); cam.D = D_of(Math.exp(lerp(Math.log(w0), Math.log(sh.w), z)));
 }
 // ===== الحلقة =====
 let W = new World(), speed = 1, paused = false, running = false, ended = false;
 function reset() { W = new World(); F.clear(); mTrail = new Map(); dTrail = new Map(); vTrail = new Map(); tTrail = new Map(); focuses = []; PIP = null; ended = false; shotKey = ''; fly = null; lastGun.clear(); tossed.clear(); for (const [, u] of UV) { u.node.dispose(); u.sh.dispose(); u.flag.dispose(); } UV.clear(); }
-function start() { reset(); setFollow(true); shotKey = 'world'; if (cam.D < 1e6) { const s = director(); cam.x = s.x; cam.y = s.y; cam.D = D_of(s.w); shotKey = ''; } /* أول مرة: الكاميرا تنزل من العالم كله للمعركة */ running = true; $('start').hidden = true; $('ui').hidden = false; $('end').hidden = true; audio(); caption('العملية بدأت: الهدف خرمشهر'); }
+function start() { reset(); setFollow(true); shotKey = 'world'; if (cam.D < 1e6) { const s = director(); cam.x = s.x; cam.y = s.y; cam.z = s.z; cam.D = D_of(s.w); shotKey = ''; } /* أول مرة: الكاميرا تنزل من العالم كله للمعركة */ running = true; $('start').hidden = true; $('ui').hidden = false; $('end').hidden = true; audio(); caption('العملية بدأت: الهدف خرمشهر'); }
 function stepSim(simDt: number, budget = 14) { let left = simDt, n = 0; const t0 = performance.now(); while (left > 1e-6 && n < 3000 && (n % 50 || performance.now() - t0 < budget)) { const d = Math.min(.02, left); left -= d; n++; W.step(d); fxStep(d); for (const e of W.ev.splice(0)) onEvent(e); } F.age(simDt - Math.max(0, left)); }
 scene.onBeforeCameraRenderObservable.add(c => { curCam = c; const vp = c.viewport; curH = engine.getRenderHeight() * vp.height || 1; scaleUnits(c); scaleMissiles(c); F.draw(c, mppAt, C(smokeCol())); });
 function frame() {
   SW = engine.getRenderWidth() / (engine.getHardwareScalingLevel() ? 1 / engine.getHardwareScalingLevel() : 1); SH = engine.getRenderHeight() / (1 / engine.getHardwareScalingLevel());
   SW = innerWidth; SH = innerHeight;
-  limit(); exag = exagOf(cam.D); const gh = groundH(cam.x, cam.y) * exag; applyCamera(gh);
+  limit(); exag = exagOf(cam.D); const gh = groundH(cam.x, cam.y) * exag + (follow ? cam.z : 0); applyCamera(gh);
   scene.fogDensity = cam.tilt > .15 ? 1.6 / (cam.D * 9) : 0; placeTerrain(cam, exag, camera.position, scene.fogColor, scene.fogDensity * .7);
   if (unitsReady) { placeUnits(); placeMissiles(); placePip(); }
   scene.render(); updateLabels(scene, SW, SH, (x, y) => groundH(x, y) * exag); if (running) hud();
@@ -287,7 +289,7 @@ window.addEventListener('resize', () => engine.resize());
 const inPip = (x: number, y: number) => { if (!PIP) return false; const { W0, H0, X0, Y0 } = pipRect(); return x > X0 && x < X0 + W0 && y > Y0 && y < Y0 + H0; };
 attachGestures(scene, canvas, () => setFollow(false), (x, y) => { if (inPip(x, y)) { pipBig = !pipBig; return true; } return false; });
 // ===== الأزرار =====
-const themeBtn = () => { $('bTheme').textContent = DARK() ? '🌙' : '☀️'; applyTheme(); };
+const themeBtn = () => { $('bTheme').textContent = DARK() ? '🌙' : '☀️'; applyTheme(); setOutline(DARK()); };
 const sizeBtn = () => { $('bSize').textContent = ['حجم ١', 'حجم ٢', 'حجم ٣'][SIZE]; };
 const pipBtn = () => { $('bPip').textContent = PIPON ? '🎬 قريب' : '🎬 مطفأ'; $('bPip').setAttribute('aria-pressed', String(PIPON)); };
 $('bTheme').onclick = async () => { THEME = DARK() ? 'light' : 'dark'; store.set('w3_theme', THEME); themeBtn(); await setTheme(scene, THEME); };
@@ -308,8 +310,8 @@ cam.x = SITES.stage.x; cam.y = SITES.stage.y; cam.D = 2.6e7;
 await loadModels(scene, prog); unitsReady = true;
 $('load').textContent = ''; ($('bGo') as HTMLButtonElement).disabled = false; $('bGo').textContent = 'ابدأ العملية';
 if (AUTO) { start(); (window as any).ready = true; }
-(window as any).seek = (t: number) => { while (W.t < t - 1e-4) stepSim(Math.min(2, t - W.t), 1e9); const sh = director(); shotKey = sh.key; fly = null; cam.x = sh.x; cam.y = sh.y; cam.D = D_of(sh.w); curTs = sh.ts; frame(); };
+(window as any).seek = async (t: number) => { while (W.t < t - 1e-4) stepSim(Math.min(2, t - W.t), 1e9); const sh = director(); shotKey = sh.key; fly = null; cam.x = sh.x; cam.y = sh.y; cam.z = sh.z; cam.D = D_of(sh.w); curTs = sh.ts; frame(); await scene.whenReadyAsync(); frame(); };
 (window as any).opts = async (th: string, sz: number) => { THEME = th as any; SIZE = sz; themeBtn(); sizeBtn(); await setTheme(scene, THEME); frame(); };
-(window as any).camSet = (o: any) => { setFollow(false); Object.assign(cam, o); frame(); };
-(window as any).W = () => W; (window as any).freeze = () => engine.stopRenderLoop(); (window as any).pip = (big: boolean) => { pipBig = big; frame(); };
+(window as any).camSet = async (o: any) => { setFollow(false); Object.assign(cam, o); frame(); await scene.whenReadyAsync(); frame(); };
+(window as any).J3 = () => { const u = UV.get('j3')!; const act = scene.getActiveMeshes().data; return JSON.stringify({ en: u.node.isEnabled(), hullEn: u.hull.isEnabled(), vis: u.hull.isVisible, active: act.includes(u.hull), sub: u.hull.subMeshes?.length, verts: u.hull.getTotalVertices(), bb: u.hull.getBoundingInfo().boundingBox.extendSizeWorld.asArray().map(v => +v.toFixed(1)), pos: u.hull.getAbsolutePosition().asArray().map(v => +v.toFixed(0)), mat: u.hull.material?.getClassName(), alpha: (u.hull.material as any)?.subMaterials?.map((m: any) => m?.alpha + '/' + m?.transparencyMode) }); }; (window as any).W = () => W; (window as any).UVd = () => [...UV.entries()].filter(([, u]) => u.node.isEnabled()).sort((a, b) => Vector3.Distance(a[1].node.position, camera.position) - Vector3.Distance(b[1].node.position, camera.position)).slice(0, 4).map(([k, u]) => k + ' S=' + u.node.scaling.x.toFixed(1) + ' p=' + u.node.position.asArray().map(v => v.toFixed(0)).join(',') + ' cam=' + camera.position.asArray().map(v => v.toFixed(0)).join(',')); (window as any).freeze = () => engine.stopRenderLoop(); (window as any).pip = (big: boolean) => { pipBig = big; frame(); };
 (window as any).ready0 = true; (window as any).hide = (re: string) => { for (const m of scene.meshes) if (new RegExp(re).test(m.name)) m.isVisible = false; for (const sm of scene.spriteManagers ?? []) if (new RegExp(re).test(sm.name)) (sm as any).isVisible = false; frame(); }; (window as any).LV = () => (LEVELS as any[]).map(l => [l.name, l.mesh.getTotalIndices(), l.m.map((v: number) => v.toFixed(7)).join(',')]);

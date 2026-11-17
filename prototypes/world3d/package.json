@@ -1,0 +1,27 @@
+{
+  "name": "wariq-world3d",
+  "private": true,
+  "version": "0.0.1",
+  "type": "module",
+  "scripts": {
+    "models": "node tools/models.mjs",
+    "dev": "vite",
+    "build": "vite build",
+    "typecheck": "tsc --noEmit",
+    "test:sim": "node tools/simtest2.ts && node tools/simtest3.ts",
+    "world": "python3 tools/world.py"
+  },
+  "dependencies": {
+    "@babylonjs/core": "9.33.1",
+    "@babylonjs/loaders": "9.33.1"
+  },
+  "devDependencies": {
+    "@gltf-transform/core": "4.5.1",
+    "@gltf-transform/extensions": "4.5.1",
+    "@gltf-transform/functions": "^4.5.1",
+    "meshoptimizer": "^1.2.0",
+    "sharp": "^0.35.5",
+    "typescript": "7.0.2",
+    "vite": "8.3.5"
+  }
+}

@@ -63,6 +63,11 @@ html.light #fcard{background:rgba(250,246,234,.96);color:#2b2620}
 #fcard table{width:100%;border-collapse:collapse;margin:6px 0;font-size:11.5px}#fcard th,#fcard td{text-align:start;padding:3px 4px;border-bottom:1px solid rgba(128,128,128,.25);vertical-align:top}#fcard th{opacity:.7;font-weight:600}
 #fcard .ord{display:flex;flex-wrap:wrap;gap:6px;align-items:center;margin-top:8px}#fcard .ord button{min-height:38px;padding:4px 10px;border-radius:7px;border:1px solid rgba(128,128,128,.45);background:rgba(128,128,128,.12)}#fcard .ord button[aria-pressed=true]{border-color:var(--brass);color:var(--brass);background:rgba(210,171,51,.15)}
 #fcard .hint{font-size:11px;opacity:.65;margin-top:4px}
+/* التحكم بالفصائل (WM15.3) */
+#cmd{position:fixed;z-index:3;inset-inline:8px;bottom:calc(112px + env(safe-area-inset-bottom,0px));max-width:480px;margin-inline:auto;background:rgba(12,14,12,.92);border:1px solid var(--brass);border-radius:10px;padding:8px 10px;display:flex;flex-wrap:wrap;gap:6px;align-items:center}
+#cmd .t{flex:1 1 100%;font:700 13.5px var(--display)}#cmd .t small{font:400 11.5px var(--body);opacity:.8;margin-inline-start:6px}
+#cmd button{min-height:40px;padding:4px 10px;border-radius:7px;border:1px solid rgba(255,255,255,.35);background:rgba(255,255,255,.08);color:#fff}#cmd button[aria-pressed=true]{border-color:var(--brass);color:var(--brass);background:rgba(210,171,51,.15)}
+html.light #cmd{background:rgba(250,246,234,.96);color:#2b2620}html.light #cmd button{color:#2b2620;border-color:rgba(0,0,0,.3)}
 </style>
 </head>
 <body>
@@ -87,11 +92,13 @@ html.light #fcard{background:rgba(250,246,234,.96);color:#2b2620}
     <li><b>ميلان:</b> حرّك الإصبعين سوا لفوق أو تحت. <b>لف:</b> دوّر الإصبعين. زر «⬆» يرجّعها من فوق</li>
     <li>الطيارات والدبابات مجسمات 3D حقيقية، تميل وتنقلب وتلف برجها بنفس المحاكاة</li>
     <li>«تابع» يلاحق الأحداث، و«🎬» لقطة قريبة 3D من الجنب عند كل إطلاق</li>
+    <li><b>تحكم:</b> اضغط على دبابة من دباباتنا ← «تقدم هنا» واضغط على الأرض، أو «اثبت»، أو «تلقائي»</li>
   </ul>
   <button class="btn go" id="bGo" disabled>يحمّل…</button><button id="bFront" hidden disabled></button>
   <div id="load"></div>
   <p class="cred">الخريطة: تضاريس من AWS Terrain Tiles، ومياه ومزارع مستخرجة من Sentinel-2 cloudless 2016 (EOX، CC BY 4.0)، وأنهار وطرق Natural Earth، وأسماء مدن © مساهمي OpenStreetMap · حدود وأنهار وأسماء الدول والمدن: Natural Earth · المجسمات (CC BY 4.0، Sketchfab): F-16 iedalton · S-400 xFORTUNAx · ذو الفقار 42manako · باتريوت و F-14 MirzaArrafi · أبرامز وT-72 Muhamad Mirza Arrafi · BMP unhappy_nation · غراد LM3D وغيرهم · دخان وانفجارات Unity Labs (CC0) · أصوات SoundBible و BigSoundBank</p>
 </div></div>
+<div id="cmd" hidden><div class="t" id="cmdT"></div><button id="cMove">➜ تقدم هنا</button><button id="cHold">✋ اثبت</button><button id="cAuto">🤖 تلقائي</button><button id="cX" aria-label="سد">✕</button></div>
 <div id="end" hidden><div class="card"><h1 id="endH">انتهت العملية</h1><p id="endTxt"></p><p>قلي شنو عجبك وشنو لا.</p><button class="btn go" id="bAgain">مرة ثانية</button></div></div>
 <script type="module" src="./src/main.ts"></script>
 </body>

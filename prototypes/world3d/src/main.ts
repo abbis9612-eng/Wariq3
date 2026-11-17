@@ -2,7 +2,7 @@
 // الكاميرا من فوق وتميل/تلف بإصبعين؛ «تابع» يلاحق الأحداث؛ «🎬» كاميرا 3D ثانية تصوّر الإطلاق من الجنب.
 import { Engine, Scene, Color4, Color3, HemisphericLight, DirectionalLight, Vector3, FreeCamera, Viewport, MeshBuilder, StandardMaterial, Sprite, Quaternion, type Mesh, type AbstractMesh, type Camera } from '@babylonjs/core';
 import { buildTerrain, setTheme, placeTerrain, exagOf, groundH, LEVELS } from './terrain';
-import { cam, camera, makeCamera, applyCamera, attachGestures, limit } from './cam';
+import { cam, camera, makeCamera, applyCamera, attachGestures, limit, pickGround } from './cam';
 import { buildLabels, updateLabels, showSites } from './labels';
 import { FrontView } from './frontmode';
 import { FrontCard, applyNames } from './frontcard';
@@ -259,8 +259,9 @@ function placeUnits() {
   for (const j of W.jets) { if (j.st === 'gone') continue; const air = j.st !== 'landed' && j.st !== 'parked'; unitAt('j' + j.id, AIR[j.type].sprite, j.side, j.p, air ? orient(j.hd, j.gam, j.bank) : orient(j.hd), { air }); }
   for (const bt of W.bats) bt.launchers.forEach((l, i) => unitAt(`b${bt.id}_${i}`, bt.type, bt.side, l.p, orient(l.hd), { dead: !l.alive, raise: bt.type === 's400' ? l.raise : undefined }));
   W.tels.forEach((tl, i) => unitAt('tel' + i, 'zolf', 1, tl.p, orient(3.6)));
+  const leadOf = new Map<string, number>(); for (const g of W.gnd) { if (g.st === 'dead' || g.st === 'gone') continue; const k = g.side + ':' + g.plt; if (!leadOf.has(k)) leadOf.set(k, g.id); }   /* علم وحد لكل فصيل فوق قائده (WM15) */
   for (const g of W.gnd) { if (g.st === 'gone') continue; const hasT = g.type === 'abrams' || g.type === 't72', lg = lastGun.get(g.id);
-    unitAt('g' + g.id, GROUND[g.type].sprite, g.side, g.p, orient(g.hd), { dead: g.st === 'dead', tur: hasT ? -Math.atan2(Math.sin(g.turret - g.hd), Math.cos(g.turret - g.hd)) * -1 : undefined, recoil: lg !== undefined ? Math.max(0, 1 - (W.t - lg) / .5) : 0, toss: tossed.get(g.id) }); }
+    unitAt('g' + g.id, GROUND[g.type].sprite, g.side, g.p, orient(g.hd), { dead: g.st === 'dead', tur: hasT ? -Math.atan2(Math.sin(g.turret - g.hd), Math.cos(g.turret - g.hd)) * -1 : undefined, recoil: lg !== undefined ? Math.max(0, 1 - (W.t - lg) / .5) : 0, toss: tossed.get(g.id), noFlag: leadOf.get(g.side + ':' + g.plt) !== g.id }); }
   for (const [, u] of UV) if (u.seen !== frameNo) { u.node.setEnabled(false); u.sh.setEnabled(false); u.flag.isVisible = false; }
 }
 const AIRN = new Set(['f16', 'su25', 'f14']);
@@ -362,7 +363,7 @@ let PR: Props | null = null;   // الأرض المجسمة (WM15.1) — تتح�
 let W = new World(), speed = 1, paused = false, running = false, ended = false, MODE: 'op' | 'front' = 'op', FV: FrontView | null = null;
 function reset() { W = new World(); placeBerms(); F.clear(); mTrail = new Map(); dTrail = new Map(); vTrail = new Map(); tTrail = new Map(); focuses = []; PIP = null; ended = false; shotKey = ''; fly = null; lastGun.clear(); tossed.clear(); mModels.forEach(b => b.dispose()); mModels.clear(); trauma = 0; for (const [, u] of UV) { u.node.dispose(); u.sh.dispose(); u.flag.dispose(); } UV.clear(); }
 function start(mode: 'op' | 'front' = 'op') { reset(); MODE = mode; FV?.dispose(); FV = null; showSites(mode === 'op');
-  card.close(); if (mode === 'front') { FV = new FrontView(fctx, qs.has('seed') ? +qs.get('seed')! : undefined); applyNames(FV.W); FV.onTap = (b, s) => onFrontTap(b, s); setFollow(true); const o = FV.overview(); if (cam.D > 2e6) { cam.x = o.x; cam.y = o.y; cam.z = 0; } shotKey = 'world'; running = true; $('start').hidden = true; $('ui').hidden = false; $('end').hidden = true; audio(); caption('الجبهة كاملة: كل لواء برمزه وشريط قوته — والمعارك تنحسم للأقوى'); $('endH').textContent = 'انتهى شهر الحرب'; return; }
+  card.close(); sel = null; pickMove = false; $('cmd').hidden = true; if (mode === 'front') { FV = new FrontView(fctx, qs.has('seed') ? +qs.get('seed')! : undefined); applyNames(FV.W); FV.onTap = (b, s) => onFrontTap(b, s); setFollow(true); const o = FV.overview(); if (cam.D > 2e6) { cam.x = o.x; cam.y = o.y; cam.z = 0; } shotKey = 'world'; running = true; $('start').hidden = true; $('ui').hidden = false; $('end').hidden = true; audio(); caption('الجبهة كاملة: كل لواء برمزه وشريط قوته — والمعارك تنحسم للأقوى'); $('endH').textContent = 'انتهى شهر الحرب'; return; }
   $('endH').textContent = 'انتهت العملية'; setFollow(true); shotKey = 'world'; if (cam.D < 1e6) { const s = director(); cam.x = s.x; cam.y = s.y; cam.z = s.z; cam.D = D_of(s.w); shotKey = ''; } /* أول مرة: الكاميرا تنزل من العالم كله للمعركة */ running = true; $('start').hidden = true; $('ui').hidden = false; $('end').hidden = true; audio(); caption('العملية بدأت: الهدف خرمشهر'); }
 function stepSim(simDt: number, budget = 9) { let left = simDt, n = 0; const t0 = performance.now(); while (left > 1e-6 && n < 3000 && (n % 50 || performance.now() - t0 < budget)) { const d = Math.min(.02, left); left -= d; n++; W.step(d); fxStep(d); for (const e of W.ev.splice(0)) onEvent(e); } F.age(simDt - Math.max(0, left)); }
 scene.onBeforeCameraRenderObservable.add(c => { curCam = c; const vp = c.viewport; curH = engine.getRenderHeight() * vp.height || 1; F.k = c === camera ? 1.5 * SIZES[SIZE] : 1; F.view = c === camera ? camW() + cam.D * Math.tan(cam.tilt) * 2 : 4000; scaleUnits(c); scaleMissiles(c); F.draw(c, mppAt, C(smokeCol())); });
@@ -373,7 +374,7 @@ function frame() {
   if (trauma > 0) { const sh = trauma * trauma * camW() * .012; camera.position.addInPlaceFromFloats(R(-1, 1) * sh, R(-1, 1) * sh * .4, R(-1, 1) * sh); trauma = Math.max(0, trauma - engine.getDeltaTime() / 1000 * 1.6); }
   PR?.update(cam);
   scene.fogDensity = cam.tilt > .15 ? 1.6 / (cam.D * 9) : 0; placeTerrain(cam, exag, camera.position, scene.fogColor, scene.fogDensity * .7);
-  if (unitsReady) { placeUnits(); if (MODE === 'op') { placeMissiles(); placePip(); } }
+  if (unitsReady) { placeUnits(); if (MODE === 'op') { placeMissiles(); placePip(); } placeRings(); }
   updateEngines();
   scene.render(); updateLabels(scene, SW, SH, (x, y) => groundH(x, y) * exag); if (MODE === 'front' && FV) { FV.draw(Math.min(.05, engine.getDeltaTime() / 1000), SW, SH); card.tick(performance.now()); } if (running) hud();
 }
@@ -414,6 +415,44 @@ function onFrontTap(b: any, s: number | null, stack?: boolean) {
   const terr = scene.meshes.filter(m => m.name.startsWith('terrain_')).map(m => `${m.name}:${Math.round(((m as any).getTotalIndices?.() ?? 0) / 3000)}k`).join(' ');
   return JSON.stringify({ msPerFrame: +((performance.now() - t0) / frames).toFixed(1), parts: Object.fromEntries(Object.entries(PT).map(([k, v]) => [k, +(v / frames).toFixed(2)])), drawCalls: Math.round(((engine as any)._drawCalls?.current - dc0) / frames), units: [...UV.values()].filter(u => u.seen === frameNo).length, dom: document.querySelectorAll('#front .ct').length, terr }); };
 (window as any).PR = () => PR?.stats(); (window as any).ll = ll2s; (window as any).W = () => W; (window as any).SITES = SITES; (window as any).FV = () => FV; (window as any).fdbg2 = () => JSON.stringify({ fxs: F.fxs.length, kinds: F.fxs.reduce((o: any, f) => (o[f.kind] = (o[f.kind] || 0) + 1, o), {}), puffs: F.puffs.length, us: [...UV.entries()].filter(([, u]) => u.seen === frameNo).slice(0, 5).map(([k, u]) => [k, u.n, u.node.isEnabled(), +u.node.scaling.x.toFixed(1), Math.round(u.node.position.x), Math.round(u.node.position.y), Math.round(u.node.position.z)]) }); (window as any).fdbg = () => JSON.stringify({ MODE, tier: FV?.tier, cam: { x: Math.round(cam.x), y: Math.round(cam.y), D: Math.round(cam.D) }, seen: [...UV.values()].filter(u => u.seen === frameNo).length, UV: UV.size, frameNo, cts: [...document.querySelectorAll('#front .ct')].filter(e => !(e as HTMLElement).style.transform.includes('-999')).length, line: (document.querySelector('.fl') as any)?.getAttribute('d')?.length }); (window as any).card = card;
+// ===== التحكم بالفصائل (WM15.3، I-075): اضغط دبابة من دباباتنا ← تقدم هنا / اثبت / تلقائي =====
+let sel: number | null = null, pickMove = false;
+const ringMat = new StandardMaterial('ring', scene); ringMat.emissiveColor = new Color3(1, .82, .3); ringMat.diffuseColor = Color3.Black(); ringMat.disableLighting = true;
+const rings: Mesh[] = [];
+const PLT_AR: Record<string, string> = { abrams: 'فصيل أبرامز', bmp: 'فصيل BMP', t72: 'فصيل T-72' };
+function selUnits() { return sel === null ? [] : W.gnd.filter(g => g.side === 0 && g.plt === sel && g.st !== 'dead' && g.st !== 'gone'); }
+function cmdShow() {
+  const us = selUnits(); if (sel === null || !us.length || MODE !== 'op') { sel = null; pickMove = false; $('cmd').hidden = true; return; }
+  const o = us[0].ord; $('cmd').hidden = false;
+  $('cmdT').innerHTML = `${PLT_AR[us[0].type] ?? 'فصيل'} ${sel + 1} <small>${us.length} آليات · ${pickMove ? 'اضغط على الأرض وين يروح' : o === 'hold' ? 'ثابت بمكانه' : o === 'move' ? 'ماشي لنقطتك' : 'القيادة تلقائية'}</small>`;
+  $('cMove').setAttribute('aria-pressed', String(pickMove || o === 'move')); $('cHold').setAttribute('aria-pressed', String(o === 'hold')); $('cAuto').setAttribute('aria-pressed', String(!o));
+}
+function placeRings() {
+  const us = MODE === 'op' ? selUnits() : [];
+  us.forEach((g, i) => { const r = rings[i] ?? (() => { const m = MeshBuilder.CreateTorus('ring', { diameter: 1, thickness: .08, tessellation: 24 }, scene); m.material = ringMat; m.isPickable = false; rings.push(m); return m; })();
+    const px = mppAt(g.p.x - cam.x - camera.position.x, Y(g.p.x, g.p.y, 0) - camera.position.y, g.p.y - cam.y - camera.position.z), d = Math.max(14, 34 * px);
+    r.setEnabled(true); r.position.set(g.p.x - cam.x, Y(g.p.x, g.p.y, .6), g.p.y - cam.y); r.scaling.set(d, d, d); });
+  for (let i = us.length; i < rings.length; i++) rings[i].setEnabled(false);
+}
+// ضغطة (بدون سحب) على الشاشة
+let tapDown: { x: number; y: number; t: number; n: number } | null = null, nPtr = 0;
+canvas.addEventListener('pointerdown', e => { nPtr++; tapDown = nPtr === 1 ? { x: e.clientX, y: e.clientY, t: performance.now(), n: 1 } : null; });
+canvas.addEventListener('pointerup', e => { nPtr = Math.max(0, nPtr - 1); const d = tapDown; tapDown = null; if (!d || MODE !== 'op' || !running) return; if (Math.hypot(e.clientX - d.x, e.clientY - d.y) > 9 || performance.now() - d.t > 450) return; onTapMap(e.clientX, e.clientY); });
+canvas.addEventListener('pointercancel', () => { nPtr = 0; tapDown = null; });
+function onTapMap(sx: number, sy: number) {
+  applyCamera(groundH(cam.x, cam.y) * exag + cam.z); const g = pickGround(scene, sx, sy); if (!g) return;
+  if (pickMove && sel !== null) { const n = W.command(0, sel, 'move', g); pickMove = false; caption(`${n} آليات تتقدم للنقطة`); puff({ ...g, z: 1 }, 6, 2, 3, .5, 0xffd27a, 8); fx('ring', g, 30, .8, 26, 0xffd27a); cmdShow(); return; }
+  // أقرب آلية عراقية للضغطة (مسافة بالبكسل)
+  const px = camW() / SW; let best: any = null, bd = Math.max(40, 34 * px);
+  for (const q of W.gnd) { if (q.side !== 0 || q.st === 'dead' || q.st === 'gone' || q.type === 'truck' || q.type === 'grad') continue; const dd = hyp(q.p.x - g.x, q.p.y - g.y); if (dd < bd) { bd = dd; best = q; } }
+  if (best) { sel = best.plt; pickMove = false; cmdShow(); } else if (sel !== null && !pickMove) { sel = null; cmdShow(); }
+}
+$('cMove').onclick = () => { if (sel === null) return; pickMove = true; cmdShow(); };
+$('cHold').onclick = () => { if (sel === null) return; W.command(0, sel, 'hold'); pickMove = false; caption('الفصيل ثابت بمكانه — يرمي بس ما يتحرك'); cmdShow(); };
+$('cAuto').onclick = () => { if (sel === null) return; W.command(0, sel, 'auto'); pickMove = false; caption('الفصيل رجع للقيادة التلقائية'); cmdShow(); };
+$('cX').onclick = () => { sel = null; pickMove = false; cmdShow(); };
+setInterval(() => { if (sel !== null) cmdShow(); }, 1000);
+(window as any).selPlt = (p: number) => { sel = p; cmdShow(); }; (window as any).tapAt = onTapMap;
 // ===== الأزرار =====
 const themeBtn = () => { $('bTheme').textContent = DARK() ? '🌙' : '☀️'; applyTheme(); setOutline(DARK()); };
 const sizeBtn = () => { $('bSize').textContent = ['حجم ١', 'حجم ٢', 'حجم ٣', 'حجم ٤'][SIZE]; };

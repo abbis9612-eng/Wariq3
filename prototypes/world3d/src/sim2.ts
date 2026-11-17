@@ -32,7 +32,7 @@ export function rng(seed: number) { let s = seed >>> 0; return () => { s = (s * 
 
 export interface Jet { id: number; type: string; side: Side; p: V3; hd: number; spd: number; vz: number; bank: number; st: string; mission: 'sead' | 'strike' | 'cap'; slot: number; lead: number; home: { x: number; y: number }; rw: number; ammo: string[]; t0: number; roll: number; fired: number; tgt: number; faf: number; cmT: number; gam: number; n: number; man: string; manT: number; manH: number }
 export interface Msl { id: number; type: string; side: Side; p: V3; vel: V3; ph: 'eject' | 'drop' | 'boost' | 'coast' | 'dead'; t: number; tgtJet?: number; tgtMsl?: number; tgtGnd?: number; tgtPt?: V3; miss: boolean; bestD: number; from: string; lastT?: V3; lastP?: V3; lostAt?: number; plan?: { dir: V3; k: number; p0: V3 } }
-export interface Gnd { id: number; type: string; side: Side; p: V3; hd: number; st: 'idle' | 'move' | 'dead' | 'gone'; goal: V3 | null; reload: number; hp: number; burnT: number; plt: number; dug: boolean; turret: number; shotsAt: number; spd: number; rev: boolean; man: string; manP: V3 | null; manT: number }
+export interface Gnd { ord?: 'hold' | 'move' | null; id: number; type: string; side: Side; p: V3; hd: number; st: 'idle' | 'move' | 'dead' | 'gone'; goal: V3 | null; reload: number; hp: number; burnT: number; plt: number; dug: boolean; turret: number; shotsAt: number; spd: number; rev: boolean; man: string; manP: V3 | null; manT: number }
 export interface Battery { id: number; type: string; side: Side; p: V3; hd: number; launchers: { p: V3; alive: boolean; raise: number; hd: number }[]; ammo: number; alert: boolean; next: number }
 export interface Ev { t: number; type: string; p: V3; id?: number; data?: any }
 export interface Debris { p: V3; vel: V3; t: number; burn: boolean }
@@ -304,7 +304,7 @@ export class World {
     if (g.st === 'dead' || g.st === 'gone') return;
     const ty = GROUND[g.type];
     // الهجوم يبدأ بعد الإخماد والقصف (أو بعد 260 ث)
-    if (g.side === 0 && g.type !== 'grad' && g.type !== 'truck' && !g.goal && this.t > 260) { const o = SITES.objective; g.goal = { x: o.x + (g.plt - 1) * 500 + (this.r() - .5) * 300, y: o.y + (g.plt - 1) * 400 + (this.r() - .5) * 300, z: 0 }; g.st = 'move'; if (!(this as any).adv) { (this as any).adv = 1; this.emit('advance', g.p, g.id); } }
+    if (g.side === 0 && g.type !== 'grad' && g.type !== 'truck' && !g.goal && !g.ord && this.t > 260) { const o = SITES.objective; g.goal = { x: o.x + (g.plt - 1) * 500 + (this.r() - .5) * 300, y: o.y + (g.plt - 1) * 400 + (this.r() - .5) * 300, z: 0 }; g.st = 'move'; if (!(this as any).adv) { (this as any).adv = 1; this.emit('advance', g.p, g.id); } }
     const foes = this.gnd.filter(q => q.side !== g.side && q.st !== 'dead' && q.st !== 'gone' && q.type !== 'truck'), near = foes.map(q => ({ q, d: Math.hypot(q.p.x - g.p.x, q.p.y - g.p.y) })).sort((a, b) => a.d - b.d)[0];
     // راجمات: رشقة على أكثف تجمّع للعدو
     if (g.type === 'grad') { g.reload -= dt; if (g.reload <= 0 && (g as any).shots !== 0 && this.t > (g.side ? 290 : 230) && near && near.d < ty.range) { (g as any).shots = ((g as any).shots ?? 3) - 1; g.reload = 90 + this.r() * 30; this.salvo(g, near.q.p); } return; }
@@ -324,6 +324,7 @@ export class World {
     if (wantFire && (Math.abs(g.spd) < 1 || (g.type === 'abrams' && Math.abs(g.spd) < 6))) {   /* أبرامز مدفعه مثبّت: يرمي وهو ماشي ببطء (WM15.2) */ g.reload = (g.type === 'abrams' ? 6 : 6.5) + this.r() * 3; this.shoot(g, near!.q, near!.d); g.manT = this.t + 1.5;
       if (g.side === 1 && g.dug && this.r() < .3) { g.dug = false; g.man = 'back'; g.manP = { x: g.p.x - Math.cos(g.hd) * 40, y: g.p.y - Math.sin(g.hd) * 40, z: 0 }; } return; }
     if (wantFire || this.t < g.manT) { this.stop(g, dt); return; }
+    if (g.ord === 'hold') { this.stop(g, dt); return; }   // أمر اللاعب: اثبت (يرمي بس ما يتحرك) — WM15.3
     if (g.st === 'move' && g.goal) {
       // قفزات (bounding overwatch): فصيل يغطي واقف وفصيل يتقدم، يتبادلون كل 14 ث
       const halt = engaging && near!.d < ty.range * .85 && (g.plt + Math.floor(this.t / 14)) % 2 === 0;
@@ -334,6 +335,20 @@ export class World {
       if (halt) this.stop(g, dt); else this.drive(g, goal, vmax, dt);
       if (Math.hypot(g.goal.x - g.p.x, g.goal.y - g.p.y) < 80) g.st = 'idle'; }
     else this.stop(g, dt);
+  }
+  /** أمر اللاعب لفصيل (WM15.3): تقدم لنقطة بتشكيل، اثبت، أو رجّعه للقيادة التلقائية */
+  command(side: Side, plt: number, kind: 'move' | 'hold' | 'auto', pt?: { x: number; y: number }) {
+    const us = this.gnd.filter(g => g.side === side && g.plt === plt && g.st !== 'dead' && g.st !== 'gone').sort((a, b) => a.id - b.id);
+    const c = us.length ? { x: us.reduce((s, g) => s + g.p.x, 0) / us.length, y: us.reduce((s, g) => s + g.p.y, 0) / us.length } : { x: 0, y: 0 };
+    const hd = pt ? Math.atan2(pt.y - c.y, pt.x - c.x) : 0, ch = Math.cos(hd), sh = Math.sin(hd);
+    us.forEach((g, i) => {
+      if (kind === 'auto') { g.ord = null; g.goal = null; g.st = 'idle'; return; }
+      if (kind === 'hold') { g.ord = 'hold'; g.goal = null; g.st = 'idle'; return; }
+      // تشكيل خط مايل: كل دبابة 60 م جنب و 30 م ورا اللي قبلها
+      const side_ = (i - (us.length - 1) / 2) * 60, back = Math.abs(i - (us.length - 1) / 2) * 30;
+      g.ord = 'move'; g.goal = { x: pt!.x - ch * back - sh * side_, y: pt!.y - sh * back + ch * side_, z: 0 }; g.st = 'move'; g.dug = false; g.man = '';
+    });
+    return us.length;
   }
   // سياقة دبابة: تسارع وفرملة، تلف بمكانها لما بطيئة وبنصف قطر لما سريعة، بدون انزلاق؛ تتجنب الجيران بالتوجيه؛ ترجع لورا لو الهدف خلفها وقريب
   drive(g: Gnd, goal: V3, vmax: number, dt: number, allowRev = false): boolean {

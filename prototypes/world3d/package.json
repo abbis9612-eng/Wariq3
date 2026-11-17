@@ -9,7 +9,9 @@
     "build": "vite build",
     "typecheck": "tsc --noEmit",
     "test:sim": "node tools/simtest2.ts && node tools/simtest3.ts",
-    "world": "python3 tools/world.py"
+    "world": "python3 tools/world.py",
+    "test:orbat": "node tools/orbattest.ts",
+    "front": "python3 tools/front.py"
   },
   "dependencies": {
     "@babylonjs/core": "9.33.1",

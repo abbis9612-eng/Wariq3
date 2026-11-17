@@ -6,12 +6,12 @@ const G = (n: string) => Object.entries(FXU).find(([k]) => k.endsWith('/' + n))!
 export interface P3 { x: number; y: number; z: number }
 interface Puff { s: Sprite; g: number; p: P3; r: number; gr: number; t: number; life: number; a: number; v: P3; minPx: number; col: Color3 }
 export interface Fx { s?: Sprite; g: number; kind: 'glow' | 'ex' | 'ring' | 'flare' | 'fire' | 'spark' | 'tracer'; p: P3; size: number; t: number; life: number; minPx: number; tint: Color3; v: P3; to?: P3 }
-export interface Trail { pts: { x: number; y: number; z: number; t: number; g: number }[]; r0: number; gr: number; life: number; a: number; col: Color3; live: boolean; flat?: boolean; minPx?: number }
+export interface Trail { pts: { x: number; y: number; z: number; t: number; g: number }[]; r0: number; gr: number; life: number; a: number; col: Color3; live: boolean; flat?: boolean; minPx?: number; maxPts?: number }
 const R = (a: number, b: number) => a + Math.random() * (b - a);
 export const WIND = { x: 3.5, y: 1.2 };
 export class FX {
   smoke: SpriteManager; ex: SpriteManager; glow: SpriteManager; flags: SpriteManager;
-  puffs: Puff[] = []; fxs: Fx[] = []; trails: Trail[] = []; trailMesh: Mesh; tmat: StandardMaterial; t = 0; k = 1;   // k: تكبير المؤثرات بنفس نسبة تكبير الآليات
+  puffs: Puff[] = []; fxs: Fx[] = []; trails: Trail[] = []; trailMesh: Mesh; tmat: StandardMaterial; t = 0; k = 1; view = 1e9;   // view: عرض المشهد بالمتر (لتخطي البعيد)   // k: تكبير المؤثرات بنفس نسبة تكبير الآليات
   constructor(private scene: Scene, private gh: (x: number, y: number) => number, private A: () => { x: number; y: number }, private exag: () => number) {
     this.smoke = new SpriteManager('smoke', G('fx_cloud.webp'), 2600, 128, scene); this.smoke.disableDepthWrite = true;
     this.ex = new SpriteManager('ex', G('fx_explo1.webp'), 200, 200, scene); this.ex.disableDepthWrite = true;
@@ -31,7 +31,7 @@ export class FX {
     this.trailMesh.material = this.tmat;
   }
   puff(p: P3, r: number, gr: number, life: number, a: number, col: Color3, minPx = 3, v: P3 = { x: 0, y: 0, z: 0 }) {
-    if (this.puffs.length > 2400) { this.puffs.shift()!.s.dispose(); }
+    if (this.puffs.length > 1300) { this.puffs.shift()!.s.dispose(); }
     const s = new Sprite('p', this.smoke); s.cellIndex = (Math.random() * 64) | 0; s.angle = R(0, 6.28); this.puffs.push({ s, g: this.gh(p.x, p.y), p: { ...p }, r, gr, t: 0, life, a, v: { ...v }, minPx, col });
   }
   fx(kind: Fx['kind'], p: P3, size: number, life: number, minPx: number, tint: Color3 = Color3.White(), v: P3 = { x: 0, y: 0, z: 0 }, to?: P3) {
@@ -52,7 +52,7 @@ export class FX {
     this.trails = this.trails.filter(r => r.live || (r.pts.length && this.t - r.pts[r.pts.length - 1].t < r.life));
   }
   trail(o: Omit<Trail, 'pts' | 'live'>): Trail { const t: Trail = { ...o, pts: [], live: true }; this.trails.push(t); return t; }
-  add(t: Trail, p: P3, minStep: number) { const l = t.pts[t.pts.length - 1]; if (!l || Math.hypot(p.x - l.x, p.y - l.y, p.z - l.z) > minStep) t.pts.push({ x: p.x, y: p.y, z: p.z, t: this.t, g: this.gh(p.x, p.y) }); }
+  add(t: Trail, p: P3, minStep: number) { const l = t.pts[t.pts.length - 1]; if (!l || Math.hypot(p.x - l.x, p.y - l.y, p.z - l.z) > minStep) { t.pts.push({ x: p.x, y: p.y, z: p.z, t: this.t, g: this.gh(p.x, p.y) }); if (t.pts.length > (t.maxPts ?? 240)) t.pts.shift(); } }   // حد للنقاط (WM13.1)
   // يحدّث المواقع والأحجام لكاميرا معينة (الرئيسية أو اللقطة القريبة)
   draw(cam: Camera, mpp: (x: number, y: number, z: number) => number, smokeCol: Color3) {
     const A = this.A(), E = this.exag(), cp = cam.position, now = this.t;
@@ -68,7 +68,9 @@ export class FX {
       else { s.width = s.height = sz; s.color.set(f.tint.r, f.tint.g, f.tint.b, f.kind === 'flare' ? 1 - u * .7 : 1 - u); } }
     // الشريط: كل نقطة تنزاح مع الريح وتتسع وتخفت
     const pos: number[] = [], col: number[] = [], uv: number[] = [], idx: number[] = [];
+    const far = this.view * 1.6;
     for (const r of this.trails) { const P = r.pts; if (P.length < 2) continue; let base = -1;
+      const a0 = P[0], a1 = P[P.length - 1], am0 = P[(P.length / 2) | 0]; if ([a0, a1, am0].every(q => Math.hypot(q.x - A.x, q.y - A.y) > far)) continue;   // بعيد عن الشاشة
       for (let i = 0; i < P.length; i++) { const q = P[i], am = now - q.t; const alive = am <= r.life;
         const x = q.x + WIND.x * (r.flat ? 0 : am) - A.x, z = q.y + WIND.y * (r.flat ? 0 : am) - A.y, y = q.g * E + q.z + (r.flat ? .3 : 0);
         const n = P[Math.min(P.length - 1, i + 1)], pr = P[Math.max(0, i - 1)], tx = n.x - pr.x, ty = n.z - pr.z, tz = n.y - pr.y;

@@ -1,12 +1,12 @@
 // مجسمات 3D (WM11.4): كل مجسم ينخبز لشبكة وحدة (قدّامه +z، طوله الحقيقي، قاعدته على الأرض) وتنسخ لكل وحدة.
 // الدبابات: البرج ينفصل عن الجسم (نفس حدود المسرح) ويلف حول محوره. S-400 يبقى بهيكله حتى حركة رفع الأنابيب تشتغل.
-import { SceneLoader, Mesh, VertexData, Vector3, Matrix, Quaternion, StandardMaterial, Color3, PBRMaterial, TransformNode, type AssetContainer, type Scene, type AnimationGroup, type Material } from '@babylonjs/core';
+import { SceneLoader, Mesh, AbstractMesh, InstancedMesh, VertexData, Vector3, Matrix, Quaternion, StandardMaterial, Color3, PBRMaterial, TransformNode, type AssetContainer, type Scene, type AnimationGroup, type Material } from '@babylonjs/core';
 import '@babylonjs/loaders/glTF';
 import '@babylonjs/core/Rendering/outlineRenderer';
 const MURL = import.meta.glob('../models/*.gltf.json', { query: '?url', import: 'default', eager: true }) as Record<string, string>;
 // [ملف، لف حتى قدّامه يصير +z، الطول بالمتر]
 export const MODELS: Record<string, { yaw: number; len: number; auto?: boolean }> = {
-  f16: { yaw: Math.PI / 2, len: 15.1 }, su25: { yaw: Math.PI / 2, len: 15.5 }, f14: { yaw: -Math.PI / 2, len: 19.1 },
+  f16: { yaw: Math.PI / 2, len: 15.1 }, su25: { yaw: -Math.PI / 2, len: 15.5 },   /* Su-25 كان معكوس (I-070): انقاس بـ noseCheck — الذيل أعرض من الأنف */ f14: { yaw: -Math.PI / 2, len: 19.1 },
   abrams: { yaw: 0, len: 9.8 }, t72: { yaw: Math.PI, len: 9.5 }, bmp: { yaw: 0, len: 6.7 }, grad: { yaw: 0, len: 7.4 }, truck: { yaw: Math.PI, len: 5.3 },
   patriot: { yaw: Math.PI / 2, len: 10.4 }, s400: { yaw: Math.PI, len: 13.5 }, zolf: { yaw: 0, len: 13.2 },
   // صواريخ (WM12.2): الاتجاه يتحدد تلقائياً (أطول محور ← +z، والرأس = الطرف الأنحف بدون زعانف)
@@ -76,11 +76,12 @@ function bake(n: string, c: AssetContainer, scene: Scene) {
       for (const i of p.idx) { let j = map.get(i); if (j === undefined) { j = map.size; map.set(i, j); const v = X(new Vector3(p.pos[i * 3], p.pos[i * 3 + 1], p.pos[i * 3 + 2])); if (tur && piv) v.subtractInPlace(piv); np.push(v.x, v.y, v.z);
         if (p.nor) { const nv2 = Vector3.TransformNormal(new Vector3(p.nor[i * 3], p.nor[i * 3 + 1], p.nor[i * 3 + 2]), R); nn.push(nv2.x, nv2.y, nv2.z); } if (p.uv) nu.push(p.uv[i * 2], p.uv[i * 2 + 1]); } ni.push(j); }
       const vd = new VertexData(); vd.positions = np; vd.indices = ni; if (!nn.length) VertexData.ComputeNormals(np, ni, nn); vd.normals = nn; vd.uvs = nu.length ? nu : new Array(np.length / 3 * 2).fill(0); /* كل الأجزاء لازم نفس الخصائص حتى تندمج */ const pm = new Mesh(`${n}_p`, scene); vd.applyToMesh(pm); pm.material = p.mat; ms.push(pm); }
-    if (!ms.length) return undefined; const M = ms.length > 1 ? Mesh.MergeMeshes(ms, true, true, undefined, false, true)! : ms[0]; M.name = `${n}_${tur ? 'tur' : 'hull'}`; M.isPickable = false; M.setEnabled(false); return M; };
+    if (!ms.length) return undefined; const M = ms.length > 1 ? Mesh.MergeMeshes(ms, true, true, undefined, false, true)! : ms[0]; M.name = `${n}_${tur ? 'tur' : 'hull'}`; M.isPickable = false; M.isVisible = false; return M; };
   const hull = build(false)!, tur = build(true);
   for (const m of c.meshes) m.dispose(); for (const t of c.transformNodes) t.dispose();
-  const dead = hull.clone(`${n}_dead`); dead.material = darkMat; dead.setEnabled(false); const deadTur = tur?.clone(`${n}_deadt`); if (deadTur) { deadTur.material = darkMat; deadTur.setEnabled(false); }
-  const shadow = hull.clone(`${n}_sh`); shadow.material = shadowMat; shadow.setEnabled(false);
+  const dead = hull.clone(`${n}_dead`); dead.material = darkMat; dead.isVisible = false; const deadTur = tur?.clone(`${n}_deadt`); if (deadTur) { deadTur.material = darkMat; deadTur.isVisible = false; }
+  const shadow = hull.clone(`${n}_sh`); shadow.material = shadowMat; shadow.isVisible = false;
+  if (!n.startsWith('m_')) { outline(hull); if (tur) outline(tur); }   // الحافة على المصدر، وكل النسخ تورثها
   PROTO[n] = { hull, tur, dead, deadTur, shadow, piv, h: (mx.y - mn.y) * s };
 }
 // مجسم متحرك (S-400): ينسخ بهيكله لكل منصة، وأنيميشن «Raise» يتحكم بيه حسب رفع المحاكاة
@@ -94,7 +95,7 @@ function animated(n: string, c: AssetContainer, scene: Scene) {
 const OUT = { col: new Color3(.62, .6, .55), on: [] as Mesh[] };
 export function setOutline(dark: boolean) { OUT.col = dark ? new Color3(.62, .6, .55) : new Color3(.16, .15, .13); for (const m of OUT.on) if (!m.isDisposed()) m.outlineColor = OUT.col; }
 const outline = (m: Mesh) => { m.renderOutline = true; m.outlineWidth = .05; m.outlineColor = OUT.col; OUT.on.push(m); };
-export interface UnitVis { node: TransformNode; hull: Mesh; tur?: Mesh; sh: Mesh; dead: boolean; anim?: AnimationGroup; n: string }
+export interface UnitVis { node: TransformNode; hull: AbstractMesh; tur?: AbstractMesh; sh: AbstractMesh; dead: boolean; anim?: AnimationGroup; n: string }
 export function makeUnit(n: string, scene: Scene, dead = false): UnitVis {
   const P = PROTO[n], node = new TransformNode('u_' + n, scene);
   if (P.cont) { const inst = P.cont.instantiateModelsToScene(nm => nm, false, { doNotInstantiate: true }); const r = inst.rootNodes[0] as TransformNode;
@@ -102,13 +103,13 @@ export function makeUnit(n: string, scene: Scene, dead = false): UnitVis {
     for (const m of r.getChildMeshes(false)) { let q: any = m, hide = false; while (q) { if (/^(msl_show|stand_|V55_)/.test(q.name)) hide = true; q = q.parent; } if (hide) m.setEnabled(false); }   // نفس الأجزاء المخفية بصور WM8
     const anim = inst.animationGroups.find(a => a.name === 'Raise'); inst.animationGroups.forEach(a => a.stop()); for (const m of r.getChildMeshes(false)) if (m instanceof Mesh && m.isEnabled()) outline(m);
     const sh = new Mesh('nosh', scene); return { node, hull: r as any, sh, dead, anim, n }; }
-  const hull = (dead ? P.dead : P.hull).clone(`h_${n}`, node)!; hull.setEnabled(true);
-  let tur: Mesh | undefined; if (P.tur) { tur = (dead ? P.deadTur! : P.tur).clone(`t_${n}`, node)!; tur.setEnabled(true); tur.position.copyFrom(P.piv!); }
-  if (!dead) { outline(hull); if (tur) outline(tur); }
-  const sh = P.shadow.clone(`s_${n}`)!; sh.setEnabled(false);
+  // نسخ (instances) بدل استنساخ: كل الآليات من نفس النوع ترسم بنداء واحد للكرت (WM13.1) — كان ~1000 نداء بالإطار
+  const hull = (dead ? P.dead : P.hull).createInstance(`h_${n}`); hull.parent = node; hull.isPickable = false;
+  let tur: InstancedMesh | undefined; if (P.tur) { tur = (dead ? P.deadTur! : P.tur).createInstance(`t_${n}`); tur.parent = node; tur.position.copyFrom(P.piv!); }
+  const sh = P.shadow.createInstance(`s_${n}`); sh.setEnabled(false);
   return { node, hull, tur, sh, dead, n };
 }
 // صاروخ 3D: نسخة من المجسم (قدّامه +z) بدون علم ولا ظل
-export function makeMissile(n: string, scene: Scene) { const m = PROTO[n].hull.clone('msl_' + n)!; m.setEnabled(true); m.isPickable = false; void scene; return m; }
+export function makeMissile(n: string, scene: Scene) { const m = PROTO[n].hull.createInstance('msl_' + n); m.isPickable = false; void scene; return m; }
 // اتجاه بالمحاكاة (hd من الشرق عكس الساعة، أنف gam، ميلان bank) ← كواترنيون Babylon (قدّام المجسم +z)
 export const orient = (hd: number, gam = 0, bank = 0) => Quaternion.RotationYawPitchRoll(Math.PI / 2 - hd, -gam, bank);

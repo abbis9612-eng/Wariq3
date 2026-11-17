@@ -119,7 +119,7 @@ for t, c in TH.items():
     im.save(f'terrain/th_{t}.webp', quality=86, method=6)
 meta['th'] = dict(m=list(m0), grid=g - 1, hmax=float(hg.max()))
 # المستوى الأدق «cl» فوق ساحة المعركة (البصرة ← شلامجة ← خرمشهر): ~16 م/بكسل، حدوده على شبكة الجبهة حتى ما يصير شق
-cell = (m0[2] - m0[0]) / 512
+cell = (m0[2] - m0[0]) / 256   # على شبكة الجبهة المرسومة (256، WM13.1) حتى ما يصير شق
 snap = lambda v, o, up: m0[o] + (math.ceil if up else math.floor)((v - m0[o]) / cell) * cell
 c0 = [snap(MX(47.55), 0, 0), snap(MY(30.72), 1, 0), snap(MX(48.25), 0, 1), snap(MY(30.30), 1, 1)]
 z = 13; n = 2 ** z; tx = (int(c0[0] * n), int(c0[2] * n)); ty = (int(c0[1] * n), int(c0[3] * n))

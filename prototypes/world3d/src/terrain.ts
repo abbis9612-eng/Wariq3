@@ -25,13 +25,14 @@ async function heights(url: string) {
 export async function buildTerrain(scene: Scene, theme: string, prog: (s: string) => void) {
   const L = (LVJ as any).levels as Record<LvName, { m: number[]; grid: number }>;
   for (const name of ['w', 'me', 'th', 'cl'] as LvName[]) {
-    const { m, grid: G } = L[name], h = await heights(U(`${name}_h.png`)); prog('الأرض');
+    const { m, grid: GF } = L[name], h = await heights(U(`${name}_h.png`)); prog('الأرض');
+    const ST = 2, G = GF / ST, NF = GF + 1;   // الشبكة بنص الدقة (256²): ربع المثلثات (WM13.1)؛ الارتفاع الكامل يبقى لـ groundH
     const ch = CHILD[name] ? L[CHILD[name]!].m : null;
     const p0 = m2s(m[0], m[1]), p1 = m2s(m[2], m[3]), c = { x: (p0.x + p1.x) / 2, y: (p0.y + p1.y) / 2 };
     const pos: number[] = [], uv: number[] = [], idx: number[] = [], N = G + 1;
     for (let j = 0; j <= G; j++) for (let i = 0; i <= G; i++) {
       const mx = m[0] + (m[2] - m[0]) * i / G, my = m[1] + (m[3] - m[1]) * j / G, s = m2s(mx, my);
-      pos.push(s.x - c.x, Math.max(0, h[j * N + i]), s.y - c.y); uv.push(i / G, 1 - j / G); }
+      pos.push(s.x - c.x, Math.max(0, h[j * ST * NF + i * ST]), s.y - c.y); uv.push(i / G, 1 - j / G); }
     const inside = (i: number, j: number) => { if (!ch) return false; const ax = m[0] + (m[2] - m[0]) * i / G, bx = m[0] + (m[2] - m[0]) * (i + 1) / G, ay = m[1] + (m[3] - m[1]) * j / G, by = m[1] + (m[3] - m[1]) * (j + 1) / G, e = 1e-9;
       return ax >= ch[0] - e && bx <= ch[2] + e && ay >= ch[1] - e && by <= ch[3] + e; };
     for (let j = 0; j < G; j++) for (let i = 0; i < G; i++) { if (inside(i, j)) continue; const a = j * N + i, b = a + 1, d = a + N, e = d + 1; idx.push(a, d, b, b, d, e); }
@@ -44,7 +45,7 @@ export async function buildTerrain(scene: Scene, theme: string, prog: (s: string
     // تفاصيل ناعمة من قريب (حبيبات الأرض) حتى ما تبين الخريطة ضبابية: تتكرر كل ~60 م
     const span = Math.abs(m2s(m[2], m[1]).x - m2s(m[0], m[1]).x); mat.setTexture('grain', grain(scene)); mat.setFloat('gScale', span / (name === 'cl' ? 45 : 60)); mat.setFloat('gAmt', name === 'w' ? 0 : name === 'cl' ? .22 : .32);
     mesh.material = mat; mesh.isPickable = false; mesh.alwaysSelectAsActiveMesh = true;
-    LEVELS.push({ name, m, grid: G, h, mesh, mat, c, tex: {} });
+    LEVELS.push({ name, m, grid: GF, h, mesh, mat, c, tex: {} });
   }
   await setTheme(scene, theme, prog);
 }

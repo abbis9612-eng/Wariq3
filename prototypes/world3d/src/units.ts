@@ -5,10 +5,13 @@ import '@babylonjs/loaders/glTF';
 import '@babylonjs/core/Rendering/outlineRenderer';
 const MURL = import.meta.glob('../models/*.gltf.json', { query: '?url', import: 'default', eager: true }) as Record<string, string>;
 // [ملف، لف حتى قدّامه يصير +z، الطول بالمتر]
-export const MODELS: Record<string, { yaw: number; len: number }> = {
+export const MODELS: Record<string, { yaw: number; len: number; auto?: boolean }> = {
   f16: { yaw: Math.PI / 2, len: 15.1 }, su25: { yaw: Math.PI / 2, len: 15.5 }, f14: { yaw: -Math.PI / 2, len: 19.1 },
   abrams: { yaw: 0, len: 9.8 }, t72: { yaw: Math.PI, len: 9.5 }, bmp: { yaw: 0, len: 6.7 }, grad: { yaw: 0, len: 7.4 }, truck: { yaw: Math.PI, len: 5.3 },
   patriot: { yaw: Math.PI / 2, len: 10.4 }, s400: { yaw: Math.PI, len: 13.5 }, zolf: { yaw: 0, len: 13.2 },
+  // صواريخ (WM12.2): الاتجاه يتحدد تلقائياً (أطول محور ← +z، والرأس = الطرف الأنحف بدون زعانف)
+  m_48n6: { yaw: 0, len: 7.5, auto: true }, m_pac3: { yaw: 0, len: 5.2, auto: true }, m_aim120: { yaw: 0, len: 3.7, auto: true }, m_aim54: { yaw: 0, len: 4.0, auto: true },
+  m_harm: { yaw: 0, len: 4.2, auto: true }, m_zolf: { yaw: 0, len: 10.3, auto: true }, m_fab: { yaw: 0, len: 2.4, auto: true },
 };
 const TURRET: Record<string, { piv: [number, number]; f: (x: number, y: number, z: number) => boolean }> = {
   abrams: { piv: [0, -0.7], f: (x, y, z) => (y > 1.3 && Math.abs(x) < 1.9 && z > -3.7 && z < 1.95) || (y > 1.12 && Math.abs(x) < 0.2 && z > 1.9) },
@@ -17,7 +20,7 @@ const TURRET: Record<string, { piv: [number, number]; f: (x: number, y: number, 
 export interface Proto { hull: Mesh; tur?: Mesh; dead: Mesh; deadTur?: Mesh; shadow: Mesh; piv?: Vector3; h: number; cont?: AssetContainer; scale?: number; yawFix?: number; off?: Vector3 }
 export const PROTO: Record<string, Proto> = {};
 let darkMat: StandardMaterial, shadowMat: StandardMaterial;
-function fixMats(c: AssetContainer, n = '') { for (const m of c.materials) if (m instanceof PBRMaterial) { if (n === 'truck') { m.albedoColor = new Color3(.5, .55, .38); }   /* بيكب الإمداد بلون عسكري */ m.metallic = Math.min(m.metallic ?? 0, .15); m.roughness = Math.max(m.roughness ?? .8, .65); m.environmentIntensity = 0; } }
+function fixMats(c: AssetContainer, n = '') { for (const m of c.materials) if (m instanceof PBRMaterial) { if (n === 'truck') { m.albedoTexture = null; m.albedoColor = new Color3(.36, .38, .26); }   /* بيكب الإمداد بلون عسكري */ m.metallic = Math.min(m.metallic ?? 0, .15); m.roughness = Math.max(m.roughness ?? .8, .65); m.environmentIntensity = 0; } }
 export async function loadModels(scene: Scene, prog: (s: string) => void) {
   darkMat = new StandardMaterial('dark', scene); darkMat.diffuseColor = new Color3(.08, .075, .07); darkMat.specularColor = Color3.Black();
   shadowMat = new StandardMaterial('shadow', scene); shadowMat.diffuseColor = Color3.Black(); shadowMat.disableLighting = true; shadowMat.alpha = .28; shadowMat.backFaceCulling = false;
@@ -52,9 +55,20 @@ function bake(n: string, c: AssetContainer, scene: Scene) {
     sets.forEach((ix, k) => { if (ix.length) parts.push({ pos: P, nor: N, uv: uv ? Float32Array.from(uv) : null, idx: ix, mat: m.material, tur: k === 1 }); });
   }
   // اللف حتى قدّامه +z، والطول الحقيقي، والوسط على المحور، والقاعدة على الأرض
-  const R = Matrix.RotationY(cfg.yaw), mn = new Vector3(1e9, 1e9, 1e9), mx = new Vector3(-1e9, -1e9, -1e9), q = new Vector3();
+  let R = Matrix.RotationY(cfg.yaw); const mn = new Vector3(1e9, 1e9, 1e9), mx = new Vector3(-1e9, -1e9, -1e9), q = new Vector3();
+  if (cfg.auto) {   // صاروخ: أطول محور يصير +z، ونقلبه إذا الطرف العريض (الزعانف) صار قدّام
+    const a0 = new Vector3(1e9, 1e9, 1e9), a1 = new Vector3(-1e9, -1e9, -1e9);
+    for (const p of parts) for (const i of p.idx) { q.set(p.pos[i * 3], p.pos[i * 3 + 1], p.pos[i * 3 + 2]); a0.minimizeInPlace(q); a1.maximizeInPlace(q); }
+    const e = a1.subtract(a0), ax = e.x >= e.y && e.x >= e.z ? 'x' : e.y >= e.z ? 'y' : 'z';
+    R = ax === 'x' ? Matrix.RotationY(-Math.PI / 2) : ax === 'y' ? Matrix.RotationX(Math.PI / 2) : Matrix.Identity();
+    let z0 = 1e9, z1 = -1e9; const pts: Vector3[] = [];
+    for (const p of parts) for (const i of p.idx) { const v = new Vector3(); Vector3.TransformCoordinatesFromFloatsToRef(p.pos[i * 3], p.pos[i * 3 + 1], p.pos[i * 3 + 2], R, v); pts.push(v); z0 = Math.min(z0, v.z); z1 = Math.max(z1, v.z); }
+    const cx = pts.reduce((s2, v) => s2 + v.x, 0) / pts.length, cy = pts.reduce((s2, v) => s2 + v.y, 0) / pts.length, L = z1 - z0; let rLo = 0, rHi = 0;
+    for (const v of pts) { const r = Math.hypot(v.x - cx, v.y - cy); if (v.z < z0 + L * .15) rLo = Math.max(rLo, r); if (v.z > z1 - L * .15) rHi = Math.max(rHi, r); }
+    if (rHi > rLo) R = R.multiply(Matrix.RotationY(Math.PI));
+  }
   for (const p of parts) for (const i of p.idx) { Vector3.TransformCoordinatesFromFloatsToRef(p.pos[i * 3], p.pos[i * 3 + 1], p.pos[i * 3 + 2], R, q); mn.minimizeInPlace(q); mx.maximizeInPlace(q); }
-  const s = cfg.len / (mx.z - mn.z), ctr = new Vector3((mn.x + mx.x) / 2, mn.y, (mn.z + mx.z) / 2);
+  const s = cfg.len / (mx.z - mn.z), ctr = new Vector3((mn.x + mx.x) / 2, cfg.auto ? (mn.y + mx.y) / 2 : mn.y, (mn.z + mx.z) / 2);   // الصاروخ: الوسط بالنص
   const X = (v: Vector3) => Vector3.TransformCoordinates(v, R).subtract(ctr).scale(s);
   const piv = T ? X(new Vector3(-T.piv[0], 0, T.piv[1])) : undefined; if (piv) piv.y = 0;
   const build = (tur: boolean) => { const ms: Mesh[] = [];
@@ -77,9 +91,9 @@ function animated(n: string, c: AssetContainer, scene: Scene) {
   void scene;
 }
 // حافة حول كل آلية حتى تبين على الخريطة (فاتحة بالثيم الغامق، غامقة بالفاتح) — I-066
-const OUT = { col: new Color3(.92, .9, .82), on: [] as Mesh[] };
-export function setOutline(dark: boolean) { OUT.col = dark ? new Color3(.92, .9, .82) : new Color3(.12, .11, .1); for (const m of OUT.on) if (!m.isDisposed()) m.outlineColor = OUT.col; }
-const outline = (m: Mesh) => { m.renderOutline = true; m.outlineWidth = .07; m.outlineColor = OUT.col; OUT.on.push(m); };
+const OUT = { col: new Color3(.62, .6, .55), on: [] as Mesh[] };
+export function setOutline(dark: boolean) { OUT.col = dark ? new Color3(.62, .6, .55) : new Color3(.16, .15, .13); for (const m of OUT.on) if (!m.isDisposed()) m.outlineColor = OUT.col; }
+const outline = (m: Mesh) => { m.renderOutline = true; m.outlineWidth = .05; m.outlineColor = OUT.col; OUT.on.push(m); };
 export interface UnitVis { node: TransformNode; hull: Mesh; tur?: Mesh; sh: Mesh; dead: boolean; anim?: AnimationGroup; n: string }
 export function makeUnit(n: string, scene: Scene, dead = false): UnitVis {
   const P = PROTO[n], node = new TransformNode('u_' + n, scene);
@@ -94,5 +108,7 @@ export function makeUnit(n: string, scene: Scene, dead = false): UnitVis {
   const sh = P.shadow.clone(`s_${n}`)!; sh.setEnabled(false);
   return { node, hull, tur, sh, dead, n };
 }
+// صاروخ 3D: نسخة من المجسم (قدّامه +z) بدون علم ولا ظل
+export function makeMissile(n: string, scene: Scene) { const m = PROTO[n].hull.clone('msl_' + n)!; m.setEnabled(true); m.isPickable = false; void scene; return m; }
 // اتجاه بالمحاكاة (hd من الشرق عكس الساعة، أنف gam، ميلان bank) ← كواترنيون Babylon (قدّام المجسم +z)
 export const orient = (hd: number, gam = 0, bank = 0) => Quaternion.RotationYawPitchRoll(Math.PI / 2 - hd, -gam, bank);

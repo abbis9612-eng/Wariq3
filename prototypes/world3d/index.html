@@ -34,11 +34,12 @@ html.light{--labc:#2b2620;--labs:#f7f1e2;--dot:#3b342c}
 </head>
 <body>
 <div id="stage"></div>
+<div id="flash" style="position:fixed;inset:0;background:#fff3d6;opacity:0;pointer-events:none;z-index:1"></div>
 <div id="pipbox" hidden><div id="piptitle"></div><div id="piphint">⤢ اضغط تكبر</div></div>
 <div id="ui" hidden>
   <div id="top"><div id="stats"></div><div id="cap"></div><div id="read"></div><span class="tag" id="rate"></span> <span class="tag clk" id="clock"></span></div>
   <div class="ctl">
-    <button id="bFollow" aria-pressed="true">🎥 تابع</button><button id="bTop" aria-label="من فوق">⬆</button>
+    <button id="bFollow" aria-pressed="true">🎥 تابع</button><button id="bTop" aria-label="من فوق">⬆</button><button id="bZoom" aria-label="بعد اللقطة"></button>
     <div class="spd" id="spd" dir="ltr"><button data-s="1" aria-pressed="true">×1</button><button data-s="2">×2</button><button data-s="4">×4</button><button data-s="8">×8</button><button data-s="16">×16</button><button data-s="32">×32</button></div>
     <button id="bPause" aria-label="إيقاف">⏸</button>
     <button id="bPip" aria-pressed="true" aria-label="اللقطة القريبة"></button><button id="bTheme" aria-label="الثيم"></button><button id="bSize" aria-label="حجم الوحدات"></button>

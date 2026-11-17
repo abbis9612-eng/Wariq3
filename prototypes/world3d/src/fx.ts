@@ -11,7 +11,7 @@ const R = (a: number, b: number) => a + Math.random() * (b - a);
 export const WIND = { x: 3.5, y: 1.2 };
 export class FX {
   smoke: SpriteManager; ex: SpriteManager; glow: SpriteManager; flags: SpriteManager;
-  puffs: Puff[] = []; fxs: Fx[] = []; trails: Trail[] = []; trailMesh: Mesh; tmat: StandardMaterial; t = 0;
+  puffs: Puff[] = []; fxs: Fx[] = []; trails: Trail[] = []; trailMesh: Mesh; tmat: StandardMaterial; t = 0; k = 1;   // k: تكبير المؤثرات بنفس نسبة تكبير الآليات
   constructor(private scene: Scene, private gh: (x: number, y: number) => number, private A: () => { x: number; y: number }, private exag: () => number) {
     this.smoke = new SpriteManager('smoke', G('fx_cloud.webp'), 2600, 128, scene); this.smoke.disableDepthWrite = true;
     this.ex = new SpriteManager('ex', G('fx_explo1.webp'), 200, 200, scene); this.ex.disableDepthWrite = true;
@@ -57,10 +57,10 @@ export class FX {
   draw(cam: Camera, mpp: (x: number, y: number, z: number) => number, smokeCol: Color3) {
     const A = this.A(), E = this.exag(), cp = cam.position, now = this.t;
     for (const q of this.puffs) { const u = q.t / q.life, y = q.g * E + q.p.z, s = q.s; s.position.set(q.p.x - A.x, y, q.p.y - A.y);
-      const px = mpp(s.position.x - cp.x, y - cp.y, s.position.z - cp.z); s.width = s.height = Math.max(q.minPx * px, q.r * 2) * 1.3;
+      const px = mpp(s.position.x - cp.x, y - cp.y, s.position.z - cp.z); s.width = s.height = Math.max(q.minPx * px * this.k, q.r * 2) * 1.3;
       s.color.set(q.col.r, q.col.g, q.col.b, q.a * Math.min(1, u * 8) * (1 - u)); }
     for (const f of this.fxs) { const s = f.s!, u = f.t / f.life, y = f.g * E + f.p.z; s.position.set(f.p.x - A.x, y, f.p.y - A.y);
-      const px = mpp(s.position.x - cp.x, y - cp.y, s.position.z - cp.z), sz = Math.max(f.minPx * px, f.size);
+      const px = mpp(s.position.x - cp.x, y - cp.y, s.position.z - cp.z), sz = Math.max(f.minPx * px * this.k, f.size);
       if (f.kind === 'ex') { s.cellIndex = Math.min(24, (u * 25) | 0); s.width = s.height = sz; s.color.set(1, 1, 1, 1); }
       else if (f.kind === 'ring') { s.width = s.height = sz * Math.sqrt(u) * 2; s.color.set(1, .95, .85, (1 - u) * .7); }
       else if (f.kind === 'fire') { const fl = sz * (1 + Math.sin(now * 13 + f.p.x) * .15) * (1 - u * .6); s.width = s.height = fl; s.color.set(1, .7, .32, .95); }

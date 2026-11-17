@@ -14,6 +14,9 @@ const L = [
   ['abrams', `${P}/theater/models/abrams.glb`, 0, 512, false], ['t72', 'data/t72_dec.glb', 0, 512, false], ['bmp', `${P}/theater/models/bmp.glb`, 0, 512, false],
   ['grad', `${P}/theater/models/grad.glb`, 0, 512, false], ['truck', `${P}/theater/models/p_pickup.glb`, 0, 256, false], ['patriot', `${P}/theater/models/patriot.glb`, 0, 512, false],
   ['s400', 'data/s400_dec.glb', 0, 512, true], ['zolf', 'data/zolf_dec.glb', 0, 512, true],
+  // صواريخ (WM12.2): من Sketchfab (CC BY، شوف models/CREDITS.md) — m_48n6 مستخرج من منصة S-400 بـ tools/bl_extract.py
+  ['m_48n6', 'data/m_48n6.glb', 0, 256, false], ['m_pac3', 'data/m_pac3.glb', 0, 256, false], ['m_aim120', 'data/m_aim120.glb', 0, 256, false], ['m_aim54', 'data/m_aim54.glb', 0, 256, false],
+  ['m_harm', 'data/m_harm.glb', 0, 256, false], ['m_zolf', 'data/m_zolf.glb', 0, 512, false], ['m_fab', 'data/m_fab.glb', 0, 256, false],
 ];
 fs.mkdirSync('models', { recursive: true });
 const io = new NodeIO().registerExtensions(ALL_EXTENSIONS); await MeshoptSimplifier.ready;

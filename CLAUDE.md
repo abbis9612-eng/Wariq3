@@ -12,6 +12,7 @@
 ## قواعد ما تنكسر
 
 - `archive/v0.1.0-original.html` **مجمّد**. لا تعدله أبداً.
+- `archive/topdown-wm10.html` و `prototypes/topdown/` و رابط Lx75CQEoksrNFSajMzuNTZ **مجمّدين** (نسخة «الحرب من فوق» اللي عجبت المالك، D-033). الشغل الجديد بمجلد ورابط جديد.
 - كل فكرة من المالك ← `docs/IDEAS.md` برقم `I-NNN` قبل التنفيذ. ما تنمسح فكرة؛ تنرفض مع السبب.
 - أي خروج عن الخطة ← تعديل `docs/PLAN.md` + سطر بـ «سجل تغييرات الخطة» + قرار بـ `docs/DECISIONS.md` إذا مهم.
 - كل تغيير بحالة اللعبة (state) ← رفع إصدار الحفظ + ترقية (migration). **حفظ المالك ما ينكسر أبداً.**
@@ -37,6 +38,7 @@
 ```
 index.html                    اللعبة الحالية (اللي تنلعب)
 archive/v0.1.0-original.html  النسخة الأصلية المجمدة
+archive/topdown-wm10.html     «الحرب من فوق» WM10 بملف واحد يشتغل بدون نت (مجمّدة، D-033)
 docs/PLAN.md                  الخطة الرئيسية (البوصلة)
 docs/GDD.md                   وثيقة التصميم: اللعبة كما هي بالكود
 docs/DESIGN_REVIEW.md         مراجعة التصميم (المشاكل R/D/T بأرقام)
@@ -46,7 +48,7 @@ CHANGELOG.md                  سجل التغييرات للاعب
 tests/smoke.mjs               اختبار الدخان (Playwright، بدون واجهة)
 docs/TECH_STACK.md            قرار التقنيات (TypeScript + Babylon.js + Vite + Capacitor)
 prototypes/intercept/         تجربة 3D: اعتراض الباتريوت (راجع README داخلها)
-prototypes/topdown/           «الحرب من فوق» (D-032): خريطة مرسومة بثيمين، PixiJS، صور Blender — الاتجاه الحالي (WM8)
+prototypes/topdown/           «الحرب من فوق» (D-032): خريطة مرسومة بثيمين، PixiJS، صور Blender — مجمّد عند WM10 (D-033)
 prototypes/oblique/           تجربة «2D مايل» (D-031): S-400 وباتريوت وباليستي بالحجم والسرعة الحقيقية على صور أقمار
 prototypes/warmap/            تجربة: شهر حرب حي على خريطة الدول (مطارات، دفاع جوي، باليستي، دروع، جبهة)
 prototypes/theater/           تجربة 3D: مسرح العمليات (راجع README داخلها). الأرض: `npm run land` يولّدها من `src/land.ts`

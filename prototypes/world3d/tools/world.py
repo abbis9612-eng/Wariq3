@@ -1,5 +1,5 @@
 # بيانات «العالم 3D» (WM11.1، I-065): خريطة مرسومة بثيمين بنفس ألوان «الحرب من فوق» + ارتفاعات، بثلاث مستويات تفاصيل
-#   w  = العالم كله (z4: 4096² ≈ 8 كم/بكسل)  ·  me = الشرق الأوسط (z7: 4096² ≈ 1 كم)  ·  th = الجبهة (نفس حدود WM8، 65 م)
+#   w  = العالم كله (z4: 4096² ≈ 8 كم/بكسل)  ·  me = الشرق الأوسط (z7: 4096² ≈ 1 كم)  ·  fr = حدود العراق–إيران (z10، ~0.2 كم)  ·  th = الجبهة (نفس حدود WM8، 65 م)
 # المصادر: Natural Earth (ملكية عامة)، ارتفاعات AWS Terrain Tiles (Mapzen/terrarium)، خضرة من Sentinel-2 cloudless 2016 (EOX، CC BY 4.0)
 # python3 tools/world.py <مجلد ne> <مجلد كاش>   ← terrain/<lvl>_<theme>.webp, terrain/<lvl>_h.png (ارتفاع terrarium RGB)، terrain/levels.json، labels/labels.json
 import json, math, os, subprocess, sys, numpy as np
@@ -15,13 +15,16 @@ TH = {   # نفس ألوان prototypes/topdown/tools/style.py
 LV = {
   'w':  dict(z=4, tx=(0, 15), ty=(0, 15), sz=4096, grid=512, res='50m', exag=14, bw=1.2, rw=0),
   'me': dict(z=7, tx=(72, 87), ty=(45, 60), sz=4096, grid=512, res='10m', exag=5, bw=1.6, rw=1.1),
+  # fr = حدود العراق–إيران كلها (WM14.3): z10 ≈ 150×230 م/بكسل، حدوده على شبكة me حتى ما يصير شق
+  'fr': dict(z=10, tx=(635, 653), ty=(396, 424), sz=4096, grid=512, res='10m', exag=3, bw=2.2, rw=2),
 }
+ONLY = sys.argv[3] if len(sys.argv) > 3 else None   # python3 tools/world.py <ne> <كاش> fr ← يبني مستوى وحد ويدمجه بـ levels.json
 def grab(url, z, tx, ty, ext):
     im = Image.new('RGB', ((tx[1] - tx[0] + 1) * 256, (ty[1] - ty[0] + 1) * 256))
     for y in range(ty[0], ty[1] + 1):
         for x in range(tx[0], tx[1] + 1):
             f = f'{CACHE}/{url.split("/")[2]}_{z}_{y}_{x}.{ext}'
-            if not os.path.exists(f): subprocess.run(['curl', '-sSf', '--retry', '3', '-o', f, url.format(z=z, x=x, y=y)], check=True)
+            if not os.path.exists(f): subprocess.run(['curl', '-sSf', '--retry', '5', '--retry-all-errors', '-o', f, url.format(z=z, x=x, y=y)], check=True)
             im.paste(Image.open(f).convert('RGB'), ((x - tx[0]) * 256, (y - ty[0]) * 256))
     return im
 TERR = 'https://s3.amazonaws.com/elevation-tiles-prod/terrarium/{z}/{x}/{y}.png'
@@ -40,6 +43,7 @@ def lines(geom):
     elif geom['type'] == 'MultiLineString': yield from geom['coordinates']
 meta = {}
 for name, L in LV.items():
+    if ONLY and name != ONLY: continue
     z, n, S = L['z'], 2 ** L['z'], L['sz']; x0, y0 = L['tx'][0], L['ty'][0]
     W = (L['tx'][1] - x0 + 1) * 256; H = (L['ty'][1] - y0 + 1) * 256; k = S / W
     P = lambda lo, la: ((MX(lo) * n - x0) * 256 * k, (MY(la) * n - y0) * 256 * k)
@@ -95,6 +99,8 @@ for name, L in LV.items():
     enc(hg).save(f'terrain/{name}_h.png', optimize=True)
     meta[name] = dict(m=[x0 / n, y0 / n, (L['tx'][1] + 1) / n, (L['ty'][1] + 1) / n], grid=L['grid'], hmax=float(hg.max()))
     print(name, S, 'mpp', round(mpp), 'hmax', round(float(hg.max())))
+if ONLY:
+    J = json.load(open('terrain/levels.json')); J['levels'].update(meta); json.dump(J, open('terrain/levels.json', 'w')); sys.exit(0)
 # الجبهة: نفس خرائط WM8 (المرسومة) + ارتفاع z10 بنفس الحدود + طرق وأنهار وحدود من mapdata
 T = '../topdown'
 bm = json.load(open(f'{T}/textures/basemap.json')); md = json.load(open(f'{T}/src/mapdata.json'))

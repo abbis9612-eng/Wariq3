@@ -49,7 +49,7 @@ tests/smoke.mjs               اختبار الدخان (Playwright، بدون �
 docs/TECH_STACK.md            قرار التقنيات (TypeScript + Babylon.js + Vite + Capacitor)
 prototypes/intercept/         تجربة 3D: اعتراض الباتريوت (راجع README داخلها)
 prototypes/topdown/           «الحرب من فوق» (D-032): خريطة مرسومة بثيمين، PixiJS، صور Blender — مجمّد عند WM10 (D-033)
-prototypes/world3d/            «العالم 3D» (WM11، I-065): خريطة العالم كلها 3D بالشكل المرسوم، Babylon.js، كاميرا تميل وتلف بإصبعين — الاتجاه الحالي
+prototypes/world3d/            «العالم 3D» (WM11، I-065): خريطة العالم كلها 3D بالشكل المرسوم، Babylon.js، كاميرا تميل وتلف بإصبعين؛ + «🗺 الجبهة كاملة» (WM14): تشكيلات ومعارك تلقائية (`src/orbat.ts`، فحص `npm run test:orbat`) — الاتجاه الحالي
 prototypes/oblique/           تجربة «2D مايل» (D-031): S-400 وباتريوت وباليستي بالحجم والسرعة الحقيقية على صور أقمار
 prototypes/warmap/            تجربة: شهر حرب حي على خريطة الدول (مطارات، دفاع جوي، باليستي، دروع، جبهة)
 prototypes/theater/           تجربة 3D: مسرح العمليات (راجع README داخلها). الأرض: `npm run land` يولّدها من `src/land.ts`

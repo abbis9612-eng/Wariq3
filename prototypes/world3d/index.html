@@ -30,6 +30,39 @@ html.light{--labc:#2b2620;--labs:#f7f1e2;--dot:#3b342c}
 .card ul{text-align:start;font-size:13px;opacity:.9;margin:0 0 12px;padding-inline-start:18px;line-height:1.8}
 .btn{display:block;width:100%;padding:12px;border-radius:7px;border:1px solid rgba(255,255,255,.3);background:rgba(255,255,255,.06);font-weight:600;margin-top:8px}.btn.go{background:var(--brass);color:#1c1a10;border-color:var(--brass)}
 #load{font-size:12px;opacity:.7;min-height:18px;margin-top:6px}.cred{font-size:10.5px;opacity:.5;margin-top:12px;line-height:1.6}
+/* الجبهة (WM14.3): رموز عسكرية مثل APP-6 — صديق مستطيل أزرق، عدو معيّن أحمر */
+#front{position:fixed;inset:0;pointer-events:none;z-index:1;overflow:hidden}
+.fsvg{position:absolute;inset:0;width:100%;height:100%;overflow:visible}
+.terr{stroke:none}.terr.t0{fill:rgba(74,163,255,.22)}.terr.t1{fill:rgba(255,90,74,.22)}
+.fl2{fill:none;stroke:rgba(0,0,0,.7);stroke-width:5.5;stroke-linejoin:round;stroke-linecap:round}.fl{fill:none;stroke:#ffd27a;stroke-width:2.6;stroke-linejoin:round;stroke-linecap:round;stroke-dasharray:9 4}
+html.light .fl2{stroke:rgba(255,255,255,.85)}html.light .fl{stroke:#b5530a}
+.ct{position:absolute;left:0;top:0;width:44px;margin:-26px 0 0 -22px;display:flex;flex-direction:column;align-items:center;pointer-events:auto;cursor:pointer;filter:drop-shadow(0 1px 2px rgba(0,0,0,.8))}
+.ct .fr{width:36px;height:24px;overflow:visible}.ct .fr>rect,.ct .fr>path:first-child{stroke:#0b0f14;stroke-width:1.6}.ct.s0 .fr>rect{fill:#80c0ff}.ct.s1 .fr>path:first-child{fill:#ff8a80}
+.ct .fr .g{fill:none;stroke:#0b0f14;stroke-width:1.6}
+.ct .ech{font:700 9px/9px var(--body);color:#fff;letter-spacing:1px;height:9px;text-shadow:0 0 2px #000}
+.ct .mult{position:absolute;top:6px;inset-inline-start:36px;font:700 10px var(--body);color:#fff;text-shadow:0 0 3px #000,0 0 3px #000;white-space:nowrap}
+.ct .bar,.ct .org,.ct .vs{width:36px;height:4px;background:rgba(0,0,0,.65);margin-top:2px;border-radius:1px;overflow:hidden}.ct .org{height:2px;margin-top:1px}.ct .bar i,.ct .org i,.ct .vs i{display:block;height:100%}.ct .org i{background:#9ad0ff}
+.ct .num{font:600 10px/12px var(--body);color:#fff;white-space:nowrap;text-shadow:0 0 3px #000,0 0 3px #000;font-variant-numeric:tabular-nums}
+.ct .arr{position:absolute;left:22px;top:21px;width:0;height:0;transform-origin:0 0}.ct .arr::after{content:"";position:absolute;left:24px;top:-6px;border-top:6px solid transparent;border-bottom:6px solid transparent;border-left:11px solid #ffd27a}
+.ct.rt .arr::after{border-left-color:#bbb}.ct.rt{opacity:.75}
+.ct.sm{transform-origin:0 0}.ct.sm .num{display:none}.ct.sm .fr{width:26px;height:17px}
+.ct.btl{width:40px;margin:-20px 0 0 -20px;z-index:2}.ct.btl .sw{font-size:20px;line-height:22px;animation:pulse 1s ease-in-out infinite}.ct.btl .vs{direction:ltr}.ct.btl .vs.a0{background:#ff5a4a}.ct.btl .vs.a1{background:#4aa3ff}.ct.btl .vs.a0 i{background:#4aa3ff}.ct.btl .vs.a1 i{background:#ff5a4a}
+@keyframes pulse{50%{transform:scale(1.25)}}
+.modes{display:flex;gap:8px}.modes .btn{flex:1}
+.ct.od::before{content:"★";position:absolute;top:2px;inset-inline-end:-2px;font-size:10px;color:#ffd27a;text-shadow:0 0 2px #000}
+#fcard{position:fixed;z-index:4;inset-inline:8px;bottom:calc(112px + env(safe-area-inset-bottom,0px));max-height:52vh;overflow:auto;background:rgba(12,14,12,.94);border:1px solid var(--brass);border-radius:10px;padding:10px 12px;font-size:12.5px;box-shadow:0 4px 18px rgba(0,0,0,.6);max-width:520px;margin-inline:auto}
+html.light #fcard{background:rgba(250,246,234,.96);color:#2b2620}
+#fcard .ch{display:flex;align-items:center;gap:6px;margin-bottom:2px}#fcard .ch .nm{font:700 15px var(--display);flex:1}#fcard .ch .fl{font-size:18px}
+#fcard .ch button{background:none;border:1px solid rgba(128,128,128,.4);border-radius:6px;min-width:34px;min-height:32px}
+#fcard input{flex:1;font:700 15px var(--body);padding:4px 6px;border-radius:6px;border:1px solid var(--brass);background:rgba(0,0,0,.3);color:inherit}
+#fcard .sub{opacity:.85;margin:4px 0;line-height:1.6}#fcard .big{font:700 14px var(--display);margin:6px 0;color:var(--brass)}
+#fcard .kv,#fcard .wy{display:grid;grid-template-columns:70px 1fr 64px;align-items:center;gap:6px;margin:3px 0}#fcard .kv em,#fcard .wy em{font-style:normal;font-variant-numeric:tabular-nums;font-size:11.5px}
+#fcard .cb{display:block;height:7px;background:rgba(128,128,128,.3);border-radius:3px;overflow:hidden;direction:ltr}#fcard .cb i{display:block;height:100%}
+#fcard .cb.vs.a0{background:#ff5a4a}#fcard .cb.vs.a1{background:#4aa3ff}#fcard .cb.vs.a0 i{background:#4aa3ff}#fcard .cb.vs.a1 i{background:#ff5a4a}
+#fcard .wb{display:flex;height:7px;background:rgba(128,128,128,.25);border-radius:3px;overflow:hidden;direction:ltr}#fcard .wb i{display:block;height:100%}#fcard .wb.p{justify-content:flex-start}#fcard .wb.p i{background:#d2ab33;margin-left:50%}#fcard .wb.n{justify-content:flex-end}#fcard .wb.n i{background:#9ab;margin-right:50%}
+#fcard table{width:100%;border-collapse:collapse;margin:6px 0;font-size:11.5px}#fcard th,#fcard td{text-align:start;padding:3px 4px;border-bottom:1px solid rgba(128,128,128,.25);vertical-align:top}#fcard th{opacity:.7;font-weight:600}
+#fcard .ord{display:flex;flex-wrap:wrap;gap:6px;align-items:center;margin-top:8px}#fcard .ord button{min-height:38px;padding:4px 10px;border-radius:7px;border:1px solid rgba(128,128,128,.45);background:rgba(128,128,128,.12)}#fcard .ord button[aria-pressed=true]{border-color:var(--brass);color:var(--brass);background:rgba(210,171,51,.15)}
+#fcard .hint{font-size:11px;opacity:.65;margin-top:4px}
 </style>
 </head>
 <body>
@@ -54,12 +87,13 @@ html.light{--labc:#2b2620;--labs:#f7f1e2;--dot:#3b342c}
     <li><b>ميلان:</b> حرّك الإصبعين سوا لفوق أو تحت. <b>لف:</b> دوّر الإصبعين. زر «⬆» يرجّعها من فوق</li>
     <li>الطيارات والدبابات مجسمات 3D حقيقية، تميل وتنقلب وتلف برجها بنفس المحاكاة</li>
     <li>«تابع» يلاحق الأحداث، و«🎬» لقطة قريبة 3D من الجنب عند كل إطلاق</li>
+    <li><b>جديد — الجبهة كاملة:</b> ألوية العراق وإيران على كل الحدود، رمز وشريط قوة فوق كل وحدة، والمعارك تنحسم لحالها للأقوى. قرّب تشوف الكتائب 3D تتقاتل</li>
   </ul>
-  <button class="btn go" id="bGo" disabled>يحمّل…</button>
+  <div class="modes"><button class="btn go" id="bFront" disabled>🗺 الجبهة كاملة</button><button class="btn" id="bGo" disabled>✈ عملية شلامجة</button></div>
   <div id="load"></div>
   <p class="cred">الخريطة: تضاريس من AWS Terrain Tiles، ومياه ومزارع مستخرجة من Sentinel-2 cloudless 2016 (EOX، CC BY 4.0)، وأنهار وطرق Natural Earth، وأسماء مدن © مساهمي OpenStreetMap · حدود وأنهار وأسماء الدول والمدن: Natural Earth · المجسمات (CC BY 4.0، Sketchfab): F-16 iedalton · S-400 xFORTUNAx · ذو الفقار 42manako · باتريوت و F-14 MirzaArrafi · أبرامز وT-72 Muhamad Mirza Arrafi · BMP unhappy_nation · غراد LM3D وغيرهم · دخان وانفجارات Unity Labs (CC0) · أصوات SoundBible و BigSoundBank</p>
 </div></div>
-<div id="end" hidden><div class="card"><h1>انتهت العملية</h1><p id="endTxt"></p><p>قلي شنو عجبك وشنو لا.</p><button class="btn go" id="bAgain">مرة ثانية</button></div></div>
+<div id="end" hidden><div class="card"><h1 id="endH">انتهت العملية</h1><p id="endTxt"></p><p>قلي شنو عجبك وشنو لا.</p><button class="btn go" id="bAgain">مرة ثانية</button></div></div>
 <script type="module" src="./src/main.ts"></script>
 </body>
 </html>

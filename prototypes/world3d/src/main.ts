@@ -3,7 +3,9 @@
 import { Engine, Scene, Color4, Color3, HemisphericLight, DirectionalLight, Vector3, FreeCamera, Viewport, MeshBuilder, StandardMaterial, Sprite, Quaternion, type Mesh, type AbstractMesh, type Camera } from '@babylonjs/core';
 import { buildTerrain, setTheme, placeTerrain, exagOf, groundH, LEVELS } from './terrain';
 import { cam, camera, makeCamera, applyCamera, attachGestures, limit } from './cam';
-import { buildLabels, updateLabels } from './labels';
+import { buildLabels, updateLabels, showSites } from './labels';
+import { FrontView } from './frontmode';
+import { FrontCard, applyNames } from './frontcard';
 import { clamp, lerp } from './geo';
 import { loadModels, makeUnit, makeMissile, orient, PROTO, MODELS, setOutline, type UnitVis } from './units';
 import { FX, C, SMOKE, type Trail } from './fx';
@@ -179,7 +181,7 @@ function updateEngines() {
 // «سرعة لعبة» (D-034): الوقت الأساسي ×3 من الحقيقة، إلا لحظات التبطيء
 const GAME = 3; let hitStopUntil = 0, trauma = 0;
 const ZOOMS = [.55, 1, 2.2]; let ZI = +(store.get('w3_zoom') ?? 0);
-function director(): ReturnType<typeof director0> { const r = director0(); r.w *= ZOOMS[ZI]; return r; }
+function director(): ReturnType<typeof director0> { const r = MODE === 'front' && FV ? FV.director() : director0(); if (r.key !== 'overview') r.w *= ZOOMS[ZI]; return r; }
 function director0(): { x: number; y: number; z: number; w: number; ts: number; key: string; hd?: number } {
   focuses = focuses.filter(f => W.t < f.until && f.pos());
   const f = focuses.sort((a, c) => c.pri - a.pri)[0];
@@ -194,6 +196,7 @@ function director0(): { x: number; y: number; z: number; w: number; ts: number; 
 }
 function hud() {
   if (performance.now() - capAt > 4500) $('cap').style.opacity = '0';
+  if (MODE === 'front' && FV) { const h = FV.hud(); $('stats').innerHTML = h.stats; $('read').textContent = h.battles ? `⚔ ${h.battles} معارك هسه` : ''; $('rate').textContent = `ساعة لعب/ثانية ×${speed}`; $('rate').className = 'tag'; $('clock').textContent = h.clock; return; }
   const S = W.stats; $('stats').innerHTML = `✈ خسرنا <b>${S.lostA[0]}</b> · أسقطنا <b>${S.lostA[1]}</b> │ 🛡 خسرنا <b>${S.lostG[0]}</b> · دمّرنا <b>${S.lostG[1]}</b> │ 🚀 اعترضنا <b>${S.bmShot}</b>/${S.bm}`;
   const o = W.msls.find(m => m.ph !== 'dead' && ['48N6', 'PAC-3', 'AIM-54', 'AIM-120', 'AGM-88', 'Zolfaghar'].includes(m.type)); let t = '';
   if (o && follow) { const sp = len3(o.vel); t = `${MSL[o.type].name} · ارتفاع ${(o.p.z / 1000).toFixed(1)} كم · ${Math.round(sp)} م/ث (ماخ ${(sp / 300).toFixed(1)})`; }
@@ -228,13 +231,13 @@ function fxStep(dt: number) {
     tk.forEach((t, i) => { const o = i ? 1.7 : -1.7; F.add(t, { x: g.p.x - Math.sin(g.hd) * o, y: g.p.y + Math.cos(g.hd) * o, z: 0 }, 12); }); }
 }
 // ===== الوحدات 3D =====
-const UV = new Map<string, UnitVis & { dk: boolean; seen: number; flag: Sprite; side: 0 | 1; len: number; air: boolean; z: number }>(); let frameNo = 0;
-function unitAt(key: string, n: string, side: 0 | 1, p: V3, q: Quaternion, o: { dead?: boolean; tur?: number; recoil?: number; toss?: { dx: number; dy: number; r: number }; air?: boolean; raise?: number } = {}) {
+const UV = new Map<string, UnitVis & { dk: boolean; seen: number; flag: Sprite; side: 0 | 1; len: number; air: boolean; z: number; nf?: boolean }>(); let frameNo = 0;
+function unitAt(key: string, n: string, side: 0 | 1, p: V3, q: Quaternion, o: { dead?: boolean; tur?: number; recoil?: number; toss?: { dx: number; dy: number; r: number }; air?: boolean; raise?: number; noFlag?: boolean } = {}) {
   let u = UV.get(key); if (u && u.dk !== !!o.dead && !PROTO[n].cont) { u.node.dispose(); u.sh.dispose(); u.flag.dispose(); UV.delete(key); u = undefined; }
   if (!u) { const b = makeUnit(n, scene, !!o.dead), flag = new Sprite('f', F.flags); flag.cellIndex = side; u = { ...b, dk: !!o.dead, seen: 0, flag, side, len: MODELS[n].len, air: !!o.air, z: 0 }; UV.set(key, u);
     if (PROTO[n].cont && o.dead) for (const m of u.node.getChildMeshes()) m.material = deadMat; }
   if (PROTO[n].cont && o.dead && !u.dk) { u.dk = true; for (const m of u.node.getChildMeshes()) m.material = deadMat; }
-  u.seen = frameNo; u.z = p.z; u.node.setEnabled(true); u.node.position.set(p.x - cam.x, Y(p.x, p.y, p.z), p.y - cam.y); u.node.rotationQuaternion = q;
+  u.seen = frameNo; u.z = p.z; u.nf = !!o.noFlag; u.node.setEnabled(true); u.node.position.set(p.x - cam.x, Y(p.x, p.y, p.z), p.y - cam.y); u.node.rotationQuaternion = q;
   if (u.tur && o.tur !== undefined) { u.tur.rotation.y = 0; const rel = o.tur; u.tur.rotationQuaternion = Quaternion.RotationYawPitchRoll(-rel, 0, 0); const P = PROTO[n].piv!; u.tur.position.set(P.x - Math.sin(-rel) * (o.recoil ?? 0) * .6, P.y, P.z - Math.cos(-rel) * (o.recoil ?? 0) * .6);
     if (o.toss) { u.tur.position.addInPlaceFromFloats(o.toss.dx, .4, o.toss.dy); u.tur.rotationQuaternion = Quaternion.RotationYawPitchRoll(-rel + o.toss.r, .35, .2); } }
   if (u.anim && o.raise !== undefined) { const a = u.anim; a.start(false, 1, a.from, a.to); a.goToFrame(a.from + (a.to - a.from) * o.raise); a.pause(); }
@@ -246,6 +249,7 @@ function unitAt(key: string, n: string, side: 0 | 1, p: V3, q: Quaternion, o: { 
 const deadMat = new StandardMaterial('dead3', scene); deadMat.diffuseColor = new Color3(.08, .075, .07); deadMat.specularColor = Color3.Black();
 function placeUnits() {
   frameNo++;
+  if (MODE === 'front') { FV?.place3d(); for (const [, u] of UV) if (u.seen !== frameNo) { u.node.setEnabled(false); u.sh.setEnabled(false); u.flag.isVisible = false; } return; }
   for (const j of W.jets) { if (j.st === 'gone') continue; const air = j.st !== 'landed' && j.st !== 'parked'; unitAt('j' + j.id, AIR[j.type].sprite, j.side, j.p, air ? orient(j.hd, j.gam, j.bank) : orient(j.hd), { air }); }
   for (const bt of W.bats) bt.launchers.forEach((l, i) => unitAt(`b${bt.id}_${i}`, bt.type, bt.side, l.p, orient(l.hd), { dead: !l.alive, raise: bt.type === 's400' ? l.raise : undefined }));
   W.tels.forEach((tl, i) => unitAt('tel' + i, 'zolf', 1, tl.p, orient(3.6)));
@@ -258,7 +262,7 @@ const AIRN = new Set(['f16', 'su25', 'f14']);
 function scaleUnits(c: Camera) { const cp = c.position, showUnits = cam.D < 2.2e6, big = c === camera ? SIZES[SIZE] : 1, minPx0 = c === camera ? 44 : 0;
   for (const [, u] of UV) { if (u.seen !== frameNo) continue; const p = u.node.position, px = mppAt(p.x - cp.x, p.y - cp.y, p.z - cp.z), minPx = minPx0 * (AIRN.has(u.n) ? 1.25 : 1), S = Math.max(1, minPx * px / u.len) * big;
     u.node.setEnabled(showUnits || c !== camera); u.node.scaling.setAll(S); u.sh.scaling.set(S, .02, S);
-    u.flag.isVisible = c === camera && showUnits && !u.dk; u.flag.position.set(p.x + 1.2 * px * 14, p.y + PROTO[u.n].h * S + 8 * px, p.z); u.flag.width = 18 * px * Math.sqrt(big); u.flag.height = 12 * px * Math.sqrt(big); } }
+    u.flag.isVisible = c === camera && showUnits && !u.dk && !u.nf; u.flag.position.set(p.x + 1.2 * px * 14, p.y + PROTO[u.n].h * S + 8 * px, p.z); u.flag.width = 18 * px * Math.sqrt(big); u.flag.height = 12 * px * Math.sqrt(big); } }
 // ===== الصواريخ (جسم + لهب)، المظلات =====
 const mPool: Mesh[] = [], gPool: Sprite[] = [], chPool: Mesh[] = [];
 const mMat = new StandardMaterial('mm', scene); mMat.diffuseColor = new Color3(.93, .93, .9); mMat.emissiveColor = new Color3(.35, .35, .33);
@@ -341,9 +345,11 @@ function camUpdate(sh: ReturnType<typeof director>, rdt: number) {
   const a = 1 - Math.exp(-rdt * 3), z = 1 - Math.exp(-rdt * 2.4); cam.x = lerp(cam.x, sh.x, a); cam.y = lerp(cam.y, sh.y, a); cam.z = lerp(cam.z, sh.z, a); cam.D = D_of(Math.exp(lerp(Math.log(w0), Math.log(sh.w), z)));
 }
 // ===== الحلقة =====
-let W = new World(), speed = 1, paused = false, running = false, ended = false;
+let W = new World(), speed = 1, paused = false, running = false, ended = false, MODE: 'op' | 'front' = 'op', FV: FrontView | null = null;
 function reset() { W = new World(); F.clear(); mTrail = new Map(); dTrail = new Map(); vTrail = new Map(); tTrail = new Map(); focuses = []; PIP = null; ended = false; shotKey = ''; fly = null; lastGun.clear(); tossed.clear(); mModels.forEach(b => b.dispose()); mModels.clear(); trauma = 0; for (const [, u] of UV) { u.node.dispose(); u.sh.dispose(); u.flag.dispose(); } UV.clear(); }
-function start() { reset(); setFollow(true); shotKey = 'world'; if (cam.D < 1e6) { const s = director(); cam.x = s.x; cam.y = s.y; cam.z = s.z; cam.D = D_of(s.w); shotKey = ''; } /* أول مرة: الكاميرا تنزل من العالم كله للمعركة */ running = true; $('start').hidden = true; $('ui').hidden = false; $('end').hidden = true; audio(); caption('العملية بدأت: الهدف خرمشهر'); }
+function start(mode: 'op' | 'front' = 'op') { reset(); MODE = mode; FV?.dispose(); FV = null; showSites(mode === 'op');
+  card.close(); if (mode === 'front') { FV = new FrontView(fctx, qs.has('seed') ? +qs.get('seed')! : undefined); applyNames(FV.W); FV.onTap = (b, s) => onFrontTap(b, s); setFollow(true); const o = FV.overview(); if (cam.D > 2e6) { cam.x = o.x; cam.y = o.y; cam.z = 0; } shotKey = 'world'; running = true; $('start').hidden = true; $('ui').hidden = false; $('end').hidden = true; audio(); caption('الجبهة كاملة: كل لواء برمزه وشريط قوته — والمعارك تنحسم للأقوى'); $('endH').textContent = 'انتهى شهر الحرب'; return; }
+  $('endH').textContent = 'انتهت العملية'; setFollow(true); shotKey = 'world'; if (cam.D < 1e6) { const s = director(); cam.x = s.x; cam.y = s.y; cam.z = s.z; cam.D = D_of(s.w); shotKey = ''; } /* أول مرة: الكاميرا تنزل من العالم كله للمعركة */ running = true; $('start').hidden = true; $('ui').hidden = false; $('end').hidden = true; audio(); caption('العملية بدأت: الهدف خرمشهر'); }
 function stepSim(simDt: number, budget = 9) { let left = simDt, n = 0; const t0 = performance.now(); while (left > 1e-6 && n < 3000 && (n % 50 || performance.now() - t0 < budget)) { const d = Math.min(.02, left); left -= d; n++; W.step(d); fxStep(d); for (const e of W.ev.splice(0)) onEvent(e); } F.age(simDt - Math.max(0, left)); }
 scene.onBeforeCameraRenderObservable.add(c => { curCam = c; const vp = c.viewport; curH = engine.getRenderHeight() * vp.height || 1; F.k = c === camera ? 1.5 * SIZES[SIZE] : 1; F.view = c === camera ? camW() + cam.D * Math.tan(cam.tilt) * 2 : 4000; scaleUnits(c); scaleMissiles(c); F.draw(c, mppAt, C(smokeCol())); });
 function frame() {
@@ -352,14 +358,16 @@ function frame() {
   limit(); exag = exagOf(cam.D); const gh = groundH(cam.x, cam.y) * exag + cam.z; applyCamera(gh);
   if (trauma > 0) { const sh = trauma * trauma * camW() * .012; camera.position.addInPlaceFromFloats(R(-1, 1) * sh, R(-1, 1) * sh * .4, R(-1, 1) * sh); trauma = Math.max(0, trauma - engine.getDeltaTime() / 1000 * 1.6); }
   scene.fogDensity = cam.tilt > .15 ? 1.6 / (cam.D * 9) : 0; placeTerrain(cam, exag, camera.position, scene.fogColor, scene.fogDensity * .7);
-  if (unitsReady) { placeUnits(); placeMissiles(); placePip(); }
+  if (unitsReady) { placeUnits(); if (MODE === 'op') { placeMissiles(); placePip(); } }
   updateEngines();
-  scene.render(); updateLabels(scene, SW, SH, (x, y) => groundH(x, y) * exag); if (running) hud();
+  scene.render(); updateLabels(scene, SW, SH, (x, y) => groundH(x, y) * exag); if (MODE === 'front' && FV) { FV.draw(Math.min(.05, engine.getDeltaTime() / 1000), SW, SH); card.tick(performance.now()); } if (running) hud();
 }
 let unitsReady = false;
 engine.runRenderLoop(() => {
   const rdt = Math.min(.05, engine.getDeltaTime() / 1000); adaptQuality(engine.getDeltaTime());
-  if (running && !paused) { const sh = director(); curTs = follow ? sh.ts : 1; if (performance.now() > hitStopUntil) stepSim(rdt * curTs * speed * (curTs < 1 ? 1 : GAME)); camUpdate(director(), rdt); if (W.endT > 0 && W.t > W.endT && !ended) { ended = true; $('end').hidden = false; $('endTxt').innerHTML = endText(); } }
+  if (FV) FV.live = running && !paused;
+  if (running && !paused && MODE === 'front' && FV) { FV.update(rdt * speed); F.age(rdt); camUpdate(director(), rdt); if (FV.ended && !ended) { ended = true; $('end').hidden = false; $('endTxt').innerHTML = FV.endText(); } }
+  else if (running && !paused) { const sh = director(); curTs = follow ? sh.ts : 1; if (performance.now() > hitStopUntil) stepSim(rdt * curTs * speed * (curTs < 1 ? 1 : GAME)); camUpdate(director(), rdt); if (W.endT > 0 && W.t > W.endT && !ended) { ended = true; $('end').hidden = false; $('endTxt').innerHTML = endText(); } }
   else if (running) camUpdate(director(), 0);
   if (!follow && running) cam.z *= Math.exp(-rdt * 1.5);   // لما تتحكم بإيدك الهدف ينزل للأرض بالتدريج
   frame();
@@ -367,6 +375,23 @@ engine.runRenderLoop(() => {
 window.addEventListener('resize', () => engine.resize());
 const inPip = (x: number, y: number) => { if (!PIP) return false; const { W0, H0, X0, Y0 } = pipRect(); return x > X0 && x < X0 + W0 && y > Y0 && y < Y0 + H0; };
 attachGestures(scene, canvas, () => setFollow(false), (x, y) => { if (inPip(x, y)) { pipBig = !pipBig; return true; } return false; });
+// ===== الجبهة (WM14) =====
+const fctx = { scene, unitAt: (k: string, n: string, side: 0 | 1, p: V3, q: Quaternion, o?: any) => unitAt(k, n, side, p, q, o), orient: (hd: number) => orient(hd), fx: (k: any, p: any, size: number, life: number, minPx: number, tint?: number, vx?: number, vy?: number, to?: any) => fx(k, p, size, life, minPx, tint, vx, vy, to),
+  // انفجار خفيف للجبهة: بدون ومضة شاشة ولا هزّة (المعارك كثيرة)، وصوت واطي إذا قريب
+  blast: (p: any, r: number) => { fx('glow', p, r * 4, .3, 14, 0xff9a40); fx('ex', p, r * 2.2, 1.3, 14); for (let i = 0; i < 3; i++) puff({ x: p.x + R(-r, r) * .4, y: p.y + R(-r, r) * .4 }, r * R(.5, .9), r * .06, R(10, 18), .5, 0x2a2622, 4); if (hyp(p.x - cam.x, p.y - cam.y) < camW()) thump(p, .18); },
+  puff: (p: any, r: number, gr: number, life: number, a: number, tint: number, minPx?: number) => puff(p, r, gr, life, a, tint, minPx), caption, ground: (x: number, y: number) => groundH(x, y) * exag, camW, size: () => SIZES[SIZE] };
+const card = new FrontCard(() => FV!.W, 0);
+function onFrontTap(b: any, s: number | null, stack?: boolean) {
+  if (!FV) return;
+  if (stack && s !== null) { const p = FV.W.fp(s); setFollow(false); fly = null; const x0 = cam.x, y0 = cam.y, D0 = cam.D, D1 = D_of(70000), t0 = performance.now(); const go = () => { const u = Math.min(1, (performance.now() - t0) / 900), e = u * u * (3 - 2 * u); cam.x = lerp(x0, p.x, e); cam.y = lerp(y0, p.y, e); cam.D = Math.exp(lerp(Math.log(D0), Math.log(D1), e)); if (u < 1) requestAnimationFrame(go); }; go(); return; }
+  if (b) card.openB(b); else if (s !== null) card.openS(s);
+}
+(window as any).fseek = async (h: number) => { if (!FV) return; FV.update(h); const sh = director(); shotKey = sh.key; fly = null; cam.x = sh.x; cam.y = sh.y; cam.z = 0; cam.D = D_of(sh.w); camAngles(sh, 10); for (let i = 0; i < 3; i++) frame(); await scene.whenReadyAsync(); frame(); };
+(window as any).fperf = (frames = 60, step = true) => { if (!FV) return ''; for (const k in PT) delete PT[k]; const t0 = performance.now(), dc0 = (engine as any)._drawCalls?.current ?? 0;
+  for (let i = 0; i < frames; i++) { tm('step', () => step && FV!.update(1 / 60 * 8)); tm('units', () => placeUnits()); tm('render', () => scene.render()); tm('overlay', () => FV!.draw(1 / 60, SW, SH)); tm('labels', () => updateLabels(scene, SW, SH, (x, y) => groundH(x, y) * exag)); }
+  const terr = scene.meshes.filter(m => m.name.startsWith('terrain_')).map(m => `${m.name}:${Math.round(((m as any).getTotalIndices?.() ?? 0) / 3000)}k`).join(' ');
+  return JSON.stringify({ msPerFrame: +((performance.now() - t0) / frames).toFixed(1), parts: Object.fromEntries(Object.entries(PT).map(([k, v]) => [k, +(v / frames).toFixed(2)])), drawCalls: Math.round(((engine as any)._drawCalls?.current - dc0) / frames), units: [...UV.values()].filter(u => u.seen === frameNo).length, dom: document.querySelectorAll('#front .ct').length, terr }); };
+(window as any).FV = () => FV; (window as any).fdbg2 = () => JSON.stringify({ fxs: F.fxs.length, kinds: F.fxs.reduce((o: any, f) => (o[f.kind] = (o[f.kind] || 0) + 1, o), {}), puffs: F.puffs.length, us: [...UV.entries()].filter(([, u]) => u.seen === frameNo).slice(0, 5).map(([k, u]) => [k, u.n, u.node.isEnabled(), +u.node.scaling.x.toFixed(1), Math.round(u.node.position.x), Math.round(u.node.position.y), Math.round(u.node.position.z)]) }); (window as any).fdbg = () => JSON.stringify({ MODE, tier: FV?.tier, cam: { x: Math.round(cam.x), y: Math.round(cam.y), D: Math.round(cam.D) }, seen: [...UV.values()].filter(u => u.seen === frameNo).length, UV: UV.size, frameNo, cts: [...document.querySelectorAll('#front .ct')].filter(e => !(e as HTMLElement).style.transform.includes('-999')).length, line: (document.querySelector('.fl') as any)?.getAttribute('d')?.length }); (window as any).card = card;
 // ===== الأزرار =====
 const themeBtn = () => { $('bTheme').textContent = DARK() ? '🌙' : '☀️'; applyTheme(); setOutline(DARK()); };
 const sizeBtn = () => { $('bSize').textContent = ['حجم ١', 'حجم ٢', 'حجم ٣', 'حجم ٤'][SIZE]; };
@@ -384,15 +409,15 @@ $('bPause').onclick = () => { paused = !paused; $('bPause').textContent = paused
 const spdBtns = document.querySelectorAll<HTMLButtonElement>('#spd button');
 spdBtns.forEach(bt => bt.onclick = () => { speed = +bt.dataset.s!; spdBtns.forEach(x => x.setAttribute('aria-pressed', String(x === bt))); });
 $('bMute').onclick = () => { muted = !muted; $('bMute').textContent = muted ? '🔇' : '🔊'; if (ac) muted ? ac.suspend() : ac.resume(); };
-$('bGo').onclick = start; $('bAgain').onclick = start;
+$('bGo').onclick = () => start('op'); $('bFront').onclick = () => start('front'); $('bAgain').onclick = () => start(MODE);
 themeBtn(); sizeBtn(); pipBtn(); zoomBtn(); camBtn();
 let nl = 0; const prog = (s: string) => { nl++; $('load').textContent = `يحمّل ${s}… ${nl}`; };
 await buildTerrain(scene, THEME, prog);
 buildLabels(document.body, [['قاعدة البصرة', SITES.base], ['S-400', SITES.s400], ['باتريوت', SITES.pat], ['ذو الفقار', SITES.zolf], ['أميدية', SITES.omid], ['شلامجة', SITES.stage], ['خرمشهر ← الهدف', SITES.objective], ['خط دفاعهم', SITES.defense]]);
 cam.x = SITES.stage.x; cam.y = SITES.stage.y; cam.D = 2.6e7;
 await loadModels(scene, prog); unitsReady = true;
-$('load').textContent = ''; ($('bGo') as HTMLButtonElement).disabled = false; $('bGo').textContent = 'ابدأ العملية';
-if (AUTO) { start(); (window as any).ready = true; }
+$('load').textContent = ''; ($('bGo') as HTMLButtonElement).disabled = false; ($('bFront') as HTMLButtonElement).disabled = false; $('bGo').textContent = '✈ عملية شلامجة';
+if (AUTO) { start(qs.get('mode') === 'front' ? 'front' : 'op'); (window as any).ready = true; }
 (window as any).seek = async (t: number) => { while (W.t < t - 1e-4) stepSim(Math.min(2, t - W.t), 1e9); const sh = director(); shotKey = sh.key; fly = null; cam.x = sh.x; cam.y = sh.y; cam.z = sh.z; cam.D = D_of(sh.w); curTs = sh.ts; camAngles(sh, 10); frame(); await scene.whenReadyAsync(); frame(); };
 (window as any).opts = async (th: string, sz: number) => { THEME = th as any; SIZE = sz; themeBtn(); sizeBtn(); await setTheme(scene, THEME); frame(); };
 (window as any).camMode = (m: number) => { CAMMODE = m; camBtn(); };

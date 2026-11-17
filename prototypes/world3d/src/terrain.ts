@@ -11,10 +11,10 @@ import LVJ from '../terrain/levels.json';
 import { m2s, clamp } from './geo';
 const URL_ = import.meta.glob('../terrain/*.{webp,png}', { query: '?url', import: 'default', eager: true }) as Record<string, string>;
 const U = (n: string) => Object.entries(URL_).find(([k]) => k.endsWith('/' + n))![1];
-type LvName = 'w' | 'me' | 'th' | 'cl';
+type LvName = 'w' | 'me' | 'fr' | 'th' | 'cl';
 interface Level { name: LvName; m: number[]; grid: number; h: Float32Array; mesh: Mesh; mat: ShaderMaterial; c: { x: number; y: number }; tex: Record<string, Texture> }
 export const LEVELS: Level[] = [];
-const CHILD: Record<LvName, LvName | null> = { w: 'me', me: 'th', th: 'cl', cl: null };
+const CHILD: Record<LvName, LvName | null> = { w: 'me', me: 'fr', fr: 'th', th: 'cl', cl: null };   // fr = حدود العراق–إيران (WM14.3)
 async function heights(url: string) {
   const img = new Image(); img.src = url; await img.decode();
   const c = document.createElement('canvas'); c.width = img.width; c.height = img.height; const x = c.getContext('2d', { willReadFrequently: true }) as CanvasRenderingContext2D; x.drawImage(img, 0, 0);
@@ -24,7 +24,7 @@ async function heights(url: string) {
 }
 export async function buildTerrain(scene: Scene, theme: string, prog: (s: string) => void) {
   const L = (LVJ as any).levels as Record<LvName, { m: number[]; grid: number }>;
-  for (const name of ['w', 'me', 'th', 'cl'] as LvName[]) {
+  for (const name of ['w', 'me', 'fr', 'th', 'cl'] as LvName[]) {
     const { m, grid: GF } = L[name], h = await heights(U(`${name}_h.png`)); prog('الأرض');
     const ST = 2, G = GF / ST, NF = GF + 1;   // الشبكة بنص الدقة (256²): ربع المثلثات (WM13.1)؛ الارتفاع الكامل يبقى لـ groundH
     const ch = CHILD[name] ? L[CHILD[name]!].m : null;
@@ -32,7 +32,9 @@ export async function buildTerrain(scene: Scene, theme: string, prog: (s: string
     const pos: number[] = [], uv: number[] = [], idx: number[] = [], N = G + 1;
     for (let j = 0; j <= G; j++) for (let i = 0; i <= G; i++) {
       const mx = m[0] + (m[2] - m[0]) * i / G, my = m[1] + (m[3] - m[1]) * j / G, s = m2s(mx, my);
-      pos.push(s.x - c.x, Math.max(0, h[j * ST * NF + i * ST]), s.y - c.y); uv.push(i / G, 1 - j / G); }
+      // نقطة داخل المستوى الأدق (مو على حافته) تنزل شوي: بشريط التداخل الأدق يطلع فوق بدل ما يتصارعون (WM14.3)
+      const under = ch && mx > ch[0] + 1e-9 && mx < ch[2] - 1e-9 && my > ch[1] + 1e-9 && my < ch[3] - 1e-9 ? 60 : 0;
+      pos.push(s.x - c.x, Math.max(0, h[j * ST * NF + i * ST]) - under, s.y - c.y); uv.push(i / G, 1 - j / G); }
     const inside = (i: number, j: number) => { if (!ch) return false; const ax = m[0] + (m[2] - m[0]) * i / G, bx = m[0] + (m[2] - m[0]) * (i + 1) / G, ay = m[1] + (m[3] - m[1]) * j / G, by = m[1] + (m[3] - m[1]) * (j + 1) / G, e = 1e-9;
       return ax >= ch[0] - e && bx <= ch[2] + e && ay >= ch[1] - e && by <= ch[3] + e; };
     for (let j = 0; j < G; j++) for (let i = 0; i < G; i++) { if (inside(i, j)) continue; const a = j * N + i, b = a + 1, d = a + N, e = d + 1; idx.push(a, d, b, b, d, e); }

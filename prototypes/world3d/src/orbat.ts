@@ -45,13 +45,13 @@ export const KIND_AR: Record<Kind, string> = { armor: 'المدرع', mech: 'ا�
 export const BN_AR: Record<BnT, string> = { tank: 'دبابات', mech: 'مشاة آلية', inf: 'مشاة', arty: 'مدفعية', mlrs: 'راجمات', sup: 'إسناد' };
 
 export interface ArmyDef {
-  side: Side; name: string; troops: number /* ألف */; inv: string; ifv: { armor: string; mech: string }; q: number /* تدريب */;
+  side: Side; name: string; fem?: boolean; troops: number /* ألف */; inv: string; ifv: { armor: string; mech: string }; q: number /* تدريب */;
   deploy: { heavy: number; inf: number } /* نسبة اللي بجبهة العراق–إيران */; air: number /* قوة جو محسوبة */; aggr: number; divNum: number[];
 }
 // من بيانات اللعبة الأصلية (index.html): الجنود والمخزون؛ نوع ناقلات المشاة والنسب [تقديري]
 export const ARMIES: ArmyDef[] = [
   { side: 0, name: 'العراق', troops: 193, inv: 'M1:100,T90:73,T72:120,T55:70,M109:40,M198:100,D30:150,GRAD:50', ifv: { armor: 'BMP1', mech: 'M113' }, q: 1, deploy: { heavy: 1, inf: 1 }, air: 0, aggr: .6, divNum: [9, 10, 5, 8, 1, 7, 11, 14, 15, 16, 17, 18, 19, 20, 3, 4, 2, 6, 12, 21] },
-  { side: 1, name: 'إيران', troops: 610, inv: 'T72:480,KARRAR:50,M60:150,T55:500,FAJR5:300,D30:1000,GRAD:500,M109:150', ifv: { armor: 'BMP2', mech: 'M113' }, q: 1, deploy: { heavy: .75, inf: .45 }, air: 0, aggr: .45, divNum: [92, 81, 16, 88, 21, 28, 64, 77, 30, 84, 58, 40, 23, 55, 65, 71, 25, 41, 27, 31, 8, 14, 17, 19, 33, 35, 36, 38] },
+  { side: 1, name: 'إيران', fem: true, troops: 610, inv: 'T72:480,KARRAR:50,M60:150,T55:500,FAJR5:300,D30:1000,GRAD:500,M109:150', ifv: { armor: 'BMP2', mech: 'M113' }, q: 1, deploy: { heavy: .75, inf: .45 }, air: 0, aggr: .45, divNum: [92, 81, 16, 88, 21, 28, 64, 77, 30, 84, 58, 40, 23, 55, 65, 71, 25, 41, 27, 31, 8, 14, 17, 19, 33, 35, 36, 38] },
 ];
 // قوة الجو (جيل × عدد، المروحيات نص، المسيّرات ثلث) من مخزون اللعبة الأصلية
 const AIRGEN: Record<string, [number, number]> = { F16: [4, 1], FA50: [3, 1], SU25: [2, 1], MI28: [4, .5], MI35: [3, .5], GAZELLE: [1, .5], CH4: [3, .3], F14: [2, 1], F4: [1, 1], F5: [1, 1], MIG29: [3, 1], SU24: [2, 1], AH1: [2, .5], TOUFAN: [2, .5], MOHAJER: [2, .3] };
@@ -102,12 +102,12 @@ export class Front {
   t = 0; bdes: Bde[] = []; divs: Div[] = []; secs: Sector[]; f: number[]; cities: City[]; ev: Ev[] = []; battles = new Map<number, Battle>(); done: Battle[] = []; r: () => number; nid = 1;
   stock: Record<string, number>[] = [{}, {}];   // معدات ما دخلت بألوية (احتياط تعويض)
   lost: Loss[] = [{ men: 0, tank: 0, ifv: 0, arty: 0 }, { men: 0, tank: 0, ifv: 0, arty: 0 }];
-  airMod: number[] = [1, 1]; priority: number[] = [];   // أولوية هجوم من اللاعب لكل قطاع
+  airMod: number[] = [1, 1]; priority: number[][] = [[], []];   // أولوية هجوم من اللاعب لكل طرف وقطاع
   auto = [true, true]; ops: { side: Side; s: number; t0: number; goal: number; ids: number[]; go: boolean }[] = [];
   armies: ArmyDef[];
   constructor(fd: FrontData, seed = 1, armies: ArmyDef[] = ARMIES) {
     this.armies = armies;
-    this.r = rng(seed); this.secs = fd.sectors; this.f = this.secs.map(() => 0); this.priority = this.secs.map(() => 1);
+    this.r = rng(seed); this.secs = fd.sectors; this.f = this.secs.map(() => 0); this.priority = [this.secs.map(() => 1), this.secs.map(() => 1)];
     this.cities = fd.cities.map(c => ({ ...c, owner: (c.side === 'IQ' ? 0 : 1) as Side }));
     // كل مدينة تنحسب لأقرب قطاع بس (حتى ما تسقط مدينة من قطاع بعيد عنها)
     const near = (c: City) => { let bi = 0, bd = 1e18; this.secs.forEach((s, i) => { const d = Math.hypot(c.x - s.c[0], c.y - s.c[1]); if (d < bd) { bd = d; bi = i; } }); return bi; };
@@ -194,8 +194,12 @@ export class Front {
     this.place();
   }
   sideName(s: Side) { return this.armies[s].name; }
+  /** الفعل حسب الدولة: إيران مؤنث بالعربي («إيران اخترقت») */
+  vb(s: Side, m: string, f: string) { return this.armies[s].fem ? f : m; }
   emit(type: string, txt: string, o: Partial<Ev> = {}) { this.ev.push({ t: this.t, type, txt, ...o }); }
   bde(id: number) { return this.bdes.find(b => b.id === id); }
+  /** أمر من اللاعب (اختياري، D-035): null = تلقائي */
+  order(id: number, o: Order) { const b = this.bde(id); if (!b) return; b.ord = o; if (!o) { if (b.post === 'attack') b.post = 'hold'; return; } this.planOrders(b.side); }
   /** تسمية من اللاعب (I-074): الأسماء الحالية مقترحة */
   rename(id: number, name: string) { const b = this.bde(id) || this.divs.find(d => d.id === id); if (b && name.trim()) b.name = name.trim().slice(0, 40); }
   alive(b: Bde) { return bdeStr(b) > .08; }
@@ -258,7 +262,7 @@ export class Front {
       if (bt) this.endBattle(i, 'stop');
       b = { s: i, att, t0: this.t, h: 0, R: 1, why: {}, loss: [{ men: 0, tank: 0, ifv: 0, arty: 0 }, { men: 0, tank: 0, ifv: 0, arty: 0 }], att0: atk.map(q => q.id), def0: dfs.map(q => q.id) };
       this.battles.set(i, b);
-      this.emit('battle', `${this.sideName(att)} يهاجم ${this.place_(i)}`, { s: i, side: att });
+      this.emit('battle', `${this.sideName(att)} ${this.vb(att, 'يهاجم', 'تهاجم')} ${this.place_(i)}`, { s: i, side: att });
     }
     b.h++;
     for (const q of [...atk, ...dfs]) q.fight = true;
@@ -338,7 +342,7 @@ export class Front {
     this.f[i] = clamp(this.f[i] + (side === 0 ? 1 : -1) * km * 1000, -lim, lim);
     for (const c of this.secs[i].cities) {
       const own = this.cityOwner(c);
-      if (own !== side && this.passed(c, i, side)) { const cc = this.cities.find(x => x.n === c.n)!; cc.owner = side; this.emit('city', `${this.sideName(side)} سيطر على ${c.n}`, { s: i, side }); }
+      if (own !== side && this.passed(c, i, side)) { const cc = this.cities.find(x => x.n === c.n)!; cc.owner = side; this.emit('city', `${this.sideName(side)} ${this.vb(side, 'سيطر', 'سيطرت')} على ${c.n}`, { s: i, side }); }
     }
   }
   cityOwner(c: City): Side { return (this.cities.find(x => x.n === c.n)?.owner ?? (c.side === 'IQ' ? 0 : 1)) as Side; }
@@ -352,7 +356,7 @@ export class Front {
     const v = (.6 + 1.4 * armor) * TERR_ADV[ter] * this.supply(i, side) * delay;
     this.shift(i, side, v);
     for (const q of atk) { q.org = Math.max(0, q.org - .4); q.fight = true; }
-    if (this.t % 12 === 0) this.emit('advance', `${this.sideName(side)} يتقدم ب${this.place_(i)}`, { s: i, side });
+    if (this.t % 12 === 0) this.emit('advance', `${this.sideName(side)} ${this.vb(side, 'يتقدم', 'تتقدم')} ب${this.place_(i)}`, { s: i, side });
   }
   /** الأجناب: إذا القطاعات الجنب متقدمة لصالح المهاجم أكثر من 20 كم، المدافع مكشوف */
   flank(i: number, att: Side) {
@@ -363,7 +367,7 @@ export class Front {
   endBattle(i: number, why: string) {
     const b = this.battles.get(i); if (!b) return;
     b.done = why; this.battles.delete(i); this.done.push(b);
-    if (why === 'break') this.emit('break', `${this.sideName(b.att)} اخترق ${this.place_(i)}`, { s: i, side: b.att });
+    if (why === 'break') this.emit('break', `${this.sideName(b.att)} ${this.vb(b.att, 'اخترق', 'اخترقت')} ${this.place_(i)}`, { s: i, side: b.att });
     else this.emit('end', `توقفت المعركة ب${this.place_(i)}`, { s: i, side: b.att });
   }
   place_(i: number) { const s = this.secs[i], c = s.cities.slice().sort((a, b) => b.v - a.v)[0]; return c ? `قطاع ${c.n}` : `القطاع ${i + 1}`; }
@@ -395,7 +399,7 @@ export class Front {
       // تجمّع أول: الألوية توصل كلها (أو يمر يومين) وبعدين تهاجم سوا
       if (!o.go) {
         const bs = o.ids.map(id => this.bde(id)!).filter(b => b && this.alive(b) && !b.ord);
-        if (bs.every(b => b.s === o.s && b.mv < 0) || this.t - o.t0 > 48) { o.go = true; for (const b of bs) if (b.s === o.s && b.mv < 0 && b.org > 50) b.post = 'attack'; o.t0 = this.t; if (bs.some(b => b.post === 'attack')) this.emit('op', `${A.name} يبدي هجوم على ${this.place_(o.s)}`, { s: o.s, side }); }
+        if (bs.every(b => b.s === o.s && b.mv < 0) || this.t - o.t0 > 48) { o.go = true; for (const b of bs) if (b.s === o.s && b.mv < 0 && b.org > 50) b.post = 'attack'; o.t0 = this.t; if (bs.some(b => b.post === 'attack')) this.emit('op', `${A.name} ${this.vb(side, 'يبدي', 'تبدي')} هجوم على ${this.place_(o.s)}`, { s: o.s, side }); }
         continue;
       }
       const atk = this.inSec(o.s, side).filter(b => b.post === 'attack');
@@ -404,7 +408,7 @@ export class Front {
     if (this.ops.filter(o => o.side === side).length < 2 && this.r() < A.aggr * .5) {
       // يقدّر النسبة بنفس معادلة المعركة، مع ضباب (±25%) على قوة العدو
       let best = -1, bs = 0, bpool: Bde[] = [];
-      const need = 1.9 - A.aggr * .6;   // العراق 1.54، إيران 1.63
+      const need = 1.9 - A.aggr * .6;   // العراق 1.54، إيران 1.63 (أولوية اللاعب تقبل نسبة أقل)
       for (let i = 0; i < N; i++) {
         if (this.ops.some(o => o.s === i)) continue;
         const ter = this.secs[i].terr, w = WIDTH[ter];
@@ -414,15 +418,15 @@ export class Front {
         if (!pool.length) continue;
         // لازم يبقى بالقطاع ماسك واحد على الأقل إذا كلهم راح يهاجمون
         const fog = .75 + this.r() * .5, R = dfs.length ? this.calc(i, side, pool, dfs, 0, false).R / fog : 5;
-        if (R < need) continue;
+        if (R < need / Math.sqrt(this.priority[side][i])) continue;
         const val = 1 + this.secs[i].cities.filter(c => this.cityOwner(c) !== side).reduce((q, c) => q + c.v, 0);
-        const sc = val * Math.min(R, 4) * TERR_ADV[ter] * this.priority[i];
+        const sc = val * Math.min(R, 4) * TERR_ADV[ter] * this.priority[side][i];
         if (sc > bs) { bs = sc; best = i; bpool = pool; }
       }
       if (best >= 0) {
         for (const b of bpool) { b.ts = best; b.post = 'hold'; }
         this.ops.push({ side, s: best, t0: this.t, goal: 15 + this.r() * 35, ids: bpool.map(b => b.id), go: false });
-        this.emit('gather', `${A.name} يحشد قوات قرب ${this.place_(best)}`, { s: best, side });
+        this.emit('gather', `${A.name} ${this.vb(side, 'يحشد', 'تحشد')} قوات قرب ${this.place_(best)}`, { s: best, side });
       }
     }
     this.planOrders(side);
@@ -439,12 +443,14 @@ export class Front {
   // ---------- المواقع للرسم ----------
   place() {
     const rows = new Map<string, Bde[]>();
-    for (const b of this.bdes) { if (!this.alive(b)) continue; const k = b.s + ':' + b.side + ':' + (b.post === 'reserve' || b.post === 'retreat' ? 1 : 0); if (!rows.has(k)) rows.set(k, []); rows.get(k)!.push(b); }
+    // اللي يتقاتلون: صف خاص بالقطاع (row 2) — المهاجم رقم j مقابل المدافع رقم j على نفس الموقع على طول الجبهة، وقريبين من الخط
+    for (const b of this.bdes) { if (!this.alive(b)) continue; const k = b.s + ':' + b.side + ':' + (b.fight && b.mv < 0 ? 2 : b.post === 'reserve' || b.post === 'retreat' ? 1 : 0); if (!rows.has(k)) rows.set(k, []); rows.get(k)!.push(b); }
+    const nFight = (si: number) => Math.max(rows.get(si + ':0:2')?.length ?? 0, rows.get(si + ':1:2')?.length ?? 0);
     for (const [k, bs] of rows) {
       const [si, sd, rs] = k.split(':').map(Number), s = this.secs[si], p = this.fp(si), back = sd === 0 ? -1 : 1;
       const tx = s.b[0] - s.a[0], ty = s.b[1] - s.a[1], tl = Math.hypot(tx, ty), t = [tx / tl, ty / tl];
       bs.sort((x, y) => x.id - y.id).forEach((b, j) => {
-        const along = ((j + .5) / bs.length - .5) * tl * .8, dep = (rs ? 28000 : 5000) + (j % 2) * 3500;
+        const n = rs === 2 ? nFight(si) : bs.length, along = ((j + .5) / n - .5) * tl * (rs === 2 ? .45 : .8), dep = rs === 2 ? 2500 : (rs ? 28000 : 5000) + (j % 2) * 3500;
         let x = p.x + t[0] * along + s.n[0] * back * dep, y = p.y + t[1] * along + s.n[1] * back * dep;
         if (b.mv >= 0) { const c = this.secs[b.ts], q = { x: c.c[0] + c.n[0] * (this.f[b.ts] + back * 25000), y: c.c[1] + c.n[1] * (this.f[b.ts] + back * 25000) }; const o = { x: s.c[0] + s.n[0] * (this.f[si] + back * 25000), y: s.c[1] + s.n[1] * (this.f[si] + back * 25000) }; x = o.x + (q.x - o.x) * b.mv; y = o.y + (q.y - o.y) * b.mv; b.hd = Math.atan2(q.y - o.y, q.x - o.x); }
         else b.hd = Math.atan2(-s.n[1] * back, -s.n[0] * back);

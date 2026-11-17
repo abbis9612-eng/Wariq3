@@ -113,11 +113,50 @@ for t, c in TH.items():
     im = Image.open(f'{T}/textures/map_{t}_1.webp').convert('RGB'); W, H = im.size; dr = ImageDraw.Draw(im)
     Q = lambda x, y: ((x - b[0]) / (b[2] - b[0]) * W, (b[1] - y) / (b[1] - b[3]) * H)
     pl = lambda p: [Q(p[i], p[i + 1]) for i in range(0, len(p) - 1, 2)]
-    for r in md['roads']: dr.line(pl(r['p']), fill=c['road'], width=2)
-    for r in md['rivers']: dr.line(pl(r['p']), fill=c['river'], width=4)
-    for l in md['borders']: dr.line(pl(l), fill=c['bglow'], width=6); dr.line(pl(l), fill=c['border'], width=2)
+    for r in md['roads']: dr.line(pl(r['p']), fill=c['road'], width=1)
+    for r in md['rivers']: dr.line(pl(r['p']), fill=c['river'], width=2)
+    for l in md['borders']: dr.line(pl(l), fill=c['bglow'] if t == 'dark' else c['border'], width=1)   # رفيعة: البكسل هنا 130 م
     im.save(f'terrain/th_{t}.webp', quality=86, method=6)
 meta['th'] = dict(m=list(m0), grid=g - 1, hmax=float(hg.max()))
+# المستوى الأدق «cl» فوق ساحة المعركة (البصرة ← شلامجة ← خرمشهر): ~16 م/بكسل، حدوده على شبكة الجبهة حتى ما يصير شق
+cell = (m0[2] - m0[0]) / 512
+snap = lambda v, o, up: m0[o] + (math.ceil if up else math.floor)((v - m0[o]) / cell) * cell
+c0 = [snap(MX(47.55), 0, 0), snap(MY(30.72), 1, 0), snap(MX(48.25), 0, 1), snap(MY(30.30), 1, 1)]
+z = 13; n = 2 ** z; tx = (int(c0[0] * n), int(c0[2] * n)); ty = (int(c0[1] * n), int(c0[3] * n))
+sat = grab(EOX, z, tx, ty, 'jpg'); cw = 4096; ch_ = round(cw * (c0[3] - c0[1]) / (c0[2] - c0[0]))
+crop = lambda im: im.crop(((c0[0] * n - tx[0]) * 256, (c0[1] * n - ty[0]) * 256, (c0[2] * n - tx[0]) * 256, (c0[3] * n - ty[0]) * 256))
+sat = np.asarray(crop(sat).resize((cw, ch_), Image.BILINEAR)).astype(np.float32) / 255
+z2 = 12; n2 = 2 ** z2; t2x = (int(c0[0] * n2), int(c0[2] * n2)); t2y = (int(c0[1] * n2), int(c0[3] * n2))
+dem = dec(np.asarray(grab(TERR, z2, t2x, t2y, 'png')).astype(np.float64)); dem = np.maximum(dem, 0).astype(np.float32)
+demi = Image.fromarray(dem).crop(((c0[0] * n2 - t2x[0]) * 256, (c0[1] * n2 - t2y[0]) * 256, (c0[2] * n2 - t2x[0]) * 256, (c0[3] * n2 - t2y[0]) * 256))
+hl = np.asarray(demi.resize((cw, ch_), Image.BILINEAR)).astype(np.float32)
+R_, G_, B_ = sat[..., 0], sat[..., 1], sat[..., 2]; lum = (R_ + G_ + B_) / 3
+water = ((B_ > R_ * 1.02) & (lum < .42)) | ((B_ > R_ + .04) & (G_ > R_) & (lum < .5))
+wat = np.asarray(Image.fromarray((water * 255).astype(np.uint8)).filter(ImageFilter.MedianFilter(3)).filter(ImageFilter.MinFilter(3)).filter(ImageFilter.MaxFilter(3)).filter(ImageFilter.GaussianBlur(.8))).astype(np.float32) / 255
+veg = ((G_ > R_ * 1.03) & (G_ > B_ * 1.05) & (lum < .55)).astype(np.uint8) * 255
+veg = np.asarray(Image.fromarray(veg).filter(ImageFilter.MedianFilter(5)).filter(ImageFilter.MinFilter(3)).filter(ImageFilter.MaxFilter(5)).filter(ImageFilter.GaussianBlur(1.5))).astype(np.float32) / 255
+mpp = 40075016 * (c0[2] - c0[0]) / cw
+gy, gx = np.gradient(hl, mpp); az, alt = math.radians(315), math.radians(42)
+slope = np.arctan(np.hypot(gx, gy) * 1.6 * 2); aspect = np.arctan2(-gx, gy)
+rel = np.clip(np.sin(alt) * np.cos(slope) + np.cos(alt) * np.sin(slope) * np.cos(az - aspect), 0, 1).astype(np.float32)
+rng = np.random.default_rng(5); noise = np.asarray(Image.fromarray((rng.random((ch_ // 8 + 1, cw // 8 + 1)) * 255).astype(np.uint8)).resize((cw, ch_), Image.BICUBIC)).astype(np.float32) / 255
+PX = lambda x, y: ((MX(REF[1]) + x / MPU - c0[0]) / (c0[2] - c0[0]) * cw, (MY(REF[0]) - y / MPU - c0[1]) / (c0[3] - c0[1]) * ch_)
+plc = lambda p: [PX(p[i], p[i + 1]) for i in range(0, len(p) - 1, 2)]
+for t, c in TH.items():
+    C = lambda q: np.array(c[q], np.float32)
+    img = C('land')[None, None] * (1 - noise[..., None] * .5) + C('land2')[None, None] * (noise[..., None] * .5)
+    img = img * (1 - veg[..., None] * .75) + C('veg')[None, None] * veg[..., None] * .75
+    sh = (rel - .7)[..., None]; img = np.where(sh < 0, img * (1 + sh * 1.1) + C('shade') * (-sh * .4), img + (C('hi') - img) * sh * .9)
+    edge = np.asarray(Image.fromarray((wat * 255).astype(np.uint8)).filter(ImageFilter.MaxFilter(3))).astype(np.float32) / 255 - wat
+    img = img * (1 - wat[..., None]) + C('water')[None, None] * wat[..., None]; img = img * (1 - edge[..., None] * .7) + C('shore')[None, None] * edge[..., None] * .7
+    im = Image.fromarray(np.clip(img, 0, 255).astype(np.uint8)); dr = ImageDraw.Draw(im)
+    for r in md['roads']: dr.line(plc(r['p']), fill=c['road'], width=3)
+    for r in md['rivers']: dr.line(plc(r['p']), fill=c['shore'], width=19, joint='curve')   # الأنهار (شط العرب ~350 م) ماء بعرضها
+    for r in md['rivers']: dr.line(plc(r['p']), fill=c['water'], width=15, joint='curve')
+    for l in md['borders']: dr.line(plc(l), fill=c['bglow'], width=5); dr.line(plc(l), fill=c['border'], width=2)
+    im.save(f'terrain/cl_{t}.webp', quality=84, method=6)
+g = 513; hg = np.asarray(demi.resize((g, g), Image.BILINEAR)).astype(np.float32); enc(hg).save('terrain/cl_h.png', optimize=True)
+meta['cl'] = dict(m=c0, grid=512, hmax=float(hg.max())); print('cl', cw, ch_, 'mpp', round(mpp, 1))
 json.dump(dict(levels=meta, ref=REF, mpu=MPU), open('terrain/levels.json', 'w'))
 # الأسماء بالعربي: دول (مع مستوى الظهور) ومدن
 labs = dict(countries=[], cities=[])

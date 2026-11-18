@@ -15,6 +15,9 @@
     su25: { n: 'سوخوي-25', v: KMS(200), aa: .08, ag: 1.35, ecm: 1, rcs: 12, cruise: 4, low: .1 },
     f14: { n: 'F-14A', v: KMS(250), aa: .55, ag: .55, ecm: .9, rcs: 20, cruise: 8, low: .3, aam: { n: 'AIM-54 / فكور-90', r: 90, v: KMS(1000), pk: .25 } },
     su24: { n: 'سوخوي-24', v: KMS(260), aa: .05, ag: 1.2, ecm: .95, rcs: 8, cruise: 5, low: .12, spr: 'su25' },
+    // مسيّرات استطلاع (R5d): العراق عنده CH-4B صينية بقاعدة الكوت، وإيران مهاجر-6. تطير عالي وبطيئة وتشوف ~40 كم حولها
+    ch4: { n: 'CH-4B (مسيّرة استطلاع)', v: KMS(50), aa: 0, ag: 0, ecm: 1, rcs: .5, cruise: 5, low: 5, isr: 1, drone: 1, endur: 400, eye: 40 },
+    m6: { n: 'مهاجر-6 (مسيّرة استطلاع)', v: KMS(55), aa: 0, ag: 0, ecm: 1, rcs: .5, cruise: 5, low: 5, isr: 1, drone: 1, endur: 300, eye: 40 },
   };
   // ===== ذخائر الهجوم الإيرانية =====
   const MUN = {
@@ -73,6 +76,8 @@
     { n: 'نوجه (همدان)', rw: 0.6, ll: [35.21, 48.65], side: 1, type: 'f14', planes: 16 },
     { n: 'بوشهر', rw: 0.9, ll: [28.94, 50.83], side: 1, type: 'f14', planes: 12 },
     { n: 'شيراز', rw: 0.3, ll: [29.54, 52.59], side: 1, type: 'su24', planes: 10 },
+    { n: 'الكوت (مسيّرات)', rw: 0.4, ll: [32.17, 46.05], side: 0, type: 'ch4', planes: 6 },
+    { n: 'كرمانشاه (مسيّرات)', rw: 0.2, ll: [34.35, 47.16], side: 1, type: 'm6', planes: 6 },
   ];
   // المواقع تقريبية [ASSUMPTION]. العراق ما عنده باتريوت بالواقع: البطاريتين «سيناريو» (مثل مساعدة حليف). بانتسير-S1 عند العراق من 2014.
   const SAMS = [
@@ -130,6 +135,7 @@
   // ===== الذكاء: شنو يسوي كل مطار =====
   function planFor(A, W, b) {
     const side = b.side, T = PLANES[b.type];
+    if (T.isr) return reconTarget(A, W, b);
     const bats = [...W.battles.values()].map(bt => {
       const mine = bt.side === side; const cell = mine ? bt.tg : [...bt.from][0];
       const p = W.cells[cell].c; return { cell, p, w: (bt.na + bt.nd) * (mine ? 1.2 : 1.4), dist: d2(p, b.p) };
@@ -151,6 +157,19 @@
     const sam = A.sams.filter(s => s.side !== side && !s.down && d2(s.p, b.p) < 700).sort((a, c) => d2(a.p, b.p) - d2(c.p, b.p))[0];
     if (sam && T.ag > .9) return { kind: 'strike', p: sam.p, sam: A.sams.indexOf(sam) };
     return null;
+  }
+  // الاستطلاع: أقدم منطقة معلوماتنا عنها، 40–200 كم ورا جبهة العدو، ويفضّل اللي برّا مظلة دفاعهم الجوي
+  function reconTarget(A, W, b) {
+    const side = b.side, T = PLANES[b.type]; if (!W.N) return null;
+    const F = []; for (let i = 0; i < W.N; i++) if (W.ctrl[i] === side && W.cells[i].nb.some(j => W.ctrl[j] !== side)) F.push(W.cells[i].c);
+    let best = null, bs = -1e9;
+    for (let i = 0; i < W.N; i++) {
+      if (W.ctrl[i] === side) continue; const c = W.cells[i].c; let df = 1e9; for (const f of F) df = Math.min(df, Math.abs(f[0] - c[0]) + Math.abs(f[1] - c[1]));
+      if (df < 30 || df > 220 || d2(c, b.p) > 600) continue;
+      const age = W.seen ? Math.min(96, W.t - W.seen[side][i]) : 48, risky = A.sams.some(s => s.side !== side && covers(s, c, T.cruise, 'air', T.rcs));
+      const sc = age + (W.cells[i].vp || 0) * 4 - (risky ? 60 : 0) + A.rnd() * 10; if (sc > bs) { bs = sc; best = c; }
+    }
+    return best && { kind: 'recon', p: best };
   }
   function nearestFront(W, side, p) {
     let best = null, bd = 1e9;
@@ -236,12 +255,12 @@
   function sorties(A, W, dt) {
     for (const b of A.bases) {
       b.cd -= dt;
-      if (b.cd > 0 || b.down > 0 || b.ready < 2) continue;
+      if (b.cd > 0 || b.down > 0 || b.ready < (PLANES[b.type].isr ? 1 : 2)) continue;
       const m = b.mission.kind === 'auto' ? planFor(A, W, b) : b.mission;
       b.cd = 12 + A.rnd() * 14;
       if (!m || m.kind === 'idle' || !m.p) continue;
       const T = PLANES[b.type];
-      const k = Math.min(b.ready, m.kind === 'cap' ? 2 : m.kind === 'strike' ? 4 : 2); b.ready -= k;
+      const k = Math.min(b.ready, m.kind === 'recon' ? 1 : m.kind === 'cap' ? 2 : m.kind === 'strike' ? 4 : 2); b.ready -= k;
       const fid = A.id++, rh = b.rw, rx = Math.cos(rh), ry = Math.sin(rh);
       for (let i = 0; i < k; i++) A.planes.push({ id: A.id++, fid, slot: i, side: b.side, type: b.type, base: A.bases.indexOf(b), x: b.p[0] - rx * 1.2, y: b.p[1] - ry * 1.2, z: 0, h: rh, v: 0, m: { ...m }, st: 'roll', t: -i * .25, shots: T.aam ? 2 : 0, harm: m.kind === 'strike' && T.harm && i < 2 ? 1 : 0, bombs: T.ag > 1.1 ? 2 : 1, zT: 0, alt: 0, bank: 0, gam: 0, flares: 30, vx: 0, vy: 0, vz: 0, trk: [] });
       emit(A, { k: 'takeoff', side: b.side, x: b.p[0], y: b.p[1], base: b.n, n: k, kind: m.kind });
@@ -261,7 +280,9 @@
     if (tac[p.st] && p.stT > 3) { if (p.st === 'final') { land(A, p, base); return; } p.st = 'back'; }
     if (p.st === 'back' && p.stT > 120) { land(A, p, base); return; }
     // وقود: طلعة أقصاها ~ساعة ونص
-    if (p.t > 95 && (p.st === 'out' || p.st === 'orbit')) p.st = 'back';
+    if (p.t > (T.endur || 95) && (p.st === 'out' || p.st === 'orbit')) p.st = 'back';
+    // عيون الجو: كل طيارة تشوف شوية تحتها، ومسيّرة الاستطلاع ~40 كم (تنقرى ساعة بساعة بـ sim.intel)
+    if (W.spots && p.st !== 'roll' && p.st !== 'final' && (p.eyeT = (p.eyeT || 0) - dt) <= 0) { p.eyeT = .5; const sp = W.spots[p.side]; if (sp.length < 400) sp.push([p.x, p.y, T.eye || 12]); }
     let tx = M.p[0], ty = M.p[1], spd = T.v, turn = 6; const d = Math.hypot(tx - p.x, ty - p.y);
     // تهرّب: صاروخ جاي عليه قريب ← لفّة حادة (يحط الصاروخ على جنبه) وينزل ويرمي مشاعل/رقائق
     const threat = A.msls.find(m => m.tgt === p && !m.done && m.t > 0 && Math.hypot(m.x - p.x, m.y - p.y) < 18);
@@ -270,15 +291,15 @@
       tx = p.x + Math.cos(ang) * 30; ty = p.y + Math.sin(ang) * 30; turn = 9; spd = T.v * 1.25; p.zT = Math.max(.08, p.z - 2);
       p.fl = (p.fl || 0) - dt; if (p.fl <= 0 && p.flares > 0) { p.fl = .03; p.flares--; (A.decoys = A.decoys || []).push({ x: p.x, y: p.y, vx: -Math.cos(p.h) * 2, vy: -Math.sin(p.h) * 2, t: 0 }); if (p.flares % 4 === 0) emit(A, { k: 'flare', x: p.x, y: p.y }); }
     } else if (p.ev > 0) { p.ev -= dt; tx = p.x + Math.cos(p.h) * 30; ty = p.y + Math.sin(p.h) * 30; }
-    else if (p.st === 'roll') { tx = p.x + Math.cos(base.rw) * 20; ty = p.y + Math.sin(base.rw) * 20; spd = Math.min(T.v, (p.v || 0) + dt * 9.6); turn = 0; p.zT = p.v > KMS(75) ? 1.5 : 0; if (p.z > .15) p.st = 'out'; }
+    else if (p.st === 'roll') { tx = p.x + Math.cos(base.rw) * 20; ty = p.y + Math.sin(base.rw) * 20; spd = Math.min(T.v, (p.v || 0) + dt * 9.6); turn = 0; p.zT = p.v > Math.min(KMS(75), T.v * .8) ? 1.5 : 0; if (p.z > .15) p.st = 'out'; if (p.stT > 2) p.st = 'out'; }  // المسيّرة تطير بسرعة أقل من الطيارة
     else if (p.st === 'out') {
       // تنقّل عالي بأرضنا، وينزل واطي ~100 كم قبل الهدف إذا مهمته إسناد بطيارة هجوم (تحت أفق الرادار)
-      p.zT = M.kind === 'cap' ? T.cruise : M.kind === 'cas' ? (T.hi ? 5.5 : d > 110 ? T.cruise * .6 : T.low) : M.kind === 'strike' ? (p.harm ? T.cruise : d > 110 ? T.cruise * .6 : T.low) : T.cruise;
+      p.zT = M.kind === 'cap' || M.kind === 'recon' ? T.cruise : M.kind === 'cas' ? (T.hi ? 5.5 : d > 110 ? T.cruise * .6 : T.low) : M.kind === 'strike' ? (p.harm ? T.cruise : d > 110 ? T.cruise * .6 : T.low) : T.cruise;
       if (M.kind === 'cas' && T.hi && d < 7) { attack(A, W, SIM, p); p.bombs--; p.st = p.bombs > 0 ? 'pull' : 'back'; p.ph = 0; }
       else if ((M.kind === 'cas' || (M.kind === 'strike' && !p.harm)) && !T.hi && d < 12) { p.st = 'popup'; p.ph = 0; }
       else if (M.kind === 'strike' && !p.harm && T.hi && d < 7) { attack(A, W, SIM, p); p.bombs--; p.st = 'back'; }
       if (M.kind === 'strike' && p.harm && d < 85) { p.st = 'harm'; p.ph = 0; }
-      if (M.kind === 'cap' && d < 18) { p.st = 'orbit'; p.ph = 0; }
+      if ((M.kind === 'cap' || M.kind === 'recon') && d < 18) { p.st = 'orbit'; p.ph = 0; }
     }
     else if (p.st === 'popup') { p.ph += dt; p.zT = 1.6; turn = 8; if (p.z > 1.2 || p.ph > .4) p.st = 'dive'; }   // صعود سريع قبل الغطس
     else if (p.st === 'dive') { p.zT = .3; spd = T.v * 1.15; turn = 7; if (d < 3.5) { if (p.bombs > 0) { p.bombs--; attack(A, W, SIM, p); } p.st = 'pull'; p.ph = 0; } }
@@ -289,7 +310,7 @@
       if (p.ph > .05) { const ang = Math.atan2(ty - p.y, tx - p.x) + 2.2; tx = p.x + Math.cos(ang) * 30; ty = p.y + Math.sin(ang) * 30; }
       if (p.ph > .5) p.st = 'back';
     }
-    else if (p.st === 'orbit') { p.ph += dt; const a2 = p.ph * (T.v / 15) + p.slot * 3; tx = M.p[0] + Math.cos(a2) * 15; ty = M.p[1] + Math.sin(a2) * 15; p.zT = T.cruise; if (p.ph > 35) p.st = 'back'; }
+    else if (p.st === 'orbit') { p.ph += dt; const a2 = p.ph * (T.v / 15) + p.slot * 3; tx = M.p[0] + Math.cos(a2) * 15; ty = M.p[1] + Math.sin(a2) * 15; p.zT = T.cruise; if (p.ph > (T.isr ? 60 : 35)) p.st = 'back'; }
     else if (p.st === 'loft') { p.ph += dt; p.zT = p.z + 1; tx = p.lt.x; ty = p.lt.y; if (p.ph > .05) { p.shots--; A.msls.push({ kind: 'aam', side: p.side, x: p.x, y: p.y, z: p.z, h: p.h, tgt: p.lt, v0: T.aam.v, pk: T.aam.pk * PLANES[p.lt.type].ecm, t: 0, tmax: T.aam.r / (T.aam.v * .7), trail: [], from: T.aam.n, vx: 0, vy: 0, vz: 0 }); emit(A, { k: 'aam', side: p.side, x: p.x, y: p.y }); p.st = 'crank'; p.ph = 0; } }
     else if (p.st === 'crank') { p.ph += dt; const ang = Math.atan2(p.lt.y - p.y, p.lt.x - p.x) + .9 * (p.id % 2 ? 1 : -1); tx = p.x + Math.cos(ang) * 30; ty = p.y + Math.sin(ang) * 30; if (p.ph > .6) p.st = p.shots > 0 && M.kind === 'cap' ? 'orbit' : 'back'; }
     else if (p.st === 'back') { // رجوع: نقطة اقتراب على امتداد المدرج 20 كم

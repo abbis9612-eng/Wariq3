@@ -201,7 +201,10 @@ let clusters = [];
 function buildClusters() {
   const near = cam.s >= 1.7; clusters = [];
   const groups = new Map();
-  for (const d of SIM.alive(WD)) { const sp = smoothPos(d), dp = divPos(d); const moving = (d.path.length && d.prog > 0) || Math.hypot(sp[0] - dp[0], sp[1] - dp[1]) > 3; const key = moving ? 'm' + d.id : d.side + ':' + d.cell; if (!groups.has(key)) groups.set(key, { side: d.side, divs: [], wp: sp }); groups.get(key).divs.push(d); }
+  // R5d: العدو يبين بس إذا شايفينه هسه؛ اللي شفناه قبل يبين «تقدير» باهت بمكانه القديم
+  const inBat = new Set(); for (const b of WD.battles.values()) { inBat.add(b.tg); for (const f of b.from) inBat.add(f); }
+  if (!WD.noFog && WD.snap) for (const [c, sn] of WD.snap[ME]) { const age = WD.t - sn.t; if (age < 1 || age > 96 || SIM.isSeen(WD, ME, c)) continue; groups.set('g' + c, { side: 1 - ME, divs: sn.divs.map(q => ({ ...q, cell: c })), wp: cells[c].c, ghost: age }); }
+  for (const d of SIM.alive(WD)) { if (d.side !== ME && !inBat.has(d.cell) && !SIM.isSeen(WD, ME, d.cell)) continue; const sp = smoothPos(d), dp = divPos(d); const moving = (d.path.length && d.prog > 0) || Math.hypot(sp[0] - dp[0], sp[1] - dp[1]) > 3; const key = moving ? 'm' + d.id : d.side + ':' + d.cell; if (!groups.has(key)) groups.set(key, { side: d.side, divs: [], wp: sp }); groups.get(key).divs.push(d); }
   const R = near ? 0 : 40;
   for (const gr of [...groups.values()].sort((a, b) => b.divs.length - a.divs.length)) {
     let [x, y] = w2s(gr.wp[0], gr.wp[1]);
@@ -211,8 +214,8 @@ function buildClusters() {
     }
     if (x < -60 || x > W + 60 || y < -60 || y > H + 60) continue;
     const hit = R && clusters.find(c => c.side === gr.side && Math.hypot(c.x - x, c.y - y) < R);
-    if (hit) { hit.divs.push(...gr.divs); continue; }
-    clusters.push({ side: gr.side, divs: gr.divs.slice(), x, y });
+    if (hit && !!hit.ghost === !!gr.ghost) { hit.divs.push(...gr.divs); continue; }
+    clusters.push({ side: gr.side, divs: gr.divs.slice(), x, y, ghost: gr.ghost });
   }
 }
 function counter(cl) {
@@ -222,7 +225,7 @@ function counter(cl) {
   const str = divs.reduce((s, d) => s + d.str, 0) / divs.length, org = divs.reduce((s, d) => s + d.org / d.orgMax, 0) / divs.length;
   const sel = side === ME && divs.some(d => SEL.has(d.id));
   const w = 44 * k, h = 26 * k; const c = side ? '#c8402f' : '#2f6fd0';
-  g.save(); g.translate(x, y);
+  g.save(); g.translate(x, y); if (cl.ghost) g.globalAlpha = Math.max(.3, .62 - cl.ghost / 200);
   g.fillStyle = 'rgba(0,0,0,.35)'; g.beginPath(); g.roundRect(-w / 2 + 1.5, -h / 2 + 2.5, w, h, 6 * k); g.fill();
   g.fillStyle = c; g.beginPath(); g.roundRect(-w / 2, -h / 2, w, h, 6 * k); g.fill(); g.shadowColor = 'transparent';
   g.lineWidth = sel ? 2.8 : 1.3; g.strokeStyle = sel ? '#ffd65a' : 'rgba(255,255,255,.9)'; g.stroke();
@@ -230,7 +233,8 @@ function counter(cl) {
   const ic = kind === 'arm' ? (side ? 't72' : 'abrams') : kind === 'mec' ? 'bmp' : null, cx = -w / 2 + 15 * k;
   if (ic) { g.save(); g.translate(cx, 0); g.rotate(side ? Math.PI : 0); g.drawImage(IMG[ic], -14 * k, -14 * k, 28 * k, 28 * k); if (kind === 'arm') g.drawImage(IMG[ic + '_t'], -14 * k, -14 * k, 28 * k, 28 * k); g.restore(); }
   else { g.font = `${15 * k}px sans-serif`; g.textAlign = 'center'; g.textBaseline = 'middle'; g.fillText('🪖', cx, 1); }
-  g.fillStyle = '#fff'; g.font = `700 ${14 * k}px "IBM Plex Sans Arabic"`; g.textAlign = 'center'; g.textBaseline = 'middle'; g.fillText(divs.length, w / 2 - 8 * k, 1);
+  g.fillStyle = '#fff'; g.font = `700 ${14 * k}px "IBM Plex Sans Arabic"`; g.textAlign = 'center'; g.textBaseline = 'middle'; g.fillText(cl.ghost ? divs.length + '?' : divs.length, w / 2 - 8 * k, 1);
+  if (cl.ghost) { g.globalAlpha = .9; text(`قبل ${cl.ghost} س`, 0, -h / 2 - 7, 9.5 * k, '#fff', 'rgba(0,0,0,.6)'); g.globalAlpha = Math.max(.3, .62 - cl.ghost / 200); }
   g.fillStyle = 'rgba(0,0,0,.55)'; g.fillRect(-w / 2, h / 2 + 2, w, 4); g.fillStyle = str > .6 ? '#5fd06f' : str > .35 ? '#e7c03f' : '#e2553f'; g.fillRect(-w / 2, h / 2 + 2, w * str, 4);
   g.fillStyle = 'rgba(0,0,0,.55)'; g.fillRect(-w / 2, h / 2 + 7, w, 3); g.fillStyle = '#e2b552'; g.fillRect(-w / 2, h / 2 + 7, w * org, 3);
   if (divs.some(d => d.mode === 'hold') && side === ME) text('📌', w / 2 - 2, -h / 2 - 2, 11, '#000', null);
@@ -334,7 +338,7 @@ function hud() {
   $('dt').textContent = `${d.getDate()} ${AR_M[d.getMonth()]} ${d.getFullYear()} · ${String(d.getHours()).padStart(2, '0')}:00`;
   const sc = SIM.score(WD), tot = WD.vpTotal[0] + WD.vpTotal[1];
   $('rVp').innerHTML = `🏙 ${sc.vp[0]}<i>نقاط مدننا</i>`; $('rDiv').innerHTML = `🪖 ${sc.divs[0]}<i>فرقنا</i>`;
-  $('rBat').innerHTML = `⚔ ${WD.battles.size}<i>معارك هسه</i>`; $('rTook').innerHTML = `✈ ${AW.bases.filter(b => b.side === ME).reduce((n, b) => n + b.n0, 0)}<i>طياراتنا</i>`;
+  $('rBat').innerHTML = `⚔ ${WD.battles.size}<i>معارك هسه</i>`; $('rTook').innerHTML = `✈ ${AW.bases.filter(b => b.side === ME && !AIR.PLANES[b.type].drone).reduce((n, b) => n + b.n0, 0)}<i>طياراتنا</i>`;
   $('rLost').innerHTML = `🎯 ${AW.kills[ME]}<i>أسقطنا طيارة</i>`;
   $('vpbar').firstElementChild.style.width = (sc.vp[0] / tot * 100) + '%';
 }
@@ -396,18 +400,17 @@ function card() {
   $('aAuto').onclick = () => { ds.forEach(d => d.mode = 'auto'); PICK = false; $('hint').hidden = true; toast('🤖 القائد يمسك الجبهة ويهاجم لما يشوف فرصة'); card(); };
   $('aX').onclick = () => { SEL.clear(); card(); };
 }
-const MK = { auto: '🤖 تلقائي', cas: '🎯 إسناد للقوات', cap: '🛡 حماية الأجواء', strike: '💥 ضرب دفاع جوي' };
+const MK = { auto: '🤖 تلقائي', cas: '🎯 إسناد للقوات', cap: '🛡 حماية الأجواء', strike: '💥 ضرب دفاع جوي', recon: '📡 استطلاع' };
 function baseCard() {
   const b = AW.bases[SELB]; if (!b) return; const T = AIR.PLANES[b.type];
   const flying = AW.planes.filter(p => p.base === SELB).length;
   $('card').hidden = false;
   $('card').innerHTML = `<div class="ch"><span style="font-size:18px">✈</span><div><div class="t">${b.n}</div><div class="s">${b.n0} طيارة ${T.n} · جاهزة ${b.ready} · بالجو ${flying}${b.down ? ' · ⚠️ المدرج متضرر' : ''}</div></div><span class="x ${b.mission.kind === 'auto' ? 'auto' : 'manual'}">${MK[b.mission.kind]}</span></div>
-  <div class="s" style="margin:6px 0 7px;font-size:11.5px;opacity:.8">${T.ag > 1 ? 'طيارة هجوم أرضي: تطير واطي تحت أفق الرادار، بس تنضرب من الدفاع المحمول فوق قوات العدو.' : 'مقاتلة: تحمي الأجواء وتسقط طيارات العدو، وتقدر تسند بقنابل موجهة من فوق.'} الطيارة العالية يشوفها S-300 من ~360 كم؛ الواطية (100 م) يشوفها من ~60 كم بس. اضغط أي بطارية تشوف شنو تقدر.</div>
-  <div class="acts"><button class="go" id="bCas">🎯 إسناد</button><button id="bCap">🛡 حماية</button><button id="bStr">💥 ضرب دفاع</button><button id="bAuto">🤖</button></div>`;
+  <div class="s" style="margin:6px 0 7px;font-size:11.5px;opacity:.8">${T.isr ? 'مسيّرة استطلاع: تطير عالي (5 كم) وبطيئة، تحوم فوق المنطقة وتكشف فرق العدو ~40 كم حولها. بدونها ما تشوف عمق العدو. الدفاع الجوي ومقاتلاتهم يقدرون يسقطونها.' : T.ag > 1 ? 'طيارة هجوم أرضي: تطير واطي تحت أفق الرادار، بس تنضرب من الدفاع المحمول فوق قوات العدو.' : 'مقاتلة: تحمي الأجواء وتسقط طيارات العدو، وتقدر تسند بقنابل موجهة من فوق.'}${T.isr ? '' : ' الطيارة العالية يشوفها S-300 من ~360 كم؛ الواطية (100 م) يشوفها من ~60 كم بس. اضغط أي بطارية تشوف شنو تقدر.'}</div>
+  ${T.isr ? `<div class="acts"><button class="go" id="bRec">📡 استطلاع هنا</button><button id="bAuto">🤖</button></div>` : `<div class="acts"><button class="go" id="bCas">🎯 إسناد</button><button id="bCap">🛡 حماية</button><button id="bStr">💥 ضرب دفاع</button><button id="bAuto">🤖</button></div>`}`;
   const pick = (k, msg) => () => { PICK = k; $('hint').hidden = false; $('hint').textContent = msg; $('hint').style.top = (TOPH() + 8) + 'px'; };
-  $('bCas').onclick = pick('cas', 'اضغط المنطقة اللي تريد الطيارات تضرب بيها');
-  $('bCap').onclick = pick('cap', 'اضغط المنطقة اللي تريد تحمي أجواءها');
-  $('bStr').onclick = pick('strike', 'اضغط بطارية الدفاع الجوي الإيرانية');
+  if (T.isr) $('bRec').onclick = pick('recon', 'اضغط المنطقة اللي تريد تعرف شنو بيها (المسيّرة تشوف ~40 كم حولها)');
+  else { $('bCas').onclick = pick('cas', 'اضغط المنطقة اللي تريد الطيارات تضرب بيها'); $('bCap').onclick = pick('cap', 'اضغط المنطقة اللي تريد تحمي أجواءها'); $('bStr').onclick = pick('strike', 'اضغط بطارية الدفاع الجوي الإيرانية'); }
   $('bAuto').onclick = () => { b.mission = { kind: 'auto' }; toast('🤖 المطار يقرر بنفسه وين يضرب'); baseCard(); };
 }
 // GW5: بطاقة بطارية الدفاع الجوي — شنو تقدر تضرب بالواقع، كم مرة وحدة، كم صاروخ، والاحتمالات
@@ -512,7 +515,7 @@ function tap(x, y) {
   // ضغط على فرقنا
   const hit = clusters.filter(c => Math.hypot(c.x - x, c.y - y) < (c.r || 24)).sort((a, b) => (a.side === ME ? -1 : 1) - (b.side === ME ? -1 : 1))[0];
   if (hit && hit.side === ME) { SELB = -1; SEL = new Set(hit.divs.map(d => d.id)); PICK = false; card(); return; }
-  if (hit) { const ds = hit.divs; toast(`🇮🇷 ${ds.length > 1 ? ds.length + ' فرق إيرانية' : ds[0].n} · القوة تقريباً ${Math.round(ds.reduce((s, d) => s + d.str, 0) / ds.length * 10) * 10}%`); return; }
+  if (hit) { const ds = hit.divs; toast(hit.ghost ? `🔍 آخر معلومة قبل ${hit.ghost} ساعة: ~${ds.length} فرق إيرانية هنا. ممكن تحركت؛ دز مسيّرة استطلاع تتأكد` : `🇮🇷 ${ds.length > 1 ? ds.length + ' فرق إيرانية' : ds[0].n} · القوة تقريباً ${Math.round(ds.reduce((s, d) => s + d.str, 0) / ds.length * 10) * 10}%`); return; }
   const ci = cellAt(wx, wy); if (ci >= 0) { const c = cells[ci]; toast(`${c.city ? c.city + ' · ' : ''}${SIM.TERR[c.t].n}${c.vp ? ' · ' + c.vp + ' نقاط' : ''} · ${WD.ctrl[ci] === ME ? 'بيدنا' : 'بيد إيران'}`); }
   SEL.clear(); card();
 }

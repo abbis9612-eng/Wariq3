@@ -71,10 +71,44 @@
     }
   }
 
+  // ===== الاستخبارات (R5d، I-088): كل طرف يعرف بس اللي يشوفه =====
+  // يشوف: مناطق فرقه والجارة إلها (تماس)، مراصد الحدود (أحياناً)، المعارك، ونقاط الاستطلاع من الجو (W.spots من air.js).
+  // اللي شافه ينحفظ «لقطة» (عدد الفرق ونوعها وقوتها ساعتها) وتعتق؛ اللي ما شافه ما يعرفه. الذكاء يقرر بنفس المعلومات.
+  function initIntel(W) { W.seen = [new Float64Array(W.N).fill(-1e9), new Float64Array(W.N).fill(-1e9)]; W.snap = [new Map(), new Map()]; W.spots = W.spots || [[], []]; }
+  function intel(W) {
+    if (!W.seen) initIntel(W);
+    const byCell = new Map(); for (const d of W.divs) if (!d.dead) { if (!byCell.has(d.cell)) byCell.set(d.cell, []); byCell.get(d.cell).push(d); }
+    for (const s of [0, 1]) {
+      const obs = new Uint8Array(W.N);
+      for (const d of W.divs) if (!d.dead && d.side === s) { obs[d.cell] = 1; for (const j of W.cells[d.cell].nb) obs[j] = 1; }
+      for (let i = 0; i < W.N; i++) if (W.ctrl[i] === s) for (const j of W.cells[i].nb) if (!obs[j] && W.ctrl[j] !== s && W.rnd() < .2) obs[j] = 1;   // مراصد ودوريات الحدود
+      for (const [x, y, r] of W.spots[s]) for (let i = 0; i < W.N; i++) { const c = W.cells[i].c; if (Math.abs(c[0] - x) < r && Math.abs(c[1] - y) < r && Math.hypot(c[0] - x, c[1] - y) < r) obs[i] = 1; }
+      W.spots[s].length = 0;
+      for (const b of W.battles.values()) { obs[b.tg] = 1; for (const f of b.from) obs[f] = 1; }
+      const SN = W.snap[s];
+      for (let i = 0; i < W.N; i++) {
+        if (!obs[i]) continue; W.seen[s][i] = W.t;
+        const en = (byCell.get(i) || []).filter(d => d.side !== s);
+        if (en.length) SN.set(i, { t: W.t, divs: en.map(d => ({ id: d.id, kind: d.kind, str: d.str, org: d.org, orgMax: d.orgMax, ent: d.ent, n: d.n, side: d.side })) }); else SN.delete(i);
+      }
+      for (const [c, sn] of SN) if (W.t - sn.t > 120) SN.delete(c);
+    }
+  }
+  // العدو اللي يعرفه الطرف s: الطازج (شافه هالساعتين) حقيقي، والقديم لقطة بمكانها القديم
+  function known(W, s) {
+    if (W.noFog || !W.seen) return alive(W).filter(d => d.side !== s);
+    const out = [], fresh = new Set();
+    for (const d of W.divs) if (!d.dead && d.side !== s && W.t - W.seen[s][d.cell] <= 2) { out.push(d); fresh.add(d.cell); }
+    for (const [c, sn] of W.snap[s]) if (!fresh.has(c) && W.t - sn.t <= 96) for (const q of sn.divs) out.push({ ...q, cell: c, ghost: W.t - sn.t });
+    return out;
+  }
+  const isSeen = (W, s, cell, h = 2) => W.noFog || !W.seen || W.t - W.seen[s][cell] <= h;
+
   // ساعة وحدة
   function step(W) {
     W.t++;
     if (W.t % 6 === 1) supply(W);
+    if (!W.noFog) intel(W);
     const D = alive(W);
     const byCell = new Map(); for (const d of D) { if (!byCell.has(d.cell)) byCell.set(d.cell, []); byCell.get(d.cell).push(d); }
     // المعارك: كل فرقة هدفها الجاي منطقة بيها عدو
@@ -195,7 +229,7 @@
   function ai(W, s, opt = {}) {
     if (s === 0) runPlans(W);
     const aggr = opt.aggr ?? 1.6;
-    const D = alive(W); const mine = D.filter(d => d.side === s), theirs = D.filter(d => d.side !== s);
+    const D = alive(W); const mine = D.filter(d => d.side === s), theirs = known(W, s); // الذكاء يقرر بالمعلومات اللي عنده بس
     const enemyAt = new Map(); for (const e of theirs) enemyAt.set(e.cell, (enemyAt.get(e.cell) || 0) + power(e));
     const mineAt = new Map(); for (const d of mine) { if (!mineAt.has(d.cell)) mineAt.set(d.cell, []); mineAt.get(d.cell).push(d); }
     const F = frontCells(W, s);
@@ -206,7 +240,9 @@
     const used = new Set(D.filter(d => d.side === s && d.path.length).map(d => d.id));
     const targets = [];
     for (const j of cand.keys()) {
-      const def = theirs.filter(e => e.cell === j);
+      let def = theirs.filter(e => e.cell === j);
+      // منطقة عدو ما شفناها من يوم: نفترض بيها فرقة (الحذر)، ما نمشي لها كأنها فاضية
+      if (!def.length && !isSeen(W, s, j, 24)) def = [{ kind: 'inf', str: .7, org: 42, orgMax: 60, ent: 0, guess: 1 }];
       const tr = TERR[W.cells[j].t];
       const dVal = def.reduce((t, e) => t + TEMPL[e.kind].def * e.str * (1 + .6 * e.ent) * (e.org / e.orgMax + .3), 0);
       const avail = [];
@@ -271,7 +307,7 @@
       let k = 0;
       for (const kind of list) { const cell = F[k % F.length]; const d = addDiv(W, s, kind, cell, s ? 20 + num : num); d.ent = 1; num++; k++; }
     }
-    supply(W); W.ob = [0, 1].map(s => alive(W).filter(d => d.side === s).length); makeArmies(W);
+    supply(W); W.ob = [0, 1].map(s => alive(W).filter(d => d.side === s).length); makeArmies(W); if (!W.noFog) intel(W);
   }
 
   // ===== الجيوش (R5a): كل طرف 3 جيوش حسب مكان الجبهة (شمال، وسط، جنوب) =====
@@ -348,6 +384,6 @@
   // تلخيص الحرب
   function score(W) { const vp = [0, 0]; W.cells.forEach((c, i) => { if (c.vp) vp[W.ctrl[i]] += c.vp; }); return { vp, cells: [0, 1].map(s => W.ctrl.reduce((n, x) => n + (x === s ? 1 : 0), 0)), divs: [0, 1].map(s => alive(W).filter(d => d.side === s).length), lost: W.lost.slice() }; }
 
-  const API = { makePlan, cancelPlan, runPlans, cellChain, joinArmy, airHit, TEMPL, TERR, KIND_N, World, addDiv, step, ai, order, route, scenario, supply, score, alive, divsIn, frontCells, power };
+  const API = { intel, known, isSeen, initIntel, makePlan, cancelPlan, runPlans, cellChain, joinArmy, airHit, TEMPL, TERR, KIND_N, World, addDiv, step, ai, order, route, scenario, supply, score, alive, divsIn, frontCells, power };
   if (typeof module !== 'undefined') module.exports = API; else root.SIM = API;
 })(this);

@@ -33,33 +33,33 @@
   // r: المدى حسب الهدف (tbm = نصف قطر المنطقة المحمية ضد الباليستي) · pk: احتمال إصابة الصاروخ الواحد بظروف عادية
   const SYS = {
     pac: {
-      n: 'باتريوت', full: 'MIM-104 باتريوت (PAC-2 GEM-T + PAC-3 MSE)', layer: 'بعيد', img: 'patriot', hm: 5, det: 170, ch: 5, mg: 9, react: .15, gap: .07, cold: 0, slew: 1, reload: 60, uav: 'self',
+      n: 'باتريوت', full: 'MIM-104 باتريوت (PAC-2 GEM-T + PAC-3 MSE)', layer: 'بعيد', img: 'patriot', hm: 5, det: 170, ch: 5, mg: 9, react: .15, gap: .07, cold: 0, slew: 1, pack: 1, setup: 1, reload: 60, uav: 'self',
       mags: [
         { n: 'PAC-2 GEM-T', ready: 16, perL: 4, stock: 8, v: KMS(1700), r: { air: 160, uav: 60, cm: 60, tbm: 20 }, zMax: 24, zMin: .06, pk: { air: .7, uav: .8, cm: .55, tbm: .4 }, salvo: { air: 2, uav: 1, cm: 2, tbm: 2 } },
         { n: 'PAC-3 MSE', res: 'tbm', ready: 12, perL: 12, stock: 12, v: KMS(1700), r: { air: 60, uav: 40, cm: 40, tbm: 35 }, zMax: 36, zMin: .03, pk: { air: .7, uav: .85, cm: .75, tbm: .7 }, salvo: { air: 1, uav: 1, cm: 2, tbm: 2 } },
       ]
     },
     pantsir: {
-      n: 'بانتسير-S1', full: 'بانتسير-S1 (صواريخ 57E6 + مدفعين 30 ملم)', layer: 'قريب', img: null, hm: 6, det: 36, ch: 4, mg: 4, react: .08, gap: .04, cold: 0, reload: 30, uav: 'all',
+      n: 'بانتسير-S1', full: 'بانتسير-S1 (صواريخ 57E6 + مدفعين 30 ملم)', layer: 'قريب', img: null, hm: 6, det: 36, ch: 4, mg: 4, react: .08, gap: .04, cold: 0, pack: 0.1, setup: 0.1, reload: 30, uav: 'all',
       mags: [
         { n: '57E6', ready: 24, perL: 12, stock: 24, v: KMS(900), r: { air: 20, uav: 15, cm: 15 }, zMax: 15, zMin: .005, pk: { air: .55, uav: .7, cm: .65 }, salvo: { air: 2, uav: 1, cm: 1 } },
         { n: 'مدفع 2A38M', gun: 1, ready: 1e9, perL: 0, stock: 0, r: { air: 4, uav: 4, cm: 4 }, zMax: 3, zMin: 0, pk: { air: .12, uav: .3, cm: .25 }, salvo: { air: 1, uav: 1, cm: 1 } },
       ]
     },
     s300: {
-      n: 'S-300PMU2', full: 'S-300PMU2 «فيفوريت» (48N6E2)', layer: 'بعيد', img: 's400', hm: 25, det: 300, ch: 6, mg: 12, react: .15, gap: .05, cold: 1, reload: 60, uav: 'self',
+      n: 'S-300PMU2', full: 'S-300PMU2 «فيفوريت» (48N6E2)', layer: 'بعيد', img: 's400', hm: 25, det: 300, ch: 6, mg: 12, react: .15, gap: .05, cold: 1, pack: 0.1, setup: 0.1, reload: 60, uav: 'self',
       mags: [{ n: '48N6E2', ready: 24, perL: 4, stock: 24, v: KMS(1900), r: { air: 195, uav: 60, cm: 70, tbm: 40 }, zMax: 27, zMin: .01, pk: { air: .7, uav: .75, cm: .6, tbm: .5 }, salvo: { air: 2, uav: 1, cm: 2, tbm: 2 } }]
     },
     bavar: {
-      n: 'باور-373', full: 'باور-373 (صياد-4)', layer: 'بعيد', img: 's400', hm: 15, det: 320, ch: 6, mg: 12, react: .2, gap: .06, cold: 0, reload: 60, uav: 'self',
+      n: 'باور-373', full: 'باور-373 (صياد-4)', layer: 'بعيد', img: 's400', hm: 15, det: 320, ch: 6, mg: 12, react: .2, gap: .06, cold: 0, pack: 0.5, setup: 0.5, reload: 60, uav: 'self',
       mags: [{ n: 'صياد-4', ready: 24, perL: 4, stock: 12, v: KMS(1600), r: { air: 200, uav: 50, cm: 60, tbm: 30 }, zMax: 27, zMin: .05, pk: { air: .6, uav: .75, cm: .55, tbm: .35 }, salvo: { air: 2, uav: 1, cm: 2, tbm: 2 } }]
     },
     khordad: {
-      n: 'خرداد-15', full: 'خرداد-15 (صياد-3)', layer: 'متوسط', img: 's400', hm: 10, det: 150, ch: 6, mg: 12, react: .2, gap: .06, cold: 0, reload: 45, uav: 'self',
+      n: 'خرداد-15', full: 'خرداد-15 (صياد-3)', layer: 'متوسط', img: 's400', hm: 10, det: 150, ch: 6, mg: 12, react: .2, gap: .06, cold: 0, pack: 0.5, setup: 0.5, reload: 45, uav: 'self',
       mags: [{ n: 'صياد-3', ready: 16, perL: 4, stock: 8, v: KMS(1300), r: { air: 120, uav: 45, cm: 45 }, zMax: 27, zMin: .06, pk: { air: .6, uav: .75, cm: .5 }, salvo: { air: 2, uav: 1, cm: 2 } }]
     },
     tor: {
-      n: 'تور-M1', full: 'تور-M1 (9M331) — دزفول المحلي نسخة منه', layer: 'قريب', img: null, hm: 5, det: 25, ch: 2, mg: 4, react: .1, gap: .05, cold: 1, reload: 18, uav: 'all',
+      n: 'تور-M1', full: 'تور-M1 (9M331) — دزفول المحلي نسخة منه', layer: 'قريب', img: null, hm: 5, det: 25, ch: 2, mg: 4, react: .1, gap: .05, cold: 1, pack: 0.05, setup: 0.05, reload: 18, uav: 'all',
       mags: [{ n: '9M331', ready: 16, perL: 8, stock: 16, v: KMS(800), r: { air: 12, uav: 12, cm: 12 }, zMax: 6, zMin: .01, pk: { air: .6, uav: .85, cm: .7 }, salvo: { air: 2, uav: 1, cm: 1 } }]
     },
   };
@@ -122,15 +122,35 @@
       mbases: (opt.mbases || MBASES).map(m => ({ ...m, p: LL(...m.ll), bm0: m.bm, cm0: m.cm, uav0: m.uav })),
       planes: [], msls: [], ev: [], kills: [0, 0], lostPlanes: [0, 0], queue: [], raids: {}, raidCd: opt.raidCd ?? (30 + W.rnd() * 40),
       stat: { tbm: [0, 0], uav: [0, 0], cm: [0, 0] }, // [اعترضنا، وصل]
+      // مخزون البلد من صواريخ الدفاع الجوي (غير اللي بالبطاريات) [تقدير]، ينزاد بالإنتاج/الشراء ببطء
+      pool: [{ 'PAC-2 GEM-T': 24, 'PAC-3 MSE': 24, '57E6': 72 }, { '48N6E2': 48, 'صياد-4': 24, 'صياد-3': 48, '9M331': 32 }],
     };
     return A;
   }
   // ===== حماية/مدى: هل البطارية تشوف وتقدر تضرب هدف بهالمكان والارتفاع =====
   function seeR(s, z, rcs) { const S = SYS[s.sys]; return Math.min(S.det * Math.pow(rcs / 2, .25), HOR(S.hm, z)); }
   function covers(s, p, z, c = 'air', rcs = 2) {
-    if (s.down > 0) return false; const d = d2(s.p, p), see = seeR(s, z, rcs);
+    if (s.down > 0 || s.mv || s.doc === 'silent') return false; const d = d2(s.p, p), see = seeR(s, z, rcs);
     return s.mags.some(m => m.r[c] && (m.ready > 0 || m.stock > 0) && d < Math.min(m.r[c], see) && z <= m.zMax && z >= m.zMin);
   }
+
+  // ===== نقل بطارية (GW5b): تتفكك ← تمشي على الطريق ~40 كم/س ← تنصب. بهالوقت ما ترمي =====
+  function moveSite(A, i, to) {
+    const s = A.sams[i], S = SYS[s.sys]; if (!s || s.down > 0) return false;
+    s.mv = { to: [...to], ph: 'pack', h: S.pack, from: null, D: 0 }; s.eng.length = 0; emit(A, { k: 'sammove', side: s.side, n: s.n, x: s.p[0], y: s.p[1] }); return true;
+  }
+  function moveStep(A, s, dH) {
+    let h = dH; const S = SYS[s.sys];
+    while (s.mv && h > 0) {
+      const mv = s.mv, use = Math.min(h, mv.h); mv.h -= use; h -= use;
+      if (mv.ph === 'drive') { const f = 1 - mv.h / mv.T; s.p = [mv.from[0] + (mv.to[0] - mv.from[0]) * f, mv.from[1] + (mv.to[1] - mv.from[1]) * f]; }
+      if (mv.h > 1e-9) break;
+      if (mv.ph === 'pack') { mv.ph = 'drive'; mv.from = s.p.slice(); mv.D = d2(mv.from, mv.to); mv.T = mv.h = Math.max(.1, mv.D / 40); }
+      else if (mv.ph === 'drive') { s.p = mv.to.slice(); mv.ph = 'setup'; mv.h = S.setup; }
+      else { s.mv = null; emit(A, { k: 'samready', side: s.side, n: s.n, x: s.p[0], y: s.p[1] }); }
+    }
+  }
+  const mvLeft = s => !s.mv ? 0 : s.mv.ph === 'pack' ? s.mv.h + d2(s.p, s.mv.to) / 40 + SYS[s.sys].setup : s.mv.ph === 'drive' ? s.mv.h + SYS[s.sys].setup : s.mv.h;
 
   // ===== الذكاء: شنو يسوي كل مطار =====
   function planFor(A, W, b) {
@@ -248,7 +268,17 @@
 
   function logistics(A, W, dH) {
     for (const b of A.bases) { b.down = Math.max(0, b.down - dH); b.rein += dH; if (b.rein >= 24) { b.rein = 0; if (b.n0 < b.max) { b.n0++; b.ready++; } } }
-    for (const s of A.sams) { s.down = Math.max(0, s.down - dH); s.sup = (s.sup || 0) + dH; if (s.sup >= 24) { s.sup = 0; for (const m of s.mags) if (!m.gun) { m.stock = Math.min(m.stock0, m.stock + m.perL); m.fix = (m.fix || 0) + 1; if (m.fix >= 2 && m.ready0 < m.orig) { m.fix = 0; m.ready0 += m.perL; } } } } // ذخيرة كل يوم، ومنصة بدل المحروقة كل يومين
+    // ذخيرة كل يوم من مخزون البلد (البطارية اللي إلها أولوية تاخذ ×3 وقبل الباقي)، ومنصة بدل المحروقة كل يومين
+    A.supT = (A.supT || 0) + dH; const day = A.supT >= 24; if (day) A.supT = 0;
+    for (const s of [...A.sams].sort((a, b) => (b.prio ? 1 : 0) - (a.prio ? 1 : 0))) {
+      s.down = Math.max(0, s.down - dH); moveStep(A, s, dH);
+      if (!day) continue;
+      for (const m of s.mags) if (!m.gun) {
+        const P = A.pool[s.side]; const k = Math.min(P[m.n] || 0, m.perL * (s.prio ? 3 : 1), m.stock0 * (s.prio ? 2 : 1) - m.stock); if (k > 0) { m.stock += k; P[m.n] -= k; }
+        m.fix = (m.fix || 0) + 1; if (m.fix >= 2 && m.ready0 < m.orig) { m.fix = 0; m.ready0 += m.perL; }
+      }
+    }
+    A.prodT = (A.prodT || 0) + dH; if (A.prodT >= 72) { A.prodT = 0; for (const s of [0, 1]) for (const k in A.pool[s]) A.pool[s][k] += s ? 6 : 4; } // إنتاج/شراء: كل 3 أيام شوية
     for (const m of A.mbases) { m.sup = (m.sup || 0) + dH; if (m.sup >= 24) { m.sup = 0; m.bm = Math.min(m.bm0, m.bm + 2); m.cm = Math.min(m.cm0, m.cm + 1); m.uav = Math.min(m.uav0, m.uav + 6); } }
   }
 
@@ -347,7 +377,8 @@
     let best = null, bs = -1;
     for (const m of s.mags) {
       if (m.ready <= 0 || !m.r[c]) continue;
-      if (m.res && m.res !== c && d > 25) continue;   // مخزن محجوز للباليستي (باتريوت PAC-3): ما يضرب غيره إلا دفاع عن نفسه
+      if (m.res && m.res !== c && d > 25 && s.doc !== 'all') continue;
+      if (s.doc === 'save' && c === 'air' && d > m.r.air * .7) continue;   // «وفّر»: بس الطيارات القريبة (احتمال أعلى)   // مخزن محجوز للباليستي (باتريوت PAC-3): ما يضرب غيره إلا دفاع عن نفسه
       if (c === 'tbm') { if (!(T.f > .5 && z < m.zMax + 15 && z > 20 && d2(T.tp, s.p) < m.r.tbm && d < m.r.tbm + 120)) continue; } // ضد الباليستي: إطلاق والهدف نازل وفوق ~20 كم (حتى الحطام ما يطيح على المحمي)
       else if (!(d < m.r[c] && z <= m.zMax && z >= m.zMin)) continue;
       // الأفضل: احتمال أعلى، ولو تساوى نحافظ على الصاروخ الغالي (المدفع أول ضد المسيّرة القريبة)
@@ -362,7 +393,7 @@
     // تلقيم المنصات من الاحتياط
     for (const m of s.mags) if (!m.gun && m.ready < m.ready0 && m.stock > 0) { m.rl += dt; if (m.rl >= S.reload) { m.rl = 0; const k = Math.min(m.perL, m.stock, m.ready0 - m.ready); m.stock -= k; m.ready += k; } } else m.rl = 0;
     s.emcon = Math.max(0, s.emcon - dt);
-    if (s.down > 0) { s.eng.length = 0; s.alert = 0; return; }
+    if (s.down > 0 || s.mv || s.doc === 'silent') { s.eng.length = 0; s.alert = 0; return; }   // معطّلة، أو تنتقل، أو صامتة (رادار مطفي: كمين، وHARM ما يلقاها)
     if (s.emcon > 0) { s.eng.length = 0; return; }   // الرادار مطفي خوفاً من صاروخ مضاد رادار
     // HARM جاي: نص الوقت الطاقم يطفي الرادار (يسلم من الضربة بس يسكت عن الرمي فترة)
     const harm = A.msls.find(m => m.kind === 'harm' && !m.done && m.tgtSam === A.sams.indexOf(s) && !m.seen && Math.hypot(m.x - s.p[0], m.y - s.p[1]) < 60);
@@ -377,12 +408,13 @@
     // قنوات فاضية ← أهداف جديدة بالأولوية: باليستي ← كروز ← طيارات ← مسيّرات
     const PRI = { tbm: 4, cm: 3, air: 2, uav: 1 };
     if (s.eng.length < S.ch) {
-      const cand = vis.filter(v => !s.eng.some(e => e.T === v.T) && (v.c !== 'uav' || S.uav === 'all' || v.d < 25))
+      const uavR = s.doc === 'all' ? 1e9 : s.doc === 'save' ? 12 : S.uav === 'all' ? 1e9 : 25;
+      const cand = vis.filter(v => !s.eng.some(e => e.T === v.T) && (v.c !== 'uav' || v.d < uavR))
         .map(v => ({ ...v, mag: magFor(s, v.T, v.c, v.d, v.T.z) })).filter(v => v.mag)
         // توزيع النار: ما نرمي على هدف عليه بالجو صواريخ كافية من بطارية ثانية
         .filter(v => A.msls.filter(m => m.tgt === v.T && !m.done && (m.kind === 'sam')).length < (v.mag.salvo[v.c] || 1))
         .sort((a, b) => PRI[b.c] - PRI[a.c] || a.d - b.d);
-      for (const v of cand) { if (s.eng.length >= S.ch) break; s.eng.push({ T: v.T, c: v.c, mag: v.mag, toFire: v.mag.salvo[v.c] || 1, inAir: 0, next: A.t + S.react, shots: 0 }); }
+      for (const v of cand) { if (s.eng.length >= S.ch) break; s.eng.push({ T: v.T, c: v.c, mag: v.mag, toFire: s.doc === 'save' && v.c !== 'tbm' ? 1 : v.mag.salvo[v.c] || 1, inAir: 0, next: A.t + S.react, shots: 0 }); }
     }
     // الرمي
     const flying = A.msls.filter(m => m.site === s && !m.done && !m.gun).length;
@@ -444,7 +476,7 @@
       const sm = A.sams[m.tgtSam]; const want = Math.atan2(m.ty - m.y, m.tx - m.x); m.h += Math.max(-3, Math.min(3, angN(want - m.h)));
       m.x += Math.cos(m.h) * m.v * dt; m.y += Math.sin(m.h) * m.v * dt; const D = Math.hypot(m.tx - m.x, m.ty - m.y); m.z = Math.max(0, Math.min(m.z + dt * 3, D * .15));
       if (D < m.v * dt + .3) {
-        m.done = 1; const on = !sm.down && sm.emcon <= 0;
+        m.done = 1; const on = !sm.down && sm.emcon <= 0 && !sm.mv && sm.doc !== 'silent';
         if (A.rnd() < (on ? .65 : .12)) { sm.down = Math.max(sm.down, 36); sm.eng.length = 0; emit(A, { k: 'harmhit', x: m.tx, y: m.ty, side: m.side, n: sm.n }); }
         else emit(A, { k: 'harmmiss', x: m.tx + 1, y: m.ty + 1, side: m.side, n: sm.n, off: !on });
       }
@@ -512,6 +544,6 @@
     if (tg.kind === 'sam' && d2(tg.p, [m.x, m.y]) < 6) siteHit(A, tg.s, .7 * k, m.side, m.kind);
     if (tg.kind === 'troops') SIM.airHit(W, m.side, tg.cell, k);
   }
-  const API = { create, step, spawn, covers, seeR, HOR, PLANES, BASES, SAMS, MBASES, SYS, MUN, MANPADS, CLS_N, LL, SC, KMS };
+  const API = { create, step, spawn, moveSite, mvLeft, covers, seeR, HOR, PLANES, BASES, SAMS, MBASES, SYS, MUN, MANPADS, CLS_N, LL, SC, KMS };
   if (typeof module !== 'undefined') module.exports = API; else root.AIR = API;
 })(this);

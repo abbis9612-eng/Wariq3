@@ -70,5 +70,21 @@ console.log('— أفق الرادار والطيارات —');
   console.log(`  S-300 أسقط F-16 العالية (جاية عليه) ${k}/${n}، وسوخوي-25 الواطية (100 م تمر على 75 كم) ${kl}/${n}`);
   check(k > kl, 'العالية تنضرب أكثر من الواطية');
 }
+console.log('— تحكّم اللاعب (GW5b) —');
+{ // طريقة الرمي: «وفّر» يصرف أقل، «كل شي» يصرف أكثر، «صامت» ما يرمي
+  const mk = doc => () => { const x = site('pac'); return [x]; };
+  const withDoc = doc => trials(`باتريوت «${doc}» ضد 12 مسيّرة`, () => [site('pac')], A => { A.sams[0].doc = doc; for (let i = 0; i < 12; i++) AIR.spawn(A, 'uav', from(250, 70 + i * 3), near()); }, 40);
+  const n = withDoc('normal'), sv = withDoc('save'), al = withDoc('all'), sl = withDoc('silent');
+  check(sv.perThreat < n.perThreat, '«وفّر» يصرف صواريخ أقل');
+  check(al.perThreat >= n.perThreat, '«كل شي» يصرف أكثر أو نفس');
+  check(sl.rate === 0 && sl.perThreat === 0, '«صامت» ما يرمي أبداً');
+}
+{ // نقل بطارية باتريوت 120 كم: تفكيك ساعة + 3 ساعات طريق + نصب ساعة ≈ 5 ساعات
+  const W = fakeW(); const A = AIR.create(W, { sams: [site('pac')], bases: [], mbases: [], raidCd: 1e9 });
+  const to = [A.sams[0].p[0] + 120, A.sams[0].p[1]]; AIR.moveSite(A, 0, to); let h = 0;
+  while (A.sams[0].mv && h < 20) { W.t++; h++; AIR.step(A, W, SIM, .02); }
+  console.log(`  نقل باتريوت 120 كم خلص بـ ${h} ساعة، ومكانها الجديد يبعد ${Math.hypot(A.sams[0].p[0] - to[0], A.sams[0].p[1] - to[1]).toFixed(1)} كم عن الهدف`);
+  check(h >= 5 && h <= 6, 'النقل ياخذ وقت حقيقي (تفكيك + طريق + نصب)');
+}
 console.log(fails ? `❌ ${fails} فشل` : '✅ كل الفحوص نجحت');
 process.exitCode = fails ? 1 : 0;

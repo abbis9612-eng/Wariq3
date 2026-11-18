@@ -424,14 +424,27 @@ function samCard(si) {
     return `<tr><td>${AIR.CLS_N[c]}</td><td>${rng}</td><td>${pc(m.pk[c])} للصاروخ${k > 1 ? ` · ${k} صواريخ ≈ ${pc(1 - Math.pow(1 - m.pk[c], k))}` : ''}</td></tr>`;
   }).join('');
   const ammo = s.mags.map(m => m.gun ? `${m.n}: ~${m.r.air} كم` : `${m.n}: جاهز <b>${m.ready}</b>/${m.ready0}${m.ready0 < m.orig ? ` (منصات محروقة ${(m.orig - m.ready0) / m.perL})` : ''} · احتياط ${m.stock}${m.ready < m.ready0 && m.stock > 0 ? ` · تلقيم ~${Math.max(1, Math.round(S.reload - m.rl))} د` : ''}`).join('<br>');
-  const st = s.down > 0 ? `⚠️ معطّل ~${Math.ceil(s.down)} ساعة` : s.emcon > 0 ? '📴 الرادار مطفي (صاروخ مضاد رادار جاي)' : s.alert > 0 ? `📡 يتابع ${s.tracks || 0} هدف · يشتبك ويا ${s.eng.length}` : '📡 يراقب';
+  const st = s.mv ? `🚚 تنتقل (${{ pack: 'تتفكك', drive: 'بالطريق', setup: 'تنصب' }[s.mv.ph]}) · تجهز بعد ~${Math.max(1, Math.round(AIR.mvLeft(s)))} س · ما ترمي هسه` : s.doc === 'silent' ? '🤫 صامتة: الرادار مطفي (كمين؛ ما ترمي وHARM ما يلقاها)' : s.down > 0 ? `⚠️ معطّل ~${Math.ceil(s.down)} ساعة` : s.emcon > 0 ? '📴 الرادار مطفي (صاروخ مضاد رادار جاي)' : s.alert > 0 ? `📡 يتابع ${s.tracks || 0} هدف · يشتبك ويا ${s.eng.length}` : '📡 يراقب';
   $('card').hidden = false;
   $('card').innerHTML = `<div class="ch"><span style="font-size:18px">🛡</span><div><div class="t">${s.n}</div><div class="s">${S.full} · طبقة ${S.layer}${s.scen ? ' · سيناريو (العراق ما عنده باتريوت بالواقع)' : ''}</div></div><span class="x" style="background:${mine ? 'var(--me)' : 'var(--foe)'}">${mine ? 'إلنا' : 'إيرانية'}</span></div>
   <div class="s" style="font-size:11.5px;margin:5px 0 4px">${st} · رادار يكشف مقاتلة لحد ~${S.det} كم · يشتبك ويا <b>${S.ch}</b> أهداف مرة وحدة ويوجّه <b>${S.mg}</b> صواريخ · ردّ الفعل ~${Math.round(S.react * 60)} ث</div>
-  <table class="adt"><tr><th>الهدف</th><th>المدى</th><th>الاحتمال</th></tr>${rows}</table>
-  <div class="s" style="font-size:11px;margin-top:5px;line-height:1.5">${ammo}<br>أطلق ${s.fired} · أصاب ${s.hits}</div>
-  <div class="s" style="font-size:10.5px;opacity:.65;margin-top:3px">الأرقام من مصادر مفتوحة؛ الاحتمالات تقدير. الطيارة اللي تناور وتشوّش تقلّل الاحتمال، وآخر المدى أضعف.</div>`;
+  <button id="sDet" style="font-size:11px;opacity:.85;padding:2px 0">${samDet ? '▾ أخفي التفاصيل' : '▸ شنو تقدر تضرب والاحتمالات'}</button>
+  ${samDet ? `<table class="adt"><tr><th>الهدف</th><th>المدى</th><th>الاحتمال</th></tr>${rows}</table>
+  <div class="s" style="font-size:10.5px;opacity:.65;margin-top:3px">الأرقام من مصادر مفتوحة؛ الاحتمالات تقدير. الطيارة اللي تناور وتشوّش تقلّل الاحتمال، وآخر المدى أضعف.</div>` : ''}
+  <div class="s" style="font-size:11px;margin-top:4px;line-height:1.5">${ammo}<br>أطلق ${s.fired} · أصاب ${s.hits}</div>
+  ${mine ? `<div class="s" style="font-size:11px;margin-top:6px">طريقة الرمي: <b>${DOCN[s.doc || 'normal']}</b> — ${DOCW[s.doc || 'normal']}</div>
+  <div class="acts" style="margin-top:4px">${Object.keys(DOCN).map(k => `<button data-doc="${k}" class="${(s.doc || 'normal') === k ? 'on' : ''}">${DOCN[k]}</button>`).join('')}</div>
+  <div class="s" style="font-size:10.5px;margin-top:5px;opacity:.8">مخزون البلد: ${Object.entries(AW.pool[ME]).filter(([k]) => s.mags.some(m => m.n === k)).map(([k, v]) => `${k} ${v}`).join(' · ')}</div>
+  <div class="acts" style="margin-top:4px"><button class="go" id="sMove">🚚 انقل (تفكيك ${S.pack} س + طريق + نصب ${S.setup} س)</button><button id="sPrio" class="${s.prio ? 'on' : ''}">⭐ أولوية إمداد</button></div>` : ''}`;
+  $('sDet').onclick = () => { samDet = !samDet; samCard(si); };
+  if (!mine) return;
+  $('card').querySelectorAll('[data-doc]').forEach(b => b.onclick = () => { s.doc = b.dataset.doc; toast(`${s.n}: ${DOCN[s.doc]} — ${DOCW[s.doc]}`); samCard(si); });
+  $('sMove').onclick = () => { PICK = 'samMove'; $('card').hidden = true; $('hint').hidden = false; $('hint').textContent = 'اضغط المكان بأرضنا اللي تريد تنقل البطارية له'; $('hint').style.top = (TOPH() + 8) + 'px'; };
+  $('sPrio').onclick = () => { s.prio = !s.prio; toast(s.prio ? `⭐ ${s.n} تاخذ صواريخ قبل الباقي (×3 كل يوم)` : `${s.n}: إمداد عادي`); samCard(si); };
 }
+let samDet = false;
+const DOCN = { normal: 'عادي', save: 'وفّر', all: 'كل شي', silent: 'صامت' };
+const DOCW = { normal: 'باليستي وكروز وطيارات، والمسيّرة بس إذا قربت (~25 كم)، وPAC-3 محجوز للباليستي', save: 'صاروخ واحد لكل هدف (إلا الباليستي)، والطيارات القريبة بس، والمسيّرة إذا صارت فوقها', all: 'يضرب أي شي بالمدى بكل الصواريخ: يحمي أكثر ويخلص بسرعة', silent: 'الرادار مطفي: ما ترمي، والعدو ما يعرف مكانها وHARM ما يلقاها (كمين)' };
 function airOrder(x, y, wx, wy) {
   const b = AW.bases[SELB]; const k = PICK; PICK = false; $('hint').hidden = true;
   if (k === 'strike') {
@@ -502,6 +515,9 @@ $('zin').onclick = () => zoomBy(1.6); $('zout').onclick = () => zoomBy(1 / 1.6);
 $('zme').onclick = () => { const F = SIM.frontCells(WD, ME); if (!F.length) return; const sel = SIM.alive(WD).filter(d => SEL.has(d.id)); const p = sel.length ? cells[sel[0].cell].c : cells[F[Math.floor(F.length / 2)]].c; cam.x = p[0]; cam.y = p[1]; };
 function tap(x, y) {
   const [wx, wy] = s2w(x, y);
+  if (PICK === 'samMove' && typeof SELB === 'string') { PICK = false; $('hint').hidden = true; const si = +SELB.slice(3), ci = cellAt(wx, wy);
+    if (ci < 0 || WD.ctrl[ci] !== ME) { toast('❌ لازم المكان بأرضنا', 'bad'); return; }
+    AIR.moveSite(AW, si, [wx, wy]); toast(`🚚 ${AW.sams[si].n} تتفكك وتمشي: تجهز بعد ~${Math.max(1, Math.round(AIR.mvLeft(AW.sams[si])))} ساعة`); samCard(si); return; }
   if (PICK && SELB >= 0) { airOrder(x, y, wx, wy); return; }
   if (PICK) { const ci = cellAt(wx, wy); if (ci >= 0) orderTo(ci); return; }
   // ضغط على مطار
@@ -567,7 +583,7 @@ function frame(now) {
     const af = Math.min(1.6, Math.max(.3, .25 * RATE * 3600 / 38)); AIR.step(AW, WD, SIM, dt * (cam.s >= 1.7 ? Math.min(af, .45) : af));
     for (const e of AW.ev) VIEW.airEvent(e, toast, ME); AW.ev.length = 0;
     events(); if (n) { hud(); if (SEL.size && WD.t % 3 === 0) card(); if (typeof SELB === 'number' && SELB >= 0 && WD.t % 2 === 0) baseCard(); }
-    if (typeof SELB === 'string' && (samT = (samT || 0) + dt) > .5) { samT = 0; samCard(+SELB.slice(3)); }
+    if (typeof SELB === 'string' && PICK !== 'samMove' && (samT = (samT || 0) + dt) > 1) { samT = 0; samCard(+SELB.slice(3)); }
   }
   if (!$('bv').hidden) { requestAnimationFrame(frame); return; }
   W = innerWidth; H = innerHeight; if (cv.width !== Math.round(W * DPR)) { cv.width = Math.round(W * DPR); cv.height = Math.round(H * DPR); }

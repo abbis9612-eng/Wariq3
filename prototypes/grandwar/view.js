@@ -308,7 +308,9 @@
       const w = Math.min(20, Math.max(11, cam.s * 9)) * (S.layer === 'قريب' ? .82 : 1);
       // من تقرّب: صورة المنصة الحقيقية صغيرة جنب الرمز
       if (cam.s > 1.4 && S.img && IMG[S.img]) { g.save(); g.translate(x + w * 1.25, y + w * .3); g.rotate(s.az ?? -.6); g.drawImage(IMG[S.img], -w * .7, -w * .7, w * 1.4, w * 1.4); g.restore(); }
-      adSym(x, y, s.side, w, sel, s.down > 0);
+      if (s.mv && (s.side === 0 || cam.s > 0)) { const [tx, ty] = w2s(...s.mv.to); g.strokeStyle = COLA(s.side, .8); g.lineWidth = 1.5; g.setLineDash([5, 4]); g.beginPath(); g.moveTo(x, y); g.lineTo(tx, ty); g.stroke(); g.setLineDash([]); ring(tx, ty, 6, COLA(s.side, .8), null, 1.5); text(`🚚 ${Math.max(1, Math.round(AIR.mvLeft(s)))} س`, x, y - w - 4, 10, '#fff', 'rgba(0,0,0,.6)', 700); }
+      if (s.doc === 'silent') g.globalAlpha = .55;
+      adSym(x, y, s.side, w, sel, s.down > 0); g.globalAlpha = 1;
       // الرادار يشع: قوس صغير يلف (ينطفي لما يطفون الرادار خوفاً من HARM)
       if (!s.down && s.emcon <= 0 && s.alert > 0) { g.save(); g.translate(x, y); g.rotate(s.radar || 0); g.strokeStyle = COLA(s.side, .9); g.lineWidth = 1.4; g.beginPath(); g.arc(0, 0, w * .95, -.35, .35); g.stroke(); g.restore(); }
       // الصواريخ الجاهزة: شريط تحت الرمز
@@ -400,6 +402,7 @@
     if (e.k === 'bmimpact' || e.k === 'munhit') { const k = e.kind === 'bm' ? .75 : e.kind === 'cm' ? .55 : .35; FX.explode(e.x, e.y, e.kind === 'bm' ? 'bm' : 'big', k * .55); FX.burn(e.x, e.y, k * .5, 40); SND.at(e.kind === 'uav' ? 'boom_mid' : 'boom_big', e.x, e.y, .9, .1); }
     if (e.k === 'crash') { FX.explode(e.x, e.y, 'big', .4); FX.burn(e.x, e.y, .35, 35); }
     if (e.k === 'eject') chutes.push({ x: e.x, y: e.y, t: 0, side: e.side });
+    if (e.k === 'samready' && e.side === ME) toast(`✅ ${e.n} نصبت بمكانها الجديد وجاهزة`, 'good');
     if (e.k === 'emcon') toast(e.side === ME ? `📴 ${e.n} طفّى الرادار: صاروخ مضاد رادار جاي (يسلم بس يسكت شوية)` : `📴 ${e.n} الإيرانية طفّت رادارها خوفاً من صاروخنا`, e.side === ME ? 'bad' : 'good');
     if (e.k === 'harmlaunch') { SND.at('woosh', e.x, e.y, .6, .2); toast(e.side === ME ? `🚀 F-16 أطلقت HARM على رادار ${e.n}` : `⚠️ صاروخ مضاد رادار على ${e.n}`, e.side === ME ? 'good' : 'bad'); }
     if (e.k === 'harmhit') { FX.explode(e.x, e.y, 'big', .45); FX.burn(e.x, e.y, .4, 50); SND.at('boom_big', e.x, e.y, .8, .1); toast(e.side === ME ? `💥 دمّرنا رادار ${e.n} (معطّل ~يوم ونص)` : `⚠️ رادار ${e.n} انضرب`, e.side === ME ? 'good' : 'bad'); }

@@ -261,98 +261,146 @@
     while (wrecks.length > 160) wrecks.shift();
   };
 
-  // ===== الجو =====
+  // ===== الجو (GW5، I-086): رسم مثل خريطة عمليات حقيقية، مو صور كبيرة =====
+  // الطيارة والصاروخ بحجم صغير قريب من الحقيقة، وراها خط مسارها؛ البطارية رمز عسكري (APP-6) وحوله دوائر مداه الحقيقية؛
+  // الباليستي: مساره المتوقع ونقطة سقوطه وعدّاد الوصول؛ الانفجارات صغيرة بمكانها.
   const PL = { f16: 'f16', su25: 'su25', f14: 'f14', su24: 'su25' };
+  const COLA = (s, a) => s ? `rgba(214,70,50,${a})` : `rgba(70,140,240,${a})`;
+  const SHORT = { pac: 'PAC', pantsir: 'Pantsir', s300: 'S-300', bavar: 'Bavar', khordad: 'Kh-15', tor: 'Tor' };
+  const tracers = [];
+  const KZ = () => Math.min(1.1, cam.s * .45);  // بكسل لكل كم ارتفاع (حتى الصاروخ العالي يبين فوق مساره)
+  const mmss = as => { const s = Math.max(0, Math.round(as * 60)); if (s >= 3600) return `${Math.floor(s / 3600)}س ${Math.floor(s % 3600 / 60)}د`; return `${Math.floor(s / 60)}:${String(s % 60).padStart(2, '0')}`; }; // وقت حقيقي (ثانية الجو = دقيقة)
+  // رمز دفاع جوي: صديق = مستطيل، عدو = معيّن، وجوّاه قبة الدفاع الجوي
+  function adSym(x, y, side, w, sel, down) {
+    g.save(); g.translate(x, y); g.lineWidth = sel ? 2.4 : 1.5; g.strokeStyle = sel ? '#ffd65a' : side ? '#ffd9cf' : '#dbe8ff'; g.fillStyle = COLA(side, .85);
+    g.beginPath(); if (side) { g.moveTo(0, -w * .62); g.lineTo(w * .62, 0); g.lineTo(0, w * .62); g.lineTo(-w * .62, 0); g.closePath(); } else g.rect(-w * .55, -w * .38, w * 1.1, w * .76); g.fill(); g.stroke();
+    g.beginPath(); g.arc(0, w * .22, w * .3, Math.PI, 0); g.strokeStyle = '#fff'; g.lineWidth = 1.4; g.stroke();
+    if (down) { g.strokeStyle = '#ffcf40'; g.lineWidth = 2; g.beginPath(); g.moveTo(-w * .5, -w * .5); g.lineTo(w * .5, w * .5); g.moveTo(w * .5, -w * .5); g.lineTo(-w * .5, w * .5); g.stroke(); }
+    g.restore();
+  }
+  function ring(x, y, r, col, dash, lw = 1.2) { if (r < 3) return; g.save(); g.setLineDash(dash || []); g.lineWidth = lw; g.strokeStyle = col; g.beginPath(); g.arc(x, y, r, 0, 7); g.stroke(); g.restore(); }
   V.drawBases = (selB) => {
-    const k = Math.min(1.25, Math.max(.75, cam.s * .9));
+    const k = Math.min(1.15, Math.max(.7, cam.s * .8));
     A.bases.forEach((b, i) => {
       const [x, y] = w2s(...b.p); if (x < -60 || x > innerWidth + 60 || y < -60 || y > innerHeight + 60) return;
-      g.save(); g.translate(x, y); g.rotate(.4 + i);
-      g.fillStyle = 'rgba(40,40,40,.85)'; g.fillRect(-18 * k, -3.5 * k, 36 * k, 7 * k); g.strokeStyle = 'rgba(255,255,255,.7)'; g.setLineDash([3 * k, 3 * k]); g.lineWidth = 1; g.beginPath(); g.moveTo(-15 * k, 0); g.lineTo(15 * k, 0); g.stroke(); g.setLineDash([]); g.restore();
-      g.save(); g.translate(x, y - 12 * k); g.beginPath(); g.arc(0, 0, 10 * k, 0, 7); g.fillStyle = b.side ? '#c8402f' : '#2f6fd0'; g.fill(); g.lineWidth = selB === i ? 3 : 1.3; g.strokeStyle = selB === i ? '#ffd65a' : '#fff'; g.stroke();
-      text('✈', 0, 1, 12 * k, '#fff', null, 700); g.restore();
-      if (cam.s > .75 || b.side === 0) text(`${b.n} · ${b.ready}/${b.n0}`, x, y + 12 * k, 10.5 * k, b.side ? '#5a1a10' : '#102a5a');
+      // المدرج بطوله الحقيقي تقريباً (3 كم) بس أقل شي 14 بكسل
+      const L = Math.max(14, 3 * cam.s * 2.2);
+      g.save(); g.translate(x, y); g.rotate(b.rw); g.fillStyle = 'rgba(30,30,30,.9)'; g.fillRect(-L / 2, -2.2, L, 4.4); g.strokeStyle = 'rgba(255,255,255,.7)'; g.setLineDash([2, 2]); g.lineWidth = .8; g.beginPath(); g.moveTo(-L / 2 + 2, 0); g.lineTo(L / 2 - 2, 0); g.stroke(); g.setLineDash([]); g.restore();
+      g.save(); g.translate(x, y - 11 * k); g.beginPath(); g.arc(0, 0, 7.5 * k, 0, 7); g.fillStyle = COLA(b.side, .9); g.fill(); g.lineWidth = selB === i ? 2.6 : 1.1; g.strokeStyle = selB === i ? '#ffd65a' : '#fff'; g.stroke();
+      text('✈', 0, 1, 9.5 * k, '#fff', null, 700); g.restore();
+      if (b.down > 0) text('⚠ المدرج', x, y - 22 * k, 9, '#ffcf40');
+      if (cam.s > .75 || b.side === 0) text(`${b.n} · ${b.ready}/${b.n0}`, x, y + 10 * k, 10 * k, b.side ? '#5a1a10' : '#102a5a');
     });
     A.sams.forEach((s, i) => {
-      const [x, y] = w2s(...s.p); if (x < -300 || x > innerWidth + 300 || y < -300 || y > innerHeight + 300) return;
-      const hot = s.flash > 0; s.flash = Math.max(0, (s.flash || 0) - .016);
-      if (hot || selB === 'sam' + i || (s.alert > 0 && cam.s > .45)) { g.save(); g.setLineDash([6, 6]); g.lineWidth = hot ? 2 : 1.2; g.strokeStyle = s.side ? `rgba(200,60,40,${hot ? .65 : .3})` : `rgba(40,100,220,${hot ? .65 : .3})`; g.beginPath(); g.arc(x, y, s.r * cam.s, 0, 7); g.stroke(); g.restore(); }
-      const sz = Math.min(40, Math.max(20, cam.s * 10)); const az = s.az ?? -.6;
-      g.save(); g.translate(x, y); g.beginPath(); g.arc(0, 0, sz * .6, 0, 7); g.fillStyle = s.side ? 'rgba(200,64,47,.45)' : 'rgba(47,111,208,.45)'; g.fill();
-      g.rotate(s.kind === 'patriot' ? az : -.6); g.drawImage(IMG[s.kind], -sz / 2, -sz / 2, sz, sz);
-      // S-300: الأنابيب مرفوعة تنشاف من فوق فتحات دائرية بآخر المنصة
-      if (s.kind === 's400' && s.raise > .05) { for (let k = 0; k < 4; k++) { g.beginPath(); g.arc(-sz * .32 + (k % 2) * sz * .1, (k < 2 ? -1 : 1) * sz * .07, sz * .05 * (.4 + .6 * s.raise), 0, 7); g.fillStyle = '#1d1f1a'; g.fill(); g.strokeStyle = '#8a8f80'; g.lineWidth = 1; g.stroke(); } }
-      g.restore();
-      // الرادار جنب المنصة يلف
-      if (cam.s > .5) { const rx = x + sz * .75, ry = y - sz * .45, ra = s.radar || 0; g.save(); g.translate(rx, ry); g.fillStyle = '#4a4f45'; g.fillRect(-sz * .14, -sz * .14, sz * .28, sz * .28); if (!s.down) { g.rotate(ra); g.strokeStyle = 'rgba(230,235,220,.95)'; g.lineWidth = 2.2; g.beginPath(); g.moveTo(-sz * .2, 0); g.lineTo(sz * .2, 0); g.stroke(); if (s.alert > 0) { g.strokeStyle = s.side ? 'rgba(255,120,90,.35)' : 'rgba(120,170,255,.35)'; g.lineWidth = 1; g.beginPath(); g.arc(0, 0, sz * (.4 + (ra % 1.5) / 1.5 * .5), 0, 7); g.stroke(); } } g.restore(); }
-      if (s.down) text('💥', x + sz * .4, y - sz * .4, 12, '#000', null);
-      if (cam.s > 1) text(`${s.n} · ${s.ammo}`, x, y + sz * .7, 10, s.side ? '#5a1a10' : '#102a5a');
+      const [x, y] = w2s(...s.p); const S = AIR.SYS[s.sys]; const sel = selB === 'sam' + i;
+      const rAir = Math.max(...s.mags.map(m => m.r.air || 0)) * cam.s; if (x < -rAir || x > innerWidth + rAir || y < -rAir || y > innerHeight + rAir) return;
+      // دوائر المدى: كاملة لما تختارها، وخفيفة لما البطارية تشتبك
+      if (sel) {
+        ring(x, y, rAir, COLA(s.side, .7), null, 1.6);
+        ring(x, y, AIR.seeR(s, .1, 2) * cam.s, COLA(s.side, .6), [6, 5], 1.3);
+        const rT = Math.max(0, ...s.mags.map(m => m.r.tbm || 0)) * cam.s; if (rT) ring(x, y, rT, 'rgba(255,200,60,.85)', [2, 4], 1.8);
+        text(`طيارات عالية ${Math.max(...s.mags.map(m => m.r.air || 0))} كم`, x, y - rAir - 6, 10, '#fff', 'rgba(0,0,0,.6)');
+        text(`طيران واطي 100 م: ${Math.round(AIR.seeR(s, .1, 2))} كم`, x, y - AIR.seeR(s, .1, 2) * cam.s - 6, 9.5, '#fff', 'rgba(0,0,0,.6)');
+        if (rT) text(`باليستي ${Math.round(rT / cam.s)} كم`, x, y + rT + 10, 9.5, '#ffd65a', 'rgba(0,0,0,.6)');
+      } else if (s.eng.length && cam.s > .4) ring(x, y, rAir, COLA(s.side, .22), [5, 6], 1);
+      // خطوط التحكم بالنار: من البطارية للأهداف اللي تشتبك وياها
+      for (const e of s.eng) { const [tx, ty] = w2s(e.T.x, e.T.y); g.strokeStyle = COLA(s.side, .35); g.lineWidth = .8; g.setLineDash([3, 3]); g.beginPath(); g.moveTo(x, y); g.lineTo(tx, ty - (e.T.z || 0) * KZ()); g.stroke(); g.setLineDash([]); }
+      const w = Math.min(20, Math.max(11, cam.s * 9)) * (S.layer === 'قريب' ? .82 : 1);
+      // من تقرّب: صورة المنصة الحقيقية صغيرة جنب الرمز
+      if (cam.s > 1.4 && S.img && IMG[S.img]) { g.save(); g.translate(x + w * 1.25, y + w * .3); g.rotate(s.az ?? -.6); g.drawImage(IMG[S.img], -w * .7, -w * .7, w * 1.4, w * 1.4); g.restore(); }
+      adSym(x, y, s.side, w, sel, s.down > 0);
+      // الرادار يشع: قوس صغير يلف (ينطفي لما يطفون الرادار خوفاً من HARM)
+      if (!s.down && s.emcon <= 0 && s.alert > 0) { g.save(); g.translate(x, y); g.rotate(s.radar || 0); g.strokeStyle = COLA(s.side, .9); g.lineWidth = 1.4; g.beginPath(); g.arc(0, 0, w * .95, -.35, .35); g.stroke(); g.restore(); }
+      // الصواريخ الجاهزة: شريط تحت الرمز
+      const mg = s.mags.find(m => !m.gun); if (mg) { const f = mg.ready / Math.max(1, mg.orig); g.fillStyle = 'rgba(0,0,0,.5)'; g.fillRect(x - w * .55, y + w * .5, w * 1.1, 3); g.fillStyle = f > .4 ? '#7ad07a' : f > .15 ? '#e6c450' : '#e0533f'; g.fillRect(x - w * .55, y + w * .5, w * 1.1 * f, 3); }
+      if (cam.s > .55) text(SHORT[s.sys], x, y - w * .72, 8.5, '#fff', 'rgba(0,0,0,.55)', 700);
+      if (cam.s > 1.1 || sel) text(`${s.n}${s.emcon > 0 ? ' · رادار مطفي' : ''}`, x, y + w * .5 + 11, 9.5, s.side ? '#5a1a10' : '#102a5a');
     });
-    A.mbases.forEach(m => { const [x, y] = w2s(...m.p); const sz = Math.min(36, Math.max(20, cam.s * 10)); g.save(); g.translate(x, y); g.beginPath(); g.arc(0, 0, sz * .55, 0, 7); g.fillStyle = 'rgba(200,64,47,.55)'; g.fill(); g.rotate(-1.2); g.drawImage(IMG.zolf, -sz / 2, -sz / 2, sz, sz); if (m.erect != null) { const e = Math.min(1, m.erect); g.translate(-sz * .3, 0); g.rotate(0); g.fillStyle = 'rgba(0,0,0,.25)'; g.fillRect(0, -sz * .05, sz * .7 * (1 - e * .7) + e * sz * .25, sz * .1); g.fillStyle = '#e9e5da'; g.fillRect(-e * sz * .1, -sz * .055, sz * .7 * (1 - e * .75), sz * .11); g.beginPath(); g.arc(-e * sz * .1, 0, sz * .06 + e * sz * .05, 0, 7); g.fill(); } g.restore(); if (cam.s > 1) text(`${m.n} · ${m.ammo}`, x, y + sz * .7, 10, '#5a1a10'); });
+    // مواقع الإطلاق الإيرانية: معيّن عدو بعلامة صاروخ أو مسيّرة
+    A.mbases.forEach(m => {
+      const [x, y] = w2s(...m.p); if (x < -40 || x > innerWidth + 40 || y < -40 || y > innerHeight + 40) return; const w = Math.min(18, Math.max(11, cam.s * 8.5));
+      g.save(); g.translate(x, y); g.fillStyle = COLA(1, .85); g.strokeStyle = '#ffd9cf'; g.lineWidth = 1.4; g.beginPath(); g.moveTo(0, -w * .62); g.lineTo(w * .62, 0); g.lineTo(0, w * .62); g.lineTo(-w * .62, 0); g.closePath(); g.fill(); g.stroke(); g.restore();
+      text(m.uav0 ? '◣' : '↑', x, y + 1, w * .7, '#fff', null, 700);
+      if (cam.s > .8) text(`${m.n} · ${m.uav0 ? m.uav + ' مسيّرة' : m.bm + ' باليستي، ' + m.cm + ' كروز'}`, x, y + w * .7 + 9, 9.5, '#5a1a10');
+    });
+    // الهدف المقصود بضربة جارية: علامة وعدّاد
+    for (const id in A.raids) { const r = A.raids[id]; const [x, y] = w2s(...r.tg.p); const pl = (performance.now() / 600) % 1; ring(x, y, 9 + pl * 10, `rgba(255,80,60,${.9 - pl * .8})`, null, 2); text(`⚠ ${mmss(r.eta - A.t)}`, x, y - 22, 10.5, '#fff', 'rgba(150,20,10,.8)', 700); }
   };
   V.drawAir = dt => {
-    // الصواريخ: كل واحد بارتفاعه (يرتفع لفوق على الشاشة وظله تحت)، ونار محركه، ودخانه يبقى ويتمدد ويا الريح
-    const kz = Math.min(2, Math.max(.6, cam.s));
+    const kz = KZ(), now = A.t;
+    // خطوط رصاص المدافع (بانتسير)
+    for (let i = tracers.length - 1; i >= 0; i--) { const t = tracers[i]; t.l -= dt; if (t.l <= 0) { tracers.splice(i, 1); continue; } const [x0, y0] = w2s(t.x, t.y), [x1, y1] = w2s(t.tx, t.ty); g.strokeStyle = `rgba(255,220,120,${t.l / .25})`; g.lineWidth = 1; g.setLineDash([2, 3]); g.beginPath(); g.moveTo(x0, y0); g.lineTo(x1, y1); g.stroke(); g.setLineDash([]); }
     for (const m of A.msls) {
-      if (m.t < 0 || m.done) continue;
-      const H = (m.kind === 'bm' ? 70 : 22) * kz * (m.alt || 0); const [sx, sy] = w2s(m.x, m.y); const x = sx, y = sy - H;
-      if (x < -80 || x > innerWidth + 80 || y < -120 || y > innerHeight + 80) continue;
-      const burning = m.kind === 'bm' ? m.f < .5 : m.kind === 'harm' ? m.t < 1.5 : !(m.cold && m.t < .55) && (m.boost ?? true);
-      // دخان: كثيف وقت المحرك، خفيف بعده
-      if (burning || R() < .3) { const wy = m.y - H / cam.s; FX.puff(m.x + rr(-.5, .5) / cam.s, wy + rr(-.5, .5) / cam.s, m.kind === 'bm' ? 8 : burning ? 4.5 : 2.5, m.kind === 'bm' ? rr(9, 14) : rr(5, 8), 'grey', burning ? .55 : .3, rr(-2, 2), rr(-2, 2), m.kind === 'bm' ? 2.8 : 3.2); }
-      if (H > 3) { g.fillStyle = 'rgba(0,0,0,.22)'; g.beginPath(); g.arc(sx, sy, 2.4, 0, 7); g.fill(); }
-      // جسم الصاروخ
-      const ang = m.kind === 'bm' ? (m.f < .12 ? -Math.PI / 2 : Math.atan2(m.ty - m.y0, m.tx - m.x0) + (m.f < .5 ? -.6 : .5)) : (m.cold && m.t < .55 ? -Math.PI / 2 : m.h);
-      const L = m.kind === 'bm' ? 12 + kz * 4 : 6 + kz * 2;
-      g.save(); g.translate(x, y); g.rotate(ang); g.fillStyle = '#ecebe5'; g.fillRect(-L / 2, -1.4, L, 2.8); g.fillStyle = '#9a9a92'; g.fillRect(L / 2 - 2, -1.4, 2, 2.8); g.restore();
-      if (burning) { const fx = x - Math.cos(ang) * L * .6, fy = y - Math.sin(ang) * L * .6, r = m.kind === 'bm' ? 11 : 6; const gr = g.createRadialGradient(fx, fy, 0, fx, fy, r); gr.addColorStop(0, 'rgba(255,255,235,1)'); gr.addColorStop(.35, 'rgba(255,190,80,.9)'); gr.addColorStop(1, 'rgba(255,110,30,0)'); g.save(); g.globalCompositeOperation = 'lighter'; g.fillStyle = gr; g.beginPath(); g.arc(fx, fy, r * (.85 + R() * .3), 0, 7); g.fill(); g.restore(); }
-      else if (m.kind === 'bm' && m.f > .78) { const gr = g.createRadialGradient(x, y, 0, x, y, 9); gr.addColorStop(0, 'rgba(255,220,180,.9)'); gr.addColorStop(1, 'rgba(255,120,60,0)'); g.fillStyle = gr; g.beginPath(); g.arc(x, y, 9, 0, 7); g.fill(); } // يتوهج وهو نازل
+      if (m.t < 0) continue;
+      const tr = m.trail, isBm = m.kind === 'bm', isMun = isBm || m.kind === 'uav' || m.kind === 'cm';
+      // الباليستي: مساره المتوقع على الأرض ونقطة السقوط وعدّاد
+      if (isBm && !m.done) {
+        const [a0, b0] = w2s(m.x0, m.y0), [a1, b1] = w2s(m.tp[0], m.tp[1]);
+        g.strokeStyle = 'rgba(255,90,60,.35)'; g.lineWidth = 1; g.setLineDash([4, 6]); g.beginPath(); g.moveTo(a0, b0); g.lineTo(a1, b1); g.stroke(); g.setLineDash([]);
+        const pl = (performance.now() / 500) % 1; ring(a1, b1, 4 + pl * 6, `rgba(255,70,50,${.9 - pl * .7})`, null, 1.5);
+        if (cam.s > .5) text(mmss(m.T - m.t), a1 + 12, b1 - 8, 9, '#fff', 'rgba(140,20,10,.75)', 700);
+      }
+      // الأثر: خط رفيع يبهت (بارتفاعه)
+      if (tr.length > 1) {
+        const life = isBm ? 3 : m.kind === 'uav' ? 6 : m.kind === 'cm' ? 2 : .5; let prev = null;
+        for (const p of tr) { const age = now - p[3]; if (age > life) { prev = null; continue; } const [sx, sy] = w2s(p[0], p[1]); const q = [sx, sy - p[2] * kz]; if (prev) { const a = (1 - age / life); g.strokeStyle = isMun ? `rgba(255,140,110,${a * .55})` : `rgba(255,255,250,${a * .85})`; g.lineWidth = isBm ? 1.6 : m.kind === 'uav' ? .8 : 1.2; g.beginPath(); g.moveTo(prev[0], prev[1]); g.lineTo(q[0], q[1]); g.stroke(); } prev = q; }
+        if (prev && !m.done) { const [sx, sy] = w2s(m.x, m.y); g.strokeStyle = isMun ? 'rgba(255,140,110,.55)' : 'rgba(255,255,250,.85)'; g.lineWidth = 1.2; g.beginPath(); g.moveTo(prev[0], prev[1]); g.lineTo(sx, sy - (m.z || 0) * kz); g.stroke(); }
+      }
+      if (m.done) continue;
+      const [sx, sy] = w2s(m.x, m.y), x = sx, y = sy - (m.z || 0) * kz; if (x < -40 || x > innerWidth + 40 || y < -60 || y > innerHeight + 40) continue;
+      if (m.kind === 'uav') { // مسيّرة شاهد: جناح دلتا صغير
+        const s = Math.max(3.5, Math.min(7, cam.s * 3)); g.save(); g.translate(x, y); g.rotate(m.h); g.fillStyle = '#e8d9c8'; g.strokeStyle = 'rgba(120,20,10,.9)'; g.lineWidth = 1; g.beginPath(); g.moveTo(s, 0); g.lineTo(-s * .7, -s * .9); g.lineTo(-s * .4, 0); g.lineTo(-s * .7, s * .9); g.closePath(); g.fill(); g.stroke(); g.restore(); continue;
+      }
+      if (m.kind === 'cm' || m.kind === 'harm') { g.save(); g.translate(x, y); g.rotate(m.h); g.fillStyle = '#f2efe6'; g.fillRect(-4, -1, 8, 2); g.fillRect(-1, -2.5, 1.5, 5); g.restore(); continue; }
+      // صاروخ (دفاع جوي/جو-جو/باليستي): نقطة ساطعة، ووهج المحرك وقت الدفع
+      const hot = isBm ? m.f < .25 || m.f > .8 : m.boost; const r = isBm ? 2.6 : 1.8;
+      if (hot) { g.save(); g.globalCompositeOperation = 'lighter'; const gr = g.createRadialGradient(x, y, 0, x, y, isBm ? 7 : 4.5); gr.addColorStop(0, 'rgba(255,250,220,1)'); gr.addColorStop(.4, isBm && m.f > .8 ? 'rgba(255,150,90,.8)' : 'rgba(255,200,90,.8)'); gr.addColorStop(1, 'rgba(255,120,40,0)'); g.fillStyle = gr; g.beginPath(); g.arc(x, y, isBm ? 7 : 4.5, 0, 7); g.fill(); g.restore(); }
+      g.fillStyle = '#fff'; g.beginPath(); g.arc(x, y, r, 0, 7); g.fill();
     }
-    // المشاعل الحرارية: نقاط ساطعة تطيح ووراها دخان
-    if (A.decoys) for (const f of A.decoys) { const [x, y] = w2s(f.x, f.y); if (x < -20 || x > innerWidth + 20 || y < -20 || y > innerHeight + 20) continue; const k = f.t / 2.2; g.save(); g.globalCompositeOperation = 'lighter'; const gr = g.createRadialGradient(x, y, 0, x, y, 7); gr.addColorStop(0, `rgba(255,255,230,${1 - k})`); gr.addColorStop(.4, `rgba(255,190,90,${.8 * (1 - k)})`); gr.addColorStop(1, 'rgba(255,120,30,0)'); g.fillStyle = gr; g.beginPath(); g.arc(x, y, 7, 0, 7); g.fill(); g.restore(); if (R() < .4) FX.puff(f.x, f.y, 2.5, 2, 'grey', .4, 0, 0, 2); }
-    // الطيارات: صفايح Blender بـ54 وضعية (ميلان × أنف)، وظلها على الأرض حسب ارتفاعها
+    if (A.decoys) for (const f of A.decoys) { const [x, y] = w2s(f.x, f.y); g.fillStyle = `rgba(255,240,190,${1 - f.t / .08})`; g.beginPath(); g.arc(x, y, 1.6, 0, 7); g.fill(); }
+    // الطيارات: صورة صغيرة (قريبة من حجمها الحقيقي)، وراها خط مسارها، وقدامها خط لهدفها ووقت الوصول
     for (const p of A.planes) {
       if (p.t < 0) continue;
-      const [x, y] = w2s(p.x, p.y); if (x < -60 || x > innerWidth + 60 || y < -60 || y > innerHeight + 60) continue;
-      const nm = PL[p.type], sh = IMG[nm + '_sheet']; const flip = nm === 'su25'; // صفيحة السوخوي أنفها لليسار
+      const [x, y] = w2s(p.x, p.y); if (x < -80 || x > innerWidth + 80 || y < -80 || y > innerHeight + 80) continue;
+      if (p.trk.length > 1 && p.st !== 'roll') { g.strokeStyle = COLA(p.side, .45); g.lineWidth = 1; g.beginPath(); p.trk.forEach((q, i) => { const [a, b] = w2s(q[0], q[1]); i ? g.lineTo(a, b) : g.moveTo(a, b); }); g.lineTo(x, y); g.stroke(); }
+      if (p.st === 'out' && cam.s > .45 && p.m && p.m.p) { const [tx, ty] = w2s(...p.m.p); g.strokeStyle = COLA(p.side, .3); g.setLineDash([3, 5]); g.lineWidth = 1; g.beginPath(); g.moveTo(x, y); g.lineTo(tx, ty); g.stroke(); g.setLineDash([]); if (p.slot === 0 && cam.s > .8) text(`${mmss(Math.hypot(p.m.p[0] - p.x, p.m.p[1] - p.y) / AIR.PLANES[p.type].v)}`, x + 14, y - 10, 9, '#fff', COLA(p.side, .7), 700); }
+      const nm = PL[p.type], sh = IMG[nm + '_sheet']; const flip = nm === 'su25';
       const bank = flip ? -p.bank : p.bank; const ri = (((Math.round((-bank * 180 / Math.PI + 180) / 20)) % 18) + 18) % 18, pi = p.gam < -.3 ? 0 : p.gam > .3 ? 2 : 1; const fr = pi * 18 + ri;
-      const sz = Math.min(52, Math.max(28, cam.s * 14)) * (.85 + .25 * Math.min(1.2, p.alt)); const alt = p.alt * Math.min(26, 6 + cam.s * 5);
-      const H = p.h + (flip ? Math.PI : 0), sx = (fr % 8) * 256, sy = Math.floor(fr / 8) * 256;
-      g.save(); g.globalAlpha = .28; g.translate(x + alt * .6, y + alt); g.rotate(H); g.drawImage(shadowOf(sh), sx, sy, 256, 256, -sz / 2, -sz / 2, sz, sz); g.restore();
-      g.save(); g.translate(x, y); g.rotate(H); g.drawImage(sh, sx, sy, 256, 256, -sz / 2, -sz / 2, sz, sz); g.restore();
-      g.beginPath(); g.moveTo(x, y - sz * .58); g.lineTo(x - 4, y - sz * .58 - 6); g.lineTo(x + 4, y - sz * .58 - 6); g.closePath(); g.fillStyle = p.side ? '#e0533f' : '#4f8ff0'; g.fill();
-      if (p.st === 'fall') { if (R() < .8) FX.puff(p.x, p.y, 6, rr(3, 5), 'black', .6, 0, 0, 2); if (R() < .3) FX.spark(p.x, p.y, 2, 40); }
-      else if (p.st === 'roll' && p.v > 8 && R() < .5) FX.puff(p.x - Math.cos(p.h) * 4 / cam.s, p.y - Math.sin(p.h) * 4 / cam.s, 4, 1.2, 'dust', .3, 0, 0, 1.5);
+      const sz = Math.min(30, Math.max(15, cam.s * 10)); const H = p.h + (flip ? Math.PI : 0), sx = (fr % 8) * 256, sy = Math.floor(fr / 8) * 256; const so = Math.min(7, p.z * .9);
+      if (sh) { g.save(); g.globalAlpha = .22; g.translate(x + so * .6, y + so); g.rotate(H); g.drawImage(shadowOf(sh), sx, sy, 256, 256, -sz / 2, -sz / 2, sz, sz); g.restore(); g.save(); g.translate(x, y); g.rotate(H); g.drawImage(sh, sx, sy, 256, 256, -sz / 2, -sz / 2, sz, sz); g.restore(); }
+      g.beginPath(); g.moveTo(x, y - sz * .6); g.lineTo(x - 3, y - sz * .6 - 4.5); g.lineTo(x + 3, y - sz * .6 - 4.5); g.closePath(); g.fillStyle = COLA(p.side, 1); g.fill();
+      if (cam.s > 1.3) text(`${Math.round(p.z * 1000 / 100) * 100} م`, x, y + sz * .62 + 6, 8.5, '#fff', 'rgba(0,0,0,.5)');
+      if (p.st === 'fall') { if (R() < .5) FX.puff(p.x, p.y, 3, rr(2, 3), 'black', .55, 0, 0, 1.6); }
     }
-    // الطيار بالمظلة
-    for (let i = chutes.length - 1; i >= 0; i--) { const c = chutes[i]; c.t += dt; if (c.t > 14) { chutes.splice(i, 1); continue; } c.x += 1.2 * dt / Math.max(.5, cam.s) * .2; const [x, y] = w2s(c.x, c.y); const k = Math.max(.6, 1.2 - c.t * .04); g.save(); g.translate(x, y); g.strokeStyle = 'rgba(60,60,60,.8)'; g.lineWidth = 1; g.beginPath(); g.moveTo(-6 * k, -2 * k); g.lineTo(0, 7 * k); g.lineTo(6 * k, -2 * k); g.stroke(); g.fillStyle = c.side ? '#f2efe8' : '#e8f0ff'; g.beginPath(); g.arc(0, -3 * k, 7 * k, Math.PI, 0); g.fill(); g.strokeStyle = 'rgba(0,0,0,.4)'; g.stroke(); g.fillStyle = '#333'; g.beginPath(); g.arc(0, 7 * k, 1.6 * k, 0, 7); g.fill(); g.restore(); }
+    for (let i = chutes.length - 1; i >= 0; i--) { const c = chutes[i]; c.t += dt; if (c.t > 14) { chutes.splice(i, 1); continue; } const [x, y] = w2s(c.x, c.y); g.fillStyle = c.side ? '#f2efe8' : '#e8f0ff'; g.beginPath(); g.arc(x, y - 3, 3.5, Math.PI, 0); g.fill(); g.strokeStyle = 'rgba(60,60,60,.8)'; g.lineWidth = .8; g.beginPath(); g.moveTo(x - 3.5, y - 3); g.lineTo(x, y + 2); g.lineTo(x + 3.5, y - 3); g.stroke(); }
   };
   const chutes = [];
-  // أحداث الجو → مؤثرات وأصوات وتنبيهات
+  const NM = { tbm: 'باليستي', uav: 'مسيّرة', cm: 'كروز', air: 'طيارة' };
+  // أحداث الجو ← مؤثرات صغيرة بحجمها + أصوات + تنبيهات مختصرة
   V.airEvent = (e, toast, ME) => {
-    if (e.k === 'samlaunch') {
-      const sm = A.sams.find(q => q.n === e.n); if (sm) sm.flash = 2.5;
-      if (e.kind === 'patriot') { const az = sm?.az ?? 0; FX.muzzle(e.x, e.y, az, 2); for (let i = 0; i < 8; i++) FX.puff(e.x - Math.cos(az) * rr(0, 3) / cam.s, e.y - Math.sin(az) * rr(0, 3) / cam.s, 9, rr(4, 7), i < 3 ? 'dust' : 'grey', .6, -Math.cos(az) * rr(10, 30), -Math.sin(az) * rr(10, 30), 2.4); SND.at('launch', e.x, e.y, .9, .25); }
-      else { for (let i = 0; i < 5; i++) FX.puff(e.x + rr(-1.5, 1.5) / cam.s, e.y + rr(-1.5, 1.5) / cam.s, 8, rr(2, 4), 'grey', .5, rr(-8, 8), rr(-8, 8), 2); SND.at('woosh', e.x, e.y, .6, .25); } // بارد: نفخة غاز بدون نار
-    }
-    if (e.k === 'ignite') { FX.muzzle(e.x, e.y - 8 * Math.min(2, Math.max(.6, cam.s)) / cam.s, -Math.PI / 2, 1.4); SND.at('launch', e.x, e.y, .8, .25); }
-    if (e.k === 'reentry') SND.at('sonic', e.x, e.y, .9, 1);
-    if (e.k === 'aam') SND.at('woosh', e.x, e.y, .5, .2);
-    if (e.k === 'kill') { FX.explode(e.x, e.y - 18 / cam.s, 'air', 1); FX.debris(e.x, e.y, 14, 80, '#444'); SND.at('boom_big', e.x, e.y, .9, .1); toast(e.vside === ME ? `💥 انضربت طيارتنا ${e.victim} (${e.by === 'aam' ? 'صاروخ جو-جو' : 'دفاع جوي'})` : `🎯 أسقطنا ${e.victim} إيرانية`, e.vside === ME ? 'bad' : 'good'); }
-    if (e.k === 'miss') { if (e.burst) { FX.explode(e.x, e.y - 20 / cam.s, 'air', .55); FX.debris(e.x, e.y - 20 / cam.s, 8, 60, '#555'); SND.at('boom_mid', e.x, e.y, .5, .1); } else FX.puff(e.x, e.y, 6, 2, 'grey', .5, 0, 0, 1.5); }
-    if (e.k === 'bomb') {
-      const sx = e.x - 14 / cam.s, sy = e.y - 20 / cam.s;
-      FX.bomb(sx, sy, e.x, e.y, () => { FX.explode(e.x, e.y, 'bomb', 1); SND.at('boom_bomb', e.x, e.y, .95, .08); });
-      FX.bomb(sx + 4 / cam.s, sy, e.x + 6 / cam.s, e.y - 3 / cam.s, () => FX.explode(e.x + 6 / cam.s, e.y - 3 / cam.s, 'big', .9));
-      if (e.what) toast(e.side === ME ? `💥 ضربنا ${e.what}` : `⚠️ إيران ضربت ${e.what}`, e.side === ME ? 'good' : 'bad');
-    }
-    if (e.k === 'takeoff') SND.at('jet_roar', e.x, e.y, .7, 1);
-    if (e.k === 'bmlaunch') { FX.explode(e.x, e.y, 'small', 1.4); for (let i = 0; i < 10; i++) FX.puff(e.x + rr(-3, 3) / cam.s, e.y + rr(-3, 3) / cam.s, 14, rr(5, 9), i < 4 ? 'dust' : 'grey', .65, rr(-25, 25), rr(-25, 25), 2.4); SND.at('launch', e.x, e.y, 1, .3); toast(`🚀 إيران أطلقت صواريخ باليستية على ${e.tgt}`, 'bad'); }
-    if (e.k === 'intercept') { FX.explode(e.x, e.y - 60 / cam.s, 'air', 1.6); FX.debris(e.x, e.y - 40 / cam.s, 18, 90, '#555'); SND.at('boom_mid', e.x, e.y, .8, .1); toast('✅ باتريوت اعترض صاروخ باليستي', 'good'); }
-    if (e.k === 'bmimpact') { FX.explode(e.x, e.y, 'bm', 1); FX.burn(e.x, e.y, 1.2, 60); SND.at('boom_big', e.x, e.y, 1, .1); }
-    if (e.k === 'crash') { FX.explode(e.x, e.y, 'big', 1); FX.burn(e.x, e.y, .8, 45); }
-    if (e.k === 'eject') { chutes.push({ x: e.x, y: e.y, t: 0, side: e.side }); }
-    if (e.k === 'harmlaunch') { SND.at('woosh', e.x, e.y, .7, .2); toast(e.side === ME ? `🚀 F-16 أطلقت صاروخ HARM على رادار ${e.n}` : `⚠️ إيران أطلقت صاروخ مضاد رادار على ${e.n}`, e.side === ME ? 'good' : 'bad'); }
-    if (e.k === 'harmhit') { FX.explode(e.x, e.y, 'big', 1.2); FX.burn(e.x, e.y, .9, 60); SND.at('boom_big', e.x, e.y, .9, .1); toast(e.side === ME ? `💥 دمّرنا رادار ${e.n} (معطّل فترة)` : `⚠️ رادار ${e.n} انضرب`, e.side === ME ? 'good' : 'bad'); }
+    const up = z => (z || 0) * KZ() / cam.s;   // ارتفاع الحدث على الشاشة (بالكم بإحداثيات الخريطة)
+    if (e.k === 'samlaunch') { const sm = A.sams.find(q => q.n === e.n); if (sm) sm.flash = 1; if (e.kind === 'manpads') { FX.spark(e.x, e.y, 3, 30); SND.at('woosh', e.x, e.y, .35, .3); } else { FX.muzzle(e.x, e.y, e.cold ? -Math.PI / 2 : e.h, .55); FX.puff(e.x, e.y, 3, 1.6, 'dust', .45, 0, 0, 1.6); SND.at(e.cold ? 'woosh' : 'launch', e.x, e.y, .8, .2); } }
+    if (e.k === 'ignite') { FX.muzzle(e.x, e.y, -Math.PI / 2, .5); SND.at('launch', e.x, e.y, .7, .2); }
+    if (e.k === 'reentry') SND.at('sonic', e.x, e.y, .8, 1);
+    if (e.k === 'aam') SND.at('woosh', e.x, e.y, .45, .2);
+    if (e.k === 'gun') { tracers.push({ x: e.x, y: e.y, tx: e.tx, ty: e.ty, l: .25 }); SND.at('can30', e.x, e.y, .5, .1); }
+    if (e.k === 'kill') { FX.explode(e.x, e.y - up(e.z), 'air', .55); FX.debris(e.x, e.y - up(e.z), 6, 30, '#444'); SND.at('boom_big', e.x, e.y, .8, .1); toast(e.vside === ME ? `💥 انضربت طيارتنا ${e.victim} (${e.by === 'aam' ? 'صاروخ جو-جو' : e.by})` : `🎯 أسقطنا ${e.victim} إيرانية (${e.by === 'aam' ? 'صاروخ جو-جو' : e.by})`, e.vside === ME ? 'bad' : 'good'); }
+    if (e.k === 'miss') FX.puff(e.x, e.y - up(e.z), 2.5, 1.4, 'grey', .5, 0, 0, 1.4);
+    if (e.k === 'selfd') FX.puff(e.x, e.y - up(e.z), 2, 1, 'grey', .35, 0, 0, 1.3);
+    if (e.k === 'intercept') { FX.explode(e.x, e.y - up(e.z), 'air', e.what === 'tbm' ? .7 : .4); SND.at(e.what === 'tbm' ? 'boom_mid' : 'boom_far', e.x, e.y, .7, .1); if (e.what === 'tbm' && e.side === ME) toast(`✅ ${e.by} اعترض صاروخ باليستي`, 'good'); }
+    if (e.k === 'bomb') { const k = e.small ? .5 : .8; FX.bomb(e.x - 6 / cam.s, e.y - 10 / cam.s, e.x, e.y, () => { FX.explode(e.x, e.y, 'bomb', k * .6); SND.at('boom_bomb', e.x, e.y, .9, .08); }); if (e.what) toast(e.side === ME ? `💥 ضربنا ${e.what}` : `⚠️ إيران ضربت ${e.what}`, e.side === ME ? 'good' : 'bad'); }
+    if (e.k === 'takeoff') SND.at('jet_roar', e.x, e.y, .6, 1);
+    if (e.k === 'bmerect') SND.at('woosh', e.x, e.y, .3, 1);
+    if (e.k === 'bmlaunch') { FX.muzzle(e.x, e.y, -Math.PI / 2, .9); for (let i = 0; i < 4; i++) FX.puff(e.x + rr(-1, 1) / cam.s, e.y + rr(-1, 1) / cam.s, 5, rr(3, 5), i < 2 ? 'dust' : 'grey', .55, rr(-10, 10), rr(-10, 10), 2); SND.at('launch', e.x, e.y, 1, .3); }
+    if (e.k === 'uavlaunch' || e.k === 'cmlaunch') { FX.puff(e.x, e.y, 2.5, 1.4, 'dust', .4, 0, 0, 1.5); SND.at('woosh', e.x, e.y, .3, .3); }
+    if (e.k === 'raid') { const n = e.n, parts = [n.uav && `${n.uav} مسيّرة`, n.cm && `${n.cm} كروز`, n.bm && `${n.bm} باليستي`].filter(Boolean).join(' + '); toast(`🚨 إيران: ضربة مركّبة على ${e.tgt} (${parts}) · توصل كلها سوا بعد ~${Math.round(e.eta)} دقيقة`, 'bad'); }
+    if (e.k === 'raidEnd') toast(`🛡 نتيجة الضربة على ${e.tgt}: انعترض ${e.down} من ${e.total}، ووصل ${e.hit}`, e.hit > e.down ? 'bad' : 'good');
+    if (e.k === 'bmimpact' || e.k === 'munhit') { const k = e.kind === 'bm' ? .75 : e.kind === 'cm' ? .55 : .35; FX.explode(e.x, e.y, e.kind === 'bm' ? 'bm' : 'big', k * .55); FX.burn(e.x, e.y, k * .5, 40); SND.at(e.kind === 'uav' ? 'boom_mid' : 'boom_big', e.x, e.y, .9, .1); }
+    if (e.k === 'crash') { FX.explode(e.x, e.y, 'big', .4); FX.burn(e.x, e.y, .35, 35); }
+    if (e.k === 'eject') chutes.push({ x: e.x, y: e.y, t: 0, side: e.side });
+    if (e.k === 'emcon') toast(e.side === ME ? `📴 ${e.n} طفّى الرادار: صاروخ مضاد رادار جاي (يسلم بس يسكت شوية)` : `📴 ${e.n} الإيرانية طفّت رادارها خوفاً من صاروخنا`, e.side === ME ? 'bad' : 'good');
+    if (e.k === 'harmlaunch') { SND.at('woosh', e.x, e.y, .6, .2); toast(e.side === ME ? `🚀 F-16 أطلقت HARM على رادار ${e.n}` : `⚠️ صاروخ مضاد رادار على ${e.n}`, e.side === ME ? 'good' : 'bad'); }
+    if (e.k === 'harmhit') { FX.explode(e.x, e.y, 'big', .45); FX.burn(e.x, e.y, .4, 50); SND.at('boom_big', e.x, e.y, .8, .1); toast(e.side === ME ? `💥 دمّرنا رادار ${e.n} (معطّل ~يوم ونص)` : `⚠️ رادار ${e.n} انضرب`, e.side === ME ? 'good' : 'bad'); }
+    if (e.k === 'harmmiss') toast(e.side === ME ? `HARM خطأ ${e.n}${e.off ? ' (طفّوا الرادار)' : ''}` : `صاروخ مضاد الرادار خطأ ${e.n}`, '');
   };
 })();

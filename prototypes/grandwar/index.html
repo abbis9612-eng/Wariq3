@@ -20,6 +20,7 @@ button{font:inherit;color:inherit;background:none;border:0;cursor:pointer}
 .list{display:flex;gap:5px;overflow-x:auto;margin:7px 0;padding-bottom:2px;scrollbar-width:none}.list::-webkit-scrollbar{display:none}
 .dv{flex:0 0 auto;min-width:96px;background:rgba(255,255,255,.06);border:1px solid var(--line);border-radius:9px;padding:4px 6px;font-size:11px}.dv b{display:block;font-size:11.5px;white-space:nowrap}
 .bar{height:4px;border-radius:2px;background:rgba(255,255,255,.12);margin-top:2px;overflow:hidden}.bar u{display:block;height:100%;background:#59c26a}.bar u.o{background:#e2b552}
+.adt{width:100%;border-collapse:collapse;font-size:11px;margin-top:3px}.adt th{font-weight:700;opacity:.7;text-align:start;padding:2px 3px}.adt td{padding:3px 3px;border-top:1px solid var(--line);vertical-align:top}.adt td:first-child{white-space:nowrap;font-weight:700}
 .acts{display:flex;gap:6px}.acts button{flex:1;text-align:center;border-radius:9px;padding:7px 2px;background:rgba(255,255,255,.07);border:1px solid var(--line);font-weight:600;font-size:12.5px}.acts button.go{background:#b8442f;border-color:#e0705a}.acts button.on{outline:2px solid var(--gold)}
 #tabs{position:fixed;left:0;right:0;bottom:0;display:flex;background:var(--panel);border-top:1px solid var(--line);padding:5px 4px calc(5px + env(safe-area-inset-bottom));z-index:5}
 #tabs button{flex:1;text-align:center;font-size:10.5px;font-weight:600;opacity:.8}#tabs button em{display:block;font-style:normal;font-size:19px;line-height:1.25}#tabs button.on{opacity:1;color:var(--gold)}
@@ -401,13 +402,32 @@ function baseCard() {
   const flying = AW.planes.filter(p => p.base === SELB).length;
   $('card').hidden = false;
   $('card').innerHTML = `<div class="ch"><span style="font-size:18px">✈</span><div><div class="t">${b.n}</div><div class="s">${b.n0} طيارة ${T.n} · جاهزة ${b.ready} · بالجو ${flying}${b.down ? ' · ⚠️ المدرج متضرر' : ''}</div></div><span class="x ${b.mission.kind === 'auto' ? 'auto' : 'manual'}">${MK[b.mission.kind]}</span></div>
-  <div class="s" style="margin:6px 0 7px;font-size:11.5px;opacity:.8">${T.ag > 1 ? 'طيارة هجوم أرضي: أحسن شي للإسناد وضرب الدفاع الجوي.' : 'مقاتلة: تحمي الأجواء وتسقط طيارات العدو، وتقدر تسند.'} الدفاع الجوي للعدو (S-300) يصيب طيارات كثيرة، فاضربه أول.</div>
+  <div class="s" style="margin:6px 0 7px;font-size:11.5px;opacity:.8">${T.ag > 1 ? 'طيارة هجوم أرضي: تطير واطي تحت أفق الرادار، بس تنضرب من الدفاع المحمول فوق قوات العدو.' : 'مقاتلة: تحمي الأجواء وتسقط طيارات العدو، وتقدر تسند بقنابل موجهة من فوق.'} الطيارة العالية يشوفها S-300 من ~360 كم؛ الواطية (100 م) يشوفها من ~60 كم بس. اضغط أي بطارية تشوف شنو تقدر.</div>
   <div class="acts"><button class="go" id="bCas">🎯 إسناد</button><button id="bCap">🛡 حماية</button><button id="bStr">💥 ضرب دفاع</button><button id="bAuto">🤖</button></div>`;
   const pick = (k, msg) => () => { PICK = k; $('hint').hidden = false; $('hint').textContent = msg; $('hint').style.top = (TOPH() + 8) + 'px'; };
   $('bCas').onclick = pick('cas', 'اضغط المنطقة اللي تريد الطيارات تضرب بيها');
   $('bCap').onclick = pick('cap', 'اضغط المنطقة اللي تريد تحمي أجواءها');
   $('bStr').onclick = pick('strike', 'اضغط بطارية الدفاع الجوي الإيرانية');
   $('bAuto').onclick = () => { b.mission = { kind: 'auto' }; toast('🤖 المطار يقرر بنفسه وين يضرب'); baseCard(); };
+}
+// GW5: بطاقة بطارية الدفاع الجوي — شنو تقدر تضرب بالواقع، كم مرة وحدة، كم صاروخ، والاحتمالات
+function samCard(si) {
+  const s = AW.sams[si]; if (!s) return; const S = AIR.SYS[s.sys]; SELB = 'sam' + si; const mine = s.side === ME;
+  const pc = x => Math.round(x * 100) + '%';
+  const rows = ['air', 'cm', 'uav', 'tbm'].map(c => {
+    const ms = s.mags.filter(m => m.r[c]); if (!ms.length) return `<tr><td>${AIR.CLS_N[c]}</td><td colspan="2" style="opacity:.6">❌ ما يقدر</td></tr>`;
+    const m = ms.reduce((a, b) => (b.pk[c] > a.pk[c] ? b : a)), r = Math.max(...ms.map(q => q.r[c])), k = m.salvo[c] || 1;
+    const rng = c === 'air' ? `${r} كم (عالية) · ${Math.round(Math.min(r, AIR.seeR(s, .1, 2)))} كم (واطية 100 م)` : c === 'cm' ? `${Math.round(Math.min(r, AIR.seeR(s, .04, .1)))} كم (تطير 40 م)` : c === 'uav' ? `${Math.round(Math.min(r, AIR.seeR(s, .6, .1)))} كم${S.uav === 'self' ? ' (بس دفاع عن نفسه، ~25 كم)' : ''}` : `يحمي ~${r} كم حوله`;
+    return `<tr><td>${AIR.CLS_N[c]}</td><td>${rng}</td><td>${pc(m.pk[c])} للصاروخ${k > 1 ? ` · ${k} صواريخ ≈ ${pc(1 - Math.pow(1 - m.pk[c], k))}` : ''}</td></tr>`;
+  }).join('');
+  const ammo = s.mags.map(m => m.gun ? `${m.n}: ~${m.r.air} كم` : `${m.n}: جاهز <b>${m.ready}</b>/${m.ready0}${m.ready0 < m.orig ? ` (منصات محروقة ${(m.orig - m.ready0) / m.perL})` : ''} · احتياط ${m.stock}${m.ready < m.ready0 && m.stock > 0 ? ` · تلقيم ~${Math.max(1, Math.round(S.reload - m.rl))} د` : ''}`).join('<br>');
+  const st = s.down > 0 ? `⚠️ معطّل ~${Math.ceil(s.down)} ساعة` : s.emcon > 0 ? '📴 الرادار مطفي (صاروخ مضاد رادار جاي)' : s.alert > 0 ? `📡 يتابع ${s.tracks || 0} هدف · يشتبك ويا ${s.eng.length}` : '📡 يراقب';
+  $('card').hidden = false;
+  $('card').innerHTML = `<div class="ch"><span style="font-size:18px">🛡</span><div><div class="t">${s.n}</div><div class="s">${S.full} · طبقة ${S.layer}${s.scen ? ' · سيناريو (العراق ما عنده باتريوت بالواقع)' : ''}</div></div><span class="x" style="background:${mine ? 'var(--me)' : 'var(--foe)'}">${mine ? 'إلنا' : 'إيرانية'}</span></div>
+  <div class="s" style="font-size:11.5px;margin:5px 0 4px">${st} · رادار يكشف مقاتلة لحد ~${S.det} كم · يشتبك ويا <b>${S.ch}</b> أهداف مرة وحدة ويوجّه <b>${S.mg}</b> صواريخ · ردّ الفعل ~${Math.round(S.react * 60)} ث</div>
+  <table class="adt"><tr><th>الهدف</th><th>المدى</th><th>الاحتمال</th></tr>${rows}</table>
+  <div class="s" style="font-size:11px;margin-top:5px;line-height:1.5">${ammo}<br>أطلق ${s.fired} · أصاب ${s.hits}</div>
+  <div class="s" style="font-size:10.5px;opacity:.65;margin-top:3px">الأرقام من مصادر مفتوحة؛ الاحتمالات تقدير. الطيارة اللي تناور وتشوّش تقلّل الاحتمال، وآخر المدى أضعف.</div>`;
 }
 function airOrder(x, y, wx, wy) {
   const b = AW.bases[SELB]; const k = PICK; PICK = false; $('hint').hidden = true;
@@ -484,9 +504,9 @@ function tap(x, y) {
   // ضغط على مطار
   const bi = AW.bases.findIndex(b => { const [bx, by] = w2s(...b.p); return Math.hypot(bx - x, by - 12 - y) < 18; });
   if (bi >= 0) { if (AW.bases[bi].side === ME) { SEL.clear(); SELB = bi; baseCard(); } else toast(`🇮🇷 مطار ${AW.bases[bi].n}: ${AW.bases[bi].n0} طيارة ${AIR.PLANES[AW.bases[bi].type].n}`); return; }
-  const si = AW.sams.findIndex(q => { const [bx, by] = w2s(...q.p); return Math.hypot(bx - x, by - y) < 16; });
-  if (si >= 0) { const q = AW.sams[si]; SELB = 'sam' + si; toast(`${q.side === ME ? '🇮🇶' : '🇮🇷'} ${q.n}: مداه ${q.r} كم، صواريخه ${q.ammo}${q.down ? ' · معطّل' : ''}`); setTimeout(() => { if (SELB === 'sam' + si) SELB = -1; }, 3500); return; }
-  if (typeof SELB === 'number' && SELB >= 0) { SELB = -1; $('card').hidden = true; }
+  const si = AW.sams.findIndex(q => { const [bx, by] = w2s(...q.p); return Math.hypot(bx - x, by - y) < 18; });
+  if (si >= 0) { SEL.clear(); samCard(si); return; }
+  if (SELB !== -1) { SELB = -1; $('card').hidden = true; }
   // ضغط على معركة
   for (const b of WD.battles.values()) if (b.sx != null && Math.hypot(b.sx - x, b.sy - y) < 20) { battleCard(b); return; }
   // ضغط على فرقنا
@@ -533,7 +553,7 @@ function battleInfo(b) {
 }
 
 // ===== الحلقة =====
-let last = performance.now(), acc = 0;
+let last = performance.now(), acc = 0, samT = 0;
 function frame(now) {
   const dt = Math.min(.1, (now - last) / 1000); last = now;
   if (SPEED && !WD.over) {
@@ -544,6 +564,7 @@ function frame(now) {
     const af = Math.min(1.6, Math.max(.3, .25 * RATE * 3600 / 38)); AIR.step(AW, WD, SIM, dt * (cam.s >= 1.7 ? Math.min(af, .45) : af));
     for (const e of AW.ev) VIEW.airEvent(e, toast, ME); AW.ev.length = 0;
     events(); if (n) { hud(); if (SEL.size && WD.t % 3 === 0) card(); if (typeof SELB === 'number' && SELB >= 0 && WD.t % 2 === 0) baseCard(); }
+    if (typeof SELB === 'string' && (samT = (samT || 0) + dt) > .5) { samT = 0; samCard(+SELB.slice(3)); }
   }
   if (!$('bv').hidden) { requestAnimationFrame(frame); return; }
   W = innerWidth; H = innerHeight; if (cv.width !== Math.round(W * DPR)) { cv.width = Math.round(W * DPR); cv.height = Math.round(H * DPR); }

@@ -17,7 +17,7 @@
       x.drawImage(src, 0, 0); x.globalCompositeOperation = 'source-atop'; x.fillStyle = col; x.globalAlpha = k === 'grey' ? .55 : .85; x.fillRect(0, 0, c.width, c.height); tint[k] = c;
     }
   };
-  FX.U = () => Math.min(38, Math.max(14, cam.s * 9.5)) / 30; // نفس حجم الآليات
+  FX.U = () => Math.min(.6, Math.max(.16, cam.s * .26)); // على الخريطة: صغير بمكانه (مثل خريطة عمليات)؛ مشهد المعركة يبدّله بحجمه
   const push = (k, o) => { const a = L[k]; a.push(o); if (a.length > CAP[k]) a.splice(0, a.length - CAP[k]); return o; };
   const vis = (x, y, m = 80) => x > -m && x < innerWidth + m && y > -m && y < innerHeight + m;
 

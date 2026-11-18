@@ -11,5 +11,5 @@ for (let h = 0; h < days * 24; h++) {
   if (!quiet && (h + 1) % 240 === 0) { const s = SIM.score(W); const L = W.log.filter(l => l.t > W.t - 240); console.log(`يوم ${(h + 1) / 24}: مناطق ${s.cells} نقاط ${s.vp} فرق ${s.divs} معارك ${W.battles.size} | أخذ ${L.filter(l => l.k === 'take').map(l => (l.side ? 'IR:' : 'IQ:') + (C.cells[l.cell].city || l.cell)).join(' ')} | انسحاب ${L.filter(l => l.k === 'retreat').length} استسلام ${L.filter(l => l.k === 'surrender').length}`); }
 }
 const ms = performance.now() - t0, s = SIM.score(W);
-if (A) console.log('الجو: إسقاط', A.kills, 'خسارة طيارات', A.lostPlanes, 'طيارات باقية', A.bases.map(b => b.n0).join(','), 'دفاع جوي ذخيرة', A.sams.map(s => s.ammo).join(','), 'باليستي باقي', A.mbases.map(m => m.ammo).join(','), 'ضربات', W.log.filter(l => l.k === 'air').length);
+if (A) console.log('الجو: إسقاط', A.kills, 'خسارة طيارات', A.lostPlanes, 'طيارات باقية', A.bases.map(b => b.n0).join(','), 'دفاع جوي جاهز', A.sams.map(s => s.mags.filter(m => !m.gun).map(m => m.ready).join('+')).join(','), 'باليستي باقي', A.mbases.map(m => m.bm).join(','), 'اعتراض [نجح،وصل]', JSON.stringify(A.stat), 'ضربات', W.log.filter(l => l.k === 'air').length);
 console.log('النهاية', JSON.stringify(s), 'أخذ', W.took, 'أقصى معارك', stats.maxB, 'ms/ساعة', (ms / (days * 24)).toFixed(3));

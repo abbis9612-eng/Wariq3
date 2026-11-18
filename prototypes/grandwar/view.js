@@ -371,7 +371,7 @@
       const sz = Math.min(30, Math.max(15, cam.s * 10)); const H = p.h + (flip ? Math.PI : 0), sx = (fr % 8) * 256, sy = Math.floor(fr / 8) * 256; const so = Math.min(7, p.z * .9);
       if (!sh) { const s2 = Math.max(9, sz * .6); g.save(); g.translate(x, y); g.rotate(p.h); g.strokeStyle = '#2b2b2b'; g.lineWidth = 2.2; g.beginPath(); g.moveTo(-s2 * .1, -s2 * .7); g.lineTo(-s2 * .1, s2 * .7); g.moveTo(s2 * .45, 0); g.lineTo(-s2 * .55, 0); g.moveTo(-s2 * .55, -s2 * .25); g.lineTo(-s2 * .55, s2 * .25); g.stroke(); g.strokeStyle = '#e9ecef'; g.lineWidth = 1.1; g.stroke(); g.restore();
         if (p.st === 'orbit' && cam.s > .4) ring(x, y, (AIR.PLANES[p.type].eye || 12) * cam.s, COLA(p.side, .35), [4, 4], 1); }
-      if (sh) { g.save(); g.globalAlpha = .22; g.translate(x + so * .6, y + so); g.rotate(H); g.drawImage(shadowOf(sh), sx, sy, 256, 256, -sz / 2, -sz / 2, sz, sz); g.restore(); g.save(); g.translate(x, y); g.rotate(H); g.drawImage(sh, sx, sy, 256, 256, -sz / 2, -sz / 2, sz, sz); g.restore(); }
+      if (sh) { g.save(); g.translate(x, y); g.rotate(H); g.drawImage(sh, sx, sy, 256, 256, -sz / 2, -sz / 2, sz, sz); g.restore(); }
       g.beginPath(); g.moveTo(x, y - sz * .6); g.lineTo(x - 3, y - sz * .6 - 4.5); g.lineTo(x + 3, y - sz * .6 - 4.5); g.closePath(); g.fillStyle = COLA(p.side, 1); g.fill();
       if (cam.s > 1.3) text(`${Math.round(p.z * 1000 / 100) * 100} م`, x, y + sz * .62 + 6, 8.5, '#fff', 'rgba(0,0,0,.5)');
       if (p.st === 'fall') { if (R() < .5) FX.puff(p.x, p.y, 3, rr(2, 3), 'black', .55, 0, 0, 1.6); }

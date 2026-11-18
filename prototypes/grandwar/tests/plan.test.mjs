@@ -2,9 +2,10 @@
 import { createRequire } from 'module'; import fs from 'fs';
 const require = createRequire(import.meta.url); const SIM = require('../sim.js');
 const C = JSON.parse(fs.readFileSync(new URL('../cells.js', import.meta.url), 'utf8').split('=').slice(1).join('=').trim().replace(/;$/, ''));
+const RD = JSON.parse(fs.readFileSync(new URL('../roads.js', import.meta.url), 'utf8').split('=').slice(1).join('=').trim().replace(/;$/, ''));  // R5b: الطرق والجسور
 let ok = 0, tot = 0;
 for (const seed of [1, 2, 3, 4]) {
-  const W = SIM.World(C, { seed }); SIM.scenario(W);
+  const W = SIM.World(C, { seed, roads: process.env.NOROADS ? null : RD }); SIM.scenario(W);
   const find = n => C.cells.findIndex(c => c.city === n); const basra = find('البصرة'), ahvaz = find('الأهواز');
   const near = SIM.alive(W).filter(d => d.side === 0 && W.dist(d.cell, basra) < 160 && d.kind !== 'inf').slice(0, 4);
   const P = SIM.makePlan(W, 0, near, [basra, ahvaz]);

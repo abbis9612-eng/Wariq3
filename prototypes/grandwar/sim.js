@@ -35,6 +35,10 @@
       log: [], sup: [new Uint8Array(N), new Uint8Array(N)], qual: [{ hard: 1.15, org: 1.1, atk: 1.1 }, { hard: .9, org: 1, atk: 1 }], lost: [0, 0], took: [0, 0],
     };
     for (let i = 0; i < N; i++) W.ctrl[i] = cells[i].s;
+    // R5b: الطرق والجسور (roads.js من Natural Earth). بدونها الإمداد يمشي مثل قبل
+    const R = opt.roads; W.road = new Map(); W.bridges = []; W.bridgeOf = new Map();
+    if (R) { for (const [i, j, c] of R.e) { W.road.set(i + ',' + j, c); W.road.set(j + ',' + i, c); }
+      R.br.forEach(([i, j, x, y, n], k) => { W.bridges.push({ k, i, j, p: [x, y], n, down: 0 }); W.bridgeOf.set(i + ',' + j, k); W.bridgeOf.set(j + ',' + i, k); }); } else W.noRoads = true;
     W.vpTotal = [0, 0]; for (const c of cells) if (c.vp) W.vpTotal[c.s] += c.vp;
     return W;
   }
@@ -62,8 +66,26 @@
   function hits(power, cap) { return power <= cap ? power * .1 : cap * .1 + (power - cap) * .4; }
 
   // الإمداد: من المدن الكبيرة اللي بعدها بيدك، على مناطقك
+  // كلفة عبور حد للإمداد: طريق سريع 1، طريق 1.5، بلا طريق 3.5 (شاحنات بالبر)؛ نهر بلا جسر سالم +4 (عبّارات/جسور عائمة)
+  const SUP_BUDGET = 15;
+  function edgeCost(W, a, b) {
+    const r = W.road.get(a + ',' + b); let c = r === 2 ? 1 : r === 1 ? 1.5 : 3.5;
+    if (W.edgeOf.get(a + ',' + b)?.r) { const k = W.bridgeOf.get(a + ',' + b); if (k == null || W.bridges[k].down > 0) c += 4; }
+    return c;
+  }
+  const bridgeOK = (W, a, b) => { const k = W.bridgeOf.get(a + ',' + b); return k != null && !(W.bridges[k].down > 0); };
   function supply(W) {
     if (W.allSup) { W.sup[0].fill(1); W.sup[1].fill(1); return; }
+    if (!W.noRoads) { // R5b: الإمداد يمشي على الطرق والجسور من المدن الكبيرة، لحد «ميزانية» 15
+      W.supC = W.supC || [new Float32Array(W.N), new Float32Array(W.N)];
+      for (const s of [0, 1]) {
+        const C = W.supC[s]; C.fill(1e9); const sup = W.sup[s]; sup.fill(0); const q = [];
+        W.cells.forEach((c, i) => { if (W.ctrl[i] === s && c.s === s && (c.vp || 0) >= 3) { C[i] = 0; q.push(i); } });
+        while (q.length) { let bi = 0; for (let k = 1; k < q.length; k++) if (C[q[k]] < C[q[bi]]) bi = k; const i = q.splice(bi, 1)[0]; if (C[i] > SUP_BUDGET) continue; sup[i] = 1;
+          for (const j of W.cells[i].nb) if (W.ctrl[j] === s) { const nc = C[i] + edgeCost(W, i, j); if (nc < C[j]) { if (C[j] === 1e9) q.push(j); C[j] = nc; } } }
+      }
+      return;
+    }
     for (const s of [0, 1]) {
       const sup = W.sup[s]; sup.fill(0); const q = [];
       W.cells.forEach((c, i) => { if (W.ctrl[i] === s && c.s === s && (c.vp || 0) >= 3) { sup[i] = 1; q.push(i); } });
@@ -107,6 +129,7 @@
   // ساعة وحدة
   function step(W) {
     W.t++;
+    for (const b of W.bridges) if (b.down > 0 && --b.down === 0) W.log.push({ t: W.t, side: b.by, k: 'bridgefix', cell: b.i, n: b.n });
     if (W.t % 6 === 1) supply(W);
     if (!W.noFog) intel(W);
     const D = alive(W);
@@ -168,7 +191,7 @@
       // سرعات حقيقية (I-084): المسير ورا الخطوط بسرعة الرتل (معدل اليوم: دروع ~200 كم/يوم)،
       // أما التقدّم بأرض العدو فبطيء: استطلاع، ألغام، تطهير، وقفات (دروع ~45 كم/يوم، مشاة ~20)
       const adv = W.ctrl[tg] !== d.side ? (d.kind === 'inf' ? .2 : .22) : 1;
-      const v = T.spd * tr.spd * adv * (W.edgeOf.get(d.cell + ',' + tg)?.r ? RIVER_SPD : 1) * (W.sup[d.side][d.cell] ? 1 : .5);
+      const rd = W.road.get(d.cell + ',' + tg), v = T.spd * tr.spd * adv * (W.edgeOf.get(d.cell + ',' + tg)?.r && !bridgeOK(W, d.cell, tg) ? RIVER_SPD : 1) * (rd === 2 ? 1.5 : rd === 1 ? 1.25 : 1) * (W.sup[d.side][d.cell] ? 1 : .5); // الطريق أسرع، والجسر السالم ما يأخّر
       d.prog += v; d.v = v;
       if (d.prog >= W.dist(d.cell, tg)) {
         d.prog = 0; byCell.get(d.cell)?.splice(byCell.get(d.cell).indexOf(d), 1);
@@ -375,6 +398,11 @@
     }
   }
 
+  // R5b: ضرب جسر: ينقطع لحد ما يصلحه المهندسين (~2–4 أيام)، والإمداد ينعاد حسابه فوراً
+  function hitBridge(W, k, side, p = .7) {
+    const b = W.bridges[k]; if (!b) return false; if (W.rnd() > p) return false;
+    b.down = 48 + Math.round(W.rnd() * 48); b.by = side; W.log.push({ t: W.t, side, k: 'bridge', cell: b.i, n: b.n }); supply(W); return true;
+  }
   // ضربة جوية أو صاروخ على منطقة: ينزل تنظيم وعدد فرق العدو بيها
   function airHit(W, side, cell, power) {
     const en = W.divs.filter(d => !d.dead && d.side !== side && d.cell === cell); if (!en.length) return 0;
@@ -384,6 +412,6 @@
   // تلخيص الحرب
   function score(W) { const vp = [0, 0]; W.cells.forEach((c, i) => { if (c.vp) vp[W.ctrl[i]] += c.vp; }); return { vp, cells: [0, 1].map(s => W.ctrl.reduce((n, x) => n + (x === s ? 1 : 0), 0)), divs: [0, 1].map(s => alive(W).filter(d => d.side === s).length), lost: W.lost.slice() }; }
 
-  const API = { intel, known, isSeen, initIntel, makePlan, cancelPlan, runPlans, cellChain, joinArmy, airHit, TEMPL, TERR, KIND_N, World, addDiv, step, ai, order, route, scenario, supply, score, alive, divsIn, frontCells, power };
+  const API = { hitBridge, edgeCost, SUP_BUDGET, intel, known, isSeen, initIntel, makePlan, cancelPlan, runPlans, cellChain, joinArmy, airHit, TEMPL, TERR, KIND_N, World, addDiv, step, ai, order, route, scenario, supply, score, alive, divsIn, frontCells, power };
   if (typeof module !== 'undefined') module.exports = API; else root.SIM = API;
 })(this);

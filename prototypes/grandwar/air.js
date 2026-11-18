@@ -167,6 +167,8 @@
       return { kind: 'cap', p: tgt };
     }
     // المظلة على ارتفاع الهجوم: الواطي يتخبى ورا أفق الرادار، والعالي (F-16 بقنابل موجهة) فوق المحمول بس بمدى الصواريخ البعيدة
+    // R5b: أحياناً نقطع جسر ورا جبهة العدو (40–200 كم) حتى نقطع إمداده
+    if (T.ag > .9 && W.bridges && W.bridges.length && A.rnd() < .15) { const br = bridgeTarget(A, W, b); if (br) return { kind: 'bridge', p: br.p, br: br.k }; }
     const zAtk = T.hi ? 5.5 : T.low;
     const cover = p => A.sams.filter(s => s.side !== side && covers(s, p, zAtk, 'air', T.rcs));
     for (const bt of bats) {
@@ -177,6 +179,11 @@
     const sam = A.sams.filter(s => s.side !== side && !s.down && d2(s.p, b.p) < 700).sort((a, c) => d2(a.p, b.p) - d2(c.p, b.p))[0];
     if (sam && T.ag > .9) return { kind: 'strike', p: sam.p, sam: A.sams.indexOf(sam) };
     return null;
+  }
+  function bridgeTarget(A, W, b) {
+    const side = b.side; const F = []; for (let i = 0; i < W.N; i++) if (W.ctrl[i] !== side && W.cells[i].nb.some(j => W.ctrl[j] === side)) F.push(W.cells[i].c);
+    const c = W.bridges.filter(x => !(x.down > 0) && W.ctrl[x.i] !== side && W.ctrl[x.j] !== side && d2(x.p, b.p) < 550).map(x => { let df = 1e9; for (const f of F) df = Math.min(df, d2(f, x.p)); return { x, df }; }).filter(o => o.df > 30 && o.df < 200);
+    return c.length ? c[Math.floor(A.rnd() * c.length)].x : null;
   }
   // الاستطلاع: أقدم منطقة معلوماتنا عنها، 40–200 كم ورا جبهة العدو، ويفضّل اللي برّا مظلة دفاعهم الجوي
   function reconTarget(A, W, b) {
@@ -324,9 +331,9 @@
     else if (p.st === 'roll') { tx = p.x + Math.cos(base.rw) * 20; ty = p.y + Math.sin(base.rw) * 20; spd = Math.min(T.v, (p.v || 0) + dt * 9.6); turn = 0; p.zT = p.v > Math.min(KMS(75), T.v * .8) ? 1.5 : 0; if (p.z > .15) p.st = 'out'; if (p.stT > 2) p.st = 'out'; }  // المسيّرة تطير بسرعة أقل من الطيارة
     else if (p.st === 'out') {
       // تنقّل عالي بأرضنا، وينزل واطي ~100 كم قبل الهدف إذا مهمته إسناد بطيارة هجوم (تحت أفق الرادار)
-      p.zT = M.kind === 'cap' || M.kind === 'recon' ? T.cruise : M.kind === 'cas' ? (T.hi ? 5.5 : d > 110 ? T.cruise * .6 : T.low) : M.kind === 'strike' ? (p.harm ? T.cruise : d > 110 ? T.cruise * .6 : T.low) : T.cruise;
-      if (M.kind === 'cas' && T.hi && d < 7) { attack(A, W, SIM, p); p.bombs--; p.st = p.bombs > 0 ? 'pull' : 'back'; p.ph = 0; }
-      else if ((M.kind === 'cas' || (M.kind === 'strike' && !p.harm)) && !T.hi && d < 12) { p.st = 'popup'; p.ph = 0; }
+      p.zT = M.kind === 'cap' || M.kind === 'recon' ? T.cruise : M.kind === 'cas' || M.kind === 'bridge' ? (T.hi ? 5.5 : d > 110 ? T.cruise * .6 : T.low) : M.kind === 'strike' ? (p.harm ? T.cruise : d > 110 ? T.cruise * .6 : T.low) : T.cruise;
+      if ((M.kind === 'cas' || M.kind === 'bridge') && T.hi && d < 7) { attack(A, W, SIM, p); p.bombs--; p.st = p.bombs > 0 ? 'pull' : 'back'; p.ph = 0; }
+      else if ((M.kind === 'cas' || M.kind === 'bridge' || (M.kind === 'strike' && !p.harm)) && !T.hi && d < 12) { p.st = 'popup'; p.ph = 0; }
       else if (M.kind === 'strike' && !p.harm && T.hi && d < 7) { attack(A, W, SIM, p); p.bombs--; p.st = 'back'; }
       if (M.kind === 'strike' && p.harm && d < 85) { p.st = 'harm'; p.ph = 0; }
       if ((M.kind === 'cap' || M.kind === 'recon') && d < 18) { p.st = 'orbit'; p.ph = 0; }
@@ -519,6 +526,10 @@
   }
   function attack(A, W, SIM, p) {
     const T = PLANES[p.type];
+    if (p.m.kind === 'bridge') { // قنابل على جسر: الموجّهة (F-16) أدق
+      const br = W.bridges[p.m.br]; if (!br) return; const ok = d2(br.p, [p.x, p.y]) < 10 && !(br.down > 0) && SIM.hitBridge(W, br.k, p.side, T.hi ? .6 : .45);
+      emit(A, { k: 'bomb', x: br.p[0], y: br.p[1], side: p.side, what: ok ? `جسر ${br.n}` : null, bridge: 1, ok }); return;
+    }
     if (p.m.kind === 'strike' && p.m.sam != null) {
       const s = A.sams[p.m.sam]; if (d2(s.p, [p.x, p.y]) < 12) siteHit(A, s, 1.2, p.side, 'bomb');
       return;

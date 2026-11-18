@@ -2,8 +2,9 @@
 import { createRequire } from 'module'; import fs from 'fs';
 const require = createRequire(import.meta.url); const SIM = require('../sim.js'); const AIR = require('../air.js');
 const C = JSON.parse(fs.readFileSync(new URL('../cells.js', import.meta.url), 'utf8').split('=').slice(1).join('=').trim().replace(/;$/, ''));
+const RD = JSON.parse(fs.readFileSync(new URL('../roads.js', import.meta.url), 'utf8').split('=').slice(1).join('=').trim().replace(/;$/, ''));  // R5b: الطرق والجسور
 const days = +(process.argv[2] || 120), seed = +(process.argv[3] || 1), quiet = process.argv[4] === 'q';
-const W = SIM.World(C, { seed }); SIM.scenario(W); const A = process.argv[5] === 'noair' ? null : AIR.create(W);
+const W = SIM.World(C, { seed, roads: process.env.NOROADS ? null : RD }); SIM.scenario(W); const A = process.argv[5] === 'noair' ? null : AIR.create(W);
 const t0 = performance.now(); let stats = { battles: 0, maxB: 0 };
 for (let h = 0; h < days * 24; h++) {
   if (h % 6 === 0) { SIM.ai(W, 0); SIM.ai(W, 1); }

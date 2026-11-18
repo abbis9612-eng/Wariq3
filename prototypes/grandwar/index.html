@@ -83,6 +83,7 @@ button{font:inherit;color:inherit;background:none;border:0;cursor:pointer}
 <div id="armies" hidden></div>
 <script src="data.js"></script>
 <script src="cells.js"></script>
+<script src="roads.js"></script>
 <script src="sim.js"></script>
 <script src="air.js"></script>
 <script src="fx.js"></script>
@@ -98,7 +99,7 @@ let DPR = Math.min(2, devicePixelRatio || 1), W, H;
 const ME = 0;
 // ===== المحاكاة =====
 const SEED = +(Q.get('seed') || (Date.now() % 100000));
-const WD = SIM.World(C, { seed: SEED }); SIM.scenario(WD);
+const WD = SIM.World(C, { seed: SEED, roads: window.ROADS }); SIM.scenario(WD);
 const AW = AIR.create(WD); const AIRK = [0, 1, 1.5, 2.2];
 const cells = C.cells;
 // ===== الكاميرا =====
@@ -134,6 +135,8 @@ function inRing(r, x, y) { let inside = false; for (let i = 0, j = r.length - 1;
 // ===== رسم الخريطة =====
 function worldT() { g.setTransform(DPR * cam.s, 0, 0, DPR * cam.s, DPR * (W / 2 - cam.x * cam.s), DPR * (H / 2 - cam.y * cam.s)); }
 function screenT() { g.setTransform(DPR, 0, 0, DPR, 0, 0); }
+// R5b: الطرق (Natural Earth): طرق سريعة وعادية، تنرسم ويا طبقة الخريطة المحفوظة
+const roadP = [new Path2D(), new Path2D()]; if (window.ROADS) for (const l of ROADS.lines) { const P = roadP[l.t === 2 ? 1 : 0]; l.p.forEach((q, i) => i ? P.lineTo(q[0], q[1]) : P.moveTo(q[0], q[1])); }
 function drawMap() {
   screenT(); g.fillStyle = '#7fb0d6'; g.fillRect(0, 0, W, H);
   worldT(); const k = 1 / cam.s;
@@ -148,6 +151,8 @@ function drawMap() {
   g.fillStyle = '#86b9dc'; g.fill(lakePath);
   g.lineCap = g.lineJoin = 'round';
   for (const r of riverPaths) { g.strokeStyle = 'rgba(60,125,185,.85)'; g.lineWidth = (cam.s > 1.5 ? 1.2 + r.w : .7 + r.w * .45) * k; g.stroke(r.P); }
+  g.strokeStyle = 'rgba(150,105,60,.55)'; g.lineWidth = (cam.s > 1.2 ? 1.8 : 1.2) * k; g.stroke(roadP[1]);
+  if (cam.s > .55) { g.strokeStyle = 'rgba(150,115,80,.4)'; g.lineWidth = .8 * k; g.stroke(roadP[0]); }
   if (cam.s > .75) { g.strokeStyle = `rgba(70,55,40,${Math.min(.28, (cam.s - .75) * .4)})`; g.lineWidth = k * .8; g.stroke(allCells); }
   g.setLineDash([3 * k, 3 * k]); g.lineWidth = k; g.strokeStyle = 'rgba(70,55,40,.4)'; g.stroke(provPath); g.setLineDash([]);
   g.strokeStyle = 'rgba(60,45,35,.55)'; g.lineWidth = 1.3 * k; g.stroke(otherPath);
@@ -313,6 +318,16 @@ function arrowSmall(x0, y0, x1, y1, col) {
   g.fillStyle = col + 'd0'; g.fill(); g.lineWidth = 1.2; g.strokeStyle = 'rgba(255,255,255,.9)'; g.stroke();
 }
 // طريق الفرق المختارة
+// R5b: الجسور: علامة صغيرة على النهر؛ المضروب أحمر بعدّاد التصليح
+function drawBridges() {
+  if (cam.s < .55 || !WD.bridges) return; const k = Math.min(1.2, cam.s * .7);
+  for (const b of WD.bridges) { const [x, y] = w2s(...b.p); if (x < -20 || x > W + 20 || y < -20 || y > H + 20) continue;
+    g.save(); g.translate(x, y); const ang = Math.atan2(cells[b.j].c[1] - cells[b.i].c[1], cells[b.j].c[0] - cells[b.i].c[0]); g.rotate(ang);
+    g.fillStyle = b.down > 0 ? 'rgba(60,20,15,.9)' : 'rgba(70,60,50,.9)'; g.fillRect(-6 * k, -2.6 * k, 12 * k, 5.2 * k); g.strokeStyle = b.down > 0 ? '#ff5a3c' : '#f3ead6'; g.lineWidth = 1; g.strokeRect(-6 * k, -2.6 * k, 12 * k, 5.2 * k);
+    if (b.down > 0) { g.beginPath(); g.moveTo(-4 * k, -4 * k); g.lineTo(4 * k, 4 * k); g.moveTo(4 * k, -4 * k); g.lineTo(-4 * k, 4 * k); g.strokeStyle = '#ff5a3c'; g.lineWidth = 2; g.stroke(); }
+    g.restore(); if (b.down > 0 && cam.s > .8) text(`🔧 ${b.down} س`, x, y - 10, 9.5, '#fff', 'rgba(150,20,10,.8)', 700);
+    if (PICK === 'bridge') { g.beginPath(); g.arc(x, y, 11, 0, 7); g.strokeStyle = '#ffd65a'; g.lineWidth = 2; g.stroke(); } }
+}
 function drawPaths() {
   g.save(); g.setLineDash([6, 5]); g.lineWidth = 2.5; g.strokeStyle = 'rgba(255,214,90,.95)';
   for (const d of SIM.alive(WD)) {
@@ -356,6 +371,8 @@ function events() {
     if (l.k === 'planfail' && mine) toast('💀 الخطة فشلت: خسرنا رأس الحربة', 'bad');
     if (l.k === 'stall' && mine) toast(`✋ ${l.div} تعبت وما كدرت تكمل الهجوم، ثبتت بمكانها`, 'bad');
     if (l.k === 'take' && mine && c && !c.vp && SEL.size) {}
+    if (l.k === 'bridge') toast(mine ? `🌉 قطعنا جسر ${l.n}: إمدادهم لازم يدوّر طريق ثاني` : `⚠️ إيران قطعت جسر ${l.n}: إمدادنا يدوّر طريق ثاني`, mine ? 'good' : 'bad');
+    if (l.k === 'bridgefix') toast(mine ? `🔧 إيران صلّحت جسر ${l.n}` : `🔧 مهندسينا صلّحوا جسر ${l.n}`);
     if (l.k === 'capitulate') endGame(l.side);
   }
 }
@@ -389,7 +406,7 @@ function card() {
   const c = cells[ds[0].cell]; const where = c.city || 'منطقة';
   const inBattle = ds.some(d => WD.battles.has(d.path[0]) || WD.battles.has(d.cell));
   $('card').hidden = false;
-  $('card').innerHTML = `<div class="ch"><span style="font-size:18px">🪖</span><div><div class="t">${ds.length > 1 ? ds.length + ' فرق' : ds[0].n}</div><div class="s">${where} · ${SIM.TERR[c.t].n}${inBattle ? ' · ⚔ تقاتل' : ''}${WD.sup[ME][ds[0].cell] ? '' : ' · ⚠️ مقطوعة الإمداد'}</div></div><span class="x ${mode}">${MN[mode]}</span></div>
+  $('card').innerHTML = `<div class="ch"><span style="font-size:18px">🪖</span><div><div class="t">${ds.length > 1 ? ds.length + ' فرق' : ds[0].n}</div><div class="s">${where} · ${SIM.TERR[c.t].n}${inBattle ? ' · ⚔ تقاتل' : ''}${!WD.sup[ME][ds[0].cell] ? ' · ⚠️ مقطوعة الإمداد' : WD.supC && WD.supC[ME][ds[0].cell] > 9 ? ' · 🚚 إمداد بعيد' : ''}</div></div><span class="x ${mode}">${MN[mode]}</span></div>
   <div class="list">${ds.map(d => `<div class="dv"><b>${d.n}</b>القوة ${Math.round(d.str * 100)}%<div class="bar"><u style="width:${d.str * 100}%"></u></div>التنظيم ${Math.round(d.org / d.orgMax * 100)}%<div class="bar"><u class="o" style="width:${d.org / d.orgMax * 100}%"></u></div></div>`).join('')}</div>
   ${pl ? `<div class="s" style="margin:-2px 0 6px;font-size:12px">🏹 ${planTxt(pl)} <button id="aCan" style="margin-inline-start:6px;background:rgba(255,255,255,.1);border:1px solid var(--line);border-radius:8px;padding:1px 8px;font-size:11.5px">إلغاء الخطة</button></div>` : ''}
   <div class="acts"><button class="go ${PICK === true ? 'on' : ''}" id="aGo">⚔ هجوم</button><button class="${PICK === 'arrow' ? 'on' : ''}" id="aArrow">🏹 سهم</button><button id="aHold">📌 ثبات</button><button id="aAuto">🤖</button><button id="aX">✕</button></div>`;
@@ -400,17 +417,17 @@ function card() {
   $('aAuto').onclick = () => { ds.forEach(d => d.mode = 'auto'); PICK = false; $('hint').hidden = true; toast('🤖 القائد يمسك الجبهة ويهاجم لما يشوف فرصة'); card(); };
   $('aX').onclick = () => { SEL.clear(); card(); };
 }
-const MK = { auto: '🤖 تلقائي', cas: '🎯 إسناد للقوات', cap: '🛡 حماية الأجواء', strike: '💥 ضرب دفاع جوي', recon: '📡 استطلاع' };
+const MK = { auto: '🤖 تلقائي', cas: '🎯 إسناد للقوات', cap: '🛡 حماية الأجواء', strike: '💥 ضرب دفاع جوي', recon: '📡 استطلاع', bridge: '🌉 ضرب جسر' };
 function baseCard() {
   const b = AW.bases[SELB]; if (!b) return; const T = AIR.PLANES[b.type];
   const flying = AW.planes.filter(p => p.base === SELB).length;
   $('card').hidden = false;
   $('card').innerHTML = `<div class="ch"><span style="font-size:18px">✈</span><div><div class="t">${b.n}</div><div class="s">${b.n0} طيارة ${T.n} · جاهزة ${b.ready} · بالجو ${flying}${b.down ? ' · ⚠️ المدرج متضرر' : ''}</div></div><span class="x ${b.mission.kind === 'auto' ? 'auto' : 'manual'}">${MK[b.mission.kind]}</span></div>
   <div class="s" style="margin:6px 0 7px;font-size:11.5px;opacity:.8">${T.isr ? 'مسيّرة استطلاع: تطير عالي (5 كم) وبطيئة، تحوم فوق المنطقة وتكشف فرق العدو ~40 كم حولها. بدونها ما تشوف عمق العدو. الدفاع الجوي ومقاتلاتهم يقدرون يسقطونها.' : T.ag > 1 ? 'طيارة هجوم أرضي: تطير واطي تحت أفق الرادار، بس تنضرب من الدفاع المحمول فوق قوات العدو.' : 'مقاتلة: تحمي الأجواء وتسقط طيارات العدو، وتقدر تسند بقنابل موجهة من فوق.'}${T.isr ? '' : ' الطيارة العالية يشوفها S-300 من ~360 كم؛ الواطية (100 م) يشوفها من ~60 كم بس. اضغط أي بطارية تشوف شنو تقدر.'}</div>
-  ${T.isr ? `<div class="acts"><button class="go" id="bRec">📡 استطلاع هنا</button><button id="bAuto">🤖</button></div>` : `<div class="acts"><button class="go" id="bCas">🎯 إسناد</button><button id="bCap">🛡 حماية</button><button id="bStr">💥 ضرب دفاع</button><button id="bAuto">🤖</button></div>`}`;
+  ${T.isr ? `<div class="acts"><button class="go" id="bRec">📡 استطلاع هنا</button><button id="bAuto">🤖</button></div>` : `<div class="acts"><button class="go" id="bCas">🎯 إسناد</button><button id="bCap">🛡 حماية</button><button id="bStr">💥 دفاع</button><button id="bBr">🌉 جسر</button><button id="bAuto">🤖</button></div>`}`;
   const pick = (k, msg) => () => { PICK = k; $('hint').hidden = false; $('hint').textContent = msg; $('hint').style.top = (TOPH() + 8) + 'px'; };
   if (T.isr) $('bRec').onclick = pick('recon', 'اضغط المنطقة اللي تريد تعرف شنو بيها (المسيّرة تشوف ~40 كم حولها)');
-  else { $('bCas').onclick = pick('cas', 'اضغط المنطقة اللي تريد الطيارات تضرب بيها'); $('bCap').onclick = pick('cap', 'اضغط المنطقة اللي تريد تحمي أجواءها'); $('bStr').onclick = pick('strike', 'اضغط بطارية الدفاع الجوي الإيرانية'); }
+  else { $('bCas').onclick = pick('cas', 'اضغط المنطقة اللي تريد الطيارات تضرب بيها'); $('bCap').onclick = pick('cap', 'اضغط المنطقة اللي تريد تحمي أجواءها'); $('bStr').onclick = pick('strike', 'اضغط بطارية الدفاع الجوي الإيرانية'); $('bBr').onclick = pick('bridge', 'اضغط جسر (العلامات الصفرة) حتى تقطعه: إمداد العدو يمر منه'); }
   $('bAuto').onclick = () => { b.mission = { kind: 'auto' }; toast('🤖 المطار يقرر بنفسه وين يضرب'); baseCard(); };
 }
 // GW5: بطاقة بطارية الدفاع الجوي — شنو تقدر تضرب بالواقع، كم مرة وحدة، كم صاروخ، والاحتمالات
@@ -447,6 +464,11 @@ const DOCN = { normal: 'عادي', save: 'وفّر', all: 'كل شي', silent: '
 const DOCW = { normal: 'باليستي وكروز وطيارات، والمسيّرة بس إذا قربت (~25 كم)، وPAC-3 محجوز للباليستي', save: 'صاروخ واحد لكل هدف (إلا الباليستي)، والطيارات القريبة بس، والمسيّرة إذا صارت فوقها', all: 'يضرب أي شي بالمدى بكل الصواريخ: يحمي أكثر ويخلص بسرعة', silent: 'الرادار مطفي: ما ترمي، والعدو ما يعرف مكانها وHARM ما يلقاها (كمين)' };
 function airOrder(x, y, wx, wy) {
   const b = AW.bases[SELB]; const k = PICK; PICK = false; $('hint').hidden = true;
+  if (k === 'bridge') {
+    const bi = WD.bridges.findIndex(q => Math.hypot(w2s(...q.p)[0] - x, w2s(...q.p)[1] - y) < 26);
+    if (bi < 0) { toast('❌ ما اكو جسر هنا (قرّب الخريطة تشوف الجسور)', 'bad'); return; }
+    const br = WD.bridges[bi]; b.mission = { kind: 'bridge', p: br.p, br: bi }; toast(`🌉 ${b.n} راح تضرب جسر ${br.n}`); baseCard(); return;
+  }
   if (k === 'strike') {
     const si = AW.sams.findIndex(q => q.side !== ME && Math.hypot(w2s(...q.p)[0] - x, w2s(...q.p)[1] - y) < 40);
     if (si < 0) { toast('❌ ما اكو بطارية إيرانية هنا', 'bad'); return; }
@@ -590,7 +612,7 @@ function frame(now) {
   smoothAll(dt); drawMapCached();
   VIEW.gs = RATE * 3600; FX.update(SPEED && !WD.over ? dt : 0);
   VIEW.drawBases(SELB);
-  buildClusters(); drawPaths(); FX.drawGround(); drawPlans();
+  buildClusters(); drawPaths(); drawBridges(); FX.drawGround(); drawPlans();
   const near = false; let nb = 0; // BV0: الخريطة بالمربعات بس؛ القتال الحقيقي بـ«مشهد المعركة»
   if (near) {
     const vis = SIM.alive(WD).filter(d => { const [x, y] = w2s(...divPos(d)); return x > -120 && x < W + 120 && y > -120 && y < H + 120; });

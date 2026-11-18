@@ -41,7 +41,7 @@ button{font:inherit;color:inherit;background:none;border:0;cursor:pointer}
   <div class="res"><span id="rVp"></span><span id="rDiv"></span><span id="rBat"></span><span id="rTook"></span><span id="rLost"></span></div>
   <div id="vpbar"><u></u></div>
 </div>
-<div id="zoom"><button id="zin">＋</button><button id="zout">－</button><button id="zme" title="رجوع للجبهة">◎</button></div>
+<div id="zoom"><button id="zin">＋</button><button id="zout">－</button><button id="zme" title="رجوع للجبهة">◎</button><button id="snd">🔊</button></div>
 <div id="toasts"></div>
 <div id="hint" hidden></div>
 <div id="card" hidden></div>
@@ -62,6 +62,8 @@ button{font:inherit;color:inherit;background:none;border:0;cursor:pointer}
 <script src="data.js"></script>
 <script src="cells.js"></script>
 <script src="sim.js"></script>
+<script src="air.js"></script>
+<script src="view.js"></script>
 <script>
 'use strict';
 const G = window.GEO, C = window.CELLS, Q = new URLSearchParams(location.search);
@@ -72,6 +74,7 @@ const ME = 0;
 // ===== المحاكاة =====
 const SEED = +(Q.get('seed') || (Date.now() % 100000));
 const WD = SIM.World(C, { seed: SEED }); SIM.scenario(WD);
+const AW = AIR.create(WD); const AIRK = [0, 1, 1.5, 2.2];
 const cells = C.cells;
 // ===== الكاميرا =====
 const cam = { x: 815, y: 850, s: .58 };
@@ -80,7 +83,7 @@ const w2s = (x, y) => [(x - cam.x) * cam.s + W / 2, (y - cam.y) * cam.s + H / 2]
 const s2w = (x, y) => [(x - W / 2) / cam.s + cam.x, (y - H / 2) / cam.s + cam.y];
 const clampCam = () => { cam.s = Math.min(7, Math.max(.28, cam.s)); cam.x = Math.min(2300, Math.max(-100, cam.x)); cam.y = Math.min(1800, Math.max(0, cam.y)); };
 // ===== الصور =====
-const IMG = {}; const load = n => new Promise(r => { const i = new Image(); i.onload = r; i.onerror = r; i.src = `img/${n}.webp`; IMG[n] = i; });
+const IMG = {}; setTimeout(() => VIEW.init({ g, cam, w2s, IMG, WD, cells, A: AW, text })); const load = n => new Promise(r => { const i = new Image(); i.onload = r; i.onerror = r; i.src = `img/${n}.webp`; IMG[n] = i; });
 // ===== المسارات (Path2D بإحداثيات الكم) =====
 const ringPath = (rings, P = new Path2D()) => { for (const r of rings) { r.forEach((q, i) => i ? P.lineTo(q[0], q[1]) : P.moveTo(q[0], q[1])); P.closePath(); } return P; };
 const cellPath = cells.map(c => ringPath([c.ring]));
@@ -152,8 +155,8 @@ function drawLabels() {
 // ===== الفرق =====
 // مكان الفرقة على الشاشة (المتحركة بين منطقتين)
 function divPos(d) {
-  const a = cells[d.cell].c; if (!d.path.length || !d.prog) return a;
-  const b = cells[d.path[0]].c, f = Math.min(.92, d.prog / WD.dist(d.cell, d.path[0])); return [a[0] + (b[0] - a[0]) * f, a[1] + (b[1] - a[1]) * f];
+  const a = cells[d.cell].c; if (!d.path.length || (!d.prog && !d.v)) return a;
+  const b = cells[d.path[0]].c, f = Math.min(.95, (d.prog + (WD.battles.has(d.path[0]) ? 0 : (d.v || 0) * acc)) / WD.dist(d.cell, d.path[0])); return [a[0] + (b[0] - a[0]) * f, a[1] + (b[1] - a[1]) * f];
 }
 let clusters = [];
 function buildClusters() {
@@ -244,7 +247,7 @@ function drawBattles(dt) {
     // أسهم الهجوم الصغيرة
     for (const f of b.from) { const [ax, ay] = w2s(...cells[f].c), [bx, by] = w2s(...t); arrowSmall(ax + (bx - ax) * .25, ay + (by - ay) * .25, ax + (bx - ax) * .78, ay + (by - ay) * .78, b.side ? '#c8402f' : '#2f6fd0'); }
     // مؤثرات من قريب
-    if (cam.s > 1.4 && SPEED && Math.random() < dt * 6) fx.push({ x: t[0] + (Math.random() - .5) * 14, y: t[1] + (Math.random() - .5) * 14, t: 0, r: 6 + Math.random() * 8, tr: [fxm + (Math.random() - .5) * 10, fym + (Math.random() - .5) * 10] });
+    if (false) fx.push({ x: t[0] + (Math.random() - .5) * 14, y: t[1] + (Math.random() - .5) * 14, t: 0, r: 6 + Math.random() * 8, tr: [fxm + (Math.random() - .5) * 10, fym + (Math.random() - .5) * 10] });
     const win = b.side === ME ? b.win : 1 - b.win;
     g.save(); g.translate(x, y); g.beginPath(); g.arc(0, 0, 12, 0, 7); g.fillStyle = 'rgba(25,20,15,.88)'; g.fill();
     g.beginPath(); g.arc(0, 0, 12, -Math.PI / 2, -Math.PI / 2 + win * 6.283); g.strokeStyle = '#4f8ff0'; g.lineWidth = 3.2; g.stroke();
@@ -279,7 +282,7 @@ function drawPaths() {
 }
 
 // ===== الواجهة =====
-let SPEED = 0, SEL = new Set(), PICK = false, HOVER = -1;
+let SPEED = 0, SEL = new Set(), PICK = false, HOVER = -1, SELB = -1;
 const HPS = [0, 2, 6, 18]; // ساعات لعبة بالثانية
 const START = new Date(2027, 2, 14, 6);
 const AR_M = ['كانون الثاني', 'شباط', 'آذار', 'نيسان', 'أيار', 'حزيران', 'تموز', 'آب', 'أيلول', 'تشرين الأول', 'تشرين الثاني', 'كانون الأول'];
@@ -288,8 +291,8 @@ function hud() {
   $('dt').textContent = `${d.getDate()} ${AR_M[d.getMonth()]} ${d.getFullYear()} · ${String(d.getHours()).padStart(2, '0')}:00`;
   const sc = SIM.score(WD), tot = WD.vpTotal[0] + WD.vpTotal[1];
   $('rVp').innerHTML = `🏙 ${sc.vp[0]}<i>نقاط مدننا</i>`; $('rDiv').innerHTML = `🪖 ${sc.divs[0]}<i>فرقنا</i>`;
-  $('rBat').innerHTML = `⚔ ${WD.battles.size}<i>معارك هسه</i>`; $('rTook').innerHTML = `📈 ${cells.reduce((n, c, i) => n + (c.s === 1 && WD.ctrl[i] === 0 ? 1 : 0), 0)}<i>أخذنا مناطق</i>`;
-  $('rLost').innerHTML = `💀 ${WD.lost[0]}<i>فرق خسرناها</i>`;
+  $('rBat').innerHTML = `⚔ ${WD.battles.size}<i>معارك هسه</i>`; $('rTook').innerHTML = `✈ ${AW.bases.filter(b => b.side === ME).reduce((n, b) => n + b.n0, 0)}<i>طياراتنا</i>`;
+  $('rLost').innerHTML = `🎯 ${AW.kills[ME]}<i>أسقطنا طيارة</i>`;
   $('vpbar').firstElementChild.style.width = (sc.vp[0] / tot * 100) + '%';
 }
 function toast(msg, cls = '') { const t = document.createElement('div'); t.className = 'toast ' + cls; t.textContent = msg; $('toasts').prepend(t); while ($('toasts').children.length > 3) $('toasts').lastChild.remove(); setTimeout(() => t.remove(), 4500); }
@@ -330,6 +333,29 @@ function card() {
   $('aAuto').onclick = () => { ds.forEach(d => d.mode = 'auto'); PICK = false; $('hint').hidden = true; toast('🤖 القائد يمسك الجبهة ويهاجم لما يشوف فرصة'); card(); };
   $('aX').onclick = () => { SEL.clear(); card(); };
 }
+const MK = { auto: '🤖 تلقائي', cas: '🎯 إسناد للقوات', cap: '🛡 حماية الأجواء', strike: '💥 ضرب دفاع جوي' };
+function baseCard() {
+  const b = AW.bases[SELB]; if (!b) return; const T = AIR.PLANES[b.type];
+  const flying = AW.planes.filter(p => p.base === SELB).length;
+  $('card').hidden = false;
+  $('card').innerHTML = `<div class="ch"><span style="font-size:18px">✈</span><div><div class="t">${b.n}</div><div class="s">${b.n0} طيارة ${T.n} · جاهزة ${b.ready} · بالجو ${flying}${b.down ? ' · ⚠️ المدرج متضرر' : ''}</div></div><span class="x ${b.mission.kind === 'auto' ? 'auto' : 'manual'}">${MK[b.mission.kind]}</span></div>
+  <div class="s" style="margin:6px 0 7px;font-size:11.5px;opacity:.8">${T.ag > 1 ? 'طيارة هجوم أرضي: أحسن شي للإسناد وضرب الدفاع الجوي.' : 'مقاتلة: تحمي الأجواء وتسقط طيارات العدو، وتقدر تسند.'} الدفاع الجوي للعدو (S-300) يصيب طيارات كثيرة، فاضربه أول.</div>
+  <div class="acts"><button class="go" id="bCas">🎯 إسناد</button><button id="bCap">🛡 حماية</button><button id="bStr">💥 ضرب دفاع</button><button id="bAuto">🤖</button></div>`;
+  const pick = (k, msg) => () => { PICK = k; $('hint').hidden = false; $('hint').textContent = msg; $('hint').style.top = (TOPH() + 8) + 'px'; };
+  $('bCas').onclick = pick('cas', 'اضغط المنطقة اللي تريد الطيارات تضرب بيها');
+  $('bCap').onclick = pick('cap', 'اضغط المنطقة اللي تريد تحمي أجواءها');
+  $('bStr').onclick = pick('strike', 'اضغط بطارية الدفاع الجوي الإيرانية');
+  $('bAuto').onclick = () => { b.mission = { kind: 'auto' }; toast('🤖 المطار يقرر بنفسه وين يضرب'); baseCard(); };
+}
+function airOrder(x, y, wx, wy) {
+  const b = AW.bases[SELB]; const k = PICK; PICK = false; $('hint').hidden = true;
+  if (k === 'strike') {
+    const si = AW.sams.findIndex(q => q.side !== ME && Math.hypot(w2s(...q.p)[0] - x, w2s(...q.p)[1] - y) < 40);
+    if (si < 0) { toast('❌ ما اكو بطارية إيرانية هنا', 'bad'); return; }
+    b.mission = { kind: 'strike', p: AW.sams[si].p, sam: si }; toast(`💥 ${b.n} راح تضرب ${AW.sams[si].n}`);
+  } else { const ci = cellAt(wx, wy); if (ci < 0) return; b.mission = { kind: k, p: cells[ci].c, cell: ci }; toast(`${MK[k]}: ${b.n} ← ${cells[ci].city || 'المنطقة'}`); }
+  baseCard();
+}
 function orderTo(ci) {
   const ds = SIM.alive(WD).filter(d => SEL.has(d.id)); let ok = 0;
   for (const d of ds) if (SIM.order(WD, d, ci, 'manual', true)) ok++;
@@ -352,16 +378,24 @@ const up = e => { ptrs.delete(e.pointerId); if (ptrs.size < 2) pinch = null; if 
 cv.addEventListener('pointerup', up); cv.addEventListener('pointercancel', e => { ptrs.delete(e.pointerId); pinch = null; downAt = null; });
 cv.addEventListener('wheel', e => { e.preventDefault(); const w = s2w(e.clientX, e.clientY); cam.s *= Math.exp(-e.deltaY * .0015); clampCam(); cam.x = w[0] - (e.clientX - W / 2) / cam.s; cam.y = w[1] - (e.clientY - H / 2) / cam.s; }, { passive: false });
 function zoomBy(f) { cam.s *= f; clampCam(); }
+$('snd').onclick = () => { VIEW.SND.init(); VIEW.SND.on = !VIEW.SND.on; $('snd').textContent = VIEW.SND.on ? '🔊' : '🔇'; };
 $('zin').onclick = () => zoomBy(1.6); $('zout').onclick = () => zoomBy(1 / 1.6);
 $('zme').onclick = () => { const F = SIM.frontCells(WD, ME); if (!F.length) return; const sel = SIM.alive(WD).filter(d => SEL.has(d.id)); const p = sel.length ? cells[sel[0].cell].c : cells[F[Math.floor(F.length / 2)]].c; cam.x = p[0]; cam.y = p[1]; };
 function tap(x, y) {
   const [wx, wy] = s2w(x, y);
+  if (PICK && SELB >= 0) { airOrder(x, y, wx, wy); return; }
   if (PICK) { const ci = cellAt(wx, wy); if (ci >= 0) orderTo(ci); return; }
+  // ضغط على مطار
+  const bi = AW.bases.findIndex(b => { const [bx, by] = w2s(...b.p); return Math.hypot(bx - x, by - 12 - y) < 18; });
+  if (bi >= 0) { if (AW.bases[bi].side === ME) { SEL.clear(); SELB = bi; baseCard(); } else toast(`🇮🇷 مطار ${AW.bases[bi].n}: ${AW.bases[bi].n0} طيارة ${AIR.PLANES[AW.bases[bi].type].n}`); return; }
+  const si = AW.sams.findIndex(q => { const [bx, by] = w2s(...q.p); return Math.hypot(bx - x, by - y) < 16; });
+  if (si >= 0) { const q = AW.sams[si]; SELB = 'sam' + si; toast(`${q.side === ME ? '🇮🇶' : '🇮🇷'} ${q.n}: مداه ${q.r} كم، صواريخه ${q.ammo}${q.down ? ' · معطّل' : ''}`); setTimeout(() => { if (SELB === 'sam' + si) SELB = -1; }, 3500); return; }
+  if (typeof SELB === 'number' && SELB >= 0) { SELB = -1; $('card').hidden = true; }
   // ضغط على معركة
   for (const b of WD.battles.values()) if (b.sx != null && Math.hypot(b.sx - x, b.sy - y) < 16) { battleInfo(b); return; }
   // ضغط على فرقنا
   const hit = clusters.filter(c => Math.hypot(c.x - x, c.y - y) < (c.r || 24)).sort((a, b) => (a.side === ME ? -1 : 1) - (b.side === ME ? -1 : 1))[0];
-  if (hit && hit.side === ME) { SEL = new Set(hit.divs.map(d => d.id)); PICK = false; card(); return; }
+  if (hit && hit.side === ME) { SELB = -1; SEL = new Set(hit.divs.map(d => d.id)); PICK = false; card(); return; }
   if (hit) { const ds = hit.divs; toast(`🇮🇷 ${ds.length > 1 ? ds.length + ' فرق إيرانية' : ds[0].n} · القوة تقريباً ${Math.round(ds.reduce((s, d) => s + d.str, 0) / ds.length * 10) * 10}%`); return; }
   const ci = cellAt(wx, wy); if (ci >= 0) { const c = cells[ci]; toast(`${c.city ? c.city + ' · ' : ''}${SIM.TERR[c.t].n}${c.vp ? ' · ' + c.vp + ' نقاط' : ''} · ${WD.ctrl[ci] === ME ? 'بيدنا' : 'بيد إيران'}`); }
   SEL.clear(); card();
@@ -380,24 +414,31 @@ function frame(now) {
   if (SPEED && !WD.over) {
     acc += dt * HPS[SPEED];
     let n = 0; while (acc >= 1 && n < 40) { if (WD.t % 6 === 0) { SIM.ai(WD, 1); SIM.ai(WD, ME); } SIM.step(WD); acc -= 1; n++; }
-    events(); if (n) { hud(); if (SEL.size && WD.t % 3 === 0) card(); }
+    AIR.step(AW, WD, SIM, dt * AIRK[SPEED]);
+    for (const e of AW.ev) VIEW.airEvent(e, toast, ME); AW.ev.length = 0;
+    events(); if (n) { hud(); if (SEL.size && WD.t % 3 === 0) card(); if (typeof SELB === 'number' && SELB >= 0 && WD.t % 2 === 0) baseCard(); }
   }
   W = innerWidth; H = innerHeight; if (cv.width !== Math.round(W * DPR)) { cv.width = Math.round(W * DPR); cv.height = Math.round(H * DPR); }
   drawMap(); drawLabels(); drawCities();
+  VIEW.drawBases(SELB);
   buildClusters(); drawPaths();
-  const near = cam.s >= 1.7;
-  for (const cl of clusters) near ? formation(cl) : counter(cl);
-  drawBattles(dt);
+  const near = cam.s >= 1.7; let nb = 0;
+  if (near) {
+    const vis = SIM.alive(WD).filter(d => { const [x, y] = w2s(...divPos(d)); return x > -120 && x < W + 120 && y > -120 && y < H + 120; });
+    nb = VIEW.divs(vis, divPos, facing, SEL, dt, SPEED > 0 && !WD.over); VIEW.drawDivs(cam.s > 4); VIEW.forget();
+    for (const cl of clusters) cl.r = Math.min(38, Math.max(14, cam.s * 9.5)) * 2;
+  } else for (const cl of clusters) counter(cl);
+  VIEW.drawFx(dt); drawBattles(dt); VIEW.drawAir(dt); VIEW.soundTick(dt, nb);
   $('zoom').style.top = (TOPH() + 10) + 'px'; $('toasts').style.top = (TOPH() + 10) + 'px';
   requestAnimationFrame(frame);
 }
 // للفحص الآلي
-window.G_ = { WD, SIM, cam, sel: ids => { SEL = new Set(ids); card(); }, orderTo, setSpeed, tap, get clusters() { return clusters; } };
-Promise.all(['base_me', 'base_south', 'abrams', 'abrams_t', 't72', 't72_t', 'bmp', 'grad', 'truck'].map(load)).then(() => {
+window.G_ = { WD, AW, SIM, cam, VIEW, sel: ids => { SEL = new Set(ids); card(); }, orderTo, setSpeed, tap, get clusters() { return clusters; } };
+Promise.all(['base_me', 'base_south', 'abrams', 'abrams_t', 't72', 't72_t', 'bmp', 'grad', 'truck', 'f16', 'su25', 'f14', 'patriot', 's400', 'zolf'].map(load)).then(() => {
   // نسخة حمرة من الشاحنة والراجمة لإيران (حتى ما تنلخبط الألوان من قريب)
   for (const n of ['truck', 'grad']) { const im = IMG[n], c = document.createElement('canvas'); c.width = im.width; c.height = im.height; const x = c.getContext('2d'); x.filter = 'hue-rotate(170deg) saturate(1.3)'; x.drawImage(im, 0, 0); IMG[n + '_r'] = c; }
   hud(); requestAnimationFrame(frame); window.READY = 1;
-  $('go').onclick = () => { $('intro').hidden = true; setSpeed(1); };
+  $('go').onclick = () => { $('intro').hidden = true; VIEW.SND.init(); setSpeed(1); };
   if (Q.has('auto')) { $('intro').hidden = true; setSpeed(+Q.get('auto') || 3); }
 });
 </script></body></html>

@@ -132,7 +132,7 @@
       if (en.length) continue; // بعده يقاتل
       const tr = TERR[W.cells[tg].t]; const T = TEMPL[d.kind];
       const v = T.spd * tr.spd * (W.edgeOf.get(d.cell + ',' + tg)?.r ? RIVER_SPD : 1) * (W.sup[d.side][d.cell] ? 1 : .5);
-      d.prog += v;
+      d.prog += v; d.v = v;
       if (d.prog >= W.dist(d.cell, tg)) {
         d.prog = 0; byCell.get(d.cell)?.splice(byCell.get(d.cell).indexOf(d), 1);
         d.cell = tg; d.path.shift(); if (!byCell.has(tg)) byCell.set(tg, []); byCell.get(tg).push(d);
@@ -268,9 +268,15 @@
     supply(W); W.ob = [0, 1].map(s => alive(W).filter(d => d.side === s).length);
   }
 
+  // ضربة جوية أو صاروخ على منطقة: ينزل تنظيم وعدد فرق العدو بيها
+  function airHit(W, side, cell, power) {
+    const en = W.divs.filter(d => !d.dead && d.side !== side && d.cell === cell); if (!en.length) return 0;
+    for (const d of en) { d.org = Math.max(0, d.org - power * 4 / en.length); d.str = Math.max(.05, d.str - power * .005 / en.length); d.hitT = W.t; }
+    W.log.push({ t: W.t, side, k: 'air', cell }); return en.length;
+  }
   // تلخيص الحرب
   function score(W) { const vp = [0, 0]; W.cells.forEach((c, i) => { if (c.vp) vp[W.ctrl[i]] += c.vp; }); return { vp, cells: [0, 1].map(s => W.ctrl.reduce((n, x) => n + (x === s ? 1 : 0), 0)), divs: [0, 1].map(s => alive(W).filter(d => d.side === s).length), lost: W.lost.slice() }; }
 
-  const API = { TEMPL, TERR, KIND_N, World, addDiv, step, ai, order, route, scenario, supply, score, alive, divsIn, frontCells, power };
+  const API = { airHit, TEMPL, TERR, KIND_N, World, addDiv, step, ai, order, route, scenario, supply, score, alive, divsIn, frontCells, power };
   if (typeof module !== 'undefined') module.exports = API; else root.SIM = API;
 })(this);

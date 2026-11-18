@@ -301,17 +301,26 @@
         if (m.kind === 'bm') { g.save(); g.translate(x, y); g.rotate(Math.atan2(m.ty - m.y0, m.tx - m.x0) + (m.f < .5 ? -.5 : .5)); const L = 10 + (m.alt || 0) * 8; g.fillStyle = '#e8e4da'; g.fillRect(-L / 2, -1.6, L, 3.2); g.restore(); }
       }
     }
-    // الطيارات (بظلها)
+    // المشاعل الحرارية: نقاط ساطعة تطيح ووراها دخان
+    if (A.decoys) for (const f of A.decoys) { const [x, y] = w2s(f.x, f.y); if (x < -20 || x > innerWidth + 20 || y < -20 || y > innerHeight + 20) continue; const k = f.t / 2.2; g.save(); g.globalCompositeOperation = 'lighter'; const gr = g.createRadialGradient(x, y, 0, x, y, 7); gr.addColorStop(0, `rgba(255,255,230,${1 - k})`); gr.addColorStop(.4, `rgba(255,190,90,${.8 * (1 - k)})`); gr.addColorStop(1, 'rgba(255,120,30,0)'); g.fillStyle = gr; g.beginPath(); g.arc(x, y, 7, 0, 7); g.fill(); g.restore(); if (R() < .4) FX.puff(f.x, f.y, 2.5, 2, 'grey', .4, 0, 0, 2); }
+    // الطيارات: صفايح Blender بـ54 وضعية (ميلان × أنف)، وظلها على الأرض حسب ارتفاعها
     for (const p of A.planes) {
+      if (p.t < 0) continue;
       const [x, y] = w2s(p.x, p.y); if (x < -60 || x > innerWidth + 60 || y < -60 || y > innerHeight + 60) continue;
-      const sz = Math.min(46, Math.max(26, cam.s * 13)) * (p.st === 'fall' ? Math.max(.4, 1 - p.t * .25) : 1); const im = IMG[PL[p.type]]; const alt = p.alt * Math.min(22, 8 + cam.s * 4);
-      const H = p.h + (PL[p.type] === 'su25' ? Math.PI : 0); // صورة السوخوي أنفها لليسار (R0.1)
-      g.save(); g.globalAlpha = .3; g.translate(x + alt * .6, y + alt); g.rotate(H); g.filter = 'brightness(0) blur(1.5px)'; g.drawImage(im, -sz / 2, -sz / 2, sz, sz); g.restore();
-      g.save(); g.translate(x, y); g.rotate(H); g.drawImage(im, -sz / 2, -sz / 2, sz, sz); g.restore();
-      g.beginPath(); g.moveTo(x, y - sz * .62); g.lineTo(x - 4, y - sz * .62 - 6); g.lineTo(x + 4, y - sz * .62 - 6); g.closePath(); g.fillStyle = p.side ? '#e0533f' : '#4f8ff0'; g.fill();
-      if (p.st === 'fall') { if (R() < .7) FX.puff(p.x, p.y, 6, rr(3, 5), 'black', .6, 0, 0, 2); if (R() < .3) FX.spark(p.x, p.y, 2, 40); }
+      const nm = PL[p.type], sh = IMG[nm + '_sheet']; const flip = nm === 'su25'; // صفيحة السوخوي أنفها لليسار
+      const bank = flip ? -p.bank : p.bank; const ri = (((Math.round((-bank * 180 / Math.PI + 180) / 20)) % 18) + 18) % 18, pi = p.gam < -.3 ? 0 : p.gam > .3 ? 2 : 1; const fr = pi * 18 + ri;
+      const sz = Math.min(52, Math.max(28, cam.s * 14)) * (.85 + .25 * Math.min(1.2, p.alt)); const alt = p.alt * Math.min(26, 6 + cam.s * 5);
+      const H = p.h + (flip ? Math.PI : 0), sx = (fr % 8) * 256, sy = Math.floor(fr / 8) * 256;
+      g.save(); g.globalAlpha = .28; g.translate(x + alt * .6, y + alt); g.rotate(H); g.filter = 'brightness(0) blur(1.5px)'; g.drawImage(sh, sx, sy, 256, 256, -sz / 2, -sz / 2, sz, sz); g.restore();
+      g.save(); g.translate(x, y); g.rotate(H); g.drawImage(sh, sx, sy, 256, 256, -sz / 2, -sz / 2, sz, sz); g.restore();
+      g.beginPath(); g.moveTo(x, y - sz * .58); g.lineTo(x - 4, y - sz * .58 - 6); g.lineTo(x + 4, y - sz * .58 - 6); g.closePath(); g.fillStyle = p.side ? '#e0533f' : '#4f8ff0'; g.fill();
+      if (p.st === 'fall') { if (R() < .8) FX.puff(p.x, p.y, 6, rr(3, 5), 'black', .6, 0, 0, 2); if (R() < .3) FX.spark(p.x, p.y, 2, 40); }
+      else if (p.st === 'roll' && p.v > 8 && R() < .5) FX.puff(p.x - Math.cos(p.h) * 4 / cam.s, p.y - Math.sin(p.h) * 4 / cam.s, 4, 1.2, 'dust', .3, 0, 0, 1.5);
     }
+    // الطيار بالمظلة
+    for (let i = chutes.length - 1; i >= 0; i--) { const c = chutes[i]; c.t += dt; if (c.t > 14) { chutes.splice(i, 1); continue; } c.x += 1.2 * dt / Math.max(.5, cam.s) * .2; const [x, y] = w2s(c.x, c.y); const k = Math.max(.6, 1.2 - c.t * .04); g.save(); g.translate(x, y); g.strokeStyle = 'rgba(60,60,60,.8)'; g.lineWidth = 1; g.beginPath(); g.moveTo(-6 * k, -2 * k); g.lineTo(0, 7 * k); g.lineTo(6 * k, -2 * k); g.stroke(); g.fillStyle = c.side ? '#f2efe8' : '#e8f0ff'; g.beginPath(); g.arc(0, -3 * k, 7 * k, Math.PI, 0); g.fill(); g.strokeStyle = 'rgba(0,0,0,.4)'; g.stroke(); g.fillStyle = '#333'; g.beginPath(); g.arc(0, 7 * k, 1.6 * k, 0, 7); g.fill(); g.restore(); }
   };
+  const chutes = [];
   // أحداث الجو → مؤثرات وأصوات وتنبيهات
   V.airEvent = (e, toast, ME) => {
     if (e.k === 'samlaunch') { const sm = A.sams.find(q => q.n === e.n); if (sm) sm.flash = 2.5; FX.muzzle(e.x, e.y, -Math.PI / 2, 1.6); for (let i = 0; i < 6; i++) FX.puff(e.x + rr(-2, 2) / cam.s, e.y + rr(-2, 2) / cam.s, 10, rr(3, 6), 'grey', .6, rr(-14, 14), rr(-14, 14), 2); SND.at('launch', e.x, e.y, .8, .3); }
@@ -329,5 +338,8 @@
     if (e.k === 'intercept') { FX.explode(e.x, e.y - 20 / cam.s, 'air', 1.3); SND.at('boom_mid', e.x, e.y, .8, .1); toast('✅ باتريوت اعترض صاروخ باليستي', 'good'); }
     if (e.k === 'bmimpact') { FX.explode(e.x, e.y, 'bm', 1); FX.burn(e.x, e.y, 1.2, 60); SND.at('boom_big', e.x, e.y, 1, .1); }
     if (e.k === 'crash') { FX.explode(e.x, e.y, 'big', 1); FX.burn(e.x, e.y, .8, 45); }
+    if (e.k === 'eject') { chutes.push({ x: e.x, y: e.y, t: 0, side: e.side }); }
+    if (e.k === 'harmlaunch') { SND.at('woosh', e.x, e.y, .7, .2); toast(e.side === ME ? `🚀 F-16 أطلقت صاروخ HARM على رادار ${e.n}` : `⚠️ إيران أطلقت صاروخ مضاد رادار على ${e.n}`, e.side === ME ? 'good' : 'bad'); }
+    if (e.k === 'harmhit') { FX.explode(e.x, e.y, 'big', 1.2); FX.burn(e.x, e.y, .9, 60); SND.at('boom_big', e.x, e.y, .9, .1); toast(e.side === ME ? `💥 دمّرنا رادار ${e.n} (معطّل فترة)` : `⚠️ رادار ${e.n} انضرب`, e.side === ME ? 'good' : 'bad'); }
   };
 })();

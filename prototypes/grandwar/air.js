@@ -11,15 +11,15 @@
     su24: { aa: .05, ag: 1.2, ecm: .95, n: 'سوخوي-24', spr: 'su25' },
   };
   const BASES = [
-    { n: 'قاعدة بلد', ll: [33.94, 44.36], side: 0, type: 'f16', planes: 24 },
-    { n: 'عين الأسد', ll: [33.79, 42.44], side: 0, type: 'f16', planes: 10 },
-    { n: 'الإمام علي', ll: [30.94, 46.09], side: 0, type: 'su25', planes: 14 },
-    { n: 'كركوك', ll: [35.47, 44.35], side: 0, type: 'su25', planes: 8 },
-    { n: 'وحدتي (دزفول)', ll: [32.43, 48.4], side: 1, type: 'su24', planes: 12 },
-    { n: 'أميدية', ll: [30.83, 49.53], side: 1, type: 'f14', planes: 10 },
-    { n: 'نوجه (همدان)', ll: [35.21, 48.65], side: 1, type: 'f14', planes: 16 },
-    { n: 'بوشهر', ll: [28.94, 50.83], side: 1, type: 'f14', planes: 12 },
-    { n: 'شيراز', ll: [29.54, 52.59], side: 1, type: 'su24', planes: 10 },
+    { n: 'قاعدة بلد', rw: 0.3, ll: [33.94, 44.36], side: 0, type: 'f16', planes: 24 },
+    { n: 'عين الأسد', rw: -0.2, ll: [33.79, 42.44], side: 0, type: 'f16', planes: 10 },
+    { n: 'الإمام علي', rw: 0.5, ll: [30.94, 46.09], side: 0, type: 'su25', planes: 14 },
+    { n: 'كركوك', rw: 0.1, ll: [35.47, 44.35], side: 0, type: 'su25', planes: 8 },
+    { n: 'وحدتي (دزفول)', rw: -0.4, ll: [32.43, 48.4], side: 1, type: 'su24', planes: 12 },
+    { n: 'أميدية', rw: 0.2, ll: [30.83, 49.53], side: 1, type: 'f14', planes: 10 },
+    { n: 'نوجه (همدان)', rw: 0.6, ll: [35.21, 48.65], side: 1, type: 'f14', planes: 16 },
+    { n: 'بوشهر', rw: 0.9, ll: [28.94, 50.83], side: 1, type: 'f14', planes: 12 },
+    { n: 'شيراز', rw: 0.3, ll: [29.54, 52.59], side: 1, type: 'su24', planes: 10 },
   ];
   const SAMS = [
     { n: 'باتريوت — بغداد', ll: [33.25, 44.5], side: 0, kind: 'patriot', r: 150, ammo: 16, pk: .6, abm: 1 },
@@ -94,32 +94,68 @@
       if (!m || m.kind === 'idle' || !m.p) continue;
       const k = Math.min(b.ready, m.kind === 'cap' ? 2 : 3); b.ready -= k;
       const fid = A.id++;
-      for (let i = 0; i < k; i++) A.planes.push({ id: A.id++, fid, slot: i, side: b.side, type: b.type, base: A.bases.indexOf(b), x: b.p[0] - i * 3, y: b.p[1] + i * 3, h: Math.atan2(m.p[1] - b.p[1], m.p[0] - b.p[0]), m: { ...m }, st: 'out', t: 0, shots: m.kind === 'cap' ? 2 : 0, bombs: 1, hp: 1, alt: 0 });
+      const rh = b.rw, rx = Math.cos(rh), ry = Math.sin(rh);
+      for (let i = 0; i < k; i++) A.planes.push({ id: A.id++, fid, slot: i, side: b.side, type: b.type, base: A.bases.indexOf(b), x: b.p[0] - rx * 5, y: b.p[1] - ry * 5, h: rh, v: 0, m: { ...m }, st: 'roll', t: -i * 1.1, shots: m.kind === 'cap' ? 2 : 0, harm: m.kind === 'strike' && b.type === 'f16' ? 1 : 0, bombs: PLANES[b.type].ag > 1.1 ? 2 : 1, alt: 0, altT: 0, bank: 0, gam: 0, flares: 12 });
       emit(A, { k: 'takeoff', side: b.side, x: b.p[0], y: b.p[1], base: b.n, n: k, kind: m.kind });
     }
-    // الطيارات
+    // الطيارات: لفّة بالميلان، صعود ونزول، ومناورات حسب المهمة (R3)
     for (const p of A.planes) {
       if (p.st === 'dead') continue;
-      if (p.st === 'fall') { p.t += dt; p.alt = Math.max(0, p.alt - dt * .6); p.h += dt * 3; p.x += Math.cos(p.h) * 10 * dt; p.y += Math.sin(p.h) * 10 * dt; if (p.t > 2.2) { p.st = 'dead'; emit(A, { k: 'crash', x: p.x, y: p.y, side: p.side }); } continue; }
-      p.t += dt; p.alt = Math.min(1, p.alt + dt * .8);
-      const base = A.bases[p.base];
-      let tx, ty;
-      if (p.st === 'out') { tx = p.m.p[0] + Math.cos(p.slot * 2.1) * 6 * p.slot; ty = p.m.p[1] + Math.sin(p.slot * 2.1) * 6 * p.slot; if (Math.hypot(tx - p.x, ty - p.y) < 14) { p.st = 'work'; p.t = 0; } }
-      else if (p.st === 'work') {
-        // يلف فوق الهدف
-        const a = p.t * 1.1 + p.slot * 2; tx = p.m.p[0] + Math.cos(a) * 22; ty = p.m.p[1] + Math.sin(a) * 22;
-        if ((p.m.kind === 'cas' || p.m.kind === 'strike') && p.bombs && p.t > .6 + p.slot * .4) { p.bombs = 0; attack(A, W, SIM, p); }
-        if (p.t > (p.m.kind === 'cap' ? 14 : 3.5)) p.st = 'back';
-      } else { tx = base.p[0]; ty = base.p[1]; if (Math.hypot(tx - p.x, ty - p.y) < 8) { p.st = 'dead'; base.ready = Math.min(base.n0, base.ready + 1); continue; } }
-      // جو-جو: الحماية تطلق على طيارات العدو القريبة
-      if (p.shots > 0 && PLANES[p.type].aa > .2) {
-        const e = A.planes.find(q => q.side !== p.side && (q.st === 'out' || q.st === 'work' || q.st === 'back') && Math.hypot(q.x - p.x, q.y - p.y) < 85 && !A.msls.some(m => m.tgt === q && m.kind === 'aam'));
-        if (e && A.rnd() < dt * 1.5) { p.shots--; A.msls.push({ kind: 'aam', side: p.side, x: p.x, y: p.y, h: p.h, tgt: e, pk: PLANES[p.type].aa * PLANES[e.type].ecm, t: 0, trail: [] }); emit(A, { k: 'aam', side: p.side, x: p.x, y: p.y }); }
+      p.t += dt; if (p.t < 0) continue;
+      if (p.st === 'fall') { p.alt = Math.max(0, p.alt - dt * .5); p.h += dt * 3.2; p.bank += dt * 6; p.gam = -1; p.x += Math.cos(p.h) * 14 * dt; p.y += Math.sin(p.h) * 14 * dt; if (p.alt <= 0) { p.st = 'dead'; emit(A, { k: 'crash', x: p.x, y: p.y, side: p.side }); } continue; }
+      const base = A.bases[p.base], T = PLANES[p.type], M = p.m;
+      let tx = M.p[0], ty = M.p[1], spd = V.plane, turn = V.turn, d = Math.hypot(tx - p.x, ty - p.y);
+      // تهرّب: صاروخ جاي عليه قريب ← لفة حادة ونزول ومشاعل
+      const threat = A.msls.find(m => m.tgt === p && !m.done && Math.hypot(m.x - p.x, m.y - p.y) < 32);
+      if (threat && p.st !== 'roll' && p.st !== 'land') {
+        p.ev = 2.2; const ang = Math.atan2(threat.y - p.y, threat.x - p.x) + Math.PI / 2 * (p.id % 2 ? 1 : -1);
+        tx = p.x + Math.cos(ang) * 60; ty = p.y + Math.sin(ang) * 60; turn = 2.6; p.altT = .35;
+        p.fl = (p.fl || 0) - dt; if (p.fl <= 0 && p.flares > 0) { p.fl = .22; p.flares--; A.decoys = A.decoys || []; A.decoys.push({ x: p.x, y: p.y, vx: -Math.cos(p.h) * 6, vy: -Math.sin(p.h) * 6, t: 0 }); emit(A, { k: 'flare', x: p.x, y: p.y }); }
+      } else if (p.ev > 0) { p.ev -= dt; tx = p.x + Math.cos(p.h) * 50; ty = p.y + Math.sin(p.h) * 50; }
+      else if (p.st === 'roll') { // إقلاع: يركض على المدرج ويرتفع
+        tx = p.x + Math.cos(base.rw) * 50; ty = p.y + Math.sin(base.rw) * 50; spd = Math.min(V.plane, (p.v || 0) + dt * 22); turn = 0; p.altT = p.v > 20 ? .7 : 0;
+        if (p.alt > .4) p.st = 'out';
+      } else if (p.st === 'out') {
+        p.altT = M.kind === 'cas' ? .35 : M.kind === 'cap' ? 1 : .85; // الإسناد يمشي واطي تحت الرادار
+        if (M.kind === 'cas' && d < 48) { p.st = 'popup'; p.ph = 0; }
+        if (M.kind === 'strike' && p.harm && d < 75) { p.st = 'harm'; p.ph = 0; }
+        else if (M.kind === 'strike' && !p.harm && d < 48) { p.st = 'popup'; p.ph = 0; }
+        if (M.kind === 'cap' && d < 20) { p.st = 'orbit'; p.ph = 0; }
+      } else if (p.st === 'popup') { p.ph += dt; p.altT = 1.1; if (p.ph > 1.1) p.st = 'dive'; }   // صعود سريع قبل الغطس
+      else if (p.st === 'dive') { p.altT = .2; spd = V.plane * 1.15; turn = 2; if (d < 15 && p.bombs > 0) { p.bombs--; attack(A, W, SIM, p); p.st = 'pull'; p.ph = 0; } }   // غطس على الهدف ويرمي
+      else if (p.st === 'pull') { // سحب وكسر لجنب ومشاعل
+        p.ph += dt; p.altT = .8; const ang = p.h + (p.id % 2 ? 1 : -1) * 1.6; tx = p.x + Math.cos(ang) * 60; ty = p.y + Math.sin(ang) * 60; turn = 2.2;
+        p.fl = (p.fl || 0) - dt; if (p.ph < 1.4 && p.fl <= 0 && p.flares > 0) { p.fl = .3; p.flares--; A.decoys = A.decoys || []; A.decoys.push({ x: p.x, y: p.y, vx: -Math.cos(p.h) * 6, vy: -Math.sin(p.h) * 6, t: 0 }); emit(A, { k: 'flare', x: p.x, y: p.y }); }
+        if (p.ph > 2.6) { if (p.bombs > 0) { p.st = 'out'; } else p.st = 'back'; }
+      } else if (p.st === 'harm') { // F-16: يرفع الأنف ويطلق HARM على رادار الـS-300 من بعيد، وبعدين يبتعد على جنب
+        p.ph += dt; p.altT = 1.05;
+        if (p.harm && p.ph > .7) { p.harm = 0; const sm = A.sams[M.sam]; A.msls.push({ kind: 'harm', side: p.side, x: p.x, y: p.y, h: p.h, tgtSam: M.sam, tx: sm.p[0], ty: sm.p[1], t: 0, trail: [] }); emit(A, { k: 'harmlaunch', side: p.side, x: p.x, y: p.y, n: sm.n }); }
+        if (p.ph > .7) { const ang = Math.atan2(ty - p.y, tx - p.x) + 1.1; tx = p.x + Math.cos(ang) * 60; ty = p.y + Math.sin(ang) * 60; }
+        if (p.ph > 3.2) p.st = 'back';
+      } else if (p.st === 'orbit') { // حماية أجواء: يلف فوق المنطقة
+        p.ph += dt; const a2 = p.ph * .9 + p.slot * 3; tx = M.p[0] + Math.cos(a2) * 26; ty = M.p[1] + Math.sin(a2) * 26; p.altT = 1;
+        if (p.ph > 16) p.st = 'back';
+      } else if (p.st === 'loft') { p.ph += dt; p.altT = 1.25; tx = p.lt.x; ty = p.lt.y; if (p.ph > .6) { p.shots--; A.msls.push({ kind: 'aam', side: p.side, x: p.x, y: p.y, h: p.h, tgt: p.lt, pk: T.aa * PLANES[p.lt.type].ecm, t: 0, trail: [] }); emit(A, { k: 'aam', side: p.side, x: p.x, y: p.y }); p.st = 'crank'; p.ph = 0; } }
+      else if (p.st === 'crank') { p.ph += dt; const ang = Math.atan2(p.lt.y - p.y, p.lt.x - p.x) + .95 * (p.id % 2 ? 1 : -1); tx = p.x + Math.cos(ang) * 60; ty = p.y + Math.sin(ang) * 60; p.altT = .9; if (p.ph > 2) { p.st = p.shots > 0 && M.kind === 'cap' ? 'orbit' : 'back'; } }
+      else if (p.st === 'back') { // رجوع: نقطة اقتراب على امتداد المدرج
+        const ax = base.p[0] - Math.cos(base.rw) * 34, ay = base.p[1] - Math.sin(base.rw) * 34; tx = ax; ty = ay; p.altT = .7;
+        if (Math.hypot(ax - p.x, ay - p.y) < 8) p.st = 'final';
+      } else if (p.st === 'final') { tx = base.p[0] + Math.cos(base.rw) * 8; ty = base.p[1] + Math.sin(base.rw) * 8; spd = V.plane * .55; p.altT = 0; turn = 1;
+        if (Math.hypot(base.p[0] - p.x, base.p[1] - p.y) < 4) { p.st = 'dead'; base.ready = Math.min(base.n0, base.ready + 1); emit(A, { k: 'land', x: p.x, y: p.y, side: p.side }); continue; } }
+      // جو-جو: الحماية تشوف طيارة عدو ← ترفع الأنف وترمي من بعيد
+      if (p.shots > 0 && T.aa > .2 && (p.st === 'orbit' || p.st === 'out' || p.st === 'back')) {
+        const e = A.planes.find(q => q.side !== p.side && q.st !== 'fall' && q.st !== 'roll' && q.st !== 'dead' && Math.hypot(q.x - p.x, q.y - p.y) < 85 && !A.msls.some(m => m.tgt === q && m.kind === 'aam'));
+        if (e && A.rnd() < dt * 1.5) { p.st = 'loft'; p.ph = 0; p.lt = e; }
       }
+      // الحركة: الأنف يلف بحد، والجناح يميل حسب سرعة اللفة، والارتفاع يتغير بنعومة
       const want = Math.atan2(ty - p.y, tx - p.x); let dh = want - p.h; while (dh > Math.PI) dh -= 2 * Math.PI; while (dh < -Math.PI) dh += 2 * Math.PI;
-      p.h += Math.max(-V.turn * dt, Math.min(V.turn * dt, dh));
-      p.x += Math.cos(p.h) * V.plane * dt; p.y += Math.sin(p.h) * V.plane * dt;
+      const rate = Math.max(-turn, Math.min(turn, dh * 2.2)); p.h += rate * dt;
+      const bankT = Math.atan(rate / 1.6 * 2.75); p.bank += Math.max(-3 * dt, Math.min(3 * dt, bankT - p.bank));
+      p.v = spd; const da = Math.max(-.55 * dt, Math.min(.5 * dt, p.altT - p.alt)); p.alt = Math.max(0, p.alt + da); p.gam = Math.max(-1, Math.min(1, da / dt * 2.2));
+      p.x += Math.cos(p.h) * spd * dt; p.y += Math.sin(p.h) * spd * dt;
     }
+    // المشاعل تطيح وتنطفي
+    if (A.decoys) { for (const f of A.decoys) { f.t += dt; f.x += f.vx * dt; f.y += f.vy * dt; } A.decoys = A.decoys.filter(f => f.t < 2.2); }
     A.planes = A.planes.filter(p => p.st !== 'dead');
     // الدفاع الجوي
     for (const s of A.sams) {
@@ -149,16 +185,23 @@
       if (m.kind === 'bm') {
         m.f = Math.min(1, m.f + V.bm * dt / m.D); m.x = m.x0 + (m.tx - m.x0) * m.f; m.y = m.y0 + (m.ty - m.y0) * m.f; m.alt = Math.sin(m.f * Math.PI);
         if (m.f >= 1) { m.done = 1; impact(A, W, SIM, m); }
+      } else if (m.kind === 'harm') {
+        const want = Math.atan2(m.ty - m.y, m.tx - m.x); let dh = want - m.h; while (dh > Math.PI) dh -= 2 * Math.PI; while (dh < -Math.PI) dh += 2 * Math.PI;
+        m.h += Math.max(-3 * dt, Math.min(3 * dt, dh)); m.x += Math.cos(m.h) * 95 * dt; m.y += Math.sin(m.h) * 95 * dt; m.alt = Math.min(1, m.t * 1.2);
+        if (Math.hypot(m.tx - m.x, m.ty - m.y) < 5) { m.done = 1; const sm = A.sams[m.tgtSam]; sm.down = Math.max(sm.down, 45); sm.ammo = Math.max(0, sm.ammo - 6); emit(A, { k: 'harmhit', x: m.tx, y: m.ty, side: m.side, n: sm.n }); }
       } else {
+        // المشاعل: صاروخ قريب من طيارة تطلق مشاعل ممكن ينخدع ويلحق المشعل
+        if (m.tgt && !m.tgt.kind && A.decoys && !m.fooled) { const f = A.decoys.find(q => Math.hypot(q.x - m.x, q.y - m.y) < 14); if (f && A.rnd() < .3) { m.fooled = 1; m.tgt = { x: f.x, y: f.y, st: 'decoy', decoy: f }; } }
+        if (m.tgt && m.tgt.decoy) { m.tgt.x = m.tgt.decoy.x; m.tgt.y = m.tgt.decoy.y; if (Math.hypot(m.tgt.x - m.x, m.tgt.y - m.y) < 6 || m.t > 4) { m.done = 1; emit(A, { k: 'miss', x: m.x, y: m.y, side: m.side, fooled: 1 }); continue; } }
         const T = m.tgt; if (!T || T.st === 'dead' || T.st === 'fall' || T.done) { m.done = 1; emit(A, { k: 'selfd', x: m.x, y: m.y }); continue; }
         const want = Math.atan2(T.y - m.y, T.x - m.x); let dh = want - m.h; while (dh > Math.PI) dh -= 2 * Math.PI; while (dh < -Math.PI) dh += 2 * Math.PI;
         m.h += Math.max(-5 * dt, Math.min(5 * dt, dh)); const v = m.kind === 'sam' ? V.sam : V.aam;
         m.x += Math.cos(m.h) * v * dt; m.y += Math.sin(m.h) * v * dt; m.alt = Math.min(1, m.t * 1.5);
-        if (Math.hypot(T.x - m.x, T.y - m.y) < 5) {
+        if (!T.decoy && Math.hypot(T.x - m.x, T.y - m.y) < 5) {
           m.done = 1;
-          if (A.rnd() < m.pk) {
+          if (A.rnd() < m.pk * (T.ev > 0 ? .6 : 1)) {
             if (T.kind === 'bm') { T.done = 1; emit(A, { k: 'intercept', x: m.x, y: m.y, side: m.side }); }
-            else { T.st = 'fall'; T.t = 0; A.kills[m.side]++; A.lostPlanes[T.side]++; A.bases[T.base].n0 = Math.max(0, A.bases[T.base].n0 - 1); emit(A, { k: 'kill', x: m.x, y: m.y, side: m.side, victim: PLANES[T.type].n, vside: T.side, by: m.kind }); }
+            else { T.st = 'fall'; T.t = 0; if (A.rnd() < .7) emit(A, { k: 'eject', x: T.x, y: T.y, side: T.side }); A.kills[m.side]++; A.lostPlanes[T.side]++; A.bases[T.base].n0 = Math.max(0, A.bases[T.base].n0 - 1); emit(A, { k: 'kill', x: m.x, y: m.y, side: m.side, victim: PLANES[T.type].n, vside: T.side, by: m.kind }); }
           } else emit(A, { k: 'miss', x: m.x, y: m.y, side: m.side });
         }
         if (m.t > 4) { m.done = 1; emit(A, { k: 'selfd', x: m.x, y: m.y }); }

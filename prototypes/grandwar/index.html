@@ -449,7 +449,7 @@ function frame(now) {
 }
 // للفحص الآلي
 window.G_ = { WD, AW, SIM, cam, VIEW, FX, sel: ids => { SEL = new Set(ids); card(); }, orderTo, setSpeed, tap, get clusters() { return clusters; } };
-Promise.all(['base_me', 'base_south', 'abrams', 'abrams_t', 't72', 't72_t', 'bmp', 'grad', 'truck', 'f16', 'su25', 'f14', 'patriot', 's400', 'zolf', 'fx_explo1', 'fx_explo2', 'fx_fire', 'fx_cloud'].map(load)).then(() => {
+Promise.all(['base_me', 'base_south', 'abrams', 'abrams_t', 't72', 't72_t', 'bmp', 'grad', 'truck', 'f16', 'su25', 'f14', 'patriot', 's400', 'zolf', 'fx_explo1', 'fx_explo2', 'fx_fire', 'fx_cloud', 'f16_sheet', 'su25_sheet', 'f14_sheet'].map(load)).then(() => {
   // نسخة حمرة من الشاحنة والراجمة لإيران (حتى ما تنلخبط الألوان من قريب)
   for (const n of ['truck', 'grad']) { const im = IMG[n], c = document.createElement('canvas'); c.width = im.width; c.height = im.height; const x = c.getContext('2d'); x.filter = 'hue-rotate(170deg) saturate(1.3)'; x.drawImage(im, 0, 0); IMG[n + '_r'] = c; }
   FX.init({ g, cam, w2s, IMG });

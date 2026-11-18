@@ -13,6 +13,7 @@
 
 - `archive/v0.1.0-original.html` **مجمّد**. لا تعدله أبداً.
 - `archive/topdown-wm10.html` و `prototypes/topdown/` و رابط Lx75CQEoksrNFSajMzuNTZ **مجمّدين** (نسخة «الحرب من فوق» اللي عجبت المالك، D-033). الشغل الجديد بمجلد ورابط جديد.
+- `prototypes/world3d/` و رابط 8yoHiqbP9uFudDUA3QjNZR (الإصدار 6) **مجمّدين** عند commit `cf886fd` («العالم 3D» WM11–WM15، D-037). الشغل الجديد بمجلد ورابط جديد.
 - كل فكرة من المالك ← `docs/IDEAS.md` برقم `I-NNN` قبل التنفيذ. ما تنمسح فكرة؛ تنرفض مع السبب.
 - أي خروج عن الخطة ← تعديل `docs/PLAN.md` + سطر بـ «سجل تغييرات الخطة» + قرار بـ `docs/DECISIONS.md` إذا مهم.
 - كل تغيير بحالة اللعبة (state) ← رفع إصدار الحفظ + ترقية (migration). **حفظ المالك ما ينكسر أبداً.**
@@ -49,7 +50,7 @@ tests/smoke.mjs               اختبار الدخان (Playwright، بدون �
 docs/TECH_STACK.md            قرار التقنيات (TypeScript + Babylon.js + Vite + Capacitor)
 prototypes/intercept/         تجربة 3D: اعتراض الباتريوت (راجع README داخلها)
 prototypes/topdown/           «الحرب من فوق» (D-032): خريطة مرسومة بثيمين، PixiJS، صور Blender — مجمّد عند WM10 (D-033)
-prototypes/world3d/            «العالم 3D» (WM11، I-065): خريطة العالم كلها 3D بالشكل المرسوم، Babylon.js، كاميرا تميل وتلف بإصبعين؛ + «🗺 الجبهة كاملة» (WM14): تشكيلات ومعارك تلقائية (`src/orbat.ts`، فحص `npm run test:orbat`) — الاتجاه الحالي
+prototypes/world3d/            «العالم 3D» (WM11–WM15): خريطة العالم 3D، عملية شلامجة بأرض مجسمة وقتال دبابات وتحكم، و«الجبهة كاملة» بـ `?mode=front` — مجمّد عند cf886fd (D-037)
 prototypes/oblique/           تجربة «2D مايل» (D-031): S-400 وباتريوت وباليستي بالحجم والسرعة الحقيقية على صور أقمار
 prototypes/warmap/            تجربة: شهر حرب حي على خريطة الدول (مطارات، دفاع جوي، باليستي، دروع، جبهة)
 prototypes/theater/           تجربة 3D: مسرح العمليات (راجع README داخلها). الأرض: `npm run land` يولّدها من `src/land.ts`

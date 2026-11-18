@@ -102,6 +102,8 @@
     for (const p of A.planes) {
       if (p.st === 'dead') continue;
       p.t += dt; if (p.t < 0) continue;
+      if (p.st !== p.lastSt) { p.lastSt = p.st; p.stT = 0; } else p.stT = (p.stT || 0) + dt;
+      if (p.stT > 30 && p.st !== 'orbit' && p.st !== 'out' && p.st !== 'fall') { p.st = p.st === 'final' || p.st === 'back' ? 'final' : 'back'; if (p.stT > 45) { p.st = 'dead'; A.bases[p.base].ready = Math.min(A.bases[p.base].n0, A.bases[p.base].ready + 1); continue; } }
       if (p.st === 'fall') { p.alt = Math.max(0, p.alt - dt * .5); p.h += dt * 3.2; p.bank += dt * 6; p.gam = -1; p.x += Math.cos(p.h) * 14 * dt; p.y += Math.sin(p.h) * 14 * dt; if (p.alt <= 0) { p.st = 'dead'; emit(A, { k: 'crash', x: p.x, y: p.y, side: p.side }); } continue; }
       const base = A.bases[p.base], T = PLANES[p.type], M = p.m;
       let tx = M.p[0], ty = M.p[1], spd = V.plane, turn = V.turn, d = Math.hypot(tx - p.x, ty - p.y);
@@ -139,9 +141,11 @@
       else if (p.st === 'crank') { p.ph += dt; const ang = Math.atan2(p.lt.y - p.y, p.lt.x - p.x) + .95 * (p.id % 2 ? 1 : -1); tx = p.x + Math.cos(ang) * 60; ty = p.y + Math.sin(ang) * 60; p.altT = .9; if (p.ph > 2) { p.st = p.shots > 0 && M.kind === 'cap' ? 'orbit' : 'back'; } }
       else if (p.st === 'back') { // رجوع: نقطة اقتراب على امتداد المدرج
         const ax = base.p[0] - Math.cos(base.rw) * 34, ay = base.p[1] - Math.sin(base.rw) * 34; tx = ax; ty = ay; p.altT = .7;
-        if (Math.hypot(ax - p.x, ay - p.y) < 8) p.st = 'final';
-      } else if (p.st === 'final') { tx = base.p[0] + Math.cos(base.rw) * 8; ty = base.p[1] + Math.sin(base.rw) * 8; spd = V.plane * .55; p.altT = 0; turn = 1;
-        if (Math.hypot(base.p[0] - p.x, base.p[1] - p.y) < 4) { p.st = 'dead'; base.ready = Math.min(base.n0, base.ready + 1); emit(A, { k: 'land', x: p.x, y: p.y, side: p.side }); continue; } }
+        if (Math.hypot(ax - p.x, ay - p.y) < 14 || Math.hypot(base.p[0] - p.x, base.p[1] - p.y) < 40) p.st = 'final';
+      } else if (p.st === 'final') { // نهائي: على المدرج نفسه، أبطأ ولف أحد؛ يهبط لما يوصل أو يعبر المدرج (ما يدور حوله)
+        tx = base.p[0]; ty = base.p[1]; spd = V.plane * .42; p.altT = 0; turn = 2.6;
+        const bd = Math.hypot(base.p[0] - p.x, base.p[1] - p.y), ahead = Math.cos(Math.atan2(base.p[1] - p.y, base.p[0] - p.x) - p.h) > 0;
+        if (bd < 7 || (!ahead && bd < 18)) { p.st = 'dead'; base.ready = Math.min(base.n0, base.ready + 1); emit(A, { k: 'land', x: p.x, y: p.y, side: p.side }); continue; } }
       // جو-جو: الحماية تشوف طيارة عدو ← ترفع الأنف وترمي من بعيد
       if (p.shots > 0 && T.aa > .2 && (p.st === 'orbit' || p.st === 'out' || p.st === 'back')) {
         const e = A.planes.find(q => q.side !== p.side && q.st !== 'fall' && q.st !== 'roll' && q.st !== 'dead' && Math.hypot(q.x - p.x, q.y - p.y) < 85 && !A.msls.some(m => m.tgt === q && m.kind === 'aam'));

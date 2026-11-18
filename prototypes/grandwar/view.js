@@ -28,17 +28,24 @@
     let v = vol * z * Math.max(0, 1 - off * 1.1); if (v < .03) return;
     let name = n; if (z < .25 && (n === 'boom_mid' || n === 'boom_big' || n === 'boom_bomb' || n === 'tank')) name = 'boom_far';
     SND.last[n] = now; SND.budget++;
+    // المسافة عن نص الشاشة بالكم: الصوت يتأخر (سرعة الصوت مضغوطة بنفس نسبة الوقت) والبعيد مكتوم
+    const dkm = Math.hypot(wx - cam.x, wy - cam.y), rel = dkm * cam.s / Math.max(W, H);
+    const delay = Math.min(2.2, dkm / (.343 * Math.max(20, V.gs || 60)));
     const s = SND.ctx.createBufferSource(); s.buffer = SND.buf[name]; s.playbackRate.value = .92 + R() * .16;
     const gn = SND.ctx.createGain(); gn.gain.value = Math.min(1, v);
+    const lp = SND.ctx.createBiquadFilter(); lp.type = 'lowpass'; lp.frequency.value = Math.max(600, 16000 * Math.exp(-rel * 2.4) * Math.min(1, cam.s / 1.2));
     const pan = SND.ctx.createStereoPanner ? SND.ctx.createStereoPanner() : null;
-    if (pan) { pan.pan.value = Math.max(-1, Math.min(1, (x - W / 2) / (W / 2))) * .7; s.connect(gn).connect(pan).connect(SND.master); } else s.connect(gn).connect(SND.master);
-    s.start();
+    let node = s.connect(lp).connect(gn); if (pan) { pan.pan.value = Math.max(-1, Math.min(1, (x - W / 2) / (W / 2))) * .7; node = node.connect(pan); } node.connect(SND.master);
+    s.start(now + delay);
+    // الانفجارات الكبيرة: طبقة هدير بعيد وراها
+    if ((n === 'boom_big' || n === 'boom_bomb') && SND.buf.boom_far && name !== 'boom_far') { const s2 = SND.ctx.createBufferSource(); s2.buffer = SND.buf.boom_far; const g2 = SND.ctx.createGain(); g2.gain.value = Math.min(.6, v * .5); s2.connect(g2).connect(SND.master); s2.start(now + delay + .12); }
   };
   V.soundTick = (dt, nBattlesNear) => { SND.budget = Math.max(0, SND.budget - dt * 12); if (SND.amb) SND.amb.gain.value += ((SND.on ? Math.min(.55, nBattlesNear * .12) * Math.min(1, cam.s / 2) : 0) - SND.amb.gain.value) * Math.min(1, dt * 2); };
 
   // ===== الآليات =====
   const VIS = new Map(); // divId → {veh:[...], s}
-  const wrecks = [], dust = [], shots = [], booms = [], smokes = [];
+  const wrecks = [], shots = [], dying = [];
+  const DARK = {}; const dark = n => { if (DARK[n]) return DARK[n]; const im = IMG[n], c = document.createElement('canvas'); c.width = im.width; c.height = im.height; const x = c.getContext('2d'); x.filter = 'brightness(.26) saturate(.15) sepia(.3)'; x.drawImage(im, 0, 0); return DARK[n] = c; };
   const KIT = {
     arm: side => [['tank', 6], ['truck', 1]], mec: side => [['bmp', 3], ['tank', 1], ['truck', 1]], inf: side => [['truck', 3], ['grad', 1]],
   };
@@ -80,7 +87,11 @@
       const combat = v.veh.filter(q => q.t !== 'truck');
       const want = Math.max(1, Math.round(d.str * v.n0));
       let alive = combat.filter(q => q.alive).length;
-      while (alive > want) { const q = combat.filter(q => q.alive).sort((a, b) => b.k - a.k)[0]; q.alive = false; alive--; if (live) { boomAt(q.x, q.y, 1.4); wrecks.push({ x: q.x, y: q.y, h: q.h, n: sprName(d, q.t), t: 0 }); SND.at('boom_big', q.x, q.y, .9, .15); } }
+      while (alive > want) {
+        const q = combat.filter(q => q.alive).sort((a, b) => b.k - a.k)[0]; q.alive = false; alive--;
+        if (live) { dying.push({ q, n: sprName(d, q.t), t: 0, cook: q.t === 'tank' ? rr(.7, 1.3) : rr(.4, .8), side: d.side }); hitBy(q, v); }
+        else wrecks.push({ x: q.x, y: q.y, h: q.h, tur: q.tur, n: sprName(d, q.t), t: 0, tank: q.t === 'tank' });
+      }
       // مكان كل آلية بالتشكيل
       const c = Math.cos(rot), s = Math.sin(rot); const L = v.veh.filter(q => q.alive);
       const base = [v.ax, v.ay];
@@ -105,7 +116,7 @@
           q.sp += (tsp - q.sp) * Math.min(1, dt * 3);
         } else { q.sp *= Math.max(0, 1 - dt * 5); let dh = q.trot - q.h; while (dh > Math.PI) dh -= 2 * Math.PI; while (dh < -Math.PI) dh += 2 * Math.PI; q.h += Math.max(-1.5 * dt, Math.min(1.5 * dt, dh)); }
         q.x += Math.cos(q.h) * q.sp * dt; q.y += Math.sin(q.h) * q.sp * dt;
-        if (Math.abs(q.sp) > 6 * kmPx && R() < dt * 9) dust.push({ x: q.x - Math.cos(q.h) * S * .5 * kmPx, y: q.y - Math.sin(q.h) * S * .5 * kmPx, t: 0, r: S * .25 });
+        if (Math.abs(q.sp) > 6 * kmPx && R() < dt * 7) FX.puff(q.x - Math.cos(q.h) * S * .5 * kmPx, q.y - Math.sin(q.h) * S * .5 * kmPx, S * .22, rr(1.5, 2.6), 'dust', .4, -Math.cos(q.h) * 6, -Math.sin(q.h) * 6, 1.8);
         let tdh = (q.aim ?? q.h) - q.h - q.tur; while (tdh > Math.PI) tdh -= 2 * Math.PI; while (tdh < -Math.PI) tdh += 2 * Math.PI; q.tur += Math.max(-2 * dt, Math.min(2 * dt, tdh));
       }
       if (st.k === 'fight') { if (!byBattle.has(st.tgt)) byBattle.set(st.tgt, [[], []]); byBattle.get(st.tgt)[st.att ? 0 : 1].push(v); }
@@ -129,17 +140,40 @@
   };
   function fire(q, tq, d) {
     const miss = () => [tq.x + (R() - .5) * 3 / cam.s * 8, tq.y + (R() - .5) * 3 / cam.s * 8];
-    if (q.t === 'tank') { q.cd = 2.2 + R() * 2.5; const [ex, ey] = miss(); shots.push({ k: 'shell', x0: q.x, y0: q.y, x1: ex, y1: ey, t: 0, dur: .18 }); booms.push({ x: q.x + Math.cos(q.aim) * 6 / cam.s, y: q.y + Math.sin(q.aim) * 6 / cam.s, t: 0, r: 5, k: 'flash' }); SND.at('tank', q.x, q.y, .55, .12); setTimeout(() => { boomAt(ex, ey, .55); }, 180); }
-    else if (q.t === 'bmp') { q.cd = 1.6 + R() * 2; for (let i = 0; i < 4; i++) { const [ex, ey] = miss(); shots.push({ k: 'burst', x0: q.x, y0: q.y, x1: ex, y1: ey, t: -i * .07, dur: .14 }); } SND.at('can30', q.x, q.y, .35, .1); }
+    if (q.t === 'tank') { q.cd = 3 + R() * 3; const [ex, ey] = miss(); const hit = R() < .3; FX.muzzle(q.x + Math.cos(q.aim) * 9 / cam.s, q.y + Math.sin(q.aim) * 9 / cam.s, q.aim); shots.push({ k: 'shell', x0: q.x, y0: q.y, x1: hit ? tq.x : ex, y1: hit ? tq.y : ey, t: 0, dur: .18, end: hit ? 'spark' : 'dirt' }); SND.at('tank', q.x, q.y, .55, .12); }
+    else if (q.t === 'bmp') { q.cd = 1.6 + R() * 2; for (let i = 0; i < 4; i++) { const [ex, ey] = miss(); shots.push({ k: 'burst', x0: q.x, y0: q.y, x1: ex, y1: ey, t: -i * .07, dur: .14, end: i === 3 ? 'puff' : null }); } SND.at('can30', q.x, q.y, .35, .1); }
     else if (q.t === 'truck') { q.cd = 1 + R() * 1.5; for (let i = 0; i < 3; i++) { const [ex, ey] = miss(); shots.push({ k: 'mg', x0: q.x + (R() - .5) * 4 / cam.s, y0: q.y + (R() - .5) * 4 / cam.s, x1: ex, y1: ey, t: -i * .05, dur: .12 }); } SND.at('mg', q.x, q.y, .25, .15); }
     else if (q.t === 'grad') { q.cd = 7 + R() * 5; for (let i = 0; i < 6; i++) { const [ex, ey] = [tq.x + (R() - .5) * 18 / cam.s, tq.y + (R() - .5) * 18 / cam.s]; shots.push({ k: 'rocket', x0: q.x, y0: q.y, x1: ex, y1: ey, t: -i * .12, dur: .9, trail: [] }); } SND.at('rocket', q.x, q.y, .6, .3); }
   }
-  function boomAt(x, y, k = 1) { booms.push({ x, y, t: 0, r: 9 * k, k: 'boom' }); for (let i = 0; i < 3; i++) smokes.push({ x: x + (R() - .5) * 2 / cam.s, y: y + (R() - .5) * 2 / cam.s, t: 0, r: 6 * k, life: 3 + R() * 3 }); }
+  const rr = (a, b) => a + R() * (b - a);
+  function boomAt(x, y, k = 1) { FX.explode(x, y, k > 1.2 ? 'big' : 'he', k); }
   V.boomAt = boomAt;
+  // الآلية اللي تموت: قذيفة جاية من دبابة عدو بنفس المعركة (إذا موجودة) وشرارة بمكان الإصابة
+  function hitBy(q, v) {
+    const foes = []; for (const [, w] of VIS) if (w.d && w.d.side !== v.d.side && performance.now() - w.seen < 200) for (const z of w.veh) if (z.alive && z.t === 'tank' && Math.hypot(z.x - q.x, z.y - q.y) < 60 / cam.s * 4) foes.push(z);
+    const f = foes[Math.floor(R() * foes.length)];
+    if (f) { f.aim = Math.atan2(q.y - f.y, q.x - f.x); FX.muzzle(f.x + Math.cos(f.aim) * 9 / cam.s, f.y + Math.sin(f.aim) * 9 / cam.s, f.aim); shots.push({ k: 'shell', x0: f.x, y0: f.y, x1: q.x, y1: q.y, t: 0, dur: .16 }); SND.at('tank', f.x, f.y, .55, .1); }
+    setTimeout(() => FX.spark(q.x, q.y, 14, 140), f ? 160 : 0);
+  }
+  function updDying(dt) {
+    for (let i = dying.length - 1; i >= 0; i--) {
+      const z = dying[i], q = z.q; z.t += dt;
+      if (R() < dt * 14) FX.puff(q.x, q.y, 4 * FX.U(), rr(1.5, 3), 'black', .55, 0, -6, 2); // دخان من الفتحات
+      if (z.t >= z.cook) {
+        const tank = q.t === 'tank', S = Math.min(38, Math.max(14, cam.s * 9.5));
+        FX.explode(q.x, q.y, tank ? 'cookoff' : q.t === 'bmp' ? 'big' : 'he', tank ? 1.1 : .8);
+        if (tank) FX.throwPart(dark(z.n + '_t'), q.x, q.y, q.h + q.tur, S);
+        FX.burn(q.x, q.y, tank ? 1 : .7, tank ? rr(70, 110) : rr(40, 70));
+        wrecks.push({ x: q.x, y: q.y, h: q.h, tur: q.tur, n: z.n, t: 0, tank, noTur: tank });
+        SND.at('boom_big', q.x, q.y, 1, .08); dying.splice(i, 1);
+      }
+    }
+  }
   // رسم الآليات
   V.drawDivs = (labels) => {
     const S = Math.min(38, Math.max(14, cam.s * 9.5));
-    for (const w of wrecks) { const [x, y] = w2s(w.x, w.y); if (x < -40 || x > innerWidth + 40 || y < -40 || y > innerHeight + 40) continue; g.save(); g.translate(x, y); g.rotate(w.h + .5); g.globalAlpha = .9; g.filter = 'brightness(.28) saturate(.2)'; g.drawImage(IMG[w.n], -S / 2, -S / 2, S, S); g.restore(); if (w.t < 25 && R() < .08) smokes.push({ x: w.x, y: w.y, t: 0, r: 4, life: 3 }); }
+    for (const w of wrecks) { const [x, y] = w2s(w.x, w.y); if (x < -40 || x > innerWidth + 40 || y < -40 || y > innerHeight + 40) continue; g.save(); g.translate(x, y); g.rotate(w.h); g.drawImage(dark(w.n), -S / 2, -S / 2, S, S); if (w.tank && !w.noTur) { g.rotate(w.tur || 0); g.drawImage(dark(w.n + '_t'), -S / 2, -S / 2, S, S); } g.restore(); }
+    for (const z of dying) { const q = z.q; const [x, y] = w2s(q.x, q.y); const sz = q.t === 'tank' ? S : S * .9; g.save(); g.translate(x, y); g.rotate(q.h); g.drawImage(IMG[z.n], -sz / 2, -sz / 2, sz, sz); if (q.t === 'tank') { g.rotate(q.tur); g.drawImage(IMG[z.n + '_t'], -sz / 2, -sz / 2, sz, sz); } g.restore(); }
     for (const [id, v] of VIS) {
       if (performance.now() - v.seen > 100) continue; const d = v.d;
       const ring = d.side ? 'rgba(215,60,45,.75)' : 'rgba(45,115,235,.75)';
@@ -163,22 +197,16 @@
   V.forget = () => { for (const [id, v] of VIS) if (performance.now() - v.seen > 3000) VIS.delete(id); };
   // المؤثرات: رمي، انفجارات، غبار، دخان
   V.drawFx = dt => {
-    for (let i = dust.length - 1; i >= 0; i--) { const p = dust[i]; p.t += dt; if (p.t > 1.6) { dust.splice(i, 1); continue; } const [x, y] = w2s(p.x, p.y); g.fillStyle = `rgba(190,170,130,${.35 * (1 - p.t / 1.6)})`; g.beginPath(); g.arc(x, y, p.r * (1 + p.t * 1.5), 0, 7); g.fill(); }
-    for (let i = smokes.length - 1; i >= 0; i--) { const p = smokes[i]; p.t += dt; if (p.t > p.life) { smokes.splice(i, 1); continue; } const [x, y] = w2s(p.x + p.t * .8 / cam.s * 3, p.y - p.t * 1.2 / cam.s * 3); const r = p.r * (1 + p.t * .6) * Math.min(1.3, Math.max(.5, cam.s / 3)); g.fillStyle = `rgba(70,65,60,${.3 * (1 - p.t / p.life)})`; g.beginPath(); g.arc(x, y, r, 0, 7); g.fill(); }
+    updDying(dt);
     for (let i = shots.length - 1; i >= 0; i--) {
-      const s = shots[i]; s.t += dt; if (s.t < 0) continue; const f = s.t / s.dur; if (f > 1) { if (s.k === 'rocket') { boomAt(s.x1, s.y1, .6); SND.at('boom_mid', s.x1, s.y1, .35, .12); } shots.splice(i, 1); continue; }
+      const s = shots[i]; s.t += dt; if (s.t < 0) continue; const f = s.t / s.dur;
+      if (f > 1) { if (s.k === 'rocket') { FX.dirt(s.x1, s.y1, .9); FX.explode(s.x1, s.y1, 'small'); SND.at('boom_mid', s.x1, s.y1, .35, .12); } else if (s.end === 'dirt') FX.dirt(s.x1, s.y1, .6); else if (s.end === 'spark') FX.spark(s.x1, s.y1, 10, 110); else if (s.end === 'puff') FX.puff(s.x1, s.y1, 4 * FX.U(), 1.2, 'dust', .5, 0, 0, 1.5); shots.splice(i, 1); continue; }
       const [x0, y0] = w2s(s.x0, s.y0), [x1, y1] = w2s(s.x1, s.y1);
-      if (s.k === 'rocket') { const ff = f, arc = Math.sin(ff * Math.PI) * Math.hypot(x1 - x0, y1 - y0) * .25; const x = x0 + (x1 - x0) * ff, y = y0 + (y1 - y0) * ff - arc; s.trail.push([x, y]); g.strokeStyle = 'rgba(220,215,205,.6)'; g.lineWidth = 1.6; g.beginPath(); s.trail.forEach(([a, b], k) => k ? g.lineTo(a, b) : g.moveTo(a, b)); g.stroke(); g.fillStyle = '#ffd27a'; g.beginPath(); g.arc(x, y, 2.2, 0, 7); g.fill(); continue; }
+      if (s.k === 'rocket') { const ff = f, arc = Math.sin(ff * Math.PI) * Math.hypot(x1 - x0, y1 - y0) * .25; const x = x0 + (x1 - x0) * ff, y = y0 + (y1 - y0) * ff - arc; s.trail.push([x, y]); if (R() < .5) FX.puff(s.x0 + (s.x1 - s.x0) * ff, s.y0 + (s.y1 - s.y0) * ff - arc / cam.s, 3 * FX.U(), 2.5, 'grey', .45, 0, 0, 2); g.fillStyle = '#ffd27a'; g.beginPath(); g.arc(x, y, 2.2, 0, 7); g.fill(); continue; }
       const a = Math.max(0, f - (s.k === 'shell' ? .35 : .25)), x = x0 + (x1 - x0) * f, y = y0 + (y1 - y0) * f, xa = x0 + (x1 - x0) * a, ya = y0 + (y1 - y0) * a;
       g.strokeStyle = s.k === 'shell' ? 'rgba(255,236,170,.95)' : s.k === 'burst' ? 'rgba(255,200,110,.9)' : 'rgba(255,240,190,.75)'; g.lineWidth = s.k === 'shell' ? 2.4 : s.k === 'burst' ? 1.7 : 1; g.beginPath(); g.moveTo(xa, ya); g.lineTo(x, y); g.stroke();
     }
-    for (let i = booms.length - 1; i >= 0; i--) {
-      const b = booms[i]; b.t += dt; const life = b.k === 'flash' ? .09 : .7; if (b.t > life) { booms.splice(i, 1); continue; }
-      const [x, y] = w2s(b.x, b.y), f = b.t / life, r = b.r * Math.min(2.4, Math.max(.7, cam.s / 1.6)) * (b.k === 'flash' ? 1 : (.5 + f));
-      const gr = g.createRadialGradient(x, y, 0, x, y, r); gr.addColorStop(0, `rgba(255,245,200,${1 - f})`); gr.addColorStop(.4, `rgba(255,150,50,${.85 * (1 - f)})`); gr.addColorStop(1, 'rgba(120,60,20,0)');
-      g.fillStyle = gr; g.beginPath(); g.arc(x, y, r, 0, 7); g.fill();
-    }
-    for (const w of wrecks) w.t += dt; while (wrecks.length > 160) wrecks.shift();
+    while (wrecks.length > 160) wrecks.shift();
   };
 
   // ===== الجو =====
@@ -231,20 +259,25 @@
       g.save(); g.globalAlpha = .3; g.translate(x + alt * .6, y + alt); g.rotate(H); g.filter = 'brightness(0) blur(1.5px)'; g.drawImage(im, -sz / 2, -sz / 2, sz, sz); g.restore();
       g.save(); g.translate(x, y); g.rotate(H); g.drawImage(im, -sz / 2, -sz / 2, sz, sz); g.restore();
       g.beginPath(); g.moveTo(x, y - sz * .62); g.lineTo(x - 4, y - sz * .62 - 6); g.lineTo(x + 4, y - sz * .62 - 6); g.closePath(); g.fillStyle = p.side ? '#e0533f' : '#4f8ff0'; g.fill();
-      if (p.st === 'fall') { if (R() < .6) smokes.push({ x: p.x, y: p.y, t: 0, r: 5, life: 2.5 }); }
+      if (p.st === 'fall') { if (R() < .7) FX.puff(p.x, p.y, 6, rr(3, 5), 'black', .6, 0, 0, 2); if (R() < .3) FX.spark(p.x, p.y, 2, 40); }
     }
   };
   // أحداث الجو → مؤثرات وأصوات وتنبيهات
   V.airEvent = (e, toast, ME) => {
-    if (e.k === 'samlaunch') { const s = A.sams.find(q => q.n === e.n); if (s) s.flash = 2.5; for (let i = 0; i < 4; i++) smokes.push({ x: e.x + (R() - .5) * 3, y: e.y + (R() - .5) * 3, t: 0, r: 7, life: 3 }); SND.at('launch', e.x, e.y, .8, .3); }
+    if (e.k === 'samlaunch') { const sm = A.sams.find(q => q.n === e.n); if (sm) sm.flash = 2.5; FX.muzzle(e.x, e.y, -Math.PI / 2, 1.6); for (let i = 0; i < 6; i++) FX.puff(e.x + rr(-2, 2) / cam.s, e.y + rr(-2, 2) / cam.s, 10, rr(3, 6), 'grey', .6, rr(-14, 14), rr(-14, 14), 2); SND.at('launch', e.x, e.y, .8, .3); }
     if (e.k === 'aam') SND.at('woosh', e.x, e.y, .5, .2);
-    if (e.k === 'kill') { booms.push({ x: e.x, y: e.y, t: 0, r: 14, k: 'boom' }); SND.at('boom_big', e.x, e.y, .9, .1); toast(e.vside === ME ? `💥 انضربت طيارتنا ${e.victim} (${e.by === 'aam' ? 'صاروخ جو-جو' : 'دفاع جوي'})` : `🎯 أسقطنا ${e.victim} إيرانية`, e.vside === ME ? 'bad' : 'good'); }
-    if (e.k === 'miss') booms.push({ x: e.x, y: e.y, t: 0, r: 4, k: 'boom' });
-    if (e.k === 'bomb') { boomAt(e.x, e.y, 1.3); setTimeout(() => boomAt(e.x + 3, e.y - 2, 1), 150); SND.at('boom_bomb', e.x, e.y, .9, .1); if (e.what) toast(e.side === ME ? `💥 ضربنا ${e.what}` : `⚠️ إيران ضربت ${e.what}`, e.side === ME ? 'good' : 'bad'); }
+    if (e.k === 'kill') { FX.explode(e.x, e.y, 'air', 1); SND.at('boom_big', e.x, e.y, .9, .1); toast(e.vside === ME ? `💥 انضربت طيارتنا ${e.victim} (${e.by === 'aam' ? 'صاروخ جو-جو' : 'دفاع جوي'})` : `🎯 أسقطنا ${e.victim} إيرانية`, e.vside === ME ? 'bad' : 'good'); }
+    if (e.k === 'miss') FX.puff(e.x, e.y, 6, 2, 'grey', .5, 0, 0, 1.5);
+    if (e.k === 'bomb') {
+      const sx = e.x - 14 / cam.s, sy = e.y - 20 / cam.s;
+      FX.bomb(sx, sy, e.x, e.y, () => { FX.explode(e.x, e.y, 'bomb', 1); SND.at('boom_bomb', e.x, e.y, .95, .08); });
+      FX.bomb(sx + 4 / cam.s, sy, e.x + 6 / cam.s, e.y - 3 / cam.s, () => FX.explode(e.x + 6 / cam.s, e.y - 3 / cam.s, 'big', .9));
+      if (e.what) toast(e.side === ME ? `💥 ضربنا ${e.what}` : `⚠️ إيران ضربت ${e.what}`, e.side === ME ? 'good' : 'bad');
+    }
     if (e.k === 'takeoff') SND.at('jet_roar', e.x, e.y, .7, 1);
-    if (e.k === 'bmlaunch') { for (let i = 0; i < 6; i++) smokes.push({ x: e.x + (R() - .5) * 5, y: e.y + (R() - .5) * 5, t: 0, r: 9, life: 4 }); SND.at('launch', e.x, e.y, 1, .3); toast(`🚀 إيران أطلقت صواريخ باليستية على ${e.tgt}`, 'bad'); }
-    if (e.k === 'intercept') { booms.push({ x: e.x, y: e.y - 20, t: 0, r: 16, k: 'boom' }); SND.at('boom_mid', e.x, e.y, .8, .1); toast('✅ باتريوت اعترض صاروخ باليستي', 'good'); }
-    if (e.k === 'bmimpact') { boomAt(e.x, e.y, 2.2); SND.at('boom_big', e.x, e.y, 1, .1); }
-    if (e.k === 'crash') { boomAt(e.x, e.y, 1); }
+    if (e.k === 'bmlaunch') { FX.explode(e.x, e.y, 'small', 1.4); for (let i = 0; i < 10; i++) FX.puff(e.x + rr(-3, 3) / cam.s, e.y + rr(-3, 3) / cam.s, 14, rr(5, 9), i < 4 ? 'dust' : 'grey', .65, rr(-25, 25), rr(-25, 25), 2.4); SND.at('launch', e.x, e.y, 1, .3); toast(`🚀 إيران أطلقت صواريخ باليستية على ${e.tgt}`, 'bad'); }
+    if (e.k === 'intercept') { FX.explode(e.x, e.y - 20 / cam.s, 'air', 1.3); SND.at('boom_mid', e.x, e.y, .8, .1); toast('✅ باتريوت اعترض صاروخ باليستي', 'good'); }
+    if (e.k === 'bmimpact') { FX.explode(e.x, e.y, 'bm', 1); FX.burn(e.x, e.y, 1.2, 60); SND.at('boom_big', e.x, e.y, 1, .1); }
+    if (e.k === 'crash') { FX.explode(e.x, e.y, 'big', 1); FX.burn(e.x, e.y, .8, 45); }
   };
 })();

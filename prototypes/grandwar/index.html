@@ -66,6 +66,7 @@ button{font:inherit;color:inherit;background:none;border:0;cursor:pointer}
 <script src="cells.js"></script>
 <script src="sim.js"></script>
 <script src="air.js"></script>
+<script src="fx.js"></script>
 <script src="view.js"></script>
 <script>
 'use strict';
@@ -433,23 +434,25 @@ function frame(now) {
   }
   W = innerWidth; H = innerHeight; if (cv.width !== Math.round(W * DPR)) { cv.width = Math.round(W * DPR); cv.height = Math.round(H * DPR); }
   smoothAll(dt); drawMap(); drawLabels(); drawCities();
+  VIEW.gs = RATE * 3600; FX.update(SPEED && !WD.over ? dt : 0);
   VIEW.drawBases(SELB);
-  buildClusters(); drawPaths();
+  buildClusters(); drawPaths(); FX.drawGround();
   const near = cam.s >= 1.7; let nb = 0;
   if (near) {
     const vis = SIM.alive(WD).filter(d => { const [x, y] = w2s(...divPos(d)); return x > -120 && x < W + 120 && y > -120 && y < H + 120; });
     nb = VIEW.divs(vis, smoothPos, facing, SEL, dt, SPEED > 0 && !WD.over); VIEW.drawDivs(cam.s > 4); VIEW.forget();
     for (const cl of clusters) cl.r = Math.min(38, Math.max(14, cam.s * 9.5)) * 2;
   } else for (const cl of clusters) counter(cl);
-  VIEW.drawFx(dt); drawBattles(dt); VIEW.drawAir(dt); VIEW.soundTick(dt, nb); lastNb = nb;
+  VIEW.drawFx(SPEED && !WD.over ? dt : 0); FX.draw(); drawBattles(dt); VIEW.drawAir(dt); VIEW.soundTick(dt, nb); lastNb = nb;
   $('zoom').style.top = (TOPH() + 10) + 'px'; $('toasts').style.top = (TOPH() + 10) + 'px';
   requestAnimationFrame(frame);
 }
 // للفحص الآلي
-window.G_ = { WD, AW, SIM, cam, VIEW, sel: ids => { SEL = new Set(ids); card(); }, orderTo, setSpeed, tap, get clusters() { return clusters; } };
-Promise.all(['base_me', 'base_south', 'abrams', 'abrams_t', 't72', 't72_t', 'bmp', 'grad', 'truck', 'f16', 'su25', 'f14', 'patriot', 's400', 'zolf'].map(load)).then(() => {
+window.G_ = { WD, AW, SIM, cam, VIEW, FX, sel: ids => { SEL = new Set(ids); card(); }, orderTo, setSpeed, tap, get clusters() { return clusters; } };
+Promise.all(['base_me', 'base_south', 'abrams', 'abrams_t', 't72', 't72_t', 'bmp', 'grad', 'truck', 'f16', 'su25', 'f14', 'patriot', 's400', 'zolf', 'fx_explo1', 'fx_explo2', 'fx_fire', 'fx_cloud'].map(load)).then(() => {
   // نسخة حمرة من الشاحنة والراجمة لإيران (حتى ما تنلخبط الألوان من قريب)
   for (const n of ['truck', 'grad']) { const im = IMG[n], c = document.createElement('canvas'); c.width = im.width; c.height = im.height; const x = c.getContext('2d'); x.filter = 'hue-rotate(170deg) saturate(1.3)'; x.drawImage(im, 0, 0); IMG[n + '_r'] = c; }
+  FX.init({ g, cam, w2s, IMG });
   hud(); requestAnimationFrame(frame); window.READY = 1;
   $('go').onclick = () => { $('intro').hidden = true; VIEW.SND.init(); setSpeed(1); };
   if (Q.has('auto')) { $('intro').hidden = true; setSpeed(+Q.get('auto') || 3); }

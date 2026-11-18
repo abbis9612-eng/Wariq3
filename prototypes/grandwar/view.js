@@ -5,6 +5,8 @@
 //  - الجو: مطارات، دفاع جوي، قواعد صواريخ، طيارات بظلها، صواريخ بدخان يبقى، باليستي يصعد وينزل، اعتراض.
 //  - الصوت: أصوات حقيقية (SoundBible، CC BY 3.0)، أعلى كل ما تقرّب، والبعيد يطلع مكتوم.
 (function () {
+  const shadowOf = im => { if (im._sh) return im._sh; const c = document.createElement('canvas'); c.width = im.width; c.height = im.height; const x = c.getContext('2d'); x.filter = 'brightness(0) blur(2px)'; x.drawImage(im, 0, 0); return im._sh = c; };
+
   const V = window.VIEW = {};
   let g, cam, w2s, IMG, WD, cells, A, text;
   V.init = o => ({ g, cam, w2s, IMG, WD, cells, A, text } = o);
@@ -316,7 +318,7 @@
       const bank = flip ? -p.bank : p.bank; const ri = (((Math.round((-bank * 180 / Math.PI + 180) / 20)) % 18) + 18) % 18, pi = p.gam < -.3 ? 0 : p.gam > .3 ? 2 : 1; const fr = pi * 18 + ri;
       const sz = Math.min(52, Math.max(28, cam.s * 14)) * (.85 + .25 * Math.min(1.2, p.alt)); const alt = p.alt * Math.min(26, 6 + cam.s * 5);
       const H = p.h + (flip ? Math.PI : 0), sx = (fr % 8) * 256, sy = Math.floor(fr / 8) * 256;
-      g.save(); g.globalAlpha = .28; g.translate(x + alt * .6, y + alt); g.rotate(H); g.filter = 'brightness(0) blur(1.5px)'; g.drawImage(sh, sx, sy, 256, 256, -sz / 2, -sz / 2, sz, sz); g.restore();
+      g.save(); g.globalAlpha = .28; g.translate(x + alt * .6, y + alt); g.rotate(H); g.drawImage(shadowOf(sh), sx, sy, 256, 256, -sz / 2, -sz / 2, sz, sz); g.restore();
       g.save(); g.translate(x, y); g.rotate(H); g.drawImage(sh, sx, sy, 256, 256, -sz / 2, -sz / 2, sz, sz); g.restore();
       g.beginPath(); g.moveTo(x, y - sz * .58); g.lineTo(x - 4, y - sz * .58 - 6); g.lineTo(x + 4, y - sz * .58 - 6); g.closePath(); g.fillStyle = p.side ? '#e0533f' : '#4f8ff0'; g.fill();
       if (p.st === 'fall') { if (R() < .8) FX.puff(p.x, p.y, 6, rr(3, 5), 'black', .6, 0, 0, 2); if (R() < .3) FX.spark(p.x, p.y, 2, 40); }

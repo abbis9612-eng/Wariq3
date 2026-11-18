@@ -155,6 +155,15 @@ function drawMap() {
   g.strokeStyle = '#b3161c'; g.lineWidth = (cam.s > 1.5 ? 5 : 3.6) * k; g.stroke(frontPath);
   screenT();
 }
+// BV5: طبقة الخريطة (أرض، ألوان، حدود، جبهة، أنهار، مدن، أسماء) تنرسم مرة وتنحفظ؛ تنعاد بس لما الكاميرا تتحرك أو الجبهة تتغير
+const MAPC = document.createElement('canvas'), mg = MAPC.getContext('2d'); let mapKey = '', ctrlSnap = '', ctrlAt = 0;
+function drawMapCached() {
+  // الجبهة تتحدّث كل ثانية ونص بالأكثر (الكاميرا فوري)
+  const now = performance.now(); if (now - ctrlAt > 1500) { const cs = WD.ctrl.join(''); if (cs !== ctrlSnap) { ctrlSnap = cs; ctrlAt = now; } }
+  const key = [cam.x.toFixed(2), cam.y.toFixed(2), cam.s.toFixed(4), cv.width, cv.height, ctrlSnap].join('|');
+  if (key !== mapKey) { drawMap(); drawLabels(); drawCities(); if (MAPC.width !== cv.width || MAPC.height !== cv.height) { MAPC.width = cv.width; MAPC.height = cv.height; } mg.setTransform(1, 0, 0, 1, 0, 0); mg.drawImage(cv, 0, 0); mapKey = key; }
+  else { g.setTransform(1, 0, 0, 1, 0, 0); g.drawImage(MAPC, 0, 0); screenT(); }
+}
 function text(s, x, y, size, col = '#2a2118', halo = 'rgba(255,250,235,.85)', weight = 600, font = 'IBM Plex Sans Arabic') {
   g.font = `${weight} ${size}px "${font}"`; g.textAlign = 'center'; g.textBaseline = 'middle'; g.lineJoin = 'round';
   if (halo) { g.lineWidth = Math.max(2.5, size / 4); g.strokeStyle = halo; g.strokeText(s, x, y); } g.fillStyle = col; g.fillText(s, x, y);
@@ -213,7 +222,7 @@ function counter(cl) {
   const sel = side === ME && divs.some(d => SEL.has(d.id));
   const w = 44 * k, h = 26 * k; const c = side ? '#c8402f' : '#2f6fd0';
   g.save(); g.translate(x, y);
-  g.shadowColor = 'rgba(0,0,0,.45)'; g.shadowBlur = 5; g.shadowOffsetY = 2;
+  g.fillStyle = 'rgba(0,0,0,.35)'; g.beginPath(); g.roundRect(-w / 2 + 1.5, -h / 2 + 2.5, w, h, 6 * k); g.fill();
   g.fillStyle = c; g.beginPath(); g.roundRect(-w / 2, -h / 2, w, h, 6 * k); g.fill(); g.shadowColor = 'transparent';
   g.lineWidth = sel ? 2.8 : 1.3; g.strokeStyle = sel ? '#ffd65a' : 'rgba(255,255,255,.9)'; g.stroke();
   g.fillStyle = 'rgba(255,255,255,.88)'; g.beginPath(); g.roundRect(-w / 2 + 3 * k, -h / 2 + 3 * k, 24 * k, h - 6 * k, 4 * k); g.fill();
@@ -536,8 +545,9 @@ function frame(now) {
     for (const e of AW.ev) VIEW.airEvent(e, toast, ME); AW.ev.length = 0;
     events(); if (n) { hud(); if (SEL.size && WD.t % 3 === 0) card(); if (typeof SELB === 'number' && SELB >= 0 && WD.t % 2 === 0) baseCard(); }
   }
+  if (!$('bv').hidden) { requestAnimationFrame(frame); return; }
   W = innerWidth; H = innerHeight; if (cv.width !== Math.round(W * DPR)) { cv.width = Math.round(W * DPR); cv.height = Math.round(H * DPR); }
-  smoothAll(dt); drawMap(); drawLabels(); drawCities();
+  smoothAll(dt); drawMapCached();
   VIEW.gs = RATE * 3600; FX.update(SPEED && !WD.over ? dt : 0);
   VIEW.drawBases(SELB);
   buildClusters(); drawPaths(); FX.drawGround(); drawPlans();

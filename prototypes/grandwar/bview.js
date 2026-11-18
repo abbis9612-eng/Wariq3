@@ -2,6 +2,8 @@
 // الخريطة الاستراتيجية توقف وانت داخل. الآليات مكبّرة ×4 بس (مو ×1000)، والتباعد حقيقي فما يصير تراكب.
 // الصوت يتأخر بسرعة الصوت الحقيقية (343 م/ث): تشوف الوميض وبعدين تسمع. المؤثرات من fx.js (Unity CC0).
 (function () {
+  const shadowOf = im => { if (im._sh) return im._sh; const c = document.createElement('canvas'); c.width = im.width; c.height = im.height; const x = c.getContext('2d'); x.filter = 'brightness(0) blur(2px)'; x.drawImage(im, 0, 0); return im._sh = c; };
+
   const BW = window.BVIEW = {};
   let B = null, el, cv, g, IMG, SND, onExit, spd = 1, last = 0, raf = 0, info = null;
   const cam = { x: 0, y: 1200, s: .42 }; // s = بكسل/متر
@@ -171,7 +173,7 @@
   function drawJets() {
     for (const j of B.jets) { if (j.st === 'dead') continue; const [x, y] = w2s(j.p.x, j.p.y - j.z * .25), [sx, sy] = w2s(j.p.x, j.p.y); const s = Math.max(22, 15.5 * E * cam.s);
       const sh = IMG.su25_sheet, ri = (((Math.round((j.bank * 180 / Math.PI + 180) / 20)) % 18) + 18) % 18, pi = j.gam < -.3 ? 0 : j.gam > .3 ? 2 : 1, fr = pi * 18 + ri, H = j.hd + Math.PI;
-      g.save(); g.globalAlpha = .28; g.translate(sx, sy); g.rotate(H); g.filter = 'brightness(0) blur(1.5px)'; g.drawImage(sh, (fr % 8) * 256, Math.floor(fr / 8) * 256, 256, 256, -s / 2, -s / 2, s, s); g.restore();
+      g.save(); g.globalAlpha = .28; g.translate(sx, sy); g.rotate(H); g.drawImage(shadowOf(sh), (fr % 8) * 256, Math.floor(fr / 8) * 256, 256, 256, -s / 2, -s / 2, s, s); g.restore();
       g.save(); g.translate(x, y); g.rotate(H); g.drawImage(sh, (fr % 8) * 256, Math.floor(fr / 8) * 256, 256, 256, -s / 2, -s / 2, s, s); g.restore();
       g.beginPath(); g.moveTo(x, y - s * .6); g.lineTo(x - 4, y - s * .6 - 6); g.lineTo(x + 4, y - s * .6 - 6); g.closePath(); g.fillStyle = j.side ? '#e0533f' : '#4f8ff0'; g.fill();
       if (j.st === 'fall' && R() < .8) FX.puff(j.p.x, j.p.y - j.z * .25, 6, 4, 'black', .6, 0, 0, 2); }

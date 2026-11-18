@@ -25,11 +25,16 @@
   </ul>
   <div class="sides"><button class="btn go" data-s="0">🇮🇶 العب بالعراق</button><button class="btn go" data-s="1">🇮🇷 العب بإيران</button></div>
 </div></div>
-<script src="data.js"></script><script src="core.js"></script><script src="map.js"></script>
+<script src="data.js"></script><script src="core.js"></script><script src="map.js"></script><script src="battle.js"></script>
 <script>
 'use strict';
 // النموذج 1 (WD1، I-078 — فكرة المالك): فرق على المحافظات الحقيقية، حركة وهجوم بالأسهم، إمداد وتطويق، دعم جوي وصواريخ. دور = أسبوع.
 const TURNS = 16, STACK = 3;
+// مشاهد المعارك (WD6): أكبر معركتين بكل دور تنعرض قدامك بالصور (تقدر تتخطاها)، والباقي بالتقرير
+const SCENES = !new URLSearchParams(location.search).has('noscene'); let scenes = [];
+const sceneName = us => us.length > 1 ? `${us.length} فرق` : us[0].n;
+function playScenes(cb) { const L = SCENES ? scenes.sort((a, b) => b.size - a.size).slice(0, 2) : []; scenes = []; if (!L.length) return cb(); BattleScene.queue(L, cb); }
+
 const VP = { 'بغداد': 10, 'البصرة': 5, 'الموصل': 3, 'كركوك': 3, 'العمارة': 2, 'الكوت': 2, 'السليمانية': 2, 'بعقوبة': 2, 'الناصرية': 1, 'أربيل': 2, 'طهران': 10, 'الأهواز': 5, 'كرمانشاه': 3, 'إيلام': 2, 'سنندج': 2, 'خرم آباد': 2, 'همدان': 2, 'أرومية': 2, 'أصفهان': 4, 'تبريز': 3 };
 const START = { 0: { 'IQ-BA': 2, 'IQ-MA': 2, 'IQ-WA': 1, 'IQ-DI': 2, 'IQ-SU': 2, 'IQ-AR': 1, 'IQ-BG': 2 }, 1: { 'IR-10': 5, 'IR-05': 2, 'IR-17': 3, 'IR-16': 2, 'IR-02': 1, 'IR-20': 2, 'IR-07': 1 } };
 let S, mv, me, sel = null, mode = '', anim = null, lastT = performance.now();
@@ -117,6 +122,7 @@ function resolve(moves, atks) {
       supA: att.some(u => sA.has(u.at)) ? 1 : .6, supD: def.length && sD.has(pid) ? 1 : .6, flank: (from.size >= 2 ? 1.25 : 1) / (pid === capOf(foe) ? 1.5 : 1) });
     if (pid === capOf(foe)) c.f['العاصمة'] = 1 / 1.5;
     let res;
+    const bA = BattleScene.snap(att), bD = BattleScene.snap(def);
     { applyBattle(att, def, c.R); res = c.R >= 1.3 && def.every(u => u.org < 30 || !alive(u)) ? 'take' : c.R >= 1 ? 'push' : 'fail'; if (c.R >= 2 && pid !== capOf(foe)) res = 'take'; }
     if (res === 'take') {
       // المدافعين ينسحبون لمحافظة صديقة جنبهم، وإذا ماكو (مطوّقين) يستسلمون
@@ -127,6 +133,8 @@ function resolve(moves, atks) {
     for (const u of att) u.order = null;
     boomAt(p.c[0], p.c[1], real.length ? 1.4 : .7); SND.boom(real.length ? .25 : .12);
     S.report.push({ pid, side, res, R: c.R, f: c.f, att: att.map(u => u.n), def: real.length ? real.map(u => u.n) : ['قوات محلية'], surr: real.filter(d => d.surrender).length });
+    scenes.push({ size: bA.tk + bD.tk + (bA.men + bD.men) / 300 + (real.length ? 200 : 0), title: `معركة ${p.n}`, terr: p.terr, city: city && real.length > 0, dug: def.reduce((a, u) => a + u.dug, 0) / def.length, me, res, f: c.f, air: { att: S.air[side].filter(x => x === pid).length * 2, def: S.air[foe].filter(x => x === pid).length * 2 },
+      att: { side, name: sceneName(att), b: bA, a: BattleScene.snap(att) }, def: { side: foe, name: real.length ? sceneName(real) : 'قوات محلية', b: bD, a: BattleScene.snap(def) } });
   }
   // صواريخ على محافظات بدون هجوم: تضعف التنظيم
   for (const s of [0, 1]) for (const pid of S.msl[s]) if (!byT[pid]) unitsIn(pid, 1 - s).forEach(u => { u.org = Math.max(0, u.org - 20); u.men *= .97; });
@@ -136,7 +144,7 @@ function resolve(moves, atks) {
   // النهاية: عاصمة سقطت أو خلص الوقت
   for (const s of [0, 1]) if (S.own[capOf(s)] !== s) S.over = { win: 1 - s, why: `سقطت ${s === 0 ? 'بغداد' : 'طهران'}` };
   if (!S.over && S.t > TURNS) { const a = score(0), b = score(1); S.over = { win: a === b ? -1 : a > b ? 0 : 1, why: `انتهت 16 أسبوع: ${SIDE[0].f} ${a} نقطة مقابل ${SIDE[1].f} ${b}` }; }
-  hud(); report(true);
+  hud(); playScenes(() => report(true));
 }
 function report(auto) {
   const r = S.report; if (!r.length && auto) { toast('أسبوع هادي — ماكو معارك'); return endCheck(); }

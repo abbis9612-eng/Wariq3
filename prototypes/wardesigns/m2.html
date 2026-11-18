@@ -31,7 +31,7 @@
   </ul>
   <div class="sides"><button class="btn go" data-s="0">🇮🇶 العب بالعراق</button><button class="btn go" data-s="1">🇮🇷 العب بإيران</button></div>
 </div></div>
-<script src="data.js"></script><script src="core.js"></script><script src="map.js"></script>
+<script src="data.js"></script><script src="core.js"></script><script src="map.js"></script><script src="battle.js"></script>
 <script>
 'use strict';
 // النموذج 2 (WD2، I-078 — اقتراحي): لوحة الجبهة. 8 قطاعات على الحدود الحقيقية، خط يتقدم 25 كم بالخطوة، فرق محدودة لكل قطاع، هجوم/دفاع لكل قطاع، دعم جوي وصواريخ.
@@ -39,6 +39,11 @@ const TURNS = 16, STEP = 25, FRONTAGE = { mount: 2, hills: 3, plain: 4, marsh: 2
 const VP = { 'البصرة': 6, 'العمارة': 3, 'الكوت': 3, 'بعقوبة': 3, 'بغداد': 10, 'السليمانية': 3, 'كركوك': 3, 'أربيل': 3, 'خانقين': 1, 'مندلي': 1, 'بدرة': 1, 'حلبجة': 1, 'القرنة': 1, 'الفاو': 2,
   'خرمشهر': 3, 'عبادان': 4, 'الأهواز': 6, 'سوسنگرد': 1, 'دهلران': 1, 'مهران': 1, 'إيلام': 3, 'قصر شيرين': 1, 'إسلام آباد غرب': 2, 'كرمانشاه': 5, 'مريوان': 1, 'سنندج': 3, 'بيرانشهر': 1, 'دزفول': 3 };
 let S, mv, me, sel = null, mode = '', anim = null, lastT = performance.now();
+// مشاهد المعارك (WD6): أكبر معركتين بكل دور تنعرض قدامك بالصور (تقدر تتخطاها)، والباقي بالتقرير
+const SCENES = !new URLSearchParams(location.search).has('noscene'); let scenes = [];
+const sceneName = us => us.length > 1 ? `${us.length} فرق` : us[0].n;
+function playScenes(cb) { const L = SCENES ? scenes.sort((a, b) => b.size - a.size).slice(0, 2) : []; scenes = []; if (!L.length) return cb(); BattleScene.queue(L, cb); }
+
 const SEC = GEO.sectors;
 const mid = s => s.pts[Math.floor(s.pts.length / 2)];
 const frontPts = (i, f = S.f[i]) => SEC[i].pts.map(p => [p[0] + SEC[i].nrm[0] * f * STEP, p[1] + SEC[i].nrm[1] * f * STEP]);
@@ -124,11 +129,14 @@ function resolve() {
     const fl = [i - 1, i + 1].filter(j => j >= 0 && j < SEC.length && (S.f[j] - S.f[i]) * dir >= 2).length;
     const c = battleCalc(AU, DU, { terr: next ? (s.terr === 'plain' ? 'city' : s.terr) : s.terr, airA: S.air[att].filter(x => x === i).length * 2, airD: S.air[foe].filter(x => x === i).length * 2,
       mslA: S.msl[att].filter(x => x === i).length * 2, supA: clamp(1 - Math.max(0, depth) * .08, .5, 1), supD: clamp(1 + Math.min(0, depth) * .08, .5, 1), flank: (1 + .2 * fl) / (a0 && a1 ? 1.4 : 1) });
+    const bA = BattleScene.snap(AU), bD = BattleScene.snap(DU);
     applyBattle(AU, DU, c.R);
     let mvStep = c.R >= 2.4 && s.terr === 'plain' && AU.some(u => u.kind === 'armor') ? 2 : c.R >= 1.15 || DU.every(u => u.org < 25) ? 1 : 0;
     if (mvStep) { for (let k = 0; k < mvStep; k++) { S.f[i] = clamp(S.f[i] + dir, -4, 4); for (const o of OBJ[i]) if (o.side === foe && (o.d - S.f[i]) * dir <= .2 && !S.taken[o.n]) { S.taken[o.n] = att; } } DU0.forEach(u => { u.dug = 0; u.org = Math.max(5, u.org - 10); }); }
     const m = mid(s); boomAt(m[0] + s.nrm[0] * S.f[i] * STEP, m[1] + s.nrm[1] * S.f[i] * STEP, 1.2); SND.boom(.22);
     S.report.push({ i, side: att, R: c.R, f: c.f, step: mvStep, att: AU.map(u => u.n), def: DU.map(u => u.n), city: next && S.taken[next.n] === att ? next.n : '' });
+    scenes.push({ size: bA.tk + bD.tk + (bA.men + bD.men) / 300, title: `معركة ${s.n}`, terr: s.terr, city: !!next, dug: DU.reduce((a, u) => a + u.dug, 0) / DU.length, me, res: mvStep ? 'take' : c.R >= 1 ? 'push' : 'fail', f: c.f, air: { att: S.air[att].filter(x => x === i).length * 2, def: S.air[foe].filter(x => x === i).length * 2 },
+      att: { side: att, name: sceneName(AU), b: bA, a: BattleScene.snap(AU) }, def: { side: foe, name: sceneName(DU), b: bD, a: BattleScene.snap(DU) } });
   }
   // صواريخ على قطاع بدون معركة: تضعف التنظيم
   for (const s of [0, 1]) for (const i of S.msl[s]) if (!S.report.some(r => r.i === i)) unitsAt(i, 1 - s).forEach(u => { u.org = Math.max(0, u.org - 20); u.men *= .97; });
@@ -137,7 +145,7 @@ function resolve() {
   for (let i = 0; i < SEC.length; i++) for (const s of [0, 1]) { const us = unitsAt(i, s); while (us.length > FRONTAGE[SEC[i].terr]) { const u = us.pop(); u.loc = 'R'; } }
   S.air = [[], []]; S.msl = [[], []]; S.t++;
   if (S.t > TURNS) { const a = score(0), b = score(1); S.over = { win: a === b ? -1 : a > b ? 0 : 1, why: `انتهت 16 أسبوع: ${SIDE[0].f} ${a} نقطة مقابل ${SIDE[1].f} ${b}` }; }
-  hud(); report(true);
+  hud(); playScenes(() => report(true));
 }
 function report(auto) {
   const r = S.report; if (!r.length && auto) { toast('أسبوع هادي — الكل يدافع'); return endCheck(); }

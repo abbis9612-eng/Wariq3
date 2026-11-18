@@ -1,0 +1,17 @@
+<!doctype html><html lang="ar" dir="rtl"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>مشهد المعركة — تجربة</title><link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Arabic:wght@400;600;700&family=Reem+Kufi:wght@700&display=swap" rel="stylesheet"><link rel="stylesheet" href="ui.css"></head>
+<body><script src="data.js"></script><script src="core.js"></script><script src="battle.js"></script>
+<script>
+// تجربة مشهد المعركة: نفس المعادلة اللي بالنماذج تحسب الخسائر، والمشهد يعرضها
+function demo(attN, defN, terr, city, air) {
+  const U = makeArmies(), a = U.find(u => u.n === attN), d = U.find(u => u.n === defN); d.dug = .7;
+  const snap = u => ({ tk: u.tk, ifv: u.ifv, gun: u.gun, men: u.men, tk0: u.tk0, men0: u.men0, gen: u.gen });
+  const b = [snap(a), snap(d)], c = battleCalc([a], [d], { terr: city ? 'city' : terr, airA: air, luck: 1 }); applyBattle([a], [d], c.R, 1.3);
+  const res = c.R >= 1.3 ? 'take' : c.R >= 1 ? 'push' : 'fail';
+  BattleScene.play({ title: city ? `معركة ${city}` : 'معركة', terr, city: !!city, dug: d.dug, me: 0, res, f: c.f, air: { att: air, def: 0 },
+    att: { side: a.side, name: a.n, b: b[0], a: snap(a) }, def: { side: d.side, name: d.n, b: b[1], a: snap(d) } }, () => {});
+  return c.R;
+}
+const q = new URLSearchParams(location.search);
+window.R = demo(q.get('a') || 'الفرقة 9 المدرعة', q.get('d') || 'الفرقة 77 الآلية', q.get('t') || 'plain', q.get('c') || 'خرمشهر', +(q.get('air') || 2));
+</script></body></html>

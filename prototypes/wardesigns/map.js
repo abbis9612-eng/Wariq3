@@ -59,25 +59,29 @@ class MapView {
       if (c.cap || k > .4) label(c.n, c.xy[0], c.xy[1] - 9 / k, `${c.cap ? 700 : 600} ${c.cap ? 13 : 11}px "IBM Plex Sans Arabic"`); }
   }
 }
-// رمز وحدة عسكرية (مثل الناتو): صديق مستطيل أزرق، عدو معيّن أحمر؛ شريط قوة تحته
+// الفرقة على الخريطة: صورة حقيقية من فوق (دبابة للمدرعة، مدرعة للآلية، جنود للمشاة) بإطار لون طرفها + عدد واضح + شريط قوة
+const UIMG = {}; ['abrams', 'abrams_t', 't72', 't72_t', 'bmp'].forEach(n => { const i = new Image(); i.src = `img/${n}.webp`; UIMG[n] = i; });
 function drawUnit(g, sx, sy, u, me, o = {}) {
-  const s = o.s || 1, friend = u.side === me, w = 30 * s, h = 20 * s, st = str(u);
-  g.save(); g.translate(sx, sy); if (o.sel) { g.beginPath(); g.arc(0, 0, 22 * s, 0, 7); g.fillStyle = 'rgba(255,210,90,.45)'; g.fill(); }
-  g.shadowColor = 'rgba(0,0,0,.35)'; g.shadowBlur = 4 * s;
-  g.beginPath(); if (friend) g.rect(-w / 2, -h / 2, w, h); else { g.moveTo(0, -h * .75); g.lineTo(w * .6, 0); g.lineTo(0, h * .75); g.lineTo(-w * .6, 0); g.closePath(); }
-  g.fillStyle = friend ? '#8fbef0' : '#f09a8f'; g.fill(); g.shadowBlur = 0; g.lineWidth = 1.6 * s; g.strokeStyle = '#13161a'; g.stroke();
-  g.beginPath(); const bw = friend ? w / 2 - 3 * s : w * .3, bh = friend ? h / 2 - 3 * s : h * .33;
-  if (u.kind === 'armor' || u.kind === 'mech') g.ellipse(0, 0, bw * .62, bh * .62, 0, 0, 7);
-  if (u.kind === 'inf' || u.kind === 'mech' || u.kind === 'mtn') { g.moveTo(-bw, -bh); g.lineTo(bw, bh); g.moveTo(bw, -bh); g.lineTo(-bw, bh); }
-  g.stroke();
-  if (u.kind === 'mtn') { g.beginPath(); g.moveTo(-5 * s, bh); g.lineTo(0, bh - 6 * s); g.lineTo(5 * s, bh); g.fillStyle = '#13161a'; g.fill(); }
-  if (u.kind === 'sf') { g.font = `700 ${11 * s}px "IBM Plex Sans Arabic"`; g.fillStyle = '#13161a'; g.textAlign = 'center'; g.textBaseline = 'middle'; g.fillText('خ', 0, 1); }
-  // XX فرقة
-  g.font = `700 ${8 * s}px sans-serif`; g.fillStyle = '#13161a'; g.textAlign = 'center'; g.fillText('XX', 0, -h * (friend ? .5 : .75) - 4 * s);
+  const s = o.s || 1, friend = u.side === me, r = 19 * s, st = str(u);
+  g.save(); g.translate(sx, sy);
+  if (o.sel) { g.beginPath(); g.arc(0, 0, r + 7 * s, 0, 7); g.fillStyle = 'rgba(255,210,90,.55)'; g.fill(); }
+  g.shadowColor = 'rgba(0,0,0,.4)'; g.shadowBlur = 5 * s; g.beginPath(); g.arc(0, 0, r, 0, 7); g.fillStyle = friend ? '#dfeafa' : '#fae2dd'; g.fill(); g.shadowBlur = 0;
+  g.lineWidth = 3 * s; g.strokeStyle = friend ? '#2f6fd0' : '#c8402f'; g.stroke();
+  g.save(); g.beginPath(); g.arc(0, 0, r - 2 * s, 0, 7); g.clip();
+  const heavy = u.kind === 'armor' || u.kind === 'mech', tk = u.side === 0 && u.gen >= 3 ? 'abrams' : 't72', rot = friend ? -Math.PI / 2 : Math.PI / 2;
+  const pic = (n, dx, dy, k) => { const im = UIMG[n]; if (!im || !im.complete) return; g.save(); g.translate(dx, dy); g.rotate(rot); g.drawImage(im, -k / 2, -k / 2, k, k); g.restore(); };
+  if (heavy) { if (u.kind === 'mech') { pic('bmp', -6 * s, 5 * s, 34 * s); pic(tk, 7 * s, -4 * s, 38 * s); pic(tk + '_t', 7 * s, -4 * s, 38 * s); } else { pic(tk, -7 * s, 4 * s, 36 * s); pic(tk + '_t', -7 * s, 4 * s, 36 * s); pic(tk, 7 * s, -5 * s, 36 * s); pic(tk + '_t', 7 * s, -5 * s, 36 * s); } }
+  else { // جنود: ثلاث حضائر صغار
+    for (let i = 0; i < 9; i++) { const x = ((i % 3) - 1) * 9 * s, y = (Math.floor(i / 3) - 1) * 8 * s; g.fillStyle = friend ? '#3b4a2a' : '#6a5233'; g.beginPath(); g.ellipse(x, y + 2 * s, 3.2 * s, 2.4 * s, 0, 0, 7); g.fill(); g.fillStyle = friend ? '#5d6e3e' : '#8a6e46'; g.beginPath(); g.arc(x, y, 2.2 * s, 0, 7); g.fill(); }
+    if (u.kind === 'mtn') { g.fillStyle = 'rgba(255,255,255,.85)'; g.beginPath(); g.moveTo(-8 * s, 11 * s); g.lineTo(0, 2 * s); g.lineTo(8 * s, 11 * s); g.fill(); } }
+  g.restore();
+  // العدد: الدبابات للمدرعة/الآلية، الجنود للمشاة
+  const lab = heavy && u.tk >= 1 ? `${Math.round(u.tk)} 🛡` : `${(u.men / 1000).toFixed(u.men >= 10000 ? 0 : 1)}k 👥`;
+  g.font = `700 ${10.5 * s}px "IBM Plex Sans Arabic",sans-serif`; g.textAlign = 'center'; g.textBaseline = 'middle'; const w = g.measureText(lab).width + 8 * s;
+  g.fillStyle = friend ? '#2f6fd0' : '#c8402f'; g.beginPath(); g.roundRect(-w / 2, r + 1 * s, w, 14 * s, 6 * s); g.fill(); g.fillStyle = '#fff'; g.fillText(lab, 0, r + 8 * s);
   // شريط القوة
-  const bx = -w / 2, by = h * (friend ? .5 : .75) + 3 * s; g.fillStyle = 'rgba(0,0,0,.55)'; g.fillRect(bx, by, w, 4 * s);
-  g.fillStyle = st > .66 ? '#3fae5a' : st > .4 ? '#e3b53a' : '#d9503e'; g.fillRect(bx, by, w * clamp(st, 0, 1), 4 * s);
-  if (o.badge) { g.font = `700 ${10 * s}px "IBM Plex Sans Arabic"`; g.fillStyle = '#fff'; g.strokeStyle = '#13161a'; g.lineWidth = 3; g.strokeText(o.badge, w / 2 + 6 * s, -h / 2); g.fillText(o.badge, w / 2 + 6 * s, -h / 2); }
+  g.fillStyle = 'rgba(0,0,0,.55)'; g.fillRect(-r, -r - 7 * s, 2 * r, 4 * s); g.fillStyle = st > .66 ? '#3fae5a' : st > .4 ? '#e3b53a' : '#d9503e'; g.fillRect(-r, -r - 7 * s, 2 * r * clamp(st, 0, 1), 4 * s);
+  if (o.badge) { g.font = `700 ${13 * s}px sans-serif`; g.fillStyle = '#fff'; g.strokeStyle = '#13161a'; g.lineWidth = 3; g.strokeText(o.badge, r + 4 * s, -r + 4 * s); g.fillText(o.badge, r + 4 * s, -r + 4 * s); }
   g.restore();
 }
 // سهم حركة/هجوم

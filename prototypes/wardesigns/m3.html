@@ -24,7 +24,7 @@
   </ul>
   <div class="sides"><button class="btn go" data-s="0">🇮🇶 العب بالعراق</button><button class="btn go" data-s="1">🇮🇷 العب بإيران</button></div>
 </div></div>
-<script src="data.js"></script><script src="core.js"></script><script src="map.js"></script>
+<script src="data.js"></script><script src="core.js"></script><script src="map.js"></script><script src="battle.js"></script>
 <script>
 'use strict';
 // النموذج 3 (WD3، I-078 — اقتراحي): شبكة المدن والطرق الحقيقية. الحركة على الطرق بالكيلومتر، الإمداد يمشي على الطرق، قطع الطرق والجسور بالطيران، التطويق.
@@ -49,6 +49,11 @@ const EDGES = E0.map((s, i) => { const [a, b] = s.split('-').map(n => NI[n]); co
 const adj = NODES.map(() => []); EDGES.forEach(e => { adj[e.a].push(e); adj[e.b].push(e); });
 const SPD = { armor: 70, mech: 65, inf: 40, mtn: 40, sf: 55 };   // كم/يوم على الطريق
 let S, mv, me, sel = null, mode = '', anim = null, lastT = performance.now(), showSup = false;
+// مشاهد المعارك (WD6): أكبر معركتين بكل دور تنعرض قدامك بالصور (تقدر تتخطاها)، والباقي بالتقرير
+const SCENES = !new URLSearchParams(location.search).has('noscene'); let scenes = [];
+const sceneName = us => us.length > 1 ? `${us.length} فرق` : us[0].n;
+function playScenes(cb) { const L = SCENES ? scenes.sort((a, b) => b.size - a.size).slice(0, 2) : []; scenes = []; if (!L.length) return cb(); BattleScene.queue(L, cb); }
+
 const unitsAt = (n, side) => S.units.filter(u => alive(u) && u.at === n && u.edge == null && (side === undefined || u.side === side));
 function newGame(side) {
   me = side; const units = makeArmies();
@@ -130,17 +135,20 @@ function resolve() {
     const mil = { side: own, kind: 'inf', n: 'حامية المدينة', men: 1500 + q.vp * 900, tk: 0, ifv: 0, gun: 6, gen: 1, q: .7, org: 100, dug: .7, exp: 0 }, def = real.length ? real : [mil];
     const ways = new Set(att.map(u => u.cameFrom ?? -1)), enc = adj[q.i].every(e => { const j = e.a === q.i ? e.b : e.a; return S.own[j] === side || S.cut[e.i] > 0; });
     const c = battleCalc(att, def, { terr: q.terr, airD: 0, supA: att.some(u => supA[side].has(u.at) || adj[q.i].some(e => supA[side].has(e.a === q.i ? e.b : e.a))) ? 1 : .6, supD: enc ? .45 : 1, flank: enc ? 1.35 : 1 });
+    const bA = BattleScene.snap(att), bD = BattleScene.snap(def);
     applyBattle(att, def, c.R, DAYS / 7 * 2.2);
     let res = c.R >= 3 || (c.R >= 1.25 && (!real.length || real.every(u => u.org < 30))) ? 'take' : c.R < .8 && att.every(u => u.org < 30) ? 'fail' : 'siege';
     if (res === 'take') { S.own[q.i] = side; for (const d of real) { const back = adj[q.i].map(e => e.a === q.i ? e.b : e.a).find(j => S.own[j] === own && !(S.cut[EDGES.find(e => (e.a === j || e.b === j) && (e.a === q.i || e.b === q.i)).i] > 0)); if (back !== undefined && !enc) { d.at = back; d.org = Math.max(5, d.org - 15); } else { d.men = 0; d.tk = 0; d.ifv = 0; d.surr = true; } } att.forEach(u => u.siegeOf = null); }
     if (res === 'fail') { const back = adj[q.i].map(e => e.a === q.i ? e.b : e.a).find(j => S.own[j] === side); att.forEach(u => { if (back !== undefined) u.at = back; u.siegeOf = null; }); }
+    scenes.push({ size: bA.tk + bD.tk + (bA.men + bD.men) / 300 + (real.length ? 200 : 0), title: `معركة ${q.n}`, terr: q.terr === 'city' ? 'plain' : q.terr, city: q.terr === 'city' || q.vp >= 2, dug: def.reduce((a, u) => a + u.dug, 0) / def.length, me, res: res === 'take' ? 'take' : res === 'fail' ? 'fail' : 'push', f: c.f, air: { att: 0, def: 0 },
+      att: { side, name: sceneName(att), b: bA, a: BattleScene.snap(att) }, def: { side: own, name: real.length ? sceneName(real) : 'حامية المدينة', b: bD, a: BattleScene.snap(def) } });
     boomAt(q.xy[0], q.xy[1], 1.2); SND.boom(.2); S.report.push({ n: q.n, side, res, R: c.R, f: c.f, enc, att: att.map(u => u.n), def: def.map(u => u.n), surr: real.filter(d => d.surr).length });
   }
   for (const s of [0, 1]) { const sp = supplied(s); for (const u of S.units.filter(z => z.side === s && alive(z))) { const ok = u.edge != null || sp.has(u.at) || adj[u.at].some(e => sp.has(e.a === u.at ? e.b : e.a)); if (!ok) { u.org = Math.max(0, u.org - 18); u.men *= .96; u.tk *= .95; } else if (!S.report.some(r => NI[r.n] === u.at)) { u.org = Math.min(100, u.org + 20); if (!u.path.length && u.edge == null) u.dug = Math.min(1, u.dug + .25); } } }
   for (const k in S.cut) S.cut[k]--; S.air = [[], []]; S.t++;
   for (const s of [0, 1]) if (S.own[capOf(s)] !== s) S.over = { win: 1 - s, why: `سقطت ${NODES[capOf(s)].n}` };
   if (!S.over && S.t > TURNS) { const a = score(0), b = score(1); S.over = { win: a === b ? -1 : a > b ? 0 : 1, why: `انتهى الشهر: ${SIDE[0].f} ${a} نقطة مقابل ${SIDE[1].f} ${b}` }; }
-  hud(); report(true);
+  hud(); playScenes(() => report(true));
 }
 function report(auto) {
   const r = S.report; if (!r.length && auto) { toast('يومين بلا معارك — الجيوش تتحرك'); return endCheck(); }

@@ -96,7 +96,7 @@
       // حركة طبيعية: تلف بالتدريج وتسرّع وتبطّي
       for (const q of L) {
         const dx = q.tx - q.x, dy = q.ty - q.y, dist = Math.hypot(dx, dy);
-        const maxV = (st.k === 'move' ? 1.3 : 1) * 46 * kmPx; // كم بالثانية الحقيقية (بكسل/ثانية ثابت)
+        const maxV = (st.k === 'move' ? 1.2 : 1) * 30 * kmPx; // ~جسم الدبابة بالثانية (مثل 30 كم/س بالحقيقة) // كم بالثانية الحقيقية (بكسل/ثانية ثابت)
         if (dist > .4 * kmPx) {
           const want = Math.atan2(dy, dx); let dh = want - q.h; while (dh > Math.PI) dh -= 2 * Math.PI; while (dh < -Math.PI) dh += 2 * Math.PI;
           const back = Math.abs(dh) > 2.4 && dist < S * 2 * kmPx; // قريب وبالعكس: يرجع لورا بدل ما يلف

@@ -131,7 +131,10 @@
       const en = (byCell.get(tg) || []).filter(e => e.side !== d.side && !e.dead);
       if (en.length) continue; // بعده يقاتل
       const tr = TERR[W.cells[tg].t]; const T = TEMPL[d.kind];
-      const v = T.spd * tr.spd * (W.edgeOf.get(d.cell + ',' + tg)?.r ? RIVER_SPD : 1) * (W.sup[d.side][d.cell] ? 1 : .5);
+      // سرعات حقيقية (I-084): المسير ورا الخطوط بسرعة الرتل (معدل اليوم: دروع ~200 كم/يوم)،
+      // أما التقدّم بأرض العدو فبطيء: استطلاع، ألغام، تطهير، وقفات (دروع ~45 كم/يوم، مشاة ~20)
+      const adv = W.ctrl[tg] !== d.side ? (d.kind === 'inf' ? .2 : .22) : 1;
+      const v = T.spd * tr.spd * adv * (W.edgeOf.get(d.cell + ',' + tg)?.r ? RIVER_SPD : 1) * (W.sup[d.side][d.cell] ? 1 : .5);
       d.prog += v; d.v = v;
       if (d.prog >= W.dist(d.cell, tg)) {
         d.prog = 0; byCell.get(d.cell)?.splice(byCell.get(d.cell).indexOf(d), 1);

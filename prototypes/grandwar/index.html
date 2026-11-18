@@ -38,7 +38,7 @@ button{font:inherit;color:inherit;background:none;border:0;cursor:pointer}
 <canvas id="c"></canvas>
 <div id="top">
   <div class="r1"><span class="flag">🇮🇶</span><span class="cn">العراق</span><span style="font-size:11px;opacity:.7">ضد إيران 🇮🇷</span>
-    <div class="date"><span id="dt"></span><div class="spd"><button data-s="0">⏸</button><button data-s="1" class="on">▶</button><button data-s="2">▶▶</button><button data-s="3">⏩</button></div></div></div>
+    <div class="date"><span><span id="dt"></span><small id="rate" style="display:block;font-size:10px;opacity:.75;font-weight:500"></small></span><div class="spd"><button data-s="0">⏸</button><button data-s="1" class="on">▶</button><button data-s="2">▶▶</button><button data-s="3">⏩</button></div></div></div>
   <div class="res"><span id="rVp"></span><span id="rDiv"></span><span id="rBat"></span><span id="rTook"></span><span id="rLost"></span></div>
   <div id="vpbar"><u></u></div>
 </div>
@@ -55,7 +55,8 @@ button{font:inherit;color:inherit;background:none;border:0;cursor:pointer}
     <li><b>المربعات الزرقاء</b> فرقك، والحمرة فرق إيران. الصورة نوعها: دبابة = مدرعة، مدرعة = آلية، خوذة = مشاة. الرقم كم فرقة، والشريط قوتها.</li>
     <li><b>الخط الأحمر</b> هو الجبهة. <b>⚔</b> معركة هسه، والدائرة حولها تبين مين غالب (أزرق إلنا).</li>
     <li><b>اضغط فرقة</b> وبعدين <b>«هجوم/تحرّك»</b> واضغط المنطقة اللي تريدها. أو خليها <b>«تلقائي»</b> والقائد يمسك الجبهة ويهاجم لما يشوف فرصة.</li>
-    <li><b>قرّب بإصبعين</b> وتشوف الدبابات والمدرعات نفسها.</li>
+    <li><b>قرّب بإصبعين</b> وتشوف الدبابات والمدرعات نفسها، والوقت يبطأ لحاله لدقيقة بالثانية حتى تشوف القتال بإيقاعه الحقيقي.</li>
+    <li><b>الوقت:</b> ▶ عشر دقايق بالثانية، ▶▶ ساعة، ⏩ ست ساعات. التقدّم بأرض العدو بطيء مثل الحقيقة (دروع ~45 كم باليوم).</li>
     <li>المدن الكبيرة نقاط. اللي يخسر 70% من نقاط مدنه يستسلم.</li>
   </ul>
   <button id="go">ابدأ الحرب ▶</button>
@@ -290,8 +291,11 @@ function drawPaths() {
 
 // ===== الواجهة =====
 let SPEED = 0, SEL = new Set(), PICK = false, HOVER = -1, SELB = -1;
-const HPS = [0, 1, 3, 8]; // ساعات لعبة بالثانية (R0.2: أبطأ)
-const TAC = 1 / 12; let RATE = 1, lastNb = 0; // من تقرّب على معركة: ~5 دقايق لعبة بالثانية
+// الساعة بوحدات حقيقية (I-084): ▶ 10 دقايق بالثانية (اليوم = 2.4 دقيقة)، ▶▶ ساعة بالثانية، ⏩ 6 ساعات بالثانية
+const HPS = [0, 1 / 6, 1, 6];
+// من تقرّب على معركة: دقيقة لعبة بالثانية، حتى الحركة والرمي ينشافون بإيقاعهم الحقيقي (إذا اخترت ⏩ تصير 10 دقايق)
+const TACR = [0, 1 / 60, 1 / 60, 1 / 6]; let RATE = 1 / 6, lastNb = 0;
+const rateTxt = r => r <= 0 ? '' : r < 1 / 30 ? `1ث = ${Math.round(r * 60)} د` : r < 1 ? `1ث = ${Math.round(r * 60)} د` : `1ث = ${Math.round(r)} س`;
 const START = new Date(2027, 2, 14, 6);
 const AR_M = ['كانون الثاني', 'شباط', 'آذار', 'نيسان', 'أيار', 'حزيران', 'تموز', 'آب', 'أيلول', 'تشرين الأول', 'تشرين الثاني', 'كانون الأول'];
 function hud() {
@@ -420,10 +424,10 @@ let last = performance.now(), acc = 0;
 function frame(now) {
   const dt = Math.min(.1, (now - last) / 1000); last = now;
   if (SPEED && !WD.over) {
-    const tac = cam.s >= 1.7 && lastNb > 0; const want = tac ? Math.min(HPS[SPEED], TAC) : HPS[SPEED]; RATE += (want - RATE) * Math.min(1, dt * 2.5); if (Math.abs(RATE - want) < .01) RATE = want;
-    acc += dt * RATE; $('tac').hidden = !tac;
+    const tac = cam.s >= 1.7 && lastNb > 0; const want = tac ? Math.min(HPS[SPEED], TACR[SPEED]) : HPS[SPEED]; RATE += (want - RATE) * Math.min(1, dt * 2.5); if (Math.abs(RATE - want) < want * .02) RATE = want; $('rate').textContent = rateTxt(RATE);
+    acc += dt * RATE; $('tac').hidden = !tac; if (tac) $('tac').textContent = `⏱ بطيء: قريب من المعركة (${rateTxt(RATE)})`;
     let n = 0; while (acc >= 1 && n < 40) { if (WD.t % 6 === 0) { SIM.ai(WD, 1); SIM.ai(WD, ME); } SIM.step(WD); acc -= 1; n++; }
-    AIR.step(AW, WD, SIM, dt * AIRK[SPEED] * (tac ? .6 : 1));
+    AIR.step(AW, WD, SIM, dt * Math.min(1.6, Math.max(.3, .25 * RATE * 3600 / 38)));
     for (const e of AW.ev) VIEW.airEvent(e, toast, ME); AW.ev.length = 0;
     events(); if (n) { hud(); if (SEL.size && WD.t % 3 === 0) card(); if (typeof SELB === 'number' && SELB >= 0 && WD.t % 2 === 0) baseCard(); }
   }

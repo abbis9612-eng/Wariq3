@@ -24,6 +24,7 @@ button{font:inherit;color:inherit;background:none;border:0;cursor:pointer}
 #tabs{position:fixed;left:0;right:0;bottom:0;display:flex;background:var(--panel);border-top:1px solid var(--line);padding:5px 4px calc(5px + env(safe-area-inset-bottom));z-index:5}
 #tabs button{flex:1;text-align:center;font-size:10.5px;font-weight:600;opacity:.8}#tabs button em{display:block;font-style:normal;font-size:19px;line-height:1.25}#tabs button.on{opacity:1;color:var(--gold)}
 #zoom{position:fixed;left:8px;display:flex;flex-direction:column;gap:5px;z-index:4}#zoom button{width:36px;height:36px;border-radius:10px;background:var(--panel);border:1px solid var(--line);font-size:17px}
+#tac{position:fixed;left:50%;transform:translateX(-50%);top:calc(96px + env(safe-area-inset-top));background:rgba(24,22,19,.85);border:1px solid rgba(226,181,82,.6);color:#e2b552;border-radius:10px;padding:3px 10px;font-size:12px;font-weight:700;z-index:4;pointer-events:none}#tac[hidden]{display:none}
 #hint{position:fixed;left:50%;transform:translateX(-50%);background:rgba(184,68,47,.95);border-radius:12px;padding:6px 14px;font-weight:600;z-index:6;white-space:nowrap}#hint[hidden]{display:none}
 #toasts{position:fixed;right:8px;left:52px;display:flex;flex-direction:column;gap:4px;z-index:4;pointer-events:none;align-items:flex-start}
 .toast{background:var(--panel);border:1px solid var(--line);border-radius:10px;padding:4px 10px;font-size:12px;animation:tin .25s ease-out;max-width:100%}.toast.bad{border-color:rgba(220,90,70,.7)}.toast.good{border-color:rgba(90,160,240,.7)}
@@ -44,6 +45,7 @@ button{font:inherit;color:inherit;background:none;border:0;cursor:pointer}
 <div id="zoom"><button id="zin">＋</button><button id="zout">－</button><button id="zme" title="رجوع للجبهة">◎</button><button id="snd">🔊</button></div>
 <div id="toasts"></div>
 <div id="hint" hidden></div>
+<div id="tac" hidden>⏱ بطيء: قريب من المعركة</div>
 <div id="card" hidden></div>
 <div id="tabs"><button class="on"><em>🗺️</em>الخريطة</button><button data-soon="1"><em>🪖</em>الجيش</button><button data-soon="1"><em>🏭</em>الإنتاج</button><button data-soon="1"><em>💰</em>الاقتصاد</button><button data-soon="1"><em>🤝</em>السياسة</button><button data-soon="1"><em>🔬</em>البحث</button></div>
 <div id="intro"><div class="box">
@@ -158,11 +160,16 @@ function divPos(d) {
   const a = cells[d.cell].c; if (!d.path.length || (!d.prog && !d.v)) return a;
   const b = cells[d.path[0]].c, f = Math.min(.95, (d.prog + (WD.battles.has(d.path[0]) ? 0 : (d.v || 0) * acc)) / WD.dist(d.cell, d.path[0])); return [a[0] + (b[0] - a[0]) * f, a[1] + (b[1] - a[1]) * f];
 }
+const SMO = new Map();
+function smoothAll(dt) {
+  for (const d of SIM.alive(WD)) { const t = divPos(d); let p = SMO.get(d.id); if (!p || Math.hypot(t[0] - p[0], t[1] - p[1]) > 250) { SMO.set(d.id, [t[0], t[1]]); continue; } const k = Math.min(1, dt * 2.2), cap = 40 * dt; let dx = (t[0] - p[0]) * k, dy = (t[1] - p[1]) * k; const L = Math.hypot(dx, dy); if (L > cap) { dx *= cap / L; dy *= cap / L; } p[0] += dx; p[1] += dy; }
+}
+const smoothPos = d => SMO.get(d.id) || divPos(d);
 let clusters = [];
 function buildClusters() {
   const near = cam.s >= 1.7; clusters = [];
   const groups = new Map();
-  for (const d of SIM.alive(WD)) { const moving = d.path.length && d.prog > 0; const key = moving ? 'm' + d.id : d.side + ':' + d.cell; if (!groups.has(key)) groups.set(key, { side: d.side, divs: [], wp: divPos(d) }); groups.get(key).divs.push(d); }
+  for (const d of SIM.alive(WD)) { const sp = smoothPos(d), dp = divPos(d); const moving = (d.path.length && d.prog > 0) || Math.hypot(sp[0] - dp[0], sp[1] - dp[1]) > 3; const key = moving ? 'm' + d.id : d.side + ':' + d.cell; if (!groups.has(key)) groups.set(key, { side: d.side, divs: [], wp: sp }); groups.get(key).divs.push(d); }
   const R = near ? 0 : 40;
   for (const gr of [...groups.values()].sort((a, b) => b.divs.length - a.divs.length)) {
     let [x, y] = w2s(gr.wp[0], gr.wp[1]);
@@ -283,7 +290,8 @@ function drawPaths() {
 
 // ===== الواجهة =====
 let SPEED = 0, SEL = new Set(), PICK = false, HOVER = -1, SELB = -1;
-const HPS = [0, 2, 6, 18]; // ساعات لعبة بالثانية
+const HPS = [0, 1, 3, 8]; // ساعات لعبة بالثانية (R0.2: أبطأ)
+const TAC = 1 / 12; let RATE = 1, lastNb = 0; // من تقرّب على معركة: ~5 دقايق لعبة بالثانية
 const START = new Date(2027, 2, 14, 6);
 const AR_M = ['كانون الثاني', 'شباط', 'آذار', 'نيسان', 'أيار', 'حزيران', 'تموز', 'آب', 'أيلول', 'تشرين الأول', 'تشرين الثاني', 'كانون الأول'];
 function hud() {
@@ -412,23 +420,24 @@ let last = performance.now(), acc = 0;
 function frame(now) {
   const dt = Math.min(.1, (now - last) / 1000); last = now;
   if (SPEED && !WD.over) {
-    acc += dt * HPS[SPEED];
+    const tac = cam.s >= 1.7 && lastNb > 0; const want = tac ? Math.min(HPS[SPEED], TAC) : HPS[SPEED]; RATE += (want - RATE) * Math.min(1, dt * 2.5); if (Math.abs(RATE - want) < .01) RATE = want;
+    acc += dt * RATE; $('tac').hidden = !tac;
     let n = 0; while (acc >= 1 && n < 40) { if (WD.t % 6 === 0) { SIM.ai(WD, 1); SIM.ai(WD, ME); } SIM.step(WD); acc -= 1; n++; }
-    AIR.step(AW, WD, SIM, dt * AIRK[SPEED]);
+    AIR.step(AW, WD, SIM, dt * AIRK[SPEED] * (tac ? .6 : 1));
     for (const e of AW.ev) VIEW.airEvent(e, toast, ME); AW.ev.length = 0;
     events(); if (n) { hud(); if (SEL.size && WD.t % 3 === 0) card(); if (typeof SELB === 'number' && SELB >= 0 && WD.t % 2 === 0) baseCard(); }
   }
   W = innerWidth; H = innerHeight; if (cv.width !== Math.round(W * DPR)) { cv.width = Math.round(W * DPR); cv.height = Math.round(H * DPR); }
-  drawMap(); drawLabels(); drawCities();
+  smoothAll(dt); drawMap(); drawLabels(); drawCities();
   VIEW.drawBases(SELB);
   buildClusters(); drawPaths();
   const near = cam.s >= 1.7; let nb = 0;
   if (near) {
     const vis = SIM.alive(WD).filter(d => { const [x, y] = w2s(...divPos(d)); return x > -120 && x < W + 120 && y > -120 && y < H + 120; });
-    nb = VIEW.divs(vis, divPos, facing, SEL, dt, SPEED > 0 && !WD.over); VIEW.drawDivs(cam.s > 4); VIEW.forget();
+    nb = VIEW.divs(vis, smoothPos, facing, SEL, dt, SPEED > 0 && !WD.over); VIEW.drawDivs(cam.s > 4); VIEW.forget();
     for (const cl of clusters) cl.r = Math.min(38, Math.max(14, cam.s * 9.5)) * 2;
   } else for (const cl of clusters) counter(cl);
-  VIEW.drawFx(dt); drawBattles(dt); VIEW.drawAir(dt); VIEW.soundTick(dt, nb);
+  VIEW.drawFx(dt); drawBattles(dt); VIEW.drawAir(dt); VIEW.soundTick(dt, nb); lastNb = nb;
   $('zoom').style.top = (TOPH() + 10) + 'px'; $('toasts').style.top = (TOPH() + 10) + 'px';
   requestAnimationFrame(frame);
 }

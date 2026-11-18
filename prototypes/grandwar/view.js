@@ -63,8 +63,18 @@
     const S = Math.min(38, Math.max(14, cam.s * 9.5)); const kmPx = 1 / cam.s;
     const byBattle = new Map();
     for (const d of list) {
-      const [wx, wy] = posOf(d); const rot = facing(d); const st = stateOf(d);
-      const v = visOf(d, wx, wy, rot); v.seen = performance.now(); v.st = st; v.d = d;
+      const [wx, wy] = posOf(d); const rot0 = facing(d); const st0 = stateOf(d);
+      const v = visOf(d, wx, wy, rot0); v.seen = performance.now(); v.d = d;
+      // الحالة (مسير/قتال/راحة) ما تتبدل إلا إذا ثبتت: الدخول للقتال فوري، الطلوع منه بعد 3 ساعات لعبة، والباقي بعد ساعة
+      if (!v.st) v.st = st0;
+      if (st0.k !== v.st.k || st0.tgt !== v.st.tgt) { if (v.cand && v.cand.k === st0.k && v.cand.tgt === st0.tgt) { if (st0.k === 'fight' || WD.t - v.candT >= (v.st.k === 'fight' ? 3 : 1)) v.st = st0; } else { v.cand = st0; v.candT = WD.t; if (st0.k === 'fight') v.st = st0; } } else v.cand = null;
+      const st = v.st;
+      // مرساة التشكيل: تمشي بنعومة لمكان الفرقة وتلف بالتدريج، والآليات مرتبة حولها (التشكيل يتحرك كتلة وحدة)
+      let bx = wx, by = wy; if (st.k === 'fight' && st.att) { const t = cells[st.tgt].c; bx = wx + (t[0] - wx) * .22; by = wy + (t[1] - wy) * .22; }
+      if (v.ax == null || Math.hypot(bx - v.ax, by - v.ay) > 160) { v.ax = bx; v.ay = by; v.ah = rot0; }
+      { const dx = bx - v.ax, dy = by - v.ay, dist = Math.hypot(dx, dy), vmax = 30 / cam.s * dt; if (dist > 1e-6) { const k2 = Math.min(1, vmax / dist, dt * 2.5); v.ax += dx * k2; v.ay += dy * k2; } }
+      { let dh = rot0 - v.ah; while (dh > Math.PI) dh -= 2 * Math.PI; while (dh < -Math.PI) dh += 2 * Math.PI; v.ah += Math.max(-.7 * dt, Math.min(.7 * dt, dh)); }
+      const rot = v.ah;
       if (Math.abs((v.s || cam.s) - cam.s) / cam.s > .08) { v.snap = 1; v.s = cam.s; }
       // كم آلية لازم تبقى (من قوة الفرقة)
       const combat = v.veh.filter(q => q.t !== 'truck');
@@ -73,8 +83,7 @@
       while (alive > want) { const q = combat.filter(q => q.alive).sort((a, b) => b.k - a.k)[0]; q.alive = false; alive--; if (live) { boomAt(q.x, q.y, 1.4); wrecks.push({ x: q.x, y: q.y, h: q.h, n: sprName(d, q.t), t: 0 }); SND.at('boom_big', q.x, q.y, .9, .15); } }
       // مكان كل آلية بالتشكيل
       const c = Math.cos(rot), s = Math.sin(rot); const L = v.veh.filter(q => q.alive);
-      let base = [wx, wy];
-      if (st.k === 'fight' && st.att) { const t = cells[st.tgt].c; base = [wx + (t[0] - wx) * .22, wy + (t[1] - wy) * .22]; }
+      const base = [v.ax, v.ay];
       L.forEach((q, i) => {
         let fx, fy; const gap = S * 1.25 * kmPx;
         if (st.k === 'move') { fx = -i * gap; fy = (i % 2 ? 1 : -1) * gap * .18; }
@@ -218,8 +227,9 @@
     for (const p of A.planes) {
       const [x, y] = w2s(p.x, p.y); if (x < -60 || x > innerWidth + 60 || y < -60 || y > innerHeight + 60) continue;
       const sz = Math.min(46, Math.max(26, cam.s * 13)) * (p.st === 'fall' ? Math.max(.4, 1 - p.t * .25) : 1); const im = IMG[PL[p.type]]; const alt = p.alt * Math.min(22, 8 + cam.s * 4);
-      g.save(); g.globalAlpha = .3; g.translate(x + alt * .6, y + alt); g.rotate(p.h); g.filter = 'brightness(0) blur(1.5px)'; g.drawImage(im, -sz / 2, -sz / 2, sz, sz); g.restore();
-      g.save(); g.translate(x, y); g.rotate(p.h); g.drawImage(im, -sz / 2, -sz / 2, sz, sz); g.restore();
+      const H = p.h + (PL[p.type] === 'su25' ? Math.PI : 0); // صورة السوخوي أنفها لليسار (R0.1)
+      g.save(); g.globalAlpha = .3; g.translate(x + alt * .6, y + alt); g.rotate(H); g.filter = 'brightness(0) blur(1.5px)'; g.drawImage(im, -sz / 2, -sz / 2, sz, sz); g.restore();
+      g.save(); g.translate(x, y); g.rotate(H); g.drawImage(im, -sz / 2, -sz / 2, sz, sz); g.restore();
       g.beginPath(); g.moveTo(x, y - sz * .62); g.lineTo(x - 4, y - sz * .62 - 6); g.lineTo(x + 4, y - sz * .62 - 6); g.closePath(); g.fillStyle = p.side ? '#e0533f' : '#4f8ff0'; g.fill();
       if (p.st === 'fall') { if (R() < .6) smokes.push({ x: p.x, y: p.y, t: 0, r: 5, life: 2.5 }); }
     }

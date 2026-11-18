@@ -110,7 +110,7 @@
       b.win = aO / (aO + dO + 1e-6); b.why = { aPow, dPow, dCap, aCap, terr: W.cells[f.tg].t, river: A.some(a => W.edgeOf.get(a.cell + ',' + f.tg)?.r), flank: flank > 1 };
       b.na = A.length; b.nd = Dd.length;
       // المهاجم اللي خلص تنظيمه يوقف
-      for (const a of A) if (a.org < 1) { a.path = []; a.prog = 0; if (a.mode === 'manual') { a.mode = 'hold'; W.log.push({ t: W.t, side: a.side, k: 'stall', div: a.n, cell: f.tg }); } }
+      for (const a of A) if (a.org < 1) { a.path = []; a.prog = 0; W.cool = W.cool || new Map(); W.cool.set(a.side + ':' + f.tg, W.t + 72); W.stalls = (W.stalls || 0) + 1; if (a.mode === 'manual') { a.mode = 'hold'; W.log.push({ t: W.t, side: a.side, k: 'stall', div: a.n, cell: f.tg }); } }
       // المدافع اللي خلص تنظيمه ينسحب أو يستسلم
       for (const d of f.def) if (d.org < 1) retreat(W, d, byCell);
     }
@@ -135,7 +135,7 @@
       d.prog += v; d.v = v;
       if (d.prog >= W.dist(d.cell, tg)) {
         d.prog = 0; byCell.get(d.cell)?.splice(byCell.get(d.cell).indexOf(d), 1);
-        d.cell = tg; d.path.shift(); if (!byCell.has(tg)) byCell.set(tg, []); byCell.get(tg).push(d);
+        d.cell = tg; d.path.shift(); d.arrT = W.t; if (!byCell.has(tg)) byCell.set(tg, []); byCell.get(tg).push(d);
         if (W.ctrl[tg] !== d.side) { W.ctrl[tg] = d.side; W.took[d.side]++; if (W.cells[tg].vp) W.log.push({ t: W.t, side: d.side, k: 'take', cell: tg }); }
         if (!d.path.length && d.mode === 'manual') d.mode = 'hold';
       }
@@ -219,6 +219,7 @@
     targets.sort((a, b) => b.score - a.score);
     for (const T of targets) {
       if (T.ratio < (T.def.length ? aggr : 0)) continue;
+      if (W.cool && (W.cool.get(s + ':' + T.j) || 0) > W.t) continue; // هجوم فشل هنا قريب: لا تعيده هسه
       const tr = TERR[W.cells[T.j].t];
       let n = 0;
       for (const d of T.avail) {
@@ -231,14 +232,15 @@
       }
     }
     // 2) دفاع: كل منطقة جبهة يكون بيها شي حسب التهديد، والاحتياط يروح للمحتاج
-    const need = F.map(i => ({ i, t: threat(i), have: (mineAt.get(i) || []).filter(d => !used.has(d.id) || !d.path.length).length }));
+    const incoming = new Map(); for (const d of mine) if (d.path.length && W.ctrl[d.path[d.path.length - 1]] === s) { const e = d.path[d.path.length - 1]; incoming.set(e, (incoming.get(e) || 0) + 1); }
+    const need = F.map(i => ({ i, t: threat(i), have: (mineAt.get(i) || []).filter(d => !used.has(d.id) || !d.path.length).length + (incoming.get(i) || 0) }));
     // العمق: المدن المهمة القريبة من الجبهة تبقى بيها حامية (حتى الثغرة ما توصل للمدينة فاضية)
     const Fs = new Set(F);
     for (let i = 0; i < W.N; i++) if (W.ctrl[i] === s && !Fs.has(i) && (W.cells[i].vp || 0) >= 3 && F.some(f => W.dist(f, i) < 110))
-      need.push({ i, t: 25, have: (mineAt.get(i) || []).filter(d => !used.has(d.id) || !d.path.length).length, depth: 1 });
-    const needSet = new Set(need.map(n => n.i)); const free = mine.filter(d => d.mode === 'auto' && !used.has(d.id) && !d.path.length && !needSet.has(d.cell));
+      need.push({ i, t: 25, have: (mineAt.get(i) || []).filter(d => !used.has(d.id) || !d.path.length).length + (incoming.get(i) || 0), depth: 1 });
+    const needSet = new Set(need.map(n => n.i)); const free = mine.filter(d => d.mode === 'auto' && !used.has(d.id) && !d.path.length && !needSet.has(d.cell) && W.t - (d.arrT || -99) >= 24);
     // فائض الجبهة الهادية
-    for (const i of F) { const here = (mineAt.get(i) || []).filter(d => d.mode === 'auto' && !used.has(d.id) && !d.path.length); const want = Math.max(1, Math.round(threat(i) / 25)); if (here.length > want + 1) free.push(...here.slice(want + 1)); }
+    for (const i of F) { const here = (mineAt.get(i) || []).filter(d => d.mode === 'auto' && !used.has(d.id) && !d.path.length); const want = Math.max(1, Math.round(threat(i) / 25)); const settled = here.filter(d => W.t - (d.arrT || -99) >= 48); if (here.length > want + 2) free.push(...settled.slice(0, here.length - want - 2)); }
     need.sort((a, b) => (a.have - a.t / 25) - (b.have - b.t / 25));
     for (const nd of need) {
       const want = Math.max(1, Math.min(4, Math.round(nd.t / 25)));

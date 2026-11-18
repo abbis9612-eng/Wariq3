@@ -25,10 +25,10 @@
     { n: 'باتريوت — بغداد', ll: [33.25, 44.5], side: 0, kind: 'patriot', r: 150, ammo: 16, pk: .6, abm: 1 },
     { n: 'باتريوت — البصرة', ll: [30.6, 47.65], side: 0, kind: 'patriot', r: 140, ammo: 16, pk: .6, abm: 1 },
     { n: 'باتريوت — بلد', ll: [34.05, 44.2], side: 0, kind: 'patriot', r: 130, ammo: 12, pk: .6, abm: 1 },
-    { n: 'S-300 — الأهواز', ll: [31.4, 48.8], side: 1, kind: 's400', r: 160, ammo: 16, pk: .55, abm: 0 },
-    { n: 'S-300 — دزفول', ll: [32.3, 48.55], side: 1, kind: 's400', r: 150, ammo: 16, pk: .55, abm: 0 },
-    { n: 'S-300 — كرمانشاه', ll: [34.4, 47.2], side: 1, kind: 's400', r: 150, ammo: 16, pk: .55, abm: 0 },
-    { n: 'S-300 — طهران', ll: [35.6, 51.3], side: 1, kind: 's400', r: 180, ammo: 24, pk: .55, abm: 0 },
+    { n: 'S-300 — الأهواز', ll: [31.4, 48.8], side: 1, kind: 's400', r: 160, ammo: 16, pk: .47, abm: 0 },
+    { n: 'S-300 — دزفول', ll: [32.3, 48.55], side: 1, kind: 's400', r: 150, ammo: 16, pk: .47, abm: 0 },
+    { n: 'S-300 — كرمانشاه', ll: [34.4, 47.2], side: 1, kind: 's400', r: 150, ammo: 16, pk: .47, abm: 0 },
+    { n: 'S-300 — طهران', ll: [35.6, 51.3], side: 1, kind: 's400', r: 180, ammo: 24, pk: .47, abm: 0 },
   ];
   const MBASES = [
     { n: 'قاعدة صواريخ كرمانشاه', ll: [34.2, 47.35], side: 1, ammo: 40 },
@@ -160,21 +160,34 @@
     // الدفاع الجوي
     for (const s of A.sams) {
       s.down = Math.max(0, s.down - dt); s.cd -= dt; s.rl = (s.rl || 0) + dt; if (s.rl > 7) { s.rl = 0; s.ammo = Math.min(s.ammo0, s.ammo + 1); }
+      s.radar = (s.radar || 0) + dt * (s.down ? 0 : 1.6); // الرادار يلف
+      // الرادار يكشف أي تهديد بمدى ×1.2 ← تجهيز المنصة
+      const seen = !s.down && (A.planes.some(q => q.side !== s.side && q.st !== 'fall' && d2([q.x, q.y], s.p) < s.r * 1.2) || (s.abm && A.msls.some(m => m.kind === 'bm' && m.side !== s.side && d2([m.x, m.y], s.p) < s.r * 1.3)));
+      if (seen) s.alert = 15; else s.alert = Math.max(0, (s.alert || 0) - dt);
+      s.raise = Math.max(0, Math.min(1, (s.raise || 0) + (s.alert > 0 ? dt / 1.6 : -dt / 3)));   // S-300: الأنابيب ترتفع ~1.6 ث
       if (s.cd > 0 || s.down > 0 || s.ammo <= 0) continue;
       // أولوية: الباليستي (للباتريوت)، بعدين الطيارات
       let tgt = null;
       if (s.abm) tgt = A.msls.find(m => m.kind === 'bm' && m.side !== s.side && m.f > .45 && d2([m.x, m.y], s.p) < s.r * .8 && A.msls.filter(q => q.tgt === m).length < 2);
       if (!tgt) tgt = A.planes.find(q => q.side !== s.side && q.st !== 'fall' && d2([q.x, q.y], s.p) < s.r && A.msls.filter(m => m.tgt === q).length < 1);
       if (!tgt) continue;
-      s.ammo--; s.cd = 1.6;
+      // باتريوت: المنصة تلف باتجاه الهدف أول (~0.9 راديان/ث)، والـS-300 لازم أنابيبه مرفوعة
+      const brg = Math.atan2(tgt.y - s.p[1], tgt.x - s.p[0]); if (s.az == null) s.az = brg;
+      if (s.kind === 'patriot') { let dz = brg - s.az; while (dz > Math.PI) dz -= 2 * Math.PI; while (dz < -Math.PI) dz += 2 * Math.PI; s.az += Math.max(-1.5 * dt, Math.min(1.5 * dt, dz)); if (Math.abs(dz) > .15) continue; }
+      else if (s.raise < 1) continue;
+      s.ammo--; s.cd = s.kind === 'patriot' ? 1.2 : 1.6;
       const isBm = tgt.kind === 'bm';
-      A.msls.push({ kind: 'sam', side: s.side, x: s.p[0], y: s.p[1], h: Math.atan2(tgt.y - s.p[1], tgt.x - s.p[0]), tgt, pk: isBm ? .55 : s.pk * PLANES[tgt.type].ecm, t: 0, trail: [], from: s.n, abm: isBm });
+      // S-300: إطلاق بارد عمودي (الصاروخ ينقذف لفوق والمحرك يشتغل بالجو)؛ باتريوت: مايل باتجاه المنصة والمحرك يشتغل فوراً
+      A.msls.push({ kind: 'sam', side: s.side, x: s.p[0], y: s.p[1], h: s.kind === 'patriot' ? s.az : brg, tgt, pk: isBm ? .55 : s.pk * PLANES[tgt.type].ecm, t: 0, trail: [], from: s.n, abm: isBm, cold: s.kind !== 'patriot', v: s.kind === 'patriot' ? 30 : 0 });
       emit(A, { k: 'samlaunch', side: s.side, x: s.p[0], y: s.p[1], n: s.n, kind: s.kind });
     }
     // الباليستي
     for (const mb of A.mbases) {
       mb.cd -= dt; mb.rl = (mb.rl || 0) + dt; if (mb.rl > 20) { mb.rl = 0; mb.ammo = Math.min(40, mb.ammo + 1); }
-      if (mb.cd > 0 || mb.ammo <= 0) continue; mb.cd = 34 + A.rnd() * 22;
+      if (mb.erect != null) { mb.erect += dt / 3; if (mb.erect < 1) continue; } // المنصة ترفع الصاروخ (~3 ث)
+      if (mb.cd > 0 || mb.ammo <= 0) continue;
+      if (mb.erect == null) { mb.erect = 0; emit(A, { k: 'bmerect', side: mb.side, x: mb.p[0], y: mb.p[1] }); continue; }
+      mb.erect = null; mb.cd = 34 + A.rnd() * 22;
       const tg = bmTarget(A, W, mb); if (!tg) continue;
       for (let i = 0; i < 2 && mb.ammo > 0; i++) { mb.ammo--; const tp = [tg.p[0] + (A.rnd() - .5) * 10, tg.p[1] + (A.rnd() - .5) * 10]; A.msls.push({ kind: 'bm', side: mb.side, x: mb.p[0] + i * 4, y: mb.p[1], x0: mb.p[0] + i * 4, y0: mb.p[1], tx: tp[0], ty: tp[1], f: 0, D: d2(mb.p, tp), t: -i * .7, tg, trail: [] }); }
       emit(A, { k: 'bmlaunch', side: mb.side, x: mb.p[0], y: mb.p[1], n: mb.n, tgt: tg.n });
@@ -183,7 +196,8 @@
     for (const m of A.msls) {
       m.t += dt; if (m.t < 0) continue;
       if (m.kind === 'bm') {
-        m.f = Math.min(1, m.f + V.bm * dt / m.D); m.x = m.x0 + (m.tx - m.x0) * m.f; m.y = m.y0 + (m.ty - m.y0) * m.f; m.alt = Math.sin(m.f * Math.PI);
+        const sp = V.bm * (m.f < .15 ? .45 + m.f * 3.6 : m.f > .7 ? 1.25 : 1); m.f = Math.min(1, m.f + sp * dt / m.D); const fh = m.f < .12 ? 0 : (m.f - .12) / .88; m.x = m.x0 + (m.tx - m.x0) * fh; m.y = m.y0 + (m.ty - m.y0) * fh; m.alt = m.f < .12 ? m.f / .12 * .55 : Math.sin(Math.min(1, .2 + fh * .8) * Math.PI) * (1 - fh * .1) + (fh < .3 ? .55 * (1 - fh / .3) * 0 : 0);
+        if (m.f > .78 && !m.boom) { m.boom = 1; emit(A, { k: 'reentry', x: m.x, y: m.y }); }
         if (m.f >= 1) { m.done = 1; impact(A, W, SIM, m); }
       } else if (m.kind === 'harm') {
         const want = Math.atan2(m.ty - m.y, m.tx - m.x); let dh = want - m.h; while (dh > Math.PI) dh -= 2 * Math.PI; while (dh < -Math.PI) dh += 2 * Math.PI;
@@ -195,16 +209,18 @@
         if (m.tgt && m.tgt.decoy) { m.tgt.x = m.tgt.decoy.x; m.tgt.y = m.tgt.decoy.y; if (Math.hypot(m.tgt.x - m.x, m.tgt.y - m.y) < 6 || m.t > 4) { m.done = 1; emit(A, { k: 'miss', x: m.x, y: m.y, side: m.side, fooled: 1 }); continue; } }
         const T = m.tgt; if (!T || T.st === 'dead' || T.st === 'fall' || T.done) { m.done = 1; emit(A, { k: 'selfd', x: m.x, y: m.y }); continue; }
         const want = Math.atan2(T.y - m.y, T.x - m.x); let dh = want - m.h; while (dh > Math.PI) dh -= 2 * Math.PI; while (dh < -Math.PI) dh += 2 * Math.PI;
-        m.h += Math.max(-5 * dt, Math.min(5 * dt, dh)); const v = m.kind === 'sam' ? V.sam : V.aam;
-        m.x += Math.cos(m.h) * v * dt; m.y += Math.sin(m.h) * v * dt; m.alt = Math.min(1, m.t * 1.5);
-        if (!T.decoy && Math.hypot(T.x - m.x, T.y - m.y) < 5) {
+        const vmax = m.kind === 'sam' ? V.sam : V.aam;
+        if (m.cold && m.t < .55) { m.alt = m.t / .55 * .35; m.v = 0; if (m.t + dt >= .55) emit(A, { k: 'ignite', x: m.x, y: m.y, side: m.side }); }   // إطلاق بارد: ينقذف لفوق بدون نار
+        else { m.v = Math.min(vmax, (m.v || 20) + dt * 120); m.h += Math.max(-5 * dt, Math.min(5 * dt, dh)) * (m.t < .9 ? .4 : 1); m.x += Math.cos(m.h) * m.v * dt; m.y += Math.sin(m.h) * m.v * dt; m.alt = Math.min(1, (m.alt || 0) + dt * 1.4); }
+        m.boost = m.t < (m.cold ? 2.2 : 1.6);
+        if (!T.decoy && Math.hypot(T.x - m.x, T.y - m.y) < 7) {   // صاعق تقاربي: ينفجر قرب الهدف
           m.done = 1;
           if (A.rnd() < m.pk * (T.ev > 0 ? .6 : 1)) {
             if (T.kind === 'bm') { T.done = 1; emit(A, { k: 'intercept', x: m.x, y: m.y, side: m.side }); }
             else { T.st = 'fall'; T.t = 0; if (A.rnd() < .7) emit(A, { k: 'eject', x: T.x, y: T.y, side: T.side }); A.kills[m.side]++; A.lostPlanes[T.side]++; A.bases[T.base].n0 = Math.max(0, A.bases[T.base].n0 - 1); emit(A, { k: 'kill', x: m.x, y: m.y, side: m.side, victim: PLANES[T.type].n, vside: T.side, by: m.kind }); }
-          } else emit(A, { k: 'miss', x: m.x, y: m.y, side: m.side });
+          } else emit(A, { k: 'miss', x: m.x, y: m.y, side: m.side, burst: 1 });
         }
-        if (m.t > 4) { m.done = 1; emit(A, { k: 'selfd', x: m.x, y: m.y }); }
+        if (m.t > 5) { m.done = 1; emit(A, { k: 'selfd', x: m.x, y: m.y }); }
       }
       // أثر الدخان
       if (m.trail.length === 0 || Math.hypot(m.trail[m.trail.length - 1][0] - m.x, m.trail[m.trail.length - 1][1] - m.y) > 2.5) m.trail.push([m.x, m.y, A.t, m.alt || 0]);

@@ -428,7 +428,8 @@ function frame(now) {
     const tac = cam.s >= 1.7 && lastNb > 0; const want = tac ? Math.min(HPS[SPEED], TACR[SPEED]) : HPS[SPEED]; RATE += (want - RATE) * Math.min(1, dt * 2.5); if (Math.abs(RATE - want) < want * .02) RATE = want; $('rate').textContent = rateTxt(RATE);
     acc += dt * RATE; $('tac').hidden = !tac; if (tac) $('tac').textContent = `⏱ بطيء: قريب من المعركة (${rateTxt(RATE)})`;
     let n = 0; while (acc >= 1 && n < 40) { if (WD.t % 6 === 0) { SIM.ai(WD, 1); SIM.ai(WD, ME); } SIM.step(WD); acc -= 1; n++; }
-    AIR.step(AW, WD, SIM, dt * Math.min(1.6, Math.max(.3, .25 * RATE * 3600 / 38)));
+    // الجو ويا الساعة، ومن تقرّب يبطأ أكثر حتى تشوف الإطلاق والمطاردة بعينك
+    const af = Math.min(1.6, Math.max(.3, .25 * RATE * 3600 / 38)); AIR.step(AW, WD, SIM, dt * (cam.s >= 1.7 ? Math.min(af, .45) : af));
     for (const e of AW.ev) VIEW.airEvent(e, toast, ME); AW.ev.length = 0;
     events(); if (n) { hud(); if (SEL.size && WD.t % 3 === 0) card(); if (typeof SELB === 'number' && SELB >= 0 && WD.t % 2 === 0) baseCard(); }
   }

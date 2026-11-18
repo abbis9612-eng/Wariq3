@@ -24,7 +24,7 @@ button{font:inherit;color:inherit;background:none;border:0;cursor:pointer}
 #tabs{position:fixed;left:0;right:0;bottom:0;display:flex;background:var(--panel);border-top:1px solid var(--line);padding:5px 4px calc(5px + env(safe-area-inset-bottom));z-index:5}
 #tabs button{flex:1;text-align:center;font-size:10.5px;font-weight:600;opacity:.8}#tabs button em{display:block;font-style:normal;font-size:19px;line-height:1.25}#tabs button.on{opacity:1;color:var(--gold)}
 #zoom{position:fixed;left:8px;display:flex;flex-direction:column;gap:5px;z-index:4}#zoom button{width:36px;height:36px;border-radius:10px;background:var(--panel);border:1px solid var(--line);font-size:17px}
-#tac{position:fixed;left:50%;transform:translateX(-50%);top:calc(96px + env(safe-area-inset-top));background:rgba(24,22,19,.85);border:1px solid rgba(226,181,82,.6);color:#e2b552;border-radius:10px;padding:3px 10px;font-size:12px;font-weight:700;z-index:4;pointer-events:none}#tac[hidden]{display:none}
+#tac{position:fixed;left:50%;transform:translateX(-50%);white-space:nowrap;bottom:calc(68px + env(safe-area-inset-bottom));background:rgba(24,22,19,.85);border:1px solid rgba(226,181,82,.6);color:#e2b552;border-radius:10px;padding:3px 10px;font-size:12px;font-weight:700;z-index:4;pointer-events:none}#tac[hidden]{display:none}
 #hint{position:fixed;left:50%;transform:translateX(-50%);background:rgba(184,68,47,.95);border-radius:12px;padding:6px 14px;font-weight:600;z-index:6;white-space:nowrap}#hint[hidden]{display:none}
 #toasts{position:fixed;right:8px;left:52px;display:flex;flex-direction:column;gap:4px;z-index:4;pointer-events:none;align-items:flex-start}
 .toast{background:var(--panel);border:1px solid var(--line);border-radius:10px;padding:4px 10px;font-size:12px;animation:tin .25s ease-out;max-width:100%}.toast.bad{border-color:rgba(220,90,70,.7)}.toast.good{border-color:rgba(90,160,240,.7)}
@@ -440,7 +440,7 @@ function frame(now) {
   const near = cam.s >= 1.7; let nb = 0;
   if (near) {
     const vis = SIM.alive(WD).filter(d => { const [x, y] = w2s(...divPos(d)); return x > -120 && x < W + 120 && y > -120 && y < H + 120; });
-    nb = VIEW.divs(vis, smoothPos, facing, SEL, dt, SPEED > 0 && !WD.over); VIEW.drawDivs(cam.s > 4); VIEW.forget();
+    nb = VIEW.divs(vis, smoothPos, facing, SEL, dt, SPEED > 0 && !WD.over); VIEW.drawDivs(cam.s > 5.5); VIEW.forget();
     for (const cl of clusters) cl.r = Math.min(38, Math.max(14, cam.s * 9.5)) * 2;
   } else for (const cl of clusters) counter(cl);
   VIEW.drawFx(SPEED && !WD.over ? dt : 0); FX.draw(); drawBattles(dt); VIEW.drawAir(dt); VIEW.soundTick(dt, nb); lastNb = nb;

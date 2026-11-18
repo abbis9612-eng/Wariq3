@@ -92,58 +92,103 @@
         if (live) { dying.push({ q, n: sprName(d, q.t), t: 0, cook: q.t === 'tank' ? rr(.7, 1.3) : rr(.4, .8), side: d.side }); hitBy(q, v); }
         else wrecks.push({ x: q.x, y: q.y, h: q.h, tur: q.tur, n: sprName(d, q.t), t: 0, tank: q.t === 'tank' });
       }
-      // مكان كل آلية بالتشكيل
+      // ===== R2: مكان كل آلية حسب التكتيك =====
       const c = Math.cos(rot), s = Math.sin(rot); const L = v.veh.filter(q => q.alive);
-      const base = [v.ax, v.ay];
-      L.forEach((q, i) => {
-        let fx, fy; const gap = S * 1.25 * kmPx;
-        if (st.k === 'move') { fx = -i * gap; fy = (i % 2 ? 1 : -1) * gap * .18; }
-        else if (st.k === 'fight') { const n = L.length, col = i < Math.ceil(n * .7) ? 0 : 1; const idx = col ? i - Math.ceil(n * .7) : i; const m = col ? n - Math.ceil(n * .7) : Math.ceil(n * .7); fx = q.t === 'truck' || q.t === 'grad' ? -gap * 2.2 : -col * gap * 1.3; fy = (idx - (m - 1) / 2) * gap * 1.15; }
-        else { const front = L.filter(z => z.t !== 'truck' && z.t !== 'grad'), back = L.filter(z => z.t === 'truck' || z.t === 'grad'); const isB = back.includes(q); const arr = isB ? back : front; const j = arr.indexOf(q); fx = isB ? -gap * 1.6 : 0; fy = (j - (arr.length - 1) / 2) * gap * 1.05; }
-        q.tx = base[0] + fx * c - fy * s; q.ty = base[1] + fx * s + fy * c; q.trot = rot;
-        if (v.snap) { q.x = q.tx; q.y = q.ty; q.h = rot; }
-      });
+      const base = [v.ax, v.ay]; const gap = S * 1.25 * kmPx;
+      const front = L.filter(z => z.t === 'tank' || z.t === 'bmp'), rear = L.filter(z => z.t === 'truck' || z.t === 'grad');
+      if (st.k === 'fight') {
+        const bt = WD.battles.get(st.tgt); const win = bt ? (bt.side === d.side ? bt.win : 1 - bt.win) : .5;
+        const E = BC.get(st.tgt)?.[st.att ? 1 : 0] || cells[st.tgt].c; const sep = Math.hypot(E[0] - v.ax, E[1] - v.ay);
+        v.phase = (v.phase || 0) + dt;
+        if (st.att) {
+          // قفزات: فصيلين، واحد يتقدّم خطوة والثاني واقف يغطي ويرمي، ويتبادلون كل ~7 ثواني
+          if (v.bA == null) { v.bA = 0; v.bB = 0; v.mv = 0; v.phase = 0; }
+          const maxAdv = sep * (.12 + .4 * win), step = gap * 1.4;
+          if (v.phase > 7) { v.phase = 0; v.mv = 1 - v.mv; }
+          if (v.mv === 0) v.bA = Math.min(maxAdv, v.bA + step * dt / 4); else v.bB = Math.min(maxAdv, v.bB + step * dt / 4);
+          front.forEach((q, i) => { q.pl = i % 2; const adv = q.pl ? v.bB : v.bA; const j = i - (front.length - 1) / 2; q.fx = adv + (q.pl ? -gap * .5 : 0); q.fy = j * gap * 1.2; q.moving = q.pl === v.mv && adv < maxAdv - 1e-3; });
+        } else {
+          // دفاع: كل دبابة بساتر (حفرة)، تطلع قدّام ترمي وترجع لورا (اضرب وارجع)
+          front.forEach((q, i) => {
+            q.pp = (q.pp ?? R() * 8) + dt; const cyc = q.t === 'tank' ? 9 : 6; const ph = q.pp % cyc;
+            const out = ph < 1.6 ? ph / 1.6 : ph < 4.4 ? 1 : ph < 6 ? 1 - (ph - 4.4) / 1.6 : 0;
+            const j = i - (front.length - 1) / 2; q.fx = out * gap * .7; q.fy = j * gap * 1.2; q.peek = out; q.moving = false; q.bfx = gap * .45; q.bfy = q.fy;
+          });
+        }
+        rear.forEach((q, i) => { const j = i - (rear.length - 1) / 2; q.fx = (st.att ? -gap * 1.2 : -gap * 1.8); q.fy = j * gap * 1.3; });
+      } else if (st.k === 'move') { L.forEach((q, i) => { q.fx = -i * gap; q.fy = (i % 2 ? 1 : -1) * gap * .18; }); v.bA = v.bB = null; }
+      else { front.forEach((q, i) => { q.fx = 0; q.fy = (i - (front.length - 1) / 2) * gap * 1.05; }); rear.forEach((q, i) => { q.fx = -gap * 1.6; q.fy = (i - (rear.length - 1) / 2) * gap * 1.05; }); v.bA = v.bB = null; }
+      for (const q of L) { q.tx = base[0] + q.fx * c - q.fy * s; q.ty = base[1] + q.fx * s + q.fy * c; q.trot = rot; if (v.snap) { q.x = q.tx; q.y = q.ty; q.h = rot; } if (st.k === 'fight' && !st.att && q.bfx != null) { q.bx = base[0] + q.bfx * c - q.bfy * s; q.by = base[1] + q.bfx * s + q.bfy * c; } else q.bx = null; }
+      v.rot = rot; v.base = base;
       v.snap = 0;
-      // حركة طبيعية: تلف بالتدريج وتسرّع وتبطّي
+      // ===== حركة الآلية: تسارع وفرملة، لفّة بسرعة الجنزير، والرجوع لورا والوجه للعدو =====
       for (const q of L) {
         const dx = q.tx - q.x, dy = q.ty - q.y, dist = Math.hypot(dx, dy);
-        const maxV = (st.k === 'move' ? 1.2 : 1) * 30 * kmPx; // ~جسم الدبابة بالثانية (مثل 30 كم/س بالحقيقة) // كم بالثانية الحقيقية (بكسل/ثانية ثابت)
-        if (dist > .4 * kmPx) {
+        const maxV = (st.k === 'move' ? 1.2 : st.k === 'fight' ? .7 : 1) * 30 * kmPx;
+        if (dist > .35 * kmPx) {
           const want = Math.atan2(dy, dx); let dh = want - q.h; while (dh > Math.PI) dh -= 2 * Math.PI; while (dh < -Math.PI) dh += 2 * Math.PI;
-          const back = Math.abs(dh) > 2.4 && dist < S * 2 * kmPx; // قريب وبالعكس: يرجع لورا بدل ما يلف
-          if (!back) q.h += Math.max(-2.6 * dt, Math.min(2.6 * dt, dh));
-          const tsp = Math.min(maxV, dist * 2.2) * (back ? -.5 : Math.max(.15, Math.cos(dh)));
-          q.sp += (tsp - q.sp) * Math.min(1, dt * 3);
-        } else { q.sp *= Math.max(0, 1 - dt * 5); let dh = q.trot - q.h; while (dh > Math.PI) dh -= 2 * Math.PI; while (dh < -Math.PI) dh += 2 * Math.PI; q.h += Math.max(-1.5 * dt, Math.min(1.5 * dt, dh)); }
+          // إذا المكان الجديد ورا (بعكس وجهه للعدو) وقريب: يرجع لورا بدون ما يلف (مثل الحقيقة تحت النار)
+          const away = Math.cos(want - q.trot) < -.3 && dist < S * 6 * kmPx;
+          if (away) { let bh = want + Math.PI - q.h; while (bh > Math.PI) bh -= 2 * Math.PI; while (bh < -Math.PI) bh += 2 * Math.PI; q.h += Math.max(-1.2 * dt, Math.min(1.2 * dt, bh)); }
+          else q.h += Math.max(-1.2 * dt, Math.min(1.2 * dt, dh));
+          const tsp = Math.min(maxV, dist * 1.8) * (away ? -.55 : Math.max(.1, Math.cos(dh)));
+          q.sp += (tsp - q.sp) * Math.min(1, dt * 1.6);
+        } else { q.sp *= Math.max(0, 1 - dt * 4); let dh = q.trot - q.h; while (dh > Math.PI) dh -= 2 * Math.PI; while (dh < -Math.PI) dh += 2 * Math.PI; q.h += Math.max(-.8 * dt, Math.min(.8 * dt, dh)); }
         q.x += Math.cos(q.h) * q.sp * dt; q.y += Math.sin(q.h) * q.sp * dt;
+        if (q.rec) { q.rec = Math.max(0, q.rec - dt * 4); }
         if (Math.abs(q.sp) > 6 * kmPx && R() < dt * 7) FX.puff(q.x - Math.cos(q.h) * S * .5 * kmPx, q.y - Math.sin(q.h) * S * .5 * kmPx, S * .22, rr(1.5, 2.6), 'dust', .4, -Math.cos(q.h) * 6, -Math.sin(q.h) * 6, 1.8);
-        let tdh = (q.aim ?? q.h) - q.h - q.tur; while (tdh > Math.PI) tdh -= 2 * Math.PI; while (tdh < -Math.PI) tdh += 2 * Math.PI; q.tur += Math.max(-2 * dt, Math.min(2 * dt, tdh));
+        // البرج يلف بسرعته الحقيقية (~45° بالثانية)
+        let tdh = (q.aim ?? q.h) - q.h - q.tur; while (tdh > Math.PI) tdh -= 2 * Math.PI; while (tdh < -Math.PI) tdh += 2 * Math.PI; q.tur += Math.max(-.8 * dt, Math.min(.8 * dt, tdh)); q.aimErr = Math.abs(tdh);
+        // المدرعة تنزّل مشاتها لما توقف بالقتال
+        if (q.t === 'bmp') q.dis = Math.max(0, Math.min(1, (q.dis || 0) + (st.k === 'fight' && Math.abs(q.sp) < 3 * kmPx ? dt / 2.5 : -dt / 1.5)));
       }
-      if (st.k === 'fight') { if (!byBattle.has(st.tgt)) byBattle.set(st.tgt, [[], []]); byBattle.get(st.tgt)[st.att ? 0 : 1].push(v); }
+      if (st.k === 'fight') {
+        if (!byBattle.has(st.tgt)) byBattle.set(st.tgt, [[], []]); byBattle.get(st.tgt)[st.att ? 0 : 1].push(v);
+        // قصف تمهيد أول 14 ثانية من الهجوم، وبعدين مدفعية خفيفة
+        if (st.att && live) { v.art = (v.art ?? 0) - dt; const prep = (v.phase0 = (v.phase0 ?? 0) + dt) < 14; if (v.art <= 0) { v.art = prep ? rr(.8, 1.6) : rr(6, 11); artyAt(st.tgt, d.side); } }
+      } else v.phase0 = null;
       v.sel = SEL.has(d.id);
     }
-    // الرمي: كل آلية تقاتل ترمي على آلية من العدو بنفس المعركة
+    // مراكز كل طرف بكل معركة (للتشكيل بالإطار الجاي)
+    BC.clear();
+    for (const [tg, sides] of byBattle) BC.set(tg, sides.map(arr => { let x = 0, y = 0, n = 0; for (const v of arr) for (const q of v.veh) if (q.alive) { x += q.x; y += q.y; n++; } return n ? [x / n, y / n] : null; }));
+    // ===== الرمي: هدف ← توقف ← تصويب البرج ← رمي ← تلقيم =====
     let near = 0;
     if (live) for (const [tg, [att, def]] of byBattle) {
       if (!att.length || !def.length) continue; near++;
-      const shoot = (from, to) => {
+      const shoot = (from, to, isAtt) => {
+        const targets = []; for (const v of to) for (const z of v.veh) if (z.alive) targets.push(z);
+        if (!targets.length) return;
         for (const v of from) for (const q of v.veh) {
-          if (!q.alive) continue; q.cd -= dt; if (q.cd > 0) continue;
-          const tv = to[Math.floor(R() * to.length)], tq = tv.veh.filter(z => z.alive)[Math.floor(R() * tv.veh.filter(z => z.alive).length)]; if (!tq) continue;
-          q.aim = Math.atan2(tq.y - q.y, tq.x - q.x);
+          if (!q.alive) continue; q.rl = (q.rl ?? R() * 4) - dt;
+          if (!q.tg || !q.tg.alive || R() < dt * .08) { let best = null, bd = 1e9; for (let k = 0; k < 4; k++) { const z = targets[Math.floor(R() * targets.length)]; const dd = Math.hypot(z.x - q.x, z.y - q.y); if (dd < bd) { bd = dd; best = z; } } q.tg = best; }
+          const tq = q.tg; q.aim = Math.atan2(tq.y - q.y, tq.x - q.x);
+          if (q.rl > 0) continue;
+          const still = Math.abs(q.sp) < 4 / cam.s;
+          if (q.t === 'tank' && (!still || q.aimErr > .07 || (!isAtt && (q.peek ?? 1) < .9) || q.moving)) continue;
+          if (q.t === 'bmp' && (q.moving || Math.abs(Math.atan2(Math.sin(q.aim - q.h), Math.cos(q.aim - q.h))) > .9)) continue;
           fire(q, tq, v.d);
         }
+        // المشاة النازلين من المدرعات وبالخنادق يرمون رشقات
+        for (const v of from) for (const q of v.veh) if (q.alive && ((q.t === 'bmp' && q.dis > .8) || (q.t === 'truck' && v.d.kind === 'inf')) && R() < dt * .7) { const z = targets[Math.floor(R() * targets.length)]; const ox = q.x + Math.cos(q.trot) * 10 / cam.s, oy = q.y + Math.sin(q.trot) * 10 / cam.s; for (let i = 0; i < 3; i++) shots.push({ k: 'mg', x0: ox + (R() - .5) * 8 / cam.s, y0: oy + (R() - .5) * 8 / cam.s, x1: z.x + (R() - .5) * 10 / cam.s, y1: z.y + (R() - .5) * 10 / cam.s, t: -i * .06, dur: .12 }); SND.at('mg', q.x, q.y, .22, .2); }
       };
-      shoot(att, def); shoot(def, att);
+      shoot(att, def, true); shoot(def, att, false);
     }
     return near;
   };
+  const BC = new Map();
+  // مدفعية من ورا الخط: صفير ثم انفجار على مواقع العدو
+  function artyAt(tg, side) {
+    const E = BC.get(tg); const p = E && (side === (WD.battles.get(tg)?.side) ? E[1] : E[0]) || cells[tg].c;
+    const x = p[0] + rr(-14, 14) / cam.s, y = p[1] + rr(-14, 14) / cam.s;
+    SND.at('whiz', x, y, .35, .4); setTimeout(() => { FX.explode(x, y, 'he', .8); SND.at('boom_mid', x, y, .5, .1); }, 650);
+  }
   function fire(q, tq, d) {
     const miss = () => [tq.x + (R() - .5) * 3 / cam.s * 8, tq.y + (R() - .5) * 3 / cam.s * 8];
-    if (q.t === 'tank') { q.cd = 3 + R() * 3; const [ex, ey] = miss(); const hit = R() < .3; FX.muzzle(q.x + Math.cos(q.aim) * 9 / cam.s, q.y + Math.sin(q.aim) * 9 / cam.s, q.aim); shots.push({ k: 'shell', x0: q.x, y0: q.y, x1: hit ? tq.x : ex, y1: hit ? tq.y : ey, t: 0, dur: .18, end: hit ? 'spark' : 'dirt' }); SND.at('tank', q.x, q.y, .55, .12); }
-    else if (q.t === 'bmp') { q.cd = 1.6 + R() * 2; for (let i = 0; i < 4; i++) { const [ex, ey] = miss(); shots.push({ k: 'burst', x0: q.x, y0: q.y, x1: ex, y1: ey, t: -i * .07, dur: .14, end: i === 3 ? 'puff' : null }); } SND.at('can30', q.x, q.y, .35, .1); }
-    else if (q.t === 'truck') { q.cd = 1 + R() * 1.5; for (let i = 0; i < 3; i++) { const [ex, ey] = miss(); shots.push({ k: 'mg', x0: q.x + (R() - .5) * 4 / cam.s, y0: q.y + (R() - .5) * 4 / cam.s, x1: ex, y1: ey, t: -i * .05, dur: .12 }); } SND.at('mg', q.x, q.y, .25, .15); }
-    else if (q.t === 'grad') { q.cd = 7 + R() * 5; for (let i = 0; i < 6; i++) { const [ex, ey] = [tq.x + (R() - .5) * 18 / cam.s, tq.y + (R() - .5) * 18 / cam.s]; shots.push({ k: 'rocket', x0: q.x, y0: q.y, x1: ex, y1: ey, t: -i * .12, dur: .9, trail: [] }); } SND.at('rocket', q.x, q.y, .6, .3); }
+    if (q.t === 'tank') { q.rl = rr(6, 10); q.rec = 1; const [ex, ey] = miss(); const hit = R() < (Math.abs(tq.sp || 0) > 3 / cam.s ? .2 : .35); FX.muzzle(q.x + Math.cos(q.aim) * 9 / cam.s, q.y + Math.sin(q.aim) * 9 / cam.s, q.aim); shots.push({ k: 'shell', x0: q.x, y0: q.y, x1: hit ? tq.x : ex, y1: hit ? tq.y : ey, t: 0, dur: .2, end: hit ? 'spark' : 'dirt' }); SND.at('tank', q.x, q.y, .55, .1); }
+    else if (q.t === 'bmp') { q.rl = rr(2.5, 4.5); for (let i = 0; i < 5; i++) { const [ex, ey] = miss(); shots.push({ k: 'burst', x0: q.x, y0: q.y, x1: ex, y1: ey, t: -i * .09, dur: .16, end: i === 4 ? 'puff' : null }); } SND.at('can30', q.x, q.y, .35, .1); }
+    else if (q.t === 'truck') { q.rl = rr(1.5, 3); }
+    else if (q.t === 'grad') { q.rl = rr(16, 24); for (let i = 0; i < 8; i++) { const [ex, ey] = [tq.x + (R() - .5) * 22 / cam.s, tq.y + (R() - .5) * 22 / cam.s]; shots.push({ k: 'rocket', x0: q.x, y0: q.y, x1: ex, y1: ey, t: -i * .14, dur: 1.1, trail: [] }); } SND.at('rocket', q.x, q.y, .6, .3); }
   }
   const rr = (a, b) => a + R() * (b - a);
   function boomAt(x, y, k = 1) { FX.explode(x, y, k > 1.2 ? 'big' : 'he', k); }
@@ -177,15 +222,20 @@
     for (const [id, v] of VIS) {
       if (performance.now() - v.seen > 100) continue; const d = v.d;
       const ring = d.side ? 'rgba(215,60,45,.75)' : 'rgba(45,115,235,.75)';
+      // ساتر ترابي قدّام كل دبابة مدافعة، وخندق قدّام المشاة
+      for (const q of v.veh) if (q.alive && q.bx != null) { const [x, y] = w2s(q.bx, q.by); g.save(); g.translate(x, y); g.rotate(v.rot); g.fillStyle = 'rgba(120,96,62,.85)'; g.beginPath(); g.ellipse(0, 0, S * .16, S * .55, 0, 0, 7); g.fill(); g.fillStyle = 'rgba(80,62,40,.6)'; g.beginPath(); g.ellipse(-S * .06, 0, S * .07, S * .45, 0, 0, 7); g.fill(); g.restore(); }
+      if (d.kind === 'inf' && v.st && v.st.k !== 'move' && v.base) { const [x, y] = w2s(v.base[0], v.base[1]); const n = Math.min(3, Math.ceil(v.veh.filter(q => q.alive).length / 2)); g.save(); g.translate(x, y); g.rotate(v.rot); g.setLineDash([S * .5, S * .18]); g.strokeStyle = 'rgba(70,55,38,.85)'; g.lineWidth = Math.max(2, S * .14); g.beginPath(); for (let k = -n; k <= n; k++) { const yy = k * S * .55, xx = S * .35 + (k % 2 ? S * .12 : 0); k === -n ? g.moveTo(xx, yy) : g.lineTo(xx, yy); } g.stroke(); g.setLineDash([]); for (let k = -n; k <= n; k++) { g.beginPath(); g.arc(S * .28 + (k % 2 ? S * .12 : 0), k * S * .55, Math.max(1.4, S * .07), 0, 7); g.fillStyle = d.side ? '#5a2a20' : '#1d3557'; g.fill(); } g.restore(); }
       for (const q of v.veh) {
-        if (!q.alive) continue; const [x, y] = w2s(q.x, q.y); if (x < -40 || x > innerWidth + 40 || y < -40 || y > innerHeight + 40) continue;
+        if (!q.alive) continue; let [x, y] = w2s(q.x, q.y); if (x < -40 || x > innerWidth + 40 || y < -40 || y > innerHeight + 40) continue;
+        if (q.rec) { x -= Math.cos(q.aim) * q.rec * S * .12; y -= Math.sin(q.aim) * q.rec * S * .12; }
+        if (q.t === 'bmp' && q.dis > .05) for (let k = 0; k < 4; k++) { const off = (k - 1.5) * S * .38, fwd = S * (.55 + .5 * q.dis); const sx = x + Math.cos(q.trot) * fwd * q.dis - Math.sin(q.trot) * off * q.dis, sy = y + Math.sin(q.trot) * fwd * q.dis + Math.cos(q.trot) * off * q.dis; g.beginPath(); g.arc(sx, sy, Math.max(1.4, S * .07), 0, 7); g.fillStyle = d.side ? '#5a2a20' : '#1d3557'; g.fill(); }
         const sz = q.t === 'tank' ? S : q.t === 'bmp' ? S * .9 : S * .8; const n = sprName(d, q.t);
         g.save(); g.translate(x, y);
         g.beginPath(); g.ellipse(0, 0, sz * .44, sz * .3, q.h, 0, 7); g.fillStyle = ring; g.fill();
         g.rotate(q.h); g.drawImage(IMG[n], -sz / 2, -sz / 2, sz, sz);
         if (q.t === 'tank') { g.rotate(q.tur); g.drawImage(IMG[n + '_t'], -sz / 2, -sz / 2, sz, sz); }
         g.restore();
-        if (d.kind === 'inf' && q.t === 'truck') for (let k = 0; k < 5; k++) { const a = k * 1.25 + q.k, rr = sz * (.55 + (k % 2) * .2); g.beginPath(); g.arc(x + Math.cos(a) * rr, y + Math.sin(a) * rr, Math.max(1.3, sz * .07), 0, 7); g.fillStyle = d.side ? '#5a2a20' : '#1d3557'; g.fill(); }
+        if (d.kind === 'inf' && q.t === 'truck' && !(v.st && v.st.k !== 'move')) for (let k = 0; k < 5; k++) { const a = k * 1.25 + q.k, rr = sz * (.55 + (k % 2) * .2); g.beginPath(); g.arc(x + Math.cos(a) * rr, y + Math.sin(a) * rr, Math.max(1.3, sz * .07), 0, 7); g.fillStyle = d.side ? '#5a2a20' : '#1d3557'; g.fill(); }
       }
       if (v.sel || labels) {
         let cx = 0, cy = 0, n = 0; for (const q of v.veh) if (q.alive) { cx += q.x; cy += q.y; n++; } const [x, y] = w2s(cx / n, cy / n);

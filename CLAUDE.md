@@ -51,7 +51,7 @@ docs/TECH_STACK.md            قرار التقنيات (TypeScript + Babylon.js
 prototypes/intercept/         تجربة 3D: اعتراض الباتريوت (راجع README داخلها)
 prototypes/topdown/           «الحرب من فوق» (D-032): خريطة مرسومة بثيمين، PixiJS، صور Blender — مجمّد عند WM10 (D-033)
 prototypes/world3d/            «العالم 3D» (WM11–WM15): خريطة العالم 3D، عملية شلامجة بأرض مجسمة وقتال دبابات وتحكم، و«الجبهة كاملة» بـ `?mode=front` — مجمّد عند cf886fd (D-037)
-prototypes/grandwar/          «الحرب الكبرى» (I-080): بداية جديدة مثل Hearts of Iron — صورة الشاشة الأولى `mockup.html`
+prototypes/grandwar/          «الحرب الكبرى» (I-080، D-039): مثل Hearts of Iron — `index.html` تنلعب (702 منطقة، `sim.js`، فحص `node tests/sim.test.mjs`)، والصورة الأولى `mockup.html`
 prototypes/wardesigns/        «أربع نماذج حرب» 2D (WD، D-038): محافظات، لوحة جبهة، مدن وطرق، خطة القائد — للمقارنة واختيار المالك
 prototypes/oblique/           تجربة «2D مايل» (D-031): S-400 وباتريوت وباليستي بالحجم والسرعة الحقيقية على صور أقمار
 prototypes/warmap/            تجربة: شهر حرب حي على خريطة الدول (مطارات، دفاع جوي، باليستي، دروع، جبهة)

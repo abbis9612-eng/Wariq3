@@ -1,0 +1,403 @@
+<!doctype html>
+<html lang="ar" dir="rtl"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover,user-scalable=no">
+<title>الحرب الكبرى</title>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Arabic:wght@400;500;600;700&family=Reem+Kufi:wght@600;700&display=swap" rel="stylesheet">
+<style>
+:root{--ink:#f3ead6;--panel:rgba(24,22,19,.88);--line:rgba(255,235,190,.16);--gold:#e2b552;--me:#2f6fd0;--foe:#c8402f}
+*{box-sizing:border-box;margin:0;padding:0}html,body{height:100%;background:#1a1815;overflow:hidden;font:500 13px/1.35 "IBM Plex Sans Arabic",Tahoma,sans-serif;color:var(--ink);-webkit-user-select:none;user-select:none;-webkit-tap-highlight-color:transparent}
+canvas{position:fixed;inset:0;width:100%;height:100%;touch-action:none}
+button{font:inherit;color:inherit;background:none;border:0;cursor:pointer}
+#top{position:fixed;top:0;left:0;right:0;background:linear-gradient(var(--panel),rgba(24,22,19,.8));border-bottom:1px solid var(--line);padding:calc(6px + env(safe-area-inset-top)) 10px 6px;backdrop-filter:blur(6px);z-index:5}
+.r1{display:flex;align-items:center;gap:8px}.flag{font-size:22px;line-height:1}.cn{font:700 16px "Reem Kufi",sans-serif;color:var(--gold)}
+.date{margin-inline-start:auto;display:flex;align-items:center;gap:6px;font-weight:600;font-variant-numeric:tabular-nums}
+.spd{display:flex;gap:3px}.spd button{width:30px;height:28px;border-radius:7px;background:rgba(255,255,255,.08);border:1px solid var(--line);font-size:11px;font-weight:700}.spd button.on{background:var(--gold);color:#221b0e}
+.res{display:flex;gap:5px;margin-top:6px}.res span{flex:1;min-width:0;background:rgba(255,255,255,.06);border:1px solid var(--line);border-radius:8px;padding:2px 3px;text-align:center;white-space:nowrap;font-size:12px;font-weight:600}.res i{font-style:normal;display:block;font-size:9.5px;opacity:.7;font-weight:500}
+#vpbar{height:6px;border-radius:3px;margin-top:6px;background:var(--foe);overflow:hidden;position:relative}#vpbar u{position:absolute;right:0;top:0;bottom:0;background:var(--me);transition:width .5s}
+#card{position:fixed;left:8px;right:8px;bottom:calc(62px + env(safe-area-inset-bottom));background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:9px 11px;backdrop-filter:blur(6px);z-index:5}
+#card[hidden]{display:none}
+.ch{display:flex;align-items:center;gap:8px}.ch .t{font:700 15px "Reem Kufi",sans-serif}.ch .s{font-size:11.5px;opacity:.75}.ch .x{margin-inline-start:auto;font-size:11px;border-radius:10px;padding:1px 8px;white-space:nowrap}
+.x.auto{background:rgba(89,194,106,.2);border:1px solid rgba(89,194,106,.6)}.x.hold{background:rgba(226,181,82,.2);border:1px solid rgba(226,181,82,.6)}.x.manual{background:rgba(63,127,224,.25);border:1px solid rgba(63,127,224,.6)}
+.list{display:flex;gap:5px;overflow-x:auto;margin:7px 0;padding-bottom:2px;scrollbar-width:none}.list::-webkit-scrollbar{display:none}
+.dv{flex:0 0 auto;min-width:96px;background:rgba(255,255,255,.06);border:1px solid var(--line);border-radius:9px;padding:4px 6px;font-size:11px}.dv b{display:block;font-size:11.5px;white-space:nowrap}
+.bar{height:4px;border-radius:2px;background:rgba(255,255,255,.12);margin-top:2px;overflow:hidden}.bar u{display:block;height:100%;background:#59c26a}.bar u.o{background:#e2b552}
+.acts{display:flex;gap:6px}.acts button{flex:1;text-align:center;border-radius:9px;padding:7px 2px;background:rgba(255,255,255,.07);border:1px solid var(--line);font-weight:600;font-size:12.5px}.acts button.go{background:#b8442f;border-color:#e0705a}.acts button.on{outline:2px solid var(--gold)}
+#tabs{position:fixed;left:0;right:0;bottom:0;display:flex;background:var(--panel);border-top:1px solid var(--line);padding:5px 4px calc(5px + env(safe-area-inset-bottom));z-index:5}
+#tabs button{flex:1;text-align:center;font-size:10.5px;font-weight:600;opacity:.8}#tabs button em{display:block;font-style:normal;font-size:19px;line-height:1.25}#tabs button.on{opacity:1;color:var(--gold)}
+#zoom{position:fixed;left:8px;display:flex;flex-direction:column;gap:5px;z-index:4}#zoom button{width:36px;height:36px;border-radius:10px;background:var(--panel);border:1px solid var(--line);font-size:17px}
+#hint{position:fixed;left:50%;transform:translateX(-50%);background:rgba(184,68,47,.95);border-radius:12px;padding:6px 14px;font-weight:600;z-index:6;white-space:nowrap}#hint[hidden]{display:none}
+#toasts{position:fixed;right:8px;left:52px;display:flex;flex-direction:column;gap:4px;z-index:4;pointer-events:none;align-items:flex-start}
+.toast{background:var(--panel);border:1px solid var(--line);border-radius:10px;padding:4px 10px;font-size:12px;animation:tin .25s ease-out;max-width:100%}.toast.bad{border-color:rgba(220,90,70,.7)}.toast.good{border-color:rgba(90,160,240,.7)}
+@keyframes tin{from{opacity:0;transform:translateY(-6px)}}
+#intro{position:fixed;inset:0;background:rgba(10,9,8,.72);display:grid;place-items:center;z-index:9;padding:18px}#intro[hidden]{display:none}
+#intro .box{background:#221f1a;border:1px solid var(--line);border-radius:16px;padding:16px 16px 14px;max-width:420px}
+#intro h1{font:700 24px "Reem Kufi",sans-serif;color:var(--gold);text-align:center}#intro p{margin:8px 0;font-size:13.5px;line-height:1.6}#intro ul{margin:4px 0 10px;padding-inline-start:18px;font-size:13px;line-height:1.65}
+#intro button{width:100%;margin-top:6px;background:var(--gold);color:#221b0e;border-radius:12px;padding:10px;font-weight:700;font-size:16px}
+#end{position:fixed;inset:0;background:rgba(10,9,8,.75);display:grid;place-items:center;z-index:9}#end[hidden]{display:none}
+</style></head><body>
+<canvas id="c"></canvas>
+<div id="top">
+  <div class="r1"><span class="flag">🇮🇶</span><span class="cn">العراق</span><span style="font-size:11px;opacity:.7">ضد إيران 🇮🇷</span>
+    <div class="date"><span id="dt"></span><div class="spd"><button data-s="0">⏸</button><button data-s="1" class="on">▶</button><button data-s="2">▶▶</button><button data-s="3">⏩</button></div></div></div>
+  <div class="res"><span id="rVp"></span><span id="rDiv"></span><span id="rBat"></span><span id="rTook"></span><span id="rLost"></span></div>
+  <div id="vpbar"><u></u></div>
+</div>
+<div id="zoom"><button id="zin">＋</button><button id="zout">－</button><button id="zme" title="رجوع للجبهة">◎</button></div>
+<div id="toasts"></div>
+<div id="hint" hidden></div>
+<div id="card" hidden></div>
+<div id="tabs"><button class="on"><em>🗺️</em>الخريطة</button><button data-soon="1"><em>🪖</em>الجيش</button><button data-soon="1"><em>🏭</em>الإنتاج</button><button data-soon="1"><em>💰</em>الاقتصاد</button><button data-soon="1"><em>🤝</em>السياسة</button><button data-soon="1"><em>🔬</em>البحث</button></div>
+<div id="intro"><div class="box">
+  <h1>الحرب الكبرى</h1>
+  <p>14 آذار 2027. الحرب بدت بين العراق وإيران. انت قائد الجيش العراقي.</p>
+  <ul>
+    <li><b>المربعات الزرقاء</b> فرقك، والحمرة فرق إيران. الصورة نوعها: دبابة = مدرعة، مدرعة = آلية، خوذة = مشاة. الرقم كم فرقة، والشريط قوتها.</li>
+    <li><b>الخط الأحمر</b> هو الجبهة. <b>⚔</b> معركة هسه، والدائرة حولها تبين مين غالب (أزرق إلنا).</li>
+    <li><b>اضغط فرقة</b> وبعدين <b>«هجوم/تحرّك»</b> واضغط المنطقة اللي تريدها. أو خليها <b>«تلقائي»</b> والقائد يمسك الجبهة ويهاجم لما يشوف فرصة.</li>
+    <li><b>قرّب بإصبعين</b> وتشوف الدبابات والمدرعات نفسها.</li>
+    <li>المدن الكبيرة نقاط. اللي يخسر 70% من نقاط مدنه يستسلم.</li>
+  </ul>
+  <button id="go">ابدأ الحرب ▶</button>
+</div></div>
+<div id="end" hidden></div>
+<script src="data.js"></script>
+<script src="cells.js"></script>
+<script src="sim.js"></script>
+<script>
+'use strict';
+const G = window.GEO, C = window.CELLS, Q = new URLSearchParams(location.search);
+const $ = id => document.getElementById(id);
+const cv = $('c'), g = cv.getContext('2d');
+let DPR = Math.min(2, devicePixelRatio || 1), W, H;
+const ME = 0;
+// ===== المحاكاة =====
+const SEED = +(Q.get('seed') || (Date.now() % 100000));
+const WD = SIM.World(C, { seed: SEED }); SIM.scenario(WD);
+const cells = C.cells;
+// ===== الكاميرا =====
+const cam = { x: 815, y: 850, s: .58 };
+const TOPH = () => $('top').offsetHeight, BOTH = () => ($('card').hidden ? 0 : $('card').offsetHeight + 8) + $('tabs').offsetHeight;
+const w2s = (x, y) => [(x - cam.x) * cam.s + W / 2, (y - cam.y) * cam.s + H / 2];
+const s2w = (x, y) => [(x - W / 2) / cam.s + cam.x, (y - H / 2) / cam.s + cam.y];
+const clampCam = () => { cam.s = Math.min(7, Math.max(.28, cam.s)); cam.x = Math.min(2300, Math.max(-100, cam.x)); cam.y = Math.min(1800, Math.max(0, cam.y)); };
+// ===== الصور =====
+const IMG = {}; const load = n => new Promise(r => { const i = new Image(); i.onload = r; i.onerror = r; i.src = `img/${n}.webp`; IMG[n] = i; });
+// ===== المسارات (Path2D بإحداثيات الكم) =====
+const ringPath = (rings, P = new Path2D()) => { for (const r of rings) { r.forEach((q, i) => i ? P.lineTo(q[0], q[1]) : P.moveTo(q[0], q[1])); P.closePath(); } return P; };
+const cellPath = cells.map(c => ringPath([c.ring]));
+const cellBox = cells.map(c => { let a = 1e9, b = 1e9, cc = -1e9, d = -1e9; for (const [x, y] of c.ring) { a = Math.min(a, x); b = Math.min(b, y); cc = Math.max(cc, x); d = Math.max(d, y); } return [a, b, cc, d]; });
+const allCells = new Path2D(); cellPath.forEach(p => allCells.addPath(p));
+const provPath = new Path2D(); G.provs.forEach(p => ringPath(p.poly, provPath));
+const otherPath = new Path2D(); G.others.forEach(o => ringPath(o.poly, otherPath));
+const lakePath = new Path2D(); G.lakes.forEach(l => ringPath(l, lakePath));
+const borderPath = new Path2D(); G.border.forEach((q, i) => i ? borderPath.lineTo(q[0], q[1]) : borderPath.moveTo(q[0], q[1]));
+const riverPaths = G.rivers.map(r => { const P = new Path2D(); r.p.forEach((q, i) => i ? P.lineTo(q[0], q[1]) : P.moveTo(q[0], q[1])); return { P, w: r.w }; });
+let ctrlPath = [null, null], occPath = null, frontPath = null, ctrlKey = '';
+function rebuildCtrl() {
+  const key = WD.ctrl.join(''); if (key === ctrlKey) return; ctrlKey = key;
+  ctrlPath = [new Path2D(), new Path2D()]; occPath = new Path2D(); frontPath = new Path2D();
+  cells.forEach((c, i) => { ctrlPath[WD.ctrl[i]].addPath(cellPath[i]); if (WD.ctrl[i] !== c.s) occPath.addPath(cellPath[i]); });
+  for (const [i, j, r, seg] of C.edges) if (WD.ctrl[i] !== WD.ctrl[j]) for (const p of seg) p.forEach((q, k) => k ? frontPath.lineTo(q[0], q[1]) : frontPath.moveTo(q[0], q[1]));
+}
+const pat = (() => { const pc = document.createElement('canvas'); pc.width = pc.height = 12; const pg = pc.getContext('2d'); pg.strokeStyle = 'rgba(70,60,60,.35)'; pg.lineWidth = 1.6; pg.beginPath(); pg.moveTo(-2, 14); pg.lineTo(14, -2); pg.stroke(); return g.createPattern(pc, 'repeat'); })();
+
+function cellAt(wx, wy) { for (let i = 0; i < cells.length; i++) { const b = cellBox[i]; if (wx < b[0] || wx > b[2] || wy < b[1] || wy > b[3]) continue; if (inRing(cells[i].ring, wx, wy)) return i; } return -1; }
+function inRing(r, x, y) { let inside = false; for (let i = 0, j = r.length - 1; i < r.length; j = i++) { const [xi, yi] = r[i], [xj, yj] = r[j]; if ((yi > y) !== (yj > y) && x < (xj - xi) * (y - yi) / (yj - yi) + xi) inside = !inside; } return inside; }
+
+// ===== رسم الخريطة =====
+function worldT() { g.setTransform(DPR * cam.s, 0, 0, DPR * cam.s, DPR * (W / 2 - cam.x * cam.s), DPR * (H / 2 - cam.y * cam.s)); }
+function screenT() { g.setTransform(DPR, 0, 0, DPR, 0, 0); }
+function drawMap() {
+  screenT(); g.fillStyle = '#7fb0d6'; g.fillRect(0, 0, W, H);
+  worldT(); const k = 1 / cam.s;
+  g.drawImage(IMG.base_me, -200, -100, IMG.base_me.width / 1.25, IMG.base_me.height / 1.25);
+  if (cam.s > 1.3) g.drawImage(IMG.base_south, 760, 900, 280, 280);
+  rebuildCtrl();
+  g.save(); g.globalCompositeOperation = 'multiply';
+  g.fillStyle = '#bcd2f3'; g.fill(ctrlPath[0]); g.fillStyle = '#f4c6ba'; g.fill(ctrlPath[1]);
+  g.restore();
+  g.fillStyle = 'rgba(245,238,222,.3)'; g.fill(otherPath);
+  g.save(); screenT(); g.restore(); g.fillStyle = pat; g.save(); g.fill(occPath); g.restore();
+  g.fillStyle = '#86b9dc'; g.fill(lakePath);
+  g.lineCap = g.lineJoin = 'round';
+  for (const r of riverPaths) { g.strokeStyle = 'rgba(60,125,185,.85)'; g.lineWidth = (cam.s > 1.5 ? 1.2 + r.w : .7 + r.w * .45) * k; g.stroke(r.P); }
+  if (cam.s > .75) { g.strokeStyle = `rgba(70,55,40,${Math.min(.28, (cam.s - .75) * .4)})`; g.lineWidth = k * .8; g.stroke(allCells); }
+  g.setLineDash([3 * k, 3 * k]); g.lineWidth = k; g.strokeStyle = 'rgba(70,55,40,.4)'; g.stroke(provPath); g.setLineDash([]);
+  g.strokeStyle = 'rgba(60,45,35,.55)'; g.lineWidth = 1.3 * k; g.stroke(otherPath);
+  g.strokeStyle = 'rgba(45,35,28,.7)'; g.lineWidth = 2 * k; g.stroke(borderPath);
+  g.strokeStyle = 'rgba(200,30,30,.22)'; g.lineWidth = (cam.s > 1.5 ? 18 : 12) * k; g.stroke(frontPath);
+  g.strokeStyle = '#b3161c'; g.lineWidth = (cam.s > 1.5 ? 5 : 3.6) * k; g.stroke(frontPath);
+  screenT();
+}
+function text(s, x, y, size, col = '#2a2118', halo = 'rgba(255,250,235,.85)', weight = 600, font = 'IBM Plex Sans Arabic') {
+  g.font = `${weight} ${size}px "${font}"`; g.textAlign = 'center'; g.textBaseline = 'middle'; g.lineJoin = 'round';
+  if (halo) { g.lineWidth = Math.max(2.5, size / 4); g.strokeStyle = halo; g.strokeText(s, x, y); } g.fillStyle = col; g.fillText(s, x, y);
+}
+function drawCities() {
+  for (const c of cells) {
+    if (!c.city) continue; const vp = c.vp || 0;
+    if (vp < 5 && cam.s < .5) continue; if (vp < 3 && cam.s < 1) continue;
+    const [x, y] = w2s(c.c[0], c.c[1]); if (x < -50 || x > W + 50 || y < 60 || y > H) continue;
+    const big = vp >= 5, near = cam.s > 1.5;
+    if (c.cap) text('★', x, y, near ? 16 : 13, '#7a1010', 'rgba(255,250,235,.9)', 700);
+    else { g.beginPath(); g.arc(x, y, near ? (big ? 5 : 3.6) : (big ? 3.4 : 2.4), 0, 7); g.fillStyle = '#2b241c'; g.fill(); g.lineWidth = 1.5; g.strokeStyle = '#fff8e6'; g.stroke(); }
+    text(c.city, x, y - (near ? 13 : 10), near ? (big ? 14 : 12) : (big ? 11.5 : 10));
+  }
+}
+function drawLabels() {
+  if (cam.s > 1.2) return; const LL = (lon, lat) => [(lon - G.proj.lon0) * G.proj.kx, (G.proj.lat1 - lat) * G.proj.ky];
+  for (const [s, lon, lat, sz] of [['العـــراق', 44.4, 31.7, 30], ['إيـــران', 51.2, 33.6, 30], ['السعـودية', 45.6, 28.3, 17], ['تركـيا', 44.2, 38.6, 16], ['الكويت', 47.65, 29.25, 12]]) {
+    const [x, y] = w2s(...LL(lon, lat)); g.globalAlpha = .5; text(s, x, y, sz * Math.min(1.3, Math.max(.8, cam.s / .58)), '#3a2a1a', 'rgba(255,248,230,.6)', 700, 'Reem Kufi'); g.globalAlpha = 1; }
+}
+
+// ===== الفرق =====
+// مكان الفرقة على الشاشة (المتحركة بين منطقتين)
+function divPos(d) {
+  const a = cells[d.cell].c; if (!d.path.length || !d.prog) return a;
+  const b = cells[d.path[0]].c, f = Math.min(.92, d.prog / WD.dist(d.cell, d.path[0])); return [a[0] + (b[0] - a[0]) * f, a[1] + (b[1] - a[1]) * f];
+}
+let clusters = [];
+function buildClusters() {
+  const near = cam.s >= 1.7; clusters = [];
+  const groups = new Map();
+  for (const d of SIM.alive(WD)) { const moving = d.path.length && d.prog > 0; const key = moving ? 'm' + d.id : d.side + ':' + d.cell; if (!groups.has(key)) groups.set(key, { side: d.side, divs: [], wp: divPos(d) }); groups.get(key).divs.push(d); }
+  const R = near ? 0 : 40;
+  for (const gr of [...groups.values()].sort((a, b) => b.divs.length - a.divs.length)) {
+    let [x, y] = w2s(gr.wp[0], gr.wp[1]);
+    if (!near) { // من بعيد: ادفع المربع شوي لورا عن العدو حتى ما يتراكب ويا مربعات العدو
+      const c0 = gr.divs[0].cell, en = cells[c0].nb.filter(j => WD.ctrl[j] !== gr.side);
+      if (en.length) { let ex = 0, ey = 0; for (const j of en) { ex += cells[j].c[0]; ey += cells[j].c[1]; } ex = ex / en.length - cells[c0].c[0]; ey = ey / en.length - cells[c0].c[1]; const L = Math.hypot(ex, ey) || 1; x -= ex / L * 15; y -= ey / L * 15; }
+    }
+    if (x < -60 || x > W + 60 || y < -60 || y > H + 60) continue;
+    const hit = R && clusters.find(c => c.side === gr.side && Math.hypot(c.x - x, c.y - y) < R);
+    if (hit) { hit.divs.push(...gr.divs); continue; }
+    clusters.push({ side: gr.side, divs: gr.divs.slice(), x, y });
+  }
+}
+function counter(cl) {
+  const { x, y, side, divs } = cl; const k = Math.min(1.15, Math.max(.82, .7 + cam.s * .35));
+  const kinds = { arm: 0, mec: 0, inf: 0 }; divs.forEach(d => kinds[d.kind]++);
+  const kind = kinds.arm ? 'arm' : kinds.mec ? 'mec' : 'inf';
+  const str = divs.reduce((s, d) => s + d.str, 0) / divs.length, org = divs.reduce((s, d) => s + d.org / d.orgMax, 0) / divs.length;
+  const sel = side === ME && divs.some(d => SEL.has(d.id));
+  const w = 44 * k, h = 26 * k; const c = side ? '#c8402f' : '#2f6fd0';
+  g.save(); g.translate(x, y);
+  g.shadowColor = 'rgba(0,0,0,.45)'; g.shadowBlur = 5; g.shadowOffsetY = 2;
+  g.fillStyle = c; g.beginPath(); g.roundRect(-w / 2, -h / 2, w, h, 6 * k); g.fill(); g.shadowColor = 'transparent';
+  g.lineWidth = sel ? 2.8 : 1.3; g.strokeStyle = sel ? '#ffd65a' : 'rgba(255,255,255,.9)'; g.stroke();
+  g.fillStyle = 'rgba(255,255,255,.88)'; g.beginPath(); g.roundRect(-w / 2 + 3 * k, -h / 2 + 3 * k, 24 * k, h - 6 * k, 4 * k); g.fill();
+  const ic = kind === 'arm' ? (side ? 't72' : 'abrams') : kind === 'mec' ? 'bmp' : null, cx = -w / 2 + 15 * k;
+  if (ic) { g.save(); g.translate(cx, 0); g.rotate(side ? Math.PI : 0); g.drawImage(IMG[ic], -14 * k, -14 * k, 28 * k, 28 * k); if (kind === 'arm') g.drawImage(IMG[ic + '_t'], -14 * k, -14 * k, 28 * k, 28 * k); g.restore(); }
+  else { g.font = `${15 * k}px sans-serif`; g.textAlign = 'center'; g.textBaseline = 'middle'; g.fillText('🪖', cx, 1); }
+  g.fillStyle = '#fff'; g.font = `700 ${14 * k}px "IBM Plex Sans Arabic"`; g.textAlign = 'center'; g.textBaseline = 'middle'; g.fillText(divs.length, w / 2 - 8 * k, 1);
+  g.fillStyle = 'rgba(0,0,0,.55)'; g.fillRect(-w / 2, h / 2 + 2, w, 4); g.fillStyle = str > .6 ? '#5fd06f' : str > .35 ? '#e7c03f' : '#e2553f'; g.fillRect(-w / 2, h / 2 + 2, w * str, 4);
+  g.fillStyle = 'rgba(0,0,0,.55)'; g.fillRect(-w / 2, h / 2 + 7, w, 3); g.fillStyle = '#e2b552'; g.fillRect(-w / 2, h / 2 + 7, w * org, 3);
+  if (divs.some(d => d.mode === 'hold') && side === ME) text('📌', w / 2 - 2, -h / 2 - 2, 11, '#000', null);
+  g.restore(); cl.r = Math.max(w, h) / 2 + 6;
+}
+// من قريب: كل فرقة دبابات ومدرعات صغيرة بتشكيل
+function spr(n, x, y, rot, s, ring) {
+  const im = IMG[n]; g.save(); g.translate(x, y);
+  if (ring) { g.beginPath(); g.ellipse(0, 0, s * .42, s * .32, rot, 0, 7); g.fillStyle = ring; g.fill(); }
+  g.rotate(rot); g.drawImage(im, -s / 2, -s / 2, s, s); g.restore();
+}
+function facing(d) {
+  const a = cells[d.cell].c; let b;
+  if (d.path.length) b = cells[d.path[0]].c;
+  else { const e = cells[d.cell].nb.find(j => WD.ctrl[j] !== d.side); b = e != null ? cells[e].c : [a[0] + (d.side ? -1 : 1), a[1]]; }
+  return Math.atan2(b[1] - a[1], b[0] - a[0]);
+}
+function formation(cl) {
+  const n = cl.divs.length; const S = Math.min(34, Math.max(13, cam.s * 7.5));
+  cl.divs.forEach((d, idx) => {
+    const off = n > 1 ? (idx - (n - 1) / 2) * S * 2.6 : 0; const rot = facing(d);
+    const c = Math.cos(rot), s = Math.sin(rot);
+    const cx = cl.x - s * off, cy = cl.y + c * off;
+    const ring = d.side ? 'rgba(215,60,45,.7)' : 'rgba(45,115,235,.7)'; const hull = d.side ? 't72' : 'abrams';
+    const pts = [], add = (nm, fx, fy, sz) => pts.push([nm, fx * S / 21, fy * S / 21, sz * S / 21]);
+    const m = Math.max(1, Math.round(d.str * 5));
+    if (d.kind === 'arm') { [[0, 0], [-14, -13], [-14, 13], [-28, -26], [-28, 26]].slice(0, m).forEach(([a, b]) => add(hull, a, b, 21)); add('truck', -46, 0, 17); }
+    if (d.kind === 'mec') { [['bmp', 0, -9, 19], ['bmp', 0, 10, 19], [hull, -16, 0, 21], ['bmp', -30, -16, 19]].slice(0, Math.max(1, m - 1)).forEach(q => add(...q)); add('truck', -44, 10, 17); }
+    if (d.kind === 'inf') { [['truck', 0, -10, 17], ['truck', 0, 10, 17], ['truck', -18, 0, 17]].slice(0, Math.max(1, m - 2)).forEach(q => add(...q)); add('grad', -38, -8, 19); }
+    const sel = SEL.has(d.id);
+    if (sel) { g.save(); g.beginPath(); g.ellipse(cx - c * S * .9, cy - s * S * .9, S * 2.3, S * 1.9, rot, 0, 7); g.setLineDash([5, 4]); g.lineWidth = 2; g.strokeStyle = '#ffd65a'; g.stroke(); g.restore(); }
+    for (const [nm, fx, fy, sz] of pts) {
+      const x = cx + fx * c - fy * s, y = cy + fx * s + fy * c; spr(d.side && (nm === 'truck' || nm === 'grad') ? nm + '_r' : nm, x, y, rot, sz, ring);
+      if (nm === hull) spr(hull + '_t', x, y, rot, sz);
+      if (d.kind === 'inf' && nm === 'truck') for (let k = 0; k < 6; k++) { const a = k * 1.05 + fx, rr = (9 + (k % 2) * 4) * S / 21; g.beginPath(); g.arc(x + Math.cos(a) * rr + c * 8, y + Math.sin(a) * rr + s * 8, 1.7 * S / 21, 0, 7); g.fillStyle = d.side ? '#5a2a20' : '#1d3557'; g.fill(); }
+    }
+    if (cam.s > 4 || (sel && cam.s > 2.2)) {
+      const ty = cy - S * 1.9; g.font = '700 11px "IBM Plex Sans Arabic"'; const tw = g.measureText(d.n).width + 14;
+      g.fillStyle = d.side ? 'rgba(150,40,30,.9)' : 'rgba(30,70,150,.9)'; g.beginPath(); g.roundRect(cx - tw / 2, ty - 9, tw, 18, 6); g.fill();
+      text(d.n, cx, ty, 11, '#fff', null, 700);
+      g.fillStyle = 'rgba(0,0,0,.6)'; g.fillRect(cx - tw / 2, ty + 10, tw, 3); g.fillStyle = d.str > .6 ? '#5fd06f' : d.str > .35 ? '#e7c03f' : '#e2553f'; g.fillRect(cx - tw / 2, ty + 10, tw * d.str, 3);
+    }
+  });
+  cl.r = S * 2;
+}
+// المعارك
+const fx = [];
+function drawBattles(dt) {
+  for (const b of WD.battles.values()) {
+    const t = cells[b.tg].c; let fxm = 0, fym = 0; for (const f of b.from) { fxm += cells[f].c[0]; fym += cells[f].c[1]; } fxm /= b.from.size; fym /= b.from.size;
+    const mx = (t[0] + fxm) / 2, my = (t[1] + fym) / 2; const [x, y] = w2s(mx, my);
+    if (x < -40 || x > W + 40 || y < -40 || y > H + 40) continue;
+    // أسهم الهجوم الصغيرة
+    for (const f of b.from) { const [ax, ay] = w2s(...cells[f].c), [bx, by] = w2s(...t); arrowSmall(ax + (bx - ax) * .25, ay + (by - ay) * .25, ax + (bx - ax) * .78, ay + (by - ay) * .78, b.side ? '#c8402f' : '#2f6fd0'); }
+    // مؤثرات من قريب
+    if (cam.s > 1.4 && SPEED && Math.random() < dt * 6) fx.push({ x: t[0] + (Math.random() - .5) * 14, y: t[1] + (Math.random() - .5) * 14, t: 0, r: 6 + Math.random() * 8, tr: [fxm + (Math.random() - .5) * 10, fym + (Math.random() - .5) * 10] });
+    const win = b.side === ME ? b.win : 1 - b.win;
+    g.save(); g.translate(x, y); g.beginPath(); g.arc(0, 0, 12, 0, 7); g.fillStyle = 'rgba(25,20,15,.88)'; g.fill();
+    g.beginPath(); g.arc(0, 0, 12, -Math.PI / 2, -Math.PI / 2 + win * 6.283); g.strokeStyle = '#4f8ff0'; g.lineWidth = 3.2; g.stroke();
+    g.beginPath(); g.arc(0, 0, 12, -Math.PI / 2 + win * 6.283, 1.5 * Math.PI); g.strokeStyle = '#e0533f'; g.stroke();
+    text('⚔', 0, 1, 13, '#fff', null, 700); g.restore();
+    b.sx = x; b.sy = y;
+  }
+  for (let i = fx.length - 1; i >= 0; i--) {
+    const e = fx[i]; e.t += dt; if (e.t > .9) { fx.splice(i, 1); continue; }
+    const [x, y] = w2s(e.x, e.y), r = e.r * Math.min(2, cam.s / 2) * (1 + e.t);
+    if (e.t < .15) { const [tx, ty] = w2s(...e.tr); g.strokeStyle = 'rgba(255,224,138,.9)'; g.lineWidth = 1.5; g.beginPath(); g.moveTo(tx, ty); g.lineTo(x, y); g.stroke(); }
+    const gr = g.createRadialGradient(x, y, 0, x, y, r); gr.addColorStop(0, `rgba(255,${200 - e.t * 150},90,${.9 - e.t})`); gr.addColorStop(.5, `rgba(120,100,80,${.5 - e.t * .5})`); gr.addColorStop(1, 'rgba(80,70,60,0)');
+    g.fillStyle = gr; g.beginPath(); g.arc(x, y, r, 0, 7); g.fill();
+  }
+}
+function arrowSmall(x0, y0, x1, y1, col) {
+  const d = Math.hypot(x1 - x0, y1 - y0); if (d < 8) return; const ux = (x1 - x0) / d, uy = (y1 - y0) / d, w = Math.min(6, 2 + cam.s * 1.2);
+  g.beginPath(); g.moveTo(x0 - uy * w * .5, y0 + ux * w * .5); g.lineTo(x1 - ux * w * 2 - uy * w * .7, y1 - uy * w * 2 + ux * w * .7); g.lineTo(x1 - ux * w * 2 - uy * w * 1.6, y1 - uy * w * 2 + ux * w * 1.6); g.lineTo(x1, y1);
+  g.lineTo(x1 - ux * w * 2 + uy * w * 1.6, y1 - uy * w * 2 - ux * w * 1.6); g.lineTo(x1 - ux * w * 2 + uy * w * .7, y1 - uy * w * 2 - ux * w * .7); g.lineTo(x0 + uy * w * .5, y0 - ux * w * .5); g.closePath();
+  g.fillStyle = col + 'd0'; g.fill(); g.lineWidth = 1.2; g.strokeStyle = 'rgba(255,255,255,.9)'; g.stroke();
+}
+// طريق الفرق المختارة
+function drawPaths() {
+  g.save(); g.setLineDash([6, 5]); g.lineWidth = 2.5; g.strokeStyle = 'rgba(255,214,90,.95)';
+  for (const d of SIM.alive(WD)) {
+    if (!SEL.has(d.id) || !d.path.length) continue;
+    g.beginPath(); const [x0, y0] = w2s(...divPos(d)); g.moveTo(x0, y0); for (const j of d.path) { const [x, y] = w2s(...cells[j].c); g.lineTo(x, y); } g.stroke();
+    const [ex, ey] = w2s(...cells[d.path[d.path.length - 1]].c); g.setLineDash([]); g.beginPath(); g.arc(ex, ey, 6, 0, 7); g.fillStyle = 'rgba(255,214,90,.95)'; g.fill(); g.setLineDash([6, 5]);
+  }
+  g.restore();
+  if (PICK && HOVER >= 0) { worldT(); g.fillStyle = 'rgba(255,214,90,.35)'; g.fill(cellPath[HOVER]); g.strokeStyle = '#ffd65a'; g.lineWidth = 2 / cam.s; g.stroke(cellPath[HOVER]); screenT(); }
+}
+
+// ===== الواجهة =====
+let SPEED = 0, SEL = new Set(), PICK = false, HOVER = -1;
+const HPS = [0, 2, 6, 18]; // ساعات لعبة بالثانية
+const START = new Date(2027, 2, 14, 6);
+const AR_M = ['كانون الثاني', 'شباط', 'آذار', 'نيسان', 'أيار', 'حزيران', 'تموز', 'آب', 'أيلول', 'تشرين الأول', 'تشرين الثاني', 'كانون الأول'];
+function hud() {
+  const d = new Date(START.getTime() + WD.t * 3600e3);
+  $('dt').textContent = `${d.getDate()} ${AR_M[d.getMonth()]} ${d.getFullYear()} · ${String(d.getHours()).padStart(2, '0')}:00`;
+  const sc = SIM.score(WD), tot = WD.vpTotal[0] + WD.vpTotal[1];
+  $('rVp').innerHTML = `🏙 ${sc.vp[0]}<i>نقاط مدننا</i>`; $('rDiv').innerHTML = `🪖 ${sc.divs[0]}<i>فرقنا</i>`;
+  $('rBat').innerHTML = `⚔ ${WD.battles.size}<i>معارك هسه</i>`; $('rTook').innerHTML = `📈 ${cells.reduce((n, c, i) => n + (c.s === 1 && WD.ctrl[i] === 0 ? 1 : 0), 0)}<i>أخذنا مناطق</i>`;
+  $('rLost').innerHTML = `💀 ${WD.lost[0]}<i>فرق خسرناها</i>`;
+  $('vpbar').firstElementChild.style.width = (sc.vp[0] / tot * 100) + '%';
+}
+function toast(msg, cls = '') { const t = document.createElement('div'); t.className = 'toast ' + cls; t.textContent = msg; $('toasts').prepend(t); while ($('toasts').children.length > 3) $('toasts').lastChild.remove(); setTimeout(() => t.remove(), 4500); }
+let logN = 0;
+function events() {
+  while (logN < WD.log.length) {
+    const l = WD.log[logN++]; const c = l.cell != null ? cells[l.cell] : null; const mine = l.side === ME;
+    if (l.k === 'take' && c && c.vp >= 3) toast(mine ? `✅ أخذنا ${c.city}` : `⚠️ إيران أخذت ${c.city}`, mine ? 'good' : 'bad');
+    if (l.k === 'surrender') toast(mine ? `💀 ${l.div} انطوقت واستسلمت` : `🎖 فرقة إيرانية انطوقت واستسلمت`, mine ? 'bad' : 'good');
+    if (l.k === 'mob' && mine) toast(`🪖 فرقة جديدة جاهزة: ${l.div}`, 'good');
+    if (l.k === 'stall' && mine) toast(`✋ ${l.div} تعبت وما كدرت تكمل الهجوم، ثبتت بمكانها`, 'bad');
+    if (l.k === 'take' && mine && c && !c.vp && SEL.size) {}
+    if (l.k === 'capitulate') endGame(l.side);
+  }
+}
+function endGame(loser) {
+  SPEED = 0; setSpeed(0);
+  const win = loser !== ME; $('end').hidden = false;
+  $('end').innerHTML = `<div class="box" style="background:#221f1a;border:1px solid var(--line);border-radius:16px;padding:18px;max-width:360px;text-align:center"><h1 style="font:700 26px 'Reem Kufi';color:${win ? '#7fb0ff' : '#ff8a7a'}">${win ? 'انتصرنا! 🎖' : 'خسرنا الحرب'}</h1><p style="margin:10px 0">${win ? 'إيران خسرت أغلب مدنها واستسلمت.' : 'العراق خسر أغلب مدنه.'}</p><p style="opacity:.75">${Math.round(WD.t / 24)} يوم حرب</p><button onclick="location.reload()" style="margin-top:10px;background:var(--gold);color:#221b0e;border-radius:12px;padding:10px 20px;font-weight:700">حرب جديدة</button></div>`;
+}
+function setSpeed(s) { SPEED = s; document.querySelectorAll('.spd button').forEach(b => b.classList.toggle('on', +b.dataset.s === s)); }
+document.querySelectorAll('.spd button').forEach(b => b.onclick = () => setSpeed(+b.dataset.s));
+document.querySelectorAll('#tabs [data-soon]').forEach(b => b.onclick = () => toast('🔜 هذا القسم بالخطوة الثالثة (الدولة والإنتاج من لعبتك)'));
+const KN = SIM.KIND_N;
+function card() {
+  const ds = SIM.alive(WD).filter(d => SEL.has(d.id));
+  if (!ds.length) { SEL.clear(); $('card').hidden = true; PICK = false; $('hint').hidden = true; return; }
+  const mode = ds.every(d => d.mode === ds[0].mode) ? ds[0].mode : 'mix';
+  const MN = { auto: 'تلقائي', hold: 'ثابت', manual: 'بأمرك', mix: 'مختلط' };
+  const c = cells[ds[0].cell]; const where = c.city || 'منطقة';
+  const inBattle = ds.some(d => WD.battles.has(d.path[0]) || WD.battles.has(d.cell));
+  $('card').hidden = false;
+  $('card').innerHTML = `<div class="ch"><span style="font-size:18px">🪖</span><div><div class="t">${ds.length > 1 ? ds.length + ' فرق' : ds[0].n}</div><div class="s">${where} · ${SIM.TERR[c.t].n}${inBattle ? ' · ⚔ تقاتل' : ''}${WD.sup[ME][ds[0].cell] ? '' : ' · ⚠️ مقطوعة الإمداد'}</div></div><span class="x ${mode}">${MN[mode]}</span></div>
+  <div class="list">${ds.map(d => `<div class="dv"><b>${d.n}</b>القوة ${Math.round(d.str * 100)}%<div class="bar"><u style="width:${d.str * 100}%"></u></div>التنظيم ${Math.round(d.org / d.orgMax * 100)}%<div class="bar"><u class="o" style="width:${d.org / d.orgMax * 100}%"></u></div></div>`).join('')}</div>
+  <div class="acts"><button class="go ${PICK ? 'on' : ''}" id="aGo">⚔ هجوم / تحرّك</button><button id="aHold">📌 ثبات</button><button id="aAuto">🤖 تلقائي</button><button id="aX">✕</button></div>`;
+  $('aGo').onclick = () => { PICK = !PICK; $('hint').hidden = !PICK; $('hint').textContent = 'اضغط المنطقة اللي تريد توصلها'; $('hint').style.top = (TOPH() + 8) + 'px'; card(); };
+  $('aHold').onclick = () => { ds.forEach(d => { d.path = []; d.prog = 0; d.mode = 'hold'; }); PICK = false; $('hint').hidden = true; toast('📌 الفرق ثابتة بمكانها وتدافع'); card(); };
+  $('aAuto').onclick = () => { ds.forEach(d => d.mode = 'auto'); PICK = false; $('hint').hidden = true; toast('🤖 القائد يمسك الجبهة ويهاجم لما يشوف فرصة'); card(); };
+  $('aX').onclick = () => { SEL.clear(); card(); };
+}
+function orderTo(ci) {
+  const ds = SIM.alive(WD).filter(d => SEL.has(d.id)); let ok = 0;
+  for (const d of ds) if (SIM.order(WD, d, ci, 'manual', true)) ok++;
+  PICK = false; $('hint').hidden = true; HOVER = -1;
+  const c = cells[ci]; const enemy = WD.ctrl[ci] !== ME;
+  toast(ok ? `${enemy ? '⚔ هجوم على' : '➡️ تحرّك إلى'} ${c.city || 'المنطقة'} (${SIM.TERR[c.t].n})` : '❌ ما يوصلون هناك', ok ? '' : 'bad');
+  card();
+}
+
+// ===== الإدخال: سحب، تكبير بإصبعين، ضغط =====
+const ptrs = new Map(); let pinch = null, moved = 0, downAt = null;
+cv.addEventListener('pointerdown', e => { cv.setPointerCapture(e.pointerId); ptrs.set(e.pointerId, [e.clientX, e.clientY]); moved = 0; downAt = [e.clientX, e.clientY]; if (ptrs.size === 2) { const [a, b] = [...ptrs.values()]; pinch = { d: Math.hypot(a[0] - b[0], a[1] - b[1]), s: cam.s, w: s2w((a[0] + b[0]) / 2, (a[1] + b[1]) / 2) }; } });
+cv.addEventListener('pointermove', e => {
+  if (!ptrs.has(e.pointerId)) { if (PICK) { const [wx, wy] = s2w(e.clientX, e.clientY); HOVER = cellAt(wx, wy); } return; }
+  const p = ptrs.get(e.pointerId), dx = e.clientX - p[0], dy = e.clientY - p[1]; ptrs.set(e.pointerId, [e.clientX, e.clientY]);
+  if (ptrs.size === 2 && pinch) { const [a, b] = [...ptrs.values()]; const d = Math.hypot(a[0] - b[0], a[1] - b[1]); cam.s = pinch.s * d / pinch.d; clampCam(); const m = [(a[0] + b[0]) / 2, (a[1] + b[1]) / 2]; cam.x = pinch.w[0] - (m[0] - W / 2) / cam.s; cam.y = pinch.w[1] - (m[1] - H / 2) / cam.s; moved = 99; return; }
+  moved += Math.abs(dx) + Math.abs(dy); if (moved > 8) { cam.x -= dx / cam.s; cam.y -= dy / cam.s; clampCam(); }
+});
+const up = e => { ptrs.delete(e.pointerId); if (ptrs.size < 2) pinch = null; if (ptrs.size === 0 && moved <= 8 && downAt) tap(downAt[0], downAt[1]); if (!ptrs.size) downAt = null; };
+cv.addEventListener('pointerup', up); cv.addEventListener('pointercancel', e => { ptrs.delete(e.pointerId); pinch = null; downAt = null; });
+cv.addEventListener('wheel', e => { e.preventDefault(); const w = s2w(e.clientX, e.clientY); cam.s *= Math.exp(-e.deltaY * .0015); clampCam(); cam.x = w[0] - (e.clientX - W / 2) / cam.s; cam.y = w[1] - (e.clientY - H / 2) / cam.s; }, { passive: false });
+function zoomBy(f) { cam.s *= f; clampCam(); }
+$('zin').onclick = () => zoomBy(1.6); $('zout').onclick = () => zoomBy(1 / 1.6);
+$('zme').onclick = () => { const F = SIM.frontCells(WD, ME); if (!F.length) return; const sel = SIM.alive(WD).filter(d => SEL.has(d.id)); const p = sel.length ? cells[sel[0].cell].c : cells[F[Math.floor(F.length / 2)]].c; cam.x = p[0]; cam.y = p[1]; };
+function tap(x, y) {
+  const [wx, wy] = s2w(x, y);
+  if (PICK) { const ci = cellAt(wx, wy); if (ci >= 0) orderTo(ci); return; }
+  // ضغط على معركة
+  for (const b of WD.battles.values()) if (b.sx != null && Math.hypot(b.sx - x, b.sy - y) < 16) { battleInfo(b); return; }
+  // ضغط على فرقنا
+  const hit = clusters.filter(c => Math.hypot(c.x - x, c.y - y) < (c.r || 24)).sort((a, b) => (a.side === ME ? -1 : 1) - (b.side === ME ? -1 : 1))[0];
+  if (hit && hit.side === ME) { SEL = new Set(hit.divs.map(d => d.id)); PICK = false; card(); return; }
+  if (hit) { const ds = hit.divs; toast(`🇮🇷 ${ds.length > 1 ? ds.length + ' فرق إيرانية' : ds[0].n} · القوة تقريباً ${Math.round(ds.reduce((s, d) => s + d.str, 0) / ds.length * 10) * 10}%`); return; }
+  const ci = cellAt(wx, wy); if (ci >= 0) { const c = cells[ci]; toast(`${c.city ? c.city + ' · ' : ''}${SIM.TERR[c.t].n}${c.vp ? ' · ' + c.vp + ' نقاط' : ''} · ${WD.ctrl[ci] === ME ? 'بيدنا' : 'بيد إيران'}`); }
+  SEL.clear(); card();
+}
+function battleInfo(b) {
+  const c = cells[b.tg]; const mine = b.side === ME; const win = mine ? b.win : 1 - b.win; const w = b.why;
+  const why = []; if (w.terr !== 'plain' && w.terr !== 'desert') why.push(`الأرض ${SIM.TERR[w.terr].n} تساعد المدافع`); if (w.river) why.push('الهجوم عبر نهر أصعب'); if (w.flank) why.push('الهجوم من أكثر من جهة يساعد المهاجم');
+  why.push(w.aPow > w.dCap ? 'المهاجم أقوى من صمود المدافع، فيخسر المدافع بسرعة' : 'صمود المدافع أكبر من الهجوم، فالمعركة بطيئة');
+  toast(`⚔ ${c.city || 'معركة'}: ${mine ? 'إحنا نهاجم' : 'إيران تهاجم'} (${b.na} ضد ${b.nd}) · ${win > .55 ? 'إحنا غالبين' : win < .45 ? 'إيران غالبة' : 'متعادلة'} · ${why.join('، ')}`);
+}
+
+// ===== الحلقة =====
+let last = performance.now(), acc = 0;
+function frame(now) {
+  const dt = Math.min(.1, (now - last) / 1000); last = now;
+  if (SPEED && !WD.over) {
+    acc += dt * HPS[SPEED];
+    let n = 0; while (acc >= 1 && n < 40) { if (WD.t % 6 === 0) { SIM.ai(WD, 1); SIM.ai(WD, ME); } SIM.step(WD); acc -= 1; n++; }
+    events(); if (n) { hud(); if (SEL.size && WD.t % 3 === 0) card(); }
+  }
+  W = innerWidth; H = innerHeight; if (cv.width !== Math.round(W * DPR)) { cv.width = Math.round(W * DPR); cv.height = Math.round(H * DPR); }
+  drawMap(); drawLabels(); drawCities();
+  buildClusters(); drawPaths();
+  const near = cam.s >= 1.7;
+  for (const cl of clusters) near ? formation(cl) : counter(cl);
+  drawBattles(dt);
+  $('zoom').style.top = (TOPH() + 10) + 'px'; $('toasts').style.top = (TOPH() + 10) + 'px';
+  requestAnimationFrame(frame);
+}
+// للفحص الآلي
+window.G_ = { WD, SIM, cam, sel: ids => { SEL = new Set(ids); card(); }, orderTo, setSpeed, tap, get clusters() { return clusters; } };
+Promise.all(['base_me', 'base_south', 'abrams', 'abrams_t', 't72', 't72_t', 'bmp', 'grad', 'truck'].map(load)).then(() => {
+  // نسخة حمرة من الشاحنة والراجمة لإيران (حتى ما تنلخبط الألوان من قريب)
+  for (const n of ['truck', 'grad']) { const im = IMG[n], c = document.createElement('canvas'); c.width = im.width; c.height = im.height; const x = c.getContext('2d'); x.filter = 'hue-rotate(170deg) saturate(1.3)'; x.drawImage(im, 0, 0); IMG[n + '_r'] = c; }
+  hud(); requestAnimationFrame(frame); window.READY = 1;
+  $('go').onclick = () => { $('intro').hidden = true; setSpeed(1); };
+  if (Q.has('auto')) { $('intro').hidden = true; setSpeed(+Q.get('auto') || 3); }
+});
+</script></body></html>

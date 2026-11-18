@@ -93,6 +93,23 @@
     }
   }
 
+  // ===== الليل والطقس (R5c، I-088) =====
+  // الساعة الحقيقية (اللعبة تبدي 06:00، 14 آذار): ليل 19:00–05:00. الطقس يتغير كل ساعة (سلسلة ماركوف) [تقدير]:
+  // صافي ← غيم (~مرتين بالأسبوع، 4–12 س)، مطر (~مرة بالأسبوع بآذار، 6–18 س)، عاصفة غبار (~مرة كل 10 أيام، 12–36 س)
+  const WX = { clear: { n: 'صافي', atk: 1, mv: 1, air: 1, obs: 1 }, cloud: { n: 'غيوم', atk: 1, mv: 1, air: .85, obs: .9 },
+    rain: { n: 'مطر وطين', atk: .9, mv: .8, air: .8, obs: .7 }, dust: { n: 'عاصفة غبار', atk: .75, mv: .7, air: 0, obs: .3 } };
+  function weather(W) {
+    W.hour = (6 + W.t) % 24; W.night = W.hour >= 19 || W.hour < 5;
+    if (!W.wx) { W.wx = 'clear'; W.wxT = 0; }
+    if (W.wxT > 0) { W.wxT--; if (W.wxT === 0) { W.wx = 'clear'; W.log.push({ t: W.t, k: 'wx', wx: 'clear' }); } return; }
+    if (W.wx !== 'clear') return; const r = W.rnd();
+    const set = (wx, a, b) => { W.wx = wx; W.wxT = a + Math.floor(W.rnd() * (b - a)); W.log.push({ t: W.t, k: 'wx', wx, h: W.wxT }); };
+    if (r < .004) set('dust', 12, 36); else if (r < .010) set('rain', 6, 18); else if (r < .022) set('cloud', 4, 12);
+  }
+  // معامل الهجوم: الليل يضعف الهجوم (العراق عنده مناظير حرارية أحدث بالأبرامز ×0.9، إيران ×0.8) والطقس
+  const envAtk = (W, side) => (W.night ? (side ? .8 : .9) : 1) * (WX[W.wx || 'clear'].atk);
+  const envMv = W => (W.night ? .8 : 1) * WX[W.wx || 'clear'].mv;
+
   // ===== الاستخبارات (R5d، I-088): كل طرف يعرف بس اللي يشوفه =====
   // يشوف: مناطق فرقه والجارة إلها (تماس)، مراصد الحدود (أحياناً)، المعارك، ونقاط الاستطلاع من الجو (W.spots من air.js).
   // اللي شافه ينحفظ «لقطة» (عدد الفرق ونوعها وقوتها ساعتها) وتعتق؛ اللي ما شافه ما يعرفه. الذكاء يقرر بنفس المعلومات.
@@ -103,7 +120,7 @@
     for (const s of [0, 1]) {
       const obs = new Uint8Array(W.N);
       for (const d of W.divs) if (!d.dead && d.side === s) { obs[d.cell] = 1; for (const j of W.cells[d.cell].nb) obs[j] = 1; }
-      for (let i = 0; i < W.N; i++) if (W.ctrl[i] === s) for (const j of W.cells[i].nb) if (!obs[j] && W.ctrl[j] !== s && W.rnd() < .2) obs[j] = 1;   // مراصد ودوريات الحدود
+      for (let i = 0; i < W.N; i++) if (W.ctrl[i] === s) for (const j of W.cells[i].nb) if (!obs[j] && W.ctrl[j] !== s && W.rnd() < .2 * (W.night ? .5 : 1) * WX[W.wx || 'clear'].obs) obs[j] = 1;   // مراصد ودوريات الحدود (الليل والغبار يقللونها)
       for (const [x, y, r] of W.spots[s]) for (let i = 0; i < W.N; i++) { const c = W.cells[i].c; if (Math.abs(c[0] - x) < r && Math.abs(c[1] - y) < r && Math.hypot(c[0] - x, c[1] - y) < r) obs[i] = 1; }
       W.spots[s].length = 0;
       for (const b of W.battles.values()) { obs[b.tg] = 1; for (const f of b.from) obs[f] = 1; }
@@ -129,6 +146,7 @@
   // ساعة وحدة
   function step(W) {
     W.t++;
+    weather(W);
     for (const b of W.bridges) if (b.down > 0 && --b.down === 0) W.log.push({ t: W.t, side: b.by, k: 'bridgefix', cell: b.i, n: b.n });
     if (W.t % 6 === 1) supply(W);
     if (!W.noFog) intel(W);
@@ -153,7 +171,7 @@
       const hA = hdOf(A), hD = hdOf(Dd);
       const flank = new Set(A.map(a => a.cell)).size > 1 ? 1.15 : 1;
       const luck = .85 + W.rnd() * .3;
-      let aPow = A.reduce((s, a) => s + atkOf(W, a, f.tg, a.cell, hD), 0) * flank * luck;
+      let aPow = A.reduce((s, a) => s + atkOf(W, a, f.tg, a.cell, hD), 0) * flank * luck * envAtk(W, f.side);
       let dPow = Dd.reduce((s, d) => s + atkOf(W, d, f.tg, null, hA) / TERR[W.cells[f.tg].t].atk * (d.kind === 'inf' ? 1 : 1 / tr.armor), 0) * (1.15 - (luck - 1));
       const dCap = Dd.reduce((s, d) => s + TEMPL[d.kind].def * d.str * (1 + .6 * d.ent) * (W.sup[d.side][d.cell] ? 1 : .6), 0);
       const aCap = A.reduce((s, a) => s + TEMPL[a.kind].brk * a.str, 0);
@@ -191,7 +209,7 @@
       // سرعات حقيقية (I-084): المسير ورا الخطوط بسرعة الرتل (معدل اليوم: دروع ~200 كم/يوم)،
       // أما التقدّم بأرض العدو فبطيء: استطلاع، ألغام، تطهير، وقفات (دروع ~45 كم/يوم، مشاة ~20)
       const adv = W.ctrl[tg] !== d.side ? (d.kind === 'inf' ? .2 : .22) : 1;
-      const rd = W.road.get(d.cell + ',' + tg), v = T.spd * tr.spd * adv * (W.edgeOf.get(d.cell + ',' + tg)?.r && !bridgeOK(W, d.cell, tg) ? RIVER_SPD : 1) * (rd === 2 ? 1.5 : rd === 1 ? 1.25 : 1) * (W.sup[d.side][d.cell] ? 1 : .5); // الطريق أسرع، والجسر السالم ما يأخّر
+      const rd = W.road.get(d.cell + ',' + tg), v = T.spd * tr.spd * adv * (W.edgeOf.get(d.cell + ',' + tg)?.r && !bridgeOK(W, d.cell, tg) ? RIVER_SPD : 1) * (rd === 2 ? 1.5 : rd === 1 ? 1.25 : 1) * (W.sup[d.side][d.cell] ? 1 : .5) * envMv(W); // الطريق أسرع، والجسر السالم ما يأخّر؛ الليل والطقس أبطأ
       d.prog += v; d.v = v;
       if (d.prog >= W.dist(d.cell, tg)) {
         d.prog = 0; byCell.get(d.cell)?.splice(byCell.get(d.cell).indexOf(d), 1);
@@ -271,7 +289,7 @@
       const avail = [];
       for (const i of W.cells[j].nb) if (W.ctrl[i] === s) for (const d of (mineAt.get(i) || [])) if (d.mode === 'auto' && !used.has(d.id) && d.org > d.orgMax * .7 && d.str > .45 && !(W.armies && W.armies[d.army]?.stance === 'defend')) avail.push(d);
       if (!avail.length) continue;
-      const aVal = avail.reduce((t, d) => t + atkOf(W, d, j, d.cell, def.length ? hdOf(def) : 0), 0);
+      const aVal = avail.reduce((t, d) => t + atkOf(W, d, j, d.cell, def.length ? hdOf(def) : 0), 0) * envAtk(W, s); // الذكاء يعرف الليل والطقس (يفضّل يهاجم بالنهار والصحو)
       const ratio = def.length ? aVal / (dVal * .1 + .001) : 99;
       // ما نتقدم لمنطقة فاضية إذا راح تصير بروز (أغلب جيرانها للعدو): نخلي الخط مستقيم
       const ownNb = W.cells[j].nb.filter(k => W.ctrl[k] === s).length;
@@ -405,6 +423,7 @@
   }
   // ضربة جوية أو صاروخ على منطقة: ينزل تنظيم وعدد فرق العدو بيها
   function airHit(W, side, cell, power) {
+    power *= (W.night ? .8 : 1) * (WX[W.wx || 'clear'].air || 1);   // بالليل والغيم القصف أقل دقة
     const en = W.divs.filter(d => !d.dead && d.side !== side && d.cell === cell); if (!en.length) return 0;
     for (const d of en) { d.org = Math.max(0, d.org - power * 4 / en.length); d.str = Math.max(.05, d.str - power * .005 / en.length); d.hitT = W.t; }
     W.log.push({ t: W.t, side, k: 'air', cell }); return en.length;
@@ -412,6 +431,6 @@
   // تلخيص الحرب
   function score(W) { const vp = [0, 0]; W.cells.forEach((c, i) => { if (c.vp) vp[W.ctrl[i]] += c.vp; }); return { vp, cells: [0, 1].map(s => W.ctrl.reduce((n, x) => n + (x === s ? 1 : 0), 0)), divs: [0, 1].map(s => alive(W).filter(d => d.side === s).length), lost: W.lost.slice() }; }
 
-  const API = { hitBridge, edgeCost, SUP_BUDGET, intel, known, isSeen, initIntel, makePlan, cancelPlan, runPlans, cellChain, joinArmy, airHit, TEMPL, TERR, KIND_N, World, addDiv, step, ai, order, route, scenario, supply, score, alive, divsIn, frontCells, power };
+  const API = { WX, weather, envAtk, envMv, hitBridge, edgeCost, SUP_BUDGET, intel, known, isSeen, initIntel, makePlan, cancelPlan, runPlans, cellChain, joinArmy, airHit, TEMPL, TERR, KIND_N, World, addDiv, step, ai, order, route, scenario, supply, score, alive, divsIn, frontCells, power };
   if (typeof module !== 'undefined') module.exports = API; else root.SIM = API;
 })(this);

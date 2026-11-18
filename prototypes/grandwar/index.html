@@ -135,6 +135,17 @@ function inRing(r, x, y) { let inside = false; for (let i = 0, j = r.length - 1;
 // ===== رسم الخريطة =====
 function worldT() { g.setTransform(DPR * cam.s, 0, 0, DPR * cam.s, DPR * (W / 2 - cam.x * cam.s), DPR * (H / 2 - cam.y * cam.s)); }
 function screenT() { g.setTransform(DPR, 0, 0, DPR, 0, 0); }
+// R5c: الليل والطقس فوق الأرض (الرموز تبقى واضحة فوقه): الليل أزرق غامق يجي ويروح بنعومة، الغبار بني، المطر رمادي مزرق
+const SKY = { n: 0, dust: 0, rain: 0, cloud: 0 };
+function drawSky(dt) {
+  const h = WD.hour ?? 6, nT = WD.night ? 1 : (h === 5 || h === 18) ? .45 : 0, k = Math.min(1, dt * 1.5);
+  SKY.n += (nT - SKY.n) * k; for (const w of ['dust', 'rain', 'cloud']) SKY[w] += ((WD.wx === w ? 1 : 0) - SKY[w]) * k;
+  screenT();
+  if (SKY.n > .01) { g.fillStyle = `rgba(8,16,40,${.42 * SKY.n})`; g.fillRect(0, 0, W, H); }
+  if (SKY.dust > .01) { g.fillStyle = `rgba(170,128,72,${.38 * SKY.dust})`; g.fillRect(0, 0, W, H); }
+  if (SKY.rain > .01) { g.fillStyle = `rgba(70,85,105,${.2 * SKY.rain})`; g.fillRect(0, 0, W, H); g.strokeStyle = `rgba(200,215,235,${.25 * SKY.rain})`; g.lineWidth = 1; g.beginPath(); const t = performance.now() / 6; for (let i = 0; i < 60; i++) { const x = (i * 97 + t * .6) % W, y = (i * 173 + t * 2.2) % H; g.moveTo(x, y); g.lineTo(x - 3, y + 10); } g.stroke(); }
+  if (SKY.cloud > .01) { g.fillStyle = `rgba(110,110,115,${.12 * SKY.cloud})`; g.fillRect(0, 0, W, H); }
+}
 // R5b: الطرق (Natural Earth): طرق سريعة وعادية، تنرسم ويا طبقة الخريطة المحفوظة
 const roadP = [new Path2D(), new Path2D()]; if (window.ROADS) for (const l of ROADS.lines) { const P = roadP[l.t === 2 ? 1 : 0]; l.p.forEach((q, i) => i ? P.lineTo(q[0], q[1]) : P.moveTo(q[0], q[1])); }
 function drawMap() {
@@ -350,7 +361,7 @@ const START = new Date(2027, 2, 14, 6);
 const AR_M = ['كانون الثاني', 'شباط', 'آذار', 'نيسان', 'أيار', 'حزيران', 'تموز', 'آب', 'أيلول', 'تشرين الأول', 'تشرين الثاني', 'كانون الأول'];
 function hud() {
   const d = new Date(START.getTime() + WD.t * 3600e3);
-  $('dt').textContent = `${d.getDate()} ${AR_M[d.getMonth()]} ${d.getFullYear()} · ${String(d.getHours()).padStart(2, '0')}:00`;
+  $('dt').textContent = `${d.getDate()} ${AR_M[d.getMonth()]} ${d.getFullYear()} · ${String(d.getHours()).padStart(2, '0')}:00 ${WD.night ? '🌙' : '☀️'}${WD.wx && WD.wx !== 'clear' ? { cloud: '☁️', rain: '🌧', dust: '🌫' }[WD.wx] : ''}`;
   const sc = SIM.score(WD), tot = WD.vpTotal[0] + WD.vpTotal[1];
   $('rVp').innerHTML = `🏙 ${sc.vp[0]}<i>نقاط مدننا</i>`; $('rDiv').innerHTML = `🪖 ${sc.divs[0]}<i>فرقنا</i>`;
   $('rBat').innerHTML = `⚔ ${WD.battles.size}<i>معارك هسه</i>`; $('rTook').innerHTML = `✈ ${AW.bases.filter(b => b.side === ME && !AIR.PLANES[b.type].drone).reduce((n, b) => n + b.n0, 0)}<i>طياراتنا</i>`;
@@ -373,6 +384,7 @@ function events() {
     if (l.k === 'take' && mine && c && !c.vp && SEL.size) {}
     if (l.k === 'bridge') toast(mine ? `🌉 قطعنا جسر ${l.n}: إمدادهم لازم يدوّر طريق ثاني` : `⚠️ إيران قطعت جسر ${l.n}: إمدادنا يدوّر طريق ثاني`, mine ? 'good' : 'bad');
     if (l.k === 'bridgefix') toast(mine ? `🔧 إيران صلّحت جسر ${l.n}` : `🔧 مهندسينا صلّحوا جسر ${l.n}`);
+    if (l.k === 'wx') toast(l.wx === 'dust' ? `🌫 عاصفة غبار (~${l.h} ساعة): الطيران موقوف، والهجوم والحركة أبطأ` : l.wx === 'rain' ? `🌧 مطر وطين (~${l.h} س): الحركة أبطأ والقصف أقل دقة` : l.wx === 'cloud' ? '☁️ غيوم: القصف أقل دقة شوية' : '☀️ الجو صفى');
     if (l.k === 'capitulate') endGame(l.side);
   }
 }
@@ -609,7 +621,7 @@ function frame(now) {
   }
   if (!$('bv').hidden) { requestAnimationFrame(frame); return; }
   W = innerWidth; H = innerHeight; if (cv.width !== Math.round(W * DPR)) { cv.width = Math.round(W * DPR); cv.height = Math.round(H * DPR); }
-  smoothAll(dt); drawMapCached();
+  smoothAll(dt); drawMapCached(); drawSky(dt);
   VIEW.gs = RATE * 3600; FX.update(SPEED && !WD.over ? dt : 0);
   VIEW.drawBases(SELB);
   buildClusters(); drawPaths(); drawBridges(); FX.drawGround(); drawPlans();

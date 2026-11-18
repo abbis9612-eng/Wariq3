@@ -11,13 +11,13 @@
   // ===== الطيارات =====
   const PLANES = {
     //        السرعة      جو-جو أرض  تشويش  مقطع راداري م²  ارتفاع التنقل/الواطي كم
-    f16: { n: 'F-16IQ', v: KMS(250), aa: .5, ag: 1, ecm: .8, rcs: 1.2, cruise: 7, low: .25, hi: 1, harm: 1, aam: { n: 'AIM-7M', r: 40, v: KMS(1000), pk: .4 } },
-    su25: { n: 'سوخوي-25', v: KMS(200), aa: .08, ag: 1.35, ecm: 1, rcs: 12, cruise: 4, low: .1 },
-    f14: { n: 'F-14A', v: KMS(250), aa: .55, ag: .55, ecm: .9, rcs: 20, cruise: 8, low: .3, aam: { n: 'AIM-54 / فكور-90', r: 90, v: KMS(1000), pk: .25 } },
-    su24: { n: 'سوخوي-24', v: KMS(260), aa: .05, ag: 1.2, ecm: .95, rcs: 8, cruise: 5, low: .12, spr: 'su25' },
+    f16: { n: 'F-16IQ', night: 1, v: KMS(250), aa: .5, ag: 1, ecm: .8, rcs: 1.2, cruise: 7, low: .25, hi: 1, harm: 1, aam: { n: 'AIM-7M', r: 40, v: KMS(1000), pk: .4 } },
+    su25: { n: 'سوخوي-25', night: 0, v: KMS(200), aa: .08, ag: 1.35, ecm: 1, rcs: 12, cruise: 4, low: .1 },
+    f14: { n: 'F-14A', night: 1, v: KMS(250), aa: .55, ag: .55, ecm: .9, rcs: 20, cruise: 8, low: .3, aam: { n: 'AIM-54 / فكور-90', r: 90, v: KMS(1000), pk: .25 } },
+    su24: { n: 'سوخوي-24', night: 1, v: KMS(260), aa: .05, ag: 1.2, ecm: .95, rcs: 8, cruise: 5, low: .12, spr: 'su25' },
     // مسيّرات استطلاع (R5d): العراق عنده CH-4B صينية بقاعدة الكوت، وإيران مهاجر-6. تطير عالي وبطيئة وتشوف ~40 كم حولها
-    ch4: { n: 'CH-4B (مسيّرة استطلاع)', v: KMS(50), aa: 0, ag: 0, ecm: 1, rcs: .5, cruise: 5, low: 5, isr: 1, drone: 1, endur: 400, eye: 40 },
-    m6: { n: 'مهاجر-6 (مسيّرة استطلاع)', v: KMS(55), aa: 0, ag: 0, ecm: 1, rcs: .5, cruise: 5, low: 5, isr: 1, drone: 1, endur: 300, eye: 40 },
+    ch4: { n: 'CH-4B (مسيّرة استطلاع)', night: 1, v: KMS(50), aa: 0, ag: 0, ecm: 1, rcs: .5, cruise: 5, low: 5, isr: 1, drone: 1, endur: 400, eye: 40 },
+    m6: { n: 'مهاجر-6 (مسيّرة استطلاع)', night: 1, v: KMS(55), aa: 0, ag: 0, ecm: 1, rcs: .5, cruise: 5, low: 5, isr: 1, drone: 1, endur: 300, eye: 40 },
   };
   // ===== ذخائر الهجوم الإيرانية =====
   const MUN = {
@@ -293,6 +293,7 @@
     for (const b of A.bases) {
       b.cd -= dt;
       if (b.cd > 0 || b.down > 0 || b.ready < (PLANES[b.type].isr ? 1 : 2)) continue;
+      if (W.wx === 'dust' || (W.night && !PLANES[b.type].night)) continue;   // R5c: عاصفة غبار = ما اكو طيران؛ سوخوي-25 ما تطير بالليل (بلا رؤية ليلية)
       const m = b.mission.kind === 'auto' ? planFor(A, W, b) : b.mission;
       b.cd = 12 + A.rnd() * 14;
       if (!m || m.kind === 'idle' || !m.p) continue;
@@ -317,7 +318,7 @@
     if (tac[p.st] && p.stT > 3) { if (p.st === 'final') { land(A, p, base); return; } p.st = 'back'; }
     if (p.st === 'back' && p.stT > 120) { land(A, p, base); return; }
     // وقود: طلعة أقصاها ~ساعة ونص
-    if (p.t > (T.endur || 95) && (p.st === 'out' || p.st === 'orbit')) p.st = 'back';
+    if ((p.t > (T.endur || 95) || W.wx === 'dust' || (W.night && !T.night)) && (p.st === 'out' || p.st === 'orbit')) p.st = 'back';   // الوقود، أو الغبار، أو الليل لطيارة بلا رؤية ليلية ← رجوع
     // عيون الجو: كل طيارة تشوف شوية تحتها، ومسيّرة الاستطلاع ~40 كم (تنقرى ساعة بساعة بـ sim.intel)
     if (W.spots && p.st !== 'roll' && p.st !== 'final' && (p.eyeT = (p.eyeT || 0) - dt) <= 0) { p.eyeT = .5; const sp = W.spots[p.side]; if (sp.length < 400) sp.push([p.x, p.y, T.eye || 12]); }
     let tx = M.p[0], ty = M.p[1], spd = T.v, turn = 6; const d = Math.hypot(tx - p.x, ty - p.y);

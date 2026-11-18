@@ -107,5 +107,7 @@
     g.save(); g.globalCompositeOperation = 'lighter'; for (const p of L.spark) { const [x, y] = w2s(p.x, p.y); if (!vis(x, y)) continue; const k = p.t / p.life; g.strokeStyle = `rgba(255,${220 - k * 120},120,${1 - k})`; g.lineWidth = 1.4; g.beginPath(); g.moveTo(x, y); g.lineTo(x - p.vx * .03, y - p.vy * .03); g.stroke(); } g.restore();
     for (const b of L.bomb) { const f = b.t / b.dur; const [x0, y0] = w2s(b.x0, b.y0), [x1, y1] = w2s(b.x1, b.y1); const x = x0 + (x1 - x0) * f, y = y0 + (y1 - y0) * f; const s = 7 * (1.4 - f * .6); g.save(); g.globalAlpha = .3 * f; g.fillStyle = '#000'; g.beginPath(); g.ellipse(x1 + (x0 - x1) * (1 - f) * .3, y1 + (y0 - y1) * (1 - f) * .3, s * .5, s * .3, 0, 0, 7); g.fill(); g.restore(); g.save(); g.translate(x, y - (1 - f) * 18); g.rotate(Math.atan2(y1 - y0, x1 - x0)); g.fillStyle = '#3d4038'; g.beginPath(); g.ellipse(0, 0, s, s * .38, 0, 0, 7); g.fill(); g.restore(); }
   };
+  FX.clear = () => { for (const k in L) L[k].length = 0; };
+  FX.U0 = FX.U;
   FX.count = () => Object.fromEntries(Object.entries(L).map(([k, a]) => [k, a.length]));
 })();

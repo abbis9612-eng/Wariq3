@@ -39,7 +39,9 @@ button{font:inherit;color:inherit;background:none;border:0;cursor:pointer}
 #bvTop{position:absolute;top:0;left:0;right:0;background:linear-gradient(rgba(20,18,15,.88),rgba(20,18,15,.7));padding:calc(6px + env(safe-area-inset-top)) 10px 7px;font-size:12px}
 #bvTop b{font:700 15px 'Reem Kufi';color:#e2b552}#bvX{margin-inline-start:auto;background:#b8442f;border-radius:9px;padding:4px 10px;font-weight:700}
 #bvC{margin-top:3px;line-height:1.5;font-variant-numeric:tabular-nums}#bvSpd{display:flex;gap:3px}#bvSpd button,#bvFol{background:rgba(255,255,255,.1);border:1px solid rgba(255,235,190,.2);border-radius:7px;padding:2px 9px;font-weight:700}#bvSpd button.on{background:#e2b552;color:#221b0e}
-#bvNote{position:absolute;bottom:calc(10px + env(safe-area-inset-bottom));left:130px;right:10px;text-align:center;font-size:11px;opacity:.8;background:rgba(20,18,15,.6);border-radius:8px;padding:3px 6px;pointer-events:none}
+#bvOrd{position:absolute;bottom:calc(10px + env(safe-area-inset-bottom));left:130px;right:8px;display:flex;flex-wrap:nowrap;overflow-x:auto;gap:4px;scrollbar-width:none}#bvOrd::-webkit-scrollbar{display:none}#bvOrd button{flex:0 0 auto}#bvOrd button{background:rgba(24,22,19,.85);border:1px solid rgba(255,235,190,.25);border-radius:9px;padding:5px 8px;font-weight:700;font-size:12px}#bvOrd button.on{background:#e2b552;color:#221b0e}
+#bvHint{position:absolute;top:calc(118px + env(safe-area-inset-top));left:50%;transform:translateX(-50%);background:rgba(184,68,47,.95);border-radius:12px;padding:5px 12px;font-weight:700;font-size:12.5px;white-space:nowrap}#bvHint[hidden]{display:none}
+#bvNote{position:absolute;top:calc(112px + env(safe-area-inset-top));left:10px;right:10px;transition:opacity 1s;text-align:center;font-size:11px;opacity:.8;background:rgba(20,18,15,.6);border-radius:8px;padding:3px 6px;pointer-events:none}
 #bvRes{position:absolute;left:12%;right:12%;top:38%;background:rgba(24,22,19,.94);border:1px solid rgba(255,235,190,.2);border-radius:16px;padding:14px;text-align:center;display:flex;flex-direction:column;gap:6px}#bvRes[hidden]{display:none}#bvRes button{background:#e2b552;color:#221b0e;border-radius:10px;padding:8px;font-weight:700;margin-top:4px}
 #end{position:fixed;inset:0;background:rgba(10,9,8,.75);display:grid;place-items:center;z-index:9}#end[hidden]{display:none}
 </style></head><body>
@@ -73,6 +75,8 @@ button{font:inherit;color:inherit;background:none;border:0;cursor:pointer}
 <div id="bv" hidden><canvas id="bvc"></canvas>
   <div id="bvTop"><div style="display:flex;align-items:center;gap:6px"><b id="bvT"></b><button id="bvX">↩ الخريطة</button></div><div id="bvC"></div>
   <div style="display:flex;gap:4px;margin-top:4px"><div id="bvSpd"><button data-k="0">⏸</button><button data-k="1" class="on">×1</button><button data-k="2">×2</button><button data-k="4">×4</button><button data-k="8">×8</button></div><button id="bvFol">🎥 تابع</button></div></div>
+  <div id="bvOrd"><button data-m="move">🎯 حرّك فصيل</button><button data-m="hold">🛡 اثبتوا</button><button data-m="back">↩ انسحاب</button><button data-m="arty">💥 مدفعية</button><button data-m="air">✈ طيارات</button></div>
+  <div id="bvHint" hidden></div>
   <div id="bvNote">مشهد حقيقي: المسافات بالمتر والوقت بالثانية الحقيقية. الآليات مكبّرة ×5 حتى تنشاف. 🎥 المخرج يقطع لأهم لحظة، واسحب بإصبعك حتى تتحكم.</div>
   <div id="bvRes" hidden></div></div>
 <div id="armies" hidden></div>
@@ -497,8 +501,20 @@ function enterBattle(b, A, D) {
   const c = cells[b.tg]; const terr = c.t === 'city' || c.city ? (c.t === 'city' ? 'city' : c.t) : c.t;
   const fill = (ds) => ds.slice(0, 3).map(d => ({ kind: d.kind, str: d.str, n: d.n }));
   const ready = s => AW.bases.filter(x => x.side === s).reduce((n, x) => n + x.ready, 0) > 2 ? 2 : 0;
-  const battle = BV.create({ seed: (WD.t * 7 + b.tg) | 0, terr, att: { side: b.side, divs: fill(A) }, def: { side: 1 - b.side, divs: fill(D) }, air: { att: ready(b.side), def: ready(1 - b.side) > 0 ? 1 : 0 } });
-  BVIEW.open(battle, { title: `⚔ معركة ${c.city || SIM.TERR[c.t].n} · ${SIM.TERR[c.t].n}`, me: ME, onExit: () => { FX.init({ g, cam, w2s, IMG }); FX.U = FX.U0; FX.WIND = [11, -3]; FX.clear(); setSpeed(prev); } });
+  const myReady = AW.bases.filter(x => x.side === ME).reduce((n, x) => n + x.ready, 0);
+  const battle = BV.create({ seed: (WD.t * 7 + b.tg) | 0, terr, me: ME, myAir: Math.min(3, Math.floor(myReady / 3)), att: { side: b.side, divs: fill(A) }, def: { side: 1 - b.side, divs: fill(D) }, air: { att: ready(b.side), def: ready(1 - b.side) > 0 ? 1 : 0 } });
+  BVIEW.open(battle, { title: `⚔ معركة ${c.city || SIM.TERR[c.t].n} · ${SIM.TERR[c.t].n}`, me: ME, onExit: (Bt) => { FX.init({ g, cam, w2s, IMG }); FX.U = FX.U0; FX.WIND = [11, -3]; FX.clear(); applyBattle(Bt, b, A, D); setSpeed(prev); } });
+}
+// BV4: نتيجة المشهد ترجع للخريطة — الخسائر تنقص قوة الفرق، والمهزوم ينسحب (المدافع) أو يتوقف (المهاجم)
+function applyBattle(Bt, b, A, D) {
+  if (!Bt || Bt.t < 20) return;
+  const att = Bt.side.att, def = Bt.side.def, fa = Math.min(.8, Bt.lost[att] / Math.max(1, Bt.init[att])), fd = Math.min(.8, Bt.lost[def] / Math.max(1, Bt.init[def]));
+  for (const d of A) if (!d.dead) { d.str = Math.max(.08, d.str * (1 - fa * .5)); d.org = Math.max(1, d.org * (1 - fa)); }
+  for (const d of D) if (!d.dead) { d.str = Math.max(.08, d.str * (1 - fd * .5)); d.org = Math.max(1, d.org * (1 - fd)); }
+  const w = Bt.over?.win; const mine = att === ME; const c = cells[b.tg];
+  if (w === 'att') { for (const d of D) if (!d.dead) d.org = 0; toast(mine ? `🎖 كسرنا دفاعهم بـ${c.city || 'المنطقة'}: ينسحبون` : `⚠️ إيران كسرت دفاعنا بـ${c.city || 'المنطقة'}: ننسحب`, mine ? 'good' : 'bad'); }
+  else if (w === 'def') { for (const d of A) if (!d.dead) { d.org = .5; d.path = []; d.prog = 0; if (d.mode === 'manual') d.mode = 'hold'; } toast(mine ? '✋ هجومنا انكسر ورجع' : '🛡 صدّينا هجومهم', mine ? 'bad' : 'good'); }
+  else toast(`⚔ المعركة ما انحسمت: خسائرنا ${Math.round(Bt.lost[ME])} وخسائرهم ${Math.round(Bt.lost[1 - ME])}`);
 }
 function battleInfo(b) {
   const c = cells[b.tg]; const mine = b.side === ME; const win = mine ? b.win : 1 - b.win; const w = b.why;

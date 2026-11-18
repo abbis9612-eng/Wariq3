@@ -23,7 +23,7 @@
     s.connect(lp).connect(gn).connect(SND.master); s.start(now + Math.min(4, d / 343) / Math.max(1, spd));
   }
   BW.open = (battle, o) => {
-    B = battle; info = o; onExit = o.onExit; spd = 1;
+    B = battle; info = o; onExit = o.onExit; spd = 1; mode = ''; selPlt = null; marks = [];
     el = document.getElementById('bv'); el.hidden = false; cv = document.getElementById('bvc'); g = cv.getContext('2d');
     el.querySelector('#bvT').textContent = o.title; el.querySelector('#bvRes').hidden = true;
     el.querySelectorAll('#bvSpd button').forEach(b => { b.classList.toggle('on', +b.dataset.k === 1); b.onclick = () => { spd = +b.dataset.k; el.querySelectorAll('#bvSpd button').forEach(z => z.classList.toggle('on', z === b)); }; });
@@ -32,22 +32,48 @@
     const A = B.units.filter(u => u.att); cam.x = A.reduce((s, u) => s + u.p.x, 0) / A.length; cam.y = A.reduce((s, u) => s + u.p.y, 0) / A.length - 500; cam.s = .5 * innerWidth / 412; shot = null; follow = true;
     FX.init({ g, cam: { get s() { return cam.s; }, get x() { return cam.x; }, get y() { return cam.y; } }, w2s, IMG }); FX.clear && FX.clear();
     FX.U = () => sizePx(9.8) / 30; FX.WIND = [6, -2];
+    const nt = document.getElementById('bvNote'); nt.style.opacity = 1; clearTimeout(BW._nt); BW._nt = setTimeout(() => nt.style.opacity = 0, 8000);
     input(); last = performance.now(); cancelAnimationFrame(raf); raf = requestAnimationFrame(frame);
   };
   function close() { cancelAnimationFrame(raf); el.hidden = true; FX.clear && FX.clear(); const b = B; B = null; onExit && onExit(b); }
   // ===== إدخال: سحب وتكبير =====
-  let ptrs = new Map(), pinch = null;
+  let ptrs = new Map(), pinch = null, down = null;
   function input() {
     if (cv._in) return; cv._in = 1;
-    cv.addEventListener('pointerdown', e => { cv.setPointerCapture(e.pointerId); ptrs.set(e.pointerId, [e.clientX, e.clientY]); if (ptrs.size === 2) { const [a, b] = [...ptrs.values()]; pinch = { d: Math.hypot(a[0] - b[0], a[1] - b[1]), s: cam.s, w: s2w((a[0] + b[0]) / 2, (a[1] + b[1]) / 2) }; } follow = false; });
-    cv.addEventListener('pointermove', e => { if (!ptrs.has(e.pointerId)) return; const p = ptrs.get(e.pointerId), dx = e.clientX - p[0], dy = e.clientY - p[1]; ptrs.set(e.pointerId, [e.clientX, e.clientY]);
+    cv.addEventListener('pointerdown', e => { cv.setPointerCapture(e.pointerId); ptrs.set(e.pointerId, [e.clientX, e.clientY]); down = [e.clientX, e.clientY, 0]; if (ptrs.size === 2) { const [a, b] = [...ptrs.values()]; pinch = { d: Math.hypot(a[0] - b[0], a[1] - b[1]), s: cam.s, w: s2w((a[0] + b[0]) / 2, (a[1] + b[1]) / 2) }; } if (!mode) follow = false; });
+    cv.addEventListener('pointermove', e => { if (!ptrs.has(e.pointerId)) return; const p = ptrs.get(e.pointerId), dx = e.clientX - p[0], dy = e.clientY - p[1]; ptrs.set(e.pointerId, [e.clientX, e.clientY]); if (down) down[2] += Math.abs(dx) + Math.abs(dy); if (down && down[2] < 8) return;
       if (ptrs.size === 2 && pinch) { const [a, b] = [...ptrs.values()]; cam.s = Math.min(3, Math.max(.06, pinch.s * Math.hypot(a[0] - b[0], a[1] - b[1]) / pinch.d)); const m = [(a[0] + b[0]) / 2, (a[1] + b[1]) / 2]; cam.x = pinch.w[0] - (m[0] - innerWidth / 2) / cam.s; cam.y = pinch.w[1] - (m[1] - innerHeight / 2) / cam.s; return; }
       cam.x -= dx / cam.s; cam.y -= dy / cam.s; });
-    const up = e => { ptrs.delete(e.pointerId); if (ptrs.size < 2) pinch = null; }; cv.addEventListener('pointerup', up); cv.addEventListener('pointercancel', up);
+    const up = e => { ptrs.delete(e.pointerId); if (ptrs.size < 2) pinch = null; if (!ptrs.size && down && down[2] < 8) tapAt(down[0], down[1]); if (!ptrs.size) down = null; };
+    document.querySelectorAll('#bvOrd button').forEach(b => b.onclick = () => setMode(b.dataset.m)); cv.addEventListener('pointerup', up); cv.addEventListener('pointercancel', up);
     cv.addEventListener('wheel', e => { e.preventDefault(); const w = s2w(e.clientX, e.clientY); cam.s = Math.min(3, Math.max(.06, cam.s * Math.exp(-e.deltaY * .0015))); cam.x = w[0] - (e.clientX - innerWidth / 2) / cam.s; cam.y = w[1] - (e.clientY - innerHeight / 2) / cam.s; }, { passive: false });
     document.getElementById('bvFol').onclick = () => { follow = true; };
   }
-  let follow = true;
+  let follow = true, mode = '', selPlt = null, marks = [];
+  const myUnitAt = (x, y) => { const [wx, wy] = s2w(x, y); let best = null, bd = 40 / cam.s; for (const u of B.units) { if (u.side !== info.me || u.st === 'dead' || BV.T[u.type].k === 'truck') continue; const d = Math.hypot(u.p.x - wx, u.p.y - wy); if (d < bd) { bd = d; best = u; } } return best; };
+  function setMode(m) { mode = mode === m ? '' : m; selPlt = null; document.querySelectorAll('#bvOrd button').forEach(b => b.classList.toggle('on', b.dataset.m === mode)); hint(); }
+  function hint() { const h = { move: selPlt == null ? 'اضغط دبابة من فصيلك' : 'اضغط المكان اللي تريده يروح له', hold: 'اضغط فصيل حتى يثبت بمكانه', back: 'اضغط فصيل حتى ينسحب لورا', arty: 'اضغط مكان القصف (يوصل بعد ~35 ثانية)', air: 'اضغط الهدف (الطيارة توصل بعد ~10 ثواني)' }[mode]; const el2 = document.getElementById('bvHint'); el2.hidden = !h; el2.textContent = h || ''; }
+  function tapAt(x, y) {
+    if (!mode) return; const [wx, wy] = s2w(x, y);
+    if (mode === 'arty') { if (BV.callArty(B, info.me, wx, wy)) marks.push({ k: 'arty', x: wx, y: wy, t: B.t, eta: 36 }); setMode('arty'); return; }
+    if (mode === 'air') { if (BV.callAir(B, info.me, wx, wy)) marks.push({ k: 'air', x: wx, y: wy, t: B.t, eta: 12 }); setMode('air'); return; }
+    const u = myUnitAt(x, y);
+    if (mode === 'move') { if (selPlt == null) { if (u) { selPlt = u.plt; hint(); } return; } BV.order(B, selPlt, { k: 'move', x: wx, y: wy }); marks.push({ k: 'move', x: wx, y: wy, t: B.t, plt: selPlt }); setMode('move'); return; }
+    if ((mode === 'hold' || mode === 'back') && u) { BV.order(B, u.plt, { k: mode }); marks.push({ k: mode, x: u.p.x, y: u.p.y, t: B.t, plt: u.plt }); setMode(mode); }
+  }
+  function drawMarks() {
+    for (let i = marks.length - 1; i >= 0; i--) { const m = marks[i]; const age = B.t - m.t; if (age > (m.k === 'arty' ? 45 : 20)) { marks.splice(i, 1); continue; } const [x, y] = w2s(m.x, m.y);
+      if (m.k === 'arty') { const left = Math.max(0, m.eta - age); g.strokeStyle = 'rgba(255,120,60,.9)'; g.setLineDash([6, 5]); g.lineWidth = 2; g.beginPath(); g.arc(x, y, 130 * cam.s, 0, 7); g.stroke(); g.setLineDash([]); if (left > 0) txt(`💥 ${Math.ceil(left)}ث`, x, y - 130 * cam.s - 10); }
+      else if (m.k === 'air') { g.strokeStyle = 'rgba(120,180,255,.9)'; g.lineWidth = 2; g.beginPath(); g.arc(x, y, 60 * cam.s + 6, 0, 7); g.stroke(); txt('✈ هدف', x, y - 60 * cam.s - 14); }
+      else if (m.k === 'move') { g.fillStyle = '#ffd65a'; g.beginPath(); g.moveTo(x, y); g.lineTo(x, y - 22); g.lineTo(x + 14, y - 17); g.lineTo(x, y - 12); g.fill(); g.strokeStyle = '#333'; g.lineWidth = 1.5; g.beginPath(); g.moveTo(x, y); g.lineTo(x, y - 22); g.stroke(); }
+    }
+    if (selPlt != null) for (const u of B.units) if (u.plt === selPlt && u.st !== 'dead') { const [x, y] = w2s(u.p.x, u.p.y); g.strokeStyle = '#ffd65a'; g.lineWidth = 2; g.beginPath(); g.arc(x, y, sizePx(9.8) * .7, 0, 7); g.stroke(); }
+    // القذيفة النازلة: ظلها يكبر آخر ثانيتين قبل ما توصل
+    for (const a of B.arty) if (a.fired && !a.done) { const left = a.at + a.fly - B.t; if (left < 2.5) { const [x, y] = w2s(a.x, a.y); const k = 1 - left / 2.5; g.fillStyle = `rgba(0,0,0,${.15 + .25 * k})`; g.beginPath(); g.ellipse(x, y, (4 + 10 * k) * Math.max(.6, cam.s), (2 + 5 * k) * Math.max(.6, cam.s), 0, 0, 7); g.fill(); } }
+    // الطلبات الباقية
+    const c = document.getElementById('bvOrd'); if (c) { c.querySelector('[data-m="arty"]').textContent = `💥 مدفعية (${B.calls.arty})`; c.querySelector('[data-m="air"]').textContent = `✈ طيارات (${B.calls.air})`; }
+  }
+  const txt = (t, x, y) => { g.font = '700 12px "IBM Plex Sans Arabic"'; g.textAlign = 'center'; g.textBaseline = 'middle'; g.lineWidth = 3; g.strokeStyle = 'rgba(0,0,0,.7)'; g.strokeText(t, x, y); g.fillStyle = '#fff'; g.fillText(t, x, y); };
   // ===== الحلقة =====
   function frame(now) {
     if (!B) return; const rdt = Math.min(.1, (now - last) / 1000); last = now;
@@ -60,7 +86,7 @@
     // كاميرا «مخرج»: تتابع مركز القتال بنعومة
     if (follow) director(rdt);
     FX.update(rdt * spd);
-    drawGround(); FX.drawGround(); drawCover(); drawUnits(); drawShots(); FX.draw(); drawJets(); mini(); hud();
+    drawGround(); FX.drawGround(); drawCover(); drawUnits(); drawShots(); FX.draw(); drawJets(); drawMarks(); mini(); hud();
     raf = requestAnimationFrame(frame);
   }
   // ===== المخرج: يقطع لأهم لحظة من قريب (صاروخ ضد دروع بالجو، دبابة تنضرب، غطس طيارة، قصف) =====
@@ -171,6 +197,7 @@
     else if (e.k === 'airburst') FX.explode(e.x, e.y - (e.z || 0) * .25, 'air', .5);
     else if (e.k === 'crash') { FX.explode(e.x, e.y, 'big', 1.3); FX.burn(e.x, e.y, 1, 70); snd('boom_big', e.x, e.y, 1); }
     else if (e.k === 'over') showRes();
+    else if (e.k === 'artyfire' && e.side === info.me) snd('howitzer', cam.x, cam.y + 2500, .35);
   }
   function hud() {
     const cnt = (s, k) => B.units.filter(u => u.side === s && u.st !== 'dead' && BV.T[u.type].k === k).length, all = (s, k) => B.units.filter(u => u.side === s && BV.T[u.type].k === k).length;
@@ -179,7 +206,7 @@
   }
   function showRes() {
     const r = document.getElementById('bvRes'), o = B.over, attMe = B.side.att === info.me; const weWon = (o.win === 'att') === attMe && o.win !== 'none';
-    r.hidden = false; r.innerHTML = `<b style="font:700 20px 'Reem Kufi';color:${weWon ? '#7fb0ff' : o.win === 'none' ? '#e2b552' : '#ff8a7a'}">${o.win === 'none' ? 'بدون حسم' : weWon ? 'انتصرنا بالمعركة' : 'خسرنا المعركة'}</b><div>${o.why}</div><div style="opacity:.8;font-size:12px">خسائرنا ${Math.round(B.lost[info.me])} · خسائرهم ${Math.round(B.lost[1 - info.me])}</div><button id="bvBack">↩ رجوع للخريطة</button>`;
+    r.hidden = false; r.innerHTML = `<b style="font:700 20px 'Reem Kufi';color:${weWon ? '#7fb0ff' : o.win === 'none' ? '#e2b552' : '#ff8a7a'}">${o.win === 'none' ? 'بدون حسم' : weWon ? 'انتصرنا بالمعركة' : 'خسرنا المعركة'}</b><div>${o.why}</div><div style="font-size:12px;color:#cfe2ff">النتيجة والخسائر تنطبق على الخريطة لما ترجع.</div><div style="opacity:.8;font-size:12px">خسائرنا ${Math.round(B.lost[info.me])} · خسائرهم ${Math.round(B.lost[1 - info.me])}</div><button id="bvBack">↩ رجوع للخريطة</button>`;
     document.getElementById('bvBack').onclick = close;
   }
 })();

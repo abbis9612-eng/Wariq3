@@ -48,7 +48,7 @@
     // جو: طلعات إسناد لكل طرف حسب ما عنده بالمعركة
     B.airQ = [];
     for (const [s, n] of [[o.att.side, o.air?.att || 0], [o.def.side, o.air?.def || 0]]) for (let i = 0; i < n; i++) B.airQ.push({ side: s, at: 70 + i * 55 + r() * 30, type: s ? 'su25' : 'su25' });
-    B.manpads = o.manpads || [1, 1];
+    B.manpads = o.manpads || [1, 1]; B.me = o.me ?? 0; B.calls = { arty: 3, air: o.myAir ?? 2 };
     // تمهيد مدفعية المهاجم: 24 قذيفة على مواقع المدافع خلال أول 40 ث (توصل بعد زمن طيرانها)
     for (let i = 0; i < 24; i++) B.arty.push({ side: o.att.side, at: 3 + i * 1.6 + r(), fly: 32 + r() * 8, x: (r() - .5) * 2400, y: -1300 + (r() - .5) * 500, cal: 155 });
     return B;
@@ -126,6 +126,14 @@
         if (!g.att && g.dug && T[g.type].k === 'tank' && B.r() < .35) { g.dug = false; g.man = 'back'; g.manP = { x: g.p.x - Math.cos(g.hd) * 40, y: g.p.y - Math.sin(g.hd) * 40 }; } continue; }
       if (wantFire || B.t < g.manT) { stop(g, dt); continue; }
       // المهاجم: قفزات نحو الهدف؛ المنكسر يرجع
+      const po = B.pord && B.pord[g.plt];
+      if (po && g.side === B.me) {
+        if (po.k === 'hold') { stop(g, dt); continue; }
+        const goal = po.k === 'back' ? { x: g.home.x, y: g.home.y + (g.att ? 300 : -300) } : { x: po.x + ((g.id % 5) - 2) * 70, y: po.y + ((g.id % 3) - 1) * 50 };
+        const halt = engaging && nd < range * .85 && po.k !== 'back' && (g.plt + Math.floor(B.t / 14)) % 2 === 0;
+        if (halt) stop(g, dt); else { g.dug = false; drive(B, g, goal, ty.v * (po.k === 'back' ? 1 : engaging ? .6 : .9), dt, po.k === 'back'); }
+        continue;
+      }
       if (g.att && B.phase === 'attack') {
         if (B.morale[g.side] < .35) { drive(B, g, { x: g.p.x, y: 2600 }, ty.v, dt, true); continue; }
         const halt = engaging && nd < range * .85 && (g.plt + Math.floor(B.t / 14)) % 2 === 0;
@@ -162,11 +170,11 @@
     // مدفعية مستمرة خفيفة لكل طرف كل ~25 ث بعد التمهيد
     if (B.phase === 'attack' && Math.floor(B.t / 25) !== Math.floor((B.t - dt) / 25)) for (const s of [0, 1]) { const tg = B.units.filter(u => u.side !== s && alive(u)); const z = tg[Math.floor(B.r() * tg.length)]; if (z) for (let i = 0; i < 3; i++) B.arty.push({ side: s, at: B.t + i * 1.5, fly: 30 + B.r() * 10, x: z.p.x + (B.r() - .5) * 300, y: z.p.y + (B.r() - .5) * 250, cal: 152 }); }
     // ===== الطيارات (فيزياء مبسطة من WM10: لفة محدودة، صعود/غطس) =====
-    for (const q of B.airQ) if (!q.go && B.t >= q.at) { q.go = 1; const ent = q.side === A ? { x: -3600, y: 2600 } : { x: 3600, y: -2600 }; B.jets.push({ id: B.nid++, side: q.side, type: q.type, p: { x: ent.x, y: ent.y }, z: 150, hd: Math.atan2(-ent.y, -ent.x), spd: 210, st: 'ingress', bank: 0, gam: 0, t: 0, bombs: 2, flares: 16, cm: 0 }); emit(B, 'jetin', ent, { side: q.side }); }
+    for (const q of B.airQ) if (!q.go && B.t >= q.at) { q.go = 1; const ent = q.side === A ? { x: -3600, y: 2600 } : { x: 3600, y: -2600 }; B.jets.push({ id: B.nid++, side: q.side, type: q.type, p: { x: ent.x, y: ent.y }, z: 150, hd: Math.atan2(-ent.y, -ent.x), spd: 210, st: 'ingress', bank: 0, gam: 0, t: 0, bombs: 2, flares: 16, cm: 0, aim: q.aim || null }); emit(B, 'jetin', ent, { side: q.side }); }
     for (const j of B.jets) {
       if (j.st === 'dead') continue; j.t += dt;
       if (j.st === 'fall') { j.z = Math.max(0, j.z - 90 * dt); j.hd += 1.6 * dt; j.bank += 3 * dt; j.p.x += Math.cos(j.hd) * 140 * dt; j.p.y += Math.sin(j.hd) * 140 * dt; if (j.z <= 0) { j.st = 'dead'; emit(B, 'crash', j.p, {}); } continue; }
-      const tgts = B.units.filter(u => u.side !== j.side && alive(u)); const tg = tgts.sort((a, b) => D2(a.p, j.p) - D2(b.p, j.p))[0];
+      const tgts = B.units.filter(u => u.side !== j.side && alive(u)); const ref = j.aim || j.p; const tg = tgts.sort((a, b) => D2(a.p, ref) - D2(b.p, ref))[0];
       let wantH = j.hd, wantZ = j.z;
       const threat = B.shots.find(s => s.k === 'manpad' && s.jet === j);
       if (threat) { wantH = Math.atan2(threat.y - j.p.y, threat.x - j.p.x) + Math.PI / 2; wantZ = 120; if (j.flares > 0 && B.t - j.cm > .3) { j.cm = B.t; j.flares--; emit(B, 'flare', j.p, { z: j.z }); } }
@@ -209,6 +217,11 @@
       if (B.over) emit(B, 'over', { x: 0, y: 0 }, { win: B.over.win });
     }
   }
-  const API = { create, step, T, W_DIM, angd };
+  // طلب مدفعية: 6 قذائف حول النقطة، توصل بعد ~30–40 ث (زمن طيرانها)
+  function callArty(B, side, x, y) { if ((B.calls?.arty ?? 0) <= 0) return false; B.calls.arty--; const fly = 32 + B.r() * 6; for (let i = 0; i < 6; i++) B.arty.push({ side, at: B.t + i * .8, fly, x: x + (B.r() - .5) * 220, y: y + (B.r() - .5) * 160, cal: 155, mine: 1 }); emit(B, 'artycall', { x, y }, { eta: fly, side }); return true; }
+  // طلب طيارات: طيارة إسناد تدخل بعد ~10 ث وتضرب أقرب عدو للنقطة
+  function callAir(B, side, x, y) { if ((B.calls?.air ?? 0) <= 0) return false; B.calls.air--; B.airQ.push({ side, at: B.t + 10, type: 'su25', aim: { x, y } }); emit(B, 'aircall', { x, y }, { side }); return true; }
+  function order(B, plt, o) { B.pord = B.pord || {}; B.pord[plt] = o; }
+  const API = { create, step, T, W_DIM, angd, callArty, callAir, order };
   if (typeof module !== 'undefined') module.exports = API; else root.BV = API;
 })(this);

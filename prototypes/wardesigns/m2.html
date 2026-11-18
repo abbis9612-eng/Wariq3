@@ -1,0 +1,183 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>نموذج 2: لوحة الجبهة</title>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Arabic:wght@400;500;600;700&family=Reem+Kufi:wght@700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="ui.css">
+<style>
+#tray{flex:1 1 100%;display:flex;gap:5px;overflow-x:auto;padding:2px 0;min-height:44px;align-items:center}
+#tray .chip{flex:0 0 auto;border:1.5px solid #13161a;border-radius:6px;background:#8fbef0;padding:3px 7px;font-size:11.5px;font-weight:600;line-height:1.25;text-align:center}
+#tray .chip[aria-pressed=true]{outline:3px solid #e8a91c}#tray .chip small{display:block;font-weight:400;opacity:.8}
+#tray .lbl{font-size:12px;opacity:.7;flex:0 0 auto}
+</style>
+</head>
+<body>
+<canvas id="map"></canvas>
+<div id="hud"><div class="r1"><a class="back" href="index.html">☰ النماذج</a><h1>٢ · لوحة الجبهة</h1><span class="turn" id="turn"></span></div><div class="r2" id="score"></div><div class="tip" id="tip"></div></div>
+<div id="bar"><div id="tray"></div><div class="info" id="info"></div><button id="bAir">✈</button><button id="bMsl">🚀</button><button id="bRep">📋</button><button id="bEnd" class="go">انهِ الأسبوع ▶</button></div>
+<div id="toast"></div>
+<div id="sheet" hidden><div class="in"></div></div>
+<div id="start"><div class="card">
+  <h1>لوحة الجبهة</h1>
+  <p>الحرب على حدود العراق–إيران الحقيقية، مقسمة 8 قطاعات من جبال كردستان لشط العرب. خط الجبهة يتقدم ويتراجع.</p>
+  <ul>
+    <li><b>وزّع:</b> اضغط فرقة (من الجبهة أو من الاحتياط تحت)، بعدين اضغط قطاع. القطاع الجنب يوصل فوراً، والبعيد والاحتياط بعد أسبوع</li>
+    <li><b>هجوم/دفاع:</b> اضغط على اسم القطاع يتبدل. المدافع يتحصن كل أسبوع</li>
+    <li><b>كل قطاع يتحمل عدد فرق محدود:</b> الجبال والأهوار 2، التلال 3، السهل 4. فالحشد يحتاج تخطيط</li>
+    <li><b>✈ و🚀:</b> اضغطها وبعدين اضغط قطاع يدعمه الطيران أو تضربه الصواريخ</li>
+    <li>الجبهة تتقدم 25 كم بكل نجاح، والمدن تسقط لما الخط يعبرها. الجناح المكشوف يضعف</li>
+    <li>16 أسبوع. تربح بالنقاط (مدن العدو)</li>
+  </ul>
+  <div class="sides"><button class="btn go" data-s="0">🇮🇶 العب بالعراق</button><button class="btn go" data-s="1">🇮🇷 العب بإيران</button></div>
+</div></div>
+<script src="data.js"></script><script src="core.js"></script><script src="map.js"></script>
+<script>
+'use strict';
+// النموذج 2 (WD2، I-078 — اقتراحي): لوحة الجبهة. 8 قطاعات على الحدود الحقيقية، خط يتقدم 25 كم بالخطوة، فرق محدودة لكل قطاع، هجوم/دفاع لكل قطاع، دعم جوي وصواريخ.
+const TURNS = 16, STEP = 25, FRONTAGE = { mount: 2, hills: 3, plain: 4, marsh: 2 };
+const VP = { 'البصرة': 6, 'العمارة': 3, 'الكوت': 3, 'بعقوبة': 3, 'بغداد': 10, 'السليمانية': 3, 'كركوك': 3, 'أربيل': 3, 'خانقين': 1, 'مندلي': 1, 'بدرة': 1, 'حلبجة': 1, 'القرنة': 1, 'الفاو': 2,
+  'خرمشهر': 3, 'عبادان': 4, 'الأهواز': 6, 'سوسنگرد': 1, 'دهلران': 1, 'مهران': 1, 'إيلام': 3, 'قصر شيرين': 1, 'إسلام آباد غرب': 2, 'كرمانشاه': 5, 'مريوان': 1, 'سنندج': 3, 'بيرانشهر': 1, 'دزفول': 3 };
+let S, mv, me, sel = null, mode = '', anim = null, lastT = performance.now();
+const SEC = GEO.sectors;
+const mid = s => s.pts[Math.floor(s.pts.length / 2)];
+const frontPts = (i, f = S.f[i]) => SEC[i].pts.map(p => [p[0] + SEC[i].nrm[0] * f * STEP, p[1] + SEC[i].nrm[1] * f * STEP]);
+// مدن كل قطاع: عمقها (بالخطوات، موجب = داخل إيران)
+const OBJ = SEC.map(s => { const m = mid(s); return GEO.cities.filter(c => VP[c.n] && dist(c.xy, m) < 190).map(c => ({ n: c.n, xy: c.xy, d: ((c.xy[0] - m[0]) * s.nrm[0] + (c.xy[1] - m[1]) * s.nrm[1]) / STEP, side: c.prov.startsWith('IQ') ? 0 : 1 })).filter(o => Math.abs(o.d) < 4.5); });
+OBJ.forEach((os, i) => { for (const o of os) { const other = OBJ.findIndex((q, j) => j !== i && q.some(x => x.n === o.n)); if (other >= 0 && dist(o.xy, mid(SEC[other])) < dist(o.xy, mid(SEC[i]))) o.dup = true; } });
+OBJ.forEach((os, i) => OBJ[i] = os.filter(o => !o.dup));
+const unitsAt = (i, side) => S.units.filter(u => u.loc === i && alive(u) && (side === undefined || u.side === side));
+function newGame(side) {
+  me = side; const units = makeArmies();
+  const place = (s, plan) => { const list = units.filter(u => u.side === s).sort((a, b) => (b.kind === 'armor') - (a.kind === 'armor')); let k = 0; for (const [i, n] of plan) for (let j = 0; j < n && k < list.length; j++) list[k++].loc = i; while (k < list.length) list[k++].loc = 'R'; };
+  place(0, [[7, 2], [6, 1], [5, 1], [4, 1], [3, 1], [2, 1], [1, 1], [0, 1]]); place(1, [[7, 3], [6, 2], [5, 2], [4, 2], [3, 2], [2, 2], [1, 1], [0, 1]]);
+  units.forEach(u => { u.dug = .4; u.transit = 0; });
+  S = { t: 1, f: SEC.map(() => 0), st: [SEC.map(() => 'def'), SEC.map(() => 'def')], units, air: [[], []], msl: [[], []], report: [], taken: {}, over: null };
+  const xs = GEO.border.map(p => p[0]), ys = GEO.border.map(p => p[1]); mv.fit(Math.min(...xs) - 120, Math.min(...ys) - 40, Math.max(...xs) + 120, Math.max(...ys) + 40);
+  $('#start').hidden = true; hud(); toast(`${SIDE[me].f} وزّع فرقك واختار وين تهاجم`);
+}
+const score = s => Object.entries(S.taken).filter(([, v]) => v === s).reduce((a, [n]) => a + VP[n], 0);
+function hud() {
+  $('#turn').textContent = `الأسبوع ${S.t}/${TURNS}`;
+  $('#score').innerHTML = [0, 1].map(s => `${SIDE[s].f} نقاط <b>${score(s)}</b> · احتياط <b>${S.units.filter(u => u.side === s && u.loc === 'R' && alive(u)).length}</b>`).join(' │ ');
+  $('#bAir').textContent = `✈ ${AIR[me].sorties - S.air[me].length}`; $('#bMsl').textContent = `🚀 ${AIR[me].msl - S.msl[me].length}`;
+  $('#bAir').setAttribute('aria-pressed', String(mode === 'air')); $('#bMsl').setAttribute('aria-pressed', String(mode === 'msl'));
+  const res = S.units.filter(u => u.side === me && alive(u) && (u.loc === 'R' || u.transit));
+  $('#tray').innerHTML = `<span class="lbl">الاحتياط:</span>` + (res.length ? res.map(u => `<button class="chip" data-u="${u.id}" aria-pressed="${u.id === sel}">${u.n.replace('الفرقة ', 'ف').replace('فرقة ', 'ف')}<small>${Math.round(str(u) * 100)}%${u.transit ? ' · بالطريق' : ''}</small></button>`).join('') : '<span class="lbl">ماكو</span>');
+  $('#tray').querySelectorAll('.chip').forEach(b => b.onclick = () => { sel = +b.dataset.u; SND.click(); hud(); });
+  const u = sel && S.units.find(x => x.id === sel);
+  $('#info').innerHTML = u ? `<b>${u.n}</b> · قوة ${Math.round(str(u) * 100)}%${u.tk >= 1 ? ` · ${Math.round(u.tk)} دبابة` : ''} · تنظيم ${Math.round(u.org)} — اضغط قطاع` : 'اضغط على اسم القطاع: هجوم/دفاع';
+  $('#tip').textContent = mode === 'air' ? '✈ اضغط القطاع اللي يدعمه الطيران' : mode === 'msl' ? '🚀 اضغط القطاع اللي تضربه الصواريخ' : '';
+}
+function secAt(x, y) { let bi = -1, bd = 90; SEC.forEach((s, i) => { for (const p of frontPts(i)) { const d = dist(p, [x, y]); if (d < bd) { bd = d; bi = i; } } }); return bi; }
+function onTap(x, y, sx, sy) {
+  if (anim || S.over) return; SND.click();
+  // اسم القطاع (البانر): يبدّل هجوم/دفاع
+  for (let i = 0; i < SEC.length; i++) { const b = banner(i), [bx, by] = mv.w2s(b[0], b[1]); if (Math.abs(sx - bx) < 46 && Math.abs(sy - by) < 13) { S.st[me][i] = S.st[me][i] === 'att' ? 'def' : 'att'; toast(`${SEC[i].n}: ${S.st[me][i] === 'att' ? '⚔ هجوم' : '🛡 دفاع'}`); return hud(); } }
+  // فرقة؟
+  let best = null, bd = 22 / mv.cam.k; for (const u of S.units) if (alive(u) && u.side === me && u.loc !== 'R' && !u.transit && u.px) { const d = Math.hypot(u.px - x, u.py - y); if (d < bd) { bd = d; best = u; } }
+  if (best && !mode) { sel = best.id; return hud(); }
+  const i = secAt(x, y); if (i < 0) { sel = null; return hud(); }
+  if (mode === 'air') { if (S.air[me].length < AIR[me].sorties) { S.air[me].push(i); toast(`✈ طلعة على ${SEC[i].n}`); } mode = ''; return hud(); }
+  if (mode === 'msl') { if (S.msl[me].length < AIR[me].msl) { S.msl[me].push(i); toast(`🚀 صواريخ على ${SEC[i].n}`); } mode = ''; return hud(); }
+  const u = sel && S.units.find(x => x.id === sel);
+  if (u) {
+    if (u.transit) return toast('هذي الفرقة بالطريق', 1);
+    if (u.loc === i) { sel = null; return hud(); }
+    if (unitsAt(i, me).length >= FRONTAGE[SEC[i].terr]) return toast(`${SEC[i].n} يتحمل ${FRONTAGE[SEC[i].terr]} فرق بس`, 1);
+    if (u.loc !== 'R' && Math.abs(u.loc - i) === 1) { u.loc = i; u.dug = 0; toast(`${u.n} انتقلت لـ ${SEC[i].n}`); }
+    else { u.loc = i; u.transit = 1; u.dug = 0; toast(`${u.n} بالطريق لـ ${SEC[i].n} (توصل الأسبوع الجاي)`); }
+    SND.move(); sel = null; return hud();
+  }
+}
+// ---------- الذكاء ----------
+function ai(side) {
+  const foe = 1 - side, pw = (i, sd, role) => unitsAt(i, sd).filter(u => !u.transit).reduce((a, u) => a + unitPower(u, role, SEC[i].terr), 0);
+  const dugOf = i => { const d = unitsAt(i, foe); return d.length ? d.reduce((a, u) => a + u.dug, 0) / d.length : .5; };
+  const sup = (1 + .24 * AIR[side].power) * 1.2;   // تقدير: طلعتين + صواريخ على القطاع اللي نهاجمه
+  const est = SEC.map((s, i) => { const d = Math.max(pw(i, foe, 'def'), 330) * TERR[s.terr].def * (1 + .7 * dugOf(i)); const v = 1 + OBJ[i].filter(o => o.side === foe && !S.taken[o.n]).reduce((a, o) => a + VP[o.n], 0) / 4; return { i, R: pw(i, side, 'att') * sup / d, v, room: FRONTAGE[s.terr] - unitsAt(i, side).length }; });
+  // أحسن قطاعين للهجوم (حسب النسبة × قيمة المدن)، والباقي دفاع
+  const picks = est.filter(e => e.R >= (side === me ? 1.15 : 1.05) * (.92 + Math.random() * .16)).sort((a, b) => b.R * b.v - a.R * a.v).slice(0, 2).map(e => e.i);
+  SEC.forEach((s, i) => S.st[side][i] = picks.includes(i) ? 'att' : 'def');
+  // الاحتياط: للقطاع اللي ممكن نهاجمه قريباً (أعلى نسبة وبيه مكان)، أو للمهدد
+  const threat = SEC.map((s, i) => ({ i, v: pw(i, foe, 'att') / Math.max(1, pw(i, side, 'def') * TERR[s.terr].def) }));
+  for (const u of S.units.filter(q => q.side === side && q.loc === 'R' && alive(q) && !q.transit)) {
+    const t = threat.filter(x => x.v > 1.1 && unitsAt(x.i, side).length < FRONTAGE[SEC[x.i].terr]).sort((a, b) => b.v - a.v)[0] || est.filter(e => unitsAt(e.i, side).length < FRONTAGE[SEC[e.i].terr]).sort((a, b) => b.R * b.v - a.R * a.v)[0];
+    if (t) { u.loc = t.i; u.transit = 1; } }
+  // نقل جانبي: من قطاع هادي لجاره المهدد
+  for (const t of threat.filter(x => x.v > 1.2).sort((a, b) => b.v - a.v)) { if (unitsAt(t.i, side).length >= FRONTAGE[SEC[t.i].terr]) continue;
+    for (const j of [t.i - 1, t.i + 1]) { const q = threat.find(x => x.i === j); if (!q || q.v > .7 || picks.includes(j)) continue; const us = unitsAt(j, side).filter(u => !u.transit); if (us.length > 1) { const u = us.sort((a, b) => str(b) - str(a))[0]; u.loc = t.i; u.dug = 0; break; } } }
+  S.air[side] = picks.length ? [picks[0], picks[0], picks[1] ?? picks[0]].slice(0, AIR[side].sorties) : threat.sort((a, b) => b.v - a.v).slice(0, AIR[side].sorties).map(x => x.i);
+  S.msl[side] = picks.slice(0, AIR[side].msl).concat(picks).slice(0, AIR[side].msl);
+}
+// ---------- نهاية الأسبوع ----------
+function endTurn() { if (anim || S.over) return; ai(1 - me); S.report = []; anim = { t: 0, dur: 1.2, then: resolve }; }
+function resolve() {
+  for (let i = 0; i < SEC.length; i++) {
+    const s = SEC[i], A = unitsAt(i, 0).filter(u => !u.transit), B = unitsAt(i, 1).filter(u => !u.transit);
+    const a0 = S.st[0][i] === 'att', a1 = S.st[1][i] === 'att'; if (!a0 && !a1) continue;
+    let att = a0 && a1 ? (A.reduce((q, u) => q + unitPower(u, 'att', s.terr), 0) >= B.reduce((q, u) => q + unitPower(u, 'att', s.terr), 0) ? 0 : 1) : a0 ? 0 : 1;
+    const foe = 1 - att, AU = att ? B : A, DU0 = att ? A : B; if (!AU.length) continue;
+    const dir = att === 0 ? 1 : -1, depth = S.f[i] * dir;   // عمق المهاجم داخل أرض العدو بالخطوات
+    const next = OBJ[i].find(o => o.side === foe && Math.abs(o.d - (S.f[i] + dir)) < .8);
+    const DU = DU0.length ? DU0 : [{ side: foe, kind: 'inf', n: 'قوات حدود', men: 4000, tk: 0, ifv: 0, gun: 10, gen: 1, q: .7, org: 100, dug: .5, exp: 0 }];
+    const fl = [i - 1, i + 1].filter(j => j >= 0 && j < SEC.length && (S.f[j] - S.f[i]) * dir >= 2).length;
+    const c = battleCalc(AU, DU, { terr: next ? (s.terr === 'plain' ? 'city' : s.terr) : s.terr, airA: S.air[att].filter(x => x === i).length * 2, airD: S.air[foe].filter(x => x === i).length * 2,
+      mslA: S.msl[att].filter(x => x === i).length * 2, supA: clamp(1 - Math.max(0, depth) * .08, .5, 1), supD: clamp(1 + Math.min(0, depth) * .08, .5, 1), flank: (1 + .2 * fl) / (a0 && a1 ? 1.4 : 1) });
+    applyBattle(AU, DU, c.R);
+    let mvStep = c.R >= 2.4 && s.terr === 'plain' && AU.some(u => u.kind === 'armor') ? 2 : c.R >= 1.15 || DU.every(u => u.org < 25) ? 1 : 0;
+    if (mvStep) { for (let k = 0; k < mvStep; k++) { S.f[i] = clamp(S.f[i] + dir, -4, 4); for (const o of OBJ[i]) if (o.side === foe && (o.d - S.f[i]) * dir <= .2 && !S.taken[o.n]) { S.taken[o.n] = att; } } DU0.forEach(u => { u.dug = 0; u.org = Math.max(5, u.org - 10); }); }
+    const m = mid(s); boomAt(m[0] + s.nrm[0] * S.f[i] * STEP, m[1] + s.nrm[1] * S.f[i] * STEP, 1.2); SND.boom(.22);
+    S.report.push({ i, side: att, R: c.R, f: c.f, step: mvStep, att: AU.map(u => u.n), def: DU.map(u => u.n), city: next && S.taken[next.n] === att ? next.n : '' });
+  }
+  // صواريخ على قطاع بدون معركة: تضعف التنظيم
+  for (const s of [0, 1]) for (const i of S.msl[s]) if (!S.report.some(r => r.i === i)) unitsAt(i, 1 - s).forEach(u => { u.org = Math.max(0, u.org - 20); u.men *= .97; });
+  for (const u of S.units) { if (!alive(u)) continue; if (u.transit) { u.transit = 0; continue; } const inB = S.report.some(r => r.i === u.loc); if (!inB) { u.org = Math.min(100, u.org + 25); if (u.loc !== 'R') u.dug = Math.min(1, u.dug + .25); } }
+  // الفرق الزايدة بقطاع (بعد وصول الاحتياط) ترجع احتياط
+  for (let i = 0; i < SEC.length; i++) for (const s of [0, 1]) { const us = unitsAt(i, s); while (us.length > FRONTAGE[SEC[i].terr]) { const u = us.pop(); u.loc = 'R'; } }
+  S.air = [[], []]; S.msl = [[], []]; S.t++;
+  if (S.t > TURNS) { const a = score(0), b = score(1); S.over = { win: a === b ? -1 : a > b ? 0 : 1, why: `انتهت 16 أسبوع: ${SIDE[0].f} ${a} نقطة مقابل ${SIDE[1].f} ${b}` }; }
+  hud(); report(true);
+}
+function report(auto) {
+  const r = S.report; if (!r.length && auto) { toast('أسبوع هادي — الكل يدافع'); return endCheck(); }
+  sheet(`<h2>تقرير الأسبوع ${S.t - 1}</h2>${r.map(b => `<div class="why"><b>${SIDE[b.side].f} ${SEC[b.i].n}</b> — ${b.step ? `<b style="color:${b.side === me ? '#2a7' : '#c33'}">${vb(b.side, 'تقدم', 'تقدمت')} ${b.step * STEP} كم</b>` : '<b>انصد الهجوم</b>'}${b.city ? ` · ${vb(b.side, 'أخذ', 'أخذت')} <b>${b.city}</b>` : ''}<br><small>${b.att.join('، ')} ضد ${b.def.join('، ')}</small><div><small>الكفة ${b.R.toFixed(2)} — ${whyText(b.f, b.side)}</small></div></div>`).join('')}<div class="row"><button class="btn go" onclick="closeSheet();endCheck()">تمام</button></div>`);
+}
+function endCheck() { if (S.over) { SND.win(); sheet(`<h2>${S.over.win === me ? '🏆 انتصرت' : S.over.win === -1 ? 'تعادل' : '💀 خسرت'}</h2><p>${S.over.why}</p><p>المدن اللي أخذتها: ${Object.entries(S.taken).filter(([, v]) => v === me).map(([n]) => n).join('، ') || 'ولا وحدة'}</p><div class="row"><button class="btn go" onclick="location.reload()">مرة ثانية</button><a class="btn" href="index.html">النماذج</a></div>`); } }
+// ---------- الرسم ----------
+const banner = i => { const s = SEC[i], m = mid(s); return [m[0] - s.nrm[0] * 95, m[1] - s.nrm[1] * 95]; };
+function frame(now) {
+  const dt = Math.min(.05, (now - lastT) / 1000); lastT = now; requestAnimationFrame(frame); if (!S) { mv.draw(null, 0); return; }
+  if (anim) { anim.t += dt; if (anim.t >= anim.dur) { const f = anim.then; anim = null; f(); } }
+  mv.draw(null, me); const g = mv.g, k = mv.cam.k;
+  // الأرض المأخوذة: بين الحدود وخط الجبهة
+  SEC.forEach((s, i) => { if (!S.f[i]) return; const fp = frontPts(i); g.beginPath(); s.pts.forEach((p, j) => { const [x, y] = mv.w2s(p[0], p[1]); j ? g.lineTo(x, y) : g.moveTo(x, y); }); for (let j = fp.length - 1; j >= 0; j--) { const [x, y] = mv.w2s(fp[j][0], fp[j][1]); g.lineTo(x, y); } g.closePath(); g.fillStyle = (S.f[i] > 0) === (me === 0) ? 'rgba(63,127,208,.35)' : 'rgba(207,74,60,.35)'; g.fill(); });
+  // خط الجبهة (متقطع ذهبي) ويوصل القطاعات
+  g.save(); g.lineJoin = 'round'; g.lineCap = 'round'; const all = []; SEC.forEach((s, i) => all.push(...frontPts(i)));
+  for (const [w, c] of [[7, 'rgba(0,0,0,.55)'], [3.5, '#f2b632']]) { g.lineWidth = w; g.strokeStyle = c; g.setLineDash(w < 5 ? [10, 5] : []); g.beginPath(); all.forEach((p, j) => { const [x, y] = mv.w2s(p[0], p[1]); j ? g.lineTo(x, y) : g.moveTo(x, y); }); g.stroke(); } g.restore();
+  // المدن الأهداف
+  for (const os of OBJ) for (const o of os) { const [x, y] = mv.w2s(o.xy[0], o.xy[1]), t = S.taken[o.n]; g.font = '700 11px "IBM Plex Sans Arabic"'; g.textAlign = 'center'; g.fillStyle = t === undefined ? '#6b5d3b' : t === me ? '#1d5fae' : '#b0291c'; g.fillText(`★${VP[o.n]}`, x, y + 14); }
+  // الفرق: على جهة طرفها من خط الجبهة
+  const sc = clamp(k * 1.6, .55, 1.15);
+  SEC.forEach((s, i) => { const fp = frontPts(i); for (const side of [0, 1]) { const us = unitsAt(i, side); us.forEach((u, j) => { const p = fp[Math.floor((j + 1) / (us.length + 1) * (fp.length - 1))], off = (side === 0 ? -1 : 1) * 26 / k, tx = p[0] + s.nrm[0] * off, ty = p[1] + s.nrm[1] * off;
+    u.px = u.px === undefined ? tx : u.px + (tx - u.px) * .2; u.py = u.py === undefined ? ty : u.py + (ty - u.py) * .2; const [x, y] = mv.w2s(u.px, u.py); g.globalAlpha = u.transit ? .45 : 1; drawUnit(g, x, y, u, me, { s: sc, sel: u.id === sel }); g.globalAlpha = 1; }); } });
+  // بانر القطاع: الاسم + الأرض + هجوم/دفاع + الفرق/السعة
+  SEC.forEach((s, i) => { const b = banner(i), [x, y] = mv.w2s(b[0], b[1]), myS = S.st[me][i], cap = FRONTAGE[s.terr];
+    g.font = '700 11.5px "IBM Plex Sans Arabic"'; g.textAlign = 'center'; g.textBaseline = 'middle'; const t = `${myS === 'att' ? '⚔' : '🛡'} ${s.n} · ${TERR[s.terr].n} ${unitsAt(i, me).length}/${cap}`, w = g.measureText(t).width + 14;
+    g.fillStyle = myS === 'att' ? '#b8871e' : 'rgba(255,255,255,.92)'; g.strokeStyle = 'rgba(0,0,0,.35)'; g.lineWidth = 1; g.beginPath(); g.roundRect(x - w / 2, y - 12, w, 24, 7); g.fill(); g.stroke(); g.fillStyle = myS === 'att' ? '#fff' : '#2b2620'; g.fillText(t, x, y + 1);
+    if (myS === 'att') { const m = mid(s), a = mv.w2s(m[0] + s.nrm[0] * (S.f[i] * STEP - (me ? -1 : 1) * 40), m[1] + s.nrm[1] * (S.f[i] * STEP - (me ? -1 : 1) * 40)), z = mv.w2s(m[0] + s.nrm[0] * (S.f[i] * STEP + (me ? -1 : 1) * 30), m[1] + s.nrm[1] * (S.f[i] * STEP + (me ? -1 : 1) * 30)); drawArrow(g, a, z, 'rgba(200,40,30,.85)', 5); }
+    if (S.air[me].includes(i)) { g.font = '18px sans-serif'; g.fillText('✈'.repeat(S.air[me].filter(q => q === i).length), x, y - 22); } if (S.msl[me].includes(i)) { g.font = '18px sans-serif'; g.fillText('🚀', x + w / 2 + 12, y); } });
+  drawFx(g, mv, dt);
+}
+mv = new MapView($('#map'), { onTap });
+document.querySelectorAll('#start [data-s]').forEach(b => b.onclick = () => newGame(+b.dataset.s));
+$('#bAir').onclick = () => { if (!S) return; mode = mode === 'air' ? '' : 'air'; hud(); };
+$('#bMsl').onclick = () => { if (!S) return; mode = mode === 'msl' ? '' : 'msl'; hud(); };
+$('#bRep').onclick = () => S && report(false);
+$('#bEnd').onclick = () => { closeSheet(); endTurn(); };
+$('#sheet').onclick = e => { if (e.target.id === 'sheet') closeSheet(); };
+requestAnimationFrame(frame);
+window.M = { get S() { return S; }, newGame, autoTurn: () => { ai(me); endTurn(); }, get anim() { return anim; }, mv };
+</script>
+</body>
+</html>

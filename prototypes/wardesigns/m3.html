@@ -1,0 +1,184 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>نموذج 3: المدن والطرق والإمداد</title>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Arabic:wght@400;500;600;700&family=Reem+Kufi:wght@700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="ui.css">
+</head>
+<body>
+<canvas id="map"></canvas>
+<div id="hud"><div class="r1"><a class="back" href="index.html">☰ النماذج</a><h1>٣ · المدن والطرق والإمداد</h1><span class="turn" id="turn"></span></div><div class="r2" id="score"></div><div class="tip" id="tip"></div></div>
+<div id="bar"><div class="info" id="info"></div><button id="bAir">✈ ضرب طريق</button><button id="bSup">🛣 الإمداد</button><button id="bRep">📋</button><button id="bEnd" class="go">يومين ▶</button></div>
+<div id="toast"></div>
+<div id="sheet" hidden><div class="in"></div></div>
+<div id="start"><div class="card">
+  <h1>المدن والطرق والإمداد</h1>
+  <p>الحرب على الطرق الحقيقية بين مدن العراق وإيران. الجيوش تمشي على الطرق، والمدينة اللي تنقطع طرقها تنخنق.</p>
+  <ul>
+    <li><b>حرّك:</b> اضغط فرقة، بعدين اضغط أي مدينة. تمشي على الطرق لحالها وتشوف الطريق اللي راح تاخذه. الدروع أسرع من المشاة، والجبال تبطّئ</li>
+    <li><b>الهجوم:</b> وصّل فرقك لمدينة العدو. إذا جيت من طريقين سوا تطوّقها وتصير أقوى</li>
+    <li><b>الإمداد:</b> يجي من عاصمتك ومستودعاتك عبر طرقك. الفرقة المقطوعة تضعف، والمدينة المحاصرة تستسلم</li>
+    <li><b>✈ ضرب طريق:</b> اضغطه وبعدين اضغط طريق: يتسكر يومين (الجسور 6 أيام) ويقطع إمداد العدو</li>
+    <li>الدور = يومين، والحرب شهر (15 دور). تربح بالنقاط (مدن العدو) أو تاخذ عاصمته</li>
+  </ul>
+  <div class="sides"><button class="btn go" data-s="0">🇮🇶 العب بالعراق</button><button class="btn go" data-s="1">🇮🇷 العب بإيران</button></div>
+</div></div>
+<script src="data.js"></script><script src="core.js"></script><script src="map.js"></script>
+<script>
+'use strict';
+// النموذج 3 (WD3، I-078 — اقتراحي): شبكة المدن والطرق الحقيقية. الحركة على الطرق بالكيلومتر، الإمداد يمشي على الطرق، قطع الطرق والجسور بالطيران، التطويق.
+const TURNS = 15, DAYS = 2;
+const PJ = (lat, lon) => [(lon - GEO.proj.lon0) * GEO.proj.kx, (GEO.proj.lat1 - lat) * GEO.proj.ky];
+// العقد: مدن ومعابر (خط العرض، الطول، الطرف، النقاط، الأرض، مستودع)
+const N0 = [['بغداد', 33.34, 44.39, 0, 10, 'city', 1], ['بعقوبة', 33.75, 44.64, 0, 2, 'plain'], ['الكوت', 32.51, 45.82, 0, 2, 'plain'], ['العمارة', 31.84, 47.14, 0, 3, 'marsh'], ['البصرة', 30.51, 47.81, 0, 6, 'city', 1],
+  ['القرنة', 31.01, 47.43, 0, 1, 'marsh'], ['الفاو', 29.98, 48.47, 0, 1, 'marsh'], ['الناصرية', 31.05, 46.26, 0, 2, 'plain'], ['الحلة', 32.48, 44.42, 0, 1, 'plain'], ['الديوانية', 31.99, 44.92, 0, 1, 'plain'],
+  ['سامراء', 34.2, 43.87, 0, 1, 'plain'], ['تكريت', 34.61, 43.68, 0, 1, 'plain'], ['كركوك', 35.47, 44.39, 0, 3, 'city', 1], ['السليمانية', 35.56, 45.43, 0, 2, 'mount'], ['أربيل', 36.19, 44.01, 0, 2, 'hills'],
+  ['الموصل', 36.34, 43.13, 0, 2, 'city'], ['خانقين', 34.35, 45.38, 0, 1, 'hills'], ['مندلي', 33.75, 45.55, 0, 1, 'hills'], ['بدرة', 33.11, 45.94, 0, 1, 'plain'], ['حلبجة', 35.18, 45.99, 0, 1, 'mount'],
+  ['رانية', 36.25, 44.88, 0, 1, 'mount'], ['شلامجة', 30.5, 47.97, 0, 1, 'marsh'],
+  ['طهران', 35.69, 51.39, 1, 10, 'city', 1], ['قم', 34.64, 50.88, 1, 2, 'plain'], ['أراك', 34.09, 49.69, 1, 1, 'mount'], ['همدان', 34.8, 48.52, 1, 2, 'mount'], ['كرمانشاه', 34.31, 47.07, 1, 3, 'mount', 1],
+  ['إسلام آباد غرب', 34.11, 46.53, 1, 1, 'mount'], ['قصر شيرين', 34.52, 45.58, 1, 1, 'hills'], ['سنندج', 35.31, 47.0, 1, 2, 'mount'], ['مريوان', 35.52, 46.18, 1, 1, 'mount'], ['إيلام', 33.64, 46.42, 1, 2, 'mount'],
+  ['مهران', 33.12, 46.16, 1, 1, 'plain'], ['دهلران', 32.69, 47.27, 1, 1, 'hills'], ['دزفول', 32.38, 48.4, 1, 2, 'plain'], ['الأهواز', 31.32, 48.67, 1, 6, 'city', 1], ['سوسنگرد', 31.56, 48.18, 1, 1, 'marsh'],
+  ['خرمشهر', 30.44, 48.17, 1, 2, 'city'], ['عبادان', 30.34, 48.3, 1, 3, 'city'], ['خرم آباد', 33.49, 48.36, 1, 2, 'mount'], ['بيرانشهر', 36.7, 45.14, 1, 1, 'mount'], ['أرومية', 37.55, 45.07, 1, 2, 'hills']];
+const NODES = N0.map(([n, la, lo, side, vp, terr, dep], i) => ({ i, n, xy: PJ(la, lo), side, vp, terr, dep: !!dep }));
+const NI = Object.fromEntries(NODES.map(q => [q.n, q.i]));
+// الطرق الحقيقية الرئيسية (تقريبية)؛ b = جسر على نهر كبير
+const E0 = 'بغداد-بعقوبة|بعقوبة-خانقين|خانقين-قصر شيرين|قصر شيرين-إسلام آباد غرب|إسلام آباد غرب-كرمانشاه|كرمانشاه-همدان|همدان-قم|قم-طهران|همدان-أراك|أراك-قم|كرمانشاه-سنندج|سنندج-مريوان|مريوان-السليمانية|حلبجة-السليمانية|حلبجة-مريوان|السليمانية-كركوك|السليمانية-رانية|رانية-أربيل|رانية-بيرانشهر|بيرانشهر-أرومية|أربيل-الموصل|أربيل-كركوك|كركوك-تكريت|تكريت-سامراء|سامراء-بغداد|كركوك-بعقوبة|بعقوبة-مندلي|مندلي-بدرة|بغداد-الكوت|الكوت-بدرة|بدرة-مهران|مهران-إيلام|إيلام-إسلام آباد غرب|إيلام-دهلران|دهلران-دزفول|الكوت-العمارة|العمارة-دهلران|العمارة-القرنة|القرنة-البصرة|البصرة-الفاو|البصرة-شلامجة|شلامجة-خرمشهر|خرمشهر-عبادان|خرمشهر-الأهواز|الأهواز-سوسنگرد|سوسنگرد-العمارة|الأهواز-دزفول|دزفول-خرم آباد|خرم آباد-أراك|خرم آباد-كرمانشاه|بغداد-الحلة|الحلة-الديوانية|الديوانية-الناصرية|الناصرية-البصرة|الكوت-الناصرية'.split('|');
+const BRIDGE = new Set(['بغداد-الكوت', 'القرنة-البصرة', 'شلامجة-خرمشهر', 'خرمشهر-الأهواز', 'خرمشهر-عبادان', 'الأهواز-دزفول', 'بغداد-بعقوبة', 'العمارة-القرنة', 'الكوت-العمارة']);
+const EDGES = E0.map((s, i) => { const [a, b] = s.split('-').map(n => NI[n]); const L = dist(NODES[a].xy, NODES[b].xy) * 1.25, terr = [NODES[a].terr, NODES[b].terr].includes('mount') ? 'mount' : [NODES[a].terr, NODES[b].terr].includes('marsh') ? 'marsh' : 'plain'; return { i, a, b, L, terr, bridge: BRIDGE.has(s) }; });
+const adj = NODES.map(() => []); EDGES.forEach(e => { adj[e.a].push(e); adj[e.b].push(e); });
+const SPD = { armor: 70, mech: 65, inf: 40, mtn: 40, sf: 55 };   // كم/يوم على الطريق
+let S, mv, me, sel = null, mode = '', anim = null, lastT = performance.now(), showSup = false;
+const unitsAt = (n, side) => S.units.filter(u => alive(u) && u.at === n && u.edge == null && (side === undefined || u.side === side));
+function newGame(side) {
+  me = side; const units = makeArmies();
+  const START = { 0: ['البصرة', 'البصرة', 'العمارة', 'الكوت', 'بعقوبة', 'خانقين', 'بغداد', 'بغداد', 'السليمانية', 'كركوك', 'أربيل', 'شلامجة'], 1: ['الأهواز', 'الأهواز', 'خرمشهر', 'عبادان', 'سوسنگرد', 'دزفول', 'كرمانشاه', 'إسلام آباد غرب', 'قصر شيرين', 'إيلام', 'مهران', 'سنندج', 'مريوان', 'خرم آباد', 'طهران', 'بيرانشهر'] };
+  for (const s of [0, 1]) units.filter(u => u.side === s).forEach((u, k) => { u.at = NI[START[s][k % START[s].length]]; });
+  units.forEach(u => { u.path = []; u.edge = null; u.prog = 0; u.dug = .3; [u.x, u.y] = NODES[u.at].xy; });
+  S = { t: 1, own: NODES.map(q => q.side), units, cut: {}, air: [[], []], report: [], over: null, siege: {} };
+  const ns = NODES.filter(q => ['البصرة', 'الأهواز', 'كرمانشاه', 'السليمانية', 'بغداد'].includes(q.n)); mv.fit(Math.min(...ns.map(q => q.xy[0])) - 120, Math.min(...ns.map(q => q.xy[1])) - 90, Math.max(...ns.map(q => q.xy[0])) + 120, Math.max(...ns.map(q => q.xy[1])) + 90);
+  $('#start').hidden = true; hud(); toast(`${SIDE[me].f} اضغط فرقة، بعدين مدينة توديها لها`);
+}
+const capOf = s => NI[s === 0 ? 'بغداد' : 'طهران'];
+const score = s => NODES.filter(q => q.side !== s && S.own[q.i] === s).reduce((a, q) => a + q.vp, 0);
+// الإمداد: من المستودعات عبر عقد صديقة وطرق مو مقطوعة
+function supplied(side) { const ok = new Set(), q = NODES.filter(n => n.dep && S.own[n.i] === side && n.side === side).map(n => n.i); q.forEach(i => ok.add(i));
+  while (q.length) { const i = q.pop(); for (const e of adj[i]) { const j = e.a === i ? e.b : e.a; if (S.cut[e.i] > 0 || ok.has(j) || S.own[j] !== side) continue; ok.add(j); q.push(j); } } return ok; }
+// أقصر طريق (بالوقت) يمر بعقد صديقة، والعقدة الأخيرة ممكن تكون للعدو
+function route(u, to) { const d = NODES.map(() => 1e9), pv = NODES.map(() => null); d[u.at] = 0; const q = [u.at];
+  while (q.length) { q.sort((a, b) => d[a] - d[b]); const i = q.shift(); if (i === to) break; if (i !== u.at && S.own[i] !== u.side) continue;
+    for (const e of adj[i]) { if (S.cut[e.i] > 0) continue; const j = e.a === i ? e.b : e.a, w = e.L / (SPD[u.kind] * TERR[e.terr].mv); if (d[i] + w < d[j]) { d[j] = d[i] + w; pv[j] = { i, e }; if (!q.includes(j)) q.push(j); } } }
+  if (d[to] > 1e8) return null; const path = []; let k = to; while (pv[k]) { path.unshift({ e: pv[k].e, to: k }); k = pv[k].i; } return path; }
+function hud() {
+  $('#turn').textContent = `اليوم ${(S.t - 1) * DAYS + 1}–${S.t * DAYS} من 30`;
+  $('#score').innerHTML = [0, 1].map(s => `${SIDE[s].f} نقاط <b>${score(s)}</b> · مدن <b>${S.own.filter(o => o === s).length}</b>`).join(' │ ');
+  $('#bAir').textContent = `✈ ضرب طريق (${AIR[me].sorties - S.air[me].length})`; $('#bAir').setAttribute('aria-pressed', String(mode === 'air')); $('#bSup').setAttribute('aria-pressed', String(showSup));
+  const u = sel && S.units.find(x => x.id === sel), sup = supplied(me);
+  $('#info').innerHTML = u ? `<b>${u.n}</b> · قوة ${Math.round(str(u) * 100)}% · ${u.edge != null ? 'بالطريق' : NODES[u.at].n} · سرعة ${SPD[u.kind]} كم/يوم · ${u.edge != null || sup.has(u.at) ? 'إمداد ✓' : '<b style="color:#c33">مقطوع!</b>'}` : 'اضغط فرقة من فرقك، بعدين مدينة';
+  $('#tip').textContent = mode === 'air' ? 'اضغط على طريق تضربه (قرب نصّه)' : u ? 'اضغط المدينة اللي تريدها تروح لها' : '';
+}
+function edgeAt(x, y) { let best = null, bd = 28 / mv.cam.k; for (const e of EDGES) { const A = NODES[e.a].xy, B = NODES[e.b].xy, vx = B[0] - A[0], vy = B[1] - A[1], t = clamp(((x - A[0]) * vx + (y - A[1]) * vy) / (vx * vx + vy * vy), .1, .9), d = Math.hypot(A[0] + vx * t - x, A[1] + vy * t - y); if (d < bd) { bd = d; best = e; } } return best; }
+function onTap(x, y) {
+  if (anim || S.over) return; SND.click();
+  if (mode === 'air') { const e = edgeAt(x, y); if (!e) return toast('اضغط قرب نص الطريق', 1); if (S.air[me].length >= AIR[me].sorties) { mode = ''; return hud(); } S.air[me].push(e.i); mode = ''; toast(`✈ ضرب ${e.bridge ? 'جسر ' : 'طريق '}${NODES[e.a].n}–${NODES[e.b].n}`); return hud(); }
+  let best = null, bd = 24 / mv.cam.k; for (const u of S.units) if (alive(u) && u.side === me) { const d = Math.hypot(u.x - x, u.y - y); if (d < bd) { bd = d; best = u; } }
+  let node = null, nd = 22 / mv.cam.k; for (const q of NODES) { const d = dist(q.xy, [x, y]); if (d < nd) { nd = d; node = q; } }
+  const u = sel && S.units.find(z => z.id === sel);
+  if (u && node && (!best || best.at === node.i)) { if (node.i === u.at && u.edge == null) { u.path = []; toast(`${u.n} تبقى بـ ${node.n}`); sel = null; return hud(); }
+    const r = route(u, node.i); if (!r) return toast('ماكو طريق مفتوح لهناك', 1); u.path = r; const days = r.reduce((a, s) => a + s.e.L / (SPD[u.kind] * TERR[s.e.terr].mv), 0); SND.move(); toast(`${u.n} ← ${node.n} (${days.toFixed(1)} يوم)`); sel = null; return hud(); }
+  if (best) { sel = best.id; return hud(); }
+  sel = null; hud();
+}
+// ---------- الذكاء ----------
+function ai(side) {
+  const foe = 1 - side, mine = S.units.filter(u => u.side === side && alive(u)), pw = (i, s, role) => unitsAt(i, s).reduce((a, u) => a + unitPower(u, role, NODES[i].terr), 0);
+  const gar = new Set(unitsAt(capOf(side), side).slice(0, 1).map(u => u.id));
+  for (const u of mine) { if (gar.has(u.id) || u.edge != null || u.org < 40) continue; if (u.path.length && Math.random() < .7) continue;
+    // أهداف: مدن العدو القريبة حسب (النقاط ÷ الدفاع ÷ المسافة)، أو صديقة مهددة
+    let best = null, bs = 0;
+    for (const q of NODES) { const r = route(u, q.i); if (!r || !r.length) continue; const days = r.reduce((a, s) => a + s.e.L / (SPD[u.kind] * TERR[s.e.terr].mv), 0); if (days > 6) continue;
+      let sc = 0; if (S.own[q.i] === foe) { const d = Math.max(pw(q.i, foe, 'def'), 150 + q.vp * 60) * TERR[q.terr].def; sc = q.vp * Math.min(2.5, unitPower(u, 'att', q.terr) * 1.6 / d) / (1 + days); }
+      else { const th = adj[q.i].reduce((a, e) => { const j = e.a === q.i ? e.b : e.a; return a + (S.own[j] === foe ? pw(j, foe, 'att') : 0); }, 0) - pw(q.i, side, 'def'); if (th > 300) sc = (q.vp + 1) * .5 / (1 + days); }
+      if (sc > bs) { bs = sc; best = r; } }
+    // ما يترك مدينة حدودية فارغة قدام العدو
+    const here = u.at, threatened = adj[here].some(e => { const j = e.a === here ? e.b : e.a; return S.own[j] === foe && unitsAt(j, foe).length; });
+    if (best && bs > .12 && !(threatened && unitsAt(here, side).length <= 1 && Math.random() < .8)) u.path = best; }
+  // الطيران: يقطع طرق إمداد العدو اللي توصل للمدن اللي نهاجمها، أو جسور
+  const tg = new Set(mine.filter(u => u.path.length).map(u => u.path[u.path.length - 1].to)), opts = EDGES.filter(e => S.own[e.a] === foe && S.own[e.b] === foe && (tg.has(e.a) || tg.has(e.b)) && !(S.cut[e.i] > 0));
+  S.air[side] = opts.sort((a, b) => b.bridge - a.bridge).slice(0, AIR[side].sorties).map(e => e.i);
+}
+// ---------- الدور (يومين) ----------
+function endTurn() {
+  if (anim || S.over) return; ai(1 - me); S.report = [];
+  for (const s of [0, 1]) for (const ei of S.air[s]) { const e = EDGES[ei]; S.cut[ei] = Math.max(S.cut[ei] || 0, e.bridge ? 3 : 1); for (const u of S.units) if (u.edge === ei && u.side !== s) { u.org = Math.max(0, u.org - 25); u.men *= .97; u.tk *= .96; } const m = [(NODES[e.a].xy[0] + NODES[e.b].xy[0]) / 2, (NODES[e.a].xy[1] + NODES[e.b].xy[1]) / 2]; boomAt(m[0], m[1], .8); }
+  // الحركة: كل فرقة تمشي كيلومتراتها على مسارها (أنيميشن)
+  const moves = [];
+  for (const u of S.units) { if (!alive(u) || !u.path.length) continue; let km = SPD[u.kind] * DAYS * (u.org < 30 ? .5 : 1); const from = [u.x, u.y];
+    while (km > 0 && u.path.length) { const st = u.path[0], e = st.e; if (S.cut[e.i] > 0 && u.edge == null) { u.path = []; break; } const rate = TERR[e.terr].mv, left = (1 - u.prog) * e.L / rate;
+      if (km >= left) { km -= left; u.prog = 0; u.edge = null; const to = st.to; u.path.shift();
+        if (S.own[to] !== u.side && unitsAt(to, 1 - u.side).length) { u.at = to; u.siegeOf = to; u.path = []; break; }   // وصل مدينة بيها عدو: يحاصر
+        u.at = to; if (S.own[to] !== u.side) { u.path = []; break; } }
+      else { u.edge = e.i; u.prog += km * rate / e.L; u.from = e.a === u.at ? e.a : e.b; km = 0; } }
+    moves.push({ u, from, to: posOf(u) }); u.dug = 0; }
+  anim = { t: 0, dur: 1.3, moves, then: resolve };
+}
+function posOf(u) { if (u.edge == null) return NODES[u.at].xy; const e = EDGES[u.edge], A = NODES[u.at].xy, B = NODES[e.a === u.at ? e.b : e.a].xy; return [lerp(A[0], B[0], u.prog), lerp(A[1], B[1], u.prog)]; }
+function resolve() {
+  const supA = [supplied(0), supplied(1)];
+  // معارك بالعقد: فرق طرف بعقدة يملكها الطرف الثاني
+  for (const q of NODES) { const own = S.own[q.i], att = unitsAt(q.i, 1 - own); if (!att.length) continue; const side = 1 - own, real = unitsAt(q.i, own);
+    const mil = { side: own, kind: 'inf', n: 'حامية المدينة', men: 1500 + q.vp * 900, tk: 0, ifv: 0, gun: 6, gen: 1, q: .7, org: 100, dug: .7, exp: 0 }, def = real.length ? real : [mil];
+    const ways = new Set(att.map(u => u.cameFrom ?? -1)), enc = adj[q.i].every(e => { const j = e.a === q.i ? e.b : e.a; return S.own[j] === side || S.cut[e.i] > 0; });
+    const c = battleCalc(att, def, { terr: q.terr, airD: 0, supA: att.some(u => supA[side].has(u.at) || adj[q.i].some(e => supA[side].has(e.a === q.i ? e.b : e.a))) ? 1 : .6, supD: enc ? .45 : 1, flank: enc ? 1.35 : 1 });
+    applyBattle(att, def, c.R, DAYS / 7 * 2.2);
+    let res = c.R >= 3 || (c.R >= 1.25 && (!real.length || real.every(u => u.org < 30))) ? 'take' : c.R < .8 && att.every(u => u.org < 30) ? 'fail' : 'siege';
+    if (res === 'take') { S.own[q.i] = side; for (const d of real) { const back = adj[q.i].map(e => e.a === q.i ? e.b : e.a).find(j => S.own[j] === own && !(S.cut[EDGES.find(e => (e.a === j || e.b === j) && (e.a === q.i || e.b === q.i)).i] > 0)); if (back !== undefined && !enc) { d.at = back; d.org = Math.max(5, d.org - 15); } else { d.men = 0; d.tk = 0; d.ifv = 0; d.surr = true; } } att.forEach(u => u.siegeOf = null); }
+    if (res === 'fail') { const back = adj[q.i].map(e => e.a === q.i ? e.b : e.a).find(j => S.own[j] === side); att.forEach(u => { if (back !== undefined) u.at = back; u.siegeOf = null; }); }
+    boomAt(q.xy[0], q.xy[1], 1.2); SND.boom(.2); S.report.push({ n: q.n, side, res, R: c.R, f: c.f, enc, att: att.map(u => u.n), def: def.map(u => u.n), surr: real.filter(d => d.surr).length });
+  }
+  for (const s of [0, 1]) { const sp = supplied(s); for (const u of S.units.filter(z => z.side === s && alive(z))) { const ok = u.edge != null || sp.has(u.at) || adj[u.at].some(e => sp.has(e.a === u.at ? e.b : e.a)); if (!ok) { u.org = Math.max(0, u.org - 18); u.men *= .96; u.tk *= .95; } else if (!S.report.some(r => NI[r.n] === u.at)) { u.org = Math.min(100, u.org + 20); if (!u.path.length && u.edge == null) u.dug = Math.min(1, u.dug + .25); } } }
+  for (const k in S.cut) S.cut[k]--; S.air = [[], []]; S.t++;
+  for (const s of [0, 1]) if (S.own[capOf(s)] !== s) S.over = { win: 1 - s, why: `سقطت ${NODES[capOf(s)].n}` };
+  if (!S.over && S.t > TURNS) { const a = score(0), b = score(1); S.over = { win: a === b ? -1 : a > b ? 0 : 1, why: `انتهى الشهر: ${SIDE[0].f} ${a} نقطة مقابل ${SIDE[1].f} ${b}` }; }
+  hud(); report(true);
+}
+function report(auto) {
+  const r = S.report; if (!r.length && auto) { toast('يومين بلا معارك — الجيوش تتحرك'); return endCheck(); }
+  sheet(`<h2>تقرير اليومين</h2>${r.map(b => `<div class="why"><b>${SIDE[b.side].f} ${b.n}</b> — ${b.res === 'take' ? `<b style="color:${b.side === me ? '#2a7' : '#c33'}">${vb(b.side, 'سيطر', 'سيطرت')}</b>` : b.res === 'fail' ? '<b>انسحب المهاجم</b>' : 'حصار مستمر'}${b.enc ? ' · <b>مطوّقة</b>' : ''}${b.surr ? ` · ${b.surr} فرق استسلمت` : ''}<br><small>${b.att.join('، ')} ضد ${b.def.join('، ')}</small><div><small>الكفة ${b.R.toFixed(2)} — ${whyText(b.f, b.side)}</small></div></div>`).join('')}<div class="row"><button class="btn go" onclick="closeSheet();endCheck()">تمام</button></div>`);
+}
+function endCheck() { if (S.over) { SND.win(); sheet(`<h2>${S.over.win === me ? '🏆 انتصرت' : S.over.win === -1 ? 'تعادل' : '💀 خسرت'}</h2><p>${S.over.why}</p><p>المدن اللي أخذتها: ${NODES.filter(q => q.side !== me && S.own[q.i] === me).map(q => q.n).join('، ') || 'ولا وحدة'}</p><div class="row"><button class="btn go" onclick="location.reload()">مرة ثانية</button><a class="btn" href="index.html">النماذج</a></div>`); } }
+// ---------- الرسم ----------
+function frame(now) {
+  const dt = Math.min(.05, (now - lastT) / 1000); lastT = now; requestAnimationFrame(frame); if (!S) { mv.draw(null, 0); return; }
+  if (anim) { anim.t += dt; const k = ease(Math.min(1, anim.t / anim.dur)); for (const m of anim.moves) { m.u.x = lerp(m.from[0], m.to[0], k); m.u.y = lerp(m.from[1], m.to[1], k); } if (anim.t >= anim.dur) { const f = anim.then; anim = null; f(); } }
+  mv.draw(null, me); const g = mv.g, k = mv.cam.k, sp = showSup ? supplied(me) : null;
+  // الطرق
+  for (const e of EDGES) { const a = mv.w2s(...NODES[e.a].xy), b = mv.w2s(...NODES[e.b].xy); g.lineCap = 'round';
+    g.strokeStyle = 'rgba(40,34,28,.55)'; g.lineWidth = 5.5; g.beginPath(); g.moveTo(...a); g.lineTo(...b); g.stroke();
+    g.strokeStyle = sp && sp.has(e.a) && sp.has(e.b) && !(S.cut[e.i] > 0) ? '#5fb36b' : e.terr === 'mount' ? '#d9c79c' : '#f4ead2'; g.lineWidth = 3; g.beginPath(); g.moveTo(...a); g.lineTo(...b); g.stroke();
+    const m = [(a[0] + b[0]) / 2, (a[1] + b[1]) / 2]; if (e.bridge) { g.fillStyle = '#4f8fbf'; g.fillRect(m[0] - 5, m[1] - 3, 10, 6); }
+    if (S.cut[e.i] > 0 || S.air[me].includes(e.i)) { g.strokeStyle = S.cut[e.i] > 0 ? '#c0281a' : '#e8a91c'; g.lineWidth = 3; g.beginPath(); g.moveTo(m[0] - 7, m[1] - 7); g.lineTo(m[0] + 7, m[1] + 7); g.moveTo(m[0] + 7, m[1] - 7); g.lineTo(m[0] - 7, m[1] + 7); g.stroke(); } }
+  // مسارات فرقي
+  for (const u of S.units) if (alive(u) && u.side === me && u.path.length) { g.setLineDash([7, 5]); g.strokeStyle = 'rgba(30,80,170,.9)'; g.lineWidth = 3; g.beginPath(); g.moveTo(...mv.w2s(u.x, u.y)); for (const st of u.path) g.lineTo(...mv.w2s(...NODES[st.to].xy)); g.stroke(); g.setLineDash([]); const lp = u.path[u.path.length - 1]; const z = mv.w2s(...NODES[lp.to].xy); drawArrow(g, mv.w2s(...NODES[u.path.length > 1 ? u.path[u.path.length - 2].to : u.at].xy), z, 'rgba(30,80,170,.9)', 3); }
+  // العقد
+  for (const q of NODES) { const [x, y] = mv.w2s(...q.xy), o = S.own[q.i], r = 7 + q.vp * 1.2; g.beginPath(); g.arc(x, y, r, 0, 7); g.fillStyle = o === me ? '#3f7fd0' : '#cf4a3c'; g.fill(); g.lineWidth = q.dep ? 3 : 1.5; g.strokeStyle = q.dep ? '#f2b632' : '#fff'; g.stroke();
+    g.fillStyle = '#fff'; g.font = '700 10px sans-serif'; g.textAlign = 'center'; g.textBaseline = 'middle'; g.fillText(q.vp, x, y + .5);
+    g.font = '600 11.5px "IBM Plex Sans Arabic"'; g.lineWidth = 3; g.strokeStyle = COL.halo; g.strokeText(q.n, x, y - r - 8); g.fillStyle = COL.text; g.fillText(q.n, x, y - r - 8); }
+  // الفرق
+  const s = clamp(k * 1.4, .55, 1.1), groups = {};
+  for (const u of S.units) { if (!alive(u)) continue; if (!anim) { const p = posOf(u), key = u.edge == null ? 'n' + u.at + ':' + u.side : 'e' + u.edge + ':' + u.id; (groups[key] ||= []).push(u); const gi = groups[key].length - 1; const off = u.edge == null ? [(gi % 3 - 1) * 30 / k, (u.side === me ? 18 : -18) / k + Math.floor(gi / 3) * 22 / k] : [0, 0]; u.x += (p[0] + off[0] - u.x) * .25; u.y += (p[1] + off[1] - u.y) * .25; }
+    const [x, y] = mv.w2s(u.x, u.y); drawUnit(g, x, y, u, me, { s, sel: u.id === sel }); }
+  drawFx(g, mv, dt);
+}
+mv = new MapView($('#map'), { onTap });
+document.querySelectorAll('#start [data-s]').forEach(b => b.onclick = () => newGame(+b.dataset.s));
+$('#bAir').onclick = () => { if (!S) return; mode = mode === 'air' ? '' : 'air'; hud(); };
+$('#bSup').onclick = () => { showSup = !showSup; hud(); toast(showSup ? 'الأخضر = طرق إمدادك المفتوحة' : 'إخفاء الإمداد'); };
+$('#bRep').onclick = () => S && report(false);
+$('#bEnd').onclick = () => { closeSheet(); endTurn(); };
+$('#sheet').onclick = e => { if (e.target.id === 'sheet') closeSheet(); };
+requestAnimationFrame(frame);
+window.M = { get S() { return S; }, newGame, autoTurn: () => { ai(me); endTurn(); }, get anim() { return anim; }, mv, NODES };
+</script>
+</body>
+</html>

@@ -1,0 +1,178 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>نموذج 1: خريطة المحافظات</title>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Arabic:wght@400;500;600;700&family=Reem+Kufi:wght@700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="ui.css">
+</head>
+<body>
+<canvas id="map"></canvas>
+<div id="hud"><div class="r1"><a class="back" href="index.html">☰ النماذج</a><h1>١ · خريطة المحافظات</h1><span class="turn" id="turn"></span></div><div class="r2" id="score"></div><div class="tip" id="tip"></div></div>
+<div id="bar"><div class="info" id="info"></div><button id="bAir">✈ دعم جوي</button><button id="bMsl">🚀 صواريخ</button><button id="bRep">📋 التقرير</button><button id="bEnd" class="go">انهِ الأسبوع ▶</button></div>
+<div id="toast"></div>
+<div id="sheet" hidden><div class="in"></div></div>
+<div id="start"><div class="card">
+  <h1>خريطة المحافظات</h1>
+  <p>الحرب على محافظات العراق وإيران الحقيقية. فرقك تتقدم من محافظة لمحافظة وتشوفها تمشي على الخريطة.</p>
+  <ul>
+    <li><b>حرّك:</b> اضغط على فرقة من فرقك، وبعدين اضغط على محافظة جنبها. إذا المحافظة للعدو يصير هجوم</li>
+    <li><b>✈ دعم جوي:</b> اضغطه وبعدين اضغط محافظة، يقوّي الهجوم أو الدفاع بيها</li>
+    <li><b>🚀 صواريخ:</b> تضرب فرق العدو بمحافظة وتضعف تنظيمها قبل الهجوم</li>
+    <li><b>الإمداد:</b> الفرقة المقطوعة عن عاصمتك تضعف كل أسبوع. طوّق العدو وخلّي طريقك مفتوح</li>
+    <li>الجبال والأهوار والمدن تحمي المدافع، والدروع قوية بالسهل. الهجوم من جهتين أقوى</li>
+    <li>16 أسبوع. تربح بالنقاط (مدن العدو) أو تاخذ عاصمته</li>
+  </ul>
+  <div class="sides"><button class="btn go" data-s="0">🇮🇶 العب بالعراق</button><button class="btn go" data-s="1">🇮🇷 العب بإيران</button></div>
+</div></div>
+<script src="data.js"></script><script src="core.js"></script><script src="map.js"></script>
+<script>
+'use strict';
+// النموذج 1 (WD1، I-078 — فكرة المالك): فرق على المحافظات الحقيقية، حركة وهجوم بالأسهم، إمداد وتطويق، دعم جوي وصواريخ. دور = أسبوع.
+const TURNS = 16, STACK = 3;
+const VP = { 'بغداد': 10, 'البصرة': 5, 'الموصل': 3, 'كركوك': 3, 'العمارة': 2, 'الكوت': 2, 'السليمانية': 2, 'بعقوبة': 2, 'الناصرية': 1, 'أربيل': 2, 'طهران': 10, 'الأهواز': 5, 'كرمانشاه': 3, 'إيلام': 2, 'سنندج': 2, 'خرم آباد': 2, 'همدان': 2, 'أرومية': 2, 'أصفهان': 4, 'تبريز': 3 };
+const START = { 0: { 'IQ-BA': 2, 'IQ-MA': 2, 'IQ-WA': 1, 'IQ-DI': 2, 'IQ-SU': 2, 'IQ-AR': 1, 'IQ-BG': 2 }, 1: { 'IR-10': 5, 'IR-05': 2, 'IR-17': 3, 'IR-16': 2, 'IR-02': 1, 'IR-20': 2, 'IR-07': 1 } };
+let S, mv, me, sel = null, mode = '', anim = null, lastT = performance.now();
+const prov = id => mv.byId[id];
+const unitsIn = (pid, side) => S.units.filter(u => u.at === pid && alive(u) && (side === undefined || u.side === side));
+const capOf = s => s === 0 ? 'IQ-BG' : 'IR-07';
+const pvp = p => GEO.cities.filter(c => c.prov === p.id).reduce((a, c) => a + (VP[c.n] || 0), 0) || 1;
+function newGame(side) {
+  me = side; const units = makeArmies();
+  for (const s of [0, 1]) { const list = units.filter(u => u.side === s); let i = 0; for (const [pid, n] of Object.entries(START[s])) for (let k = 0; k < n && i < list.length; k++) list[i++].at = pid; while (i < list.length) list[i++].at = capOf(s); }
+  units.forEach(u => { u.dug = .4; u.order = null; u.x = prov(u.at).c[0]; u.y = prov(u.at).c[1]; });
+  S = { t: 1, own: Object.fromEntries(GEO.provs.map(p => [p.id, p.side])), units, air: [[], []], msl: [[], []], report: [], over: null };
+  const fr = GEO.provs.filter(p => ['IQ-BA', 'IQ-DI', 'IQ-SU', 'IR-10', 'IR-17'].includes(p.id)), xs = fr.map(p => p.c[0]), ys = fr.map(p => p.c[1]);
+  mv.fit(Math.min(...xs) - 260, Math.min(...ys) - 220, Math.max(...xs) + 260, Math.max(...ys) + 220);
+  $('#start').hidden = true; hud(); toast(`${SIDE[me].f} إنت قائد ${SIDE[me].n}. اضغط على فرقة من فرقك`);
+}
+// الإمداد: المحافظات المتصلة بعاصمتك عبر محافظاتك
+function supplied(side) { const seen = new Set([capOf(side)]), q = [capOf(side)]; if (S.own[capOf(side)] !== side) return seen; while (q.length) { const p = q.pop(); for (const n of prov(p).nb) if (!seen.has(n) && S.own[n] === side) { seen.add(n); q.push(n); } } return seen; }
+function score(side) { return GEO.provs.filter(p => p.side !== side && S.own[p.id] === side).reduce((a, p) => a + pvp(p), 0); }
+// ---------- الواجهة ----------
+function hud() {
+  $('#turn').textContent = `الأسبوع ${S.t}/${TURNS}`;
+  $('#score').innerHTML = [0, 1].map(s => `${SIDE[s].f} نقاط <b>${score(s)}</b> · فرق <b>${S.units.filter(u => u.side === s && alive(u)).length}</b>`).join(' │ ');
+  $('#bAir').textContent = `✈ دعم جوي (${AIR[me].sorties - S.air[me].length})`; $('#bMsl').textContent = `🚀 صواريخ (${AIR[me].msl - S.msl[me].length})`;
+  $('#bAir').setAttribute('aria-pressed', String(mode === 'air')); $('#bMsl').setAttribute('aria-pressed', String(mode === 'msl'));
+  const u = sel && S.units.find(x => x.id === sel), sup = supplied(me);
+  $('#info').innerHTML = u ? `<b>${u.n}</b> · قوة ${Math.round(str(u) * 100)}% · ${fmtK(u.men)} جندي${u.tk >= 1 ? ` · ${Math.round(u.tk)} دبابة` : ''} · تنظيم ${Math.round(u.org)} · ${sup.has(u.at) ? 'إمداد ✓' : '<b style="color:#c33">مقطوع الإمداد!</b>'}` : 'اضغط فرقة من فرقك، بعدين محافظة جنبها';
+  $('#tip').textContent = mode === 'air' ? 'اضغط محافظة تريد الطيران يدعمها' : mode === 'msl' ? 'اضغط محافظة للعدو تضرب فرقها بالصواريخ' : u ? `${u.n}: اضغط محافظة جنب ${prov(u.at).n} (الأرض: ${TERR[prov(u.at).terr].n})` : '';
+}
+function onTap(x, y) {
+  if (anim || S.over) return; SND.click(); const p = mv.provAt(x, y);
+  // ضغطة على فرقة؟
+  let best = null, bd = 26 / mv.cam.k; for (const u of S.units) if (alive(u) && u.side === me) { const d = Math.hypot(u.x - x, u.y - y); if (d < bd) { bd = d; best = u; } }
+  if (mode === 'air' && p) { if (S.air[me].length >= AIR[me].sorties) { toast('خلصت الطلعات هذا الأسبوع', 1); mode = ''; return hud(); } S.air[me].push(p.id); mode = ''; toast(`✈ طلعة جوية على ${p.n}`); return hud(); }
+  if (mode === 'msl' && p) { if (S.own[p.id] === me) return toast('اختار محافظة للعدو', 1); if (S.msl[me].length >= AIR[me].msl) { toast('خلصت الصواريخ هذا الأسبوع', 1); mode = ''; return hud(); } S.msl[me].push(p.id); mode = ''; toast(`🚀 صواريخ على ${p.n}`); return hud(); }
+  if (best && (!sel || best.id !== sel || !p || p.id === best.at)) { sel = best.id; return hud(); }
+  const u = sel && S.units.find(x => x.id === sel);
+  if (u && p) {
+    if (p.id === u.at) { u.order = null; toast(`${u.n} تبقى وتتحصن`); return hud(); }
+    if (!prov(u.at).nb.includes(p.id)) return toast('بس للمحافظة اللي جنبها', 1);
+    const mine = S.units.filter(q => q.side === me && alive(q) && (q.order === p.id || (q.at === p.id && !q.order))).length;
+    if (S.own[p.id] === me && mine >= STACK) return toast(`أكثر من ${STACK} فرق بمحافظة وحدة ما يصير`, 1);
+    u.order = p.id; SND.move(); toast(S.own[p.id] === me ? `${u.n} تتحرك لـ ${p.n}` : `⚔ ${u.n} تهاجم ${p.n}`); sel = null; return hud();
+  }
+  sel = null; hud();
+}
+// ---------- ذكاء العدو (نفس القواعد) ----------
+function ai(side) {
+  const foe = 1 - side, sup = supplied(side), mine = S.units.filter(u => u.side === side && alive(u));
+  const est = (pid, s) => unitsIn(pid, s).reduce((a, u) => a + unitPower(u, s === side ? 'att' : 'def', prov(pid).terr), 0);
+  // هجوم: كل فرقة بمحافظة حدودية تشوف أضعف محافظة عدو جنبها
+  const garrison = new Set(unitsIn(capOf(side), side).slice(0, 2).map(u => u.id));   // العاصمة تبقى بيها فرقتين دائماً
+  for (const u of mine) {
+    u.order = null; if (u.org < 45 || garrison.has(u.id)) continue;
+    const opts = prov(u.at).nb.filter(n => S.own[n] === foe).map(n => { const p = prov(n), d = Math.max(est(n, foe), 120 + p.pop * .11) * TERR[p.terr].def * (1 + .7 * (unitsIn(n, foe)[0]?.dug || 0)); const a = unitPower(u, 'att', p.terr) + mine.filter(q => q !== u && q.order === n).reduce((s, q) => s + unitPower(q, 'att', p.terr), 0); return { n, R: d ? a / d : 9, v: pvp(p) }; }).sort((a, b) => b.R * b.v - a.R * a.v);
+    const pick = opts[0]; const last = unitsIn(u.at, side).filter(q => !q.order).length <= 1 && prov(u.at).nb.some(n => unitsIn(n, foe).length);
+    if (pick && pick.R > (side === me ? 1.4 : 1.25) * (last ? 1.6 : 1) * (.9 + Math.random() * .2)) u.order = pick.n;
+  }
+  // دفاع: الاحتياط يروح للمحافظة المهددة (اللي بيها أقل قوة مقابل العدو جنبها)
+  const thr = [...new Set(mine.map(u => u.at))].concat(GEO.provs.filter(p => S.own[p.id] === side).map(p => p.id)).map(id => ({ id, th: prov(id).nb.filter(n => S.own[n] === foe).reduce((a, n) => a + est(n, foe), 0) - est(id, side) * 1.3 })).filter(q => q.th > 0).sort((a, b) => b.th - a.th);
+  for (const u of mine) { if (u.order || garrison.has(u.id)) continue; const here = prov(u.at); if (here.nb.some(n => S.own[n] === foe) && unitsIn(u.at, side).length <= 1) continue;
+    const t = thr.find(q => here.nb.includes(q.id) && S.own[q.id] === side && unitsIn(q.id, side).length + S.units.filter(z => z.order === q.id).length < STACK); if (t) u.order = t.id; }
+  // جو وصواريخ: على أهم هجوم
+  const atk = mine.filter(u => u.order && S.own[u.order] === foe).map(u => u.order); S.air[side] = atk.slice(0, AIR[side].sorties); S.msl[side] = atk.slice(0, AIR[side].msl);
+}
+// ---------- نهاية الأسبوع: حركة ← معارك ← إمداد ----------
+function endTurn() {
+  if (anim || S.over) return; ai(1 - me); S.report = [];
+  // 1) الحركة لمحافظات صديقة (أنيميشن)
+  const moves = S.units.filter(u => alive(u) && u.order && S.own[u.order] === u.side);
+  const atks = S.units.filter(u => alive(u) && u.order && S.own[u.order] !== u.side);
+  anim = { t: 0, dur: 1.1, items: [...moves, ...atks].map(u => { const to = prov(u.order).c; return { u, from: [u.x, u.y], to: S.own[u.order] === u.side ? to : [lerp(u.x, to[0], .55), lerp(u.y, to[1], .55)] }; }), then: () => resolve(moves, atks) };
+}
+function resolve(moves, atks) {
+  for (const u of moves) { u.at = u.order; u.order = null; u.dug = 0; }
+  // 2) المعارك: كل محافظة يهجمون عليها
+  const byT = {}; for (const u of atks) (byT[u.order] ||= []).push(u);
+  for (const [pid, att] of Object.entries(byT)) {
+    const p = prov(pid), side = att[0].side, foe = 1 - side, real = unitsIn(pid, foe), from = new Set(att.map(u => u.at));
+    // قوات محلية (شرطة واحتياط) حسب سكان المحافظة: المحافظة الفارغة ما تسقط ببلاش
+    const mil = { side: foe, kind: 'inf', n: 'قوات محلية', men: 2500 + p.pop * 2.2, tk: 0, ifv: 0, gun: 8, gen: 1, q: .7, org: 100, dug: .6, exp: 0 }, def = real.length ? real : [mil];
+    const city = GEO.cities.some(c => c.prov === pid && c.pop >= 900);
+    const sA = supplied(side), sD = supplied(foe);
+    const c = battleCalc(att, def, { terr: city && def.length ? (TERR[p.terr].def > 2 ? p.terr : 'city') : p.terr, airA: S.air[side].filter(x => x === pid).length * 2, airD: S.air[foe].filter(x => x === pid).length * 2, mslA: S.msl[side].filter(x => x === pid).length * 2,
+      supA: att.some(u => sA.has(u.at)) ? 1 : .6, supD: def.length && sD.has(pid) ? 1 : .6, flank: (from.size >= 2 ? 1.25 : 1) / (pid === capOf(foe) ? 1.5 : 1) });
+    if (pid === capOf(foe)) c.f['العاصمة'] = 1 / 1.5;
+    let res;
+    { applyBattle(att, def, c.R); res = c.R >= 1.3 && def.every(u => u.org < 30 || !alive(u)) ? 'take' : c.R >= 1 ? 'push' : 'fail'; if (c.R >= 2 && pid !== capOf(foe)) res = 'take'; }
+    if (res === 'take') {
+      // المدافعين ينسحبون لمحافظة صديقة جنبهم، وإذا ماكو (مطوّقين) يستسلمون
+      for (const d of real) { const back = prov(pid).nb.filter(n => S.own[n] === foe && unitsIn(n, foe).length < STACK + 1).sort((a, b) => unitsIn(a, foe).length - unitsIn(b, foe).length)[0];
+        if (back) { d.at = back; d.org = Math.max(5, d.org - 15); d.men *= .85; d.tk *= .8; d.x = prov(back).c[0]; d.y = prov(back).c[1]; } else { d.men = 0; d.tk = 0; d.ifv = 0; d.surrender = true; } }
+      S.own[pid] = side; for (const u of att) { u.at = pid; u.dug = 0; }
+    }
+    for (const u of att) u.order = null;
+    boomAt(p.c[0], p.c[1], real.length ? 1.4 : .7); SND.boom(real.length ? .25 : .12);
+    S.report.push({ pid, side, res, R: c.R, f: c.f, att: att.map(u => u.n), def: real.length ? real.map(u => u.n) : ['قوات محلية'], surr: real.filter(d => d.surrender).length });
+  }
+  // صواريخ على محافظات بدون هجوم: تضعف التنظيم
+  for (const s of [0, 1]) for (const pid of S.msl[s]) if (!byT[pid]) unitsIn(pid, 1 - s).forEach(u => { u.org = Math.max(0, u.org - 20); u.men *= .97; });
+  // 3) الإمداد والتحصين والراحة
+  for (const s of [0, 1]) { const sup = supplied(s); for (const u of S.units.filter(q => q.side === s && alive(q))) { if (!sup.has(u.at)) { u.org = Math.max(0, u.org - 15); u.men *= .96; u.tk *= .96; } else { u.org = Math.min(100, u.org + 25); u.dug = Math.min(1, u.dug + .25); } } }
+  S.air = [[], []]; S.msl = [[], []]; S.t++;
+  // النهاية: عاصمة سقطت أو خلص الوقت
+  for (const s of [0, 1]) if (S.own[capOf(s)] !== s) S.over = { win: 1 - s, why: `سقطت ${s === 0 ? 'بغداد' : 'طهران'}` };
+  if (!S.over && S.t > TURNS) { const a = score(0), b = score(1); S.over = { win: a === b ? -1 : a > b ? 0 : 1, why: `انتهت 16 أسبوع: ${SIDE[0].f} ${a} نقطة مقابل ${SIDE[1].f} ${b}` }; }
+  hud(); report(true);
+}
+function report(auto) {
+  const r = S.report; if (!r.length && auto) { toast('أسبوع هادي — ماكو معارك'); return endCheck(); }
+  const RES = { take: 'سيطر', push: 'تقدم شوية', fail: 'انصد' };
+  sheet(`<h2>تقرير الأسبوع ${S.t - 1}</h2>${r.map((b, i) => `<div class="why"><b>${SIDE[b.side].f} ${prov(b.pid).n}</b> — ${b.res === 'take' ? `<b style="color:${b.side === me ? '#2a7' : '#c33'}">${vb(b.side, 'سيطر', 'سيطرت')}</b>` : b.res === 'push' ? 'تقدم شوية بس ما سيطر' : '<b>انصد الهجوم</b>'}${b.surr ? ` · ${b.surr} فرق استسلمت (مطوّقة)` : ''}<br><small>${b.att.join('، ')} ضد ${b.def.join('، ') || 'ماكو مدافعين'}</small>
+    ${b.R ? `<div style="margin-top:4px"><small>الكفة ${b.R.toFixed(2)} — ${whyText(b.f, b.side)}</small></div>` : ''}</div>`).join('')}<div class="row"><button class="btn go" onclick="closeSheet();endCheck()">تمام</button></div>`);
+}
+function endCheck() { if (S.over) { SND.win(); sheet(`<h2>${S.over.win === me ? '🏆 انتصرت' : S.over.win === -1 ? 'تعادل' : '💀 خسرت'}</h2><p>${S.over.why}</p><p>المحافظات اللي أخذتها: ${GEO.provs.filter(p => p.side !== me && S.own[p.id] === me).map(p => p.n).join('، ') || 'ولا وحدة'}</p><div class="row"><button class="btn go" onclick="location.reload()">مرة ثانية</button><a class="btn" href="index.html">النماذج</a></div>`); } }
+// ---------- الرسم ----------
+function frame(now) {
+  const dt = Math.min(.05, (now - lastT) / 1000); lastT = now; requestAnimationFrame(frame); if (!S) { mv.draw(null, 0); return; }
+  if (anim) { anim.t += dt; const k = ease(Math.min(1, anim.t / anim.dur)); for (const it of anim.items) { it.u.x = lerp(it.from[0], it.to[0], k); it.u.y = lerp(it.from[1], it.to[1], k); } if (anim.t >= anim.dur) { const f = anim.then; anim = null; f(); } }
+  else for (const u of S.units) { if (!alive(u)) continue; const st = unitsIn(u.at, u.side), i = st.indexOf(u), c = prov(u.at).c, off = (i - (st.length - 1) / 2) * 34 / mv.cam.k; u.x += (c[0] + off - u.x) * .2; u.y += (c[1] - u.y) * .2; }
+  mv.draw(p => S.own[p.id], me);
+  const g = mv.g;
+  // جبهة: خط سميك بين محافظات الطرفين
+  // أوامر: أسهم
+  for (const u of S.units) if (alive(u) && u.order && (u.side === me) && !anim) { const a = mv.w2s(u.x, u.y), b = mv.w2s(...prov(u.order).c); drawArrow(g, a, b, S.own[u.order] === u.side ? 'rgba(40,90,170,.85)' : 'rgba(200,40,30,.9)', 4); }
+  // جو وصواريخ
+  for (const s of [0, 1]) if (s === me) { for (const pid of S.air[s]) { const [x, y] = mv.w2s(...prov(pid).c); g.font = '20px sans-serif'; g.textAlign = 'center'; g.fillText('✈', x + 26, y - 26); } for (const pid of S.msl[s]) { const [x, y] = mv.w2s(...prov(pid).c); g.font = '20px sans-serif'; g.fillText('🚀', x - 26, y - 26); } }
+  const s = clamp(mv.cam.k * 1.1, .6, 1.25);
+  for (const u of S.units) if (alive(u)) { const [x, y] = mv.w2s(u.x, u.y); drawUnit(g, x, y, u, me, { s, sel: u.id === sel }); }
+  // محافظات ممكن تتحرك لها (للفرقة المختارة)
+  const su = sel && S.units.find(x => x.id === sel); if (su) for (const n of prov(su.at).nb) { const [x, y] = mv.w2s(...prov(n).c); g.beginPath(); g.arc(x, y, 9, 0, 7); g.fillStyle = S.own[n] === me ? 'rgba(40,90,170,.5)' : 'rgba(200,40,30,.55)'; g.fill(); }
+  drawFx(g, mv, dt);
+}
+mv = new MapView($('#map'), { onTap });
+document.querySelectorAll('#start [data-s]').forEach(b => b.onclick = () => newGame(+b.dataset.s));
+$('#bAir').onclick = () => { if (!S) return; mode = mode === 'air' ? '' : 'air'; hud(); };
+$('#bMsl').onclick = () => { if (!S) return; mode = mode === 'msl' ? '' : 'msl'; hud(); };
+$('#bRep').onclick = () => S && report(false);
+$('#bEnd').onclick = () => { closeSheet(); endTurn(); };
+$('#sheet').onclick = e => { if (e.target.id === 'sheet') closeSheet(); };
+requestAnimationFrame(frame);
+// للفحص الآلي: الطرفين يلعبهم الذكاء
+window.M = { get S() { return S; }, newGame, autoTurn: () => { ai(me); endTurn(); }, get anim() { return anim; }, mv };
+</script>
+</body>
+</html>

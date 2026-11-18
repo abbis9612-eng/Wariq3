@@ -1,0 +1,235 @@
+<!doctype html>
+<html lang="ar" dir="rtl"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>الحرب الكبرى — صورة الشاشة</title>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Arabic:wght@400;500;600;700&family=Reem+Kufi:wght@600;700&display=swap" rel="stylesheet">
+<style>
+:root{--ink:#f3ead6;--panel:rgba(24,22,19,.86);--line:rgba(255,235,190,.16);--gold:#e2b552;--me:#3f7fe0;--foe:#d2493a}
+*{box-sizing:border-box;margin:0;padding:0}html,body{height:100%;background:#1a1815;overflow:hidden;font:500 13px/1.35 "IBM Plex Sans Arabic",Tahoma,sans-serif;color:var(--ink);-webkit-user-select:none;user-select:none}
+canvas{position:fixed;inset:0;width:100%;height:100%;touch-action:none}
+#top{position:fixed;top:0;left:0;right:0;background:linear-gradient(var(--panel),rgba(24,22,19,.78));border-bottom:1px solid var(--line);padding:calc(6px + env(safe-area-inset-top)) 10px 6px;backdrop-filter:blur(6px)}
+.r1{display:flex;align-items:center;gap:8px}.flag{font-size:22px;line-height:1}.cn{font:700 16px "Reem Kufi",sans-serif;color:var(--gold)}
+.date{margin-inline-start:auto;display:flex;align-items:center;gap:6px;font-weight:600}
+.spd{display:flex;gap:3px}.spd b{width:26px;height:24px;border-radius:6px;background:rgba(255,255,255,.08);display:grid;place-items:center;font-size:11px;border:1px solid var(--line)}.spd b.on{background:var(--gold);color:#221b0e}
+.res{display:flex;gap:5px;margin-top:6px;overflow:hidden}.res span{flex:1;min-width:0;background:rgba(255,255,255,.06);border:1px solid var(--line);border-radius:8px;padding:2px 4px;text-align:center;white-space:nowrap;font-size:11.5px}.res i{font-style:normal;display:block;font-size:9.5px;opacity:.7;font-weight:500}
+.res .warn{border-color:rgba(230,120,60,.6)}
+#card{position:fixed;left:8px;right:8px;bottom:calc(66px + env(safe-area-inset-bottom));background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:9px 11px;backdrop-filter:blur(6px)}
+.ch{display:flex;align-items:center;gap:8px}.ch .t{font:700 15px "Reem Kufi",sans-serif}.ch .s{font-size:11.5px;opacity:.75}.ch .x{margin-inline-start:auto;font-size:11px;background:rgba(63,127,224,.25);border:1px solid rgba(63,127,224,.6);border-radius:10px;padding:1px 8px}
+.bars{display:flex;gap:10px;margin:6px 0 7px;font-size:11px}.bars div{flex:1}.bar{height:5px;border-radius:3px;background:rgba(255,255,255,.12);margin-top:2px;overflow:hidden}.bar u{display:block;height:100%;background:#59c26a}.bar u.o{background:#e2b552}
+.acts{display:flex;gap:6px}.acts b{flex:1;text-align:center;border-radius:9px;padding:6px 2px;background:rgba(255,255,255,.07);border:1px solid var(--line);font-weight:600;font-size:12.5px}.acts b.go{background:#b8442f;border-color:#e0705a}
+#tabs{position:fixed;left:0;right:0;bottom:0;display:flex;background:var(--panel);border-top:1px solid var(--line);padding:5px 4px calc(5px + env(safe-area-inset-bottom))}
+#tabs b{flex:1;text-align:center;font-size:10.5px;font-weight:600;opacity:.8;position:relative}#tabs b em{display:block;font-style:normal;font-size:19px;line-height:1.25}#tabs b.on{opacity:1;color:var(--gold)}
+#tabs b sup{position:absolute;top:-2px;left:22%;background:#c8402f;color:#fff;border-radius:8px;font-size:9.5px;padding:0 4px}
+#zoom{position:fixed;left:8px;display:flex;flex-direction:column;gap:5px}#zoom b{width:34px;height:34px;border-radius:10px;background:var(--panel);border:1px solid var(--line);display:grid;place-items:center;font-size:16px}
+#tag{position:fixed;right:8px;background:var(--panel);border:1px solid var(--line);border-radius:10px;padding:4px 9px;font-size:11.5px}
+</style></head><body>
+<canvas id="c"></canvas>
+<div id="top">
+  <div class="r1"><span class="flag">🇮🇶</span><span class="cn">العراق</span><span style="font-size:11px;opacity:.7">· حرب مع إيران</span>
+    <div class="date"><span id="dt">14 آذار 2027</span><div class="spd"><b>⏸</b><b class="on">▶</b><b>▶▶</b></div></div></div>
+  <div class="res">
+    <span>💰 48 مليار<i>الخزينة</i></span><span>🏭 36<i>مصانع حربية</i></span><span>👥 410 ألف<i>مجنّدين</i></span><span class="warn">⛽ 64%<i>وقود</i></span><span>🏛 71%<i>استقرار</i></span>
+  </div>
+</div>
+<div id="zoom"><b>＋</b><b>－</b></div><div id="tag"></div>
+<div id="card"></div>
+<div id="tabs"><b class="on"><em>🗺️</em>الخريطة</b><b><em>🪖</em>الجيش</b><b><em>🏭</em>الإنتاج<sup>2</sup></b><b><em>💰</em>الاقتصاد</b><b><em>🤝</em>السياسة</b><b><em>🔬</em>البحث</b></div>
+<script src="data.js"></script>
+<script>
+const G = window.GEO, Q = new URLSearchParams(location.search), NEAR = Q.get('v') === 'near';
+const cv = document.getElementById('c'), g = cv.getContext('2d'), DPR = Math.min(2, devicePixelRatio || 1);
+let W, H; const TOP = 84, BOT = NEAR ? 196 : 196;
+const CAM = NEAR ? { x: 925, y: 1022, s: 3.4 } : { x: 815, y: 850, s: .58 };
+const w2s = (x, y) => [(x - CAM.x) * CAM.s + W / 2, (y - CAM.y) * CAM.s + (TOP + H - BOT) / 2];
+const LL = (lon, lat) => [(lon - G.proj.lon0) * G.proj.kx, (G.proj.lat1 - lat) * G.proj.ky];
+const IMG = {}; const load = n => new Promise(r => { const i = new Image(); i.onload = r; i.onerror = r; i.src = `img/${n}.webp`; IMG[n] = i; });
+// من يسيطر (للصورة فقط): جيب عراقي غرب الكارون (الحويزة، سوسنكرد، خرمشهر)
+const POCKET = [[47.3, 32.45], [47.95, 32.15], [48.32, 31.62], [48.55, 31.38], [48.6, 31.0], [48.4, 30.62], [48.28, 30.42], [47.9, 30.25], [47.3, 30.25]].map(q => LL(...q));
+const ctrl = p => p.side;
+const COL = NEAR ? { 0: '#d3e2f8', 1: '#f6d6cc' } : { 0: '#bcd2f3', 1: '#f4c6ba' };
+
+function path(poly, ctx = g) { ctx.beginPath(); for (const ring of poly) { ring.forEach((q, i) => { const [x, y] = w2s(q[0], q[1]); i ? ctx.lineTo(x, y) : ctx.moveTo(x, y); }); ctx.closePath(); } }
+function line(pts, ctx = g) { ctx.beginPath(); pts.forEach((q, i) => { const [x, y] = w2s(q[0], q[1]); i ? ctx.lineTo(x, y) : ctx.moveTo(x, y); }); }
+function text(s, x, y, size, col = '#2a2118', halo = 'rgba(255,250,235,.85)', weight = 600, font = 'IBM Plex Sans Arabic') {
+  g.font = `${weight} ${size}px "${font}"`; g.textAlign = 'center'; g.textBaseline = 'middle'; g.lineJoin = 'round';
+  if (halo) { g.lineWidth = Math.max(2.5, size / 4); g.strokeStyle = halo; g.strokeText(s, x, y); } g.fillStyle = col; g.fillText(s, x, y);
+}
+function img(n, wx, wy, kmPerPx, x0, y0) { const im = IMG[n], [a, b] = w2s(x0, y0); g.drawImage(im, a, b, im.width * kmPerPx * CAM.s, im.height * kmPerPx * CAM.s); }
+
+function frontBand(width, color) {
+  const mk = () => { const c = document.createElement('canvas'); c.width = W; c.height = H; return c.getContext('2d'); };
+  const A = mk(), B = mk();
+  for (const p of G.provs) { const k = ctrl(p) ? B : A; path(p.poly, k); k.fillStyle = '#fff'; k.fill(); k.lineWidth = width; k.strokeStyle = '#fff'; k.lineJoin = 'round'; k.stroke(); }
+  path([POCKET], A); A.fill(); A.lineWidth = width * 2; A.stroke();
+  B.globalCompositeOperation = 'destination-out'; path([POCKET], B); B.fill();
+  A.globalCompositeOperation = 'source-in'; A.drawImage(B.canvas, 0, 0); A.fillStyle = color; A.fillRect(0, 0, W, H);
+  g.drawImage(A.canvas, 0, 0, W, H);
+}
+
+function drawMap() {
+  g.fillStyle = '#7fb0d6'; g.fillRect(0, 0, W, H);
+  img('base_me', 0, 0, 1 / 1.25, -200, -100);
+  if (NEAR) img('base_south', 0, 0, 1 / 5, 760, 900);
+  // تلوين الدول (السيطرة)
+  g.save(); g.globalCompositeOperation = 'multiply';
+  for (const p of G.provs) { path(p.poly); g.fillStyle = COL[ctrl(p)]; g.fill(); }
+  g.restore(); g.save(); path(G.provs.filter(p => p.side).map(p => p.poly).flat()); g.clip(); path([POCKET]); g.globalCompositeOperation = 'multiply'; g.fillStyle = '#d8dfee'; g.fill(); g.restore();
+  g.save(); for (const o of G.others) { path(o.poly); g.fillStyle = 'rgba(245,238,222,.32)'; g.fill(); } g.restore();
+  // أرض محتلة: خطوط بلون صاحبها الأصلي
+  const pc = document.createElement('canvas'); pc.width = pc.height = 12; const pg = pc.getContext('2d'); pg.strokeStyle = NEAR ? 'rgba(200,70,55,.18)' : 'rgba(200,70,55,.32)'; pg.lineWidth = 1.6; pg.beginPath(); pg.moveTo(-2, 14); pg.lineTo(14, -2); pg.stroke();
+  g.save(); path(G.provs.filter(p => p.side).map(p => p.poly).flat()); g.clip(); path([POCKET]); g.fillStyle = g.createPattern(pc, 'repeat'); g.fill(); g.restore();
+  // أنهار وبحيرات
+  for (const l of G.lakes) { path(l); g.fillStyle = '#86b9dc'; g.fill(); }
+  g.lineCap = g.lineJoin = 'round';
+  for (const r of G.rivers) { line(r.p); g.strokeStyle = 'rgba(60,125,185,.85)'; g.lineWidth = NEAR ? 1.4 + r.w * 1.2 : .7 + r.w * .45; g.stroke(); }
+  // حدود المحافظات والدول
+  g.setLineDash(NEAR ? [5, 4] : [3, 3]); g.lineWidth = 1; g.strokeStyle = 'rgba(70,55,40,.4)';
+  for (const p of G.provs) { path(p.poly); g.stroke(); } g.setLineDash([]);
+  g.strokeStyle = 'rgba(60,45,35,.6)'; g.lineWidth = 1.3; for (const o of G.others) { path(o.poly); g.stroke(); }
+  line(G.border); g.strokeStyle = 'rgba(45,35,28,.75)'; g.lineWidth = 2; g.stroke();
+  // خط الجبهة
+  frontBand(NEAR ? 26 : 16, 'rgba(200,30,30,.18)');
+  frontBand(NEAR ? 7 : 4.5, '#b3161c');
+}
+
+function cities() {
+  const show = NEAR ? G.cities : G.cities.filter(c => c.cap || c.pop >= 650);
+  for (const c of show) {
+    const [x, y] = w2s(c.xy[0], c.xy[1]); if (x < -40 || x > W + 40 || y < TOP || y > H) continue;
+    const big = c.cap || c.pop >= 1000, r = NEAR ? (big ? 5 : 3.6) : (big ? 3.4 : 2.4);
+    if (c.cap) text('★', x, y, NEAR ? 16 : 13, '#7a1010', 'rgba(255,250,235,.9)', 700);
+    else { g.beginPath(); g.arc(x, y, r, 0, 7); g.fillStyle = '#2b241c'; g.fill(); g.lineWidth = 1.5; g.strokeStyle = '#fff8e6'; g.stroke(); }
+    text(c.n, x, y - (NEAR ? 13 : 10), NEAR ? (big ? 14 : 12) : (big ? 11.5 : 10), '#2a2118');
+  }
+}
+function labels() {
+  const L = NEAR ? [] : [['العـــراق', 44.4, 31.7, 30], ['إيـــران', 50.1, 33.9, 30], ['السعـودية', 45.6, 28.3, 17], ['تركـيا', 44.2, 38.6, 16], ['الكويت', 47.65, 29.25, 12]];
+  for (const [s, lon, lat, sz] of L) { const [x, y] = w2s(...LL(lon, lat)); g.globalAlpha = .55; text(s, x, y, sz, '#3a2a1a', 'rgba(255,248,230,.6)', 700, 'Reem Kufi'); g.globalAlpha = 1; }
+  if (NEAR) for (const [s, lon, lat] of [['شط العرب', 48.42, 30.32], ['هور الحويزة', 47.72, 31.5], ['نهر الكارون', 48.5, 30.82]]) { const [x, y] = w2s(...LL(lon, lat)); text(s, x, y, 11, '#1f4f7a', 'rgba(235,245,255,.75)', 600); }
+}
+
+// ===== رموز الفرق (من بعيد) =====
+function counter(x, y, side, kind, n, str, sel) {
+  const w = 44, h = 26; const c = side ? '#c8402f' : '#2f6fd0';
+  g.save(); g.translate(x, y);
+  g.shadowColor = 'rgba(0,0,0,.45)'; g.shadowBlur = 5; g.shadowOffsetY = 2;
+  g.fillStyle = c; g.beginPath(); g.roundRect(-w / 2, -h / 2, w, h, 6); g.fill(); g.shadowColor = 'transparent';
+  g.lineWidth = sel ? 2.6 : 1.3; g.strokeStyle = sel ? '#ffd65a' : 'rgba(255,255,255,.9)'; g.stroke();
+  // صورة السلاح
+  g.fillStyle = 'rgba(255,255,255,.88)'; g.beginPath(); g.roundRect(-w / 2 + 3, -h / 2 + 3, 24, h - 6, 4); g.fill();
+  const ic = kind === 'arm' ? (side ? 't72' : 'abrams') : kind === 'mec' ? 'bmp' : null, cx = -w / 2 + 15;
+  if (ic) { g.save(); g.translate(cx, 0); g.rotate(side ? Math.PI : 0); g.drawImage(IMG[ic], -14, -14, 28, 28); if (kind === 'arm') g.drawImage(IMG[ic + '_t'], -14, -14, 28, 28); g.restore(); }
+  else { g.font = '15px sans-serif'; g.textAlign = 'center'; g.textBaseline = 'middle'; g.fillText('🪖', cx, 1); }
+  g.fillStyle = '#fff'; g.font = '700 14px "IBM Plex Sans Arabic"'; g.textAlign = 'center'; g.textBaseline = 'middle'; g.fillText(n, w / 2 - 8, 1);
+  // شريط القوة
+  g.fillStyle = 'rgba(0,0,0,.55)'; g.fillRect(-w / 2, h / 2 + 2, w, 4); g.fillStyle = str > .6 ? '#5fd06f' : str > .35 ? '#e7c03f' : '#e2553f'; g.fillRect(-w / 2, h / 2 + 2, w * str, 4);
+  g.restore();
+}
+function battle(x, y, win) {
+  g.save(); g.translate(x, y); g.beginPath(); g.arc(0, 0, 11, 0, 7); g.fillStyle = 'rgba(25,20,15,.85)'; g.fill();
+  g.beginPath(); g.arc(0, 0, 11, -Math.PI / 2, -Math.PI / 2 + win * 6.283); g.strokeStyle = '#4f8ff0'; g.lineWidth = 3; g.stroke();
+  g.beginPath(); g.arc(0, 0, 11, -Math.PI / 2 + win * 6.283, 1.5 * Math.PI); g.strokeStyle = '#e0533f'; g.stroke();
+  text('⚔', 0, 1, 12, '#fff', null, 700); g.restore();
+}
+function arrow(pts, w, col, edge) {
+  // سهم خطة الهجوم: منحني وعريض ويتقلص
+  const P = pts.map(q => w2s(...q)); const n = 40, S = [];
+  for (let i = 0; i <= n; i++) { const t = i / n, a = P[0], b = P[1], c = P[2]; S.push([(1 - t) ** 2 * a[0] + 2 * (1 - t) * t * b[0] + t * t * c[0], (1 - t) ** 2 * a[1] + 2 * (1 - t) * t * b[1] + t * t * c[1]]); }
+  const L = [], R = [];
+  for (let i = 0; i < n; i++) { const [x0, y0] = S[i], [x1, y1] = S[i + 1]; const d = Math.hypot(x1 - x0, y1 - y0) || 1, nx = -(y1 - y0) / d, ny = (x1 - x0) / d, ww = w * (.55 + .45 * i / n); L.push([x0 + nx * ww, y0 + ny * ww]); R.push([x0 - nx * ww, y0 - ny * ww]); }
+  const [ex, ey] = S[n], [px, py] = S[n - 3]; const d = Math.hypot(ex - px, ey - py), ux = (ex - px) / d, uy = (ey - py) / d, hw = w * 2.1, hl = w * 2.6;
+  const bx = ex - ux * hl, by = ey - uy * hl;
+  g.beginPath(); L.forEach(([x, y], i) => i ? g.lineTo(x, y) : g.moveTo(x, y));
+  g.lineTo(bx - uy * w, by + ux * w); g.lineTo(bx - uy * hw, by + ux * hw); g.lineTo(ex, ey); g.lineTo(bx + uy * hw, by - ux * hw); g.lineTo(bx + uy * w, by - ux * w);
+  for (let i = R.length - 1; i >= 0; i--) g.lineTo(R[i][0], R[i][1]); g.closePath();
+  const gr = g.createLinearGradient(P[0][0], P[0][1], ex, ey); gr.addColorStop(0, col + '30'); gr.addColorStop(1, col + 'e6');
+  g.fillStyle = gr; g.fill(); g.lineWidth = 1.6; g.strokeStyle = edge; g.stroke();
+}
+function airZone(lon, lat, rkm, pct) {
+  const [x, y] = w2s(...LL(lon, lat)), r = rkm * CAM.s;
+  g.save(); g.setLineDash([6, 5]); g.lineWidth = 1.6; g.strokeStyle = 'rgba(40,90,170,.75)'; g.beginPath(); g.arc(x, y, r, 0, 7); g.stroke(); g.setLineDash([]);
+  g.fillStyle = 'rgba(70,130,220,.07)'; g.fill();
+  const [tx, ty] = [x - r * .2, y + r * .98]; g.fillStyle = 'rgba(24,22,19,.85)'; g.beginPath(); g.roundRect(tx - 44, ty - 11, 88, 22, 11); g.fill();
+  text(`✈ سيطرة جوية ${pct}%`, tx, ty + 1, 11, '#cfe2ff', null, 600); g.restore();
+}
+
+// مواقع الفرق: على كل قطاع فرقة لنا وفرقة لهم، وبالجنوب حول الجيب
+const KIND = [['inf', 'inf'], ['inf', 'inf'], ['mec', 'inf'], ['arm', 'mec'], ['inf', 'inf'], ['mec', 'inf']];
+const UNITS = [];
+G.sectors.slice(0, 5).forEach((sc, i) => { const m = sc.pts[Math.floor(sc.pts.length / 2)], d = 48;
+  UNITS.push([m[0] - sc.nrm[0] * d, m[1] - sc.nrm[1] * d, 0, KIND[i][0], 2 + (i % 2), .7 + (i % 3) * .1]);
+  UNITS.push([m[0] + sc.nrm[0] * d, m[1] + sc.nrm[1] * d, 1, KIND[i][1], 2 + ((i + 1) % 2), .55 + (i % 3) * .12]); });
+for (const [lon, lat, side, kind, n, str, sel] of [[47.75, 31.85, 0, 'arm', 3, .78, 1], [48.05, 31.2, 0, 'mec', 2, .72, 1], [47.85, 30.6, 0, 'inf', 2, .9, 1],
+  [48.75, 32.15, 1, 'inf', 2, .55], [49.15, 31.45, 1, 'mec', 2, .6], [48.95, 30.65, 1, 'inf', 3, .7]]) UNITS.push([...LL(lon, lat), side, kind, n, str, sel]);
+
+// ===== من قريب: كل فرقة مجسمات صغيرة =====
+function spr(n, x, y, rot, s, ring) {
+  const im = IMG[n]; g.save(); g.translate(x, y);
+  if (ring) { g.beginPath(); g.ellipse(0, 0, s * .36, s * .26, rot, 0, 7); g.fillStyle = ring; g.fill(); }
+  g.rotate(rot); g.shadowColor = 'rgba(0,0,0,.5)'; g.shadowBlur = 3; g.shadowOffsetX = 2; g.shadowOffsetY = 2; g.drawImage(im, -s / 2, -s / 2, s, s); g.restore();
+}
+function formation(lon, lat, side, kind, name, str, rot, sel) {
+  const [cx, cy] = w2s(...LL(lon, lat)); const ring = side ? 'rgba(210,70,50,.55)' : 'rgba(50,120,230,.55)';
+  const hull = side ? 't72' : 'abrams', S = 27; const pts = [];
+  const add = (n, fx, fy, s) => pts.push([n, fx * 1.25, fy * 1.25, s * 1.25]);
+  if (kind === 'arm') { add(hull, 0, 0, S); add(hull, -14, -13, S); add(hull, -14, 13, S); add(hull, -28, -26, S); add(hull, -28, 26, S); add('truck', -46, 0, 17); }
+  if (kind === 'mec') { add('bmp', 0, -9, 19); add('bmp', 0, 10, 19); add(hull, -16, 0, S); add('bmp', -30, -16, 19); add('truck', -44, 10, 17); }
+  if (kind === 'inf') { add('truck', 0, -10, 17); add('truck', 0, 10, 17); add('truck', -18, 0, 17); add('grad', -38, -8, 19); }
+  if (kind === 'art') { add('grad', 0, -12, 20); add('grad', 0, 12, 20); add('truck', -20, 0, 17); }
+  const c = Math.cos(rot), s = Math.sin(rot);
+  if (sel) { g.save(); g.beginPath(); g.ellipse(cx - c * 24, cy - s * 24, 62, 50, rot, 0, 7); g.setLineDash([5, 4]); g.lineWidth = 2; g.strokeStyle = '#ffd65a'; g.stroke(); g.restore(); }
+  for (const [n, fx, fy, sz] of pts) {
+    const x = cx + fx * c - fy * s, y = cy + fx * s + fy * c; spr(n, x, y, rot, sz, ring);
+    if (n === hull) spr(hull + '_t', x, y, rot, sz);
+    if (kind === 'inf' && n === 'truck') for (let k = 0; k < 6; k++) { const a = k * 1.05 + fx, rr = 9 + (k % 2) * 4; g.beginPath(); g.arc(x + Math.cos(a) * rr + c * 8, y + Math.sin(a) * rr + s * 8, 1.7, 0, 7); g.fillStyle = side ? '#5a2a20' : '#1d3557'; g.fill(); }
+  }
+  // بطاقة الاسم فوقها
+  const ty = cy - 52; g.font = '700 11.5px "IBM Plex Sans Arabic"'; const tw = g.measureText(name).width + 16;
+  g.fillStyle = side ? 'rgba(150,40,30,.92)' : 'rgba(30,70,150,.92)'; g.beginPath(); g.roundRect(cx - tw / 2, ty - 10, tw, 20, 6); g.fill();
+  text(name, cx, ty, 11.5, '#fff', null, 700);
+  g.fillStyle = 'rgba(0,0,0,.6)'; g.fillRect(cx - tw / 2, ty + 11, tw, 3.5); g.fillStyle = str > .6 ? '#5fd06f' : str > .35 ? '#e7c03f' : '#e2553f'; g.fillRect(cx - tw / 2, ty + 11, tw * str, 3.5);
+}
+function boom(lon, lat, r) {
+  const [x, y] = w2s(...LL(lon, lat));
+  for (let i = 0; i < 3; i++) { const gr = g.createRadialGradient(x + i * 4, y - i * 3, 0, x + i * 4, y - i * 3, r * (1.6 - i * .3)); gr.addColorStop(0, i ? 'rgba(90,85,80,.55)' : 'rgba(255,220,120,.95)'); gr.addColorStop(.45, i ? 'rgba(80,75,70,.35)' : 'rgba(240,110,40,.7)'); gr.addColorStop(1, 'rgba(60,55,50,0)'); g.fillStyle = gr; g.beginPath(); g.arc(x + i * 4, y - i * 3, r * (1.6 - i * .3), 0, 7); g.fill(); }
+}
+function tracer(a, b, col) { const [x0, y0] = w2s(...LL(...a)), [x1, y1] = w2s(...LL(...b)); const gr = g.createLinearGradient(x0, y0, x1, y1); gr.addColorStop(0, col + '00'); gr.addColorStop(1, col); g.strokeStyle = gr; g.lineWidth = 1.6; g.beginPath(); g.moveTo(x0, y0); g.lineTo(x1, y1); g.stroke(); }
+function plane(n, lon, lat, rot, s) { const [x, y] = w2s(...LL(lon, lat)); const im = IMG[n]; g.save(); g.globalAlpha = .35; g.translate(x + 26, y + 34); g.rotate(rot); g.filter = 'brightness(0) blur(1.5px)'; g.drawImage(im, -s / 2, -s / 2, s, s); g.restore(); g.save(); g.translate(x, y); g.rotate(rot); g.drawImage(im, -s / 2, -s / 2, s, s); g.restore(); }
+
+function draw() {
+  W = innerWidth; H = innerHeight; cv.width = W * DPR; cv.height = H * DPR; g.setTransform(DPR, 0, 0, DPR, 0, 0);
+  drawMap(); labels(); cities();
+  if (!NEAR) {
+    airZone(48.5, 31.3, 85, 62);
+    for (const [kx, ky, side, kind, n, str, sel] of UNITS) { const [x, y] = w2s(kx, ky); counter(x, y, side, kind, n, str, sel); }
+    g.globalAlpha = .92;
+    arrow([LL(48.1, 31.05), LL(48.75, 30.85), LL(49.35, 31.05)], 9, '#2f6fd0', 'rgba(255,255,255,.95)');
+    arrow([LL(47.85, 32.0), LL(48.15, 32.45), LL(48.6, 32.75)], 8, '#2f6fd0', 'rgba(255,255,255,.95)');
+    arrow([LL(46.85, 33.2), LL(46.2, 33.75), LL(45.45, 33.7)], 8, '#c8402f', 'rgba(255,255,255,.9)');
+    g.globalAlpha = 1;
+    for (const [lon, lat, win] of [[48.62, 31.25, .62], [46.0, 33.5, .38], [48.3, 32.3, .55]]) { const [x, y] = w2s(...LL(lon, lat)); battle(x, y, win); }
+  } else {
+    // جبهة الكارون: هجوم عراقي على الأهواز، ودفاع إيراني
+    arrow([LL(48.38, 31.18), LL(48.52, 31.2), LL(48.62, 31.27)], 10, '#2f6fd0', 'rgba(255,255,255,.95)');
+    formation(48.3, 31.17, 0, 'arm', 'الفرقة 3 مدرعة', .82, -.15, true);
+    formation(48.22, 31.48, 0, 'mec', 'الفرقة 5 آلية', .7, -.35);
+    formation(48.38, 30.84, 0, 'inf', 'الفرقة 11 مشاة', .9, .1);
+    formation(48.84, 31.42, 1, 'mec', 'الفرقة 92 آلية', .58, 3.0);
+    formation(48.8, 31.0, 1, 'inf', 'اللواء 37', .5, 3.2);
+    formation(49.0, 31.16, 1, 'art', 'مدفعية', .8, 3.1);
+    tracer([48.33, 31.17], [48.78, 31.4], '#ffe08a'); tracer([48.8, 31.4], [48.36, 31.2], '#ff9a6a'); tracer([48.4, 30.86], [48.76, 31.0], '#ffe08a'); tracer([48.93, 31.2], [48.42, 31.15], '#ff9a6a');
+    boom(48.78, 31.4, 15); boom(48.74, 31.0, 12); boom(48.4, 31.15, 10);
+    plane('f16', 48.55, 31.48, -.15, 40); plane('su25', 48.6, 30.92, .1, 34); plane('f14', 48.98, 30.75, 3.5, 40);
+  }
+}
+const CARD_FAR = `<div class="ch"><span style="font-size:18px">🪖</span><div><div class="t">جيش الجنوب</div><div class="s">9 فرق · جبهة خوزستان · القائد: لواء ركن</div></div><span class="x">مختار</span></div>
+<div class="bars"><div>القوة 78%<div class="bar"><u style="width:78%"></u></div></div><div>التنظيم 61%<div class="bar"><u class="o" style="width:61%"></u></div></div><div>الإمداد 70%<div class="bar"><u style="width:70%"></u></div></div></div>
+<div class="acts"><b class="go">⚔ خطة هجوم</b><b>🛡 دفاع</b><b>➕ تعزيز</b><b>🔍 قرّب</b></div>`;
+const CARD_NEAR = `<div class="ch"><span style="font-size:18px">🛡</span><div><div class="t">الفرقة 3 مدرعة</div><div class="s">96 دبابة أبرامز · 40 مدرعة · 9,800 جندي</div></div><span class="x">تهاجم الأهواز</span></div>
+<div class="bars"><div>القوة 82%<div class="bar"><u style="width:82%"></u></div></div><div>التنظيم 58%<div class="bar"><u class="o" style="width:58%"></u></div></div><div>الخبرة ★★☆</div></div>
+<div class="acts"><b class="go">⚔ هجوم</b><b>⏸ وقّف</b><b>↩ انسحاب</b><b>⚔ شوف المعركة</b></div>`;
+document.getElementById('card').innerHTML = NEAR ? CARD_NEAR : CARD_FAR;
+document.getElementById('tag').textContent = NEAR ? '🔎 قريب: الجبهة الجنوبية' : '🗺️ بعيد: كل الجبهة';
+document.getElementById('zoom').style.top = document.getElementById('tag').style.top = '96px';
+Promise.all(['base_me', 'base_south', 'abrams', 'abrams_t', 't72', 't72_t', 'bmp', 'grad', 'truck', 'f16', 'su25', 'f14'].map(load)).then(() => document.fonts.ready).then(() => { draw(); window.READY = 1; });
+addEventListener('resize', draw);
+</script></body></html>

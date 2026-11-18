@@ -110,7 +110,7 @@
       b.win = aO / (aO + dO + 1e-6); b.why = { aPow, dPow, dCap, aCap, terr: W.cells[f.tg].t, river: A.some(a => W.edgeOf.get(a.cell + ',' + f.tg)?.r), flank: flank > 1 };
       b.na = A.length; b.nd = Dd.length;
       // المهاجم اللي خلص تنظيمه يوقف
-      for (const a of A) if (a.org < 1) { a.path = []; a.prog = 0; W.cool = W.cool || new Map(); W.cool.set(a.side + ':' + f.tg, W.t + 72); W.stalls = (W.stalls || 0) + 1; if (a.mode === 'manual') { a.mode = 'hold'; W.log.push({ t: W.t, side: a.side, k: 'stall', div: a.n, cell: f.tg }); } }
+      for (const a of A) if (a.org < 1) { a.path = []; a.prog = 0; W.cool = W.cool || new Map(); W.cool.set(a.side + ':' + f.tg, W.t + 72); W.stalls = (W.stalls || 0) + 1; if (a.mode === 'plan') { } else if (a.mode === 'manual') { a.mode = 'hold'; W.log.push({ t: W.t, side: a.side, k: 'stall', div: a.n, cell: f.tg }); } }
       // المدافع اللي خلص تنظيمه ينسحب أو يستسلم
       for (const d of f.def) if (d.org < 1) retreat(W, d, byCell);
     }
@@ -152,7 +152,7 @@
       W.mob = W.mob || [0, 0]; W.ob = W.ob || [n, n];
       if (n < W.ob[s] && W.t - W.mob[s] >= 24 * 8) {
         let best = -1, bv = -1; W.cells.forEach((c, i) => { if (W.ctrl[i] === s && c.s === s && W.sup[s][i] && (c.vp || 0) > bv) { bv = c.vp || 0; best = i; } });
-        if (best >= 0) { W.mob[s] = W.t; W.num = W.num || [100, 200]; const d = addDiv(W, s, 'inf', best, W.num[s]++); d.org = d.orgMax * .5; d.str = .7; W.log.push({ t: W.t, side: s, k: 'mob', div: d.n, cell: best }); }
+        if (best >= 0) { W.mob[s] = W.t; W.num = W.num || [100, 200]; const d = addDiv(W, s, 'inf', best, W.num[s]++); d.org = d.orgMax * .5; d.str = .7; joinArmy(W, d); W.log.push({ t: W.t, side: s, k: 'mob', div: d.n, cell: best }); }
       }
       // استسلام: إذا الدولة خسرت 70% من نقاط مدنها
       const own = W.cells.reduce((v, c, i) => v + (c.s === s && W.ctrl[i] === s ? (c.vp || 0) : 0), 0);
@@ -193,6 +193,7 @@
   function frontCells(W, s) { const F = []; for (let i = 0; i < W.N; i++) if (W.ctrl[i] === s && W.cells[i].nb.some(j => W.ctrl[j] !== s)) F.push(i); return F; }
   const power = d => (TEMPL[d.kind].soft + TEMPL[d.kind].def * .5) * d.str * (d.org / d.orgMax);
   function ai(W, s, opt = {}) {
+    if (s === 0) runPlans(W);
     const aggr = opt.aggr ?? 1.6;
     const D = alive(W); const mine = D.filter(d => d.side === s), theirs = D.filter(d => d.side !== s);
     const enemyAt = new Map(); for (const e of theirs) enemyAt.set(e.cell, (enemyAt.get(e.cell) || 0) + power(e));
@@ -209,7 +210,7 @@
       const tr = TERR[W.cells[j].t];
       const dVal = def.reduce((t, e) => t + TEMPL[e.kind].def * e.str * (1 + .6 * e.ent) * (e.org / e.orgMax + .3), 0);
       const avail = [];
-      for (const i of W.cells[j].nb) if (W.ctrl[i] === s) for (const d of (mineAt.get(i) || [])) if (d.mode === 'auto' && !used.has(d.id) && d.org > d.orgMax * .7 && d.str > .45) avail.push(d);
+      for (const i of W.cells[j].nb) if (W.ctrl[i] === s) for (const d of (mineAt.get(i) || [])) if (d.mode === 'auto' && !used.has(d.id) && d.org > d.orgMax * .7 && d.str > .45 && !(W.armies && W.armies[d.army]?.stance === 'defend')) avail.push(d);
       if (!avail.length) continue;
       const aVal = avail.reduce((t, d) => t + atkOf(W, d, j, d.cell, def.length ? hdOf(def) : 0), 0);
       const ratio = def.length ? aVal / (dVal * .1 + .001) : 99;
@@ -270,7 +271,72 @@
       let k = 0;
       for (const kind of list) { const cell = F[k % F.length]; const d = addDiv(W, s, kind, cell, s ? 20 + num : num); d.ent = 1; num++; k++; }
     }
-    supply(W); W.ob = [0, 1].map(s => alive(W).filter(d => d.side === s).length);
+    supply(W); W.ob = [0, 1].map(s => alive(W).filter(d => d.side === s).length); makeArmies(W);
+  }
+
+  // ===== الجيوش (R5a): كل طرف 3 جيوش حسب مكان الجبهة (شمال، وسط، جنوب) =====
+  const ARMY_N = [['الجيش الشمالي', 'الجيش الأوسط', 'الجيش الجنوبي'], ['جيش أذربيجان وكردستان', 'جيش كرمانشاه وإيلام', 'جيش خوزستان']];
+  function makeArmies(W) {
+    W.armies = []; W.plans = []; W.planId = 1;
+    for (const s of [0, 1]) for (let k = 0; k < 3; k++) W.armies.push({ id: W.armies.length, side: s, n: ARMY_N[s][k], k, stance: 'auto' });
+    for (const d of alive(W)) joinArmy(W, d);
+  }
+  // الحدود بين الجيوش على ارتفاع الخريطة (كم من فوق): الشمال فوق 640، الجنوب تحت 900
+  function joinArmy(W, d) { if (!W.armies) return; const y = W.cells[d.cell].c[1]; const k = y < 640 ? 0 : y < 900 ? 1 : 2; d.army = W.armies.find(a => a.side === d.side && a.k === k).id; }
+
+  // ===== خطط الهجوم بالأسهم (R5a) =====
+  // السهم = سلسلة مناطق متجاورة. رأس الحربة (الدروع والآليات المختارة) يتجمّع أول (تحضير)، وبعدين يهاجم منطقة منطقة على طول السهم.
+  // الخطة تخلص إذا وصلت الهدف، وتتوقف إذا رأس الحربة تعب أو انقتل (3 توقفات بدون تقدّم).
+  function cellChain(W, pts) {
+    const out = []; for (const c of pts) if (c >= 0 && out[out.length - 1] !== c) out.push(c);
+    const full = [out[0]];
+    for (let i = 1; i < out.length; i++) { const a = full[full.length - 1], b = out[i]; if (W.cells[a].nb.includes(b)) { full.push(b); continue; }
+      // سد الفراغ بأقصر طريق
+      const prev = new Map([[a, -1]]), q = [a]; while (q.length) { const x = q.shift(); if (x === b) break; for (const y of W.cells[x].nb) if (!prev.has(y)) { prev.set(y, x); q.push(y); } }
+      const seg = []; for (let x = b; x !== a && x !== undefined; x = prev.get(x)) seg.unshift(x); full.push(...seg); }
+    return full.filter((c, i) => full.indexOf(c) === i);
+  }
+  function makePlan(W, side, divs, pathCells) {
+    const path = cellChain(W, pathCells); if (path.length < 2) return null;
+    const spear = divs.filter(d => d.kind !== 'inf').length ? divs.filter(d => d.kind !== 'inf') : divs;
+    for (const d of divs) if (d.plan) cancelPlan(W, W.plans.find(p => p.id === d.plan));
+    const P = { id: W.planId++, side, path, divs: spear.map(d => d.id), st: 'prep', t0: W.t, prep: 8, stalls: 0, last: W.t, taken: 0 };
+    for (const d of spear) { d.mode = 'plan'; d.plan = P.id; d.path = []; d.prog = 0; }
+    W.plans.push(P); W.log.push({ t: W.t, side, k: 'plan', id: P.id, cell: path[path.length - 1] }); return P;
+  }
+  function cancelPlan(W, P) { if (!P) return; P.st = P.st === 'done' ? 'done' : 'cancel'; for (const d of W.divs) if (d.plan === P.id) { d.plan = null; if (d.mode === 'plan') { d.mode = 'auto'; if (d.path.length && W.ctrl[d.path[0]] !== d.side) d.path = []; } } }
+  function runPlans(W) {
+    for (const P of W.plans || []) {
+      if (P.st !== 'prep' && P.st !== 'go') continue;
+      const D = W.divs.filter(d => !d.dead && d.plan === P.id); if (!D.length) { P.st = 'fail'; W.log.push({ t: W.t, side: P.side, k: 'planfail', id: P.id }); continue; }
+      // رأس الحربة يكمل لقدّام من أبعد نقطة وصلها على السهم (اللي يضيع وراه يمسكه المشاة)، فما يرجع ويروح
+      const reach = Math.max(0, ...D.map(d => P.path.indexOf(d.cell)));
+      let ni = P.path.findIndex((c, i) => i > reach && W.ctrl[c] !== P.side);
+      if (ni < 0 && W.ctrl[P.path[P.path.length - 1]] !== P.side) ni = P.path.length - 1;
+      if (ni < 0) { P.st = 'done'; W.log.push({ t: W.t, side: P.side, k: 'plandone', id: P.id, cell: P.path[P.path.length - 1] }); cancelPlan(W, P); P.st = 'done'; continue; }
+      const nextT = P.path[ni];
+      // نقطة التجمّع: أقرب منطقة إلنا جارة للهدف الجاي (على السهم إذا ممكن)
+      const stage = (ni > 0 && W.ctrl[P.path[ni - 1]] === P.side) ? P.path[ni - 1] : W.cells[nextT].nb.filter(j => W.ctrl[j] === P.side).sort((a, b) => W.dist(a, D[0].cell) - W.dist(b, D[0].cell))[0];
+      if (stage == null) { P.st = 'fail'; cancelPlan(W, P); P.st = 'fail'; continue; }
+      if (P.st === 'prep') {
+        let ready = true;
+        for (const d of D) { if (d.cell !== stage && !W.cells[stage].nb.includes(d.cell)) { ready = false; if (!d.path.length) order(W, d, stage, 'plan'); } }
+        // اللي يوصل يتجمّع؛ إذا طوّلوا أكثر من 30 ساعة نبدي باللي وصل والباقي يلحق
+        const near = D.filter(d => d.cell === stage || W.cells[stage].nb.includes(d.cell)).length;
+        if ((ready && W.t - P.t0 >= P.prep) || (W.t - P.t0 >= 30 && near > 0)) { P.st = 'go'; P.last = W.t; W.log.push({ t: W.t, side: P.side, k: 'plango', id: P.id }); }
+        continue;
+      }
+      for (const d of D) {
+        if (d.org < d.orgMax * .25) continue; // تعب: يرتاح بمكانه
+        if (d.path.length && d.path[d.path.length - 1] === nextT) continue;
+        if (W.cells[d.cell].nb.includes(nextT)) { d.path = [nextT]; d.prog = 0; d.mode = 'plan'; }
+        else if (!d.path.length || d.path[d.path.length - 1] !== stage) order(W, d, stage, 'plan');
+      }
+      // التقدّم: كم منطقة أخذنا على السهم
+      const taken = P.path.filter(c => W.ctrl[c] === P.side).length;
+      if (taken > P.taken) { P.taken = taken; P.last = W.t; P.stalls = 0; }
+      else if (W.t - P.last > 48) { P.stalls++; P.last = W.t; if (P.stalls >= 3) { W.log.push({ t: W.t, side: P.side, k: 'planstall', id: P.id }); cancelPlan(W, P); P.st = 'stall'; } }
+    }
   }
 
   // ضربة جوية أو صاروخ على منطقة: ينزل تنظيم وعدد فرق العدو بيها
@@ -282,6 +348,6 @@
   // تلخيص الحرب
   function score(W) { const vp = [0, 0]; W.cells.forEach((c, i) => { if (c.vp) vp[W.ctrl[i]] += c.vp; }); return { vp, cells: [0, 1].map(s => W.ctrl.reduce((n, x) => n + (x === s ? 1 : 0), 0)), divs: [0, 1].map(s => alive(W).filter(d => d.side === s).length), lost: W.lost.slice() }; }
 
-  const API = { airHit, TEMPL, TERR, KIND_N, World, addDiv, step, ai, order, route, scenario, supply, score, alive, divsIn, frontCells, power };
+  const API = { makePlan, cancelPlan, runPlans, cellChain, joinArmy, airHit, TEMPL, TERR, KIND_N, World, addDiv, step, ai, order, route, scenario, supply, score, alive, divsIn, frontCells, power };
   if (typeof module !== 'undefined') module.exports = API; else root.SIM = API;
 })(this);

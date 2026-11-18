@@ -33,6 +33,8 @@ button{font:inherit;color:inherit;background:none;border:0;cursor:pointer}
 #intro .box{background:#221f1a;border:1px solid var(--line);border-radius:16px;padding:16px 16px 14px;max-width:420px}
 #intro h1{font:700 24px "Reem Kufi",sans-serif;color:var(--gold);text-align:center}#intro p{margin:8px 0;font-size:13.5px;line-height:1.6}#intro ul{margin:4px 0 10px;padding-inline-start:18px;font-size:13px;line-height:1.65}
 #intro button{width:100%;margin-top:6px;background:var(--gold);color:#221b0e;border-radius:12px;padding:10px;font-weight:700;font-size:16px}
+#armies{position:fixed;left:0;right:0;bottom:calc(58px + env(safe-area-inset-bottom));max-height:62vh;overflow:auto;background:var(--panel);border-top:1px solid var(--line);border-radius:16px 16px 0 0;padding:10px 12px;z-index:6;backdrop-filter:blur(6px)}#armies[hidden]{display:none}
+.arm{background:rgba(255,255,255,.05);border:1px solid var(--line);border-radius:12px;padding:8px 10px;margin:7px 0}.arm .h{display:flex;align-items:center;gap:8px}.arm b{font:700 15px 'Reem Kufi'}.arm .acts{margin-top:6px}
 #end{position:fixed;inset:0;background:rgba(10,9,8,.75);display:grid;place-items:center;z-index:9}#end[hidden]{display:none}
 </style></head><body>
 <canvas id="c"></canvas>
@@ -47,7 +49,7 @@ button{font:inherit;color:inherit;background:none;border:0;cursor:pointer}
 <div id="hint" hidden></div>
 <div id="tac" hidden>⏱ بطيء: قريب من المعركة</div>
 <div id="card" hidden></div>
-<div id="tabs"><button class="on"><em>🗺️</em>الخريطة</button><button data-soon="1"><em>🪖</em>الجيش</button><button data-soon="1"><em>🏭</em>الإنتاج</button><button data-soon="1"><em>💰</em>الاقتصاد</button><button data-soon="1"><em>🤝</em>السياسة</button><button data-soon="1"><em>🔬</em>البحث</button></div>
+<div id="tabs"><button class="on"><em>🗺️</em>الخريطة</button><button id="tabArmy"><em>🪖</em>الجيش</button><button data-soon="1"><em>🏭</em>الإنتاج</button><button data-soon="1"><em>💰</em>الاقتصاد</button><button data-soon="1"><em>🤝</em>السياسة</button><button data-soon="1"><em>🔬</em>البحث</button></div>
 <div id="intro"><div class="box">
   <h1>الحرب الكبرى</h1>
   <p>14 آذار 2027. الحرب بدت بين العراق وإيران. انت قائد الجيش العراقي.</p>
@@ -62,6 +64,7 @@ button{font:inherit;color:inherit;background:none;border:0;cursor:pointer}
   <button id="go">ابدأ الحرب ▶</button>
 </div></div>
 <div id="end" hidden></div>
+<div id="armies" hidden></div>
 <script src="data.js"></script>
 <script src="cells.js"></script>
 <script src="sim.js"></script>
@@ -316,6 +319,10 @@ function events() {
     if (l.k === 'take' && c && c.vp >= 3) toast(mine ? `✅ أخذنا ${c.city}` : `⚠️ إيران أخذت ${c.city}`, mine ? 'good' : 'bad');
     if (l.k === 'surrender') toast(mine ? `💀 ${l.div} انطوقت واستسلمت` : `🎖 فرقة إيرانية انطوقت واستسلمت`, mine ? 'bad' : 'good');
     if (l.k === 'mob' && mine) toast(`🪖 فرقة جديدة جاهزة: ${l.div}`, 'good');
+    if (l.k === 'plango' && mine) toast('⚔ بدأ الهجوم على طول السهم', 'good');
+    if (l.k === 'plandone' && mine) toast(`🎯 الخطة نجحت: وصلنا ${cells[l.cell].city || 'الهدف'}`, 'good');
+    if (l.k === 'planstall' && mine) toast('✋ الهجوم توقف: رأس الحربة تعب وما تقدّم يومين', 'bad');
+    if (l.k === 'planfail' && mine) toast('💀 الخطة فشلت: خسرنا رأس الحربة', 'bad');
     if (l.k === 'stall' && mine) toast(`✋ ${l.div} تعبت وما كدرت تكمل الهجوم، ثبتت بمكانها`, 'bad');
     if (l.k === 'take' && mine && c && !c.vp && SEL.size) {}
     if (l.k === 'capitulate') endGame(l.side);
@@ -328,20 +335,36 @@ function endGame(loser) {
 }
 function setSpeed(s) { SPEED = s; document.querySelectorAll('.spd button').forEach(b => b.classList.toggle('on', +b.dataset.s === s)); }
 document.querySelectorAll('.spd button').forEach(b => b.onclick = () => setSpeed(+b.dataset.s));
+function armies() {
+  const el = $('armies'); if (!el.hidden) { el.hidden = true; return; }
+  const A = (WD.armies || []).filter(a => a.side === ME);
+  el.innerHTML = `<div style="display:flex;align-items:center"><b style="font:700 17px 'Reem Kufi';color:var(--gold)">🪖 جيوشنا</b><button id="armX" style="margin-inline-start:auto;font-size:18px">✕</button></div><div class="s" style="font-size:12px;opacity:.75">اختار جيش، وبعدين «🏹 سهم» وارسم الهجوم بإصبعك. الدروع والآليات تصير رأس حربة، والمشاة تمسك الجبهة.</div>` +
+    A.map(a => { const ds = SIM.alive(WD).filter(d => d.army === a.id); const st = ds.length ? ds.reduce((s, d) => s + d.str, 0) / ds.length : 0; const k = { arm: 0, mec: 0, inf: 0 }; ds.forEach(d => k[d.kind]++); const pl = (WD.plans || []).filter(p => p.side === ME && (p.st === 'prep' || p.st === 'go') && ds.some(d => d.plan === p.id));
+      return `<div class="arm"><div class="h"><b>${a.n}</b><span class="x ${a.stance === 'defend' ? 'hold' : 'auto'}" style="margin-inline-start:auto;font-size:11px;border-radius:10px;padding:1px 8px">${a.stance === 'defend' ? '🛡 دفاع فقط' : '🤖 تلقائي'}</span></div><div style="font-size:12px;opacity:.85">${ds.length} فرق (🛡 ${k.arm} مدرعة · 🚙 ${k.mec} آلية · 🪖 ${k.inf} مشاة) · القوة ${Math.round(st * 100)}%${pl.length ? ' · 🏹 ' + pl.map(planTxt).join('، ') : ''}</div><div class="bar"><u style="width:${st * 100}%"></u></div>
+      <div class="acts"><button class="go" data-sel="${a.id}">اختر الجيش</button><button data-st="${a.id}">${a.stance === 'defend' ? '🤖 خليه يهاجم' : '🛡 دفاع فقط'}</button></div></div>`; }).join('');
+  el.hidden = false; $('armX').onclick = () => el.hidden = true;
+  el.querySelectorAll('[data-sel]').forEach(b => b.onclick = () => { const id = +b.dataset.sel; const ds = SIM.alive(WD).filter(d => d.army === id); SEL = new Set(ds.map(d => d.id)); SELB = -1; let x = 0, y = 0; ds.forEach(d => { x += cells[d.cell].c[0]; y += cells[d.cell].c[1]; }); if (ds.length) { cam.x = x / ds.length; cam.y = y / ds.length; cam.s = Math.min(cam.s, .9); } el.hidden = true; card(); });
+  el.querySelectorAll('[data-st]').forEach(b => b.onclick = () => { const a = WD.armies[+b.dataset.st]; a.stance = a.stance === 'defend' ? 'auto' : 'defend'; toast(a.stance === 'defend' ? `🛡 ${a.n}: يمسك الجبهة وما يهاجم` : `🤖 ${a.n}: القائد يهاجم لما يشوف فرصة`); el.hidden = true; armies(); });
+}
+$('tabArmy').onclick = armies;
 document.querySelectorAll('#tabs [data-soon]').forEach(b => b.onclick = () => toast('🔜 هذا القسم بالخطوة الثالثة (الدولة والإنتاج من لعبتك)'));
 const KN = SIM.KIND_N;
 function card() {
   const ds = SIM.alive(WD).filter(d => SEL.has(d.id));
   if (!ds.length) { SEL.clear(); $('card').hidden = true; PICK = false; $('hint').hidden = true; return; }
   const mode = ds.every(d => d.mode === ds[0].mode) ? ds[0].mode : 'mix';
-  const MN = { auto: 'تلقائي', hold: 'ثابت', manual: 'بأمرك', mix: 'مختلط' };
+  const MN = { auto: 'تلقائي', hold: 'ثابت', manual: 'بأمرك', plan: 'بخطة هجوم', mix: 'مختلط' };
+  const pl = (WD.plans || []).find(p => (p.st === 'prep' || p.st === 'go') && ds.some(d => d.plan === p.id));
   const c = cells[ds[0].cell]; const where = c.city || 'منطقة';
   const inBattle = ds.some(d => WD.battles.has(d.path[0]) || WD.battles.has(d.cell));
   $('card').hidden = false;
   $('card').innerHTML = `<div class="ch"><span style="font-size:18px">🪖</span><div><div class="t">${ds.length > 1 ? ds.length + ' فرق' : ds[0].n}</div><div class="s">${where} · ${SIM.TERR[c.t].n}${inBattle ? ' · ⚔ تقاتل' : ''}${WD.sup[ME][ds[0].cell] ? '' : ' · ⚠️ مقطوعة الإمداد'}</div></div><span class="x ${mode}">${MN[mode]}</span></div>
   <div class="list">${ds.map(d => `<div class="dv"><b>${d.n}</b>القوة ${Math.round(d.str * 100)}%<div class="bar"><u style="width:${d.str * 100}%"></u></div>التنظيم ${Math.round(d.org / d.orgMax * 100)}%<div class="bar"><u class="o" style="width:${d.org / d.orgMax * 100}%"></u></div></div>`).join('')}</div>
-  <div class="acts"><button class="go ${PICK ? 'on' : ''}" id="aGo">⚔ هجوم / تحرّك</button><button id="aHold">📌 ثبات</button><button id="aAuto">🤖 تلقائي</button><button id="aX">✕</button></div>`;
-  $('aGo').onclick = () => { PICK = !PICK; $('hint').hidden = !PICK; $('hint').textContent = 'اضغط المنطقة اللي تريد توصلها'; $('hint').style.top = (TOPH() + 8) + 'px'; card(); };
+  ${pl ? `<div class="s" style="margin:-2px 0 6px;font-size:12px">🏹 ${planTxt(pl)} <button id="aCan" style="margin-inline-start:6px;background:rgba(255,255,255,.1);border:1px solid var(--line);border-radius:8px;padding:1px 8px;font-size:11.5px">إلغاء الخطة</button></div>` : ''}
+  <div class="acts"><button class="go ${PICK === true ? 'on' : ''}" id="aGo">⚔ هجوم</button><button class="${PICK === 'arrow' ? 'on' : ''}" id="aArrow">🏹 سهم</button><button id="aHold">📌 ثبات</button><button id="aAuto">🤖</button><button id="aX">✕</button></div>`;
+  $('aArrow').onclick = () => { PICK = PICK === 'arrow' ? false : 'arrow'; $('hint').hidden = !PICK; $('hint').textContent = 'اسحب إصبعك من فرقك لحد الهدف'; $('hint').style.top = (TOPH() + 8) + 'px'; card(); };
+  if ($('aCan')) $('aCan').onclick = () => { SIM.cancelPlan(WD, pl); toast('✋ الخطة انلغت والفرق رجعت للقائد'); card(); };
+  $('aGo').onclick = () => { PICK = PICK === true ? false : true; $('hint').hidden = !PICK; $('hint').textContent = 'اضغط المنطقة اللي تريد توصلها'; $('hint').style.top = (TOPH() + 8) + 'px'; card(); };
   $('aHold').onclick = () => { ds.forEach(d => { d.path = []; d.prog = 0; d.mode = 'hold'; }); PICK = false; $('hint').hidden = true; toast('📌 الفرق ثابتة بمكانها وتدافع'); card(); };
   $('aAuto').onclick = () => { ds.forEach(d => d.mode = 'auto'); PICK = false; $('hint').hidden = true; toast('🤖 القائد يمسك الجبهة ويهاجم لما يشوف فرصة'); card(); };
   $('aX').onclick = () => { SEL.clear(); card(); };
@@ -369,6 +392,39 @@ function airOrder(x, y, wx, wy) {
   } else { const ci = cellAt(wx, wy); if (ci < 0) return; b.mission = { kind: k, p: cells[ci].c, cell: ci }; toast(`${MK[k]}: ${b.n} ← ${cells[ci].city || 'المنطقة'}`); }
   baseCard();
 }
+let DRAW = null;
+function finishArrow() {
+  const pts = DRAW.pts; DRAW = null; PICK = false; $('hint').hidden = true;
+  // نقاط كل ~8 كم على طول الخط ← مناطق
+  const cs = []; for (let i = 1; i < pts.length; i++) { const [a, b] = [pts[i - 1], pts[i]]; const n = Math.max(1, Math.ceil(Math.hypot(b[0] - a[0], b[1] - a[1]) / 8)); for (let k = 0; k <= n; k++) cs.push(cellAt(a[0] + (b[0] - a[0]) * k / n, a[1] + (b[1] - a[1]) * k / n)); }
+  const ds = SIM.alive(WD).filter(d => SEL.has(d.id));
+  if (cs.filter(c => c >= 0).length < 2 || !ds.length) { toast('❌ السهم قصير، اسحب أطول', 'bad'); card(); return; }
+  const P = SIM.makePlan(WD, ME, ds, cs.filter(c => c >= 0));
+  if (!P) { toast('❌ ما كدرت أسوي خطة من هالسهم', 'bad'); card(); return; }
+  const tgt = cells[P.path[P.path.length - 1]];
+  toast(`🏹 خطة هجوم: ${P.divs.length} فرق رأس حربة ← ${tgt.city || 'الهدف'} (${P.path.length} مناطق). تحضير ${P.prep} ساعات`, 'good'); card();
+}
+const planTxt = P => { const tg = cells[P.path[P.path.length - 1]]; const done = P.path.filter(c => WD.ctrl[c] === ME).length; return `${P.st === 'prep' ? 'تحضير' : P.st === 'go' ? 'هجوم' : P.st === 'done' ? 'نجحت' : 'توقفت'} ← ${tg.city || 'الهدف'} (${done}/${P.path.length})`; };
+// رسم الأسهم: سهم عريض يتقلص، ملوّن باللي أخذناه، وفوق رأسه حالته
+function bigArrow(P, col, live) {
+  const pts = P.map(([x, y]) => w2s(x, y)); if (pts.length < 2) return;
+  // تنعيم
+  const S = []; for (let i = 0; i < pts.length - 1; i++) { const p0 = pts[Math.max(0, i - 1)], p1 = pts[i], p2 = pts[i + 1], p3 = pts[Math.min(pts.length - 1, i + 2)]; for (let t = 0; t < 1; t += .2) { const t2 = t * t, t3 = t2 * t; S.push([.5 * ((2 * p1[0]) + (-p0[0] + p2[0]) * t + (2 * p0[0] - 5 * p1[0] + 4 * p2[0] - p3[0]) * t2 + (-p0[0] + 3 * p1[0] - 3 * p2[0] + p3[0]) * t3), .5 * ((2 * p1[1]) + (-p0[1] + p2[1]) * t + (2 * p0[1] - 5 * p1[1] + 4 * p2[1] - p3[1]) * t2 + (-p0[1] + 3 * p1[1] - 3 * p2[1] + p3[1]) * t3)]); } } S.push(pts[pts.length - 1]);
+  const n = S.length, w0 = Math.min(12, Math.max(5, cam.s * 4)); const L = [], Rr = [];
+  for (let i = 0; i < n - 1; i++) { const [x0, y0] = S[i], [x1, y1] = S[i + 1]; const d = Math.hypot(x1 - x0, y1 - y0) || 1, nx = -(y1 - y0) / d, ny = (x1 - x0) / d, ww = w0 * (.5 + .5 * i / n); L.push([x0 + nx * ww, y0 + ny * ww]); Rr.push([x0 - nx * ww, y0 - ny * ww]); }
+  const [ex, ey] = S[n - 1], [px, py] = S[Math.max(0, n - 3)]; const d = Math.hypot(ex - px, ey - py) || 1, ux = (ex - px) / d, uy = (ey - py) / d, hw = w0 * 2.2, hl = w0 * 2.8, bx = ex - ux * hl, by = ey - uy * hl;
+  g.beginPath(); L.forEach(([x, y], i) => i ? g.lineTo(x, y) : g.moveTo(x, y)); g.lineTo(bx - uy * w0, by + ux * w0); g.lineTo(bx - uy * hw, by + ux * hw); g.lineTo(ex, ey); g.lineTo(bx + uy * hw, by - ux * hw); g.lineTo(bx + uy * w0, by - ux * w0); for (let i = Rr.length - 1; i >= 0; i--) g.lineTo(Rr[i][0], Rr[i][1]); g.closePath();
+  const gr = g.createLinearGradient(pts[0][0], pts[0][1], ex, ey); gr.addColorStop(0, col + '25'); gr.addColorStop(1, col + (live ? 'e0' : '90')); g.fillStyle = gr; g.fill(); g.lineWidth = 1.8; g.strokeStyle = live ? 'rgba(255,255,255,.95)' : 'rgba(255,255,255,.5)'; if (!live) g.setLineDash([6, 5]); g.stroke(); g.setLineDash([]);
+  return [ex, ey];
+}
+function drawPlans() {
+  for (const P of WD.plans || []) {
+    if (P.side !== ME || !(P.st === 'prep' || P.st === 'go')) continue;
+    const pts = P.path.map(c => cells[c].c); const head = bigArrow(pts, '#2f6fd0', P.st === 'go');
+    if (head) { g.font = '700 11.5px "IBM Plex Sans Arabic"'; const t = '🏹 ' + planTxt(P); const tw = g.measureText(t).width + 14; g.fillStyle = 'rgba(24,22,19,.85)'; g.beginPath(); g.roundRect(head[0] - tw / 2, head[1] - 30, tw, 20, 8); g.fill(); text(t, head[0], head[1] - 20, 11.5, '#cfe2ff', null, 700); }
+  }
+  if (DRAW && DRAW.pts.length > 1) bigArrow(DRAW.pts, '#e2b552', true);
+}
 function orderTo(ci) {
   const ds = SIM.alive(WD).filter(d => SEL.has(d.id)); let ok = 0;
   for (const d of ds) if (SIM.order(WD, d, ci, 'manual', true)) ok++;
@@ -380,14 +436,15 @@ function orderTo(ci) {
 
 // ===== الإدخال: سحب، تكبير بإصبعين، ضغط =====
 const ptrs = new Map(); let pinch = null, moved = 0, downAt = null;
-cv.addEventListener('pointerdown', e => { cv.setPointerCapture(e.pointerId); ptrs.set(e.pointerId, [e.clientX, e.clientY]); moved = 0; downAt = [e.clientX, e.clientY]; if (ptrs.size === 2) { const [a, b] = [...ptrs.values()]; pinch = { d: Math.hypot(a[0] - b[0], a[1] - b[1]), s: cam.s, w: s2w((a[0] + b[0]) / 2, (a[1] + b[1]) / 2) }; } });
+cv.addEventListener('pointerdown', e => { if (PICK === 'arrow' && !ptrs.size) { cv.setPointerCapture(e.pointerId); DRAW = { id: e.pointerId, pts: [s2w(e.clientX, e.clientY)] }; return; } cv.setPointerCapture(e.pointerId); ptrs.set(e.pointerId, [e.clientX, e.clientY]); moved = 0; downAt = [e.clientX, e.clientY]; if (ptrs.size === 2) { const [a, b] = [...ptrs.values()]; pinch = { d: Math.hypot(a[0] - b[0], a[1] - b[1]), s: cam.s, w: s2w((a[0] + b[0]) / 2, (a[1] + b[1]) / 2) }; } });
 cv.addEventListener('pointermove', e => {
+  if (DRAW && e.pointerId === DRAW.id) { const w = s2w(e.clientX, e.clientY), l = DRAW.pts[DRAW.pts.length - 1]; if (Math.hypot(w[0] - l[0], w[1] - l[1]) * cam.s > 6) DRAW.pts.push(w); return; }
   if (!ptrs.has(e.pointerId)) { if (PICK) { const [wx, wy] = s2w(e.clientX, e.clientY); HOVER = cellAt(wx, wy); } return; }
   const p = ptrs.get(e.pointerId), dx = e.clientX - p[0], dy = e.clientY - p[1]; ptrs.set(e.pointerId, [e.clientX, e.clientY]);
   if (ptrs.size === 2 && pinch) { const [a, b] = [...ptrs.values()]; const d = Math.hypot(a[0] - b[0], a[1] - b[1]); cam.s = pinch.s * d / pinch.d; clampCam(); const m = [(a[0] + b[0]) / 2, (a[1] + b[1]) / 2]; cam.x = pinch.w[0] - (m[0] - W / 2) / cam.s; cam.y = pinch.w[1] - (m[1] - H / 2) / cam.s; moved = 99; return; }
   moved += Math.abs(dx) + Math.abs(dy); if (moved > 8) { cam.x -= dx / cam.s; cam.y -= dy / cam.s; clampCam(); }
 });
-const up = e => { ptrs.delete(e.pointerId); if (ptrs.size < 2) pinch = null; if (ptrs.size === 0 && moved <= 8 && downAt) tap(downAt[0], downAt[1]); if (!ptrs.size) downAt = null; };
+const up = e => { if (DRAW && e.pointerId === DRAW.id) { finishArrow(); return; } ptrs.delete(e.pointerId); if (ptrs.size < 2) pinch = null; if (ptrs.size === 0 && moved <= 8 && downAt) tap(downAt[0], downAt[1]); if (!ptrs.size) downAt = null; };
 cv.addEventListener('pointerup', up); cv.addEventListener('pointercancel', e => { ptrs.delete(e.pointerId); pinch = null; downAt = null; });
 cv.addEventListener('wheel', e => { e.preventDefault(); const w = s2w(e.clientX, e.clientY); cam.s *= Math.exp(-e.deltaY * .0015); clampCam(); cam.x = w[0] - (e.clientX - W / 2) / cam.s; cam.y = w[1] - (e.clientY - H / 2) / cam.s; }, { passive: false });
 function zoomBy(f) { cam.s *= f; clampCam(); }
@@ -437,7 +494,7 @@ function frame(now) {
   smoothAll(dt); drawMap(); drawLabels(); drawCities();
   VIEW.gs = RATE * 3600; FX.update(SPEED && !WD.over ? dt : 0);
   VIEW.drawBases(SELB);
-  buildClusters(); drawPaths(); FX.drawGround();
+  buildClusters(); drawPaths(); FX.drawGround(); drawPlans();
   const near = cam.s >= 1.7; let nb = 0;
   if (near) {
     const vis = SIM.alive(WD).filter(d => { const [x, y] = w2s(...divPos(d)); return x > -120 && x < W + 120 && y > -120 && y < H + 120; });
@@ -449,7 +506,7 @@ function frame(now) {
   requestAnimationFrame(frame);
 }
 // للفحص الآلي
-window.G_ = { WD, AW, SIM, cam, VIEW, FX, sel: ids => { SEL = new Set(ids); card(); }, orderTo, setSpeed, tap, get clusters() { return clusters; } };
+window.G_ = { WD, AW, SIM, cam, VIEW, FX, armies, get SEL() { return SEL; }, sel: ids => { SEL = new Set(ids); card(); }, orderTo, setSpeed, tap, get clusters() { return clusters; } };
 Promise.all(['base_me', 'base_south', 'abrams', 'abrams_t', 't72', 't72_t', 'bmp', 'grad', 'truck', 'f16', 'su25', 'f14', 'patriot', 's400', 'zolf', 'fx_explo1', 'fx_explo2', 'fx_fire', 'fx_cloud', 'f16_sheet', 'su25_sheet', 'f14_sheet'].map(load)).then(() => {
   // نسخة حمرة من الشاحنة والراجمة لإيران (حتى ما تنلخبط الألوان من قريب)
   for (const n of ['truck', 'grad']) { const im = IMG[n], c = document.createElement('canvas'); c.width = im.width; c.height = im.height; const x = c.getContext('2d'); x.filter = 'hue-rotate(170deg) saturate(1.3)'; x.drawImage(im, 0, 0); IMG[n + '_r'] = c; }

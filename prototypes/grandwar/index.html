@@ -86,6 +86,8 @@ button:focus-visible{outline:2px solid var(--gold);outline-offset:2px}
 #mmenu{position:fixed;left:56px;z-index:8;background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:5px;display:flex;flex-direction:column;gap:3px;box-shadow:var(--shadow)}#mmenu[hidden]{display:none}#mmenu button{text-align:start;padding:9px 12px;border-radius:9px;font-weight:600;min-width:150px}#mmenu button:hover{background:var(--chip)}
 #toasts{left:56px;right:8px;top:auto!important;flex-direction:column-reverse;align-items:stretch}.toast{box-shadow:var(--shadow)}
 .leg{display:grid;grid-template-columns:34px 1fr;gap:6px 10px;align-items:center;font-size:var(--fs);margin-top:6px}.leg i{display:inline-block;justify-self:center}
+#advChip{position:absolute;top:100%;inset-inline-start:8px;margin-top:6px;background:var(--neg-s);color:var(--on-acc);border-radius:16px;padding:6px 11px;font-weight:700;font-size:12.5px;box-shadow:var(--shadow);min-height:34px}#advChip[hidden]{display:none}
+.adv{display:flex;align-items:center;gap:8px;padding:7px 9px;margin:5px 0;border-radius:11px;background:var(--chip);border:1px solid var(--line);font-size:var(--fs)}.adv.w{border-inline-start:4px solid var(--neg-s)}.adv span{flex:1;min-width:0}.adv button{flex:0 0 auto;min-height:36px;padding:4px 10px;border-radius:9px;background:var(--gold);color:var(--brass-ink);font-weight:700}
 </style></head><body>
 <canvas id="c"></canvas>
 <div id="top">
@@ -93,6 +95,7 @@ button:focus-visible{outline:2px solid var(--gold);outline-offset:2px}
     <div class="date"><span><span id="dt"></span><small id="rate" style="display:block;font-size:10px;opacity:.75;font-weight:500"></small></span><div class="spd"><button data-s="0">⏸</button><button data-s="1" class="on">▶</button><button data-s="2">▶▶</button><button data-s="3">⏩</button></div></div></div>
   <div class="res"><button id="rVp"></button><button id="rCash"></button><button id="rMor"></button><button id="rDiv"></button></div>
   <div id="vpbar" title="نقاط المدن: أزرق إلنا، أحمر إلهم"><u></u></div>
+  <button id="advChip" hidden></button>
   <button id="ticker" aria-label="آخر الأخبار، اضغط تشوف السجل"><b>📡</b><span id="tickT">غرفة العمليات: الحرب بدت</span></button>
 </div>
 <div id="zoom"><button id="zin" aria-label="قرّب">＋</button><button id="zout" aria-label="بعّد">－</button><button id="zme" title="رجوع للجبهة" aria-label="رجوع للجبهة">◎</button><button id="menu" aria-label="القائمة">☰</button></div>
@@ -135,6 +138,7 @@ button:focus-visible{outline:2px solid var(--gold);outline-offset:2px}
 <script src="air.js"></script>
 <script src="econ.js"></script>
 <script src="dip.js"></script>
+<script src="advise.js"></script>
 <script src="fx.js"></script>
 <script src="view.js"></script>
 <script src="bv.js"></script>
@@ -506,6 +510,23 @@ $('ticker').onclick = () => openSheet(repPanel, 'tabRep');
 $('tabRep').onclick = () => openSheet(repPanel, 'tabRep');
 // 📜 التقرير (GW11 B1): ملخص اليوم ▲▼، رسوم، وسجل الأخبار بفلاتر
 const NCAT = m => /^(✈|🎯|💥|🚀|🛡|📡|🌫|☁|🌧|☀)/u.test(m) ? 'air' : /^(🛢|💰|🏭|💸|🏦|⚙)/u.test(m) ? 'eco' : /^(🤝|🕊|✉|🚫|📦|🔍|⚓|🇺🇳|🏕|🚢|🚂|📢|⚔ الهدنة|⚔ رفضنا)|^.{0,3}(🇰🇼|🇸🇦|🇦🇪|🇶🇦|🇯🇴|🇸🇾|🇹🇷|🇦🇿|🇦🇲|🇵🇰|🇺🇸|🇷🇺|🇨🇳)/u.test(m) ? 'dip' : 'war';
+// GW11 B2: المستشارين
+let ADVL = [];
+const advHtml = () => ADVL.length ? ADVL.map((o, i) => `<div class="adv ${o.w ? 'w' : ''}"><span>${o.t}</span><button data-adv="${i}">${o.l}</button></div>`).join('') : '<div class="dim">ماكو شي مستعجل. الأمور ماشية 👍</div>';
+function advRefresh() { ADVL = ADV.list(WD, AW, { SIM, ECON, DIP }, ME); const n = ADVL.filter(o => o.w).length, c = $('advChip'); c.hidden = !n; if (n) c.textContent = `🧭 ${n} ${n > 1 ? 'تحذيرات' : 'تحذير'}`; }
+function advDo(a) {
+  const [k, v] = a.split(':');
+  if (k === 'prod') { SUB.prod = 'buy'; openSheet(prodPanel, 'tabProd'); return; }
+  if (k === 'eco') { SUB.eco = v; openSheet(ecoPanel, 'tabEco'); return; }
+  if (k === 'dip') { SUB.dip = v; openSheet(dipPanel, 'tabDip'); return; }
+  if (k === 'ev') { closeSheet(); dipPopups(); return; }
+  if (k === 'arrow') { openSheet(armies, 'tabArmy'); return; }
+  closeSheet();
+  if (k === 'div') { const d = WD.divs.find(x => x.id === +v); if (d) { SEL = new Set([d.id]); SELB = -1; cam.x = cells[d.cell].c[0]; cam.y = cells[d.cell].c[1]; cam.s = Math.max(cam.s, 1); card(); } }
+  if (k === 'cell') { const c = cells[+v]; cam.x = c.c[0]; cam.y = c.c[1]; cam.s = Math.max(cam.s, 1.1); }
+}
+function advBind(el) { el.querySelectorAll('[data-adv]').forEach(b => b.onclick = () => advDo(ADVL[+b.dataset.adv].a)); }
+$('advChip').onclick = () => { SUB.rep = 'sum'; openSheet(repPanel, 'tabRep'); };
 function chartSvg(series, h = 46) {
   const all = series.flatMap(x => x.v).filter(v => v != null); if (all.length < 2) return '';
   let lo = Math.min(...all), hi = Math.max(...all); if (hi - lo < 1e-6) { hi += 1; lo -= 1; }
@@ -526,6 +547,7 @@ function repPanel(refresh) {
   const list = NEWS.filter(n => f === 'all' || (f === 'bad' ? n.cls === 'bad' : NCAT(n.msg) === f));
   el.innerHTML = `${GRAB}<div class="eh"><b>📜 التقرير</b><span class="dim">يوم ${Math.floor(WD.t / 24) + 1} من الحرب</span><button class="x" id="shX" aria-label="سكّر">✕</button></div>
   ${subBar('rep', SUBS)}<section data-s="sum">
+  <h3>🧭 المستشارين</h3>${advHtml()}
   <h3>آخر يوم</h3>
   <div class="kpis">${kpi('🏙 ' + (L ? L[1] : '—'), 'نقاط مدننا', 1)}${kpi('💰 ' + WD.eco[ME].cash.toFixed(1), 'مليار $', 3)}${kpi('🙂 ' + Math.round(WD.eco[ME].mor), 'المعنويات', 4)}${kpi('🪖 ' + SIM.score(WD).divs[0], 'فرقنا', 5)}${kpi('✈ ' + pl, 'طياراتنا', 7)}${kpi('🎯 ' + AW.kills[ME], 'أسقطنا طيارة', 9)}</div>
   ${L && P7 && L !== P7 ? `<div class="dim">آخر ${L[0] - P7[0]} أيام: مدننا ${L[1] - P7[1] >= 0 ? '+' : ''}${L[1] - P7[1]} نقطة · مناطقنا ${L[11] - P7[11] >= 0 ? '+' : ''}${L[11] - P7[11]} · خزينتنا ${(L[3] - P7[3] >= 0 ? '+' : '') + (L[3] - P7[3]).toFixed(1)} مليار · أسقطنا ${L[9] - P7[9]} وأسقطوا ${L[10] - P7[10]}</div>` : '<div class="dim">الملخص والرسوم تبدي بعد أول يوم.</div>'}
@@ -537,7 +559,7 @@ function repPanel(refresh) {
   </section><section data-s="news">
   <div class="subs">${FL.map(([k, l]) => `<button data-nf="${k}" class="${f === k ? 'on' : ''}">${l}</button>`).join('')}</div>
   ${list.length ? list.slice(0, 150).map(n => `<div class="news ${n.cls}"><small>${gameDate(n.t).replace(/ \d{4}/, '')}</small><span>${n.msg}</span></div>`).join('') : '<div class="dim" style="padding:12px 0">ما اكو أخبار بهالفلتر.</div>'}</section>`;
-  subApply(el, 'rep', SUBS); if (refresh) el.scrollTop = top;
+  subApply(el, 'rep', SUBS); if (refresh) el.scrollTop = top; advBind(el);
   el.querySelectorAll('[data-nf]').forEach(b => b.onclick = () => { SUB.repf = b.dataset.nf; repPanel(); });
 }
 document.querySelectorAll('#tabs [data-soon]').forEach(b => b.onclick = () => toast('🔜 هذا القسم بعدين (عالم أوسع، GW10)'));
@@ -994,7 +1016,7 @@ function frame(now) {
   if (SPEED && !WD.over) {
     const tac = cam.s >= 1.7 && lastNb > 0; const want = tac ? Math.min(HPS[SPEED], TACR[SPEED]) : HPS[SPEED]; RATE += (want - RATE) * Math.min(1, dt * 2.5); if (Math.abs(RATE - want) < want * .02) RATE = want; $('rate').textContent = rateTxt(RATE);
     acc += dt * RATE; $('tac').hidden = !tac; if (tac) $('tac').textContent = `⏱ بطيء: قريب من المعركة (${rateTxt(RATE)})`;
-    let n = 0; while (acc >= 1 && n < 40) { if (WD.t % 6 === 0) { SIM.ai(WD, 1); SIM.ai(WD, ME); } SIM.step(WD); if (WD.t % 24 === 0) { ECON.daily(WD, AW, SIM); DIP.daily(WD, AW, SIM, ECON); dipPopups(); if (!$('sheet').hidden) renderSheet(true); } acc -= 1; n++; }
+    let n = 0; while (acc >= 1 && n < 40) { if (WD.t % 6 === 0) { SIM.ai(WD, 1); SIM.ai(WD, ME); } SIM.step(WD); if (WD.t % 24 === 0) { ECON.daily(WD, AW, SIM); DIP.daily(WD, AW, SIM, ECON); advRefresh(); dipPopups(); if (!$('sheet').hidden) renderSheet(true); } acc -= 1; n++; }
     // الجو ويا الساعة، ومن تقرّب يبطأ أكثر حتى تشوف الإطلاق والمطاردة بعينك
     const af = Math.min(1.6, Math.max(.3, .25 * RATE * 3600 / 38)); AIR.step(AW, WD, SIM, dt * (cam.s >= 1.7 ? Math.min(af, .45) : af));
     for (const e of AW.ev) VIEW.airEvent(e, toast, ME); AW.ev.length = 0;
@@ -1025,7 +1047,7 @@ Promise.all(['base_me', 'base_south', 'abrams', 'abrams_t', 't72', 't72_t', 'bmp
   // نسخة حمرة من الشاحنة والراجمة لإيران (حتى ما تنلخبط الألوان من قريب)
   for (const n of ['truck', 'grad']) { const im = IMG[n], c = document.createElement('canvas'); c.width = im.width; c.height = im.height; const x = c.getContext('2d'); x.filter = 'hue-rotate(170deg) saturate(1.3)'; x.drawImage(im, 0, 0); IMG[n + '_r'] = c; }
   FX.init({ g, cam, w2s, IMG }); BVIEW.init({ IMG, SND: VIEW.SND });
-  hud(); requestAnimationFrame(frame); window.READY = 1;
+  hud(); advRefresh(); requestAnimationFrame(frame); window.READY = 1;
   $('go').onclick = () => { if (LOADED) { $('intro').hidden = true; VIEW.SND.init(); setSpeed(1); toast(`💾 كمّلنا من ${gameDate(WD.t)}`, 'good'); return; } if (Q.get('load') != null) { location.search = ''; return; } $('intro').hidden = true; VIEW.SND.init(); setSpeed(1); };
   if (LOADED) { $('go').textContent = `كمّل الحرب ▶ (${gameDate(WD.t)})`; logN = WD.log.length; if (LOADED.ui?.news) { NEWS.push(...LOADED.ui.news); $('tickT').textContent = NEWS[0]?.msg || ''; } }
   else { const a = ST && SAVE.info(ST, 0); if (a) { $('cont').hidden = false; $('cont').textContent = `💾 كمّل حربك (${gameDate(a.t)})`; $('cont').onclick = () => { location.search = '?load=0'; }; $('go').textContent = 'حرب جديدة ▶'; } }

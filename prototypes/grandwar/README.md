@@ -189,6 +189,16 @@
 - الفحص: `node tests/econ.test.mjs [أيام] [بذور]`.
 - الصفحة: https://claude.ai/artifact/4cwaG4sErXbzHEUkZPpQ3H
 
+## GW10: عالم أوسع (I-091)
+- `dip.js`: 13 دولة بعلاقات ويا الطرفين.
+  - بعثات، ومساعدات، وتحالف (قوات توصل للعراق)، وعقوبات، ووساطة؛
+  - «تعب الحرب»، وهدنة وسلام بشروط؛
+  - عروض إيران وذكاؤها الدبلوماسي؛
+  - أحداث عالمية.
+  - القواعد والأرقام بـ `../../docs/features/grandwar-world.md`.
+- الهدنة: `SIM.inTruce` يوقف الهجوم والخطط، والجو يوقف الطلعات الهجومية والضربات.
+- الفحص: `node tests/dip.test.mjs [أيام] [بذور]`.
+
 ## الملفات
 - `tools/warp.py`: صور الأرض المظللة (من `../world3d/terrain`) لنفس إسقاط الخريطة → `img/base_me.webp`، `img/base_south.webp`.
 - `tools/cells.py <Natural Earth> ../world3d/terrain ../wardesigns/data.js` → `cells.js` (المناطق، الجيران، الحدود المشتركة للجبهة، الأنهار).
@@ -196,4 +206,4 @@
 - `data.js`: من `../wardesigns/` (Natural Earth). صور الأسلحة من `../wardesigns/img/` (مجسمات CC BY، راجع `../theater/models/CREDITS.md`).
 
 ## الجاي
-GW9 التلفون (PWA ثم APK) · GW10 عالم أوسع.
+GW9 التلفون (PWA ثم APK).

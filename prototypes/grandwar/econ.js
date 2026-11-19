@@ -96,9 +96,9 @@
   // ميزانية اليوم (بدون شراء): كل بند لحاله حتى ينعرض للاعب
   function budget(W, A, s) {
     const e = W.eco[s], L = LAND[s], P = PRIO[e.prio], o = oilOf(W, s);
-    const price = W.oil.price * L.disc;
+    const price = W.oil.price * L.disc * (s === 1 && W.dip && W.dip.sanc > W.t ? .8 : 1);   // GW10: العقوبات الأمريكية تكبّر خصم إيران
     const oil = o.exp * price * 1e-3, other = L.other * P.other;
-    let army = 0; for (const d of W.divs) if (!d.dead && d.side === s) army += UPKEEP[d.kind] * (W.t - d.lastFight < 24 ? 2.5 : d.path.length ? 1.5 : 1) * L.mil;
+    let army = 0; for (const d of W.divs) if (!d.dead && d.side === s && !d.ally) army += UPKEEP[d.kind] * (W.t - d.lastFight < 24 ? 2.5 : d.path.length ? 1.5 : 1) * L.mil;
     const civ = L.civ * P.civ;
     const air = (A && A.sor ? A.sor[s] : 0) * SORTIE[s];
     const fix = W.oil.sites.filter(f => f.side === s && f.dmg > 0).length * .002;
@@ -133,17 +133,17 @@
       let best = -1, bv = -1; W.cells.forEach((c, i) => { if (W.ctrl[i] === s && c.s === s && W.sup[s][i] && (c.vp || 0) > bv) { bv = c.vp || 0; best = i; } });
       if (best < 0) return false;
       W.num = W.num || [100, 200]; const d = SIM.addDiv(W, s, o.k, best, W.num[s]++); d.org = d.orgMax * .6; SIM.joinArmy(W, d);
-      W.log.push({ t: W.t, side: s, k: 'built', it: o.k, div: d.n, cell: best });
+      W.log.push({ t: W.t, side: s, k: 'built', it: o.k, gift: o.gift, div: d.n, cell: best });
     } else if (it.cat === 'plane') {
       if (!A) return true;
       const bs = A.bases.filter(b => b.side === s && b.type === it.plane); if (!bs.length) return true;
       for (let n = 0; n < (it.q || 1); n++) { const b = bs.sort((a, c) => (c.max - c.n0) - (a.max - a.n0))[0]; if (b.n0 >= b.max) b.max++; b.n0++; b.ready++; }
       const b = bs[0];
-      W.log.push({ t: W.t, side: s, k: 'built', it: o.k, base: b.n });
+      W.log.push({ t: W.t, side: s, k: 'built', it: o.k, gift: o.gift, base: b.n });
     } else if (it.cat === 'sam') {
       if (A) A.pool[s][it.pool] = (A.pool[s][it.pool] || 0) + it.q;
-      W.log.push({ t: W.t, side: s, k: 'built', it: o.k });
-    } else if (it.cat === 'line') { W.eco[s].lines++; W.log.push({ t: W.t, side: s, k: 'built', it: o.k }); }
+      W.log.push({ t: W.t, side: s, k: 'built', it: o.k, gift: o.gift });
+    } else if (it.cat === 'line') { W.eco[s].lines++; W.log.push({ t: W.t, side: s, k: 'built', it: o.k, gift: o.gift }); }
     return true;
   }
 

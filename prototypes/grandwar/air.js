@@ -260,7 +260,7 @@
     if (A.decoys) { for (const f of A.decoys) { f.t += dt; f.x += f.vx * dt; f.y += f.vy * dt; } A.decoys = A.decoys.filter(f => f.t < .08); }
     A.planes = A.planes.filter(p => p.st !== 'dead');
     // ضربات إيران المركّبة
-    A.raidCd -= dt; if (A.raidCd <= 0) { A.raidCd = 70 + A.rnd() * 90; planRaid(A, W); }
+    A.raidCd -= dt; if (A.raidCd <= 0) { A.raidCd = 70 + A.rnd() * 90; if (!(W.dip && W.dip.truce > W.t)) planRaid(A, W); }
     for (let i = A.queue.length - 1; i >= 0; i--) {
       const q = A.queue[i]; if (A.t < q.t) continue;
       if (q.k === 'bm' && q.erect === 0) { q.erect = 1; q.t += .06; emit(A, { k: 'bmerect', side: 1, x: q.mb.p[0], y: q.mb.p[1] }); continue; }
@@ -302,7 +302,8 @@
       b.cd -= dt;
       if (b.cd > 0 || b.down > 0 || b.ready < (PLANES[b.type].isr ? 1 : 2)) continue;
       if (W.wx === 'dust' || (W.night && !PLANES[b.type].night)) continue;   // R5c: عاصفة غبار = ما اكو طيران؛ سوخوي-25 ما تطير بالليل (بلا رؤية ليلية)
-      const m = b.mission.kind === 'auto' ? planFor(A, W, b) : b.mission;
+      let m = b.mission.kind === 'auto' ? planFor(A, W, b) : b.mission;
+      if (W.dip && W.dip.truce > W.t && m && m.kind !== 'cap' && m.kind !== 'recon') m = null;   // GW10: بالهدنة بس دوريات واستطلاع
       b.cd = 12 + A.rnd() * 14;
       if (!m || m.kind === 'idle' || !m.p) continue;
       const T = PLANES[b.type];

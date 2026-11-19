@@ -147,8 +147,11 @@
   const isSeen = (W, s, cell, h = 2) => W.noFog || !W.seen || W.t - W.seen[s][cell] <= h;
 
   // ساعة وحدة
+  // GW10: هدنة = ما اكو هجوم (الحركة بأرضنا بس)
+  const inTruce = W => !!(W.dip && W.dip.truce > W.t);
   function step(W) {
     W.t++;
+    if (inTruce(W)) for (const d of W.divs) if (!d.dead && d.path.length && W.ctrl[d.path[0]] !== d.side) { d.path = []; d.prog = 0; if (d.mode === 'manual') d.mode = 'hold'; }
     weather(W);
     for (const b of W.bridges) if (b.down > 0 && --b.down === 0) W.log.push({ t: W.t, side: b.by, k: 'bridgefix', cell: b.i, n: b.n });
     if (W.t % 6 === 1) supply(W);
@@ -302,7 +305,7 @@
       const gain = (W.cells[j].vp || 0) * 3 + 1 + (W.cells[j].s === s ? 3 : 0);
       targets.push({ j, def, avail, ratio, score: ratio * gain });
     }
-    targets.sort((a, b) => b.score - a.score);
+    targets.sort((a, b) => b.score - a.score); if (inTruce(W)) targets.length = 0;
     for (const T of targets) {
       if (T.ratio < (T.def.length ? aggr : 0)) continue;
       if (W.cool && (W.cool.get(s + ':' + T.j) || 0) > W.t) continue; // هجوم فشل هنا قريب: لا تعيده هسه
@@ -389,7 +392,7 @@
   function cancelPlan(W, P) { if (!P) return; P.st = P.st === 'done' ? 'done' : 'cancel'; for (const d of W.divs) if (d.plan === P.id) { d.plan = null; if (d.mode === 'plan') { d.mode = 'auto'; if (d.path.length && W.ctrl[d.path[0]] !== d.side) d.path = []; } } }
   function runPlans(W) {
     for (const P of W.plans || []) {
-      if (P.st !== 'prep' && P.st !== 'go') continue;
+      if (P.st !== 'prep' && P.st !== 'go') continue; if (inTruce(W)) { P.last = W.t; continue; }
       const D = W.divs.filter(d => !d.dead && d.plan === P.id); if (!D.length) { P.st = 'fail'; W.log.push({ t: W.t, side: P.side, k: 'planfail', id: P.id }); continue; }
       // رأس الحربة يكمل لقدّام من أبعد نقطة وصلها على السهم (اللي يضيع وراه يمسكه المشاة)، فما يرجع ويروح
       const reach = Math.max(0, ...D.map(d => P.path.indexOf(d.cell)));
@@ -436,6 +439,6 @@
   // تلخيص الحرب
   function score(W) { const vp = [0, 0]; W.cells.forEach((c, i) => { if (c.vp) vp[W.ctrl[i]] += c.vp; }); return { vp, cells: [0, 1].map(s => W.ctrl.reduce((n, x) => n + (x === s ? 1 : 0), 0)), divs: [0, 1].map(s => alive(W).filter(d => d.side === s).length), lost: W.lost.slice() }; }
 
-  const API = { getNID: () => NID, setNID: v => { NID = v; }, WX, weather, envAtk, envMv, hitBridge, edgeCost, SUP_BUDGET, intel, known, isSeen, initIntel, makePlan, cancelPlan, runPlans, cellChain, joinArmy, airHit, TEMPL, TERR, KIND_N, World, addDiv, step, ai, order, route, scenario, supply, score, alive, divsIn, frontCells, power };
+  const API = { inTruce, getNID: () => NID, setNID: v => { NID = v; }, WX, weather, envAtk, envMv, hitBridge, edgeCost, SUP_BUDGET, intel, known, isSeen, initIntel, makePlan, cancelPlan, runPlans, cellChain, joinArmy, airHit, TEMPL, TERR, KIND_N, World, addDiv, step, ai, order, route, scenario, supply, score, alive, divsIn, frontCells, power };
   if (typeof module !== 'undefined') module.exports = API; else root.SIM = API;
 })(this);

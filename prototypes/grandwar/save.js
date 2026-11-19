@@ -3,10 +3,12 @@
 // الحفظ: الحرب كلها بالضبط (المناطق، الفرق، المعارك، الخطط، الاستخبارات، الجسور، الطقس، الأرقام العشوائية)،
 // والجو «على الأرض»: المطارات والبطاريات والمخازن؛ الطيارات اللي بالجو ترجع لقواعدها، والصواريخ بالجو تنشال.
 (function (root) {
-  const V = 2;
+  const V = 3;
   const MIG = {
     // 1 ← 2 (GW8): الاقتصاد (W.eco، W.oil) جديد؛ ينبني من حالة الحرب وقت التحميل (ECON.ensure بـ restore)
     1: s => { s.v = 2; return s; },
+    // 2 ← 3 (GW10): الدبلوماسية (W.dip) جديدة؛ تنبني بـ DIP.ensure بـ restore
+    2: s => { s.v = 3; return s; },
   };
   // أشياء ثابتة تنبني من الخريطة (ما تنحفظ)
   const W_STATIC = new Set(['cells', 'N', 'edgeOf', 'dist', 'rnd', 'road', 'bridgeOf', 'spots']);
@@ -48,7 +50,7 @@
     return s;
   }
   // يرجّع العالم والجو من الحفظ (W جديد من الخريطة + الحالة فوقه)
-  function restore(s, C, opt, SIM, AIR, ECON) {
+  function restore(s, C, opt, SIM, AIR, ECON, DIP) {
     s = migrate(s);
     const W = SIM.World(C, { ...opt, seed: s.seed });
     const w = dec(s.W); for (const k in w) W[k] = w[k];
@@ -58,7 +60,7 @@
     const A = AIR.create(W); const a = dec(s.A);
     for (const k in a) A[k] = a[k];
     A.rnd = W.rnd; A.planes = []; A.msls = []; A.ev = []; A.queue = []; A.raids = {}; A.decoys = [];
-    if (ECON) ECON.ensure(W);   // حفظ قديم بلا اقتصاد ← نبنيه (ما يسحب أرقام عشوائية)
+    if (ECON) ECON.ensure(W); if (DIP) DIP.ensure(W);   // حفظ قديم بلا اقتصاد ← نبنيه (ما يسحب أرقام عشوائية)
     W.rnd.set(s.rng);   // آخر شي: بناء الجو يسحب أرقام عشوائية، فنرجّع الحالة بعده حتى الحرب تكمل بالضبط
     return { W, A, ui: s.ui, saved: s.saved, seed: s.seed };
   }

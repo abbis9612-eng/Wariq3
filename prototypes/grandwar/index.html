@@ -29,7 +29,7 @@ button{font:inherit;color:inherit;background:none;border:0;cursor:pointer}
 .bar{height:4px;border-radius:2px;background:var(--chip2);margin-top:2px;overflow:hidden}.bar u{display:block;height:100%;background:var(--pos-s)}.bar u.o{background:var(--gold)}
 .adt{width:100%;border-collapse:collapse;font-size:11px;margin-top:3px}.adt th{font-weight:700;opacity:.7;text-align:start;padding:2px 3px}.adt td{padding:3px 3px;border-top:1px solid var(--line);vertical-align:top}.adt td:first-child{white-space:nowrap;font-weight:700}
 .acts{display:flex;gap:6px}.acts button{flex:1;text-align:center;border-radius:9px;padding:7px 2px;background:var(--chip);border:1px solid var(--line);font-weight:600;font-size:12.5px}.acts button.go{background:var(--act);border-color:var(--act-l)}.acts button.on{outline:2px solid var(--gold)}
-#tabs{position:fixed;left:0;right:0;bottom:0;display:flex;background:var(--panel);border-top:1px solid var(--line);padding:5px 4px calc(5px + env(safe-area-inset-bottom));z-index:5}
+#tabs{position:fixed;left:0;right:0;bottom:0;display:flex;background:var(--panel);border-top:1px solid var(--line);padding:5px 4px calc(5px + env(safe-area-inset-bottom));z-index:7}
 #tabs button{flex:1;text-align:center;font-size:10.5px;font-weight:600;opacity:.8}#tabs button em{display:block;font-style:normal;font-size:19px;line-height:1.25}#tabs button.on{opacity:1;color:var(--gold)}
 #zoom{position:fixed;left:8px;display:flex;flex-direction:column;gap:5px;z-index:4}#zoom button{width:36px;height:36px;border-radius:10px;background:var(--panel);border:1px solid var(--line);font-size:17px}
 #tac{position:fixed;left:50%;transform:translateX(-50%);white-space:nowrap;bottom:calc(68px + env(safe-area-inset-bottom));background:var(--panel);border:1px solid var(--gold-l);color:var(--gold);border-radius:10px;padding:3px 10px;font-size:12px;font-weight:700;z-index:4;pointer-events:none}#tac[hidden]{display:none}
@@ -42,10 +42,13 @@ button{font:inherit;color:inherit;background:none;border:0;cursor:pointer}
 #intro h1{font:700 24px "Reem Kufi",sans-serif;color:var(--gold);text-align:center}#intro p{margin:8px 0;font-size:13.5px;line-height:1.6}#intro ul{margin:4px 0 10px;padding-inline-start:18px;font-size:13px;line-height:1.65}
 #intro button{width:100%;margin-top:6px;background:var(--gold);color:var(--brass-ink);border-radius:12px;padding:10px;font-weight:700;font-size:16px}
 #intro #cont{background:var(--me);color:var(--on-acc)}
-#saves{position:fixed;left:8px;right:8px;top:calc(110px + env(safe-area-inset-top));background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:10px 12px;z-index:7;backdrop-filter:blur(6px)}#saves[hidden]{display:none}.slot{background:var(--chip);border:1px solid var(--line);border-radius:10px;padding:7px 9px;margin:6px 0}.slot b{font:700 14px 'Reem Kufi'}.slot .acts{margin-top:5px}
-#armies{position:fixed;left:0;right:0;bottom:calc(58px + env(safe-area-inset-bottom));max-height:62vh;overflow:auto;background:var(--panel);border-top:1px solid var(--line);border-radius:16px 16px 0 0;padding:10px 12px;z-index:6;backdrop-filter:blur(6px)}#armies[hidden]{display:none}
+.slot{background:var(--chip);border:1px solid var(--line);border-radius:10px;padding:7px 9px;margin:6px 0}.slot b{font:700 14px 'Reem Kufi'}.slot .acts{margin-top:5px}
 .arm{background:var(--chip);border:1px solid var(--line);border-radius:12px;padding:8px 10px;margin:7px 0}.arm .h{display:flex;align-items:center;gap:8px}.arm b{font:700 15px 'Reem Kufi'}.arm .acts{margin-top:6px}
-#sheet{position:fixed;left:0;right:0;bottom:calc(58px + env(safe-area-inset-bottom));max-height:66vh;overflow:auto;background:var(--panel);border-top:1px solid var(--line);border-radius:16px 16px 0 0;padding:10px 12px 12px;z-index:6;backdrop-filter:blur(6px)}#sheet[hidden]{display:none}
+#scrim{position:fixed;inset:0;background:var(--scrim);z-index:5}#scrim[hidden]{display:none}
+#sheet{position:fixed;left:0;right:0;bottom:calc(58px + env(safe-area-inset-bottom));max-height:62vh;overflow:auto;overscroll-behavior:contain;background:var(--panel);border-top:1px solid var(--line);border-radius:18px 18px 0 0;padding:0 max(12px,env(safe-area-inset-right)) 14px max(12px,env(safe-area-inset-left));z-index:6;box-shadow:var(--shadow);transition:max-height .2s ease}#sheet[hidden]{display:none}#sheet.full{max-height:calc(100% - 58px - env(safe-area-inset-bottom) - 12px - env(safe-area-inset-top))}
+.grab{position:sticky;top:0;z-index:2;margin:0 -12px;padding:8px 0 6px;background:var(--panel);display:flex;justify-content:center;cursor:grab;touch-action:none}.grab::before{content:"";width:44px;height:5px;border-radius:3px;background:var(--line)}
+.subs{display:flex;gap:5px;margin:8px 0 4px;overflow-x:auto;scrollbar-width:none}.subs::-webkit-scrollbar{display:none}.subs button{flex:1 0 auto;min-height:36px;border-radius:18px;padding:5px 12px;background:var(--chip);border:1px solid var(--line);font-weight:700;font-size:var(--fs);white-space:nowrap}.subs button.on{background:var(--gold);color:var(--brass-ink);border-color:var(--gold)}.subs .cnt{font-style:normal;font-size:11px;background:var(--neg-s);color:var(--on-acc);border-radius:8px;padding:0 5px;margin-inline-start:3px}
+.eh .x{min-width:40px;min-height:40px}
 #sheet h3{font:700 var(--fs-m) 'Reem Kufi';color:var(--gold);margin:12px 0 4px;text-wrap:balance}.eh{display:flex;align-items:center;gap:8px}.eh b{font:700 17px 'Reem Kufi';color:var(--gold)}.eh .x{margin-inline-start:auto;font-size:18px}
 .big{font:700 22px 'Reem Kufi';font-variant-numeric:tabular-nums}.pos{color:var(--pos)}.neg{color:var(--neg)}.dim{color:var(--dim);font-size:var(--fs-s)}
 .bt{width:100%;border-collapse:collapse;font-size:12px;font-variant-numeric:tabular-nums}.bt td{padding:2px 3px;border-top:1px solid var(--line)}.bt td:last-child{text-align:end;white-space:nowrap}
@@ -85,7 +88,7 @@ button:focus-visible{outline:2px solid var(--gold);outline-offset:2px}
   <div id="vpbar"><u></u></div>
 </div>
 <div id="zoom"><button id="zin">＋</button><button id="zout">－</button><button id="zme" title="رجوع للجبهة">◎</button><button id="snd">🔊</button><button id="sv" title="حفظ">💾</button><button id="thm" title="الثيم: فاتح / غامق">🌓</button></div>
-<div id="saves" hidden></div><input type="file" id="imp" accept=".json,application/json" hidden>
+<input type="file" id="imp" accept=".json,application/json" hidden>
 <div id="toasts"></div>
 <div id="hint" hidden></div>
 <div id="tac" hidden>⏱ بطيء: قريب من المعركة</div>
@@ -115,7 +118,7 @@ button:focus-visible{outline:2px solid var(--gold);outline-offset:2px}
   <div id="bvHint" hidden></div>
   <div id="bvNote">مشهد حقيقي: المسافات بالمتر والوقت بالثانية الحقيقية. الآليات مكبّرة ×5 حتى تنشاف. 🎥 المخرج يقطع لأهم لحظة، واسحب بإصبعك حتى تتحكم.</div>
   <div id="bvRes" hidden></div></div>
-<div id="armies" hidden></div><div id="sheet" hidden></div><div id="modal" hidden></div>
+<div id="scrim" hidden></div><div id="sheet" hidden></div><div id="modal" hidden></div>
 <script src="data.js"></script>
 <script src="cells.js"></script>
 <script src="roads.js"></script>
@@ -465,17 +468,16 @@ function endGame(loser, why) {
 function setSpeed(s) { SPEED = s; document.querySelectorAll('.spd button').forEach(b => b.classList.toggle('on', +b.dataset.s === s)); }
 document.querySelectorAll('.spd button').forEach(b => b.onclick = () => setSpeed(+b.dataset.s));
 function armies() {
-  const el = $('armies'); if (!el.hidden) { el.hidden = true; return; }
+  const el = $('sheet');
   const A = (WD.armies || []).filter(a => a.side === ME);
-  el.innerHTML = `<div style="display:flex;align-items:center"><b style="font:700 17px 'Reem Kufi';color:var(--gold)">🪖 جيوشنا</b><button id="armX" style="margin-inline-start:auto;font-size:18px">✕</button></div><div class="s" style="font-size:12px;opacity:.75">اختار جيش، وبعدين «🏹 سهم» وارسم الهجوم بإصبعك. الدروع والآليات تصير رأس حربة، والمشاة تمسك الجبهة.</div>` +
+  el.innerHTML = `${GRAB}<div class="eh"><b>🪖 جيوشنا</b><button class="x" id="shX" aria-label="سكّر">✕</button></div><div class="s" style="font-size:12px;opacity:.75">اختار جيش، وبعدين «🏹 سهم» وارسم الهجوم بإصبعك. الدروع والآليات تصير رأس حربة، والمشاة تمسك الجبهة.</div>` +
     A.map(a => { const ds = SIM.alive(WD).filter(d => d.army === a.id); const st = ds.length ? ds.reduce((s, d) => s + d.str, 0) / ds.length : 0; const k = { arm: 0, mec: 0, inf: 0 }; ds.forEach(d => k[d.kind]++); const pl = (WD.plans || []).filter(p => p.side === ME && (p.st === 'prep' || p.st === 'go') && ds.some(d => d.plan === p.id));
       return `<div class="arm"><div class="h"><b>${a.n}</b><span class="x ${a.stance === 'defend' ? 'hold' : 'auto'}" style="margin-inline-start:auto;font-size:11px;border-radius:10px;padding:1px 8px">${a.stance === 'defend' ? '🛡 دفاع فقط' : '🤖 تلقائي'}</span></div><div style="font-size:12px;opacity:.85">${ds.length} فرق (🛡 ${k.arm} مدرعة · 🚙 ${k.mec} آلية · 🪖 ${k.inf} مشاة) · القوة ${Math.round(st * 100)}%${pl.length ? ' · 🏹 ' + pl.map(planTxt).join('، ') : ''}</div><div class="bar"><u style="width:${st * 100}%"></u></div>
       <div class="acts"><button class="go" data-sel="${a.id}">اختر الجيش</button><button data-st="${a.id}">${a.stance === 'defend' ? '🤖 خليه يهاجم' : '🛡 دفاع فقط'}</button></div></div>`; }).join('');
-  el.hidden = false; $('armX').onclick = () => el.hidden = true;
-  el.querySelectorAll('[data-sel]').forEach(b => b.onclick = () => { const id = +b.dataset.sel; const ds = SIM.alive(WD).filter(d => d.army === id); SEL = new Set(ds.map(d => d.id)); SELB = -1; let x = 0, y = 0; ds.forEach(d => { x += cells[d.cell].c[0]; y += cells[d.cell].c[1]; }); if (ds.length) { cam.x = x / ds.length; cam.y = y / ds.length; cam.s = Math.min(cam.s, .9); } el.hidden = true; card(); });
-  el.querySelectorAll('[data-st]').forEach(b => b.onclick = () => { const a = WD.armies[+b.dataset.st]; a.stance = a.stance === 'defend' ? 'auto' : 'defend'; toast(a.stance === 'defend' ? `🛡 ${a.n}: يمسك الجبهة وما يهاجم` : `🤖 ${a.n}: القائد يهاجم لما يشوف فرصة`); el.hidden = true; armies(); });
+  el.querySelectorAll('[data-sel]').forEach(b => b.onclick = () => { const id = +b.dataset.sel; const ds = SIM.alive(WD).filter(d => d.army === id); SEL = new Set(ds.map(d => d.id)); SELB = -1; let x = 0, y = 0; ds.forEach(d => { x += cells[d.cell].c[0]; y += cells[d.cell].c[1]; }); if (ds.length) { cam.x = x / ds.length; cam.y = y / ds.length; cam.s = Math.min(cam.s, .9); } closeSheet(); card(); });
+  el.querySelectorAll('[data-st]').forEach(b => b.onclick = () => { const a = WD.armies[+b.dataset.st]; a.stance = a.stance === 'defend' ? 'auto' : 'defend'; toast(a.stance === 'defend' ? `🛡 ${a.n}: يمسك الجبهة وما يهاجم` : `🤖 ${a.n}: القائد يهاجم لما يشوف فرصة`); armies(); });
 }
-$('tabArmy').onclick = () => { $('sheet').hidden = true; SHEET = null; armies(); };
+$('tabArmy').onclick = () => openSheet(armies, 'tabArmy');
 document.querySelectorAll('#tabs [data-soon]').forEach(b => b.onclick = () => toast('🔜 هذا القسم بعدين (عالم أوسع، GW10)'));
 const KN = SIM.KIND_N;
 function card() {
@@ -685,8 +687,18 @@ function battleInfo(b) {
 const OILST = { ok: '✅ شغال', risk: '⚠️ قرب الجبهة (ينتج أقل)', dmg: '🔥 مضروب', lost: '❌ بيد العدو' };
 const M$ = v => { const m = Math.round(v * 1000); return (m > 0 ? '+' : m < 0 ? '−' : '') + Math.abs(m) + ' م$'; };
 const B$ = v => (v < 0 ? '−' : '') + Math.abs(v).toFixed(1) + ' مليار $';
-let SHEET = null;
-function openSheet(fn) { const el = $('sheet'); if (!el.hidden && SHEET === fn) { el.hidden = true; SHEET = null; tabOn(0); return; } $('armies').hidden = true; SHEET = fn; fn(); el.hidden = false; }
+// GW11 A2: ورقة وحدة من تحت لكل الأقسام: خلفية معتمة، مقبض (اضغط = نص/كاملة، اسحب لتحت = سكّر)، وتبويبات فرعية
+let SHEET = null; const SUB = {}; const GRAB = '<div class="grab" title="اسحب لتحت حتى تسكّر"></div>';
+function openSheet(fn, tab) { const el = $('sheet'); if (!el.hidden && SHEET === fn) { closeSheet(); return; } SHEET = fn; el.classList.remove('full'); el.scrollTop = 0; fn(); el.hidden = false; $('scrim').hidden = false; tabOn(tab || 0); }
+function closeSheet() { $('sheet').hidden = true; $('scrim').hidden = true; SHEET = null; tabOn(0); }
+function renderSheet(refresh) { if (SHEET && !$('sheet').hidden) SHEET(refresh); }
+function subBar(key, list) { const cur = SUB[key] || list[0][0]; return `<div class="subs" role="tablist">${list.map(([k, l, n]) => `<button role="tab" data-sub="${key}:${k}" class="${cur === k ? 'on' : ''}">${l}${n ? `<i class="cnt">${n}</i>` : ''}</button>`).join('')}</div>`; }
+function subApply(el, key, list) { const cur = SUB[key] || list[0][0]; el.querySelectorAll('section[data-s]').forEach(x => { x.hidden = x.dataset.s !== cur; }); }
+$('scrim').onclick = closeSheet;
+$('sheet').addEventListener('click', ev => { const t = ev.target.closest('[data-sub],#shX'); if (!t) return; if (t.id === 'shX') { closeSheet(); return; } const [k, v] = t.dataset.sub.split(':'); SUB[k] = v; $('sheet').scrollTop = 0; renderSheet(); });
+{ let y0 = null; const el = $('sheet');
+  el.addEventListener('pointerdown', ev => { if (ev.target.closest('.grab')) { y0 = ev.clientY; ev.target.setPointerCapture?.(ev.pointerId); } });
+  el.addEventListener('pointerup', ev => { if (y0 == null) return; const dy = ev.clientY - y0; y0 = null; if (dy > 60) closeSheet(); else if (dy < -30) el.classList.add('full'); else if (Math.abs(dy) < 8) el.classList.toggle('full'); }); }
 function tabOn(id) { document.querySelectorAll('#tabs button').forEach((b, i) => b.classList.toggle('on', id ? b.id === id : i === 0)); }
 function spark(hist, k, col, lo, hi) {
   if (hist.length < 2) return '';
@@ -699,7 +711,9 @@ function ecoPanel(refresh) {
   const el = $('sheet'), e = WD.eco[ME], B = e.last || ECON.budget(WD, AW, ME), L = ECON.LAND[ME], top = el.scrollTop;
   const mine = WD.oil.sites.filter(f => f.side === ME), theirs = WD.oil.sites.filter(f => f.side !== ME && !f.off);
   const pr = Object.entries(ECON.PRIO);
-  el.innerHTML = `<div class="eh"><b>💰 الاقتصاد</b><span class="dim">${WD.eco[ME].auto ? '🤖 الوزير يشتري' : '✋ انت تشتري'}</span><button class="x" id="shX">✕</button></div>
+  const SUBS = [['cash', '💰 الخزينة'], ['oil', '🛢 النفط'], ['mor', '🙂 الشعب']];
+  el.innerHTML = `${GRAB}<div class="eh"><b>💰 الاقتصاد</b><span class="dim">${WD.eco[ME].auto ? '🤖 الوزير يشتري' : '✋ انت تشتري'}</span><button class="x" id="shX" aria-label="سكّر">✕</button></div>
+  ${subBar('eco', SUBS)}<section data-s="cash">
   <div style="display:flex;align-items:baseline;gap:10px;margin-top:4px"><span class="big ${e.cash < 0 ? 'neg' : ''}">${B$(e.cash)}</span><span class="${B.net >= 0 ? 'pos' : 'neg'}" style="font-weight:700">${M$(B.net)} باليوم</span></div>
   <div class="dim">${e.cash < -L.lim ? '💸 تجاوزنا حد الدين: الرواتب متأخرة والمعنويات تنزل بسرعة' : e.cash < 0 ? `🏦 بالدين (الحد ${L.lim} مليار). الدين ينقص المعنويات وعليه فائدة` : `تقدر تستدين لحد ${L.lim} مليار، بس الدين ينقص المعنويات`}</div>
   ${e.hist.length > 2 ? `<div class="dim" style="margin-top:4px">الخزينة آخر ${e.hist.length} يوم (من ${B$(Math.min(...e.hist.map(h => h[1])))} لـ ${B$(Math.max(...e.hist.map(h => h[1])))})</div>${spark(e.hist, 1, 'var(--gold)')}` : ''}
@@ -715,21 +729,21 @@ function ecoPanel(refresh) {
   <div class="dim" style="margin-top:3px">سعر النفط $${Math.round(WD.oil.price)} (الحرب ترفعه، وكل ضربة على حقل تقفزه). المشتريات تنقص من الخزينة وقت الطلب (🏭 الإنتاج).</div>
   <h3>أولوية الاقتصاد</h3>
   <div class="seg">${pr.map(([k, p]) => `<button data-pr="${k}" class="${e.prio === k ? 'on' : ''}">${p.n}</button>`).join('')}</div>
-  <div class="dim" style="margin-top:3px">${ECON.PRIO[e.prio].d}${e.auto ? ' · الوزير يغيّرها لحاله' : ''}</div>
-  <h3>معنويات الشعب: ${Math.round(e.mor)} ${e.dm != null ? `<span class="${e.dm >= 0 ? 'pos' : 'neg'}" style="font-size:12px">(${e.dm >= 0 ? '+' : ''}${e.dm.toFixed(1)} اليوم)</span>` : ''}</h3>
+  <div class="dim" style="margin-top:3px">${ECON.PRIO[e.prio].d}${e.auto ? ' · الوزير يغيّرها لحاله' : ''}</div></section>
+  <section data-s="mor"><h3>معنويات الشعب: ${Math.round(e.mor)} ${e.dm != null ? `<span class="${e.dm >= 0 ? 'pos' : 'neg'}" style="font-size:12px">(${e.dm >= 0 ? '+' : ''}${e.dm.toFixed(1)} اليوم)</span>` : ''}</h3>
   <div class="bar" style="height:6px"><u style="width:${e.mor}%;background:${e.mor >= 50 ? 'var(--pos-s)' : e.mor >= 25 ? 'var(--gold)' : 'var(--neg-s)'}"></u></div>
   ${e.morWhy.length ? `<div class="why">${e.morWhy.map(w => `<span class="${w[0] >= 0 ? 'pos' : 'neg'}">${w[0] >= 0 ? '+' : ''}${w[0].toFixed(1)} ${w[1]}</span>`).join('')}</div>` : ''}
-  <div class="dim" style="margin-top:3px">تنزل بخسارة المدن والفرق، والدين، وطول الحرب. تصعد بالانتصارات. تحت 50 الفرق ترتاح أبطأ، تحت 30 الإنتاج أبطأ، تحت 25 نستسلم أبكر، وبالصفر الدولة تنهار.</div>
+  <div class="dim" style="margin-top:3px">تنزل بخسارة المدن والفرق، والدين، وطول الحرب. تصعد بالانتصارات. تحت 50 الفرق ترتاح أبطأ، تحت 30 الإنتاج أبطأ، تحت 25 نستسلم أبكر، وبالصفر الدولة تنهار.</div></section>
+  <section data-s="oil"><div class="dim" style="margin-top:6px">سعر النفط اليوم <b>$${Math.round(WD.oil.price)}</b> · صادراتنا ${B.exp.toFixed(2)} مليون برميل/يوم · إنتاجنا ${B.prod.toFixed(2)}</div>
   <h3>نفطنا</h3>
   ${mine.map(f => { const st = ECON.siteState(WD, f); return `<div class="oil" data-go="${WD.oil.sites.indexOf(f)}"><span>${f.term ? '⚓' : '🛢'}</span><span><b>${f.n}</b> <span class="dim">${OILST[st.k]}${f.dmg > 0 ? ' ' + Math.ceil(f.dmg / 24) + ' يوم' : ''}</span></span><span>${f.term ? (f.term === 'south' ? 'تصدير الجنوب' : '') : Math.round(f.out * st.f * 1000) + ' ألف ب/ي'}</span></div>`; }).join('')}
   <div class="dim">حقول البصرة وميسان تتصدّر من موانئ الفاو: إذا انضربت أو انحتلت، أغلب فلوسنا تنقطع. كركوك تطلع بأنبوب جيهان.</div>
   <h3>نفط إيران (اللي نعرفه)</h3>
   ${theirs.map(f => { const st = ECON.siteState(WD, f); return `<div class="oil" data-go="${WD.oil.sites.indexOf(f)}"><span>${f.term ? '⚓' : '🛢'}</span><span><b>${f.n}</b> <span class="dim">${OILST[st.k]}${f.dmg > 0 ? ' ' + Math.ceil(f.dmg / 24) + ' يوم' : ''}</span></span><span>${f.term ? 'تصدير' : '~' + Math.round(f.out * 1000) + ' ألف'}</span></div>`; }).join('')}
-  <div class="dim">إيران تبيع نفطها بخصم (العقوبات) من جزيرة خرج. اضربها من بطاقة المطار «🛢 نفط». خزينتهم تقريباً ${Math.round(WD.eco[1].cash / 5) * 5} مليار، ومعنوياتهم ${WD.eco[1].mor > 55 ? 'عالية' : WD.eco[1].mor > 35 ? 'متوسطة' : 'نازلة'} (تقدير المخابرات).</div>`;
-  if (refresh) el.scrollTop = top;
-  $('shX').onclick = () => { el.hidden = true; SHEET = null; tabOn(0); };
+  <div class="dim">إيران تبيع نفطها بخصم (العقوبات) من جزيرة خرج. اضربها من بطاقة المطار «🛢 نفط». خزينتهم تقريباً ${Math.round(WD.eco[1].cash / 5) * 5} مليار، ومعنوياتهم ${WD.eco[1].mor > 55 ? 'عالية' : WD.eco[1].mor > 35 ? 'متوسطة' : 'نازلة'} (تقدير المخابرات).</div></section>`;
+  subApply(el, 'eco', SUBS); if (refresh) el.scrollTop = top;
   el.querySelectorAll('[data-pr]').forEach(b => b.onclick = () => { e.prio = b.dataset.pr; if (e.auto) { e.auto = false; toast('✋ صرت انت تدير الاقتصاد (الوزير وقف)'); } toast(`⚙️ أولوية الاقتصاد: ${ECON.PRIO[e.prio].n}`); ecoPanel(true); });
-  el.querySelectorAll('[data-go]').forEach(b => b.onclick = () => { const f = WD.oil.sites[+b.dataset.go]; if (!f.p) return; cam.x = f.p[0]; cam.y = f.p[1]; cam.s = Math.max(cam.s, 1); el.hidden = true; SHEET = null; tabOn(0); });
+  el.querySelectorAll('[data-go]').forEach(b => b.onclick = () => { const f = WD.oil.sites[+b.dataset.go]; if (!f.p) return; cam.x = f.p[0]; cam.y = f.p[1]; cam.s = Math.max(cam.s, 1); closeSheet(); });
 }
 function prodPanel(refresh) {
   const el = $('sheet'), e = WD.eco[ME], top = el.scrollTop, P = ECON.PRIO[e.prio];
@@ -739,27 +753,27 @@ function prodPanel(refresh) {
   const btn = k => { const it = ECON.ITEMS[k], c = ECON.costOf(k, ME), d = ECON.daysOf(k, ME), err = ECON.canBuy(WD, ME, k);
     const extra = it.cat === 'plane' ? `ناقص ${miss(it.plane)}` : it.cat === 'sam' ? `بالمخزن ${AW.pool[ME][it.pool] || 0}` : it.cat === 'line' ? `عندنا ${e.lines}` : '';
     return `<button data-buy="${k}" ${err ? 'disabled' : ''}><b>${it.ic} ${it.n}</b><i>${c >= 1 ? c.toFixed(1) + ' مليار' : Math.round(c * 1000) + ' مليون'} $ · ${Math.round(d / sp)} يوم${extra ? ' · ' + extra : ''}</i></button>`; };
-  el.innerHTML = `<div class="eh"><b>🏭 الإنتاج والشراء</b><span class="dim">${B$(e.cash)}</span><button class="x" id="shX">✕</button></div>
-  <div class="dim">${e.lines} خطوط إنتاج: تشتغل على أول ${e.lines} طلبات، والباقي ينتظر. السرعة ×${sp.toFixed(2)} (${P.n}${e.mor < 30 ? '، والمعنويات نازلة' : ''}).</div>
-  <div class="seg" style="margin-top:6px"><button id="auto" class="${e.auto ? 'on' : ''}">🤖 الوزير يشتري لحاله</button><button id="man" class="${e.auto ? '' : 'on'}">✋ أنا أقرر</button></div>
+  const SUBS = [['buy', '🛒 اطلب'], ['q', '⏳ الطابور', e.q.length]];
+  el.innerHTML = `${GRAB}<div class="eh"><b>🏭 الإنتاج والشراء</b><span class="dim">${B$(e.cash)}</span><button class="x" id="shX" aria-label="سكّر">✕</button></div>
+  ${subBar('prod', SUBS)}<section data-s="q"><div class="dim">${e.lines} خطوط إنتاج: تشتغل على أول ${e.lines} طلبات، والباقي ينتظر. السرعة ×${sp.toFixed(2)} (${P.n}${e.mor < 30 ? '، والمعنويات نازلة' : ''}).</div>
+  </section><section data-s="buy"><div class="seg" style="margin-top:6px"><button id="auto" class="${e.auto ? 'on' : ''}">🤖 الوزير يشتري لحاله</button><button id="man" class="${e.auto ? '' : 'on'}">✋ أنا أقرر</button></div>
   <div class="dim" style="margin-top:3px">${e.auto ? 'الوزير يعوّض الفرق والطيارات والصواريخ اللي تخسرها، ويبني خطوط. تقدر تطلب انت هم.' : 'محد يشتري غيرك: إذا ما عوّضت الخسائر، الجيش يصغر.'}</div>
-  <h3>الطابور (${e.q.length})</h3>
-  ${e.q.length ? e.q.map((o, i) => { const it = ECON.ITEMS[o.k], act = i < e.lines; return `<div class="ord ${act ? '' : 'wait'}"><div class="h"><span>${it.ic}</span><b>${it.n}</b><span>${act ? 'باقي ~' + Math.max(1, Math.ceil(o.left / sp)) + ' يوم' : '⏳ ينتظر خط'}</span><button data-can="${o.id}" style="padding:0 6px">✕</button></div><div class="bar"><u style="width:${(1 - o.left / o.tot) * 100}%"></u></div></div>`; }).join('') : '<div class="dim">ما اكو طلبات. اختار من تحت.</div>'}
   <h3>فرق جديدة</h3><div class="buy">${cat('div').map(btn).join('')}</div>
   <div class="dim" style="margin:3px 0">الفرقة الجديدة تطلع بأكبر مدينة مزودة وتنضم لأقرب جيش. جيشنا هسه ${SIM.alive(WD).filter(d => d.side === ME).length} فرقة.</div>
   <h3>طيارات</h3><div class="buy">${cat('plane').map(btn).join('')}</div>
   <h3>صواريخ دفاع جوي (لمخزون البلد)</h3><div class="buy">${cat('sam').map(btn).join('')}</div>
   <div class="dim" style="margin:3px 0">البطاريات تاخذ من مخزون البلد كل يوم (والبطارية اللي إلها ⭐ أولوية تاخذ أكثر).</div>
-  <h3>المصانع</h3><div class="buy">${cat('line').map(btn).join('')}</div>`;
-  if (refresh) el.scrollTop = top;
-  $('shX').onclick = () => { el.hidden = true; SHEET = null; tabOn(0); };
+  <h3>المصانع</h3><div class="buy">${cat('line').map(btn).join('')}</div></section>
+  <section data-s="q"><h3>الطابور (${e.q.length})</h3>
+  ${e.q.length ? e.q.map((o, i) => { const it = ECON.ITEMS[o.k], act = i < e.lines; return `<div class="ord ${act ? '' : 'wait'}"><div class="h"><span>${it.ic}</span><b>${it.n}</b><span>${act ? 'باقي ~' + Math.max(1, Math.ceil(o.left / sp)) + ' يوم' : '⏳ ينتظر خط'}</span><button data-can="${o.id}" aria-label="ألغي الطلب" style="min-width:40px;min-height:36px">✕</button></div><div class="bar"><u style="width:${(1 - o.left / o.tot) * 100}%"></u></div></div>`; }).join('') : '<div class="dim">ما اكو طلبات. اختار من «🛒 اطلب».</div>'}</section>`;
+  subApply(el, 'prod', SUBS); if (refresh) el.scrollTop = top;
   $('auto').onclick = () => { e.auto = true; toast('🤖 الوزير يدير الشراء والأولوية'); prodPanel(true); };
   $('man').onclick = () => { e.auto = false; toast('✋ انت تقرر كل شراء'); prodPanel(true); };
   el.querySelectorAll('[data-buy]').forEach(b => b.onclick = () => { const k = b.dataset.buy, r = ECON.buy(WD, ME, k); if (typeof r === 'string') toast('❌ ' + r, 'bad'); else { toast(`🏭 طلبنا ${ECON.ITEMS[k].n} (−${ECON.costOf(k, ME) >= 1 ? ECON.costOf(k, ME).toFixed(1) + ' مليار' : Math.round(ECON.costOf(k, ME) * 1000) + ' مليون'})`, 'good'); hud(); } prodPanel(true); });
   el.querySelectorAll('[data-can]').forEach(b => b.onclick = () => { const back = ECON.cancel(WD, ME, +b.dataset.can); toast(`↩ ألغينا الطلب ورجع ${back >= 1 ? back.toFixed(1) + ' مليار' : Math.round(back * 1000) + ' مليون'}`); hud(); prodPanel(true); });
 }
-$('tabEco').onclick = () => { tabOn('tabEco'); openSheet(ecoPanel); };
-$('tabProd').onclick = () => { tabOn('tabProd'); openSheet(prodPanel); };
+$('tabEco').onclick = () => openSheet(ecoPanel, 'tabEco');
+$('tabProd').onclick = () => openSheet(prodPanel, 'tabProd');
 
 // ===== GW10: العالم والدبلوماسية =====
 const DIPP = Object.fromEntries(G.others.map(o => [o.n, ringPath(o.poly)]));
@@ -820,7 +834,9 @@ function dipPanel(refresh) {
   const stN = c => c.st === 'ally0' ? '⚔ ويانا بالحرب' : c.st === 'ally1' ? '⚔ ويا إيران' : c.rel[0] >= 60 ? 'صديقة' : c.rel[1] >= 60 ? 'صديقة إيران' : c.rel[0] <= -40 ? 'عدائية' : 'محايدة';
   const cdTxt = (id, a) => { const h = DIP.cdLeft(WD, ME, id, a); return h ? ` (${Math.ceil(h / 24)}ي)` : ''; };
   const trm = k => { const T = DIP.TERMS[k], v = DIP.verdict(WD, 1, k, !!med); return `<div class="trm"><span><b>${T.n}</b></span><button data-pr="${k}" ${D.truce > WD.t && k === 'truce' ? 'disabled' : ''}>اعرض</button><span class="dim">${T.d} · <b class="${v.m >= 0 ? 'pos' : 'neg'}">إيران: ${DIP.guess(v)}</b></span></div>`; };
-  el.innerHTML = `<div class="eh"><b>🤝 السياسة والعالم</b><button class="x" id="shX">✕</button></div>
+  const SUBS = [['war', '🕊 الحرب والسلام', D.offer ? '!' : 0], ['ctry', '🌍 الدول']];
+  el.innerHTML = `${GRAB}<div class="eh"><b>🤝 السياسة والعالم</b><button class="x" id="shX" aria-label="سكّر">✕</button></div>
+  ${subBar('dip', SUBS)}<section data-s="war">
   ${D.offer ? `<div class="ctry" style="border-color:var(--gold)"><b>✉️ عرض من إيران:</b> ${DIP.TERMS[D.offer.k].n}<div class="acts"><button class="go" id="oY">✅ نقبل</button><button id="oN">❌ نرفض</button></div></div>` : ''}
   ${D.truce > WD.t ? `<div class="dim" style="color:var(--gold)">🕊 هدنة: باقي ${Math.ceil((D.truce - WD.t) / 24)} يوم. ما اكو هجوم ولا ضربات.</div>` : ''}
   <h3>ميزان الحرب: مين تعبان أكثر</h3>
@@ -832,15 +848,14 @@ function dipPanel(refresh) {
   <div class="dim">${med ? `🕊 الوسيط: ${CN(med.id)} (يزيد فرصة القبول)` : 'ما اكو وسيط هسه: قطر أو تركيا أو باكستان تتوسط إذا علاقتها 30+ ويا الطرفين'}${D.peaceCd > WD.t ? ` · رفضوا قريب، انتظر ${Math.ceil((D.peaceCd - WD.t) / 24)} يوم` : ''}</div>
   ${['truce', 'sq', 'keep', 'rep'].map(trm).join('')}
   ${D.inbound.filter(q => q.s === ME).length ? `<h3>جاي بالطريق</h3>${D.inbound.filter(q => q.s === ME).map(q => `<div class="oil"><span>${DIP.BY[q.id].f}</span><span>${PKG(q.pkg)}${q.pkg.startsWith('div:') ? ' ' + SIM.KIND_N[q.pkg.slice(4)] : ''}</span><span>${Math.max(1, Math.ceil((q.at - WD.t) / 24))} يوم</span></div>`).join('')}` : ''}
-  <h3>الدول</h3>
-  <div class="dim">🤝 بعثة: ${Math.round(DIP.C_MISSION * 1000)} مليون، والعلاقة +6–11 (كل أسبوع). 📦 مساعدة: تنجح أكثر كل ما العلاقة أعلى (فوق 25). ⚔ تحالف: لازم علاقة عالية كلش.${DIP.truce(WD) ? '' : ''}</div>
+  </section><section data-s="ctry">
+  <div class="dim" style="margin-top:6px">🤝 بعثة: ${Math.round(DIP.C_MISSION * 1000)} مليون، والعلاقة +6–11 (كل أسبوع). 📦 مساعدة: تنجح أكثر كل ما العلاقة أعلى (فوق 25). ⚔ تحالف: لازم علاقة عالية كلش.${DIP.truce(WD) ? '' : ''}</div>
   ${DIP.COUNTRIES.map(C => { const c = D.c[C.id], st = c.st;
     return `<div class="ctry"><div class="h"><span style="font-size:18px">${C.f}</span><b>${C.n}</b>${C.power ? '<span class="dim">قوة كبرى</span>' : ''}<span class="st ${st === 'ally0' ? 'a0' : st === 'ally1' ? 'a1' : ''}">${stN(c)}</span></div>
     <div class="rel"><span>ويانا</span>${relBar(c.rel[0], 'var(--me-l)')}<span>${Math.round(c.rel[0])}</span></div>
     <div class="rel"><span>ويا إيران</span>${relBar(c.rel[1], 'var(--neg-s)')}<span>${Math.round(c.rel[1])}</span></div>
-    ${st === 'ally1' ? '' : `<div class="acts"><button data-m="${C.id}">🤝 بعثة${cdTxt(C.id, 'm')}</button>${C.will !== 'none' && C.aid && C.aid[0].length ? `<button data-a="${C.id}">📦 مساعدة ${cdTxt(C.id, 'a') || Math.round(DIP.aidP(WD, ME, C.id) * 100) + '٪'}</button>` : ''}${C.join && st === 'neutral' ? `<button data-j="${C.id}">⚔ تحالف (${C.join}+)${cdTxt(C.id, 'j')}</button>` : ''}${C.sanc ? `<button data-s="${C.id}">🚫 عقوبات${D.sanc > WD.t ? ' ✓' : cdTxt(C.id, 's')}</button>` : ''}</div>`}</div>`; }).join('')}`;
-  if (refresh) el.scrollTop = top;
-  $('shX').onclick = () => { el.hidden = true; SHEET = null; tabOn(0); };
+    ${st === 'ally1' ? '' : `<div class="acts"><button data-m="${C.id}">🤝 بعثة${cdTxt(C.id, 'm')}</button>${C.will !== 'none' && C.aid && C.aid[0].length ? `<button data-a="${C.id}">📦 مساعدة ${cdTxt(C.id, 'a') || Math.round(DIP.aidP(WD, ME, C.id) * 100) + '٪'}</button>` : ''}${C.join && st === 'neutral' ? `<button data-j="${C.id}">⚔ تحالف (${C.join}+)${cdTxt(C.id, 'j')}</button>` : ''}${C.sanc ? `<button data-s="${C.id}">🚫 عقوبات${D.sanc > WD.t ? ' ✓' : cdTxt(C.id, 's')}</button>` : ''}</div>`}</div>`; }).join('')}</section>`;
+  subApply(el, 'dip', SUBS); if (refresh) el.scrollTop = top;
   const res = (r, ok, no) => { if (typeof r === 'string') toast('❌ ' + r, 'bad'); else toast(r.ok === false ? no(r) : ok(r), r.ok === false ? 'bad' : 'good'); events(); hud(); dipPanel(true); };
   if ($('oY')) { $('oY').onclick = () => { DIP.answerOffer(WD, true); events(); if (!WD.over) dipPanel(true); }; $('oN').onclick = () => { DIP.answerOffer(WD, false); toast('⚔ رفضنا العرض'); dipPanel(true); }; }
   el.querySelectorAll('[data-m]').forEach(b => b.onclick = () => res(DIP.mission(WD, ME, b.dataset.m), r => `🤝 ${CN(b.dataset.m)}: العلاقة +${r.dv}`));
@@ -849,7 +864,7 @@ function dipPanel(refresh) {
   el.querySelectorAll('[data-s]').forEach(b => b.onclick = () => res(DIP.askSanc(WD, ME, b.dataset.s), () => '🚫 عقوبات على نفط إيران 60 يوم', r => `أمريكا ما وافقت هسه (الفرصة ${Math.round(r.p * 100)}٪)`));
   el.querySelectorAll('[data-pr]').forEach(b => b.onclick = () => res(DIP.propose(WD, ME, b.dataset.pr, med && med.id), () => b.dataset.pr === 'truce' ? '🕊 إيران وافقت على الهدنة' : '🕊 إيران وافقت!', () => `❌ إيران رفضت «${DIP.TERMS[b.dataset.pr].n}»`));
 }
-$('tabDip').onclick = () => { tabOn('tabDip'); openSheet(dipPanel); };
+$('tabDip').onclick = () => openSheet(dipPanel, 'tabDip');
 
 // ===== GW7: الحفظ =====
 const gameDate = t => { const d = new Date(START.getTime() + t * 3600e3); return `${d.getDate()} ${AR_M[d.getMonth()]} ${d.getFullYear()} ${String(d.getHours()).padStart(2, '0')}:00`; };
@@ -860,18 +875,19 @@ function doSave(slot, quiet) {
   catch (e) { toast('❌ الحفظ فشل: ' + (e.name === 'QuotaExceededError' ? 'الذاكرة مليانة' : e.message), 'bad'); return false; }
 }
 function savesPanel() {
-  const el = $('saves'); el.hidden = false;
-  const row = i => { const a = ST && SAVE.info(ST, i); return `<div class="slot"><b>${SLOTN[i]}</b> <span style="font-size:11.5px;opacity:.8">${a ? `${gameDate(a.t)} · مدننا ${a.ui?.vp?.[0] ?? '?'} نقطة · انحفظ ${new Date(a.saved).toLocaleString('ar-IQ', { hour: '2-digit', minute: '2-digit', day: 'numeric', month: 'numeric' })}` : 'فاضية'}</span>
+  const el = $('sheet');
+  const row = i => { const a = ST && SAVE.info(ST, i); return `<div class="slot"><b>${SLOTN[i]}</b> <span class="dim">${a ? `${gameDate(a.t)} · مدننا ${a.ui?.vp?.[0] ?? '?'} نقطة · انحفظ ${new Date(a.saved).toLocaleString('ar-IQ', { hour: '2-digit', minute: '2-digit', day: 'numeric', month: 'numeric' })}` : 'فاضية'}</span>
     <div class="acts">${i ? `<button class="go" data-sv="${i}">💾 احفظ هنا</button>` : ''}${a ? `<button data-ld="${i}">▶ حمّل</button><button data-rm="${i}">🗑</button>` : ''}</div></div>`; };
-  el.innerHTML = `<div class="ch"><span style="font-size:18px">💾</span><div><div class="t">الحفظ</div><div class="s">الحرب تنحفظ تلقائياً كل يوم لعبة ولما تطلع من الصفحة</div></div><span class="x" id="svX" style="font-size:16px">✕</span></div>
+  el.innerHTML = `${GRAB}<div class="eh"><b>💾 الحفظ</b><span class="dim">تلقائي كل يوم لعبة، ولما تطلع</span><button class="x" id="shX" aria-label="سكّر">✕</button></div>
     ${[0, 1, 2].map(row).join('')}
     <div class="acts" style="margin-top:6px"><button id="svExp">⬇ نسخة بملف</button><button id="svImp">⬆ رجّع من ملف</button><button id="svNew">🆕 حرب جديدة</button></div>
-    <div class="s" style="font-size:10.5px;opacity:.65;margin-top:5px">الحفظ بذاكرة هالمتصفح بتلفونك. إذا مسحت بيانات المتصفح يروح، فخذ «نسخة بملف» للأمان.</div>`;
-  $('svX').onclick = () => { el.hidden = true; };
+    <div class="dim" style="margin-top:5px">الحفظ بذاكرة هالمتصفح بتلفونك. إذا مسحت بيانات المتصفح يروح، فخذ «نسخة بملف» للأمان.</div>`;
   el.querySelectorAll('[data-sv]').forEach(b => b.onclick = () => { doSave(+b.dataset.sv); savesPanel(); });
   el.querySelectorAll('[data-ld]').forEach(b => b.onclick = () => { doSave(0, true); location.search = '?load=' + b.dataset.ld; });
-  el.querySelectorAll('[data-rm]').forEach(b => b.onclick = () => { if (confirm(`أمسح «${SLOTN[+b.dataset.rm]}»؟`)) { SAVE.remove(ST, +b.dataset.rm); savesPanel(); } });
-  $('svNew').onclick = () => { if (confirm('تبدي حرب جديدة؟ حربك هسه تنحفظ بـ«الحفظ التلقائي»')) { doSave(0, true); location.search = '?new=1'; } };
+  // تأكيد بضغطتين (نافذة confirm ما تشتغل بصفحة Claude)
+  const twice = (b, msg, fn) => { b.onclick = () => { if (b.dataset.arm) { fn(); return; } b.dataset.arm = 1; const t0 = b.textContent; b.textContent = msg; b.classList.add('go'); setTimeout(() => { if (b.isConnected) { delete b.dataset.arm; b.textContent = t0; b.classList.remove('go'); } }, 3500); }; };
+  el.querySelectorAll('[data-rm]').forEach(b => twice(b, 'اضغط ثاني تتأكد', () => { SAVE.remove(ST, +b.dataset.rm); savesPanel(); }));
+  twice($('svNew'), 'اضغط ثاني: حرب جديدة', () => { doSave(0, true); location.search = '?new=1'; });
   $('svExp').onclick = async () => {
     const txt = JSON.stringify(SAVE.snapshot(WD, AW, SIM, { seed: SEED, ui: { cam: { x: cam.x, y: cam.y, s: cam.s } } })), fn = `grandwar-day${Math.floor(WD.t / 24) + 1}.json`;
     // بصفحة Claude: التنزيل يمر من صلاحية «downloads» (تطلع لك موافقة)؛ برّاها (تطبيق/متصفح عادي) رابط تنزيل عادي
@@ -883,7 +899,7 @@ function savesPanel() {
 }
 $('imp').onchange = async e => { const f = e.target.files[0]; if (!f) return; try { const s0 = SAVE.migrate(JSON.parse(await f.text())); SAVE.write(ST, 2, s0); toast('⬆ رجع الحفظ لـ«خانة 2»، هسه نحمّله', 'good'); setTimeout(() => { location.search = '?load=2'; }, 600); } catch (err) { toast('❌ الملف مو حفظ صالح: ' + err.message, 'bad'); } };
 $('thm').onclick = () => { const cur = document.documentElement.dataset.theme || (matchMedia('(prefers-color-scheme: light)').matches ? 'light' : 'dark'); const v = cur === 'light' ? 'dark' : 'light'; applyTheme(v); THEME.set(v); toast(v === 'light' ? '☀️ ثيم فاتح (أوضح بالشمس)' : '🌙 ثيم غامق'); };
-$('sv').onclick = () => { const was = SPEED; savesPanel(); };
+$('sv').onclick = () => openSheet(savesPanel);
 // حفظ تلقائي: كل يوم لعبة (منتصف الليل)، ولما التلفون يطلع من الصفحة
 let lastAutoDay = Math.floor(WD.t / 24);
 function autoSave() { const d = Math.floor(WD.t / 24); if (d !== lastAutoDay) { lastAutoDay = d; doSave(0, true); } }
@@ -898,7 +914,7 @@ function frame(now) {
   if (SPEED && !WD.over) {
     const tac = cam.s >= 1.7 && lastNb > 0; const want = tac ? Math.min(HPS[SPEED], TACR[SPEED]) : HPS[SPEED]; RATE += (want - RATE) * Math.min(1, dt * 2.5); if (Math.abs(RATE - want) < want * .02) RATE = want; $('rate').textContent = rateTxt(RATE);
     acc += dt * RATE; $('tac').hidden = !tac; if (tac) $('tac').textContent = `⏱ بطيء: قريب من المعركة (${rateTxt(RATE)})`;
-    let n = 0; while (acc >= 1 && n < 40) { if (WD.t % 6 === 0) { SIM.ai(WD, 1); SIM.ai(WD, ME); } SIM.step(WD); if (WD.t % 24 === 0) { ECON.daily(WD, AW, SIM); DIP.daily(WD, AW, SIM, ECON); dipPopups(); if (!$('sheet').hidden) SHEET && SHEET(true); } acc -= 1; n++; }
+    let n = 0; while (acc >= 1 && n < 40) { if (WD.t % 6 === 0) { SIM.ai(WD, 1); SIM.ai(WD, ME); } SIM.step(WD); if (WD.t % 24 === 0) { ECON.daily(WD, AW, SIM); DIP.daily(WD, AW, SIM, ECON); dipPopups(); if (!$('sheet').hidden) renderSheet(true); } acc -= 1; n++; }
     // الجو ويا الساعة، ومن تقرّب يبطأ أكثر حتى تشوف الإطلاق والمطاردة بعينك
     const af = Math.min(1.6, Math.max(.3, .25 * RATE * 3600 / 38)); AIR.step(AW, WD, SIM, dt * (cam.s >= 1.7 ? Math.min(af, .45) : af));
     for (const e of AW.ev) VIEW.airEvent(e, toast, ME); AW.ev.length = 0;

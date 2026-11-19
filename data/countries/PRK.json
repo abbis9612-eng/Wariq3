@@ -1,0 +1,690 @@
+{
+ "id": "PRK",
+ "ar": "كوريا الشمالية",
+ "en": "North Korea",
+ "tier": "A",
+ "asOf": "2026-11",
+ "src": {
+  "wiki_air": {
+   "t": "Wikipedia: Korean People's Army Air Force",
+   "u": "https://en.wikipedia.org/wiki/Korean_People's_Army_Air_Force?oldid=1385920047",
+   "y": 2026,
+   "note": "نسخة الصفحة بتاريخ السحب؛ أرقام ويكيبيديا تنراجع ويا مصادر ثانية"
+  },
+  "wiki_army": {
+   "t": "Wikipedia: List of equipment of the Korean People's Army Ground Force",
+   "u": "https://en.wikipedia.org/wiki/List_of_equipment_of_the_Korean_People's_Army_Ground_Force?oldid=1383790760",
+   "y": 2026,
+   "note": "نسخة الصفحة بتاريخ السحب؛ أرقام ويكيبيديا تنراجع ويا مصادر ثانية"
+  },
+  "wiki_navy": {
+   "t": "Wikipedia: Korean People's Navy",
+   "u": "https://en.wikipedia.org/wiki/Korean_People's_Navy?oldid=1385610407",
+   "y": 2026,
+   "note": "نسخة الصفحة بتاريخ السحب؛ أرقام ويكيبيديا تنراجع ويا مصادر ثانية"
+  },
+  "iiss_eq": {
+   "t": "Wikipedia: List of countries by level of military equipment (من IISS Military Balance ومصادر ثانية)",
+   "u": "https://en.wikipedia.org/wiki/List_of_countries_by_level_of_military_equipment?oldid=1384804191",
+   "y": 2025
+  },
+  "iiss_pers": {
+   "t": "Wikipedia: List of countries by number of military and paramilitary personnel (جدول IISS Military Balance)",
+   "u": "https://en.wikipedia.org/wiki/List_of_countries_by_number_of_military_and_paramilitary_personnel?oldid=1380910017",
+   "y": 2025
+  },
+  "wb": {
+   "t": "World Bank WDI (SP.POP.TOTL, NY.GDP.MKTP.CD, NY.GDP.MKTP.KD.ZG, MS.MIL.XPND.CD/GD.ZS ← SIPRI, MS.MIL.TOTL.P1, FP.CPI.TOTL.ZG)",
+   "u": "https://api.worldbank.org/v2/",
+   "y": 2026
+  },
+  "govt": {
+   "t": "تصنيف نظام الحكم: دساتير الدول + CIA World Factbook «Government type» + V-Dem/Freedom House لدرجة الحرية (تصنيف المصمم 2026)",
+   "u": "https://www.cia.gov/the-world-factbook/field/government-type/",
+   "y": 2026
+  },
+  "leaders": {
+   "t": "Wikipedia: List of current heads of state and government",
+   "u": "https://en.wikipedia.org/wiki/List_of_current_heads_of_state_and_government?oldid=1386623862",
+   "y": 2026,
+   "note": "سحب نوفمبر 2026"
+  },
+  "rules": {
+   "t": "قواعد من blocs.json وconflicts.json وsanctions.json (تكتل دفاعي +40، معاهدة +50، حرب −90، عقوبات ثقيلة −40...)",
+   "u": "data/world/",
+   "y": 2026
+  },
+  "relk": {
+   "t": "تقدير المصمم للعلاقات الثنائية المعروفة (تشرين الثاني 2026): حروب، نزاعات حدودية، تحالفات غير رسمية، تطبيع، عداء تاريخي",
+   "u": "https://en.wikipedia.org/wiki/Foreign_relations_by_country",
+   "y": 2026
+  },
+  "tierA": {
+   "t": "تقدير المصمم (تشرين الثاني 2026) لصناعة السلاح والاستقرار: SIPRI Arms Transfers Database (أكبر المصدّرين 2020–24)، SIPRI Top 100 Arms-Producing Companies، Fragile States Index 2025، أخبار 2026",
+   "u": "https://www.sipri.org/databases/armstransfers",
+   "y": 2026
+  }
+ },
+ "gov": {
+  "type": "one",
+  "ar": "حزب واحد",
+  "free": 0,
+  "hos": {
+   "role": "General Secretary of the Workers' Party",
+   "name": "Kim Jong Un"
+  },
+  "hog": null,
+  "s": "govt,leaders",
+  "c": "ح"
+ },
+ "pop": {
+  "v": 26571036,
+  "y": 2025,
+  "s": "wb",
+  "c": "ح"
+ },
+ "eco": {},
+ "mil": {
+  "budgetBusd": {
+   "v": 1.6,
+   "y": 2018,
+   "s": "wb",
+   "c": "ح"
+  },
+  "personnelWB": {
+   "v": 1469000,
+   "y": 2020,
+   "s": "wb",
+   "c": "ح"
+  },
+  "sum": {
+   "tanks": {
+    "v": 5845,
+    "s": "iiss_eq",
+    "c": "ت"
+   },
+   "carriers": {
+    "v": 0,
+    "s": "iiss_eq",
+    "c": "ت"
+   },
+   "amphib": {
+    "v": 10,
+    "s": "iiss_eq",
+    "c": "ت"
+   },
+   "cruisers": {
+    "v": 0,
+    "s": "iiss_eq",
+    "c": "ت"
+   },
+   "destroyers": {
+    "v": 0,
+    "s": "iiss_eq",
+    "c": "ت"
+   },
+   "frigates": {
+    "v": 2,
+    "s": "iiss_eq",
+    "c": "ت"
+   },
+   "corvettes": {
+    "v": 5,
+    "s": "iiss_eq",
+    "c": "ت"
+   },
+   "subNuc": {
+    "v": 0,
+    "s": "iiss_eq",
+    "c": "ت"
+   },
+   "subs": {
+    "v": 71,
+    "s": "iiss_eq",
+    "c": "ت"
+   },
+   "combatAir": {
+    "v": 572,
+    "s": "iiss_eq",
+    "c": "ت"
+   },
+   "attackHeli": {
+    "v": 0,
+    "s": "iiss_eq",
+    "c": "ت"
+   },
+   "sats": {
+    "v": 0,
+    "s": "iiss_eq",
+    "c": "ت"
+   },
+   "active": {
+    "v": 1280000,
+    "s": "iiss_pers",
+    "c": "ت"
+   },
+   "reserve": {
+    "v": 600000,
+    "s": "iiss_pers",
+    "c": "ت"
+   },
+   "para": {
+    "v": 5889000,
+    "s": "iiss_pers",
+    "c": "ت"
+   }
+  },
+  "land": [
+   {
+    "m": "T-54/55",
+    "n": 1000,
+    "orig": "SUN",
+    "s": "wiki_army",
+    "c": "ت",
+    "gen": 1,
+    "cat": "tank"
+   },
+   {
+    "m": "Type 59",
+    "n": 175,
+    "orig": "CHN",
+    "s": "wiki_army",
+    "c": "ت",
+    "gen": 1,
+    "cat": "tank"
+   },
+   {
+    "m": "T-62",
+    "n": 800,
+    "orig": "SUN",
+    "s": "wiki_army",
+    "c": "ت",
+    "gen": 2,
+    "cat": "tank"
+   },
+   {
+    "m": "Chonma-ho",
+    "n": 1000,
+    "orig": "PRK",
+    "s": "wiki_army",
+    "c": "ت",
+    "note": "Locally produced T-62.",
+    "gen": 2,
+    "cat": "tank"
+   },
+   {
+    "m": "Pokpung-ho",
+    "n": 100,
+    "orig": "PRK",
+    "s": "wiki_army",
+    "c": "ت",
+    "note": "Based on the T-62, it incorporates technologies from the T-72 or T-90 tank.",
+    "gen": 2,
+    "cat": "tank"
+   },
+   {
+    "m": "Cheonma-2",
+    "n": 10,
+    "orig": "PRK",
+    "s": "wiki_army",
+    "c": "ت",
+    "gen": 2,
+    "cat": "tank"
+   },
+   {
+    "m": "PT-76",
+    "n": 560,
+    "orig": "SUN",
+    "s": "wiki_army",
+    "c": "ت",
+    "gen": 1,
+    "cat": "tank"
+   },
+   {
+    "m": "M1985",
+    "n": 560,
+    "orig": "PRK",
+    "s": "wiki_army",
+    "c": "ت",
+    "note": "Similar to the PT-76, but uses the VTT-323 chassis.",
+    "gen": 2,
+    "cat": "tank"
+   },
+   {
+    "m": "BTR-80A",
+    "n": 32,
+    "orig": "RUS",
+    "s": "wiki_army",
+    "c": "ت",
+    "gen": 3,
+    "cat": "ifv"
+   },
+   {
+    "m": "Type 63",
+    "n": 500,
+    "orig": "CHN",
+    "s": "wiki_army",
+    "c": "ت",
+    "gen": 2,
+    "cat": "apc"
+   },
+   {
+    "m": "BTR-60",
+    "n": 1200,
+    "orig": "SUN",
+    "s": "wiki_army",
+    "c": "ت",
+    "note": "500 BTR-60PA and 700 BTR-60PB in 2011.",
+    "gen": 2,
+    "cat": "apc"
+   },
+   {
+    "m": "M2010",
+    "n": 10,
+    "orig": "PRK",
+    "s": "wiki_army",
+    "c": "ت",
+    "note": "6×6 and 8×8 versions based on the BTR-60 and BTR-80.",
+    "gen": 2,
+    "cat": "apc"
+   },
+   {
+    "m": "HIMARS-style",
+    "n": 122,
+    "orig": "INT",
+    "s": "wiki_army",
+    "c": "ت",
+    "note": "Maximum range of 240mm rocket stated at 100 for ballistic trajectory and 115 kilometers for glided.",
+    "gen": 2,
+    "cat": "mlrs"
+   },
+   {
+    "m": "ZU-23-2",
+    "n": 1500,
+    "orig": "INT",
+    "s": "wiki_army",
+    "c": "ت",
+    "gen": 2,
+    "cat": "towed"
+   },
+   {
+    "m": "M1939",
+    "n": 1000,
+    "orig": "INT",
+    "s": "wiki_army",
+    "c": "ت",
+    "gen": 2,
+    "cat": "towed"
+   },
+   {
+    "m": "AZP S-60",
+    "n": 600,
+    "orig": "INT",
+    "s": "wiki_army",
+    "c": "ت",
+    "gen": 2,
+    "cat": "towed"
+   },
+   {
+    "m": "KS-12",
+    "n": 400,
+    "orig": "INT",
+    "s": "wiki_army",
+    "c": "ت",
+    "gen": 2,
+    "cat": "towed"
+   },
+   {
+    "m": "KS-19",
+    "n": 500,
+    "orig": "INT",
+    "s": "wiki_army",
+    "c": "ت",
+    "gen": 2,
+    "cat": "towed"
+   }
+  ],
+  "air": [
+   {
+    "m": "MiG-21 (F/ PFM/ bis)",
+    "n": 26,
+    "orig": "SUN",
+    "s": "wiki_air",
+    "c": "ت",
+    "gen": 1,
+    "cat": "fighter"
+   },
+   {
+    "m": "MiG-29 (B/S)",
+    "n": 35,
+    "orig": "SUN",
+    "s": "wiki_air",
+    "c": "ت",
+    "gen": 3,
+    "cat": "fighter"
+   },
+   {
+    "m": "MiG-23 (MF/MS/ML)",
+    "n": 56,
+    "orig": "SUN",
+    "s": "wiki_air",
+    "c": "ت",
+    "gen": 2,
+    "cat": "bomber"
+   },
+   {
+    "m": "Sukhoi Su-25 (K)",
+    "n": 34,
+    "orig": "SUN",
+    "s": "wiki_air",
+    "c": "ت",
+    "gen": 3,
+    "cat": "attack"
+   },
+   {
+    "m": "Ilyushin Il-28 (H-5)",
+    "n": 80,
+    "orig": "SUN",
+    "s": "wiki_air",
+    "c": "ت",
+    "note": "Chinese-built variant designated the H-5. 36 aircraft are operational.",
+    "gen": 2,
+    "cat": "bomber"
+   },
+   {
+    "m": "Shenyang F-5",
+    "n": 106,
+    "orig": "CHN",
+    "s": "wiki_air",
+    "c": "ت",
+    "note": "derivative of the MiG-17F",
+    "gen": 2,
+    "cat": "fighter"
+   },
+   {
+    "m": "Shenyang J-6 (F-6C)",
+    "n": 97,
+    "orig": "CHN",
+    "s": "wiki_air",
+    "c": "ت",
+    "note": "license built MiG-19S",
+    "gen": 1,
+    "cat": "fighter"
+   },
+   {
+    "m": "Chengdu J-7 (F-7I)",
+    "n": 30,
+    "orig": "CHN",
+    "s": "wiki_air",
+    "c": "ت",
+    "note": "license built MiG-21F-13",
+    "gen": 1,
+    "cat": "fighter"
+   },
+   {
+    "m": "Il-76TD (indigenous conversion)",
+    "n": 1,
+    "orig": "RUS",
+    "s": "wiki_air",
+    "c": "ت",
+    "note": "Equipped with a AESA radar",
+    "gen": 2,
+    "cat": "awacs"
+   },
+   {
+    "m": "PAC P-750",
+    "n": 3,
+    "orig": "NZL",
+    "s": "wiki_air",
+    "c": "ت",
+    "note": "illegally imported via China",
+    "gen": 2,
+    "cat": "transport"
+   },
+   {
+    "m": "An-2",
+    "n": 270,
+    "orig": "SUN",
+    "s": "wiki_air",
+    "c": "ت",
+    "gen": 2,
+    "cat": "transport"
+   },
+   {
+    "m": "Antonov An-24 (B/RV)",
+    "n": 1,
+    "orig": "SUN",
+    "s": "wiki_air",
+    "c": "ت",
+    "gen": 2,
+    "cat": "transport"
+   },
+   {
+    "m": "PZL Mi-2 (T)",
+    "n": 48,
+    "orig": "INT",
+    "s": "wiki_air",
+    "c": "ت",
+    "gen": 2,
+    "cat": "heli_util"
+   },
+   {
+    "m": "Harbin Z-5",
+    "n": 48,
+    "orig": "CHN",
+    "s": "wiki_air",
+    "c": "ت",
+    "gen": 2,
+    "cat": "heli_util"
+   },
+   {
+    "m": "Mil Mi-8 (T/TV/MT Mi-17)",
+    "n": 41,
+    "orig": "SUN",
+    "s": "wiki_air",
+    "c": "ت",
+    "gen": 2,
+    "cat": "heli_util"
+   },
+   {
+    "m": "Mil Mi-14 (PL/BT)",
+    "n": 8,
+    "orig": "SUN",
+    "s": "wiki_air",
+    "c": "ت",
+    "gen": 2,
+    "cat": "heli_util"
+   },
+   {
+    "m": "Mil Mi-24 (D/P Mi-35)",
+    "n": 20,
+    "orig": "SUN",
+    "s": "wiki_air",
+    "c": "ت",
+    "gen": 3,
+    "cat": "heli_attack"
+   },
+   {
+    "m": "Mil Mi-26 (T)",
+    "n": 4,
+    "orig": "SUN",
+    "s": "wiki_air",
+    "c": "ت",
+    "gen": 2,
+    "cat": "heli_util"
+   },
+   {
+    "m": "MD Helicopters MD 500",
+    "n": 84,
+    "orig": "USA",
+    "s": "wiki_air",
+    "c": "ت",
+    "note": "illegally obtained by circumventing U.S. export controls",
+    "gen": 2,
+    "cat": "heli_util"
+   },
+   {
+    "m": "MiG-15 (UTI)",
+    "n": 4,
+    "orig": "SUN",
+    "s": "wiki_air",
+    "c": "ت",
+    "gen": 2,
+    "cat": "trainer"
+   },
+   {
+    "m": "Shenyang F-5 (FT-5)",
+    "n": 135,
+    "orig": "CHN",
+    "s": "wiki_air",
+    "c": "ت",
+    "gen": 2,
+    "cat": "trainer"
+   },
+   {
+    "m": "Sukhoi Su-25 (UBK)",
+    "n": 34,
+    "orig": "SUN",
+    "s": "wiki_air",
+    "c": "ت",
+    "gen": 3,
+    "cat": "attack"
+   },
+   {
+    "m": "Shenyang FT-2",
+    "n": 30,
+    "orig": "CHN",
+    "s": "wiki_air",
+    "c": "ت",
+    "note": "Chinese produced MiG-15UTI",
+    "gen": 2,
+    "cat": "trainer"
+   },
+   {
+    "m": "Yakovlev Pchela",
+    "n": 10,
+    "orig": "RUS",
+    "s": "wiki_air",
+    "c": "ت",
+    "gen": 2,
+    "cat": "uav_isr"
+   }
+  ],
+  "ad": [],
+  "msl": [
+   {
+    "m": "2K6 Luna",
+    "n": 24,
+    "orig": "INT",
+    "s": "wiki_army",
+    "c": "ت",
+    "note": "FROG-3 and FROG-5 in service.",
+    "gen": 2,
+    "cat": "srbm"
+   },
+   {
+    "m": "9K52 Luna-M",
+    "n": 24,
+    "orig": "INT",
+    "s": "wiki_army",
+    "c": "ت",
+    "gen": 2,
+    "cat": "srbm"
+   },
+   {
+    "m": "Hwasong-11D",
+    "n": 250,
+    "orig": "INT",
+    "s": "wiki_army",
+    "c": "ت",
+    "note": "Undergoing trials.",
+    "gen": 2,
+    "cat": "srbm"
+   }
+  ],
+  "navy": []
+ },
+ "ind": {
+  "tech": {
+   "arm": 2,
+   "air": 0,
+   "uav": 2,
+   "msl": 4,
+   "navy": 1,
+   "ew": 2,
+   "ind": 1
+  },
+  "makes": [
+   "صواريخ باليستية وعابرة (هواسونغ)",
+   "قنابل نووية",
+   "مدفعية ثقيلة"
+  ],
+  "s": "tierA",
+  "c": "ت"
+ },
+ "pol": {
+  "factions": [
+   "party",
+   "army",
+   "street",
+   "biz"
+  ],
+  "stab": {
+   "v": 70,
+   "s": "tierA",
+   "c": "ت"
+  },
+  "warHome": []
+ },
+ "rel": {
+  "AUT": -40,
+  "BEL": -40,
+  "BGR": -40,
+  "CHN": 55,
+  "CYP": -40,
+  "CZE": -40,
+  "DEU": -40,
+  "DNK": -40,
+  "ESP": -40,
+  "EST": -40,
+  "FIN": -40,
+  "FRA": -40,
+  "GRC": -40,
+  "HRV": -40,
+  "HUN": -40,
+  "IRL": -40,
+  "ITA": -40,
+  "JPN": -80,
+  "KOR": -85,
+  "LTU": -40,
+  "LVA": -40,
+  "NLD": -40,
+  "POL": -40,
+  "PRT": -40,
+  "ROU": -40,
+  "RUS": 75,
+  "SVK": -40,
+  "SVN": -40,
+  "SWE": -40,
+  "USA": -85
+ },
+ "treaties": [
+  "PACT_CHN",
+  "PACT_RUS"
+ ],
+ "sanctions": [
+  {
+   "by": [
+    "UN",
+    "USA",
+    "EU",
+    "JPN",
+    "KOR"
+   ],
+   "level": "heavy",
+   "ar": "عقوبات الأمم المتحدة الشاملة"
+  }
+ ],
+ "conflicts": [],
+ "notes": ""
+}

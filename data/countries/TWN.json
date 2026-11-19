@@ -1,0 +1,622 @@
+{
+ "id": "TWN",
+ "ar": "تايوان",
+ "en": "Taiwan",
+ "tier": "A",
+ "asOf": "2026-11",
+ "src": {
+  "wiki_air": {
+   "t": "Wikipedia: Republic of China Air Force",
+   "u": "https://en.wikipedia.org/wiki/Republic_of_China_Air_Force?oldid=1381922234",
+   "y": 2026,
+   "note": "نسخة الصفحة بتاريخ السحب؛ أرقام ويكيبيديا تنراجع ويا مصادر ثانية"
+  },
+  "wiki_army": {
+   "t": "Wikipedia: List of equipment of the Republic of China Army",
+   "u": "https://en.wikipedia.org/wiki/List_of_equipment_of_the_Republic_of_China_Army?oldid=1385231126",
+   "y": 2026,
+   "note": "نسخة الصفحة بتاريخ السحب؛ أرقام ويكيبيديا تنراجع ويا مصادر ثانية"
+  },
+  "wiki_navy": {
+   "t": "Wikipedia: Republic of China Navy",
+   "u": "https://en.wikipedia.org/wiki/Republic_of_China_Navy?oldid=1376621811",
+   "y": 2026,
+   "note": "نسخة الصفحة بتاريخ السحب؛ أرقام ويكيبيديا تنراجع ويا مصادر ثانية"
+  },
+  "dgbas26": {
+   "t": "DGBAS (Taiwan) via Statistics of the World / Taipei Times: GDP 2025 ≈ US$922bn، نمو 8.63%، سكان 23.3 مليون",
+   "u": "https://statisticsoftheworld.com/country/TWN",
+   "y": 2026,
+   "note": "تايوان مو بالبنك الدولي"
+  },
+  "iiss_eq": {
+   "t": "Wikipedia: List of countries by level of military equipment (من IISS Military Balance ومصادر ثانية)",
+   "u": "https://en.wikipedia.org/wiki/List_of_countries_by_level_of_military_equipment?oldid=1384804191",
+   "y": 2025
+  },
+  "iiss_pers": {
+   "t": "Wikipedia: List of countries by number of military and paramilitary personnel (جدول IISS Military Balance)",
+   "u": "https://en.wikipedia.org/wiki/List_of_countries_by_number_of_military_and_paramilitary_personnel?oldid=1380910017",
+   "y": 2025
+  },
+  "wb": {
+   "t": "World Bank WDI (SP.POP.TOTL, NY.GDP.MKTP.CD, NY.GDP.MKTP.KD.ZG, MS.MIL.XPND.CD/GD.ZS ← SIPRI, MS.MIL.TOTL.P1, FP.CPI.TOTL.ZG)",
+   "u": "https://api.worldbank.org/v2/",
+   "y": 2026
+  },
+  "govt": {
+   "t": "تصنيف نظام الحكم: دساتير الدول + CIA World Factbook «Government type» + V-Dem/Freedom House لدرجة الحرية (تصنيف المصمم 2026)",
+   "u": "https://www.cia.gov/the-world-factbook/field/government-type/",
+   "y": 2026
+  },
+  "leaders": {
+   "t": "Wikipedia: List of current heads of state and government",
+   "u": "https://en.wikipedia.org/wiki/List_of_current_heads_of_state_and_government?oldid=1386623862",
+   "y": 2026,
+   "note": "سحب نوفمبر 2026"
+  },
+  "rules": {
+   "t": "قواعد من blocs.json وconflicts.json وsanctions.json (تكتل دفاعي +40، معاهدة +50، حرب −90، عقوبات ثقيلة −40...)",
+   "u": "data/world/",
+   "y": 2026
+  },
+  "relk": {
+   "t": "تقدير المصمم للعلاقات الثنائية المعروفة (تشرين الثاني 2026): حروب، نزاعات حدودية، تحالفات غير رسمية، تطبيع، عداء تاريخي",
+   "u": "https://en.wikipedia.org/wiki/Foreign_relations_by_country",
+   "y": 2026
+  },
+  "tierA": {
+   "t": "تقدير المصمم (تشرين الثاني 2026) لصناعة السلاح والاستقرار: SIPRI Arms Transfers Database (أكبر المصدّرين 2020–24)، SIPRI Top 100 Arms-Producing Companies، Fragile States Index 2025، أخبار 2026",
+   "u": "https://www.sipri.org/databases/armstransfers",
+   "y": 2026
+  }
+ },
+ "gov": {
+  "type": "semi",
+  "ar": "شبه رئاسي",
+  "free": 2,
+  "hos": {
+   "role": "President",
+   "name": "Lai Ching-te"
+  },
+  "hog": {
+   "role": "Premier",
+   "name": "Cho Jung-tai"
+  },
+  "s": "govt,leaders",
+  "c": "ح"
+ },
+ "pop": {
+  "v": 23300000,
+  "y": 2025,
+  "s": "dgbas26",
+  "c": "ح"
+ },
+ "eco": {
+  "gdpBusd": {
+   "v": 922.5,
+   "y": 2025,
+   "s": "dgbas26",
+   "c": "ت"
+  },
+  "growth": {
+   "v": 8.6,
+   "y": 2025,
+   "s": "dgbas26",
+   "c": "ح"
+  }
+ },
+ "mil": {
+  "sum": {
+   "tanks": {
+    "v": 1110,
+    "s": "iiss_eq",
+    "c": "ت"
+   },
+   "carriers": {
+    "v": 0,
+    "s": "iiss_eq",
+    "c": "ت"
+   },
+   "amphib": {
+    "v": 9,
+    "s": "iiss_eq",
+    "c": "ت"
+   },
+   "cruisers": {
+    "v": 0,
+    "s": "iiss_eq",
+    "c": "ت"
+   },
+   "destroyers": {
+    "v": 4,
+    "s": "iiss_eq",
+    "c": "ت"
+   },
+   "frigates": {
+    "v": 21,
+    "s": "iiss_eq",
+    "c": "ت"
+   },
+   "corvettes": {
+    "v": 11,
+    "s": "iiss_eq",
+    "c": "ت"
+   },
+   "subNuc": {
+    "v": 0,
+    "s": "iiss_eq",
+    "c": "ت"
+   },
+   "subs": {
+    "v": 4,
+    "s": "iiss_eq",
+    "c": "ت"
+   },
+   "combatAir": {
+    "v": 346,
+    "s": "iiss_eq",
+    "c": "ت"
+   },
+   "attackHeli": {
+    "v": 96,
+    "s": "iiss_eq",
+    "c": "ت"
+   },
+   "sats": {
+    "v": 1,
+    "s": "iiss_eq",
+    "c": "ت"
+   },
+   "active": {
+    "v": 170600,
+    "s": "iiss_pers",
+    "c": "ت"
+   },
+   "reserve": {
+    "v": 1657000,
+    "s": "iiss_pers",
+    "c": "ت"
+   },
+   "para": {
+    "v": 11800,
+    "s": "iiss_pers",
+    "c": "ت"
+   }
+  },
+  "land": [
+   {
+    "m": "M1A2T Abrams",
+    "n": 108,
+    "orig": "USA",
+    "s": "wiki_army",
+    "c": "ت",
+    "note": "108 M1A2Ts ordered in total.",
+    "gen": 4,
+    "cat": "tank"
+   },
+   {
+    "m": "M60A3 TTS",
+    "n": 460,
+    "orig": "USA",
+    "s": "wiki_army",
+    "c": "ت",
+    "note": "Some have been transferred to the ROCMC. Undergoing system upgrade by NCSIST from 2022~2024.",
+    "gen": 2,
+    "cat": "tank"
+   },
+   {
+    "m": "CM11 Brave Tiger",
+    "n": 450,
+    "orig": "USA",
+    "s": "wiki_army",
+    "c": "ت",
+    "note": "Assembled in Taiwan from 1988 to 1994, with a M48 turret fixed on a M60 chassis integrated with a M1A1 fire control system. Certain armoured",
+    "gen": 2,
+    "cat": "tank"
+   },
+   {
+    "m": "CM32",
+    "n": 378,
+    "orig": "TWN",
+    "s": "wiki_army",
+    "c": "ت",
+    "note": "In 2018, first batch of 378 CM32 and CM33 vehicles was completed and a second batch of 284 CM34 vehicles was ordered. In August 2020 another",
+    "gen": 2,
+    "cat": "ifv"
+   },
+   {
+    "m": "CM21",
+    "n": 1025,
+    "orig": "USA",
+    "s": "wiki_army",
+    "c": "ت",
+    "note": "Various variants produced from 1982 to 2009. CM21/A1 armored personnel carrier CM22 mortar carrier for 107mm/120 mm mortar CM23 mortar carri",
+    "gen": 2,
+    "cat": "apc"
+   },
+   {
+    "m": "M113",
+    "n": 650,
+    "orig": "USA",
+    "s": "wiki_army",
+    "c": "ت",
+    "note": "M113A1/A2",
+    "gen": 2,
+    "cat": "apc"
+   },
+   {
+    "m": "AAV-7A1",
+    "n": 90,
+    "orig": "USA",
+    "s": "wiki_army",
+    "c": "ت",
+    "note": "Serving in Republic of China Marine Corps, replaces the LVTP-5 and LVT H6.",
+    "gen": 2,
+    "cat": "apc"
+   },
+   {
+    "m": "V-150S Commando",
+    "n": 300,
+    "orig": "USA",
+    "s": "wiki_army",
+    "c": "ت",
+    "note": "In use with Southern Army Group, 333rd Mechanised Infantry Brigade.",
+    "gen": 2,
+    "cat": "apc"
+   },
+   {
+    "m": "SC-09A 4WD Special combat Assault Vehicle(SAV)",
+    "n": 56,
+    "orig": "TWN",
+    "s": "wiki_army",
+    "c": "ت",
+    "note": "In use with ROC Army Aviation and Special Forces.",
+    "gen": 2,
+    "cat": "apc"
+   },
+   {
+    "m": "M115",
+    "n": 70,
+    "orig": "USA",
+    "s": "wiki_army",
+    "c": "ت",
+    "gen": 2,
+    "cat": "towed"
+   },
+   {
+    "m": "M59A2",
+    "n": 30,
+    "orig": "USA",
+    "s": "wiki_army",
+    "c": "ت",
+    "gen": 2,
+    "cat": "towed"
+   },
+   {
+    "m": "M114A1",
+    "n": 250,
+    "orig": "CHN",
+    "s": "wiki_army",
+    "c": "ت",
+    "gen": 2,
+    "cat": "towed"
+   },
+   {
+    "m": "T-65 155 mm howitzer",
+    "n": 203,
+    "orig": "CHN",
+    "s": "wiki_army",
+    "c": "ت",
+    "note": "Locally produced, licensed, version of the M114A1 howitzer.",
+    "gen": 2,
+    "cat": "towed"
+   },
+   {
+    "m": "M101A1(T-63)",
+    "n": 650,
+    "orig": "USA",
+    "s": "wiki_army",
+    "c": "ت",
+    "note": "Locally produced, licensed, version of the M101 howitzer.",
+    "gen": 2,
+    "cat": "towed"
+   },
+   {
+    "m": "M109",
+    "n": 225,
+    "orig": "USA",
+    "s": "wiki_army",
+    "c": "ت",
+    "note": "M109A2/A5",
+    "gen": 2,
+    "cat": "spg"
+   },
+   {
+    "m": "M110A2",
+    "n": 70,
+    "orig": "USA",
+    "s": "wiki_army",
+    "c": "ت",
+    "gen": 2,
+    "cat": "spg"
+   },
+   {
+    "m": "M142 HIMARS",
+    "n": 11,
+    "orig": "USA",
+    "s": "wiki_army",
+    "c": "ت",
+    "note": "On 21 October 2020, the United States government approved the sale of 11 HIMARS to Taiwan. Another 18 are ordered since the cancellation of ",
+    "gen": 2,
+    "cat": "mlrs"
+   },
+   {
+    "m": "RT/LT-2000",
+    "n": 100,
+    "orig": "CHN",
+    "s": "wiki_army",
+    "c": "ت",
+    "gen": 2,
+    "cat": "mlrs"
+   },
+   {
+    "m": "Hellfire AGM-114L",
+    "n": 1000,
+    "orig": "USA",
+    "s": "wiki_army",
+    "c": "ت",
+    "note": "Carried by AH-64E since 2012-2014.",
+    "gen": 2,
+    "cat": "atgm"
+   },
+   {
+    "m": "Hellfire AGM-114K3",
+    "n": 240,
+    "orig": "USA",
+    "s": "wiki_army",
+    "c": "ت",
+    "note": "Carried by AH-1W and OH-58D since 1999.",
+    "gen": 2,
+    "cat": "atgm"
+   },
+   {
+    "m": "Hellfire AGM-114C",
+    "n": 684,
+    "orig": "USA",
+    "s": "wiki_army",
+    "c": "ت",
+    "note": "Carried by AH-1W and OH-58D.",
+    "gen": 2,
+    "cat": "atgm"
+   },
+   {
+    "m": "FGM-148 Javelin",
+    "n": 2200,
+    "orig": "USA",
+    "s": "wiki_army",
+    "c": "ت",
+    "note": "40 launchers, 360 missiles ordered in 2002. 20 launchers, 182 missiles ordered in 2008. 60 launchers, 208 missiles ordered in 2017. 42 launc",
+    "gen": 2,
+    "cat": "atgm"
+   },
+   {
+    "m": "APILAS",
+    "n": 1000,
+    "orig": "FRA",
+    "s": "wiki_army",
+    "c": "ت",
+    "note": "Over 1,000 delivered by 1998, deployed mostly in outlying islands.",
+    "gen": 2,
+    "cat": "atgm"
+   }
+  ],
+  "air": [
+   {
+    "m": "AH-64 Apache Guardian (AH-64E)",
+    "n": 29,
+    "orig": "USA",
+    "s": "wiki_army",
+    "c": "ت",
+    "gen": 4,
+    "cat": "heli_attack"
+   },
+   {
+    "m": "AH-1 SuperCobra (AH-1W)",
+    "n": 61,
+    "orig": "USA",
+    "s": "wiki_army",
+    "c": "ت",
+    "gen": 2,
+    "cat": "heli_attack"
+   },
+   {
+    "m": "OH-58 Kiowa (OH-58D)",
+    "n": 37,
+    "orig": "USA",
+    "s": "wiki_army",
+    "c": "ت",
+    "gen": 2,
+    "cat": "heli_util"
+   },
+   {
+    "m": "CH-47 Chinook (CH-47SD)",
+    "n": 8,
+    "orig": "USA",
+    "s": "wiki_army",
+    "c": "ت",
+    "gen": 3,
+    "cat": "heli_util"
+   },
+   {
+    "m": "UH-60 Black Hawk (UH-60M)",
+    "n": 30,
+    "orig": "USA",
+    "s": "wiki_army",
+    "c": "ت",
+    "gen": 2,
+    "cat": "heli_util"
+   },
+   {
+    "m": "Bell 206 (TH-67A Creek)",
+    "n": 30,
+    "orig": "USA",
+    "s": "wiki_army",
+    "c": "ت",
+    "gen": 2,
+    "cat": "heli_util"
+   },
+   {
+    "m": "NCSIST Albatross (Medium recon unmanned aerial vehicle)",
+    "n": 32,
+    "orig": "TWN",
+    "s": "wiki_army",
+    "c": "ت",
+    "gen": 2,
+    "cat": "uav_isr"
+   },
+   {
+    "m": "NCSIST Cardinal II (Small recon unmanned aerial vehicle)",
+    "n": 30,
+    "orig": "TWN",
+    "s": "wiki_army",
+    "c": "ت",
+    "gen": 2,
+    "cat": "uav_isr"
+   },
+   {
+    "m": "NCSIST Capricorn [zh] (Unmanned aerial vehicle)",
+    "n": 300,
+    "orig": "TWN",
+    "s": "wiki_army",
+    "c": "ت",
+    "gen": 2,
+    "cat": "uav_isr"
+   },
+   {
+    "m": "Altius-600M (Unmanned aerial vehicle)",
+    "n": 291,
+    "orig": "USA",
+    "s": "wiki_army",
+    "c": "ت",
+    "gen": 2,
+    "cat": "uav_isr"
+   }
+  ],
+  "ad": [
+   {
+    "m": "Surface-to-air TC-2",
+    "n": 29,
+    "orig": "TWN",
+    "s": "wiki_army",
+    "c": "ت",
+    "note": "Six batteries and 246 missiles service in 2023.",
+    "gen": 2,
+    "cat": "short"
+   },
+   {
+    "m": "M1097 Avenger (AN/TWQ-1)",
+    "n": 74,
+    "orig": "USA",
+    "s": "wiki_army",
+    "c": "ت",
+    "note": "In service with Northern and Central Army Group only, came with 1299 Stingers purchased in the same deal.",
+    "gen": 2,
+    "cat": "short"
+   },
+   {
+    "m": "Dual Mounted Stinger",
+    "n": 116,
+    "orig": "USA",
+    "s": "wiki_army",
+    "c": "ت",
+    "note": "55 Stinger DMS launchers with 465 RMP rounds, from the United States Army stockpile and rebuilt/refurbished, sold to Taiwan May 1996 for 80 ",
+    "gen": 2,
+    "cat": "short"
+   }
+  ],
+  "msl": [],
+  "navy": [
+   {
+    "m": "Kuang Hua VI-class",
+    "n": 61,
+    "orig": "INT",
+    "s": "wiki_navy",
+    "c": "ت",
+    "gen": 2,
+    "cat": "missile_boat"
+   },
+   {
+    "m": "Lockheed P-3 Orion (P-3C)",
+    "n": 12,
+    "orig": "USA",
+    "s": "wiki_navy",
+    "c": "ت",
+    "note": "Re-built ex-US Navy aircraft and replaced ROCN Grumman S-2 Trackers",
+    "gen": 2,
+    "cat": "patrol"
+   },
+   {
+    "m": "Sikorsky S-70 (S-70C(M)-1/2 Thunderhawk)",
+    "n": 18,
+    "orig": "USA",
+    "s": "wiki_navy",
+    "c": "ت",
+    "note": "To be replaced",
+    "gen": 2,
+    "cat": "sub"
+   },
+   {
+    "m": "McDonnell Douglas MD 500 Defender (500MD/ASW Defender)",
+    "n": 7,
+    "orig": "USA",
+    "s": "wiki_navy",
+    "c": "ت",
+    "note": "Out of original 13 ordered",
+    "gen": 2,
+    "cat": "sub"
+   }
+  ]
+ },
+ "ind": {
+  "tech": {
+   "arm": 2,
+   "air": 3,
+   "uav": 3,
+   "msl": 4,
+   "navy": 3,
+   "ew": 4,
+   "ind": 5
+  },
+  "makes": [
+   "تيان كونغ",
+   "هسيونغ فينغ",
+   "غواصة هاي كون",
+   "رقائق إلكترونية"
+  ],
+  "s": "tierA",
+  "c": "ت"
+ },
+ "pol": {
+  "factions": [
+   "army",
+   "parties",
+   "street",
+   "biz"
+  ],
+  "stab": {
+   "v": 66,
+   "s": "tierA",
+   "c": "ت"
+  },
+  "warHome": []
+ },
+ "rel": {
+  "CHN": -80,
+  "USA": 70
+ },
+ "treaties": [],
+ "sanctions": [],
+ "conflicts": [],
+ "notes": "مو بالأمم المتحدة. الصين تعتبرها جزء منها (علاقة −80). الأرقام العسكرية من IISS عبر ويكيبيديا."
+}

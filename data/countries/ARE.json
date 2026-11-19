@@ -1,0 +1,1039 @@
+{
+ "id": "ARE",
+ "ar": "الإمارات العربية المتحدة",
+ "en": "United Arab Emirates",
+ "tier": "A",
+ "asOf": "2026-11",
+ "src": {
+  "wiki_air": {
+   "t": "Wikipedia: United Arab Emirates Air Force",
+   "u": "https://en.wikipedia.org/wiki/United_Arab_Emirates_Air_Force?oldid=1385420078",
+   "y": 2026,
+   "note": "نسخة الصفحة بتاريخ السحب؛ أرقام ويكيبيديا تنراجع ويا مصادر ثانية"
+  },
+  "wiki_army": {
+   "t": "Wikipedia: List of equipment of the United Arab Emirates Army",
+   "u": "https://en.wikipedia.org/wiki/List_of_equipment_of_the_United_Arab_Emirates_Army?oldid=1379723603",
+   "y": 2026,
+   "note": "نسخة الصفحة بتاريخ السحب؛ أرقام ويكيبيديا تنراجع ويا مصادر ثانية"
+  },
+  "wiki_navy": {
+   "t": "Wikipedia: United Arab Emirates Navy",
+   "u": "https://en.wikipedia.org/wiki/United_Arab_Emirates_Navy?oldid=1371484534",
+   "y": 2026,
+   "note": "نسخة الصفحة بتاريخ السحب؛ أرقام ويكيبيديا تنراجع ويا مصادر ثانية"
+  },
+  "iiss_eq": {
+   "t": "Wikipedia: List of countries by level of military equipment (من IISS Military Balance ومصادر ثانية)",
+   "u": "https://en.wikipedia.org/wiki/List_of_countries_by_level_of_military_equipment?oldid=1384804191",
+   "y": 2025
+  },
+  "iiss_pers": {
+   "t": "Wikipedia: List of countries by number of military and paramilitary personnel (جدول IISS Military Balance)",
+   "u": "https://en.wikipedia.org/wiki/List_of_countries_by_number_of_military_and_paramilitary_personnel?oldid=1380910017",
+   "y": 2025
+  },
+  "wb": {
+   "t": "World Bank WDI (SP.POP.TOTL, NY.GDP.MKTP.CD, NY.GDP.MKTP.KD.ZG, MS.MIL.XPND.CD/GD.ZS ← SIPRI, MS.MIL.TOTL.P1, FP.CPI.TOTL.ZG)",
+   "u": "https://api.worldbank.org/v2/",
+   "y": 2026
+  },
+  "govt": {
+   "t": "تصنيف نظام الحكم: دساتير الدول + CIA World Factbook «Government type» + V-Dem/Freedom House لدرجة الحرية (تصنيف المصمم 2026)",
+   "u": "https://www.cia.gov/the-world-factbook/field/government-type/",
+   "y": 2026
+  },
+  "leaders": {
+   "t": "Wikipedia: List of current heads of state and government",
+   "u": "https://en.wikipedia.org/wiki/List_of_current_heads_of_state_and_government?oldid=1386623862",
+   "y": 2026,
+   "note": "سحب نوفمبر 2026"
+  },
+  "rules": {
+   "t": "قواعد من blocs.json وconflicts.json وsanctions.json (تكتل دفاعي +40، معاهدة +50، حرب −90، عقوبات ثقيلة −40...)",
+   "u": "data/world/",
+   "y": 2026
+  },
+  "relk": {
+   "t": "تقدير المصمم للعلاقات الثنائية المعروفة (تشرين الثاني 2026): حروب، نزاعات حدودية، تحالفات غير رسمية، تطبيع، عداء تاريخي",
+   "u": "https://en.wikipedia.org/wiki/Foreign_relations_by_country",
+   "y": 2026
+  },
+  "tierA": {
+   "t": "تقدير المصمم (تشرين الثاني 2026) لصناعة السلاح والاستقرار: SIPRI Arms Transfers Database (أكبر المصدّرين 2020–24)، SIPRI Top 100 Arms-Producing Companies، Fragile States Index 2025، أخبار 2026",
+   "u": "https://www.sipri.org/databases/armstransfers",
+   "y": 2026
+  }
+ },
+ "gov": {
+  "type": "amon",
+  "ar": "ملكية مطلقة/قوية",
+  "free": 0,
+  "hos": {
+   "role": "President",
+   "name": "Mohamed bin Zayed Al Nahyan"
+  },
+  "hog": {
+   "role": "Prime Minister",
+   "name": "Mohammed bin Rashid Al Maktoum"
+  },
+  "s": "govt,leaders",
+  "c": "ح"
+ },
+ "pop": {
+  "v": 11513149,
+  "y": 2025,
+  "s": "wb",
+  "c": "ح"
+ },
+ "eco": {
+  "gdpBusd": {
+   "v": 552.3,
+   "y": 2024,
+   "s": "wb",
+   "c": "ح"
+  },
+  "growth": {
+   "v": 4.0,
+   "y": 2024,
+   "s": "wb",
+   "c": "ح"
+  },
+  "infl": {
+   "v": 1.3,
+   "y": 2025,
+   "s": "wb",
+   "c": "ح"
+  },
+  "oilRentPct": {
+   "v": 15.7,
+   "y": 2021,
+   "s": "wb",
+   "c": "ح"
+  }
+ },
+ "mil": {
+  "budgetBusd": {
+   "v": 22.76,
+   "y": 2014,
+   "s": "wb",
+   "c": "ح"
+  },
+  "budgetPctGdp": {
+   "v": 5.64,
+   "y": 2014,
+   "s": "wb",
+   "c": "ح"
+  },
+  "personnelWB": {
+   "v": 63000,
+   "y": 2020,
+   "s": "wb",
+   "c": "ح"
+  },
+  "sum": {
+   "tanks": {
+    "v": 353,
+    "s": "iiss_eq",
+    "c": "ت"
+   },
+   "carriers": {
+    "v": 0,
+    "s": "iiss_eq",
+    "c": "ت"
+   },
+   "amphib": {
+    "v": 2,
+    "s": "iiss_eq",
+    "c": "ت"
+   },
+   "cruisers": {
+    "v": 0,
+    "s": "iiss_eq",
+    "c": "ت"
+   },
+   "destroyers": {
+    "v": 0,
+    "s": "iiss_eq",
+    "c": "ت"
+   },
+   "frigates": {
+    "v": 0,
+    "s": "iiss_eq",
+    "c": "ت"
+   },
+   "corvettes": {
+    "v": 7,
+    "s": "iiss_eq",
+    "c": "ت"
+   },
+   "subNuc": {
+    "v": 0,
+    "s": "iiss_eq",
+    "c": "ت"
+   },
+   "subs": {
+    "v": 0,
+    "s": "iiss_eq",
+    "c": "ت"
+   },
+   "combatAir": {
+    "v": 155,
+    "s": "iiss_eq",
+    "c": "ت"
+   },
+   "attackHeli": {
+    "v": 28,
+    "s": "iiss_eq",
+    "c": "ت"
+   },
+   "sats": {
+    "v": 3,
+    "s": "iiss_eq",
+    "c": "ت"
+   },
+   "active": {
+    "v": 63000,
+    "s": "iiss_pers",
+    "c": "ت"
+   },
+   "reserve": {
+    "v": 0,
+    "s": "iiss_pers",
+    "c": "ت"
+   },
+   "para": {
+    "v": 0,
+    "s": "iiss_pers",
+    "c": "ت"
+   }
+  },
+  "land": [
+   {
+    "m": "M142 HIMARS",
+    "n": 12,
+    "orig": "USA",
+    "s": "wiki_army",
+    "c": "ت",
+    "note": "Ordered in September 2014.",
+    "gen": 2,
+    "cat": "mlrs"
+   },
+   {
+    "m": "SR-5",
+    "n": 5,
+    "orig": "CHN",
+    "s": "wiki_army",
+    "c": "ت",
+    "gen": 2,
+    "cat": "mlrs"
+   },
+   {
+    "m": "K239 Chunmoo",
+    "n": 12,
+    "orig": "KOR",
+    "s": "wiki_army",
+    "c": "ت",
+    "note": "Purchased in 2021. 12 Chunmoo multiple rocket launchers, 12 ammunition supply vehicles, and Korean GPS guided missiles and logistics support",
+    "gen": 2,
+    "cat": "mlrs"
+   },
+   {
+    "m": "M109",
+    "n": 87,
+    "orig": "USA",
+    "s": "wiki_army",
+    "c": "ت",
+    "note": "In August 1995, Abu Dhabi purchased 87 M109A3 from the Royal Netherlands Army.",
+    "gen": 2,
+    "cat": "spg"
+   },
+   {
+    "m": "G6",
+    "n": 78,
+    "orig": "ZAF",
+    "s": "wiki_army",
+    "c": "ت",
+    "gen": 2,
+    "cat": "spg"
+   },
+   {
+    "m": "AH4",
+    "n": 6,
+    "orig": "CHN",
+    "s": "wiki_army",
+    "c": "ت",
+    "note": "On 21 February 2019, the United Arab Emirates military confirmed the acquisition of 6 Norinco AH4 gun-howitzers.",
+    "gen": 2,
+    "cat": "towed"
+   },
+   {
+    "m": "L118 light gun",
+    "n": 73,
+    "orig": "GBR",
+    "s": "wiki_army",
+    "c": "ت",
+    "gen": 2,
+    "cat": "towed"
+   },
+   {
+    "m": "Type 59",
+    "n": 20,
+    "orig": "CHN",
+    "s": "wiki_army",
+    "c": "ت",
+    "gen": 1,
+    "cat": "towed"
+   },
+   {
+    "m": "Leclerc",
+    "n": 354,
+    "orig": "FRA",
+    "s": "wiki_army",
+    "c": "ت",
+    "gen": 4,
+    "cat": "tank"
+   },
+   {
+    "m": "FNSS ACV-300",
+    "n": 136,
+    "orig": "TUR",
+    "s": "wiki_army",
+    "c": "ت",
+    "gen": 2,
+    "cat": "ifv"
+   },
+   {
+    "m": "BMP-3",
+    "n": 652,
+    "orig": "RUS",
+    "s": "wiki_army",
+    "c": "ت",
+    "gen": 4,
+    "cat": "ifv"
+   },
+   {
+    "m": "Patria AMV",
+    "n": 45,
+    "orig": "FIN",
+    "s": "wiki_army",
+    "c": "ت",
+    "gen": 2,
+    "cat": "apc"
+   },
+   {
+    "m": "Otokar-Al Jassor Rabdan",
+    "n": 700,
+    "orig": "TUR",
+    "s": "wiki_army",
+    "c": "ت",
+    "gen": 2,
+    "cat": "ifv"
+   },
+   {
+    "m": "Nimr Hafeet",
+    "n": 675,
+    "orig": "ARE",
+    "s": "wiki_army",
+    "c": "ت",
+    "gen": 2,
+    "cat": "apc"
+   },
+   {
+    "m": "Nimr Ajban",
+    "n": 350,
+    "orig": "ARE",
+    "s": "wiki_army",
+    "c": "ت",
+    "gen": 2,
+    "cat": "apc"
+   },
+   {
+    "m": "HMMWV",
+    "n": 150,
+    "orig": "USA",
+    "s": "wiki_army",
+    "c": "ت",
+    "gen": 2,
+    "cat": "apc"
+   },
+   {
+    "m": "M1288 GMV 1.1",
+    "n": 100,
+    "orig": "USA",
+    "s": "wiki_army",
+    "c": "ت",
+    "gen": 2,
+    "cat": "apc"
+   },
+   {
+    "m": "BAE Caiman",
+    "n": 931,
+    "orig": "USA",
+    "s": "wiki_army",
+    "c": "ت",
+    "gen": 2,
+    "cat": "mrap"
+   },
+   {
+    "m": "International MaxxPro",
+    "n": 3375,
+    "orig": "USA",
+    "s": "wiki_army",
+    "c": "ت",
+    "gen": 2,
+    "cat": "mrap"
+   },
+   {
+    "m": "Oshkosh M-ATV",
+    "n": 750,
+    "orig": "USA",
+    "s": "wiki_army",
+    "c": "ت",
+    "gen": 2,
+    "cat": "mrap"
+   },
+   {
+    "m": "Nimr Jais",
+    "n": 250,
+    "orig": "ARE",
+    "s": "wiki_army",
+    "c": "ت",
+    "gen": 2,
+    "cat": "mrap"
+   },
+   {
+    "m": "RG-31 Nyala",
+    "n": 76,
+    "orig": "ZAF",
+    "s": "wiki_army",
+    "c": "ت",
+    "gen": 2,
+    "cat": "mrap"
+   }
+  ],
+  "air": [
+   {
+    "m": "Dassault Mirage 2000 (9/EAD/RAD)",
+    "n": 44,
+    "orig": "FRA",
+    "s": "wiki_air",
+    "c": "ت",
+    "gen": 3,
+    "cat": "fighter"
+   },
+   {
+    "m": "Dassault Mirage 2000 (9/DAD)",
+    "n": 15,
+    "orig": "FRA",
+    "s": "wiki_air",
+    "c": "ت",
+    "gen": 3,
+    "cat": "trainer"
+   },
+   {
+    "m": "F-16 Fighting Falcon (E Block 60)",
+    "n": 55,
+    "orig": "USA",
+    "s": "wiki_air",
+    "c": "ت",
+    "gen": 3,
+    "cat": "fighter"
+   },
+   {
+    "m": "F-16 Fighting Falcon (F Block 60)",
+    "n": 21,
+    "orig": "USA",
+    "s": "wiki_air",
+    "c": "ت",
+    "gen": 3,
+    "cat": "trainer"
+   },
+   {
+    "m": "Saab GlobalEye",
+    "n": 5,
+    "orig": "CAN",
+    "s": "wiki_air",
+    "c": "ت",
+    "gen": 2,
+    "cat": "awacs"
+   },
+   {
+    "m": "Bombardier Global Express (Global 6000)",
+    "n": 2,
+    "orig": "CAN",
+    "s": "wiki_air",
+    "c": "ت",
+    "gen": 2,
+    "cat": "isr"
+   },
+   {
+    "m": "Ayres Thrush (IOMAX S2R-T660 Archangel)",
+    "n": 24,
+    "orig": "USA",
+    "s": "wiki_air",
+    "c": "ت",
+    "gen": 2,
+    "cat": "attack"
+   },
+   {
+    "m": "Bombardier Dash 8 (MPA-D8)",
+    "n": 2,
+    "orig": "CAN",
+    "s": "wiki_air",
+    "c": "ت",
+    "gen": 2,
+    "cat": "isr"
+   },
+   {
+    "m": "Challenger 650",
+    "n": 2,
+    "orig": "CAN",
+    "s": "wiki_air",
+    "c": "ت",
+    "gen": 3,
+    "cat": "isr"
+   },
+   {
+    "m": "Airbus A330 MRTT",
+    "n": 5,
+    "orig": "INT",
+    "s": "wiki_air",
+    "c": "ت",
+    "gen": 2,
+    "cat": "tanker"
+   },
+   {
+    "m": "Boeing C-17",
+    "n": 8,
+    "orig": "USA",
+    "s": "wiki_air",
+    "c": "ت",
+    "gen": 2,
+    "cat": "transport"
+   },
+   {
+    "m": "Airbus C295",
+    "n": 7,
+    "orig": "ESP",
+    "s": "wiki_air",
+    "c": "ت",
+    "gen": 2,
+    "cat": "transport"
+   },
+   {
+    "m": "Daher Kodiak",
+    "n": 1,
+    "orig": "USA",
+    "s": "wiki_air",
+    "c": "ت",
+    "gen": 2,
+    "cat": "transport"
+   },
+   {
+    "m": "Lockheed C-130 (C-130H)",
+    "n": 4,
+    "orig": "USA",
+    "s": "wiki_air",
+    "c": "ت",
+    "gen": 2,
+    "cat": "transport"
+   },
+   {
+    "m": "Lockheed L-100",
+    "n": 4,
+    "orig": "USA",
+    "s": "wiki_air",
+    "c": "ت",
+    "gen": 2,
+    "cat": "transport"
+   },
+   {
+    "m": "PAC P-750",
+    "n": 1,
+    "orig": "NZL",
+    "s": "wiki_air",
+    "c": "ت",
+    "gen": 2,
+    "cat": "transport"
+   },
+   {
+    "m": "Air Tractor AT-802",
+    "n": 16,
+    "orig": "USA",
+    "s": "wiki_air",
+    "c": "ت",
+    "gen": 3,
+    "cat": "fighter"
+   },
+   {
+    "m": "Piaggio P.180 Avanti",
+    "n": 2,
+    "orig": "ITA",
+    "s": "wiki_air",
+    "c": "ت",
+    "gen": 2,
+    "cat": "heli_util"
+   },
+   {
+    "m": "AgustaWestland AW139",
+    "n": 8,
+    "orig": "ITA",
+    "s": "wiki_air",
+    "c": "ت",
+    "gen": 2,
+    "cat": "heli_util"
+   },
+   {
+    "m": "Bell 412",
+    "n": 4,
+    "orig": "USA",
+    "s": "wiki_air",
+    "c": "ت",
+    "gen": 2,
+    "cat": "heli_util"
+   },
+   {
+    "m": "Eurocopter AS550",
+    "n": 2,
+    "orig": "FRA",
+    "s": "wiki_air",
+    "c": "ت",
+    "gen": 2,
+    "cat": "heli_util"
+   },
+   {
+    "m": "Eurocopter EC145",
+    "n": 3,
+    "orig": "INT",
+    "s": "wiki_air",
+    "c": "ت",
+    "gen": 2,
+    "cat": "heli_util"
+   },
+   {
+    "m": "Bell 407",
+    "n": 13,
+    "orig": "USA",
+    "s": "wiki_air",
+    "c": "ت",
+    "gen": 2,
+    "cat": "heli_util"
+   },
+   {
+    "m": "Bell 505",
+    "n": 12,
+    "orig": "USA",
+    "s": "wiki_air",
+    "c": "ت",
+    "gen": 2,
+    "cat": "heli_util"
+   },
+   {
+    "m": "BAe Hawk (Hawk 61/63/102)",
+    "n": 12,
+    "orig": "GBR",
+    "s": "wiki_air",
+    "c": "ت",
+    "gen": 2,
+    "cat": "trainer"
+   },
+   {
+    "m": "Hongdu JL-10 (L-15)",
+    "n": 6,
+    "orig": "INT",
+    "s": "wiki_air",
+    "c": "ت",
+    "note": "42 on order",
+    "gen": 2,
+    "cat": "trainer"
+   },
+   {
+    "m": "Beechcraft King Air (King Air 90)",
+    "n": 3,
+    "orig": "USA",
+    "s": "wiki_air",
+    "c": "ت",
+    "gen": 2,
+    "cat": "trainer"
+   },
+   {
+    "m": "Grob G 115",
+    "n": 12,
+    "orig": "DEU",
+    "s": "wiki_air",
+    "c": "ت",
+    "gen": 2,
+    "cat": "trainer"
+   },
+   {
+    "m": "Pilatus PC-7",
+    "n": 31,
+    "orig": "CHE",
+    "s": "wiki_air",
+    "c": "ت",
+    "gen": 2,
+    "cat": "trainer"
+   },
+   {
+    "m": "Pilatus PC-21",
+    "n": 25,
+    "orig": "CHE",
+    "s": "wiki_air",
+    "c": "ت",
+    "gen": 2,
+    "cat": "trainer"
+   },
+   {
+    "m": "Denel Dynamics Seeker (Seeker II)",
+    "n": 11,
+    "orig": "ZAF",
+    "s": "wiki_air",
+    "c": "ت",
+    "gen": 2,
+    "cat": "uav_isr"
+   },
+   {
+    "m": "Cessna 208",
+    "n": 13,
+    "orig": "USA",
+    "s": "wiki_air",
+    "c": "ت",
+    "gen": 2,
+    "cat": "transport"
+   },
+   {
+    "m": "DHC-6 Twin Otter",
+    "n": 10,
+    "orig": "CAN",
+    "s": "wiki_air",
+    "c": "ت",
+    "note": "7 used for transport, STOL capable aircraft",
+    "gen": 2,
+    "cat": "transport"
+   },
+   {
+    "m": "Bell 407",
+    "n": 29,
+    "orig": "USA",
+    "s": "wiki_air",
+    "c": "ت",
+    "gen": 2,
+    "cat": "heli_attack"
+   },
+   {
+    "m": "AH-64 Apache (AH-64D/E)",
+    "n": 30,
+    "orig": "USA",
+    "s": "wiki_air",
+    "c": "ت",
+    "note": "39 on order",
+    "gen": 3,
+    "cat": "heli_attack"
+   },
+   {
+    "m": "CH-47 Chinook (CH-47C/F)",
+    "n": 28,
+    "orig": "USA",
+    "s": "wiki_air",
+    "c": "ت",
+    "note": "12 obtained from Libya",
+    "gen": 3,
+    "cat": "heli_util"
+   },
+   {
+    "m": "UH-60 Black Hawk (UH-60L/M)",
+    "n": 80,
+    "orig": "USA",
+    "s": "wiki_air",
+    "c": "ت",
+    "gen": 2,
+    "cat": "heli_util"
+   },
+   {
+    "m": "Eurocopter AS565",
+    "n": 12,
+    "orig": "FRA",
+    "s": "wiki_air",
+    "c": "ت",
+    "gen": 2,
+    "cat": "heli_util"
+   },
+   {
+    "m": "Eurocopter AS350",
+    "n": 15,
+    "orig": "FRA",
+    "s": "wiki_air",
+    "c": "ت",
+    "gen": 2,
+    "cat": "heli_util"
+   },
+   {
+    "m": "Eurocopter AS332",
+    "n": 8,
+    "orig": "FRA",
+    "s": "wiki_air",
+    "c": "ت",
+    "gen": 2,
+    "cat": "heli_util"
+   }
+  ],
+  "ad": [
+   {
+    "m": "MIM-104 Patriot",
+    "n": 12,
+    "orig": "USA",
+    "s": "wiki_army",
+    "c": "ت",
+    "note": "United Arab Emirates has 9 PAC-3 batteries and 3 PAC-2 batteries (818 missiles).",
+    "gen": 4,
+    "cat": "long"
+   },
+   {
+    "m": "MIM-23 Hawk",
+    "n": 343,
+    "orig": "USA",
+    "s": "wiki_army",
+    "c": "ت",
+    "note": "United Arab Emirates owns Phase I and Phase III.",
+    "gen": 2,
+    "cat": "medium"
+   },
+   {
+    "m": "Pantsir",
+    "n": 50,
+    "orig": "RUS",
+    "s": "wiki_army",
+    "c": "ت",
+    "note": "United Arab Emirates owns the S1 version.",
+    "gen": 3,
+    "cat": "short"
+   }
+  ],
+  "msl": [
+   {
+    "m": "Terminal High Altitude Area Defense",
+    "n": 2,
+    "orig": "USA",
+    "s": "wiki_army",
+    "c": "ت",
+    "note": "In 2011 United Arab Emirates ordered the Terminal High Altitude Area Defense (THAAD) which made the United Arab Emirates the first foreign c",
+    "gen": 2,
+    "cat": "srbm"
+   }
+  ],
+  "navy": [
+   {
+    "m": "Bani Yas-class",
+    "n": 2,
+    "orig": "FRA",
+    "s": "wiki_navy",
+    "c": "ت",
+    "note": "2 ships ordered on 25 March 2019 from Naval Group 2,700 tonnes, 102 m (335 ft) Propulsion: CODAD Speed: 25 knots (46 km/h; 29 mph) 1 × OTO M",
+    "gen": 2,
+    "cat": "corvette"
+   },
+   {
+    "m": "Abu Dhabi-class",
+    "n": 1,
+    "orig": "ITA",
+    "s": "wiki_navy",
+    "c": "ت",
+    "note": "1,650 tons, 88m length 1 × Otobreda 76 mm Super Rapid gun 2 × remote controlled 30 mm guns 4 × MM40 Block 3 Exocet anti-ship missiles 2 × tr",
+    "gen": 2,
+    "cat": "corvette"
+   },
+   {
+    "m": "Banynunah-class",
+    "n": 6,
+    "orig": "FRA",
+    "s": "wiki_navy",
+    "c": "ت",
+    "note": "930 tons, 71m length 1 × Otobreda 76 mm Super Rapid gun 2 × Rheinmetall MLG 27 27 mm guns 1 x RAM (PDMS) 8 × RIM-162 ESSM in VLS 8 × MM40 Bl",
+    "gen": 2,
+    "cat": "corvette"
+   },
+   {
+    "m": "Muray-Jib",
+    "n": 2,
+    "orig": "DEU",
+    "s": "wiki_navy",
+    "c": "ت",
+    "note": "630 tons, 63m length 1 × 76 mm 1 × 30 mm gun 1 × 8 Crotale SAM 8 × MM-40 SSM 1 SA 316 Helicopter",
+    "gen": 2,
+    "cat": "corvette"
+   },
+   {
+    "m": "Falaj 3-class patrol vessel",
+    "n": 1,
+    "orig": "SGP",
+    "s": "wiki_navy",
+    "c": "ت",
+    "note": "Four Falaj 3 ordered in May 2021. Based on Fearless-class patrol vessel built by Singapore Technologies (ST) Marine.",
+    "gen": 2,
+    "cat": "patrol"
+   },
+   {
+    "m": "Falaj 2-class patrol vessel",
+    "n": 2,
+    "orig": "ITA",
+    "s": "wiki_navy",
+    "c": "ت",
+    "note": "550 tons, 55.7m length 1 x Otobreda 76 mm 2 x 12.7 machine gun in hitrole RWS 6 x VLS for VL MICA 2 × twin launcher for MM40 Exocet block ii",
+    "gen": 2,
+    "cat": "patrol"
+   },
+   {
+    "m": "Arialah class",
+    "n": 2,
+    "orig": "NLD",
+    "s": "wiki_navy",
+    "c": "ت",
+    "note": "67m length 1 x 57mm 2 x 30mm guns 1 × RAM (PDMS)",
+    "gen": 2,
+    "cat": "patrol"
+   },
+   {
+    "m": "Mubarraz class",
+    "n": 2,
+    "orig": "DEU",
+    "s": "wiki_navy",
+    "c": "ت",
+    "note": "260 tons full load / 44.9 metres length / commissioned 1990 1 × 76 mm 2 × 40 mm guns 1 × 6 Mistral SAM 4 × MM-40 SSM",
+    "gen": 2,
+    "cat": "missile_boat"
+   },
+   {
+    "m": "Ban-Yas (Lürssen TNC-45)",
+    "n": 6,
+    "orig": "DEU",
+    "s": "wiki_navy",
+    "c": "ت",
+    "note": "TNC 45 fast attack craft - 260 tons full load / 44.9 metres length / commissioned 1980- Will be upgraded to Mubarraz class 1 × 76 mm 2 × 40 ",
+    "gen": 2,
+    "cat": "missile_boat"
+   },
+   {
+    "m": "Ardhana class",
+    "n": 6,
+    "orig": "GBR",
+    "s": "wiki_navy",
+    "c": "ت",
+    "note": "175 tons full load — commissioned 1975–6",
+    "gen": 2,
+    "cat": "missile_boat"
+   },
+   {
+    "m": "Unknown",
+    "n": 20,
+    "orig": "INT",
+    "s": "wiki_navy",
+    "c": "ت",
+    "note": "4 tons",
+    "gen": 2,
+    "cat": "missile_boat"
+   },
+   {
+    "m": "Al-Quwaisat-class LST",
+    "n": 3,
+    "orig": "MYS",
+    "s": "wiki_navy",
+    "c": "ت",
+    "gen": 2,
+    "cat": "amphib"
+   },
+   {
+    "m": "Unknown",
+    "n": 7,
+    "orig": "INT",
+    "s": "wiki_navy",
+    "c": "ت",
+    "gen": 2,
+    "cat": "amphib"
+   },
+   {
+    "m": "Ghannatha",
+    "n": 12,
+    "orig": "INT",
+    "s": "wiki_navy",
+    "c": "ت",
+    "note": "Will be upgraded to Gnannatha Phase II class",
+    "gen": 2,
+    "cat": "amphib"
+   }
+  ]
+ },
+ "ind": {
+  "tech": {
+   "arm": 2,
+   "air": 0,
+   "uav": 2,
+   "msl": 1,
+   "navy": 2,
+   "ew": 2,
+   "ind": 3
+  },
+  "makes": [
+   "EDGE: مسيّرات وذخيرة ذكية",
+   "نمر (مدرعات)"
+  ],
+  "s": "tierA",
+  "c": "ت"
+ },
+ "pol": {
+  "factions": [
+   "royal",
+   "army",
+   "clergy",
+   "street",
+   "biz"
+  ],
+  "stab": {
+   "v": 74,
+   "s": "tierA",
+   "c": "ت"
+  },
+  "warHome": []
+ },
+ "rel": {
+  "BHR": 50,
+  "CHN": 35,
+  "COG": 15,
+  "DJI": 10,
+  "DZA": 25,
+  "EGY": 10,
+  "GAB": 15,
+  "GNQ": 15,
+  "IRN": -30,
+  "IRQ": 25,
+  "ISR": 25,
+  "JOR": 10,
+  "KWT": 65,
+  "LBN": 10,
+  "LBY": 25,
+  "MAR": 10,
+  "MRT": 10,
+  "NGA": 15,
+  "OMN": 50,
+  "PSX": 10,
+  "QAT": 50,
+  "SAU": 35,
+  "SDN": -40,
+  "SOM": 10,
+  "SYR": 10,
+  "TUN": 10,
+  "USA": 60,
+  "VEN": 15,
+  "YEM": 10
+ },
+ "treaties": [
+  "ARAB",
+  "GCC",
+  "OPEC"
+ ],
+ "sanctions": [],
+ "conflicts": [
+  "iran_war"
+ ],
+ "notes": ""
+}

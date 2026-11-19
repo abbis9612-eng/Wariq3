@@ -1,0 +1,62 @@
+{
+ "src": {
+  "fdd_syr26": {
+   "t": "FDD Long War Journal: Syria's military is rebuilding (17 Sep 2026) — ميليشيات راجلة بعجلات غير مدرعة، كم دبابة T-72/T-55",
+   "u": "https://www.fdd.org/analysis/2026/09/17/syrias-military-is-rebuilding-but-foreign-influence-may-slow-security-progress/",
+   "y": 2026
+  },
+  "mil_syr26": {
+   "t": "Militarnyi: Israel destroys Syrian aircraft (آب 2026) — ~2 سوخوي-22 مجددة وكم L-39 ومروحيات قديمة",
+   "u": "https://militarnyi.com/en/news/israel-destroys-syrian-aircraft-as-country-makes-first-attempts-to-revive-its-air-force/",
+   "y": 2026
+  },
+  "aj_syr26": {
+   "t": "Al Jazeera: Syria's challenges to rebuild its armed forces (4 Jan 2026)",
+   "u": "https://www.aljazeera.com/news/2026/1/4/syrias-challenges-to-rebuild-its-armed-forces",
+   "y": 2026
+  }
+ },
+ "sum": {
+  "tanks": {
+   "v": 40,
+   "s": "fdd_syr26",
+   "c": "ت",
+   "note": "كم دبابة T-72/T-55 باقية؛ إسرائيل دمرت أغلب معدات الجيش السابق كانون الأول 2024"
+  },
+  "combatAir": {
+   "v": 4,
+   "s": "mil_syr26",
+   "c": "ت",
+   "note": "محاولات إحياء القوة الجوية؛ إسرائيل تضربها"
+  },
+  "active": {
+   "v": 100000,
+   "s": "aj_syr26,fdd_syr26",
+   "c": "ت",
+   "note": "الجيش الجديد (فصائل مدموجة) — الرقم غير مؤكد"
+  },
+  "frigates": {
+   "v": 0,
+   "s": "aj_syr26",
+   "c": "ت"
+  },
+  "corvettes": {
+   "v": 0,
+   "s": "aj_syr26",
+   "c": "ت"
+  }
+ },
+ "notes": "سوريا الجديدة (الرئيس أحمد الشرع): جيش يبتدي من الصفر تقريباً، الجنوب تحت احتلال/ضربات إسرائيلية، قسد اندمجت كانون الثاني 2026 (جزئياً).",
+ "fix": [
+  {
+   "in": "navy",
+   "match": ".",
+   "drop": true
+  },
+  {
+   "in": "air",
+   "match": ".",
+   "drop": true
+  }
+ ]
+}

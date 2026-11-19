@@ -1,0 +1,1222 @@
+{
+ "id": "DZA",
+ "ar": "الجزائر",
+ "en": "Algeria",
+ "tier": "A",
+ "asOf": "2026-11",
+ "src": {
+  "wiki_air": {
+   "t": "Wikipedia: Algerian Air Force",
+   "u": "https://en.wikipedia.org/wiki/Algerian_Air_Force?oldid=1377921935",
+   "y": 2026,
+   "note": "نسخة الصفحة بتاريخ السحب؛ أرقام ويكيبيديا تنراجع ويا مصادر ثانية"
+  },
+  "wiki_army": {
+   "t": "Wikipedia: List of equipment of the Algerian Land Forces",
+   "u": "https://en.wikipedia.org/wiki/List_of_equipment_of_the_Algerian_Land_Forces?oldid=1386674242",
+   "y": 2026,
+   "note": "نسخة الصفحة بتاريخ السحب؛ أرقام ويكيبيديا تنراجع ويا مصادر ثانية"
+  },
+  "wiki_navy": {
+   "t": "Wikipedia: Algerian National Navy",
+   "u": "https://en.wikipedia.org/wiki/Algerian_National_Navy?oldid=1378394164",
+   "y": 2026,
+   "note": "نسخة الصفحة بتاريخ السحب؛ أرقام ويكيبيديا تنراجع ويا مصادر ثانية"
+  },
+  "iiss_eq": {
+   "t": "Wikipedia: List of countries by level of military equipment (من IISS Military Balance ومصادر ثانية)",
+   "u": "https://en.wikipedia.org/wiki/List_of_countries_by_level_of_military_equipment?oldid=1384804191",
+   "y": 2025
+  },
+  "iiss_pers": {
+   "t": "Wikipedia: List of countries by number of military and paramilitary personnel (جدول IISS Military Balance)",
+   "u": "https://en.wikipedia.org/wiki/List_of_countries_by_number_of_military_and_paramilitary_personnel?oldid=1380910017",
+   "y": 2025
+  },
+  "wb": {
+   "t": "World Bank WDI (SP.POP.TOTL, NY.GDP.MKTP.CD, NY.GDP.MKTP.KD.ZG, MS.MIL.XPND.CD/GD.ZS ← SIPRI, MS.MIL.TOTL.P1, FP.CPI.TOTL.ZG)",
+   "u": "https://api.worldbank.org/v2/",
+   "y": 2026
+  },
+  "govt": {
+   "t": "تصنيف نظام الحكم: دساتير الدول + CIA World Factbook «Government type» + V-Dem/Freedom House لدرجة الحرية (تصنيف المصمم 2026)",
+   "u": "https://www.cia.gov/the-world-factbook/field/government-type/",
+   "y": 2026
+  },
+  "leaders": {
+   "t": "Wikipedia: List of current heads of state and government",
+   "u": "https://en.wikipedia.org/wiki/List_of_current_heads_of_state_and_government?oldid=1386623862",
+   "y": 2026,
+   "note": "سحب نوفمبر 2026"
+  },
+  "rules": {
+   "t": "قواعد من blocs.json وconflicts.json وsanctions.json (تكتل دفاعي +40، معاهدة +50، حرب −90، عقوبات ثقيلة −40...)",
+   "u": "data/world/",
+   "y": 2026
+  },
+  "relk": {
+   "t": "تقدير المصمم للعلاقات الثنائية المعروفة (تشرين الثاني 2026): حروب، نزاعات حدودية، تحالفات غير رسمية، تطبيع، عداء تاريخي",
+   "u": "https://en.wikipedia.org/wiki/Foreign_relations_by_country",
+   "y": 2026
+  },
+  "tierA": {
+   "t": "تقدير المصمم (تشرين الثاني 2026) لصناعة السلاح والاستقرار: SIPRI Arms Transfers Database (أكبر المصدّرين 2020–24)، SIPRI Top 100 Arms-Producing Companies، Fragile States Index 2025، أخبار 2026",
+   "u": "https://www.sipri.org/databases/armstransfers",
+   "y": 2026
+  }
+ },
+ "gov": {
+  "type": "auth",
+  "ar": "رئاسي سلطوي",
+  "free": 0,
+  "hos": {
+   "role": "President",
+   "name": "Abdelmadjid Tebboune"
+  },
+  "hog": {
+   "role": "Prime Minister",
+   "name": "Sifi Ghrieb"
+  },
+  "s": "govt,leaders",
+  "c": "ح"
+ },
+ "pop": {
+  "v": 47435312,
+  "y": 2025,
+  "s": "wb",
+  "c": "ح"
+ },
+ "eco": {
+  "gdpBusd": {
+   "v": 287.0,
+   "y": 2025,
+   "s": "wb",
+   "c": "ح"
+  },
+  "growth": {
+   "v": 3.8,
+   "y": 2025,
+   "s": "wb",
+   "c": "ح"
+  },
+  "infl": {
+   "v": 1.4,
+   "y": 2025,
+   "s": "wb",
+   "c": "ح"
+  },
+  "oilRentPct": {
+   "v": 14.5,
+   "y": 2021,
+   "s": "wb",
+   "c": "ح"
+  }
+ },
+ "mil": {
+  "budgetBusd": {
+   "v": 25.44,
+   "y": 2025,
+   "s": "wb",
+   "c": "ح"
+  },
+  "budgetPctGdp": {
+   "v": 8.83,
+   "y": 2025,
+   "s": "wb",
+   "c": "ح"
+  },
+  "personnelWB": {
+   "v": 326000,
+   "y": 2020,
+   "s": "wb",
+   "c": "ح"
+  },
+  "sum": {
+   "tanks": {
+    "v": 1632,
+    "s": "iiss_eq",
+    "c": "ت"
+   },
+   "carriers": {
+    "v": 0,
+    "s": "iiss_eq",
+    "c": "ت"
+   },
+   "amphib": {
+    "v": 3,
+    "s": "iiss_eq",
+    "c": "ت"
+   },
+   "cruisers": {
+    "v": 0,
+    "s": "iiss_eq",
+    "c": "ت"
+   },
+   "destroyers": {
+    "v": 0,
+    "s": "iiss_eq",
+    "c": "ت"
+   },
+   "frigates": {
+    "v": 8,
+    "s": "iiss_eq",
+    "c": "ت"
+   },
+   "corvettes": {
+    "v": 16,
+    "s": "iiss_eq",
+    "c": "ت"
+   },
+   "subNuc": {
+    "v": 0,
+    "s": "iiss_eq",
+    "c": "ت"
+   },
+   "subs": {
+    "v": 6,
+    "s": "iiss_eq",
+    "c": "ت"
+   },
+   "combatAir": {
+    "v": 102,
+    "s": "iiss_eq",
+    "c": "ت"
+   },
+   "attackHeli": {
+    "v": 75,
+    "s": "iiss_eq",
+    "c": "ت"
+   },
+   "sats": {
+    "v": 0,
+    "s": "iiss_eq",
+    "c": "ت"
+   },
+   "active": {
+    "v": 139000,
+    "s": "iiss_pers",
+    "c": "ت"
+   },
+   "reserve": {
+    "v": 150000,
+    "s": "iiss_pers",
+    "c": "ت"
+   },
+   "para": {
+    "v": 187200,
+    "s": "iiss_pers",
+    "c": "ت"
+   }
+  },
+  "land": [
+   {
+    "m": "T-90SA",
+    "n": 600,
+    "orig": "SUN",
+    "s": "wiki_army",
+    "c": "ت",
+    "note": "The Algerian Army was the second largest operator of the T-90",
+    "gen": 4,
+    "cat": "tank"
+   },
+   {
+    "m": "T-72M1",
+    "n": 325,
+    "orig": "SUN",
+    "s": "wiki_army",
+    "c": "ت",
+    "note": "Variants include T-72M1 and T-72M1M.",
+    "gen": 3,
+    "cat": "tank"
+   },
+   {
+    "m": "T-62",
+    "n": 290,
+    "orig": "SUN",
+    "s": "wiki_army",
+    "c": "ت",
+    "note": "Starting in 2021 the Algerian T-62 fleet underwent a unique homemade upgrade, turning the vehicle from an MBT into a fire-support vehicle by",
+    "gen": 2,
+    "cat": "tank"
+   },
+   {
+    "m": "T-55AMV",
+    "n": 270,
+    "orig": "SUN",
+    "s": "wiki_army",
+    "c": "ت",
+    "note": "T-55s upgraded to the AMV standard. Retired from armored divisions but continues to serve in mechanized infantry divisions. Equipped with St",
+    "gen": 1,
+    "cat": "tank"
+   },
+   {
+    "m": "BMP-2M",
+    "n": 760,
+    "orig": "SUN",
+    "s": "wiki_army",
+    "c": "ت",
+    "note": "Upgraded to BMP-2M \"Berezhok\" variant, which comprises four 9M133 Kornet-E anti-tank missiles, an AGS-30 30mm automatic grenade launcher, a ",
+    "gen": 3,
+    "cat": "ifv"
+   },
+   {
+    "m": "BMP-2",
+    "n": 220,
+    "orig": "SUN",
+    "s": "wiki_army",
+    "c": "ت",
+    "gen": 3,
+    "cat": "ifv"
+   },
+   {
+    "m": "BRDM-2",
+    "n": 26,
+    "orig": "SUN",
+    "s": "wiki_army",
+    "c": "ت",
+    "note": "120 vehicles delivered between 1981 and 1982. 64 vehicles were later modernized to BDRM-2M and fitted with 9M113 \"Konkurs\" missiles for use ",
+    "gen": 2,
+    "cat": "apc"
+   },
+   {
+    "m": "Panhard AML-60",
+    "n": 44,
+    "orig": "FRA",
+    "s": "wiki_army",
+    "c": "ت",
+    "note": "54 were delivered in 1965. In 2018 they were fitted with Kornet ATGMs, an automated turret carrying a 14.5mm KPV as well as a coaxial PKT, r",
+    "gen": 2,
+    "cat": "apc"
+   },
+   {
+    "m": "TPz Fuchs 2",
+    "n": 1034,
+    "orig": "DEU",
+    "s": "wiki_army",
+    "c": "ت",
+    "note": "In early 2011, 54 Fuchs 2 worth $248 million were ordered from Rheinmetall. In 2014, 980 Fuchs 2 were ordered as part of a €2.7 billion defe",
+    "gen": 2,
+    "cat": "apc"
+   },
+   {
+    "m": "Nimr II",
+    "n": 3000,
+    "orig": "ARE",
+    "s": "wiki_army",
+    "c": "ت",
+    "note": "A contract was signed for the production of such armored vehicles, for a total amount of 3000 vehicles. A local variant was made with a Chin",
+    "gen": 2,
+    "cat": "spg"
+   },
+   {
+    "m": "Panhard M3",
+    "n": 55,
+    "orig": "FRA",
+    "s": "wiki_army",
+    "c": "ت",
+    "gen": 2,
+    "cat": "apc"
+   },
+   {
+    "m": "BTR-80",
+    "n": 150,
+    "orig": "SUN",
+    "s": "wiki_army",
+    "c": "ت",
+    "gen": 3,
+    "cat": "apc"
+   },
+   {
+    "m": "BTR-60",
+    "n": 250,
+    "orig": "SUN",
+    "s": "wiki_army",
+    "c": "ت",
+    "gen": 2,
+    "cat": "apc"
+   },
+   {
+    "m": "OT-64 SKOT",
+    "n": 150,
+    "orig": "CSK",
+    "s": "wiki_army",
+    "c": "ت",
+    "note": "151 OT-64 APCs armed with a pintle-mounted machine gun and 75 OT-64A (version fitted with BRDM-2 turret) ordered from the Czech Republic in ",
+    "gen": 2,
+    "cat": "apc"
+   },
+   {
+    "m": "Humvee",
+    "n": 100,
+    "orig": "USA",
+    "s": "wiki_army",
+    "c": "ت",
+    "note": "Used by Special Forces.",
+    "gen": 2,
+    "cat": "apc"
+   },
+   {
+    "m": "PLZ-45",
+    "n": 54,
+    "orig": "CHN",
+    "s": "wiki_army",
+    "c": "ت",
+    "gen": 2,
+    "cat": "spg"
+   },
+   {
+    "m": "2S1 Gvozdika",
+    "n": 140,
+    "orig": "SUN",
+    "s": "wiki_army",
+    "c": "ت",
+    "gen": 2,
+    "cat": "spg"
+   },
+   {
+    "m": "2S3 Akatsiya",
+    "n": 30,
+    "orig": "SUN",
+    "s": "wiki_army",
+    "c": "ت",
+    "gen": 2,
+    "cat": "spg"
+   },
+   {
+    "m": "D-44",
+    "n": 80,
+    "orig": "SUN",
+    "s": "wiki_army",
+    "c": "ت",
+    "gen": 2,
+    "cat": "atgm"
+   },
+   {
+    "m": "MT-12",
+    "n": 10,
+    "orig": "SUN",
+    "s": "wiki_army",
+    "c": "ت",
+    "note": "Fitted on 6x6 Mercedes-Benz Zetros vehicle",
+    "gen": 2,
+    "cat": "atgm"
+   },
+   {
+    "m": "D-30",
+    "n": 160,
+    "orig": "SUN",
+    "s": "wiki_army",
+    "c": "ت",
+    "note": "Some fitted on 6x6 Mercedes-Benz Zetros vehicle.",
+    "gen": 2,
+    "cat": "towed"
+   },
+   {
+    "m": "M-30",
+    "n": 60,
+    "orig": "SUN",
+    "s": "wiki_army",
+    "c": "ت",
+    "gen": 2,
+    "cat": "towed"
+   },
+   {
+    "m": "M-1931/37",
+    "n": 100,
+    "orig": "SUN",
+    "s": "wiki_army",
+    "c": "ت",
+    "gen": 2,
+    "cat": "towed"
+   },
+   {
+    "m": "D-74",
+    "n": 25,
+    "orig": "SUN",
+    "s": "wiki_army",
+    "c": "ت",
+    "gen": 2,
+    "cat": "towed"
+   },
+   {
+    "m": "M-46",
+    "n": 10,
+    "orig": "SUN",
+    "s": "wiki_army",
+    "c": "ت",
+    "gen": 2,
+    "cat": "towed"
+   },
+   {
+    "m": "ML-20",
+    "n": 20,
+    "orig": "SUN",
+    "s": "wiki_army",
+    "c": "ت",
+    "gen": 2,
+    "cat": "towed"
+   },
+   {
+    "m": "WA-021",
+    "n": 18,
+    "orig": "CHN",
+    "s": "wiki_army",
+    "c": "ت",
+    "gen": 2,
+    "cat": "towed"
+   },
+   {
+    "m": "TOS-1A",
+    "n": 52,
+    "orig": "RUS",
+    "s": "wiki_army",
+    "c": "ت",
+    "gen": 2,
+    "cat": "mlrs"
+   },
+   {
+    "m": "SR-5",
+    "n": 70,
+    "orig": "CHN",
+    "s": "wiki_army",
+    "c": "ت",
+    "gen": 2,
+    "cat": "mlrs"
+   },
+   {
+    "m": "BM-30 Smerch",
+    "n": 18,
+    "orig": "SUN",
+    "s": "wiki_army",
+    "c": "ت",
+    "gen": 2,
+    "cat": "mlrs"
+   },
+   {
+    "m": "BM-21 Grad",
+    "n": 48,
+    "orig": "SUN",
+    "s": "wiki_army",
+    "c": "ت",
+    "gen": 2,
+    "cat": "mlrs"
+   }
+  ],
+  "air": [
+   {
+    "m": "Mikoyan MiG-29 (MiG 29C (9.13))",
+    "n": 46,
+    "orig": "BLR",
+    "s": "wiki_air",
+    "c": "ت",
+    "note": "21 MiG 29C",
+    "gen": 3,
+    "cat": "fighter"
+   },
+   {
+    "m": "Mikoyan MiG-29 (MiG-29M (9.41))",
+    "n": 46,
+    "orig": "BLR",
+    "s": "wiki_air",
+    "c": "ت",
+    "note": "25 MiG-29M and M2.",
+    "gen": 3,
+    "cat": "fighter"
+   },
+   {
+    "m": "Mikoyan MiG-29 (MiG-29M2 (9.47))",
+    "n": 46,
+    "orig": "BLR",
+    "s": "wiki_air",
+    "c": "ت",
+    "note": "25 MiG-29M and M2.",
+    "gen": 3,
+    "cat": "fighter"
+   },
+   {
+    "m": "Sukhoi Su-24 (Su-24 MK2)",
+    "n": 39,
+    "orig": "SUN",
+    "s": "wiki_air",
+    "c": "ت",
+    "note": "Modernised to MK2 format in 2020.",
+    "gen": 4,
+    "cat": "bomber"
+   },
+   {
+    "m": "Sukhoi Su-24 (SU-24 MRK2)",
+    "n": 3,
+    "orig": "SUN",
+    "s": "wiki_air",
+    "c": "ت",
+    "note": "Modernised to MRK2 format in 2020",
+    "gen": 4,
+    "cat": "isr"
+   },
+   {
+    "m": "Sukhoi Su-30 (Su-30MKA)",
+    "n": 72,
+    "orig": "RUS",
+    "s": "wiki_air",
+    "c": "ت",
+    "note": "31 were delivered, 1 of which was lost in a crash in 2018.",
+    "gen": 4,
+    "cat": "fighter"
+   },
+   {
+    "m": "Beechcraft 1900 (B1900D)",
+    "n": 5,
+    "orig": "USA",
+    "s": "wiki_air",
+    "c": "ت",
+    "note": "Fitted with HISAR, Sky Guardian ESM and Wescam Type 16 FLIR. 1 lost in 2026.",
+    "gen": 2,
+    "cat": "isr"
+   },
+   {
+    "m": "Beechcraft Super King Air (B200T)",
+    "n": 2,
+    "orig": "USA",
+    "s": "wiki_air",
+    "c": "ت",
+    "gen": 2,
+    "cat": "isr"
+   },
+   {
+    "m": "Beechcraft Super King Air (B350ER)",
+    "n": 1,
+    "orig": "USA",
+    "s": "wiki_air",
+    "c": "ت",
+    "gen": 2,
+    "cat": "isr"
+   },
+   {
+    "m": "Ilyushin Il-76 (Il-76TD)",
+    "n": 8,
+    "orig": "SUN",
+    "s": "wiki_air",
+    "c": "ت",
+    "note": "12 were acquired from Russia, some were upgraded. In 2018, one Il-76TD crashed.",
+    "gen": 2,
+    "cat": "transport"
+   },
+   {
+    "m": "Ilyushin Il-76 (Il-76MD)",
+    "n": 3,
+    "orig": "SUN",
+    "s": "wiki_air",
+    "c": "ت",
+    "note": "12 were acquired from Russia, some were upgraded. In 2018, one Il-76TD crashed.",
+    "gen": 2,
+    "cat": "transport"
+   },
+   {
+    "m": "Lockheed C-130 Hercules (C-130H-30)",
+    "n": 7,
+    "orig": "USA",
+    "s": "wiki_air",
+    "c": "ت",
+    "gen": 2,
+    "cat": "transport"
+   },
+   {
+    "m": "Lockheed L-100 Hercules (L-100-30)",
+    "n": 1,
+    "orig": "USA",
+    "s": "wiki_air",
+    "c": "ت",
+    "gen": 2,
+    "cat": "transport"
+   },
+   {
+    "m": "Lockheed-Martin C-130J Super Hercules (C-130J-30)",
+    "n": 4,
+    "orig": "USA",
+    "s": "wiki_air",
+    "c": "ت",
+    "note": "4 C-130J-30 ordered in 2018 with an option for four additional aircraft.",
+    "gen": 2,
+    "cat": "transport"
+   },
+   {
+    "m": "CASA C295 (C295M)",
+    "n": 5,
+    "orig": "ESP",
+    "s": "wiki_air",
+    "c": "ت",
+    "note": "6 aircraft purchased in the transport configuration One aircraft was lost in 2012 in a crash in France.",
+    "gen": 2,
+    "cat": "transport"
+   },
+   {
+    "m": "Pilatus PC-6 Porter (–)",
+    "n": 3,
+    "orig": "CHE",
+    "s": "wiki_air",
+    "c": "ت",
+    "gen": 2,
+    "cat": "transport"
+   },
+   {
+    "m": "Airbus A340 (A340-500)",
+    "n": 1,
+    "orig": "FRA",
+    "s": "wiki_air",
+    "c": "ت",
+    "note": "Fitted with a medical unit, sleeping chamber with an en-suite bathroom, offices and anti-missile systems.",
+    "gen": 2,
+    "cat": "transport"
+   },
+   {
+    "m": "Gulfstream IV (GIV-SP)",
+    "n": 4,
+    "orig": "USA",
+    "s": "wiki_air",
+    "c": "ت",
+    "gen": 2,
+    "cat": "transport"
+   },
+   {
+    "m": "Gulfstream V (GV)",
+    "n": 1,
+    "orig": "USA",
+    "s": "wiki_air",
+    "c": "ت",
+    "gen": 2,
+    "cat": "transport"
+   },
+   {
+    "m": "Beechcraft 1900 (B1900D)",
+    "n": 6,
+    "orig": "USA",
+    "s": "wiki_air",
+    "c": "ت",
+    "gen": 2,
+    "cat": "transport"
+   },
+   {
+    "m": "Beechcraft Super King Air (C90B)",
+    "n": 20,
+    "orig": "USA",
+    "s": "wiki_air",
+    "c": "ت",
+    "gen": 2,
+    "cat": "transport"
+   },
+   {
+    "m": "Beechcraft Super King Air (B200T)",
+    "n": 20,
+    "orig": "USA",
+    "s": "wiki_air",
+    "c": "ت",
+    "gen": 2,
+    "cat": "transport"
+   },
+   {
+    "m": "Beechcraft Super King Air (B350ER)",
+    "n": 20,
+    "orig": "USA",
+    "s": "wiki_air",
+    "c": "ت",
+    "gen": 2,
+    "cat": "transport"
+   },
+   {
+    "m": "Zlin Z 142 (Firnas 142)",
+    "n": 20,
+    "orig": "CZE",
+    "s": "wiki_air",
+    "c": "ت",
+    "gen": 2,
+    "cat": "trainer"
+   },
+   {
+    "m": "Aero L-39 Albatros (L-39C)",
+    "n": 54,
+    "orig": "CZE",
+    "s": "wiki_air",
+    "c": "ت",
+    "gen": 2,
+    "cat": "trainer"
+   },
+   {
+    "m": "Aero L-39 Albatros (L-39ZA)",
+    "n": 54,
+    "orig": "CZE",
+    "s": "wiki_air",
+    "c": "ت",
+    "gen": 2,
+    "cat": "attack"
+   },
+   {
+    "m": "Yakovlev Yak-130 (–)",
+    "n": 18,
+    "orig": "RUS",
+    "s": "wiki_air",
+    "c": "ت",
+    "gen": 2,
+    "cat": "fighter"
+   },
+   {
+    "m": "Mikoyan MiG-29 (–)",
+    "n": 2,
+    "orig": "RUS",
+    "s": "wiki_air",
+    "c": "ت",
+    "gen": 3,
+    "cat": "trainer"
+   },
+   {
+    "m": "Mil Mi-24 (Mi-24 Super Hind Mk.III)",
+    "n": 32,
+    "orig": "RUS",
+    "s": "wiki_air",
+    "c": "ت",
+    "gen": 3,
+    "cat": "heli_attack"
+   },
+   {
+    "m": "Mil Mi-28 (Mi-28NE Night Hunter)",
+    "n": 42,
+    "orig": "RUS",
+    "s": "wiki_air",
+    "c": "ت",
+    "note": "8 helicopters ordered initially, increased to 42 in 2016.",
+    "gen": 4,
+    "cat": "heli_attack"
+   },
+   {
+    "m": "Mil Mi-28 (Mi-28UB)",
+    "n": 42,
+    "orig": "RUS",
+    "s": "wiki_air",
+    "c": "ت",
+    "note": "8 helicopters ordered initially, increased to 42 in 2016.",
+    "gen": 4,
+    "cat": "heli_attack"
+   },
+   {
+    "m": "Mil Mi-8 (Mil Mi-8AMTSh)",
+    "n": 104,
+    "orig": "SUN",
+    "s": "wiki_air",
+    "c": "ت",
+    "note": "The Mil Mi-8 were upgraded as part of a 2014 contract.",
+    "gen": 2,
+    "cat": "heli_attack"
+   },
+   {
+    "m": "Mil Mi-17 (–)",
+    "n": 104,
+    "orig": "SUN",
+    "s": "wiki_air",
+    "c": "ت",
+    "note": "The Mil Mi-8 were upgraded as part of a 2014 contract.",
+    "gen": 2,
+    "cat": "heli_attack"
+   },
+   {
+    "m": "Mil Mi-17 (Mil Mi-171Sh2)",
+    "n": 37,
+    "orig": "RUS",
+    "s": "wiki_air",
+    "c": "ت",
+    "note": "42 Mil Mi-171 were received between 2002 and 2004, 3 of which were lost prior to be modernised. In 2014–2016, Algeria decided to modernise 3",
+    "gen": 2,
+    "cat": "heli_attack"
+   },
+   {
+    "m": "Mil Mi-26 (Mi-26T2)",
+    "n": 14,
+    "orig": "RUS",
+    "s": "wiki_air",
+    "c": "ت",
+    "note": "Six delivered in 2015-16 and eight ordered from the option on the first order, with deliveries taking place in 2017–18.",
+    "gen": 2,
+    "cat": "heli_util"
+   },
+   {
+    "m": "AgustaWestland AW139 (–)",
+    "n": 11,
+    "orig": "ITA",
+    "s": "wiki_air",
+    "c": "ت",
+    "gen": 2,
+    "cat": "heli_util"
+   },
+   {
+    "m": "Bell 412 (Bell 412EP)",
+    "n": 3,
+    "orig": "USA",
+    "s": "wiki_air",
+    "c": "ت",
+    "note": "They were delivered in 2002.",
+    "gen": 2,
+    "cat": "heli_util"
+   },
+   {
+    "m": "Eurocopter AS355 Écureuil (AS355N Écureuil 2)",
+    "n": 14,
+    "orig": "FRA",
+    "s": "wiki_air",
+    "c": "ت",
+    "gen": 2,
+    "cat": "heli_util"
+   },
+   {
+    "m": "Kamov Ka-32 (Ka-32T)",
+    "n": 3,
+    "orig": "RUS",
+    "s": "wiki_air",
+    "c": "ت",
+    "gen": 2,
+    "cat": "heli_util"
+   },
+   {
+    "m": "Mil Mi-2 (–)",
+    "n": 22,
+    "orig": "SUN",
+    "s": "wiki_air",
+    "c": "ت",
+    "gen": 2,
+    "cat": "heli_util"
+   },
+   {
+    "m": "AgustaWestland EH101 Merlin (AW101 Model 642)",
+    "n": 2,
+    "orig": "ITA",
+    "s": "wiki_air",
+    "c": "ت",
+    "gen": 2,
+    "cat": "heli_util"
+   },
+   {
+    "m": "AgustaWestland AW119 (AW119Ke Koala)",
+    "n": 8,
+    "orig": "ITA",
+    "s": "wiki_air",
+    "c": "ت",
+    "gen": 2,
+    "cat": "heli_util"
+   },
+   {
+    "m": "PZL W-3 Sokół (W-3A)",
+    "n": 8,
+    "orig": "POL",
+    "s": "wiki_air",
+    "c": "ت",
+    "gen": 2,
+    "cat": "heli_util"
+   },
+   {
+    "m": "CASIC WJ-700 Falcon (–)",
+    "n": 4,
+    "orig": "CHN",
+    "s": "wiki_air",
+    "c": "ت",
+    "note": "Drone acquired in 2024.",
+    "gen": 1,
+    "cat": "uav_strike"
+   },
+   {
+    "m": "CAIG Wing Loong II (–)",
+    "n": 24,
+    "orig": "CHN",
+    "s": "wiki_air",
+    "c": "ت",
+    "gen": 4,
+    "cat": "uav_strike"
+   },
+   {
+    "m": "Denel Seeker (–)",
+    "n": 10,
+    "orig": "ZAF",
+    "s": "wiki_air",
+    "c": "ت",
+    "gen": 2,
+    "cat": "uav_isr"
+   },
+   {
+    "m": "CASC Rainbow (CH-3)",
+    "n": 5,
+    "orig": "CHN",
+    "s": "wiki_air",
+    "c": "ت",
+    "note": "Drones purchased in 2018.",
+    "gen": 2,
+    "cat": "uav_isr"
+   },
+   {
+    "m": "CASC Rainbow (CH-4)",
+    "n": 5,
+    "orig": "CHN",
+    "s": "wiki_air",
+    "c": "ت",
+    "note": "Drones purchased in 2018.",
+    "gen": 3,
+    "cat": "uav_isr"
+   }
+  ],
+  "ad": [
+   {
+    "m": "Pantsir-S1/SM",
+    "n": 108,
+    "orig": "RUS",
+    "s": "wiki_army",
+    "c": "ت",
+    "note": "38 Pantsir-S1, and an unknown number of Pantsir-SM. With up to 900 57E6 missiles. 20km range.",
+    "gen": 3,
+    "cat": "short"
+   },
+   {
+    "m": "ZPU-2/4",
+    "n": 100,
+    "orig": "SUN",
+    "s": "wiki_army",
+    "c": "ت",
+    "note": "60 ZPU-2; 40 ZPU-4",
+    "gen": 2,
+    "cat": "short"
+   },
+   {
+    "m": "ZU-23-2",
+    "n": 100,
+    "orig": "SUN",
+    "s": "wiki_army",
+    "c": "ت",
+    "gen": 2,
+    "cat": "short"
+   },
+   {
+    "m": "ZSU-23-4 Shilka",
+    "n": 225,
+    "orig": "SUN",
+    "s": "wiki_army",
+    "c": "ت",
+    "note": "210 were modernized to SHILKA-M with the Igla missile system.",
+    "gen": 2,
+    "cat": "short"
+   },
+   {
+    "m": "Buk-MK2",
+    "n": 48,
+    "orig": "RUS",
+    "s": "wiki_army",
+    "c": "ت",
+    "note": "The system is commonly known by its NATO reporting name, SA-15 \"Gauntlet\".",
+    "gen": 4,
+    "cat": "medium"
+   }
+  ],
+  "msl": [
+   {
+    "m": "Iskander-E",
+    "n": 48,
+    "orig": "RUS",
+    "s": "wiki_army",
+    "c": "ت",
+    "note": "4 regiments received from 2014 to 2017. 75 missiles received",
+    "gen": 2,
+    "cat": "srbm"
+   }
+  ],
+  "navy": [
+   {
+    "m": "Project 636.1",
+    "n": 4,
+    "orig": "RUS",
+    "s": "wiki_navy",
+    "c": "ت",
+    "gen": 2,
+    "cat": "sub"
+   },
+   {
+    "m": "Project 877EKM",
+    "n": 2,
+    "orig": "SUN",
+    "s": "wiki_navy",
+    "c": "ت",
+    "gen": 2,
+    "cat": "sub"
+   },
+   {
+    "m": "San Giorgio class",
+    "n": 1,
+    "orig": "ITA",
+    "s": "wiki_navy",
+    "c": "ت",
+    "gen": 2,
+    "cat": "amphib"
+   },
+   {
+    "m": "Kalaat Beni Hammed",
+    "n": 2,
+    "orig": "GBR",
+    "s": "wiki_navy",
+    "c": "ت",
+    "gen": 2,
+    "cat": "amphib"
+   },
+   {
+    "m": "MEKO A200",
+    "n": 2,
+    "orig": "DEU",
+    "s": "wiki_navy",
+    "c": "ت",
+    "gen": 2,
+    "cat": "frigate"
+   },
+   {
+    "m": "Adhafer class",
+    "n": 3,
+    "orig": "CHN",
+    "s": "wiki_navy",
+    "c": "ت",
+    "gen": 2,
+    "cat": "frigate"
+   },
+   {
+    "m": "Koni class",
+    "n": 3,
+    "orig": "SUN",
+    "s": "wiki_navy",
+    "c": "ت",
+    "gen": 2,
+    "cat": "frigate"
+   },
+   {
+    "m": "Nanuchka class",
+    "n": 3,
+    "orig": "SUN",
+    "s": "wiki_navy",
+    "c": "ت",
+    "gen": 2,
+    "cat": "corvette"
+   },
+   {
+    "m": "Djebel Chenoua class",
+    "n": 4,
+    "orig": "DZA",
+    "s": "wiki_navy",
+    "c": "ت",
+    "gen": 2,
+    "cat": "corvette"
+   },
+   {
+    "m": "Type 056 class",
+    "n": 1,
+    "orig": "CHN",
+    "s": "wiki_navy",
+    "c": "ت",
+    "gen": 2,
+    "cat": "corvette"
+   },
+   {
+    "m": "Osa II-class missile boat",
+    "n": 8,
+    "orig": "SUN",
+    "s": "wiki_navy",
+    "c": "ت",
+    "gen": 2,
+    "cat": "missile_boat"
+   },
+   {
+    "m": "Kebir-class patrol boat [fr]",
+    "n": 14,
+    "orig": "GBR",
+    "s": "wiki_navy",
+    "c": "ت",
+    "gen": 2,
+    "cat": "patrol"
+   },
+   {
+    "m": "FPB98 MKI Ocea-class patrol boat",
+    "n": 41,
+    "orig": "FRA",
+    "s": "wiki_navy",
+    "c": "ت",
+    "gen": 2,
+    "cat": "patrol"
+   },
+   {
+    "m": "Alusafe 2000 [es]",
+    "n": 12,
+    "orig": "ESP",
+    "s": "wiki_navy",
+    "c": "ت",
+    "gen": 2,
+    "cat": "patrol"
+   }
+  ]
+ },
+ "ind": {
+  "tech": {
+   "arm": 1,
+   "air": 0,
+   "uav": 1,
+   "msl": 0,
+   "navy": 1,
+   "ew": 1,
+   "ind": 2
+  },
+  "makes": [
+   "تجميع BMP وفوكس"
+  ],
+  "s": "tierA",
+  "c": "ت"
+ },
+ "pol": {
+  "factions": [
+   "army",
+   "security",
+   "street",
+   "biz"
+  ],
+  "stab": {
+   "v": 58,
+   "s": "tierA",
+   "c": "ت"
+  },
+  "warHome": []
+ },
+ "rel": {
+  "ARE": 25,
+  "BHR": 10,
+  "COG": 15,
+  "DJI": 10,
+  "EGY": 10,
+  "FRA": -30,
+  "GAB": 15,
+  "GNQ": 15,
+  "IRN": 15,
+  "IRQ": 25,
+  "ISR": -70,
+  "JOR": 10,
+  "KWT": 25,
+  "LBN": 10,
+  "LBY": 25,
+  "MAR": -70,
+  "MLI": -45,
+  "MRT": 10,
+  "NGA": 15,
+  "OMN": 10,
+  "PSX": 10,
+  "QAT": 10,
+  "RUS": 55,
+  "SAU": 25,
+  "SDN": 10,
+  "SOM": 10,
+  "SYR": 10,
+  "TUN": 10,
+  "VEN": 15,
+  "YEM": 10
+ },
+ "treaties": [
+  "ARAB",
+  "OPEC"
+ ],
+ "sanctions": [],
+ "conflicts": [],
+ "notes": ""
+}

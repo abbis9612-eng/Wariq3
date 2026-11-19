@@ -1,0 +1,834 @@
+{
+ "id": "IDN",
+ "ar": "إندونيسيا",
+ "en": "Indonesia",
+ "tier": "A",
+ "asOf": "2026-11",
+ "src": {
+  "wiki_air": {
+   "t": "Wikipedia: Indonesian Air Force",
+   "u": "https://en.wikipedia.org/wiki/Indonesian_Air_Force?oldid=1386452357",
+   "y": 2026,
+   "note": "نسخة الصفحة بتاريخ السحب؛ أرقام ويكيبيديا تنراجع ويا مصادر ثانية"
+  },
+  "wiki_army": {
+   "t": "Wikipedia: List of equipment of the Indonesian Army",
+   "u": "https://en.wikipedia.org/wiki/List_of_equipment_of_the_Indonesian_Army?oldid=1384425741",
+   "y": 2026,
+   "note": "نسخة الصفحة بتاريخ السحب؛ أرقام ويكيبيديا تنراجع ويا مصادر ثانية"
+  },
+  "wiki_navy": {
+   "t": "Wikipedia: List of active Indonesian Navy ships",
+   "u": "https://en.wikipedia.org/wiki/List_of_active_Indonesian_Navy_ships?oldid=1386602264",
+   "y": 2026,
+   "note": "نسخة الصفحة بتاريخ السحب؛ أرقام ويكيبيديا تنراجع ويا مصادر ثانية"
+  },
+  "iiss_eq": {
+   "t": "Wikipedia: List of countries by level of military equipment (من IISS Military Balance ومصادر ثانية)",
+   "u": "https://en.wikipedia.org/wiki/List_of_countries_by_level_of_military_equipment?oldid=1384804191",
+   "y": 2025
+  },
+  "iiss_pers": {
+   "t": "Wikipedia: List of countries by number of military and paramilitary personnel (جدول IISS Military Balance)",
+   "u": "https://en.wikipedia.org/wiki/List_of_countries_by_number_of_military_and_paramilitary_personnel?oldid=1380910017",
+   "y": 2025
+  },
+  "wb": {
+   "t": "World Bank WDI (SP.POP.TOTL, NY.GDP.MKTP.CD, NY.GDP.MKTP.KD.ZG, MS.MIL.XPND.CD/GD.ZS ← SIPRI, MS.MIL.TOTL.P1, FP.CPI.TOTL.ZG)",
+   "u": "https://api.worldbank.org/v2/",
+   "y": 2026
+  },
+  "govt": {
+   "t": "تصنيف نظام الحكم: دساتير الدول + CIA World Factbook «Government type» + V-Dem/Freedom House لدرجة الحرية (تصنيف المصمم 2026)",
+   "u": "https://www.cia.gov/the-world-factbook/field/government-type/",
+   "y": 2026
+  },
+  "leaders": {
+   "t": "Wikipedia: List of current heads of state and government",
+   "u": "https://en.wikipedia.org/wiki/List_of_current_heads_of_state_and_government?oldid=1386623862",
+   "y": 2026,
+   "note": "سحب نوفمبر 2026"
+  },
+  "rules": {
+   "t": "قواعد من blocs.json وconflicts.json وsanctions.json (تكتل دفاعي +40، معاهدة +50، حرب −90، عقوبات ثقيلة −40...)",
+   "u": "data/world/",
+   "y": 2026
+  },
+  "relk": {
+   "t": "تقدير المصمم للعلاقات الثنائية المعروفة (تشرين الثاني 2026): حروب، نزاعات حدودية، تحالفات غير رسمية، تطبيع، عداء تاريخي",
+   "u": "https://en.wikipedia.org/wiki/Foreign_relations_by_country",
+   "y": 2026
+  },
+  "tierA": {
+   "t": "تقدير المصمم (تشرين الثاني 2026) لصناعة السلاح والاستقرار: SIPRI Arms Transfers Database (أكبر المصدّرين 2020–24)، SIPRI Top 100 Arms-Producing Companies، Fragile States Index 2025، أخبار 2026",
+   "u": "https://www.sipri.org/databases/armstransfers",
+   "y": 2026
+  }
+ },
+ "gov": {
+  "type": "pres",
+  "ar": "جمهورية رئاسية",
+  "free": 1,
+  "hos": {
+   "role": "President",
+   "name": "Prabowo Subianto"
+  },
+  "hog": null,
+  "s": "govt,leaders",
+  "c": "ح"
+ },
+ "pop": {
+  "v": 285721236,
+  "y": 2025,
+  "s": "wb",
+  "c": "ح"
+ },
+ "eco": {
+  "gdpBusd": {
+   "v": 1445.6,
+   "y": 2025,
+   "s": "wb",
+   "c": "ح"
+  },
+  "growth": {
+   "v": 5.1,
+   "y": 2025,
+   "s": "wb",
+   "c": "ح"
+  },
+  "infl": {
+   "v": 1.9,
+   "y": 2025,
+   "s": "wb",
+   "c": "ح"
+  },
+  "oilRentPct": {
+   "v": 0.8,
+   "y": 2021,
+   "s": "wb",
+   "c": "ح"
+  }
+ },
+ "mil": {
+  "budgetBusd": {
+   "v": 15.03,
+   "y": 2025,
+   "s": "wb",
+   "c": "ح"
+  },
+  "budgetPctGdp": {
+   "v": 1.04,
+   "y": 2025,
+   "s": "wb",
+   "c": "ح"
+  },
+  "personnelWB": {
+   "v": 676000,
+   "y": 2020,
+   "s": "wb",
+   "c": "ح"
+  },
+  "sum": {
+   "tanks": {
+    "v": 313,
+    "s": "iiss_eq",
+    "c": "ت"
+   },
+   "carriers": {
+    "v": 0,
+    "s": "iiss_eq",
+    "c": "ت"
+   },
+   "amphib": {
+    "v": 29,
+    "s": "iiss_eq",
+    "c": "ت"
+   },
+   "cruisers": {
+    "v": 0,
+    "s": "iiss_eq",
+    "c": "ت"
+   },
+   "destroyers": {
+    "v": 0,
+    "s": "iiss_eq",
+    "c": "ت"
+   },
+   "frigates": {
+    "v": 7,
+    "s": "iiss_eq",
+    "c": "ت"
+   },
+   "corvettes": {
+    "v": 24,
+    "s": "iiss_eq",
+    "c": "ت"
+   },
+   "subNuc": {
+    "v": 0,
+    "s": "iiss_eq",
+    "c": "ت"
+   },
+   "subs": {
+    "v": 4,
+    "s": "iiss_eq",
+    "c": "ت"
+   },
+   "combatAir": {
+    "v": 97,
+    "s": "iiss_eq",
+    "c": "ت"
+   },
+   "attackHeli": {
+    "v": 15,
+    "s": "iiss_eq",
+    "c": "ت"
+   },
+   "sats": {
+    "v": 0,
+    "s": "iiss_eq",
+    "c": "ت"
+   },
+   "active": {
+    "v": 433700,
+    "s": "iiss_pers",
+    "c": "ت"
+   },
+   "reserve": {
+    "v": 400000,
+    "s": "iiss_pers",
+    "c": "ت"
+   },
+   "para": {
+    "v": 63850,
+    "s": "iiss_pers",
+    "c": "ت"
+   }
+  },
+  "land": [
+   {
+    "m": "Leopard 2",
+    "n": 103,
+    "orig": "DEU",
+    "s": "wiki_army",
+    "c": "ت",
+    "note": "Equipped with DM11, DM53, DM78, DM88, DM98 and RH88 ammunition. Indonesia purchased 42 units Leopard 2A4+ and 61 units Leopard 2RI plus 10 s",
+    "gen": 3,
+    "cat": "tank"
+   },
+   {
+    "m": "Kaplan MT / Harimau",
+    "n": 18,
+    "orig": "TUR",
+    "s": "wiki_army",
+    "c": "ت",
+    "note": "Jointly designed and developed by FNSS and PT Pindad for the army's MMWT program. Armed with 105mm Cockerill 3105 turret. First batch of 10 ",
+    "gen": 2,
+    "cat": "tank"
+   },
+   {
+    "m": "FV101 Scorpion",
+    "n": 90,
+    "orig": "GBR",
+    "s": "wiki_army",
+    "c": "ت",
+    "note": "Acquired in 1995. As of 2016, 90 operational according to IISS Military Balance. Armed with 90mm Cockerill M-A1 Mk3 Gun on Alvis AC 90 turre",
+    "gen": 2,
+    "cat": "tank"
+   },
+   {
+    "m": "AMX-13",
+    "n": 120,
+    "orig": "FRA",
+    "s": "wiki_army",
+    "c": "ت",
+    "note": "175 AMX-13/75 and 130 AMX-13/105 or total of 305 AMX-13 acquired in 1960s. As of 2018, Janes reported that only half of the fleet (120+) ope",
+    "gen": 2,
+    "cat": "tank"
+   },
+   {
+    "m": "Marder",
+    "n": 50,
+    "orig": "DEU",
+    "s": "wiki_army",
+    "c": "ت",
+    "note": "50 1A3s including 8 spares. Purchased from German Army surplus. Armed with 20mm Rh 202 autocannon turret.",
+    "gen": 3,
+    "cat": "ifv"
+   },
+   {
+    "m": "M113",
+    "n": 160,
+    "orig": "BEL",
+    "s": "wiki_army",
+    "c": "ت",
+    "note": "Being phased out. Acquired from Belgian army's surplus in 2014–2017. 150 M113A1-BE APCs and 10 M113 Arisgator in service. Armed with 12.7mm ",
+    "gen": 2,
+    "cat": "apc"
+   },
+   {
+    "m": "Alvis Stormer",
+    "n": 40,
+    "orig": "GBR",
+    "s": "wiki_army",
+    "c": "ت",
+    "note": "in limited service, Acquired in 1995 together with FV101 Scorpion 90.",
+    "gen": 3,
+    "cat": "apc"
+   },
+   {
+    "m": "AMX-VCI",
+    "n": 75,
+    "orig": "FRA",
+    "s": "wiki_army",
+    "c": "ت",
+    "note": "Being phased out, Total of 200 AMX-VTT/VCI acquired in 1960s. As 2016, only 75 remains in service according to IISS Military Balance and the",
+    "gen": 2,
+    "cat": "apc"
+   },
+   {
+    "m": "Pandur II",
+    "n": 26,
+    "orig": "CZE",
+    "s": "wiki_army",
+    "c": "ت",
+    "note": "Locally known as Cobra 8x8. The variant includes APC, IFV (30mm), and FSV (105mm) and will be manufactured locally by PT Pindad.",
+    "gen": 2,
+    "cat": "apc"
+   },
+   {
+    "m": "Pindad Anoa",
+    "n": 500,
+    "orig": "IDN",
+    "s": "wiki_army",
+    "c": "ت",
+    "note": "As 2019 about 400 vehicle delivered according to PT Pindad. Additional 26 were delivered to the Army in January 2022. 12 vehicles delivered ",
+    "gen": 2,
+    "cat": "apc"
+   },
+   {
+    "m": "Pindad Badak",
+    "n": 14,
+    "orig": "IDN",
+    "s": "wiki_army",
+    "c": "ت",
+    "note": "Developed from Anoa by PT Pindad. Armed with Cockerill CSE 90LP turret. As of 2018, the order was reduced from 50 to 14 vehicles. It is inte",
+    "gen": 2,
+    "cat": "apc"
+   },
+   {
+    "m": "Hanwha Tarantula",
+    "n": 22,
+    "orig": "KOR",
+    "s": "wiki_army",
+    "c": "ت",
+    "note": "Armed with Cockerill CSE 90LP turret. 11 units of the vehicles are assembled by PT Pindad.",
+    "gen": 2,
+    "cat": "apc"
+   },
+   {
+    "m": "Véhicule de l'Avant Blindé",
+    "n": 50,
+    "orig": "FRA",
+    "s": "wiki_army",
+    "c": "ت",
+    "note": "Some 18 units were bought in 1997. Another 32 followed in 2006 for UNIFIL mission, including 6 Ambulance and 2 PC variants.",
+    "gen": 2,
+    "cat": "apc"
+   },
+   {
+    "m": "Cadillac Gage Commando",
+    "n": 58,
+    "orig": "USA",
+    "s": "wiki_army",
+    "c": "ت",
+    "note": "Total of 200 V-150 was purchased in 1977–1980. Currently 58 in service.",
+    "gen": 2,
+    "cat": "apc"
+   },
+   {
+    "m": "Casspir",
+    "n": 2,
+    "orig": "ZAF",
+    "s": "wiki_army",
+    "c": "ت",
+    "note": "Register of Conventional Arms (UNROCA) reported that 2 Casspir bought in 2004 and used by Unit 81 of Kopassus special forces.",
+    "gen": 2,
+    "cat": "mrap"
+   },
+   {
+    "m": "Bushmaster Protected Mobility Vehicle",
+    "n": 18,
+    "orig": "AUS",
+    "s": "wiki_army",
+    "c": "ت",
+    "note": "Used by Kopassus and produced in Indonesia as Sanca MRAP by PT Pindad. In September 2021, Australia announced that it would donate 15 Bushma",
+    "gen": 2,
+    "cat": "mrap"
+   },
+   {
+    "m": "Kozak",
+    "n": 2,
+    "orig": "UKR",
+    "s": "wiki_army",
+    "c": "ت",
+    "note": "2 units of Kozak-2M have been delivered as 7 January 2021",
+    "gen": 2,
+    "cat": "mrap"
+   },
+   {
+    "m": "Pindad Komodo",
+    "n": 100,
+    "orig": "IDN",
+    "s": "wiki_army",
+    "c": "ت",
+    "note": "The Indonesian Army special forces (Kopassus) make the first order for special purpose vehicle (Halilintar). Then, another variant fitted wi",
+    "gen": 2,
+    "cat": "apc"
+   },
+   {
+    "m": "BTR-40",
+    "n": 85,
+    "orig": "SUN",
+    "s": "wiki_army",
+    "c": "ت",
+    "note": "Total of 100 originally but 85 still in service. Locally modified from armoured personnel carrier to armoured reconnaissance variants.",
+    "gen": 3,
+    "cat": "apc"
+   },
+   {
+    "m": "SSE P1 PAKCI",
+    "n": 3,
+    "orig": "IDN",
+    "s": "wiki_army",
+    "c": "ت",
+    "note": "Made by PT SSE. Used as battering ram vehicle by Kopassus special force.",
+    "gen": 2,
+    "cat": "apc"
+   },
+   {
+    "m": "Pindad APR-1",
+    "n": 12,
+    "orig": "IDN",
+    "s": "wiki_army",
+    "c": "ت",
+    "note": "A light 4x4 armored vehicle based on a commercial Isuzu truck chassis made by PT Pindad. Total of about 40 units were planned with only 14 u",
+    "gen": 2,
+    "cat": "apc"
+   },
+   {
+    "m": "URO VAMTAC",
+    "n": 57,
+    "orig": "ESP",
+    "s": "wiki_army",
+    "c": "ت",
+    "note": "40 unit ST5 fitted with RapidRanger MMS automatic launcher for 10 battery ST5 fitted with RapidRanger automatic launcher as part of Thales F",
+    "gen": 2,
+    "cat": "apc"
+   },
+   {
+    "m": "Renault Sherpa Light",
+    "n": 18,
+    "orig": "FRA",
+    "s": "wiki_army",
+    "c": "ت",
+    "note": "12 Sherpa Light Scout units bought in 2011 together with VAB 320 power packs from Renault Trucks Defense. Used to be license produced by PT ",
+    "gen": 2,
+    "cat": "apc"
+   },
+   {
+    "m": "Panhard VBL",
+    "n": 18,
+    "orig": "FRA",
+    "s": "wiki_army",
+    "c": "ت",
+    "gen": 2,
+    "cat": "apc"
+   },
+   {
+    "m": "Cadillac Gage Commando Scout",
+    "n": 28,
+    "orig": "USA",
+    "s": "wiki_army",
+    "c": "ت",
+    "note": "Used by Paspampres and Tontaipur Special Force of Kostrad.",
+    "gen": 2,
+    "cat": "apc"
+   },
+   {
+    "m": "SSE P6 ATAV",
+    "n": 100,
+    "orig": "IDN",
+    "s": "wiki_army",
+    "c": "ت",
+    "note": "Made by PT SSE. Used by Kopassus special force. Armed with 1x 7,62mm machine gun & 2x 5,56mm light machine gun or 1x M134D minigun & 2x 5,56",
+    "gen": 2,
+    "cat": "apc"
+   },
+   {
+    "m": "ILSV",
+    "n": 100,
+    "orig": "IDN",
+    "s": "wiki_army",
+    "c": "ت",
+    "note": "Made by J-Forces and Indonesian Aerospace, different variants were made.",
+    "gen": 2,
+    "cat": "apc"
+   },
+   {
+    "m": "Flyer Light Strike Vehicle",
+    "n": 5,
+    "orig": "AUS",
+    "s": "wiki_army",
+    "c": "ت",
+    "gen": 2,
+    "cat": "apc"
+   },
+   {
+    "m": "Avibras Astros II",
+    "n": 63,
+    "orig": "BRA",
+    "s": "wiki_army",
+    "c": "ت",
+    "note": "Equipped with Rheinmetall FieldGuard 3 Fire Control and Measuring System (AV-UCF). Order of 36 launchers were confirmed to have been made be",
+    "gen": 2,
+    "cat": "mlrs"
+   },
+   {
+    "m": "Nexter CAESAR",
+    "n": 55,
+    "orig": "FRA",
+    "s": "wiki_army",
+    "c": "ت",
+    "note": "37 units have been purchased in 2012 and another 18 equipped with Nexter FINDART artillery firing control system have been ordered in 2017 f",
+    "gen": 2,
+    "cat": "spg"
+   },
+   {
+    "m": "M109",
+    "n": 36,
+    "orig": "USA",
+    "s": "wiki_army",
+    "c": "ت",
+    "note": "36 used M109A4-BEs bought from Belgian Army.",
+    "gen": 2,
+    "cat": "spg"
+   },
+   {
+    "m": "AMX Mk-61",
+    "n": 54,
+    "orig": "NLD",
+    "s": "wiki_army",
+    "c": "ت",
+    "note": "Original 54 Purchased. Not all operational.",
+    "gen": 2,
+    "cat": "spg"
+   },
+   {
+    "m": "FH-2000",
+    "n": 8,
+    "orig": "SGP",
+    "s": "wiki_army",
+    "c": "ت",
+    "note": "Used for training purpose only.",
+    "gen": 2,
+    "cat": "spg"
+   },
+   {
+    "m": "KH-179",
+    "n": 18,
+    "orig": "KOR",
+    "s": "wiki_army",
+    "c": "ت",
+    "note": "Developed from M114A1 howitzer.",
+    "gen": 2,
+    "cat": "towed"
+   },
+   {
+    "m": "KH-178",
+    "n": 54,
+    "orig": "KOR",
+    "s": "wiki_army",
+    "c": "ت",
+    "note": "Developed from M101 howitzer.",
+    "gen": 2,
+    "cat": "towed"
+   },
+   {
+    "m": "M101",
+    "n": 180,
+    "orig": "USA",
+    "s": "wiki_army",
+    "c": "ت",
+    "note": "Used by at least 10 field artillery battalions across Indonesia. If 1 field artillery battalion consist of 18 guns, then its approximately 1",
+    "gen": 2,
+    "cat": "towed"
+   },
+   {
+    "m": "M48",
+    "n": 126,
+    "orig": "YUG",
+    "s": "wiki_army",
+    "c": "ت",
+    "note": "Used by at least 7 field artillery battalions across Indonesia. Currently on retiring process and will be replaced by more modern guns.",
+    "gen": 1,
+    "cat": "towed"
+   },
+   {
+    "m": "Heckler & Koch M635",
+    "n": 18,
+    "orig": "DEU",
+    "s": "wiki_army",
+    "c": "ت",
+    "note": "Used by 7th Field Artillery Battalion for ceremonial purpose.",
+    "gen": 2,
+    "cat": "towed"
+   }
+  ],
+  "air": [
+   {
+    "m": "Boeing AH-64 Apache",
+    "n": 8,
+    "orig": "USA",
+    "s": "wiki_army",
+    "c": "ت",
+    "note": "Originally known as AH-64D Apache Block III Longbow. Equipped with AN/APG-78 Longbow radar, Hydra 70 and AGM-114R3 Hellfire missiles. All de",
+    "gen": 3,
+    "cat": "heli_attack"
+   },
+   {
+    "m": "Mil Mi-35",
+    "n": 52,
+    "orig": "RUS",
+    "s": "wiki_army",
+    "c": "ت",
+    "note": "Export version of Mi-24, equipped with a side-mounted twin-barell GSh-30K 30mm fixed-position automatic cannon, 240mm rockets launchers and ",
+    "gen": 3,
+    "cat": "heli_attack"
+   },
+   {
+    "m": "Bell 412",
+    "n": 60,
+    "orig": "CAN",
+    "s": "wiki_army",
+    "c": "ت",
+    "note": "Built under license by PTDI. Air assault helicopters are armed with 7.62mm MG such as SM2 or Dillon Aero minigun.",
+    "gen": 2,
+    "cat": "heli_util"
+   },
+   {
+    "m": "Eurocopter Fennec",
+    "n": 66,
+    "orig": "FRA",
+    "s": "wiki_army",
+    "c": "ت",
+    "note": "Assembled locally by PTDI. Most aircraft armed with 7.62mm MG, FZ219 rocket pod or FN HMP250 gun pod.",
+    "gen": 2,
+    "cat": "heli_attack"
+   },
+   {
+    "m": "MBB Bo 105",
+    "n": 12,
+    "orig": "IDN",
+    "s": "wiki_army",
+    "c": "ت",
+    "note": "Built under licence by PTDI. Most aircraft have been converted into air assault helicopters armed with rocket pod and FN HMP250 gun pod. Wil",
+    "gen": 2,
+    "cat": "heli_attack"
+   },
+   {
+    "m": "Kamov Ka-32",
+    "n": 2,
+    "orig": "RUS",
+    "s": "wiki_army",
+    "c": "ت",
+    "gen": 2,
+    "cat": "heli_util"
+   },
+   {
+    "m": "Mil Mi-8M",
+    "n": 2,
+    "orig": "RUS",
+    "s": "wiki_army",
+    "c": "ت",
+    "note": "Previously used by the Ministry of Defense for humanitarian purpose.",
+    "gen": 2,
+    "cat": "heli_util"
+   },
+   {
+    "m": "Mil Mi-17",
+    "n": 10,
+    "orig": "RUS",
+    "s": "wiki_army",
+    "c": "ت",
+    "note": "Most aircraft armed with 7.62mm MG. 12 Mi-17V-5 were delivered from 2008 to 2011 according to SIPRI. 3 units have crashed from 2013 to 2020.",
+    "gen": 2,
+    "cat": "heli_util"
+   },
+   {
+    "m": "Hughes 300",
+    "n": 20,
+    "orig": "USA",
+    "s": "wiki_army",
+    "c": "ت",
+    "gen": 2,
+    "cat": "heli_util"
+   }
+  ],
+  "ad": [
+   {
+    "m": "Patriot I",
+    "n": 100,
+    "orig": "CZE",
+    "s": "wiki_army",
+    "c": "ت",
+    "note": "There are rumours that 100 more on order by undisclosed customer in SEA which is probably Indonesia.",
+    "gen": 4,
+    "cat": "long"
+   },
+   {
+    "m": "Starstreak",
+    "n": 10,
+    "orig": "GBR",
+    "s": "wiki_army",
+    "c": "ت",
+    "note": "10 battery of Starstreak missile system equipped with lightweight multiple launcher (LML) and LML-NG (Next Generation) mounted on Land Rover",
+    "gen": 2,
+    "cat": "short"
+   },
+   {
+    "m": "Grom",
+    "n": 2,
+    "orig": "POL",
+    "s": "wiki_army",
+    "c": "ت",
+    "note": "2 battery (2 system) of Grom missile have been acquired as part of Kobra (Aster) Modular Air Defence System equipped with Poprad launcher mo",
+    "gen": 2,
+    "cat": "short"
+   },
+   {
+    "m": "QW-3",
+    "n": 1,
+    "orig": "CHN",
+    "s": "wiki_army",
+    "c": "ت",
+    "note": "A battery of QW-3 missile equipped with automatic launcher mounted on Shaanxi truck, 57 mm AA autocannon, SR-74 searching radar, and fire co",
+    "gen": 2,
+    "cat": "short"
+   },
+   {
+    "m": "Rh-202 Twin Gun",
+    "n": 121,
+    "orig": "DEU",
+    "s": "wiki_army",
+    "c": "ت",
+    "note": "Integrated with Saab Giraffe radar.",
+    "gen": 2,
+    "cat": "short"
+   },
+   {
+    "m": "ZUR-23-2KG",
+    "n": 242,
+    "orig": "POL",
+    "s": "wiki_army",
+    "c": "ت",
+    "note": "Purchased as part of the Kobra Modular Air Defence system",
+    "gen": 2,
+    "cat": "short"
+   },
+   {
+    "m": "Giant Bow II",
+    "n": 18,
+    "orig": "CHN",
+    "s": "wiki_army",
+    "c": "ت",
+    "note": "Integrated with Battery Command and Control Vehicle (BCCV) and AS901A 3D searching radar.",
+    "gen": 2,
+    "cat": "short"
+   },
+   {
+    "m": "Bofors L-70",
+    "n": 90,
+    "orig": "SWE",
+    "s": "wiki_army",
+    "c": "ت",
+    "note": "Integrated with Super Fledermaus fire control radar unit.",
+    "gen": 2,
+    "cat": "short"
+   }
+  ],
+  "msl": [
+   {
+    "m": "Bora",
+    "n": 4,
+    "orig": "TUR",
+    "s": "wiki_army",
+    "c": "ت",
+    "note": "First batch delivered in September 2025, second batch to be delivered in early 2026.",
+    "gen": 2,
+    "cat": "srbm"
+   }
+  ],
+  "navy": [
+   {
+    "m": "FPB-57 class",
+    "n": 57,
+    "orig": "IDN",
+    "s": "wiki_navy",
+    "c": "ت",
+    "gen": 2,
+    "cat": "missile_boat"
+   }
+  ]
+ },
+ "ind": {
+  "tech": {
+   "arm": 2,
+   "air": 2,
+   "uav": 1,
+   "msl": 0,
+   "navy": 2,
+   "ew": 1,
+   "ind": 3
+  },
+  "makes": [
+   "PT Pindad (مدرعات أنوا)",
+   "CN-235",
+   "سفن PAL"
+  ],
+  "s": "tierA",
+  "c": "ت"
+ },
+ "pol": {
+  "factions": [
+   "army",
+   "parties",
+   "street",
+   "biz"
+  ],
+  "stab": {
+   "v": 60,
+   "s": "tierA",
+   "c": "ت"
+  },
+  "warHome": [],
+  "insurgency": "بابوا"
+ },
+ "rel": {
+  "KHM": 15,
+  "LAO": 15,
+  "MMR": 15,
+  "MYS": 15,
+  "PHL": 15,
+  "SGP": 15,
+  "THA": 15,
+  "TLS": 15,
+  "VNM": 15
+ },
+ "treaties": [
+  "ASEAN"
+ ],
+ "sanctions": [],
+ "conflicts": [],
+ "notes": ""
+}

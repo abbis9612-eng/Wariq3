@@ -1,0 +1,666 @@
+{
+ "id": "SAU",
+ "ar": "السعودية",
+ "en": "Saudi Arabia",
+ "tier": "A",
+ "asOf": "2026-11",
+ "src": {
+  "wiki_air": {
+   "t": "Wikipedia: Royal Saudi Air Force",
+   "u": "https://en.wikipedia.org/wiki/Royal_Saudi_Air_Force?oldid=1386027435",
+   "y": 2026,
+   "note": "نسخة الصفحة بتاريخ السحب؛ أرقام ويكيبيديا تنراجع ويا مصادر ثانية"
+  },
+  "wiki_army": {
+   "t": "Wikipedia: List of equipment of the Saudi Arabian Army",
+   "u": "https://en.wikipedia.org/wiki/List_of_equipment_of_the_Saudi_Arabian_Army?oldid=1383063747",
+   "y": 2026,
+   "note": "نسخة الصفحة بتاريخ السحب؛ أرقام ويكيبيديا تنراجع ويا مصادر ثانية"
+  },
+  "wiki_navy": {
+   "t": "Wikipedia: Royal Saudi Naval Forces",
+   "u": "https://en.wikipedia.org/wiki/Royal_Saudi_Naval_Forces?oldid=1378358532",
+   "y": 2026,
+   "note": "نسخة الصفحة بتاريخ السحب؛ أرقام ويكيبيديا تنراجع ويا مصادر ثانية"
+  },
+  "iiss_eq": {
+   "t": "Wikipedia: List of countries by level of military equipment (من IISS Military Balance ومصادر ثانية)",
+   "u": "https://en.wikipedia.org/wiki/List_of_countries_by_level_of_military_equipment?oldid=1384804191",
+   "y": 2025
+  },
+  "iiss_pers": {
+   "t": "Wikipedia: List of countries by number of military and paramilitary personnel (جدول IISS Military Balance)",
+   "u": "https://en.wikipedia.org/wiki/List_of_countries_by_number_of_military_and_paramilitary_personnel?oldid=1380910017",
+   "y": 2025
+  },
+  "wb": {
+   "t": "World Bank WDI (SP.POP.TOTL, NY.GDP.MKTP.CD, NY.GDP.MKTP.KD.ZG, MS.MIL.XPND.CD/GD.ZS ← SIPRI, MS.MIL.TOTL.P1, FP.CPI.TOTL.ZG)",
+   "u": "https://api.worldbank.org/v2/",
+   "y": 2026
+  },
+  "govt": {
+   "t": "تصنيف نظام الحكم: دساتير الدول + CIA World Factbook «Government type» + V-Dem/Freedom House لدرجة الحرية (تصنيف المصمم 2026)",
+   "u": "https://www.cia.gov/the-world-factbook/field/government-type/",
+   "y": 2026
+  },
+  "leaders": {
+   "t": "Wikipedia: List of current heads of state and government",
+   "u": "https://en.wikipedia.org/wiki/List_of_current_heads_of_state_and_government?oldid=1386623862",
+   "y": 2026,
+   "note": "سحب نوفمبر 2026"
+  },
+  "rules": {
+   "t": "قواعد من blocs.json وconflicts.json وsanctions.json (تكتل دفاعي +40، معاهدة +50، حرب −90، عقوبات ثقيلة −40...)",
+   "u": "data/world/",
+   "y": 2026
+  },
+  "relk": {
+   "t": "تقدير المصمم للعلاقات الثنائية المعروفة (تشرين الثاني 2026): حروب، نزاعات حدودية، تحالفات غير رسمية، تطبيع، عداء تاريخي",
+   "u": "https://en.wikipedia.org/wiki/Foreign_relations_by_country",
+   "y": 2026
+  },
+  "tierA": {
+   "t": "تقدير المصمم (تشرين الثاني 2026) لصناعة السلاح والاستقرار: SIPRI Arms Transfers Database (أكبر المصدّرين 2020–24)، SIPRI Top 100 Arms-Producing Companies، Fragile States Index 2025، أخبار 2026",
+   "u": "https://www.sipri.org/databases/armstransfers",
+   "y": 2026
+  }
+ },
+ "gov": {
+  "type": "amon",
+  "ar": "ملكية مطلقة/قوية",
+  "free": 0,
+  "hos": {
+   "role": "Crown Prince",
+   "name": "Mohammed bin Salman"
+  },
+  "hog": {
+   "role": "King",
+   "name": "Salman"
+  },
+  "s": "govt,leaders",
+  "c": "ح"
+ },
+ "pop": {
+  "v": 36973555,
+  "y": 2025,
+  "s": "wb",
+  "c": "ح"
+ },
+ "eco": {
+  "gdpBusd": {
+   "v": 1276.9,
+   "y": 2025,
+   "s": "wb",
+   "c": "ح"
+  },
+  "growth": {
+   "v": 4.5,
+   "y": 2025,
+   "s": "wb",
+   "c": "ح"
+  },
+  "infl": {
+   "v": 2.0,
+   "y": 2025,
+   "s": "wb",
+   "c": "ح"
+  },
+  "oilRentPct": {
+   "v": 23.7,
+   "y": 2021,
+   "s": "wb",
+   "c": "ح"
+  }
+ },
+ "mil": {
+  "budgetBusd": {
+   "v": 83.18,
+   "y": 2025,
+   "s": "wb",
+   "c": "ح"
+  },
+  "budgetPctGdp": {
+   "v": 6.48,
+   "y": 2025,
+   "s": "wb",
+   "c": "ح"
+  },
+  "personnelWB": {
+   "v": 282000,
+   "y": 2020,
+   "s": "wb",
+   "c": "ح"
+  },
+  "sum": {
+   "tanks": {
+    "v": 960,
+    "s": "iiss_eq",
+    "c": "ت"
+   },
+   "carriers": {
+    "v": 0,
+    "s": "iiss_eq",
+    "c": "ت"
+   },
+   "amphib": {
+    "v": 0,
+    "s": "iiss_eq",
+    "c": "ت"
+   },
+   "cruisers": {
+    "v": 0,
+    "s": "iiss_eq",
+    "c": "ت"
+   },
+   "destroyers": {
+    "v": 0,
+    "s": "iiss_eq",
+    "c": "ت"
+   },
+   "frigates": {
+    "v": 6,
+    "s": "iiss_eq",
+    "c": "ت"
+   },
+   "corvettes": {
+    "v": 4,
+    "s": "iiss_eq",
+    "c": "ت"
+   },
+   "subNuc": {
+    "v": 0,
+    "s": "iiss_eq",
+    "c": "ت"
+   },
+   "subs": {
+    "v": 0,
+    "s": "iiss_eq",
+    "c": "ت"
+   },
+   "combatAir": {
+    "v": 364,
+    "s": "iiss_eq",
+    "c": "ت"
+   },
+   "attackHeli": {
+    "v": 47,
+    "s": "iiss_eq",
+    "c": "ت"
+   },
+   "sats": {
+    "v": 0,
+    "s": "iiss_eq",
+    "c": "ت"
+   },
+   "active": {
+    "v": 257000,
+    "s": "iiss_pers",
+    "c": "ت"
+   },
+   "reserve": {
+    "v": 0,
+    "s": "iiss_pers",
+    "c": "ت"
+   },
+   "para": {
+    "v": 24500,
+    "s": "iiss_pers",
+    "c": "ت"
+   }
+  },
+  "land": [
+   {
+    "m": "Panhard AML (AML-60 AML-90)",
+    "n": 300,
+    "orig": "FRA",
+    "s": "wiki_army",
+    "c": "ت",
+    "gen": 2,
+    "cat": "apc"
+   },
+   {
+    "m": "M2 Bradley (M2A2)",
+    "n": 380,
+    "orig": "USA",
+    "s": "wiki_army",
+    "c": "ت",
+    "gen": 3,
+    "cat": "ifv"
+   },
+   {
+    "m": "AMX-10P",
+    "n": 380,
+    "orig": "FRA",
+    "s": "wiki_army",
+    "c": "ت",
+    "gen": 2,
+    "cat": "ifv"
+   },
+   {
+    "m": "VAB (VAB Mk3)",
+    "n": 100,
+    "orig": "FRA",
+    "s": "wiki_army",
+    "c": "ت",
+    "gen": 2,
+    "cat": "ifv"
+   },
+   {
+    "m": "M113 (M113A1 M113A3)",
+    "n": 1190,
+    "orig": "USA",
+    "s": "wiki_army",
+    "c": "ت",
+    "gen": 2,
+    "cat": "apc"
+   },
+   {
+    "m": "Panhard M3",
+    "n": 150,
+    "orig": "FRA",
+    "s": "wiki_army",
+    "c": "ت",
+    "gen": 2,
+    "cat": "apc"
+   },
+   {
+    "m": "AMX-10P",
+    "n": 90,
+    "orig": "FRA",
+    "s": "wiki_army",
+    "c": "ت",
+    "gen": 2,
+    "cat": "atgm"
+   },
+   {
+    "m": "VCC-1 ITOW",
+    "n": 200,
+    "orig": "USA",
+    "s": "wiki_army",
+    "c": "ت",
+    "gen": 2,
+    "cat": "atgm"
+   }
+  ],
+  "air": [
+   {
+    "m": "F-15 Eagle (F-15C/D MSIP II)",
+    "n": 210,
+    "orig": "USA",
+    "s": "wiki_air",
+    "c": "ت",
+    "note": "21 used for training. 1 lost in 2026",
+    "gen": 3,
+    "cat": "fighter"
+   },
+   {
+    "m": "F-15E Strike Eagle (F-15SR)",
+    "n": 210,
+    "orig": "USA",
+    "s": "wiki_air",
+    "c": "ت",
+    "note": "21 used for training. 1 lost in 2026",
+    "gen": 4,
+    "cat": "fighter"
+   },
+   {
+    "m": "F-15EX Eagle II (F-15SA)",
+    "n": 210,
+    "orig": "USA",
+    "s": "wiki_air",
+    "c": "ت",
+    "note": "21 used for training. 1 lost in 2026",
+    "gen": 4,
+    "cat": "fighter"
+   },
+   {
+    "m": "E-3 Sentry (E/RE-3A)",
+    "n": 6,
+    "orig": "USA",
+    "s": "wiki_air",
+    "c": "ت",
+    "note": "1 used for SIGINT / ELINT missions",
+    "gen": 2,
+    "cat": "awacs"
+   },
+   {
+    "m": "Saab 2000 (2000 AEW&C)",
+    "n": 2,
+    "orig": "SWE",
+    "s": "wiki_air",
+    "c": "ت",
+    "gen": 2,
+    "cat": "awacs"
+   },
+   {
+    "m": "Airbus A330 MRTT (A330-243 MRTT)",
+    "n": 6,
+    "orig": "FRA",
+    "s": "wiki_air",
+    "c": "ت",
+    "note": "4 on order",
+    "gen": 2,
+    "cat": "tanker"
+   },
+   {
+    "m": "Gulfstream IV",
+    "n": 2,
+    "orig": "USA",
+    "s": "wiki_air",
+    "c": "ت",
+    "gen": 2,
+    "cat": "transport"
+   },
+   {
+    "m": "BAe Jetstream (31)",
+    "n": 1,
+    "orig": "GBR",
+    "s": "wiki_air",
+    "c": "ت",
+    "gen": 2,
+    "cat": "transport"
+   },
+   {
+    "m": "Cessna Citation II (Bravo)",
+    "n": 4,
+    "orig": "USA",
+    "s": "wiki_air",
+    "c": "ت",
+    "gen": 2,
+    "cat": "transport"
+   },
+   {
+    "m": "Super King Air (350)",
+    "n": 17,
+    "orig": "USA",
+    "s": "wiki_air",
+    "c": "ت",
+    "note": "8 used for reconnaissance, 4 on order",
+    "gen": 2,
+    "cat": "transport"
+   },
+   {
+    "m": "C-130 Hercules (C-130H)",
+    "n": 33,
+    "orig": "USA",
+    "s": "wiki_air",
+    "c": "ت",
+    "gen": 2,
+    "cat": "transport"
+   },
+   {
+    "m": "Bell 212",
+    "n": 22,
+    "orig": "USA",
+    "s": "wiki_air",
+    "c": "ت",
+    "gen": 2,
+    "cat": "heli_util"
+   },
+   {
+    "m": "Bell 412",
+    "n": 14,
+    "orig": "USA",
+    "s": "wiki_air",
+    "c": "ت",
+    "gen": 2,
+    "cat": "heli_util"
+   },
+   {
+    "m": "Sikorsky UH-60 (UH-60L)",
+    "n": 2,
+    "orig": "USA",
+    "s": "wiki_air",
+    "c": "ت",
+    "gen": 2,
+    "cat": "heli_util"
+   },
+   {
+    "m": "Eurocopter AS332",
+    "n": 15,
+    "orig": "FRA",
+    "s": "wiki_air",
+    "c": "ت",
+    "note": "2 on order",
+    "gen": 2,
+    "cat": "heli_util"
+   },
+   {
+    "m": "BAE Hawk (65A/165)",
+    "n": 81,
+    "orig": "GBR",
+    "s": "wiki_air",
+    "c": "ت",
+    "gen": 2,
+    "cat": "trainer"
+   },
+   {
+    "m": "Pilatus PC-21",
+    "n": 55,
+    "orig": "CHE",
+    "s": "wiki_air",
+    "c": "ت",
+    "gen": 2,
+    "cat": "trainer"
+   },
+   {
+    "m": "Cirrus SR22",
+    "n": 25,
+    "orig": "USA",
+    "s": "wiki_air",
+    "c": "ت",
+    "gen": 2,
+    "cat": "trainer"
+   },
+   {
+    "m": "PAC MFI-17 Mushshak",
+    "n": 20,
+    "orig": "PAK",
+    "s": "wiki_air",
+    "c": "ت",
+    "gen": 2,
+    "cat": "trainer"
+   },
+   {
+    "m": "Boeing AH-64 Apache (AH-64D AH-64E)",
+    "n": 47,
+    "orig": "USA",
+    "s": "wiki_army",
+    "c": "ت",
+    "gen": 4,
+    "cat": "heli_util"
+   },
+   {
+    "m": "Bell OH-58 Kiowa (OH-58D)",
+    "n": 15,
+    "orig": "USA",
+    "s": "wiki_army",
+    "c": "ت",
+    "gen": 2,
+    "cat": "heli_util"
+   },
+   {
+    "m": "Sikorsky UH-60 Black Hawk (UH-60L UH-60M)",
+    "n": 100,
+    "orig": "USA",
+    "s": "wiki_army",
+    "c": "ت",
+    "gen": 2,
+    "cat": "heli_util"
+   },
+   {
+    "m": "Boeing CH-47 Chinook (CH-47F)",
+    "n": 48,
+    "orig": "USA",
+    "s": "wiki_army",
+    "c": "ت",
+    "gen": 3,
+    "cat": "heli_util"
+   },
+   {
+    "m": "Saqr (Saqr1 Saqr2 Saqr3 Saqr4)",
+    "n": 230,
+    "orig": "SAU",
+    "s": "wiki_army",
+    "c": "ت",
+    "gen": 2,
+    "cat": "uav_isr"
+   },
+   {
+    "m": "CAIG Wing Loong (Pterodactyl Wing Loong II)",
+    "n": 300,
+    "orig": "CHN",
+    "s": "wiki_army",
+    "c": "ت",
+    "gen": 4,
+    "cat": "uav_isr"
+   },
+   {
+    "m": "Aeryon Scout (?)",
+    "n": 10,
+    "orig": "CAN",
+    "s": "wiki_army",
+    "c": "ت",
+    "gen": 2,
+    "cat": "uav_isr"
+   }
+  ],
+  "ad": [],
+  "msl": [],
+  "navy": [
+   {
+    "m": "Al Riyadh class",
+    "n": 3,
+    "orig": "FRA",
+    "s": "wiki_navy",
+    "c": "ت",
+    "gen": 2,
+    "cat": "frigate"
+   },
+   {
+    "m": "Al Madinah class",
+    "n": 4,
+    "orig": "FRA",
+    "s": "wiki_navy",
+    "c": "ت",
+    "gen": 2,
+    "cat": "frigate"
+   },
+   {
+    "m": "Multi-Mission Surface Combatant (MMSC)",
+    "n": 4,
+    "orig": "USA",
+    "s": "wiki_navy",
+    "c": "ت",
+    "gen": 2,
+    "cat": "frigate"
+   },
+   {
+    "m": "Al Jubail class",
+    "n": 5,
+    "orig": "ESP",
+    "s": "wiki_navy",
+    "c": "ت",
+    "gen": 2,
+    "cat": "corvette"
+   },
+   {
+    "m": "Badr class",
+    "n": 4,
+    "orig": "USA",
+    "s": "wiki_navy",
+    "c": "ت",
+    "gen": 2,
+    "cat": "corvette"
+   },
+   {
+    "m": "Al Siddiq class",
+    "n": 9,
+    "orig": "USA",
+    "s": "wiki_navy",
+    "c": "ت",
+    "gen": 2,
+    "cat": "missile_boat"
+   }
+  ]
+ },
+ "ind": {
+  "tech": {
+   "arm": 1,
+   "air": 0,
+   "uav": 1,
+   "msl": 0,
+   "navy": 0,
+   "ew": 1,
+   "ind": 2
+  },
+  "makes": [
+   "ذخيرة (SAMI)",
+   "تجميع مدرعات"
+  ],
+  "s": "tierA",
+  "c": "ت"
+ },
+ "pol": {
+  "factions": [
+   "royal",
+   "army",
+   "clergy",
+   "street",
+   "biz"
+  ],
+  "stab": {
+   "v": 68,
+   "s": "tierA",
+   "c": "ت"
+  },
+  "warHome": [],
+  "insurgency": "ضربات الحوثيين"
+ },
+ "rel": {
+  "ARE": 35,
+  "BHR": 50,
+  "CHN": 35,
+  "COG": 15,
+  "DJI": 10,
+  "DZA": 25,
+  "EGY": 60,
+  "GAB": 15,
+  "GNQ": 15,
+  "IRN": -25,
+  "IRQ": 35,
+  "ISR": -15,
+  "JOR": 10,
+  "KWT": 65,
+  "LBN": 10,
+  "LBY": 25,
+  "MAR": 10,
+  "MRT": 10,
+  "NGA": 15,
+  "OMN": 50,
+  "PAK": 75,
+  "PSX": 10,
+  "QAT": 40,
+  "RUS": 30,
+  "SDN": 10,
+  "SOM": 10,
+  "SYR": 50,
+  "TUN": 10,
+  "TUR": 35,
+  "USA": 60,
+  "VEN": 15,
+  "YEM": -70
+ },
+ "treaties": [
+  "ARAB",
+  "GCC",
+  "OPEC",
+  "PACT_PAK"
+ ],
+ "sanctions": [],
+ "conflicts": [
+  "iran_war",
+  "yemen"
+ ],
+ "notes": ""
+}

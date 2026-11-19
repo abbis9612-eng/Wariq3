@@ -1,0 +1,6 @@
+{
+ "src": {"dgbas26": {"t": "DGBAS (Taiwan) via Statistics of the World / Taipei Times: GDP 2025 ≈ US$922bn، نمو 8.63%، سكان 23.3 مليون", "u": "https://statisticsoftheworld.com/country/TWN", "y": 2026, "note": "تايوان مو بالبنك الدولي"}},
+ "pop": {"v": 23300000, "y": 2025, "s": "dgbas26", "c": "ح"},
+ "eco": {"gdpBusd": {"v": 922.5, "y": 2025, "s": "dgbas26", "c": "ت"}, "growth": {"v": 8.6, "y": 2025, "s": "dgbas26", "c": "ح"}},
+ "notes": "مو بالأمم المتحدة. الصين تعتبرها جزء منها (علاقة −80). الأرقام العسكرية من IISS عبر ويكيبيديا."
+}

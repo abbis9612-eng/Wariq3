@@ -1,0 +1,954 @@
+{
+ "id": "ITA",
+ "ar": "إيطاليا",
+ "en": "Italy",
+ "tier": "A",
+ "asOf": "2026-11",
+ "src": {
+  "wiki_air": {
+   "t": "Wikipedia: Italian Air Force",
+   "u": "https://en.wikipedia.org/wiki/Italian_Air_Force?oldid=1384945149",
+   "y": 2026,
+   "note": "نسخة الصفحة بتاريخ السحب؛ أرقام ويكيبيديا تنراجع ويا مصادر ثانية"
+  },
+  "wiki_army": {
+   "t": "Wikipedia: List of equipment of the Italian Army",
+   "u": "https://en.wikipedia.org/wiki/List_of_equipment_of_the_Italian_Army?oldid=1382908283",
+   "y": 2026,
+   "note": "نسخة الصفحة بتاريخ السحب؛ أرقام ويكيبيديا تنراجع ويا مصادر ثانية"
+  },
+  "wiki_navy": {
+   "t": "Wikipedia: List of active Italian Navy ships",
+   "u": "https://en.wikipedia.org/wiki/List_of_active_Italian_Navy_ships?oldid=1385814996",
+   "y": 2026,
+   "note": "نسخة الصفحة بتاريخ السحب؛ أرقام ويكيبيديا تنراجع ويا مصادر ثانية"
+  },
+  "iiss_eq": {
+   "t": "Wikipedia: List of countries by level of military equipment (من IISS Military Balance ومصادر ثانية)",
+   "u": "https://en.wikipedia.org/wiki/List_of_countries_by_level_of_military_equipment?oldid=1384804191",
+   "y": 2025
+  },
+  "iiss_pers": {
+   "t": "Wikipedia: List of countries by number of military and paramilitary personnel (جدول IISS Military Balance)",
+   "u": "https://en.wikipedia.org/wiki/List_of_countries_by_number_of_military_and_paramilitary_personnel?oldid=1380910017",
+   "y": 2025
+  },
+  "wb": {
+   "t": "World Bank WDI (SP.POP.TOTL, NY.GDP.MKTP.CD, NY.GDP.MKTP.KD.ZG, MS.MIL.XPND.CD/GD.ZS ← SIPRI, MS.MIL.TOTL.P1, FP.CPI.TOTL.ZG)",
+   "u": "https://api.worldbank.org/v2/",
+   "y": 2026
+  },
+  "govt": {
+   "t": "تصنيف نظام الحكم: دساتير الدول + CIA World Factbook «Government type» + V-Dem/Freedom House لدرجة الحرية (تصنيف المصمم 2026)",
+   "u": "https://www.cia.gov/the-world-factbook/field/government-type/",
+   "y": 2026
+  },
+  "leaders": {
+   "t": "Wikipedia: List of current heads of state and government",
+   "u": "https://en.wikipedia.org/wiki/List_of_current_heads_of_state_and_government?oldid=1386623862",
+   "y": 2026,
+   "note": "سحب نوفمبر 2026"
+  },
+  "rules": {
+   "t": "قواعد من blocs.json وconflicts.json وsanctions.json (تكتل دفاعي +40، معاهدة +50، حرب −90، عقوبات ثقيلة −40...)",
+   "u": "data/world/",
+   "y": 2026
+  },
+  "relk": {
+   "t": "تقدير المصمم للعلاقات الثنائية المعروفة (تشرين الثاني 2026): حروب، نزاعات حدودية، تحالفات غير رسمية، تطبيع، عداء تاريخي",
+   "u": "https://en.wikipedia.org/wiki/Foreign_relations_by_country",
+   "y": 2026
+  },
+  "tierA": {
+   "t": "تقدير المصمم (تشرين الثاني 2026) لصناعة السلاح والاستقرار: SIPRI Arms Transfers Database (أكبر المصدّرين 2020–24)، SIPRI Top 100 Arms-Producing Companies، Fragile States Index 2025، أخبار 2026",
+   "u": "https://www.sipri.org/databases/armstransfers",
+   "y": 2026
+  }
+ },
+ "gov": {
+  "type": "parl",
+  "ar": "جمهورية برلمانية",
+  "free": 2,
+  "hos": {
+   "role": "President",
+   "name": "Sergio Mattarella"
+  },
+  "hog": {
+   "role": "Prime Minister",
+   "name": "Giorgia Meloni"
+  },
+  "s": "govt,leaders",
+  "c": "ح"
+ },
+ "pop": {
+  "v": 58915656,
+  "y": 2025,
+  "s": "wb",
+  "c": "ح"
+ },
+ "eco": {
+  "gdpBusd": {
+   "v": 2551.6,
+   "y": 2025,
+   "s": "wb",
+   "c": "ح"
+  },
+  "growth": {
+   "v": 0.5,
+   "y": 2025,
+   "s": "wb",
+   "c": "ح"
+  },
+  "infl": {
+   "v": 1.5,
+   "y": 2025,
+   "s": "wb",
+   "c": "ح"
+  },
+  "oilRentPct": {
+   "v": 0.1,
+   "y": 2021,
+   "s": "wb",
+   "c": "ح"
+  }
+ },
+ "mil": {
+  "budgetBusd": {
+   "v": 48.14,
+   "y": 2025,
+   "s": "wb",
+   "c": "ح"
+  },
+  "budgetPctGdp": {
+   "v": 1.89,
+   "y": 2025,
+   "s": "wb",
+   "c": "ح"
+  },
+  "personnelWB": {
+   "v": 338000,
+   "y": 2020,
+   "s": "wb",
+   "c": "ح"
+  },
+  "sum": {
+   "tanks": {
+    "v": 200,
+    "s": "iiss_eq",
+    "c": "ت"
+   },
+   "carriers": {
+    "v": 2,
+    "s": "iiss_eq",
+    "c": "ت"
+   },
+   "amphib": {
+    "v": 3,
+    "s": "iiss_eq",
+    "c": "ت"
+   },
+   "cruisers": {
+    "v": 0,
+    "s": "iiss_eq",
+    "c": "ت"
+   },
+   "destroyers": {
+    "v": 4,
+    "s": "iiss_eq",
+    "c": "ت"
+   },
+   "frigates": {
+    "v": 12,
+    "s": "iiss_eq",
+    "c": "ت"
+   },
+   "corvettes": {
+    "v": 0,
+    "s": "iiss_eq",
+    "c": "ت"
+   },
+   "subNuc": {
+    "v": 0,
+    "s": "iiss_eq",
+    "c": "ت"
+   },
+   "subs": {
+    "v": 8,
+    "s": "iiss_eq",
+    "c": "ت"
+   },
+   "combatAir": {
+    "v": 221,
+    "s": "iiss_eq",
+    "c": "ت"
+   },
+   "attackHeli": {
+    "v": 36,
+    "s": "iiss_eq",
+    "c": "ت"
+   },
+   "sats": {
+    "v": 9,
+    "s": "iiss_eq",
+    "c": "ت"
+   },
+   "active": {
+    "v": 160400,
+    "s": "iiss_pers",
+    "c": "ت"
+   },
+   "reserve": {
+    "v": 14500,
+    "s": "iiss_pers",
+    "c": "ت"
+   },
+   "para": {
+    "v": 179250,
+    "s": "iiss_pers",
+    "c": "ت"
+   }
+  },
+  "land": [
+   {
+    "m": "Spike iCLU",
+    "n": 210,
+    "orig": "ISR",
+    "s": "wiki_army",
+    "c": "ت",
+    "note": "Orders: 90 in 2009: 84 for the Army 6 for the Navy 126 in 2020",
+    "gen": 2,
+    "cat": "atgm"
+   },
+   {
+    "m": "Spike CLU",
+    "n": 53,
+    "orig": "ISR",
+    "s": "wiki_army",
+    "c": "ت",
+    "note": "Orders: 53 in 2004 32 for the infantry troops 21 installed on the VLTM Lince",
+    "gen": 2,
+    "cat": "atgm"
+   },
+   {
+    "m": "Spike MR",
+    "n": 165,
+    "orig": "ISR",
+    "s": "wiki_army",
+    "c": "ت",
+    "note": "Order: 165 in 2004",
+    "gen": 2,
+    "cat": "atgm"
+   },
+   {
+    "m": "Spike LR",
+    "n": 1215,
+    "orig": "ISR",
+    "s": "wiki_army",
+    "c": "ت",
+    "note": "Orders: 345 in 2004 870 in 2009",
+    "gen": 2,
+    "cat": "atgm"
+   },
+   {
+    "m": "Spike LR2",
+    "n": 800,
+    "orig": "ISR",
+    "s": "wiki_army",
+    "c": "ت",
+    "note": "Order: 800 missiles in 2020 600 Spike LR2 with anti-tank warhead 200 Spike LR2 with multi-purpose warhead",
+    "gen": 2,
+    "cat": "atgm"
+   },
+   {
+    "m": "Spike ER",
+    "n": 800,
+    "orig": "ISR",
+    "s": "wiki_army",
+    "c": "ت",
+    "note": "Order: 800 Spike ER ordered in 2010 for the Agusta A129D Mangusta, operational since 2010",
+    "gen": 2,
+    "cat": "atgm"
+   },
+   {
+    "m": "MO-120 RT",
+    "n": 139,
+    "orig": "FRA",
+    "s": "wiki_army",
+    "c": "ت",
+    "note": "139 delivered between 2000 and 2004. Some were donated to Ukraine from 2022.",
+    "gen": 2,
+    "cat": "towed"
+   },
+   {
+    "m": "OTO Melara Mod 56",
+    "n": 18,
+    "orig": "ITA",
+    "s": "wiki_army",
+    "c": "ت",
+    "note": "330 in service since 1960s; withdrawn in early 2000s and limited number returned to service in 2013: Some were donated to Ukraine.",
+    "gen": 2,
+    "cat": "towed"
+   },
+   {
+    "m": "FH70",
+    "n": 90,
+    "orig": "ITA",
+    "s": "wiki_army",
+    "c": "ت",
+    "note": "164 in service since 1982, some being updated with new engine and fire control computer (LINAPS) starting in 2020. 12 to 18 per regiment. So",
+    "gen": 2,
+    "cat": "towed"
+   },
+   {
+    "m": "Panzerhaubitze 2000",
+    "n": 64,
+    "orig": "DEU",
+    "s": "wiki_army",
+    "c": "ت",
+    "note": "70 PzH 2000 purchased, of which 68 were license built by OTO Melara. 6 donated to Ukraine in 2022. 18 PzH 2000 per regiment with four regime",
+    "gen": 2,
+    "cat": "spg"
+   },
+   {
+    "m": "M270A1 MLRS-I",
+    "n": 21,
+    "orig": "USA",
+    "s": "wiki_army",
+    "c": "ت",
+    "note": "22 M270A1 received in 1988. 21 of which upgraded to M270A1 MLRS-I by 2012. All 21 being upgraded to M270A2.",
+    "gen": 2,
+    "cat": "mlrs"
+   },
+   {
+    "m": "Ariete C1",
+    "n": 110,
+    "orig": "ITA",
+    "s": "wiki_army",
+    "c": "ت",
+    "note": "200 Ariete received in total. Among the 200, 90 are being modernised to the C2 standard, and there is an option for 35 additional to moderni",
+    "gen": 2,
+    "cat": "tank"
+   },
+   {
+    "m": "Centauro",
+    "n": 259,
+    "orig": "ITA",
+    "s": "wiki_army",
+    "c": "ت",
+    "note": "In service with the army's nine cavalry regiments. Initially, 400 purchased, 141 sold to Jordan. The vehicles are being replaced by the Cent",
+    "gen": 2,
+    "cat": "atgm"
+   },
+   {
+    "m": "Centauro 2",
+    "n": 150,
+    "orig": "ITA",
+    "s": "wiki_army",
+    "c": "ت",
+    "note": "Production started in 2021. Orders: 10 in July 2018 86 in December 2020 (+ 10 in option) 26 in June 2022 (among which the option for 10 cont",
+    "gen": 2,
+    "cat": "atgm"
+   },
+   {
+    "m": "Lynx KF41",
+    "n": 5,
+    "orig": "DEU",
+    "s": "wiki_army",
+    "c": "ت",
+    "note": "Total Lynx planned: 1050 developed with indigenous variations such as the HITFIST 30 tower 679 KF41 Infantry Fighting Vehicle, (IFV) (~) KF4",
+    "gen": 2,
+    "cat": "ifv"
+   },
+   {
+    "m": "VCC Dardo",
+    "n": 198,
+    "orig": "ITA",
+    "s": "wiki_army",
+    "c": "ت",
+    "note": "150 To be upgraded.",
+    "gen": 2,
+    "cat": "ifv"
+   },
+   {
+    "m": "VBM Freccia",
+    "n": 630,
+    "orig": "ITA",
+    "s": "wiki_army",
+    "c": "ت",
+    "note": "Total Freccia planned: 630 First phase of 249 delivered by 2017: 172 VBM da Combattimento (AIFV) 36 VBM Controcarro (ATGW) 20 VBM Posto Coma",
+    "gen": 2,
+    "cat": "ifv"
+   },
+   {
+    "m": "Puma",
+    "n": 200,
+    "orig": "ITA",
+    "s": "wiki_army",
+    "c": "ت",
+    "note": "Purchased 180 4×4s and 360 6×6s, gradually retired",
+    "gen": 4,
+    "cat": "apc"
+   },
+   {
+    "m": "Orso 4×4",
+    "n": 56,
+    "orig": "ITA",
+    "s": "wiki_army",
+    "c": "ت",
+    "note": "Variants in service: 40 Iveco VTMM Orso 4×4 RCP (Route Clearance Package), with 25 options, ordered in 2011 for delivery since 2013 (120 mil",
+    "gen": 2,
+    "cat": "mrap"
+   },
+   {
+    "m": "Cougar HE",
+    "n": 12,
+    "orig": "USA",
+    "s": "wiki_army",
+    "c": "ت",
+    "note": "Since 2008, in Afghanistan theatre.",
+    "gen": 2,
+    "cat": "mrap"
+   },
+   {
+    "m": "Bandvagn 206",
+    "n": 300,
+    "orig": "SWE",
+    "s": "wiki_army",
+    "c": "ت",
+    "note": "Variants in service: 110 BV206 (unprotected) 112 BV-206S7 (armoured) acquired between 2002 and 2008 46 BV-206D (specialised version) acquire",
+    "gen": 2,
+    "cat": "apc"
+   },
+   {
+    "m": "VTMM Orso ACRT-RC",
+    "n": 40,
+    "orig": "DEU",
+    "s": "wiki_army",
+    "c": "ت",
+    "note": "40 Iveco VTMM Orso 4×4 RCP (Route Clearance Package), purchased with an option for 25. The contract was worth €120 million. It was ordered i",
+    "gen": 2,
+    "cat": "mrap"
+   },
+   {
+    "m": "Buffalo MPV",
+    "n": 7,
+    "orig": "USA",
+    "s": "wiki_army",
+    "c": "ت",
+    "note": "Purchased initially to dispose of IED in Afghanistan and Iraq: 7 Mk2A1 purchased in 2 batches (4 + 3) 9 Mk2A2 ordered in April 2022.",
+    "gen": 2,
+    "cat": "mrap"
+   },
+   {
+    "m": "Jeep Wrangler J8 Nuova Autovettura da Ricognizione (new reconnaissance vehicle)",
+    "n": 210,
+    "orig": "USA",
+    "s": "wiki_army",
+    "c": "ت",
+    "note": "Purchased as a replacement of the AR90 Land Rover Defender 90 for light reconnaissance in 2020 (delivery 2021-22). To be used by the special",
+    "gen": 2,
+    "cat": "apc"
+   }
+  ],
+  "air": [
+   {
+    "m": "TOPLITE III",
+    "n": 32,
+    "orig": "ISR",
+    "s": "wiki_army",
+    "c": "ت",
+    "note": "A pod capable to have 4 Spike-ER missiles. Order: 32 pods ordered in 2010 (option of 16), used since 2014.",
+    "gen": 2,
+    "cat": "heli_util"
+   },
+   {
+    "m": "A129 Mangusta",
+    "n": 37,
+    "orig": "ITA",
+    "s": "wiki_army",
+    "c": "ت",
+    "note": "Variants in service: 32 A129D 5 A129C The Army already retired 11 A129C.",
+    "gen": 2,
+    "cat": "heli_attack"
+   },
+   {
+    "m": "Leonardo AW249",
+    "n": 4,
+    "orig": "ITA",
+    "s": "wiki_army",
+    "c": "ت",
+    "note": "17 AW249 are on order. A total of 48 AW249 are planned.",
+    "gen": 2,
+    "cat": "heli_attack"
+   },
+   {
+    "m": "CH-47C Chinook",
+    "n": 5,
+    "orig": "USA",
+    "s": "wiki_army",
+    "c": "ت",
+    "note": "40 in service since 1973, 5 remain in service.",
+    "gen": 3,
+    "cat": "heli_util"
+   },
+   {
+    "m": "CH-47F Chinook",
+    "n": 16,
+    "orig": "USA",
+    "s": "wiki_army",
+    "c": "ت",
+    "note": "16 ordered in 2009, jointly developed between Boeing and AgustaWestland, and built by AgustaWestland under licence in Italy.",
+    "gen": 3,
+    "cat": "heli_util"
+   },
+   {
+    "m": "NH90 TTH",
+    "n": 59,
+    "orig": "FRA",
+    "s": "wiki_army",
+    "c": "ت",
+    "note": "Among the 60 helicopters received, 1 was lost in 2008.",
+    "gen": 2,
+    "cat": "heli_util"
+   },
+   {
+    "m": "AB-206",
+    "n": 29,
+    "orig": "USA",
+    "s": "wiki_army",
+    "c": "ت",
+    "note": "Made under licence by Agusta. It will be replaced by the UH-169D.",
+    "gen": 2,
+    "cat": "heli_util"
+   },
+   {
+    "m": "AB-205",
+    "n": 37,
+    "orig": "USA",
+    "s": "wiki_army",
+    "c": "ت",
+    "note": "Made under licence by Agusta. It is being replaced by the UH-169D.",
+    "gen": 2,
+    "cat": "heli_util"
+   },
+   {
+    "m": "AW169D Light Utility Helicopter",
+    "n": 1,
+    "orig": "ITA",
+    "s": "wiki_army",
+    "c": "ت",
+    "note": "25 UH-169D ordered, a total of 50 is planned eventually.",
+    "gen": 2,
+    "cat": "heli_util"
+   },
+   {
+    "m": "AW169B",
+    "n": 2,
+    "orig": "ITA",
+    "s": "wiki_army",
+    "c": "ت",
+    "gen": 2,
+    "cat": "heli_util"
+   },
+   {
+    "m": "RQ-7B Shadow (Made by AAI Corporation)",
+    "n": 16,
+    "orig": "USA",
+    "s": "wiki_army",
+    "c": "ت",
+    "note": "Ordered in 2010, received in 2016.",
+    "gen": 2,
+    "cat": "uav_isr"
+   },
+   {
+    "m": "APR Rapier X-25 (Made by Sky Eye Systems)",
+    "n": 6,
+    "orig": "ITA",
+    "s": "wiki_army",
+    "c": "ت",
+    "note": "Ordered in December 2022. 2 systems with 3 aircraft each.",
+    "gen": 2,
+    "cat": "uav_isr"
+   },
+   {
+    "m": "RQ-11 Raven (Made by AeroVironment)",
+    "n": 36,
+    "orig": "USA",
+    "s": "wiki_army",
+    "c": "ت",
+    "note": "Received in 2007-08.",
+    "gen": 2,
+    "cat": "uav_isr"
+   },
+   {
+    "m": "Bramor C4EYE (Made by C-Astral)",
+    "n": 3,
+    "orig": "SVN",
+    "s": "wiki_army",
+    "c": "ت",
+    "note": "Purchased in 2014.",
+    "gen": 2,
+    "cat": "uav_isr"
+   },
+   {
+    "m": "SIXTON (Made by Alpi Aviation and A3R)",
+    "n": 2,
+    "orig": "ITA",
+    "s": "wiki_army",
+    "c": "ت",
+    "note": "Received in 2010.",
+    "gen": 2,
+    "cat": "uav_isr"
+   },
+   {
+    "m": "STRIX (Made by Alpi Aviation)",
+    "n": 3,
+    "orig": "ITA",
+    "s": "wiki_army",
+    "c": "ت",
+    "note": "Received in 2010.",
+    "gen": 2,
+    "cat": "uav_isr"
+   }
+  ],
+  "ad": [
+   {
+    "m": "SAMP/T",
+    "n": 5,
+    "orig": "FRA",
+    "s": "wiki_army",
+    "c": "ت",
+    "note": "6 SAMP/T fires units ordered, assigned to 4 active batteries, 1 training battery, and 1 spare battery donated to Ukraine 4th Anti-aircraft A",
+    "gen": 2,
+    "cat": "long"
+   },
+   {
+    "m": "GRIFO",
+    "n": 2,
+    "orig": "GBR",
+    "s": "wiki_army",
+    "c": "ت",
+    "note": "6 GRIFO fire units ordered in 2022 (together with similar MAADS fire units for the Italian Air Force. The Italian Army's fire units are equi",
+    "gen": 2,
+    "cat": "short"
+   },
+   {
+    "m": "FIM-92 Stinger",
+    "n": 145,
+    "orig": "USA",
+    "s": "wiki_army",
+    "c": "ت",
+    "note": "In service since 1987. 145 launchers and about 675 missiles have been delivered. 17th Anti-aircraft Artillery Regiment \"Sforzesca\" 121st Ant",
+    "gen": 2,
+    "cat": "short"
+   }
+  ],
+  "msl": [],
+  "navy": [
+   {
+    "m": "Sauro class",
+    "n": 4,
+    "orig": "INT",
+    "s": "wiki_navy",
+    "c": "ت",
+    "note": "First two SSK in Class will be replaced by two U212 NFS starting in the latter 2020s and last two will be replaced by two NFS EVO in the 203",
+    "gen": 2,
+    "cat": "sub"
+   },
+   {
+    "m": "Todaro class Type 212A",
+    "n": 4,
+    "orig": "INT",
+    "s": "wiki_navy",
+    "c": "ت",
+    "note": "Italian family of Type 212A submarine",
+    "gen": 2,
+    "cat": "sub"
+   },
+   {
+    "m": "Cavour class",
+    "n": 1,
+    "orig": "INT",
+    "s": "wiki_navy",
+    "c": "ت",
+    "gen": 2,
+    "cat": "carrier"
+   },
+   {
+    "m": "Trieste class",
+    "n": 1,
+    "orig": "INT",
+    "s": "wiki_navy",
+    "c": "ت",
+    "note": "Successor of the Italian aircraft carrier Giuseppe Garibaldi.",
+    "gen": 2,
+    "cat": "carrier"
+   },
+   {
+    "m": "San Giorgio class",
+    "n": 3,
+    "orig": "INT",
+    "s": "wiki_navy",
+    "c": "ت",
+    "note": "This class will be replaced by a new class of 16,500-ton LPD planned for 2028-30.",
+    "gen": 2,
+    "cat": "amphib"
+   },
+   {
+    "m": "Orizzonte class",
+    "n": 2,
+    "orig": "INT",
+    "s": "wiki_navy",
+    "c": "ت",
+    "note": "MLU ongoing, and be ready by the end of 2027 / mid-2029.",
+    "gen": 2,
+    "cat": "destroyer"
+   },
+   {
+    "m": "Bergamini class",
+    "n": 4,
+    "orig": "INT",
+    "s": "wiki_navy",
+    "c": "ت",
+    "note": "10 FREMM are in service. 2 ships will be transferred to the Hellenic Navy: 2028, the Carlo Bergamini (F 590) 2029, the Virginio Fasan (F 591",
+    "gen": 2,
+    "cat": "frigate"
+   },
+   {
+    "m": "Thaon di Revel class",
+    "n": 2,
+    "orig": "INT",
+    "s": "wiki_navy",
+    "c": "ت",
+    "note": "The Italian Navy signed a contract with the OCCAR to get all of its seven PPA to the \"Full\" standard.",
+    "gen": 2,
+    "cat": "frigate"
+   },
+   {
+    "m": "Comandanti class",
+    "n": 4,
+    "orig": "INT",
+    "s": "wiki_navy",
+    "c": "ت",
+    "note": "Planned to be eventually replaced by the EPC / MMPC in the 2030.",
+    "gen": 2,
+    "cat": "patrol"
+   },
+   {
+    "m": "Sirio class",
+    "n": 2,
+    "orig": "INT",
+    "s": "wiki_navy",
+    "c": "ت",
+    "note": "To be replaced eventually with the PPX class [it].",
+    "gen": 2,
+    "cat": "patrol"
+   },
+   {
+    "m": "Cassiopea class",
+    "n": 3,
+    "orig": "INT",
+    "s": "wiki_navy",
+    "c": "ت",
+    "note": "To be replaced with the PPX class [it] from 2027. The retirement is planned for 2028 - 2030.",
+    "gen": 2,
+    "cat": "patrol"
+   },
+   {
+    "m": "Esploratore class",
+    "n": 4,
+    "orig": "INT",
+    "s": "wiki_navy",
+    "c": "ت",
+    "gen": 3,
+    "cat": "patrol"
+   },
+   {
+    "m": "Angelo Cabrini class",
+    "n": 2,
+    "orig": "INT",
+    "s": "wiki_navy",
+    "c": "ت",
+    "note": "Class also known as the UNPAV.",
+    "gen": 2,
+    "cat": "patrol"
+   },
+   {
+    "m": "Panarea class",
+    "n": 4,
+    "orig": "INT",
+    "s": "wiki_navy",
+    "c": "ت",
+    "note": "Transport capacity of 550 t (1,210,000 lb).",
+    "gen": 2,
+    "cat": "patrol"
+   },
+   {
+    "m": "Simeto class",
+    "n": 2,
+    "orig": "INT",
+    "s": "wiki_navy",
+    "c": "ت",
+    "gen": 2,
+    "cat": "patrol"
+   },
+   {
+    "m": "Gorgona class",
+    "n": 6,
+    "orig": "INT",
+    "s": "wiki_navy",
+    "c": "ت",
+    "note": "Ship with minelaying capability. To be replaced by the MTC-F class.",
+    "gen": 2,
+    "cat": "patrol"
+   },
+   {
+    "m": "Ponza class",
+    "n": 5,
+    "orig": "INT",
+    "s": "wiki_navy",
+    "c": "ت",
+    "note": "Ship with minelaying capability. To be replaced by the MTC-F class.",
+    "gen": 2,
+    "cat": "patrol"
+   },
+   {
+    "m": "GGS 1012 class",
+    "n": 13,
+    "orig": "INT",
+    "s": "wiki_navy",
+    "c": "ت",
+    "note": "GGS-1018 launched in December 2012. The GGS-1019 & GGS-2020 were launched by Cantiere Navale Tringali in 2001 and 2002.",
+    "gen": 2,
+    "cat": "patrol"
+   },
+   {
+    "m": "LCM62 class MTM C828",
+    "n": 9,
+    "orig": "INT",
+    "s": "wiki_navy",
+    "c": "ت",
+    "note": "Vessels used with the San Giorgio landing platform dock. Orders: 4 in 2007 1 in 2009 4 in 2010",
+    "gen": 2,
+    "cat": "amphib"
+   },
+   {
+    "m": "MTM217 class",
+    "n": 8,
+    "orig": "INT",
+    "s": "wiki_navy",
+    "c": "ت",
+    "note": "Vessels used with the San Giorgio landing platform dock.",
+    "gen": 2,
+    "cat": "amphib"
+   },
+   {
+    "m": "MTP96 class",
+    "n": 20,
+    "orig": "INT",
+    "s": "wiki_navy",
+    "c": "ت",
+    "note": "Vessels used with the San Giorgio landing platform dock.",
+    "gen": 2,
+    "cat": "amphib"
+   },
+   {
+    "m": "–",
+    "n": 1,
+    "orig": "INT",
+    "s": "wiki_navy",
+    "c": "ت",
+    "note": "Vessel operated by the Italian Navy from La Spezia, but owned by the CMRE (a NATO institute).",
+    "gen": 2,
+    "cat": "patrol"
+   },
+   {
+    "m": "Rossetti class",
+    "n": 2,
+    "orig": "INT",
+    "s": "wiki_navy",
+    "c": "ت",
+    "gen": 2,
+    "cat": "patrol"
+   }
+  ]
+ },
+ "ind": {
+  "tech": {
+   "arm": 3,
+   "air": 4,
+   "uav": 3,
+   "msl": 3,
+   "navy": 4,
+   "ew": 4,
+   "ind": 4
+  },
+  "makes": [
+   "مروحيات ليوناردو",
+   "فرقاطات FREMM",
+   "M-346"
+  ],
+  "s": "tierA",
+  "c": "ت"
+ },
+ "pol": {
+  "factions": [
+   "army",
+   "parties",
+   "street",
+   "biz"
+  ],
+  "stab": {
+   "v": 60,
+   "s": "tierA",
+   "c": "ت"
+  },
+  "warHome": []
+ },
+ "rel": {
+  "ALB": 40,
+  "AUT": 25,
+  "BEL": 65,
+  "BGR": 65,
+  "BLR": -25,
+  "CAN": 40,
+  "CYP": 25,
+  "CZE": 65,
+  "DEU": 65,
+  "DNK": 65,
+  "ESP": 65,
+  "EST": 65,
+  "FIN": 65,
+  "FRA": 65,
+  "GBR": 40,
+  "GRC": 65,
+  "HRV": 65,
+  "HUN": 65,
+  "IRL": 25,
+  "IRN": -40,
+  "LTU": 65,
+  "LVA": 65,
+  "MKD": 40,
+  "MMR": -25,
+  "NLD": 65,
+  "NOR": 40,
+  "POL": 65,
+  "PRK": -40,
+  "PRT": 65,
+  "ROU": 65,
+  "RUS": -40,
+  "SVK": 65,
+  "SVN": 65,
+  "SWE": 65,
+  "SYR": -10,
+  "TUR": 40,
+  "USA": 40
+ },
+ "treaties": [
+  "EU",
+  "NATO"
+ ],
+ "sanctions": [],
+ "conflicts": [],
+ "notes": ""
+}

@@ -1,0 +1,337 @@
+{
+ "id": "AUS",
+ "ar": "أستراليا",
+ "en": "Australia",
+ "tier": "A",
+ "asOf": "2026-11",
+ "src": {
+  "wiki_army": {
+   "t": "Wikipedia: List of equipment of the Australian Army",
+   "u": "https://en.wikipedia.org/wiki/List_of_equipment_of_the_Australian_Army?oldid=1385600249",
+   "y": 2026,
+   "note": "نسخة الصفحة بتاريخ السحب؛ أرقام ويكيبيديا تنراجع ويا مصادر ثانية"
+  },
+  "wiki_navy": {
+   "t": "Wikipedia: List of active Royal Australian Navy ships",
+   "u": "https://en.wikipedia.org/wiki/List_of_active_Royal_Australian_Navy_ships?oldid=1385814116",
+   "y": 2026,
+   "note": "نسخة الصفحة بتاريخ السحب؛ أرقام ويكيبيديا تنراجع ويا مصادر ثانية"
+  },
+  "iiss_eq": {
+   "t": "Wikipedia: List of countries by level of military equipment (من IISS Military Balance ومصادر ثانية)",
+   "u": "https://en.wikipedia.org/wiki/List_of_countries_by_level_of_military_equipment?oldid=1384804191",
+   "y": 2025
+  },
+  "iiss_pers": {
+   "t": "Wikipedia: List of countries by number of military and paramilitary personnel (جدول IISS Military Balance)",
+   "u": "https://en.wikipedia.org/wiki/List_of_countries_by_number_of_military_and_paramilitary_personnel?oldid=1380910017",
+   "y": 2025
+  },
+  "wb": {
+   "t": "World Bank WDI (SP.POP.TOTL, NY.GDP.MKTP.CD, NY.GDP.MKTP.KD.ZG, MS.MIL.XPND.CD/GD.ZS ← SIPRI, MS.MIL.TOTL.P1, FP.CPI.TOTL.ZG)",
+   "u": "https://api.worldbank.org/v2/",
+   "y": 2026
+  },
+  "govt": {
+   "t": "تصنيف نظام الحكم: دساتير الدول + CIA World Factbook «Government type» + V-Dem/Freedom House لدرجة الحرية (تصنيف المصمم 2026)",
+   "u": "https://www.cia.gov/the-world-factbook/field/government-type/",
+   "y": 2026
+  },
+  "leaders": {
+   "t": "Wikipedia: List of current heads of state and government",
+   "u": "https://en.wikipedia.org/wiki/List_of_current_heads_of_state_and_government?oldid=1386623862",
+   "y": 2026,
+   "note": "سحب نوفمبر 2026"
+  },
+  "rules": {
+   "t": "قواعد من blocs.json وconflicts.json وsanctions.json (تكتل دفاعي +40، معاهدة +50، حرب −90، عقوبات ثقيلة −40...)",
+   "u": "data/world/",
+   "y": 2026
+  },
+  "relk": {
+   "t": "تقدير المصمم للعلاقات الثنائية المعروفة (تشرين الثاني 2026): حروب، نزاعات حدودية، تحالفات غير رسمية، تطبيع، عداء تاريخي",
+   "u": "https://en.wikipedia.org/wiki/Foreign_relations_by_country",
+   "y": 2026
+  },
+  "tierA": {
+   "t": "تقدير المصمم (تشرين الثاني 2026) لصناعة السلاح والاستقرار: SIPRI Arms Transfers Database (أكبر المصدّرين 2020–24)، SIPRI Top 100 Arms-Producing Companies، Fragile States Index 2025، أخبار 2026",
+   "u": "https://www.sipri.org/databases/armstransfers",
+   "y": 2026
+  }
+ },
+ "gov": {
+  "type": "cmon",
+  "ar": "ملكية دستورية",
+  "free": 2,
+  "hos": {
+   "role": "King",
+   "name": "Charles III"
+  },
+  "hog": {
+   "role": "Prime Minister",
+   "name": "Anthony Albanese"
+  },
+  "s": "govt,leaders",
+  "c": "ح"
+ },
+ "pop": {
+  "v": 27614411,
+  "y": 2025,
+  "s": "wb",
+  "c": "ح"
+ },
+ "eco": {
+  "gdpBusd": {
+   "v": 1798.5,
+   "y": 2025,
+   "s": "wb",
+   "c": "ح"
+  },
+  "growth": {
+   "v": 1.4,
+   "y": 2025,
+   "s": "wb",
+   "c": "ح"
+  },
+  "infl": {
+   "v": 2.9,
+   "y": 2025,
+   "s": "wb",
+   "c": "ح"
+  },
+  "oilRentPct": {
+   "v": 0.3,
+   "y": 2021,
+   "s": "wb",
+   "c": "ح"
+  }
+ },
+ "mil": {
+  "budgetBusd": {
+   "v": 35.33,
+   "y": 2025,
+   "s": "wb",
+   "c": "ح"
+  },
+  "budgetPctGdp": {
+   "v": 1.92,
+   "y": 2025,
+   "s": "wb",
+   "c": "ح"
+  },
+  "personnelWB": {
+   "v": 60000,
+   "y": 2020,
+   "s": "wb",
+   "c": "ح"
+  },
+  "sum": {
+   "tanks": {
+    "v": 59,
+    "s": "iiss_eq",
+    "c": "ت"
+   },
+   "carriers": {
+    "v": 0,
+    "s": "iiss_eq",
+    "c": "ت"
+   },
+   "amphib": {
+    "v": 3,
+    "s": "iiss_eq",
+    "c": "ت"
+   },
+   "cruisers": {
+    "v": 0,
+    "s": "iiss_eq",
+    "c": "ت"
+   },
+   "destroyers": {
+    "v": 3,
+    "s": "iiss_eq",
+    "c": "ت"
+   },
+   "frigates": {
+    "v": 7,
+    "s": "iiss_eq",
+    "c": "ت"
+   },
+   "corvettes": {
+    "v": 0,
+    "s": "iiss_eq",
+    "c": "ت"
+   },
+   "subNuc": {
+    "v": 0,
+    "s": "iiss_eq",
+    "c": "ت"
+   },
+   "subs": {
+    "v": 6,
+    "s": "iiss_eq",
+    "c": "ت"
+   },
+   "combatAir": {
+    "v": 84,
+    "s": "iiss_eq",
+    "c": "ت"
+   },
+   "attackHeli": {
+    "v": 45,
+    "s": "iiss_eq",
+    "c": "ت"
+   },
+   "sats": {
+    "v": 1,
+    "s": "iiss_eq",
+    "c": "ت"
+   },
+   "active": {
+    "v": 58540,
+    "s": "iiss_pers",
+    "c": "ت"
+   },
+   "reserve": {
+    "v": 21450,
+    "s": "iiss_pers",
+    "c": "ت"
+   },
+   "para": {
+    "v": 0,
+    "s": "iiss_pers",
+    "c": "ت"
+   }
+  },
+  "land": [
+   {
+    "m": "ASLAV",
+    "n": 257,
+    "orig": "CAN",
+    "s": "wiki_army",
+    "c": "ت",
+    "note": "Under LAND 400 Phase 2 the ASLAV is slated to be replaced by a new Armoured Reconnaissance Vehicle (ARV), the Boxer.",
+    "gen": 2,
+    "cat": "apc"
+   },
+   {
+    "m": "M113",
+    "n": 431,
+    "orig": "USA",
+    "s": "wiki_army",
+    "c": "ت",
+    "note": "The Army has two upgraded M113 versions the M113AS3 and the lengthened M113AS4 in seven variants. The Army had operated 431 upgraded M113s. ",
+    "gen": 2,
+    "cat": "apc"
+   },
+   {
+    "m": "M777 howitzer",
+    "n": 48,
+    "orig": "GBR",
+    "s": "wiki_army",
+    "c": "ت",
+    "note": "35 155mm M777A2s were ordered as part of the first phase of the Land 17 project to replace the Army's inventory of towed artillery, with ini",
+    "gen": 2,
+    "cat": "towed"
+   }
+  ],
+  "air": [
+   {
+    "m": "AgustaWestland AW139",
+    "n": 1,
+    "orig": "ITA",
+    "s": "wiki_army",
+    "c": "ت",
+    "note": "The Army operates 1 AW139 leased from Toll as a Crash Response Helicopter based in Darwin for the 1st Aviation Regiment.",
+    "gen": 2,
+    "cat": "heli_util"
+   },
+   {
+    "m": "Bell B412EP",
+    "n": 2,
+    "orig": "USA",
+    "s": "wiki_army",
+    "c": "ت",
+    "note": "2 under lease from Toll as Crash Response Helicopters based at the Army Aviation Training Center.",
+    "gen": 2,
+    "cat": "heli_util"
+   },
+   {
+    "m": "Boeing CH-47F Chinook",
+    "n": 14,
+    "orig": "USA",
+    "s": "wiki_army",
+    "c": "ت",
+    "note": "The Chinook can be armed with the 7.62×51mm FN MAG 58 general-purpose machine gun and the 7.62×51mm M134D Minigun. In 2015, seven new CH-47F",
+    "gen": 3,
+    "cat": "heli_util"
+   },
+   {
+    "m": "Eurocopter EC135",
+    "n": 15,
+    "orig": "FRA",
+    "s": "wiki_army",
+    "c": "ت",
+    "note": "The Helicopter Aircrew Training System (HATS) of the Joint Helicopter School within the Navy's 723 Squadron at HMAS Albatross operates 15 EC",
+    "gen": 2,
+    "cat": "heli_util"
+   }
+  ],
+  "ad": [
+   {
+    "m": "NASAMS-3",
+    "n": 7,
+    "orig": "NOR",
+    "s": "wiki_army",
+    "c": "ت",
+    "note": "The 16th Regiment will operate two enhanced National Advanced Surface to Air Missile System (NASAMS) batteries by the end of 2026. Each batt",
+    "gen": 2,
+    "cat": "medium"
+   }
+  ],
+  "msl": [],
+  "navy": []
+ },
+ "ind": {
+  "tech": {
+   "arm": 2,
+   "air": 2,
+   "uav": 3,
+   "msl": 2,
+   "navy": 3,
+   "ew": 4,
+   "ind": 4
+  },
+  "makes": [
+   "MQ-28 غوست بات",
+   "بوكسر (تجميع)",
+   "فرقاطات"
+  ],
+  "s": "tierA",
+  "c": "ت"
+ },
+ "pol": {
+  "factions": [
+   "army",
+   "parties",
+   "street",
+   "biz"
+  ],
+  "stab": {
+   "v": 74,
+   "s": "tierA",
+   "c": "ت"
+  },
+  "warHome": []
+ },
+ "rel": {
+  "CHN": -15,
+  "RUS": -40,
+  "USA": 80
+ },
+ "treaties": [
+  "PACT_USA"
+ ],
+ "sanctions": [],
+ "conflicts": [],
+ "notes": ""
+}

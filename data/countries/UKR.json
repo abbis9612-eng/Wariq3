@@ -1,0 +1,1171 @@
+{
+ "id": "UKR",
+ "ar": "أوكرانيا",
+ "en": "Ukraine",
+ "tier": "A",
+ "asOf": "2026-11",
+ "src": {
+  "wiki_air": {
+   "t": "Wikipedia: Ukrainian Air Force",
+   "u": "https://en.wikipedia.org/wiki/Ukrainian_Air_Force?oldid=1386254190",
+   "y": 2026,
+   "note": "نسخة الصفحة بتاريخ السحب؛ أرقام ويكيبيديا تنراجع ويا مصادر ثانية"
+  },
+  "wiki_army": {
+   "t": "Wikipedia: List of equipment of the Armed Forces of Ukraine",
+   "u": "https://en.wikipedia.org/wiki/List_of_equipment_of_the_Armed_Forces_of_Ukraine?oldid=1382992264",
+   "y": 2026,
+   "note": "نسخة الصفحة بتاريخ السحب؛ أرقام ويكيبيديا تنراجع ويا مصادر ثانية"
+  },
+  "wiki_navy": {
+   "t": "Wikipedia: Ukrainian Navy",
+   "u": "https://en.wikipedia.org/wiki/Ukrainian_Navy?oldid=1384041721",
+   "y": 2026,
+   "note": "نسخة الصفحة بتاريخ السحب؛ أرقام ويكيبيديا تنراجع ويا مصادر ثانية"
+  },
+  "iiss_eq": {
+   "t": "Wikipedia: List of countries by level of military equipment (من IISS Military Balance ومصادر ثانية)",
+   "u": "https://en.wikipedia.org/wiki/List_of_countries_by_level_of_military_equipment?oldid=1384804191",
+   "y": 2025
+  },
+  "iiss_pers": {
+   "t": "Wikipedia: List of countries by number of military and paramilitary personnel (جدول IISS Military Balance)",
+   "u": "https://en.wikipedia.org/wiki/List_of_countries_by_number_of_military_and_paramilitary_personnel?oldid=1380910017",
+   "y": 2025
+  },
+  "wb": {
+   "t": "World Bank WDI (SP.POP.TOTL, NY.GDP.MKTP.CD, NY.GDP.MKTP.KD.ZG, MS.MIL.XPND.CD/GD.ZS ← SIPRI, MS.MIL.TOTL.P1, FP.CPI.TOTL.ZG)",
+   "u": "https://api.worldbank.org/v2/",
+   "y": 2026
+  },
+  "govt": {
+   "t": "تصنيف نظام الحكم: دساتير الدول + CIA World Factbook «Government type» + V-Dem/Freedom House لدرجة الحرية (تصنيف المصمم 2026)",
+   "u": "https://www.cia.gov/the-world-factbook/field/government-type/",
+   "y": 2026
+  },
+  "leaders": {
+   "t": "Wikipedia: List of current heads of state and government",
+   "u": "https://en.wikipedia.org/wiki/List_of_current_heads_of_state_and_government?oldid=1386623862",
+   "y": 2026,
+   "note": "سحب نوفمبر 2026"
+  },
+  "rules": {
+   "t": "قواعد من blocs.json وconflicts.json وsanctions.json (تكتل دفاعي +40، معاهدة +50، حرب −90، عقوبات ثقيلة −40...)",
+   "u": "data/world/",
+   "y": 2026
+  },
+  "relk": {
+   "t": "تقدير المصمم للعلاقات الثنائية المعروفة (تشرين الثاني 2026): حروب، نزاعات حدودية، تحالفات غير رسمية، تطبيع، عداء تاريخي",
+   "u": "https://en.wikipedia.org/wiki/Foreign_relations_by_country",
+   "y": 2026
+  },
+  "tierA": {
+   "t": "تقدير المصمم (تشرين الثاني 2026) لصناعة السلاح والاستقرار: SIPRI Arms Transfers Database (أكبر المصدّرين 2020–24)، SIPRI Top 100 Arms-Producing Companies، Fragile States Index 2025، أخبار 2026",
+   "u": "https://www.sipri.org/databases/armstransfers",
+   "y": 2026
+  }
+ },
+ "gov": {
+  "type": "semi",
+  "ar": "شبه رئاسي",
+  "free": 1,
+  "hos": {
+   "role": "President",
+   "name": "Volodymyr Zelenskyy"
+  },
+  "hog": {
+   "role": "Prime Minister",
+   "name": "Serhii Koretskyi"
+  },
+  "s": "govt,leaders",
+  "c": "ح"
+ },
+ "pop": {
+  "v": 38980376,
+  "y": 2025,
+  "s": "wb",
+  "c": "ح"
+ },
+ "eco": {
+  "gdpBusd": {
+   "v": 214.2,
+   "y": 2025,
+   "s": "wb",
+   "c": "ح"
+  },
+  "growth": {
+   "v": 1.8,
+   "y": 2025,
+   "s": "wb",
+   "c": "ح"
+  },
+  "infl": {
+   "v": 12.7,
+   "y": 2025,
+   "s": "wb",
+   "c": "ح"
+  },
+  "oilRentPct": {
+   "v": 0.3,
+   "y": 2021,
+   "s": "wb",
+   "c": "ح"
+  }
+ },
+ "mil": {
+  "budgetBusd": {
+   "v": 84.11,
+   "y": 2025,
+   "s": "wb",
+   "c": "ح"
+  },
+  "budgetPctGdp": {
+   "v": 39.56,
+   "y": 2025,
+   "s": "wb",
+   "c": "ح"
+  },
+  "personnelWB": {
+   "v": 298000,
+   "y": 2020,
+   "s": "wb",
+   "c": "ح"
+  },
+  "sum": {
+   "tanks": {
+    "v": 1121,
+    "s": "iiss_eq",
+    "c": "ت"
+   },
+   "carriers": {
+    "v": 0,
+    "s": "iiss_eq",
+    "c": "ت"
+   },
+   "amphib": {
+    "v": 1,
+    "s": "iiss_eq",
+    "c": "ت"
+   },
+   "cruisers": {
+    "v": 0,
+    "s": "iiss_eq",
+    "c": "ت"
+   },
+   "destroyers": {
+    "v": 0,
+    "s": "iiss_eq",
+    "c": "ت"
+   },
+   "frigates": {
+    "v": 1,
+    "s": "iiss_eq",
+    "c": "ت"
+   },
+   "corvettes": {
+    "v": 1,
+    "s": "iiss_eq",
+    "c": "ت"
+   },
+   "subNuc": {
+    "v": 0,
+    "s": "iiss_eq",
+    "c": "ت"
+   },
+   "subs": {
+    "v": 0,
+    "s": "iiss_eq",
+    "c": "ت"
+   },
+   "combatAir": {
+    "v": 111,
+    "s": "iiss_eq",
+    "c": "ت"
+   },
+   "attackHeli": {
+    "v": 35,
+    "s": "iiss_eq",
+    "c": "ت"
+   },
+   "sats": {
+    "v": 0,
+    "s": "iiss_eq",
+    "c": "ت"
+   },
+   "active": {
+    "v": 677000,
+    "s": "iiss_pers",
+    "c": "ت"
+   },
+   "reserve": {
+    "v": 0,
+    "s": "iiss_pers",
+    "c": "ت"
+   },
+   "para": {
+    "v": 260000,
+    "s": "iiss_pers",
+    "c": "ت"
+   }
+  },
+  "land": [
+   {
+    "m": "T-55 (M-55S)",
+    "n": 26,
+    "orig": "SUN",
+    "s": "wiki_army",
+    "c": "ت",
+    "gen": 1,
+    "cat": "tank"
+   },
+   {
+    "m": "T-64 (T-64BV T-64BV mod. 2017 T-64BM \"Bulat\" T-64BM2 \"Bulat\")",
+    "n": 200,
+    "orig": "SUN",
+    "s": "wiki_army",
+    "c": "ت",
+    "gen": 2,
+    "cat": "tank"
+   },
+   {
+    "m": "T-72 (T-72AMT T-72AV T-72AV mod. 2021 T-72B1 T-72B3 T-72EA T-72M1 T-72M1R)",
+    "n": 520,
+    "orig": "SUN",
+    "s": "wiki_army",
+    "c": "ت",
+    "gen": 3,
+    "cat": "tank"
+   },
+   {
+    "m": "T-80 (T-80BV T-80BV mod T-80BVM T-80U T-80UK)",
+    "n": 80,
+    "orig": "SUN",
+    "s": "wiki_army",
+    "c": "ت",
+    "gen": 3,
+    "cat": "tank"
+   },
+   {
+    "m": "M-84 (M-84A4)",
+    "n": 30,
+    "orig": "YUG",
+    "s": "wiki_army",
+    "c": "ت",
+    "gen": 2,
+    "cat": "tank"
+   },
+   {
+    "m": "T-84 Oplot",
+    "n": 5,
+    "orig": "UKR",
+    "s": "wiki_army",
+    "c": "ت",
+    "gen": 2,
+    "cat": "tank"
+   },
+   {
+    "m": "PT-91 Twardy",
+    "n": 26,
+    "orig": "POL",
+    "s": "wiki_army",
+    "c": "ت",
+    "gen": 2,
+    "cat": "tank"
+   },
+   {
+    "m": "Leopard 1 (Leopard 1A5 Leopard 1A5BE)",
+    "n": 103,
+    "orig": "DEU",
+    "s": "wiki_army",
+    "c": "ت",
+    "gen": 2,
+    "cat": "tank"
+   },
+   {
+    "m": "Leopard 2 (Leopard 2A4Leopard 2A6Strv 122)",
+    "n": 60,
+    "orig": "DEU",
+    "s": "wiki_army",
+    "c": "ت",
+    "gen": 4,
+    "cat": "tank"
+   },
+   {
+    "m": "Challenger 2",
+    "n": 13,
+    "orig": "GBR",
+    "s": "wiki_army",
+    "c": "ت",
+    "gen": 3,
+    "cat": "tank"
+   },
+   {
+    "m": "M1 Abrams (M1A1SA M1A1 AIM)",
+    "n": 22,
+    "orig": "USA",
+    "s": "wiki_army",
+    "c": "ت",
+    "gen": 3,
+    "cat": "tank"
+   },
+   {
+    "m": "9P148 (9P148 Konkurs 9P148 Amulet)",
+    "n": 4,
+    "orig": "SUN",
+    "s": "wiki_army",
+    "c": "ت",
+    "gen": 2,
+    "cat": "atgm"
+   },
+   {
+    "m": "AMX-10 RC (AMX-10 RCR)",
+    "n": 35,
+    "orig": "FRA",
+    "s": "wiki_army",
+    "c": "ت",
+    "gen": 2,
+    "cat": "atgm"
+   },
+   {
+    "m": "BRM-1(K)",
+    "n": 50,
+    "orig": "SUN",
+    "s": "wiki_army",
+    "c": "ت",
+    "gen": 2,
+    "cat": "apc"
+   },
+   {
+    "m": "FV107 Scimitar (Scimitar Mk 2)",
+    "n": 23,
+    "orig": "GBR",
+    "s": "wiki_army",
+    "c": "ت",
+    "gen": 2,
+    "cat": "apc"
+   },
+   {
+    "m": "BRDM-2 (BRDM-2 BRDM-2L1 BRDM-2T)",
+    "n": 120,
+    "orig": "SUN",
+    "s": "wiki_army",
+    "c": "ت",
+    "gen": 2,
+    "cat": "apc"
+   },
+   {
+    "m": "Fennek",
+    "n": 8,
+    "orig": "DEU",
+    "s": "wiki_army",
+    "c": "ت",
+    "gen": 2,
+    "cat": "apc"
+   },
+   {
+    "m": "Ferret (Ferret Mk 1)",
+    "n": 1,
+    "orig": "GBR",
+    "s": "wiki_army",
+    "c": "ت",
+    "gen": 2,
+    "cat": "apc"
+   },
+   {
+    "m": "BMP-1 (BMP-1 BMP-1AK BMP-1TS BMP-1U BVP-1 BWP-1)",
+    "n": 400,
+    "orig": "SUN",
+    "s": "wiki_army",
+    "c": "ت",
+    "gen": 2,
+    "cat": "ifv"
+   },
+   {
+    "m": "BMP-2",
+    "n": 400,
+    "orig": "SUN",
+    "s": "wiki_army",
+    "c": "ت",
+    "gen": 3,
+    "cat": "ifv"
+   },
+   {
+    "m": "PbV-501 (PbV-501A)",
+    "n": 54,
+    "orig": "CZE",
+    "s": "wiki_army",
+    "c": "ت",
+    "gen": 2,
+    "cat": "ifv"
+   },
+   {
+    "m": "BMP-3",
+    "n": 40,
+    "orig": "SUN",
+    "s": "wiki_army",
+    "c": "ت",
+    "gen": 4,
+    "cat": "ifv"
+   },
+   {
+    "m": "YPR-765",
+    "n": 353,
+    "orig": "USA",
+    "s": "wiki_army",
+    "c": "ت",
+    "gen": 2,
+    "cat": "ifv"
+   },
+   {
+    "m": "BVP M-80 (BVP M-80A)",
+    "n": 28,
+    "orig": "YUG",
+    "s": "wiki_army",
+    "c": "ت",
+    "gen": 2,
+    "cat": "ifv"
+   },
+   {
+    "m": "Marder",
+    "n": 140,
+    "orig": "DEU",
+    "s": "wiki_army",
+    "c": "ت",
+    "gen": 3,
+    "cat": "ifv"
+   },
+   {
+    "m": "Bradley (M2A2 ODS M7 Bradley FiST)",
+    "n": 300,
+    "orig": "USA",
+    "s": "wiki_army",
+    "c": "ت",
+    "gen": 2,
+    "cat": "ifv"
+   },
+   {
+    "m": "CV90 (CV9040)",
+    "n": 48,
+    "orig": "SWE",
+    "s": "wiki_army",
+    "c": "ت",
+    "gen": 4,
+    "cat": "ifv"
+   },
+   {
+    "m": "Pansarbandvagn 302",
+    "n": 200,
+    "orig": "SWE",
+    "s": "wiki_army",
+    "c": "ت",
+    "gen": 2,
+    "cat": "ifv"
+   },
+   {
+    "m": "BTR-80 (Captured: BTR-82A BTR-82AM)",
+    "n": 75,
+    "orig": "RUS",
+    "s": "wiki_army",
+    "c": "ت",
+    "gen": 3,
+    "cat": "ifv"
+   },
+   {
+    "m": "KTO Rosomak",
+    "n": 90,
+    "orig": "POL",
+    "s": "wiki_army",
+    "c": "ت",
+    "gen": 2,
+    "cat": "ifv"
+   },
+   {
+    "m": "MT-LB (MT-LB MT-LBu MT-LBVM MT-LBVMK)",
+    "n": 125,
+    "orig": "SUN",
+    "s": "wiki_army",
+    "c": "ت",
+    "gen": 2,
+    "cat": "apc"
+   },
+   {
+    "m": "BTR-D",
+    "n": 40,
+    "orig": "SUN",
+    "s": "wiki_army",
+    "c": "ت",
+    "gen": 2,
+    "cat": "apc"
+   },
+   {
+    "m": "M113 (M113A1 M113AS4 M113G3DK M113G4DK)",
+    "n": 510,
+    "orig": "USA",
+    "s": "wiki_army",
+    "c": "ت",
+    "gen": 2,
+    "cat": "apc"
+   },
+   {
+    "m": "FV103 Spartan",
+    "n": 30,
+    "orig": "GBR",
+    "s": "wiki_army",
+    "c": "ت",
+    "gen": 2,
+    "cat": "apc"
+   },
+   {
+    "m": "Bandvagn (Bandvagn BvS 10 Bandvagn BV-206S')",
+    "n": 92,
+    "orig": "SWE",
+    "s": "wiki_army",
+    "c": "ت",
+    "gen": 2,
+    "cat": "apc"
+   },
+   {
+    "m": "BTR-60 (BTR-60PB BTR-60МTAB-71M)",
+    "n": 620,
+    "orig": "SUN",
+    "s": "wiki_army",
+    "c": "ت",
+    "gen": 2,
+    "cat": "apc"
+   },
+   {
+    "m": "BTR-70 (BTR-70 BTR-70M BTR-7)",
+    "n": 217,
+    "orig": "SUN",
+    "s": "wiki_army",
+    "c": "ت",
+    "gen": 2,
+    "cat": "apc"
+   },
+   {
+    "m": "BTR-80 (BTR-80 BTR-80M)",
+    "n": 224,
+    "orig": "SUN",
+    "s": "wiki_army",
+    "c": "ت",
+    "gen": 3,
+    "cat": "apc"
+   },
+   {
+    "m": "VAB",
+    "n": 250,
+    "orig": "FRA",
+    "s": "wiki_army",
+    "c": "ت",
+    "gen": 2,
+    "cat": "apc"
+   },
+   {
+    "m": "Patria Pasi (Sisu XA-185)",
+    "n": 36,
+    "orig": "FIN",
+    "s": "wiki_army",
+    "c": "ت",
+    "gen": 2,
+    "cat": "apc"
+   },
+   {
+    "m": "LAV 6 (ACSV)",
+    "n": 39,
+    "orig": "CAN",
+    "s": "wiki_army",
+    "c": "ت",
+    "gen": 2,
+    "cat": "apc"
+   },
+   {
+    "m": "Stryker",
+    "n": 400,
+    "orig": "USA",
+    "s": "wiki_army",
+    "c": "ت",
+    "gen": 2,
+    "cat": "apc"
+   },
+   {
+    "m": "M1117",
+    "n": 400,
+    "orig": "USA",
+    "s": "wiki_army",
+    "c": "ت",
+    "gen": 2,
+    "cat": "apc"
+   },
+   {
+    "m": "OT-64 SKOT",
+    "n": 1,
+    "orig": "POL",
+    "s": "wiki_army",
+    "c": "ت",
+    "gen": 2,
+    "cat": "apc"
+   },
+   {
+    "m": "Valuk",
+    "n": 20,
+    "orig": "SVN",
+    "s": "wiki_army",
+    "c": "ت",
+    "gen": 2,
+    "cat": "apc"
+   },
+   {
+    "m": "BOV",
+    "n": 26,
+    "orig": "YUG",
+    "s": "wiki_army",
+    "c": "ت",
+    "gen": 2,
+    "cat": "apc"
+   },
+   {
+    "m": "Varta",
+    "n": 80,
+    "orig": "UKR",
+    "s": "wiki_army",
+    "c": "ت",
+    "gen": 2,
+    "cat": "apc"
+   },
+   {
+    "m": "KrAZ Cobra",
+    "n": 10,
+    "orig": "UKR",
+    "s": "wiki_army",
+    "c": "ت",
+    "gen": 2,
+    "cat": "apc"
+   },
+   {
+    "m": "Bogdan Bars-8",
+    "n": 90,
+    "orig": "UKR",
+    "s": "wiki_army",
+    "c": "ت",
+    "gen": 2,
+    "cat": "apc"
+   },
+   {
+    "m": "Novator",
+    "n": 40,
+    "orig": "UKR",
+    "s": "wiki_army",
+    "c": "ت",
+    "gen": 3,
+    "cat": "apc"
+   },
+   {
+    "m": "Ovid (GAZ-66)",
+    "n": 1,
+    "orig": "SUN",
+    "s": "wiki_army",
+    "c": "ت",
+    "gen": 2,
+    "cat": "apc"
+   },
+   {
+    "m": "Dozor-B (Dozor-B Oncilla)",
+    "n": 100,
+    "orig": "UKR",
+    "s": "wiki_army",
+    "c": "ت",
+    "gen": 2,
+    "cat": "apc"
+   },
+   {
+    "m": "Bushmaster",
+    "n": 75,
+    "orig": "AUS",
+    "s": "wiki_army",
+    "c": "ت",
+    "gen": 2,
+    "cat": "apc"
+   },
+   {
+    "m": "Roshel Senator",
+    "n": 1000,
+    "orig": "CAN",
+    "s": "wiki_army",
+    "c": "ت",
+    "gen": 3,
+    "cat": "apc"
+   },
+   {
+    "m": "Iveco VM 90P (40.12 WM/PVM 90P)",
+    "n": 445,
+    "orig": "ITA",
+    "s": "wiki_army",
+    "c": "ت",
+    "gen": 2,
+    "cat": "apc"
+   },
+   {
+    "m": "Snatch Land Rover",
+    "n": 7,
+    "orig": "GBR",
+    "s": "wiki_army",
+    "c": "ت",
+    "gen": 2,
+    "cat": "apc"
+   },
+   {
+    "m": "Cougar (Mastiff Wolfhound)",
+    "n": 97,
+    "orig": "ZAF",
+    "s": "wiki_army",
+    "c": "ت",
+    "gen": 2,
+    "cat": "mrap"
+   },
+   {
+    "m": "International M1224 MaxxPro (Unknown)",
+    "n": 440,
+    "orig": "USA",
+    "s": "wiki_army",
+    "c": "ت",
+    "gen": 2,
+    "cat": "mrap"
+   },
+   {
+    "m": "Husky TSV (International MXT-MV based)",
+    "n": 20,
+    "orig": "USA",
+    "s": "wiki_army",
+    "c": "ت",
+    "gen": 2,
+    "cat": "mrap"
+   },
+   {
+    "m": "Light Tactical Vehicles (Unknown)",
+    "n": 200,
+    "orig": "USA",
+    "s": "wiki_army",
+    "c": "ت",
+    "gen": 2,
+    "cat": "apc"
+   },
+   {
+    "m": "Oshkosh M-ATV (Unknown)",
+    "n": 200,
+    "orig": "USA",
+    "s": "wiki_army",
+    "c": "ت",
+    "gen": 2,
+    "cat": "apc"
+   },
+   {
+    "m": "Humvee (Unknown)",
+    "n": 5000,
+    "orig": "USA",
+    "s": "wiki_army",
+    "c": "ت",
+    "gen": 2,
+    "cat": "apc"
+   },
+   {
+    "m": "LC-79 APC-SH Fighter-2",
+    "n": 11,
+    "orig": "USA",
+    "s": "wiki_army",
+    "c": "ت",
+    "gen": 2,
+    "cat": "apc"
+   },
+   {
+    "m": "GAZ-2975 Tigr (Tigr Tigr-M)",
+    "n": 7,
+    "orig": "RUS",
+    "s": "wiki_army",
+    "c": "ت",
+    "gen": 2,
+    "cat": "apc"
+   },
+   {
+    "m": "Linza (KamAZ-53949-Linza)",
+    "n": 1,
+    "orig": "RUS",
+    "s": "wiki_army",
+    "c": "ت",
+    "gen": 2,
+    "cat": "apc"
+   },
+   {
+    "m": "MLS Shield",
+    "n": 11,
+    "orig": "ITA",
+    "s": "wiki_army",
+    "c": "ت",
+    "gen": 2,
+    "cat": "apc"
+   },
+   {
+    "m": "BMC Kirpi",
+    "n": 170,
+    "orig": "TUR",
+    "s": "wiki_army",
+    "c": "ت",
+    "gen": 2,
+    "cat": "mrap"
+   },
+   {
+    "m": "ATF Dingo (Dingo 2)",
+    "n": 43,
+    "orig": "DEU",
+    "s": "wiki_army",
+    "c": "ت",
+    "gen": 2,
+    "cat": "mrap"
+   },
+   {
+    "m": "BPM-97",
+    "n": 3,
+    "orig": "RUS",
+    "s": "wiki_army",
+    "c": "ت",
+    "gen": 2,
+    "cat": "mrap"
+   },
+   {
+    "m": "KamAZ-63968 Typhoon-K",
+    "n": 1,
+    "orig": "RUS",
+    "s": "wiki_army",
+    "c": "ت",
+    "gen": 4,
+    "cat": "mrap"
+   },
+   {
+    "m": "VPK-Ural",
+    "n": 1,
+    "orig": "RUS",
+    "s": "wiki_army",
+    "c": "ت",
+    "gen": 2,
+    "cat": "apc"
+   },
+   {
+    "m": "GAZ-3937 'Vodnik'",
+    "n": 1,
+    "orig": "RUS",
+    "s": "wiki_army",
+    "c": "ت",
+    "gen": 2,
+    "cat": "apc"
+   },
+   {
+    "m": "Mowag Eagle (Mowag Eagle I)",
+    "n": 11,
+    "orig": "CHE",
+    "s": "wiki_army",
+    "c": "ت",
+    "gen": 2,
+    "cat": "apc"
+   },
+   {
+    "m": "HMT Exteda (MK2)",
+    "n": 14,
+    "orig": "GBR",
+    "s": "wiki_army",
+    "c": "ت",
+    "gen": 4,
+    "cat": "apc"
+   },
+   {
+    "m": "T-12 (MT-12 Rapira)",
+    "n": 200,
+    "orig": "SUN",
+    "s": "wiki_army",
+    "c": "ت",
+    "gen": 2,
+    "cat": "atgm"
+   },
+   {
+    "m": "RG-31 Nyala (Ambulance)",
+    "n": 1,
+    "orig": "ZAF",
+    "s": "wiki_army",
+    "c": "ت",
+    "gen": 2,
+    "cat": "apc"
+   },
+   {
+    "m": "Terradyne Gurkha",
+    "n": 13,
+    "orig": "CAN",
+    "s": "wiki_army",
+    "c": "ت",
+    "gen": 2,
+    "cat": "apc"
+   },
+   {
+    "m": "Alvis Tactica (Ambulance)",
+    "n": 1,
+    "orig": "GBR",
+    "s": "wiki_army",
+    "c": "ت",
+    "gen": 2,
+    "cat": "apc"
+   }
+  ],
+  "air": [
+   {
+    "m": "General Dynamics F-16 (A/AM)",
+    "n": 39,
+    "orig": "USA",
+    "s": "wiki_air",
+    "c": "ت",
+    "note": "About 85 to be delivered.",
+    "gen": 3,
+    "cat": "fighter"
+   },
+   {
+    "m": "Mikoyan MiG-29 (S/M1/M2/UB/G/AS)",
+    "n": 45,
+    "orig": "SUN",
+    "s": "wiki_air",
+    "c": "ت",
+    "note": "9 are used for conversion training.",
+    "gen": 3,
+    "cat": "fighter"
+   },
+   {
+    "m": "Sukhoi Su-24 (M/MR)",
+    "n": 13,
+    "orig": "SUN",
+    "s": "wiki_air",
+    "c": "ت",
+    "note": "Modified to fire Storm Shadow missiles.",
+    "gen": 3,
+    "cat": "attack"
+   },
+   {
+    "m": "Sukhoi Su-25 (M1/M1K/UB/UBM1/UBM1K)",
+    "n": 17,
+    "orig": "SUN",
+    "s": "wiki_air",
+    "c": "ت",
+    "note": "4 are used for conversion training.",
+    "gen": 3,
+    "cat": "attack"
+   },
+   {
+    "m": "Sukhoi Su-27 (S1M/P1M/UB1M/UP1M)",
+    "n": 23,
+    "orig": "SUN",
+    "s": "wiki_air",
+    "c": "ت",
+    "note": "6 are used for conversion training.",
+    "gen": 3,
+    "cat": "fighter"
+   },
+   {
+    "m": "Dassault Mirage 2000 (5F)",
+    "n": 6,
+    "orig": "FRA",
+    "s": "wiki_air",
+    "c": "ت",
+    "note": "4 to 14 more to be delivered.",
+    "gen": 3,
+    "cat": "fighter"
+   },
+   {
+    "m": "Antonov An-30 (B)",
+    "n": 3,
+    "orig": "SUN",
+    "s": "wiki_air",
+    "c": "ت",
+    "gen": 2,
+    "cat": "isr"
+   },
+   {
+    "m": "Antonov An-24 (B/T/RT)",
+    "n": 22,
+    "orig": "SUN",
+    "s": "wiki_air",
+    "c": "ت",
+    "gen": 2,
+    "cat": "transport"
+   },
+   {
+    "m": "Antonov An-26",
+    "n": 22,
+    "orig": "SUN",
+    "s": "wiki_air",
+    "c": "ت",
+    "gen": 2,
+    "cat": "transport"
+   },
+   {
+    "m": "Antonov An-70",
+    "n": 1,
+    "orig": "UKR",
+    "s": "wiki_air",
+    "c": "ت",
+    "gen": 2,
+    "cat": "transport"
+   },
+   {
+    "m": "Mil Mi-8 (TB/MSB-V)",
+    "n": 15,
+    "orig": "SUN",
+    "s": "wiki_air",
+    "c": "ت",
+    "gen": 2,
+    "cat": "heli_util"
+   },
+   {
+    "m": "Mil Mi-9",
+    "n": 2,
+    "orig": "SUN",
+    "s": "wiki_air",
+    "c": "ت",
+    "gen": 2,
+    "cat": "heli_util"
+   },
+   {
+    "m": "Mil Mi-17 (E/M/V-5)",
+    "n": 7,
+    "orig": "SUN",
+    "s": "wiki_air",
+    "c": "ت",
+    "note": "Donated by several countries since 2022",
+    "gen": 2,
+    "cat": "heli_util"
+   },
+   {
+    "m": "Aero L-39 (C/M1)",
+    "n": 42,
+    "orig": "CSK",
+    "s": "wiki_air",
+    "c": "ت",
+    "gen": 3,
+    "cat": "trainer"
+   },
+   {
+    "m": "Direct Fly Alto (NG)",
+    "n": 10,
+    "orig": "CZE",
+    "s": "wiki_air",
+    "c": "ت",
+    "gen": 2,
+    "cat": "trainer"
+   },
+   {
+    "m": "EDM4S",
+    "n": 110,
+    "orig": "LTU",
+    "s": "wiki_army",
+    "c": "ت",
+    "gen": 2,
+    "cat": "uav_isr"
+   },
+   {
+    "m": "THeMIS (MEDEVAC role)",
+    "n": 14,
+    "orig": "EST",
+    "s": "wiki_army",
+    "c": "ت",
+    "gen": 2,
+    "cat": "uav_isr"
+   },
+   {
+    "m": "Tencore Terrain Modular Infantry Transporter (TerMIT) (TerMIT 2.0)",
+    "n": 1000,
+    "orig": "UKR",
+    "s": "wiki_army",
+    "c": "ت",
+    "gen": 2,
+    "cat": "uav_isr"
+   }
+  ],
+  "ad": [
+   {
+    "m": "Barnaul-T 9С932-1",
+    "n": 1,
+    "orig": "RUS",
+    "s": "wiki_army",
+    "c": "ت",
+    "gen": 2,
+    "cat": "short"
+   }
+  ],
+  "msl": [
+   {
+    "m": "MGM-140 ATACMS (Block I)",
+    "n": 100,
+    "orig": "USA",
+    "s": "wiki_army",
+    "c": "ت",
+    "gen": 2,
+    "cat": "srbm"
+   },
+   {
+    "m": "1KR1 Sapsan (Hrim-2 TBM OTRK Sapsan)",
+    "n": 1,
+    "orig": "UKR",
+    "s": "wiki_army",
+    "c": "ت",
+    "gen": 2,
+    "cat": "srbm"
+   }
+  ],
+  "navy": []
+ },
+ "ind": {
+  "tech": {
+   "arm": 3,
+   "air": 1,
+   "uav": 5,
+   "msl": 3,
+   "navy": 1,
+   "ew": 4,
+   "ind": 2
+  },
+  "makes": [
+   "مسيّرات بعيدة المدى وFPV",
+   "نبتون",
+   "بوهدان",
+   "زوارق مسيّرة"
+  ],
+  "s": "tierA",
+  "c": "ت"
+ },
+ "pol": {
+  "factions": [
+   "army",
+   "parties",
+   "street",
+   "biz"
+  ],
+  "stab": {
+   "v": 45,
+   "s": "tierA",
+   "c": "ت"
+  },
+  "warHome": [
+   "ukraine"
+  ],
+  "insurgency": "حرب على أرضها"
+ },
+ "rel": {
+  "BLR": -60,
+  "DEU": 70,
+  "FRA": 70,
+  "GBR": 80,
+  "HUN": -20,
+  "POL": 55,
+  "RUS": -100,
+  "USA": 45
+ },
+ "treaties": [],
+ "sanctions": [],
+ "conflicts": [
+  "ukraine"
+ ],
+ "notes": ""
+}

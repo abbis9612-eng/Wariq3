@@ -1,0 +1,730 @@
+{
+ "id": "GBR",
+ "ar": "المملكة المتحدة",
+ "en": "United Kingdom",
+ "tier": "A",
+ "asOf": "2026-11",
+ "src": {
+  "wiki_air": {
+   "t": "Wikipedia: List of active United Kingdom military aircraft",
+   "u": "https://en.wikipedia.org/wiki/List_of_active_United_Kingdom_military_aircraft?oldid=1384127310",
+   "y": 2026,
+   "note": "نسخة الصفحة بتاريخ السحب؛ أرقام ويكيبيديا تنراجع ويا مصادر ثانية"
+  },
+  "wiki_army": {
+   "t": "Wikipedia: List of equipment of the British Army",
+   "u": "https://en.wikipedia.org/wiki/List_of_equipment_of_the_British_Army?oldid=1385807814",
+   "y": 2026,
+   "note": "نسخة الصفحة بتاريخ السحب؛ أرقام ويكيبيديا تنراجع ويا مصادر ثانية"
+  },
+  "wiki_navy": {
+   "t": "Wikipedia: List of active Royal Navy ships",
+   "u": "https://en.wikipedia.org/wiki/List_of_active_Royal_Navy_ships?oldid=1386017291",
+   "y": 2026,
+   "note": "نسخة الصفحة بتاريخ السحب؛ أرقام ويكيبيديا تنراجع ويا مصادر ثانية"
+  },
+  "iiss_eq": {
+   "t": "Wikipedia: List of countries by level of military equipment (من IISS Military Balance ومصادر ثانية)",
+   "u": "https://en.wikipedia.org/wiki/List_of_countries_by_level_of_military_equipment?oldid=1384804191",
+   "y": 2025
+  },
+  "iiss_pers": {
+   "t": "Wikipedia: List of countries by number of military and paramilitary personnel (جدول IISS Military Balance)",
+   "u": "https://en.wikipedia.org/wiki/List_of_countries_by_number_of_military_and_paramilitary_personnel?oldid=1380910017",
+   "y": 2025
+  },
+  "wb": {
+   "t": "World Bank WDI (SP.POP.TOTL, NY.GDP.MKTP.CD, NY.GDP.MKTP.KD.ZG, MS.MIL.XPND.CD/GD.ZS ← SIPRI, MS.MIL.TOTL.P1, FP.CPI.TOTL.ZG)",
+   "u": "https://api.worldbank.org/v2/",
+   "y": 2026
+  },
+  "govt": {
+   "t": "تصنيف نظام الحكم: دساتير الدول + CIA World Factbook «Government type» + V-Dem/Freedom House لدرجة الحرية (تصنيف المصمم 2026)",
+   "u": "https://www.cia.gov/the-world-factbook/field/government-type/",
+   "y": 2026
+  },
+  "leaders": {
+   "t": "Wikipedia: List of current heads of state and government",
+   "u": "https://en.wikipedia.org/wiki/List_of_current_heads_of_state_and_government?oldid=1386623862",
+   "y": 2026,
+   "note": "سحب نوفمبر 2026"
+  },
+  "rules": {
+   "t": "قواعد من blocs.json وconflicts.json وsanctions.json (تكتل دفاعي +40، معاهدة +50، حرب −90، عقوبات ثقيلة −40...)",
+   "u": "data/world/",
+   "y": 2026
+  },
+  "relk": {
+   "t": "تقدير المصمم للعلاقات الثنائية المعروفة (تشرين الثاني 2026): حروب، نزاعات حدودية، تحالفات غير رسمية، تطبيع، عداء تاريخي",
+   "u": "https://en.wikipedia.org/wiki/Foreign_relations_by_country",
+   "y": 2026
+  },
+  "tierA": {
+   "t": "تقدير المصمم (تشرين الثاني 2026) لصناعة السلاح والاستقرار: SIPRI Arms Transfers Database (أكبر المصدّرين 2020–24)، SIPRI Top 100 Arms-Producing Companies، Fragile States Index 2025، أخبار 2026",
+   "u": "https://www.sipri.org/databases/armstransfers",
+   "y": 2026
+  }
+ },
+ "gov": {
+  "type": "cmon",
+  "ar": "ملكية دستورية",
+  "free": 2,
+  "hos": {
+   "role": "King",
+   "name": "Charles III"
+  },
+  "hog": {
+   "role": "Prime Minister",
+   "name": "Andy Burnham"
+  },
+  "s": "govt,leaders",
+  "c": "ح"
+ },
+ "pop": {
+  "v": 69487000,
+  "y": 2025,
+  "s": "wb",
+  "c": "ح"
+ },
+ "eco": {
+  "gdpBusd": {
+   "v": 4002.6,
+   "y": 2025,
+   "s": "wb",
+   "c": "ح"
+  },
+  "growth": {
+   "v": 1.4,
+   "y": 2025,
+   "s": "wb",
+   "c": "ح"
+  },
+  "infl": {
+   "v": 3.9,
+   "y": 2025,
+   "s": "wb",
+   "c": "ح"
+  },
+  "oilRentPct": {
+   "v": 0.4,
+   "y": 2021,
+   "s": "wb",
+   "c": "ح"
+  }
+ },
+ "mil": {
+  "budgetBusd": {
+   "v": 88.98,
+   "y": 2025,
+   "s": "wb",
+   "c": "ح"
+  },
+  "budgetPctGdp": {
+   "v": 2.35,
+   "y": 2025,
+   "s": "wb",
+   "c": "ح"
+  },
+  "personnelWB": {
+   "v": 153000,
+   "y": 2020,
+   "s": "wb",
+   "c": "ح"
+  },
+  "sum": {
+   "tanks": {
+    "v": 227,
+    "s": "iiss_eq",
+    "c": "ت"
+   },
+   "carriers": {
+    "v": 2,
+    "s": "iiss_eq",
+    "c": "ت"
+   },
+   "amphib": {
+    "v": 5,
+    "s": "iiss_eq",
+    "c": "ت"
+   },
+   "cruisers": {
+    "v": 0,
+    "s": "iiss_eq",
+    "c": "ت"
+   },
+   "destroyers": {
+    "v": 6,
+    "s": "iiss_eq",
+    "c": "ت"
+   },
+   "frigates": {
+    "v": 5,
+    "s": "iiss_eq",
+    "c": "ت"
+   },
+   "corvettes": {
+    "v": 0,
+    "s": "iiss_eq",
+    "c": "ت"
+   },
+   "subNuc": {
+    "v": 10,
+    "s": "iiss_eq",
+    "c": "ت"
+   },
+   "subs": {
+    "v": 0,
+    "s": "iiss_eq",
+    "c": "ت"
+   },
+   "combatAir": {
+    "v": 145,
+    "s": "iiss_eq",
+    "c": "ت"
+   },
+   "attackHeli": {
+    "v": 40,
+    "s": "iiss_eq",
+    "c": "ت"
+   },
+   "sats": {
+    "v": 8,
+    "s": "iiss_eq",
+    "c": "ت"
+   },
+   "active": {
+    "v": 141100,
+    "s": "iiss_pers",
+    "c": "ت"
+   },
+   "reserve": {
+    "v": 70450,
+    "s": "iiss_pers",
+    "c": "ت"
+   },
+   "para": {
+    "v": 0,
+    "s": "iiss_pers",
+    "c": "ت"
+   }
+  },
+  "land": [
+   {
+    "m": "Challenger 2 Challenger 3",
+    "n": 285,
+    "orig": "GBR",
+    "s": "wiki_army",
+    "c": "ت",
+    "gen": 4,
+    "cat": "tank"
+   },
+   {
+    "m": "Boxer",
+    "n": 100,
+    "orig": "DEU",
+    "s": "wiki_army",
+    "c": "ت",
+    "gen": 2,
+    "cat": "apc"
+   },
+   {
+    "m": "Warrior",
+    "n": 526,
+    "orig": "GBR",
+    "s": "wiki_army",
+    "c": "ت",
+    "gen": 3,
+    "cat": "ifv"
+   },
+   {
+    "m": "Bulldog",
+    "n": 723,
+    "orig": "GBR",
+    "s": "wiki_army",
+    "c": "ت",
+    "gen": 2,
+    "cat": "apc"
+   },
+   {
+    "m": "Mastiff",
+    "n": 296,
+    "orig": "USA",
+    "s": "wiki_army",
+    "c": "ت",
+    "gen": 2,
+    "cat": "apc"
+   },
+   {
+    "m": "Ridgeback",
+    "n": 162,
+    "orig": "USA",
+    "s": "wiki_army",
+    "c": "ت",
+    "gen": 2,
+    "cat": "apc"
+   },
+   {
+    "m": "Wolfhound",
+    "n": 81,
+    "orig": "USA",
+    "s": "wiki_army",
+    "c": "ت",
+    "gen": 2,
+    "cat": "apc"
+   },
+   {
+    "m": "Jackal 2",
+    "n": 480,
+    "orig": "GBR",
+    "s": "wiki_army",
+    "c": "ت",
+    "gen": 2,
+    "cat": "apc"
+   },
+   {
+    "m": "Coyote",
+    "n": 72,
+    "orig": "GBR",
+    "s": "wiki_army",
+    "c": "ت",
+    "gen": 2,
+    "cat": "apc"
+   },
+   {
+    "m": "Foxhound",
+    "n": 389,
+    "orig": "GBR",
+    "s": "wiki_army",
+    "c": "ت",
+    "gen": 2,
+    "cat": "apc"
+   },
+   {
+    "m": "Panther CLV",
+    "n": 377,
+    "orig": "GBR",
+    "s": "wiki_army",
+    "c": "ت",
+    "gen": 2,
+    "cat": "apc"
+   },
+   {
+    "m": "L118 light gun",
+    "n": 126,
+    "orig": "GBR",
+    "s": "wiki_army",
+    "c": "ت",
+    "gen": 2,
+    "cat": "towed"
+   },
+   {
+    "m": "Archer Artillery System",
+    "n": 14,
+    "orig": "SWE",
+    "s": "wiki_army",
+    "c": "ت",
+    "gen": 2,
+    "cat": "spg"
+   },
+   {
+    "m": "M270 Multiple Launch Rocket System",
+    "n": 26,
+    "orig": "USA",
+    "s": "wiki_army",
+    "c": "ت",
+    "gen": 2,
+    "cat": "mlrs"
+   },
+   {
+    "m": "TPz Fuchs TPz = Transportpanzer",
+    "n": 8,
+    "orig": "DEU",
+    "s": "wiki_army",
+    "c": "ت",
+    "gen": 2,
+    "cat": "apc"
+   }
+  ],
+  "air": [
+   {
+    "m": "Eurofighter Typhoon",
+    "n": 111,
+    "orig": "INT",
+    "s": "wiki_air",
+    "c": "ت",
+    "note": "26 of 30 Tranche 1s have been retired as of 1 July 2025. The remaining Falklands-based Tranche 1s to be retired and replaced by four Tranche",
+    "gen": 4,
+    "cat": "fighter"
+   },
+   {
+    "m": "Boeing E-7 Wedgetail AEW.1",
+    "n": 2,
+    "orig": "USA",
+    "s": "wiki_air",
+    "c": "ت",
+    "note": "Originally five envisaged, then reduced to three.",
+    "gen": 2,
+    "cat": "awacs"
+   },
+   {
+    "m": "Beechcraft Shadow R.1",
+    "n": 6,
+    "orig": "USA",
+    "s": "wiki_air",
+    "c": "ت",
+    "note": "Originally expected OSD 2030. 2026 Defence Investment Plan indicated aircraft to be superseded by autonomous systems.",
+    "gen": 2,
+    "cat": "isr"
+   },
+   {
+    "m": "Boeing RC-135W Rivet Joint",
+    "n": 3,
+    "orig": "USA",
+    "s": "wiki_air",
+    "c": "ت",
+    "note": "Formally known as Airseeker.",
+    "gen": 2,
+    "cat": "isr"
+   },
+   {
+    "m": "Boeing P-8 Poseidon MRA.1",
+    "n": 9,
+    "orig": "USA",
+    "s": "wiki_air",
+    "c": "ت",
+    "gen": 2,
+    "cat": "isr"
+   },
+   {
+    "m": "Airbus Voyager",
+    "n": 14,
+    "orig": "USA",
+    "s": "wiki_air",
+    "c": "ت",
+    "gen": 2,
+    "cat": "tanker"
+   },
+   {
+    "m": "Boeing C-17A Globemaster III",
+    "n": 8,
+    "orig": "USA",
+    "s": "wiki_air",
+    "c": "ت",
+    "gen": 2,
+    "cat": "transport"
+   },
+   {
+    "m": "Airbus A400M Atlas C.1",
+    "n": 22,
+    "orig": "USA",
+    "s": "wiki_air",
+    "c": "ت",
+    "note": "Final aircraft in initial batch delivered May 2023.",
+    "gen": 2,
+    "cat": "transport"
+   },
+   {
+    "m": "Dassault Envoy IV CC.1",
+    "n": 2,
+    "orig": "FRA",
+    "s": "wiki_air",
+    "c": "ت",
+    "note": "Two aircraft introduced in 2022. To be initially operated under civil contract until 2026.",
+    "gen": 2,
+    "cat": "transport"
+   },
+   {
+    "m": "Boeing Chinook",
+    "n": 36,
+    "orig": "USA",
+    "s": "wiki_air",
+    "c": "ت",
+    "note": "All HC.Mk 6A variants being withdrawn from service; 14 CH-47-ER variants being delivered from 2027; overall operational numbers to stabilize",
+    "gen": 2,
+    "cat": "heli_util"
+   },
+   {
+    "m": "Airbus H145 Jupiter HC.2",
+    "n": 3,
+    "orig": "USA",
+    "s": "wiki_air",
+    "c": "ت",
+    "note": "Replaced former Puma HC2s & deployed with 84 Squadron on Cyprus from 2026; 3 additional helicopters acquired by the Army Air Corps.",
+    "gen": 2,
+    "cat": "heli_util"
+   },
+   {
+    "m": "BAE Systems Hawk T.2",
+    "n": 27,
+    "orig": "GBR",
+    "s": "wiki_air",
+    "c": "ت",
+    "note": "Forms part of the UK Military Flying Training System listed below but operated by No. IV (R) Squadron & No. XXV(F) Squadron; aircraft to rem",
+    "gen": 2,
+    "cat": "trainer"
+   },
+   {
+    "m": "Grob Viking T.1",
+    "n": 52,
+    "orig": "DEU",
+    "s": "wiki_air",
+    "c": "ت",
+    "note": "The Grob Viking T1 is the RAF's primary aircraft for delivering basic glider and flight training to the RAF Air Cadets.",
+    "gen": 2,
+    "cat": "trainer"
+   },
+   {
+    "m": "Protector RG1",
+    "n": 10,
+    "orig": "USA",
+    "s": "wiki_air",
+    "c": "ت",
+    "note": "16 ordered; 10 aircraft delivered as of June 2025 with 4 in the UK and the other 6 in the US where they are used for testing and training; t",
+    "gen": 3,
+    "cat": "uav_isr"
+   },
+   {
+    "m": "Avro Lancaster (PA474)",
+    "n": 1,
+    "orig": "GBR",
+    "s": "wiki_air",
+    "c": "ت",
+    "note": "1 B.I",
+    "gen": 2,
+    "cat": "attack"
+   },
+   {
+    "m": "Boeing AH-64E Apache Guardian",
+    "n": 50,
+    "orig": "USA",
+    "s": "wiki_air",
+    "c": "ت",
+    "note": "50 Apache AH1 remanufactured to AH-64E specification. Armed with M230 cannon and JAGM, Hellfire K1 and Hellfire Romeo missiles.",
+    "gen": 4,
+    "cat": "heli_attack"
+   },
+   {
+    "m": "AgustaWestland Wildcat AH1",
+    "n": 25,
+    "orig": "GBR",
+    "s": "wiki_air",
+    "c": "ت",
+    "note": "To be withdrawn from service from 2027; up to 8 helicopters serve with the Fleet Air Arm's 847 Squadron in support of the Royal Marines. The",
+    "gen": 2,
+    "cat": "heli_util"
+   },
+   {
+    "m": "Eurocopter AS365 Dauphin II",
+    "n": 5,
+    "orig": "FRA",
+    "s": "wiki_air",
+    "c": "ت",
+    "note": "ZJ780, ZJ782, ZJ783; ZJ785; ZJ787 These are the helicopters of the No. 658 Squadron AAC (Army Air Corps).",
+    "gen": 2,
+    "cat": "heli_util"
+   },
+   {
+    "m": "AgustaWestland AW101 Merlin HM2",
+    "n": 23,
+    "orig": "GBR",
+    "s": "wiki_air",
+    "c": "ت",
+    "note": "Expected OSD 2040.",
+    "gen": 2,
+    "cat": "heli_attack"
+   },
+   {
+    "m": "AgustaWestland AW159 Wildcat AH1",
+    "n": 25,
+    "orig": "GBR",
+    "s": "wiki_air",
+    "c": "ت",
+    "note": "Up to 8 Army Air Corps aircraft tasked to 847 Naval Air Squadron in support of the Royal Marines; future with 847 NAS unclear once withdrawn",
+    "gen": 2,
+    "cat": "heli_attack"
+   },
+   {
+    "m": "AgustaWestland AW101 Merlin Mk4/4A",
+    "n": 21,
+    "orig": "GBR",
+    "s": "wiki_air",
+    "c": "ت",
+    "note": "One aircraft crashed September 2024, second in June 2026; Expected OSD 2040.",
+    "gen": 2,
+    "cat": "heli_util"
+   },
+   {
+    "m": "Grob Tutor",
+    "n": 5,
+    "orig": "DEU",
+    "s": "wiki_air",
+    "c": "ت",
+    "note": "Introductory fight training; operated by 727 Naval Air Squadron. These aircraft here are also listed above in the \"Royal Air Force\" table, a",
+    "gen": 3,
+    "cat": "trainer"
+   },
+   {
+    "m": "Peregrine",
+    "n": 2,
+    "orig": "AUT",
+    "s": "wiki_air",
+    "c": "ت",
+    "note": "Formerly deployed on HMS Lancaster; future tasking unclear.",
+    "gen": 2,
+    "cat": "uav_isr"
+   },
+   {
+    "m": "Agusta AW109",
+    "n": 1,
+    "orig": "ITA",
+    "s": "wiki_air",
+    "c": "ت",
+    "note": "QinetiQ, Boscombe Down.",
+    "gen": 2,
+    "cat": "heli_util"
+   },
+   {
+    "m": "Eurocopter AS350 Écureuil",
+    "n": 3,
+    "orig": "FRA",
+    "s": "wiki_air",
+    "c": "ت",
+    "note": "Cobham Helicopter Academy, Newquay under CFAOS.",
+    "gen": 2,
+    "cat": "heli_util"
+   },
+   {
+    "m": "AgustaWestland AW159 Wildcat",
+    "n": 24,
+    "orig": "GBR",
+    "s": "wiki_army",
+    "c": "ت",
+    "gen": 2,
+    "cat": "heli_util"
+   }
+  ],
+  "ad": [],
+  "msl": [],
+  "navy": [
+   {
+    "m": "Vanguard class",
+    "n": 31,
+    "orig": "INT",
+    "s": "wiki_navy",
+    "c": "ت",
+    "gen": 2,
+    "cat": "sub"
+   },
+   {
+    "m": "Astute class",
+    "n": 120,
+    "orig": "INT",
+    "s": "wiki_navy",
+    "c": "ت",
+    "gen": 2,
+    "cat": "sub"
+   },
+   {
+    "m": "Queen Elizabeth class",
+    "n": 9,
+    "orig": "INT",
+    "s": "wiki_navy",
+    "c": "ت",
+    "gen": 2,
+    "cat": "carrier"
+   },
+   {
+    "m": "Type 45 destroyer (Daring class)",
+    "n": 37,
+    "orig": "INT",
+    "s": "wiki_navy",
+    "c": "ت",
+    "gen": 2,
+    "cat": "destroyer"
+   },
+   {
+    "m": "Type 23 frigate (Duke class)",
+    "n": 83,
+    "orig": "INT",
+    "s": "wiki_navy",
+    "c": "ت",
+    "gen": 2,
+    "cat": "frigate"
+   }
+  ]
+ },
+ "ind": {
+  "tech": {
+   "arm": 3,
+   "air": 4,
+   "uav": 3,
+   "msl": 4,
+   "navy": 4,
+   "ew": 5,
+   "ind": 4
+  },
+  "makes": [
+   "تايفون (شريك)",
+   "تشالنجر 3",
+   "ستورم شادو (شريك)",
+   "غواصات نووية"
+  ],
+  "s": "tierA",
+  "c": "ت"
+ },
+ "pol": {
+  "factions": [
+   "army",
+   "parties",
+   "street",
+   "biz"
+  ],
+  "stab": {
+   "v": 62,
+   "s": "tierA",
+   "c": "ت"
+  },
+  "warHome": []
+ },
+ "rel": {
+  "ALB": 40,
+  "BEL": 40,
+  "BGR": 40,
+  "BLR": -25,
+  "CAN": 40,
+  "CZE": 40,
+  "DEU": 40,
+  "DNK": 40,
+  "ESP": 40,
+  "EST": 40,
+  "FIN": 40,
+  "FRA": 40,
+  "GRC": 40,
+  "HRV": 40,
+  "HUN": 40,
+  "IRN": -40,
+  "ITA": 40,
+  "LTU": 40,
+  "LVA": 40,
+  "MKD": 40,
+  "MMR": -25,
+  "NLD": 40,
+  "NOR": 40,
+  "POL": 40,
+  "PRT": 40,
+  "ROU": 40,
+  "RUS": -70,
+  "SVK": 40,
+  "SVN": 40,
+  "SWE": 40,
+  "TUR": 40,
+  "UKR": 80,
+  "USA": 80
+ },
+ "treaties": [
+  "NATO"
+ ],
+ "sanctions": [],
+ "conflicts": [],
+ "notes": ""
+}

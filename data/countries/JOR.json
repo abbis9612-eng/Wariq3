@@ -1,0 +1,536 @@
+{
+ "id": "JOR",
+ "ar": "الأردن",
+ "en": "Jordan",
+ "tier": "A",
+ "asOf": "2026-11",
+ "src": {
+  "wiki_air": {
+   "t": "Wikipedia: Royal Jordanian Air Force",
+   "u": "https://en.wikipedia.org/wiki/Royal_Jordanian_Air_Force?oldid=1386245929",
+   "y": 2026,
+   "note": "نسخة الصفحة بتاريخ السحب؛ أرقام ويكيبيديا تنراجع ويا مصادر ثانية"
+  },
+  "wiki_navy": {
+   "t": "Wikipedia: Royal Jordanian Navy",
+   "u": "https://en.wikipedia.org/wiki/Royal_Jordanian_Navy?oldid=1373456928",
+   "y": 2026,
+   "note": "نسخة الصفحة بتاريخ السحب؛ أرقام ويكيبيديا تنراجع ويا مصادر ثانية"
+  },
+  "iiss_eq": {
+   "t": "Wikipedia: List of countries by level of military equipment (من IISS Military Balance ومصادر ثانية)",
+   "u": "https://en.wikipedia.org/wiki/List_of_countries_by_level_of_military_equipment?oldid=1384804191",
+   "y": 2025
+  },
+  "iiss_pers": {
+   "t": "Wikipedia: List of countries by number of military and paramilitary personnel (جدول IISS Military Balance)",
+   "u": "https://en.wikipedia.org/wiki/List_of_countries_by_number_of_military_and_paramilitary_personnel?oldid=1380910017",
+   "y": 2025
+  },
+  "wb": {
+   "t": "World Bank WDI (SP.POP.TOTL, NY.GDP.MKTP.CD, NY.GDP.MKTP.KD.ZG, MS.MIL.XPND.CD/GD.ZS ← SIPRI, MS.MIL.TOTL.P1, FP.CPI.TOTL.ZG)",
+   "u": "https://api.worldbank.org/v2/",
+   "y": 2026
+  },
+  "govt": {
+   "t": "تصنيف نظام الحكم: دساتير الدول + CIA World Factbook «Government type» + V-Dem/Freedom House لدرجة الحرية (تصنيف المصمم 2026)",
+   "u": "https://www.cia.gov/the-world-factbook/field/government-type/",
+   "y": 2026
+  },
+  "leaders": {
+   "t": "Wikipedia: List of current heads of state and government",
+   "u": "https://en.wikipedia.org/wiki/List_of_current_heads_of_state_and_government?oldid=1386623862",
+   "y": 2026,
+   "note": "سحب نوفمبر 2026"
+  },
+  "rules": {
+   "t": "قواعد من blocs.json وconflicts.json وsanctions.json (تكتل دفاعي +40، معاهدة +50، حرب −90، عقوبات ثقيلة −40...)",
+   "u": "data/world/",
+   "y": 2026
+  },
+  "relk": {
+   "t": "تقدير المصمم للعلاقات الثنائية المعروفة (تشرين الثاني 2026): حروب، نزاعات حدودية، تحالفات غير رسمية، تطبيع، عداء تاريخي",
+   "u": "https://en.wikipedia.org/wiki/Foreign_relations_by_country",
+   "y": 2026
+  },
+  "tierA": {
+   "t": "تقدير المصمم (تشرين الثاني 2026) لصناعة السلاح والاستقرار: SIPRI Arms Transfers Database (أكبر المصدّرين 2020–24)، SIPRI Top 100 Arms-Producing Companies، Fragile States Index 2025، أخبار 2026",
+   "u": "https://www.sipri.org/databases/armstransfers",
+   "y": 2026
+  }
+ },
+ "gov": {
+  "type": "amon",
+  "ar": "ملكية مطلقة/قوية",
+  "free": 0,
+  "hos": {
+   "role": "King",
+   "name": "Abdullah II"
+  },
+  "hog": {
+   "role": "Prime Minister",
+   "name": "Jafar Hassan"
+  },
+  "s": "govt,leaders",
+  "c": "ح"
+ },
+ "pop": {
+  "v": 11520684,
+  "y": 2025,
+  "s": "wb",
+  "c": "ح"
+ },
+ "eco": {
+  "gdpBusd": {
+   "v": 61.6,
+   "y": 2025,
+   "s": "wb",
+   "c": "ح"
+  },
+  "growth": {
+   "v": 2.8,
+   "y": 2025,
+   "s": "wb",
+   "c": "ح"
+  },
+  "infl": {
+   "v": 1.8,
+   "y": 2025,
+   "s": "wb",
+   "c": "ح"
+  },
+  "oilRentPct": {
+   "v": 0.0,
+   "y": 2021,
+   "s": "wb",
+   "c": "ح"
+  }
+ },
+ "mil": {
+  "budgetBusd": {
+   "v": 2.56,
+   "y": 2025,
+   "s": "wb",
+   "c": "ح"
+  },
+  "budgetPctGdp": {
+   "v": 4.56,
+   "y": 2025,
+   "s": "wb",
+   "c": "ح"
+  },
+  "personnelWB": {
+   "v": 116000,
+   "y": 2020,
+   "s": "wb",
+   "c": "ح"
+  },
+  "sum": {
+   "tanks": {
+    "v": 1365,
+    "s": "iiss_eq",
+    "c": "ت"
+   },
+   "carriers": {
+    "v": 0,
+    "s": "iiss_eq",
+    "c": "ت"
+   },
+   "amphib": {
+    "v": 0,
+    "s": "iiss_eq",
+    "c": "ت"
+   },
+   "cruisers": {
+    "v": 0,
+    "s": "iiss_eq",
+    "c": "ت"
+   },
+   "destroyers": {
+    "v": 0,
+    "s": "iiss_eq",
+    "c": "ت"
+   },
+   "frigates": {
+    "v": 0,
+    "s": "iiss_eq",
+    "c": "ت"
+   },
+   "corvettes": {
+    "v": 0,
+    "s": "iiss_eq",
+    "c": "ت"
+   },
+   "subNuc": {
+    "v": 0,
+    "s": "iiss_eq",
+    "c": "ت"
+   },
+   "subs": {
+    "v": 0,
+    "s": "iiss_eq",
+    "c": "ت"
+   },
+   "combatAir": {
+    "v": 63,
+    "s": "iiss_eq",
+    "c": "ت"
+   },
+   "attackHeli": {
+    "v": 29,
+    "s": "iiss_eq",
+    "c": "ت"
+   },
+   "sats": {
+    "v": 0,
+    "s": "iiss_eq",
+    "c": "ت"
+   },
+   "active": {
+    "v": 100500,
+    "s": "iiss_pers",
+    "c": "ت"
+   },
+   "reserve": {
+    "v": 65000,
+    "s": "iiss_pers",
+    "c": "ت"
+   },
+   "para": {
+    "v": 15000,
+    "s": "iiss_pers",
+    "c": "ت"
+   }
+  },
+  "land": [],
+  "air": [
+   {
+    "m": "F-16 Fighting Falcon (F-16AM Block 20 MLU)",
+    "n": 44,
+    "orig": "USA",
+    "s": "wiki_air",
+    "c": "ت",
+    "note": "Single-seat variant. Upgraded to MLU standard with improved avionics, radar, and compatibility with modern weaponry.",
+    "gen": 3,
+    "cat": "fighter"
+   },
+   {
+    "m": "F-16 Fighting Falcon (F-16BM Block 20 MLU)",
+    "n": 18,
+    "orig": "USA",
+    "s": "wiki_air",
+    "c": "ت",
+    "note": "Dual-seat variant, used for both operational missions and training. Upgraded to MLU standard.",
+    "gen": 3,
+    "cat": "fighter"
+   },
+   {
+    "m": "CASA/IPTN CN-235 (AC-235)",
+    "n": 2,
+    "orig": "ESP",
+    "s": "wiki_air",
+    "c": "ت",
+    "note": "Delivered in 2011. Modified as gunships, armed with M230 chain gun, APKWS rockets and AGM-114 Hellfire missiles, by JODDB and Orbital ATK in",
+    "gen": 2,
+    "cat": "isr"
+   },
+   {
+    "m": "Cessna 208B Grand Caravan (Ce208B-ISR)",
+    "n": 6,
+    "orig": "USA",
+    "s": "wiki_air",
+    "c": "ت",
+    "note": "Delivered between 2009 and 2011.",
+    "gen": 2,
+    "cat": "isr"
+   },
+   {
+    "m": "Air Tractor AT-802 (AT-802U)",
+    "n": 4,
+    "orig": "USA",
+    "s": "wiki_air",
+    "c": "ت",
+    "note": "Airframes initially intended for Yemen, delivered to Jordan in 2016.",
+    "gen": 3,
+    "cat": "isr"
+   },
+   {
+    "m": "Air Tractor AT-802 (AT-802i Block 4 BPA)",
+    "n": 6,
+    "orig": "USA",
+    "s": "wiki_air",
+    "c": "ت",
+    "note": "Gifted by the United Arab Emirates Air Force in 2014 as Block 2 BPA, upgraded to Block 4 by IOMAX.",
+    "gen": 3,
+    "cat": "isr"
+   },
+   {
+    "m": "Lockheed C-130 Hercules (C-130H)",
+    "n": 7,
+    "orig": "USA",
+    "s": "wiki_air",
+    "c": "ت",
+    "note": "4 airframes delivered in the 1980s and 3 ex-USAF airframes delivered in 2021 and 2022. Plans for an additional 3 airframes.",
+    "gen": 2,
+    "cat": "transport"
+   },
+   {
+    "m": "PZL M28 Skytruck",
+    "n": 2,
+    "orig": "POL",
+    "s": "wiki_air",
+    "c": "ت",
+    "note": "Delivered in 2013 and 2015. Both airframes modified by Sierra Nevada Corporation in 2016 and 2018.",
+    "gen": 2,
+    "cat": "transport"
+   },
+   {
+    "m": "Ilyushin Il-76 (Il-76TD)",
+    "n": 2,
+    "orig": "RUS",
+    "s": "wiki_air",
+    "c": "ت",
+    "note": "One leased from Silk Way Airlines, the other from UATG - Uz Aero Tech Group.",
+    "gen": 2,
+    "cat": "transport"
+   },
+   {
+    "m": "Gulfstream G650/G700/G800 (G650ER)",
+    "n": 1,
+    "orig": "USA",
+    "s": "wiki_air",
+    "c": "ت",
+    "note": "Registered VQ-BNZ.",
+    "gen": 2,
+    "cat": "transport"
+   },
+   {
+    "m": "Bell AH-1 Cobra (AH-1F)",
+    "n": 32,
+    "orig": "USA",
+    "s": "wiki_air",
+    "c": "ت",
+    "note": "49 airframes were delivered between 1985 and 2016. Between 8 and 16 airframes were transferred to the Pakistan Air Force in the 2010s. 2 air",
+    "gen": 2,
+    "cat": "heli_attack"
+   },
+   {
+    "m": "Bell AH-1 Cobra (AH-1F (SES))",
+    "n": 11,
+    "orig": "USA",
+    "s": "wiki_air",
+    "c": "ت",
+    "note": "12 refurbished airframes capable of carrying AGM-114 Hellfire missiles and APKWS rockets. One airframe crashed in June 2023.",
+    "gen": 2,
+    "cat": "heli_attack"
+   },
+   {
+    "m": "MD Helicopters MD530 (MD530FF)",
+    "n": 6,
+    "orig": "USA",
+    "s": "wiki_air",
+    "c": "ت",
+    "note": "Delivered in 2006, received an avionics upgrade in 2024.",
+    "gen": 2,
+    "cat": "heli_attack"
+   },
+   {
+    "m": "MD Helicopters MD530 (AH530 Block II)",
+    "n": 6,
+    "orig": "USA",
+    "s": "wiki_air",
+    "c": "ت",
+    "note": "Ordered in August 2023. 4 airframes delivered in December 2024 and 2 others in June 2025.",
+    "gen": 2,
+    "cat": "heli_attack"
+   },
+   {
+    "m": "Sikorsky UH-60 Black Hawk (UH-60A)",
+    "n": 8,
+    "orig": "USA",
+    "s": "wiki_air",
+    "c": "ت",
+    "note": "Delivered in 2015 and 2016.",
+    "gen": 2,
+    "cat": "heli_util"
+   },
+   {
+    "m": "Sikorsky S-70 (S-70A-11)",
+    "n": 5,
+    "orig": "USA",
+    "s": "wiki_air",
+    "c": "ت",
+    "note": "Delivered in the 1980s and 1990s as Royal transportation.",
+    "gen": 2,
+    "cat": "heli_util"
+   },
+   {
+    "m": "AgustaWestland AW139",
+    "n": 3,
+    "orig": "ITA",
+    "s": "wiki_air",
+    "c": "ت",
+    "note": "2 airframes are MEDEVAC-configured and operate on behalf of the Jordan Air Ambulance Center. The third is VIP-configured for Royal transport",
+    "gen": 2,
+    "cat": "heli_util"
+   },
+   {
+    "m": "Eurocopter EC635 (EC635T1)",
+    "n": 9,
+    "orig": "FRA",
+    "s": "wiki_air",
+    "c": "ت",
+    "note": "9 ex-Portuguese airframes acquired in 2003 and 2004, some airframes have received an armament upgrade.",
+    "gen": 2,
+    "cat": "heli_util"
+   },
+   {
+    "m": "Eurocopter EC635 (EC635T2i)",
+    "n": 3,
+    "orig": "FRA",
+    "s": "wiki_air",
+    "c": "ت",
+    "note": "4 airframes delivered in 2007. 1 airframe crashed in February 2016.",
+    "gen": 2,
+    "cat": "heli_util"
+   },
+   {
+    "m": "Aérospatiale AS332 Super Puma (AS332M-1)",
+    "n": 7,
+    "orig": "FRA",
+    "s": "wiki_air",
+    "c": "ت",
+    "note": "11 airframes were delivered in 1987. 1 airframe crashed in 1989. 3 airframes transferred to the Benin Air Force in July 2023.",
+    "gen": 4,
+    "cat": "heli_util"
+   },
+   {
+    "m": "Mil Mi-26 (Mi-26T2)",
+    "n": 4,
+    "orig": "RUS",
+    "s": "wiki_air",
+    "c": "ت",
+    "note": "Delivered in 2018 and 2019.",
+    "gen": 2,
+    "cat": "heli_util"
+   },
+   {
+    "m": "Pilatus PC-21",
+    "n": 12,
+    "orig": "CHE",
+    "s": "wiki_air",
+    "c": "ت",
+    "note": "Delivered between 2017 and 2019.",
+    "gen": 2,
+    "cat": "trainer"
+   },
+   {
+    "m": "Grob G 120TP",
+    "n": 13,
+    "orig": "DEU",
+    "s": "wiki_air",
+    "c": "ت",
+    "note": "16 airframes delivered between 2016 and 2018. 3 airframes crashed, in December 2017, in June 2022, and in February 2024.",
+    "gen": 2,
+    "cat": "trainer"
+   },
+   {
+    "m": "Bell 505 Jet Ranger X",
+    "n": 10,
+    "orig": "USA",
+    "s": "wiki_air",
+    "c": "ت",
+    "note": "Delivery completed in July 2024.",
+    "gen": 2,
+    "cat": "heli_util"
+   },
+   {
+    "m": "Aérospatiale AS350 Écureuil (AS350B3)",
+    "n": 1,
+    "orig": "FRA",
+    "s": "wiki_air",
+    "c": "ت",
+    "note": "At least 7 ex-UAEAF airframes delivered in the 2000s. 6 airframes sold into the civilian market.",
+    "gen": 2,
+    "cat": "heli_util"
+   },
+   {
+    "m": "Robinson R44",
+    "n": 12,
+    "orig": "USA",
+    "s": "wiki_air",
+    "c": "ت",
+    "note": "Delivered between 2014 and 2016. Will be phased out in favour of the newer Bell 505.",
+    "gen": 2,
+    "cat": "heli_util"
+   }
+  ],
+  "ad": [],
+  "msl": [],
+  "navy": []
+ },
+ "ind": {
+  "tech": {
+   "arm": 1,
+   "air": 0,
+   "uav": 1,
+   "msl": 0,
+   "navy": 0,
+   "ew": 1,
+   "ind": 1
+  },
+  "makes": [
+   "KADDB: تعديل مدرعات"
+  ],
+  "s": "tierA",
+  "c": "ت"
+ },
+ "pol": {
+  "factions": [
+   "royal",
+   "army",
+   "clergy",
+   "street",
+   "biz"
+  ],
+  "stab": {
+   "v": 58,
+   "s": "tierA",
+   "c": "ت"
+  },
+  "warHome": []
+ },
+ "rel": {
+  "ARE": 10,
+  "BHR": 10,
+  "DJI": 10,
+  "DZA": 10,
+  "EGY": 10,
+  "IRN": -35,
+  "IRQ": 55,
+  "ISR": 5,
+  "KWT": 10,
+  "LBN": 10,
+  "LBY": 10,
+  "MAR": 10,
+  "MRT": 10,
+  "OMN": 10,
+  "PSX": 10,
+  "QAT": 10,
+  "SAU": 10,
+  "SDN": 10,
+  "SOM": 10,
+  "SYR": 10,
+  "TUN": 10,
+  "USA": 65,
+  "YEM": 10
+ },
+ "treaties": [
+  "ARAB"
+ ],
+ "sanctions": [],
+ "conflicts": [
+  "iran_war"
+ ],
+ "notes": ""
+}

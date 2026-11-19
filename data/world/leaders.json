@@ -1,0 +1,1402 @@
+{
+"src": {
+"leaders": {
+"t": "Wikipedia: List of current heads of state and government",
+"u": "https://en.wikipedia.org/wiki/List_of_current_heads_of_state_and_government?oldid=1386623862",
+"y": 2026,
+"note": "سحب نوفمبر 2026"
+}
+},
+"c": {
+"AFG": {
+"hos": {
+"role": "Supreme Leader",
+"name": "Hibatullah Akhundzada"
+},
+"hog": {
+"role": "Prime Minister",
+"name": "Hasan Akhund"
+}
+},
+"AGO": {
+"hos": {
+"role": "President",
+"name": "João Lourenço"
+},
+"hog": null
+},
+"ALB": {
+"hos": {
+"role": "President",
+"name": "Bajram Begaj"
+},
+"hog": {
+"role": "Prime Minister",
+"name": "Edi Rama"
+}
+},
+"ARE": {
+"hos": {
+"role": "President",
+"name": "Mohamed bin Zayed Al Nahyan"
+},
+"hog": {
+"role": "Prime Minister",
+"name": "Mohammed bin Rashid Al Maktoum"
+}
+},
+"ARG": {
+"hos": {
+"role": "President",
+"name": "Javier Milei"
+},
+"hog": null
+},
+"ARM": {
+"hos": {
+"role": "President",
+"name": "Vahagn Khachaturyan"
+},
+"hog": {
+"role": "Prime Minister",
+"name": "Nikol Pashinyan"
+}
+},
+"AUS": {
+"hos": {
+"role": "King",
+"name": "Charles III"
+},
+"hog": {
+"role": "Prime Minister",
+"name": "Anthony Albanese"
+}
+},
+"AUT": {
+"hos": {
+"role": "President",
+"name": "Alexander Van der Bellen"
+},
+"hog": {
+"role": "Chancellor",
+"name": "Christian Stocker"
+}
+},
+"AZE": {
+"hos": {
+"role": "President",
+"name": "Ilham Aliyev"
+},
+"hog": {
+"role": "Prime Minister",
+"name": "Ali Asadov"
+}
+},
+"BDI": {
+"hos": {
+"role": "President",
+"name": "Évariste Ndayishimiye"
+},
+"hog": {
+"role": "Prime Minister",
+"name": "Nestor Ntahontuye"
+}
+},
+"BEL": {
+"hos": {
+"role": "King",
+"name": "Philippe"
+},
+"hog": {
+"role": "Prime Minister",
+"name": "Bart De Wever"
+}
+},
+"BEN": {
+"hos": {
+"role": "President",
+"name": "Romuald Wadagni"
+},
+"hog": null
+},
+"BFA": {
+"hos": {
+"role": "President of the Patriotic Movement for Safeguard and Restoration",
+"name": "Ibrahim Traoré"
+},
+"hog": null
+},
+"BGD": {
+"hos": {
+"role": "President",
+"name": "Mirza Fakhrul Islam Alamgir"
+},
+"hog": {
+"role": "Prime Minister",
+"name": "Tarique Rahman"
+}
+},
+"BGR": {
+"hos": {
+"role": "President",
+"name": "Iliana Iotova"
+},
+"hog": {
+"role": "Prime Minister",
+"name": "Rumen Radev"
+}
+},
+"BHR": {
+"hos": {
+"role": "King",
+"name": "Hamad bin Isa Al Khalifa"
+},
+"hog": {
+"role": "Prime Minister",
+"name": "Salman bin Hamad Al Khalifa"
+}
+},
+"BIH": {
+"hos": {
+"role": "Acting High Representative",
+"name": "Louis Crishock"
+},
+"hog": {
+"role": "",
+"name": "Presidency"
+}
+},
+"BLR": {
+"hos": {
+"role": "Chairman of the All-Belarusian People's Assembly",
+"name": "Alexander Lukashenko"
+},
+"hog": null
+},
+"BOL": {
+"hos": {
+"role": "President",
+"name": "Rodrigo Paz"
+},
+"hog": null
+},
+"BRA": {
+"hos": {
+"role": "President",
+"name": "Luiz Inácio Lula da Silva"
+},
+"hog": null
+},
+"BWA": {
+"hos": {
+"role": "President",
+"name": "Duma Boko"
+},
+"hog": null
+},
+"CAF": {
+"hos": {
+"role": "President",
+"name": "Faustin-Archange Touadéra"
+},
+"hog": {
+"role": "Prime Minister",
+"name": "Félix Moloua"
+}
+},
+"CAN": {
+"hos": {
+"role": "King",
+"name": "Charles III"
+},
+"hog": {
+"role": "Prime Minister",
+"name": "Mark Carney"
+}
+},
+"CHE": {
+"hos": {
+"role": "",
+"name": "Federal Council"
+},
+"hog": {
+"role": "",
+"name": "Members: Guy Parmelin (President) Ignazio Cassis (Vice President) Karin Keller-Sutter Albert Rösti Élisabeth Baume-Schneider Beat Jans Martin Pfister"
+}
+},
+"CHL": {
+"hos": {
+"role": "President",
+"name": "José Antonio Kast"
+},
+"hog": null
+},
+"CHN": {
+"hos": {
+"role": "General Secretary of the Communist Party",
+"name": "Xi Jinping"
+},
+"hog": null
+},
+"CIV": {
+"hos": {
+"role": "President",
+"name": "Alassane Ouattara"
+},
+"hog": {
+"role": "Prime Minister",
+"name": "Robert Beugré Mambé"
+}
+},
+"CMR": {
+"hos": {
+"role": "President",
+"name": "Paul Biya"
+},
+"hog": {
+"role": "Prime Minister",
+"name": "Joseph Ngute"
+}
+},
+"COD": {
+"hos": {
+"role": "President",
+"name": "Félix Tshisekedi"
+},
+"hog": {
+"role": "Prime Minister",
+"name": "Judith Suminwa"
+}
+},
+"COG": {
+"hos": {
+"role": "President",
+"name": "Denis Sassou Nguesso"
+},
+"hog": {
+"role": "Prime Minister",
+"name": "Anatole Collinet Makosso"
+}
+},
+"COL": {
+"hos": {
+"role": "President",
+"name": "Abelardo de la Espriella"
+},
+"hog": null
+},
+"CRI": {
+"hos": {
+"role": "President",
+"name": "Laura Fernández"
+},
+"hog": null
+},
+"CUB": {
+"hos": {
+"role": "First Secretary of the Communist Party",
+"name": "Miguel Díaz-Canel"
+},
+"hog": null
+},
+"CYP": {
+"hos": {
+"role": "President",
+"name": "Nikos Christodoulides"
+},
+"hog": null
+},
+"CZE": {
+"hos": {
+"role": "President",
+"name": "Petr Pavel"
+},
+"hog": {
+"role": "Prime Minister",
+"name": "Andrej Babiš"
+}
+},
+"DEU": {
+"hos": {
+"role": "President",
+"name": "Frank-Walter Steinmeier"
+},
+"hog": {
+"role": "Chancellor",
+"name": "Friedrich Merz"
+}
+},
+"DJI": {
+"hos": {
+"role": "President",
+"name": "Ismaïl Omar Guelleh"
+},
+"hog": null
+},
+"DNK": {
+"hos": {
+"role": "King",
+"name": "Frederik X"
+},
+"hog": {
+"role": "Prime Minister",
+"name": "Mette Frederiksen"
+}
+},
+"DOM": {
+"hos": {
+"role": "President",
+"name": "Luis Abinader"
+},
+"hog": null
+},
+"DZA": {
+"hos": {
+"role": "President",
+"name": "Abdelmadjid Tebboune"
+},
+"hog": {
+"role": "Prime Minister",
+"name": "Sifi Ghrieb"
+}
+},
+"ECU": {
+"hos": {
+"role": "President",
+"name": "Daniel Noboa"
+},
+"hog": null
+},
+"EGY": {
+"hos": {
+"role": "President",
+"name": "Abdel Fattah el-Sisi"
+},
+"hog": {
+"role": "Prime Minister",
+"name": "Mostafa Madbouly"
+}
+},
+"ERI": {
+"hos": {
+"role": "President",
+"name": "Isaias Afwerki"
+},
+"hog": null
+},
+"ESP": {
+"hos": {
+"role": "King",
+"name": "Felipe VI"
+},
+"hog": {
+"role": "Prime Minister",
+"name": "Pedro Sánchez"
+}
+},
+"EST": {
+"hos": {
+"role": "President",
+"name": "Ülle Madise"
+},
+"hog": {
+"role": "Prime Minister",
+"name": "Kristen Michal"
+}
+},
+"ETH": {
+"hos": {
+"role": "President",
+"name": "Taye Atske Selassie"
+},
+"hog": {
+"role": "Prime Minister",
+"name": "Abiy Ahmed"
+}
+},
+"FIN": {
+"hos": {
+"role": "President",
+"name": "Alexander Stubb"
+},
+"hog": {
+"role": "Prime Minister",
+"name": "Petteri Orpo"
+}
+},
+"FRA": {
+"hos": {
+"role": "President",
+"name": "Emmanuel Macron"
+},
+"hog": {
+"role": "Prime Minister",
+"name": "Sébastien Lecornu"
+}
+},
+"GAB": {
+"hos": {
+"role": "President",
+"name": "Brice Oligui Nguema"
+},
+"hog": null
+},
+"GBR": {
+"hos": {
+"role": "King",
+"name": "Charles III"
+},
+"hog": {
+"role": "Prime Minister",
+"name": "Andy Burnham"
+}
+},
+"GEO": {
+"hos": {
+"role": "Honorary Chairman of Georgian Dream",
+"name": "Bidzina Ivanishvili"
+},
+"hog": {
+"role": "President",
+"name": "Mikheil Kavelashvili"
+}
+},
+"GHA": {
+"hos": {
+"role": "President",
+"name": "John Mahama"
+},
+"hog": null
+},
+"GIN": {
+"hos": {
+"role": "President",
+"name": "Mamady Doumbouya"
+},
+"hog": {
+"role": "Prime Minister",
+"name": "Bah Oury"
+}
+},
+"GMB": {
+"hos": {
+"role": "President",
+"name": "Adama Barrow"
+},
+"hog": null
+},
+"GNB": {
+"hos": {
+"role": "Chief of the High Command",
+"name": "Horta Inta-A Na Man"
+},
+"hog": null
+},
+"GNQ": {
+"hos": {
+"role": "President",
+"name": "Teodoro Obiang Nguema Mbasogo"
+},
+"hog": {
+"role": "Prime Minister",
+"name": "Manuel Osa Nsue Nsua"
+}
+},
+"GRC": {
+"hos": {
+"role": "President",
+"name": "Konstantinos Tasoulas"
+},
+"hog": {
+"role": "Prime Minister",
+"name": "Kyriakos Mitsotakis"
+}
+},
+"GTM": {
+"hos": {
+"role": "President",
+"name": "Bernardo Arévalo"
+},
+"hog": null
+},
+"HND": {
+"hos": {
+"role": "President",
+"name": "Nasry Asfura"
+},
+"hog": null
+},
+"HRV": {
+"hos": {
+"role": "President",
+"name": "Zoran Milanović"
+},
+"hog": {
+"role": "Prime Minister",
+"name": "Andrej Plenković"
+}
+},
+"HTI": {
+"hos": {
+"role": "President",
+"name": "Vacant"
+},
+"hog": {
+"role": "Acting Prime Minister",
+"name": "Alix Didier Fils-Aimé"
+}
+},
+"HUN": {
+"hos": {
+"role": "President",
+"name": "András Baka"
+},
+"hog": {
+"role": "Prime Minister",
+"name": "Péter Magyar"
+}
+},
+"IDN": {
+"hos": {
+"role": "President",
+"name": "Prabowo Subianto"
+},
+"hog": null
+},
+"IND": {
+"hos": {
+"role": "President",
+"name": "Droupadi Murmu"
+},
+"hog": {
+"role": "Prime Minister",
+"name": "Narendra Modi"
+}
+},
+"IRL": {
+"hos": {
+"role": "President",
+"name": "Catherine Connolly"
+},
+"hog": {
+"role": "Taoiseach",
+"name": "Micheál Martin"
+}
+},
+"IRN": {
+"hos": {
+"role": "Supreme Leader",
+"name": "Mojtaba Khamenei"
+},
+"hog": {
+"role": "President",
+"name": "Masoud Pezeshkian"
+}
+},
+"IRQ": {
+"hos": {
+"role": "President",
+"name": "Nizar Amidi"
+},
+"hog": {
+"role": "Prime Minister",
+"name": "Ali al-Zaidi"
+}
+},
+"ISR": {
+"hos": {
+"role": "President",
+"name": "Isaac Herzog"
+},
+"hog": {
+"role": "Caretaker Prime Minister",
+"name": "Benjamin Netanyahu"
+}
+},
+"ITA": {
+"hos": {
+"role": "President",
+"name": "Sergio Mattarella"
+},
+"hog": {
+"role": "Prime Minister",
+"name": "Giorgia Meloni"
+}
+},
+"JAM": {
+"hos": {
+"role": "King",
+"name": "Charles III"
+},
+"hog": {
+"role": "Prime Minister",
+"name": "Andrew Holness"
+}
+},
+"JOR": {
+"hos": {
+"role": "King",
+"name": "Abdullah II"
+},
+"hog": {
+"role": "Prime Minister",
+"name": "Jafar Hassan"
+}
+},
+"JPN": {
+"hos": {
+"role": "Emperor",
+"name": "Naruhito"
+},
+"hog": {
+"role": "Prime Minister",
+"name": "Sanae Takaichi"
+}
+},
+"KAZ": {
+"hos": {
+"role": "President",
+"name": "Kassym-Jomart Tokayev"
+},
+"hog": {
+"role": "Prime Minister",
+"name": "Oljas Bektenov"
+}
+},
+"KEN": {
+"hos": {
+"role": "President",
+"name": "William Ruto"
+},
+"hog": null
+},
+"KGZ": {
+"hos": {
+"role": "President",
+"name": "Sadyr Japarov"
+},
+"hog": null
+},
+"KHM": {
+"hos": {
+"role": "President of the People's Party",
+"name": "Hun Sen"
+},
+"hog": {
+"role": "King",
+"name": "Norodom Sihamoni"
+}
+},
+"KOR": {
+"hos": {
+"role": "President",
+"name": "Lee Jae Myung"
+},
+"hog": null
+},
+"KWT": {
+"hos": {
+"role": "Emir",
+"name": "Mishal Al-Ahmad Al-Jaber Al-Sabah"
+},
+"hog": {
+"role": "Prime Minister",
+"name": "Ahmad Al-Abdullah Al-Sabah"
+}
+},
+"LAO": {
+"hos": {
+"role": "General Secretary of the People's Revolutionary Party",
+"name": "Thongloun Sisoulith"
+},
+"hog": null
+},
+"LBN": {
+"hos": {
+"role": "President",
+"name": "Joseph Aoun"
+},
+"hog": {
+"role": "Prime Minister",
+"name": "Nawaf Salam"
+}
+},
+"LBR": {
+"hos": {
+"role": "President",
+"name": "Joseph Boakai"
+},
+"hog": null
+},
+"LBY": {
+"hos": {
+"role": "Chairman of the Presidential Council",
+"name": "Mohamed al-Menfi"
+},
+"hog": {
+"role": "Prime Minister",
+"name": "Abdul Hamid Dbeibeh"
+}
+},
+"LKA": {
+"hos": {
+"role": "President",
+"name": "Anura Kumara Dissanayake"
+},
+"hog": null
+},
+"LSO": {
+"hos": {
+"role": "King",
+"name": "Letsie III"
+},
+"hog": {
+"role": "Prime Minister",
+"name": "Sam Matekane"
+}
+},
+"LTU": {
+"hos": {
+"role": "President",
+"name": "Gitanas Nausėda"
+},
+"hog": {
+"role": "Prime Minister",
+"name": "Mindaugas Sinkevičius"
+}
+},
+"LVA": {
+"hos": {
+"role": "President",
+"name": "Edgars Rinkēvičs"
+},
+"hog": {
+"role": "Prime Minister",
+"name": "Andris Kulbergs"
+}
+},
+"MAR": {
+"hos": {
+"role": "King",
+"name": "Mohammed VI"
+},
+"hog": {
+"role": "Prime Minister",
+"name": "Fatima Ezzahra El Mansouri"
+}
+},
+"MDA": {
+"hos": {
+"role": "President",
+"name": "Maia Sandu"
+},
+"hog": {
+"role": "Prime Minister",
+"name": "Vasile Tofan"
+}
+},
+"MDG": {
+"hos": {
+"role": "President of the Council of the Presidency for the Re-Foundation of the Republic",
+"name": "Michael Randrianirina"
+},
+"hog": null
+},
+"MEX": {
+"hos": {
+"role": "President",
+"name": "Claudia Sheinbaum"
+},
+"hog": null
+},
+"MKD": {
+"hos": {
+"role": "President",
+"name": "Gordana Siljanovska-Davkova"
+},
+"hog": {
+"role": "Prime Minister",
+"name": "Hristijan Mickoski"
+}
+},
+"MLI": {
+"hos": {
+"role": "President",
+"name": "Assimi Goita"
+},
+"hog": null
+},
+"MMR": {
+"hos": {
+"role": "President",
+"name": "Min Aung Hlaing"
+},
+"hog": null
+},
+"MNG": {
+"hos": {
+"role": "Acting President",
+"name": "Sandagiin Byambatsogt"
+},
+"hog": {
+"role": "Prime Minister",
+"name": "Nyam-Osoryn Uchral"
+}
+},
+"MOZ": {
+"hos": {
+"role": "President",
+"name": "Daniel Chapo"
+},
+"hog": null
+},
+"MRT": {
+"hos": {
+"role": "President",
+"name": "Mohamed Ould Ghazouani"
+},
+"hog": {
+"role": "Prime Minister",
+"name": "Mokhtar Ould Djay"
+}
+},
+"MWI": {
+"hos": {
+"role": "President",
+"name": "Peter Mutharika"
+},
+"hog": null
+},
+"MYS": {
+"hos": {
+"role": "King",
+"name": "Ibrahim Iskandar"
+},
+"hog": {
+"role": "Prime Minister",
+"name": "Anwar Ibrahim"
+}
+},
+"NAM": {
+"hos": {
+"role": "President",
+"name": "Netumbo Nandi-Ndaitwah"
+},
+"hog": null
+},
+"NER": {
+"hos": {
+"role": "President of the National Council for the Safeguard of the Homeland",
+"name": "Abdourahamane Tiani"
+},
+"hog": null
+},
+"NGA": {
+"hos": {
+"role": "President",
+"name": "Bola Tinubu"
+},
+"hog": null
+},
+"NIC": {
+"hos": {
+"role": "Co-Presidents",
+"name": "Daniel Ortega and Rosario Murillo"
+},
+"hog": null
+},
+"NLD": {
+"hos": {
+"role": "King",
+"name": "Willem-Alexander"
+},
+"hog": {
+"role": "Prime Minister",
+"name": "Rob Jetten"
+}
+},
+"NOR": {
+"hos": {
+"role": "King",
+"name": "Haakon VIII"
+},
+"hog": {
+"role": "Prime Minister",
+"name": "Jonas Gahr Støre"
+}
+},
+"NPL": {
+"hos": {
+"role": "President",
+"name": "Ram Chandra Paudel"
+},
+"hog": {
+"role": "Prime Minister",
+"name": "Balen Shah"
+}
+},
+"NZL": {
+"hos": {
+"role": "King",
+"name": "Charles III"
+},
+"hog": {
+"role": "Prime Minister",
+"name": "Christopher Luxon"
+}
+},
+"OMN": {
+"hos": {
+"role": "Sultan",
+"name": "Haitham bin Tariq"
+},
+"hog": {
+"role": "Prime Minister",
+"name": "Haitham bin Tariq"
+}
+},
+"PAK": {
+"hos": {
+"role": "President",
+"name": "Asif Ali Zardari"
+},
+"hog": {
+"role": "Prime Minister",
+"name": "Shehbaz Sharif"
+}
+},
+"PAN": {
+"hos": {
+"role": "President",
+"name": "José Raúl Mulino"
+},
+"hog": null
+},
+"PER": {
+"hos": {
+"role": "President",
+"name": "Keiko Fujimori"
+},
+"hog": null
+},
+"PHL": {
+"hos": {
+"role": "President",
+"name": "Bongbong Marcos"
+},
+"hog": null
+},
+"PNG": {
+"hos": {
+"role": "King",
+"name": "Charles III"
+},
+"hog": {
+"role": "Prime Minister",
+"name": "James Marape"
+}
+},
+"POL": {
+"hos": {
+"role": "President",
+"name": "Karol Nawrocki"
+},
+"hog": {
+"role": "Prime Minister",
+"name": "Donald Tusk"
+}
+},
+"PRK": {
+"hos": {
+"role": "General Secretary of the Workers' Party",
+"name": "Kim Jong Un"
+},
+"hog": null
+},
+"PRT": {
+"hos": {
+"role": "President",
+"name": "António José Seguro"
+},
+"hog": {
+"role": "Prime Minister",
+"name": "Luís Montenegro"
+}
+},
+"PRY": {
+"hos": {
+"role": "President",
+"name": "Pedro Alliana"
+},
+"hog": null
+},
+"PSX": {
+"hos": {
+"role": "President",
+"name": "Mahmoud Abbas"
+},
+"hog": {
+"role": "Prime Minister",
+"name": "Mohammad Mustafa"
+}
+},
+"QAT": {
+"hos": {
+"role": "Emir",
+"name": "Tamim bin Hamad Al Thani"
+},
+"hog": {
+"role": "Prime Minister",
+"name": "Mohammed bin Abdulrahman bin Jassim Al Thani"
+}
+},
+"ROU": {
+"hos": {
+"role": "President",
+"name": "Nicușor Dan"
+},
+"hog": {
+"role": "Prime Minister",
+"name": "Luca Niculescu"
+}
+},
+"RUS": {
+"hos": {
+"role": "President",
+"name": "Vladimir Putin"
+},
+"hog": {
+"role": "Prime Minister",
+"name": "Mikhail Mishustin"
+}
+},
+"RWA": {
+"hos": {
+"role": "President",
+"name": "Paul Kagame"
+},
+"hog": {
+"role": "Prime Minister",
+"name": "Justin Nsengiyumva"
+}
+},
+"SAU": {
+"hos": {
+"role": "Crown Prince",
+"name": "Mohammed bin Salman"
+},
+"hog": {
+"role": "King",
+"name": "Salman"
+}
+},
+"SDN": {
+"hos": {
+"role": "",
+"name": "Transitional Sovereignty Council"
+},
+"hog": {
+"role": "Prime Minister",
+"name": "Kamil Idris"
+}
+},
+"SDS": {
+"hos": {
+"role": "President",
+"name": "Salva Kiir"
+},
+"hog": null
+},
+"SEN": {
+"hos": {
+"role": "President",
+"name": "Bassirou Diomaye Faye"
+},
+"hog": {
+"role": "Prime Minister",
+"name": "Ahmadou Al Aminou Lo"
+}
+},
+"SGP": {
+"hos": {
+"role": "President",
+"name": "Tharman Shanmugaratnam"
+},
+"hog": {
+"role": "Prime Minister",
+"name": "Lawrence Wong"
+}
+},
+"SLE": {
+"hos": {
+"role": "President",
+"name": "Julius Maada Bio"
+},
+"hog": null
+},
+"SLV": {
+"hos": {
+"role": "President",
+"name": "Nayib Bukele"
+},
+"hog": null
+},
+"SOM": {
+"hos": {
+"role": "President",
+"name": "Hassan Sheikh Mohamud"
+},
+"hog": {
+"role": "Prime Minister",
+"name": "Hamza Abdi Barre"
+}
+},
+"SRB": {
+"hos": {
+"role": "Acting President",
+"name": "Aleksandar Čupić"
+},
+"hog": {
+"role": "Prime Minister",
+"name": "Đuro Macut"
+}
+},
+"SVK": {
+"hos": {
+"role": "President",
+"name": "Peter Pellegrini"
+},
+"hog": {
+"role": "Prime Minister",
+"name": "Robert Fico"
+}
+},
+"SVN": {
+"hos": {
+"role": "President",
+"name": "Nataša Pirc Musar"
+},
+"hog": {
+"role": "Prime Minister",
+"name": "Janez Janša"
+}
+},
+"SWE": {
+"hos": {
+"role": "King",
+"name": "Carl XVI Gustaf"
+},
+"hog": {
+"role": "Caretaker Prime Minister",
+"name": "Ulf Kristersson"
+}
+},
+"SWZ": {
+"hos": {
+"role": "King",
+"name": "Mswati III"
+},
+"hog": {
+"role": "Prime Minister",
+"name": "Russell Dlamini"
+}
+},
+"SYR": {
+"hos": {
+"role": "President",
+"name": "Ahmed al-Sharaa"
+},
+"hog": null
+},
+"TCD": {
+"hos": {
+"role": "President",
+"name": "Mahamat Déby"
+},
+"hog": {
+"role": "Prime Minister",
+"name": "Allamaye Halina"
+}
+},
+"TGO": {
+"hos": {
+"role": "President",
+"name": "Jean-Lucien Savi de Tové"
+},
+"hog": {
+"role": "Prime Minister",
+"name": "Faure Gnassingbé"
+}
+},
+"THA": {
+"hos": {
+"role": "King",
+"name": "Vajiralongkorn"
+},
+"hog": {
+"role": "Prime Minister",
+"name": "Anutin Charnvirakul"
+}
+},
+"TJK": {
+"hos": {
+"role": "President",
+"name": "Emomali Rahmon"
+},
+"hog": {
+"role": "Prime Minister",
+"name": "Qohir Rasulzoda"
+}
+},
+"TKM": {
+"hos": {
+"role": "Chairman of the People's Council",
+"name": "Gurbanguly Berdimuhamedow"
+},
+"hog": {
+"role": "President",
+"name": "Serdar Berdimuhamedow"
+}
+},
+"TLS": {
+"hos": {
+"role": "President",
+"name": "José Ramos-Horta"
+},
+"hog": {
+"role": "Prime Minister",
+"name": "Xanana Gusmão"
+}
+},
+"TTO": {
+"hos": {
+"role": "President",
+"name": "Christine Kangaloo"
+},
+"hog": {
+"role": "Prime Minister",
+"name": "Kamla Persad-Bissessar"
+}
+},
+"TUN": {
+"hos": {
+"role": "President",
+"name": "Kais Saied"
+},
+"hog": {
+"role": "Prime Minister",
+"name": "Sara Zaafarani"
+}
+},
+"TUR": {
+"hos": {
+"role": "President",
+"name": "Recep Tayyip Erdoğan"
+},
+"hog": null
+},
+"TWN": {
+"hos": {
+"role": "President",
+"name": "Lai Ching-te"
+},
+"hog": {
+"role": "Premier",
+"name": "Cho Jung-tai"
+}
+},
+"TZA": {
+"hos": {
+"role": "President",
+"name": "Samia Suluhu Hassan"
+},
+"hog": null
+},
+"UGA": {
+"hos": {
+"role": "President",
+"name": "Yoweri Museveni"
+},
+"hog": null
+},
+"UKR": {
+"hos": {
+"role": "President",
+"name": "Volodymyr Zelenskyy"
+},
+"hog": {
+"role": "Prime Minister",
+"name": "Serhii Koretskyi"
+}
+},
+"URY": {
+"hos": {
+"role": "President",
+"name": "Yamandú Orsi"
+},
+"hog": null
+},
+"USA": {
+"hos": {
+"role": "President",
+"name": "Donald Trump"
+},
+"hog": null
+},
+"UZB": {
+"hos": {
+"role": "President",
+"name": "Shavkat Mirziyoyev"
+},
+"hog": {
+"role": "Prime Minister",
+"name": "Abdulla Aripov"
+}
+},
+"VEN": {
+"hos": {
+"role": "Acting President",
+"name": "Delcy Rodríguez"
+},
+"hog": null
+},
+"VNM": {
+"hos": {
+"role": "General Secretary of the Communist Party",
+"name": "Tô Lâm"
+},
+"hog": null
+},
+"YEM": {
+"hos": {
+"role": "President of the Presidential Leadership Council",
+"name": "Rashad al-Alimi"
+},
+"hog": {
+"role": "Prime Minister",
+"name": "Shaya al-Zindani"
+}
+},
+"ZAF": {
+"hos": {
+"role": "President",
+"name": "Cyril Ramaphosa"
+},
+"hog": null
+},
+"ZMB": {
+"hos": {
+"role": "President",
+"name": "Hakainde Hichilema"
+},
+"hog": null
+},
+"ZWE": {
+"hos": {
+"role": "President",
+"name": "Emmerson Mnangagwa"
+},
+"hog": null
+}
+}
+}

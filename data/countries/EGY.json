@@ -1,0 +1,1088 @@
+{
+ "id": "EGY",
+ "ar": "مصر",
+ "en": "Egypt",
+ "tier": "A",
+ "asOf": "2026-11",
+ "src": {
+  "wiki_air": {
+   "t": "Wikipedia: Egyptian Air Force",
+   "u": "https://en.wikipedia.org/wiki/Egyptian_Air_Force?oldid=1386638571",
+   "y": 2026,
+   "note": "نسخة الصفحة بتاريخ السحب؛ أرقام ويكيبيديا تنراجع ويا مصادر ثانية"
+  },
+  "wiki_army": {
+   "t": "Wikipedia: List of equipment of the Egyptian Army",
+   "u": "https://en.wikipedia.org/wiki/List_of_equipment_of_the_Egyptian_Army?oldid=1386416371",
+   "y": 2026,
+   "note": "نسخة الصفحة بتاريخ السحب؛ أرقام ويكيبيديا تنراجع ويا مصادر ثانية"
+  },
+  "wiki_navy": {
+   "t": "Wikipedia: Egyptian Navy",
+   "u": "https://en.wikipedia.org/wiki/Egyptian_Navy?oldid=1386638877",
+   "y": 2026,
+   "note": "نسخة الصفحة بتاريخ السحب؛ أرقام ويكيبيديا تنراجع ويا مصادر ثانية"
+  },
+  "iiss_eq": {
+   "t": "Wikipedia: List of countries by level of military equipment (من IISS Military Balance ومصادر ثانية)",
+   "u": "https://en.wikipedia.org/wiki/List_of_countries_by_level_of_military_equipment?oldid=1384804191",
+   "y": 2025
+  },
+  "iiss_pers": {
+   "t": "Wikipedia: List of countries by number of military and paramilitary personnel (جدول IISS Military Balance)",
+   "u": "https://en.wikipedia.org/wiki/List_of_countries_by_number_of_military_and_paramilitary_personnel?oldid=1380910017",
+   "y": 2025
+  },
+  "wb": {
+   "t": "World Bank WDI (SP.POP.TOTL, NY.GDP.MKTP.CD, NY.GDP.MKTP.KD.ZG, MS.MIL.XPND.CD/GD.ZS ← SIPRI, MS.MIL.TOTL.P1, FP.CPI.TOTL.ZG)",
+   "u": "https://api.worldbank.org/v2/",
+   "y": 2026
+  },
+  "govt": {
+   "t": "تصنيف نظام الحكم: دساتير الدول + CIA World Factbook «Government type» + V-Dem/Freedom House لدرجة الحرية (تصنيف المصمم 2026)",
+   "u": "https://www.cia.gov/the-world-factbook/field/government-type/",
+   "y": 2026
+  },
+  "leaders": {
+   "t": "Wikipedia: List of current heads of state and government",
+   "u": "https://en.wikipedia.org/wiki/List_of_current_heads_of_state_and_government?oldid=1386623862",
+   "y": 2026,
+   "note": "سحب نوفمبر 2026"
+  },
+  "rules": {
+   "t": "قواعد من blocs.json وconflicts.json وsanctions.json (تكتل دفاعي +40، معاهدة +50، حرب −90، عقوبات ثقيلة −40...)",
+   "u": "data/world/",
+   "y": 2026
+  },
+  "relk": {
+   "t": "تقدير المصمم للعلاقات الثنائية المعروفة (تشرين الثاني 2026): حروب، نزاعات حدودية، تحالفات غير رسمية، تطبيع، عداء تاريخي",
+   "u": "https://en.wikipedia.org/wiki/Foreign_relations_by_country",
+   "y": 2026
+  },
+  "tierA": {
+   "t": "تقدير المصمم (تشرين الثاني 2026) لصناعة السلاح والاستقرار: SIPRI Arms Transfers Database (أكبر المصدّرين 2020–24)، SIPRI Top 100 Arms-Producing Companies، Fragile States Index 2025، أخبار 2026",
+   "u": "https://www.sipri.org/databases/armstransfers",
+   "y": 2026
+  }
+ },
+ "gov": {
+  "type": "auth",
+  "ar": "رئاسي سلطوي",
+  "free": 0,
+  "hos": {
+   "role": "President",
+   "name": "Abdel Fattah el-Sisi"
+  },
+  "hog": {
+   "role": "Prime Minister",
+   "name": "Mostafa Madbouly"
+  },
+  "s": "govt,leaders",
+  "c": "ح"
+ },
+ "pop": {
+  "v": 118365995,
+  "y": 2025,
+  "s": "wb",
+  "c": "ح"
+ },
+ "eco": {
+  "gdpBusd": {
+   "v": 365.3,
+   "y": 2025,
+   "s": "wb",
+   "c": "ح"
+  },
+  "growth": {
+   "v": 4.4,
+   "y": 2025,
+   "s": "wb",
+   "c": "ح"
+  },
+  "infl": {
+   "v": 14.1,
+   "y": 2025,
+   "s": "wb",
+   "c": "ح"
+  },
+  "oilRentPct": {
+   "v": 3.0,
+   "y": 2021,
+   "s": "wb",
+   "c": "ح"
+  }
+ },
+ "mil": {
+  "budgetBusd": {
+   "v": 2.5,
+   "y": 2025,
+   "s": "wb",
+   "c": "ح"
+  },
+  "budgetPctGdp": {
+   "v": 0.61,
+   "y": 2025,
+   "s": "wb",
+   "c": "ح"
+  },
+  "personnelWB": {
+   "v": 836000,
+   "y": 2020,
+   "s": "wb",
+   "c": "ح"
+  },
+  "sum": {
+   "tanks": {
+    "v": 5340,
+    "s": "iiss_eq",
+    "c": "ت"
+   },
+   "carriers": {
+    "v": 2,
+    "s": "iiss_eq",
+    "c": "ت"
+   },
+   "amphib": {
+    "v": 4,
+    "s": "iiss_eq",
+    "c": "ت"
+   },
+   "cruisers": {
+    "v": 0,
+    "s": "iiss_eq",
+    "c": "ت"
+   },
+   "destroyers": {
+    "v": 0,
+    "s": "iiss_eq",
+    "c": "ت"
+   },
+   "frigates": {
+    "v": 13,
+    "s": "iiss_eq",
+    "c": "ت"
+   },
+   "corvettes": {
+    "v": 7,
+    "s": "iiss_eq",
+    "c": "ت"
+   },
+   "subNuc": {
+    "v": 0,
+    "s": "iiss_eq",
+    "c": "ت"
+   },
+   "subs": {
+    "v": 8,
+    "s": "iiss_eq",
+    "c": "ت"
+   },
+   "combatAir": {
+    "v": 426,
+    "s": "iiss_eq",
+    "c": "ت"
+   },
+   "attackHeli": {
+    "v": 152,
+    "s": "iiss_eq",
+    "c": "ت"
+   },
+   "sats": {
+    "v": 1,
+    "s": "iiss_eq",
+    "c": "ت"
+   },
+   "active": {
+    "v": 438500,
+    "s": "iiss_pers",
+    "c": "ت"
+   },
+   "reserve": {
+    "v": 479000,
+    "s": "iiss_pers",
+    "c": "ت"
+   },
+   "para": {
+    "v": 397000,
+    "s": "iiss_pers",
+    "c": "ت"
+   }
+  },
+  "land": [
+   {
+    "m": "MILAN II",
+    "n": 345,
+    "orig": "FRA",
+    "s": "wiki_army",
+    "c": "ت",
+    "gen": 2,
+    "cat": "atgm"
+   },
+   {
+    "m": "Swingfire",
+    "n": 260,
+    "orig": "GBR",
+    "s": "wiki_army",
+    "c": "ت",
+    "gen": 2,
+    "cat": "atgm"
+   },
+   {
+    "m": "BGM-71D TOW II",
+    "n": 500,
+    "orig": "USA",
+    "s": "wiki_army",
+    "c": "ت",
+    "gen": 2,
+    "cat": "atgm"
+   },
+   {
+    "m": "Akeron MP",
+    "n": 15,
+    "orig": "FRA",
+    "s": "wiki_army",
+    "c": "ت",
+    "gen": 2,
+    "cat": "atgm"
+   },
+   {
+    "m": "FGM-148 Javelin",
+    "n": 148,
+    "orig": "USA",
+    "s": "wiki_army",
+    "c": "ت",
+    "gen": 2,
+    "cat": "atgm"
+   },
+   {
+    "m": "M113/YPR-765",
+    "n": 2700,
+    "orig": "USA",
+    "s": "wiki_army",
+    "c": "ت",
+    "gen": 2,
+    "cat": "atgm"
+   },
+   {
+    "m": "BTR-50",
+    "n": 500,
+    "orig": "SUN",
+    "s": "wiki_army",
+    "c": "ت",
+    "gen": 2,
+    "cat": "apc"
+   },
+   {
+    "m": "OT-62 TOPAS",
+    "n": 200,
+    "orig": "CSK",
+    "s": "wiki_army",
+    "c": "ت",
+    "gen": 2,
+    "cat": "apc"
+   },
+   {
+    "m": "BMR-600",
+    "n": 250,
+    "orig": "ESP",
+    "s": "wiki_army",
+    "c": "ت",
+    "gen": 2,
+    "cat": "apc"
+   },
+   {
+    "m": "Fahd",
+    "n": 410,
+    "orig": "EGY",
+    "s": "wiki_army",
+    "c": "ت",
+    "gen": 2,
+    "cat": "atgm"
+   },
+   {
+    "m": "BTR-60",
+    "n": 250,
+    "orig": "SUN",
+    "s": "wiki_army",
+    "c": "ت",
+    "gen": 2,
+    "cat": "apc"
+   },
+   {
+    "m": "Walid",
+    "n": 650,
+    "orig": "EGY",
+    "s": "wiki_army",
+    "c": "ت",
+    "gen": 2,
+    "cat": "apc"
+   },
+   {
+    "m": "Caiman",
+    "n": 535,
+    "orig": "USA",
+    "s": "wiki_army",
+    "c": "ت",
+    "gen": 2,
+    "cat": "mrap"
+   },
+   {
+    "m": "RG-33",
+    "n": 449,
+    "orig": "ZAF",
+    "s": "wiki_army",
+    "c": "ت",
+    "gen": 2,
+    "cat": "mrap"
+   },
+   {
+    "m": "M901",
+    "n": 52,
+    "orig": "USA",
+    "s": "wiki_army",
+    "c": "ت",
+    "gen": 2,
+    "cat": "atgm"
+   },
+   {
+    "m": "YPR-765",
+    "n": 300,
+    "orig": "NLD",
+    "s": "wiki_army",
+    "c": "ت",
+    "gen": 2,
+    "cat": "atgm"
+   },
+   {
+    "m": "Type 63 multiple rocket launcher",
+    "n": 22,
+    "orig": "CHN",
+    "s": "wiki_army",
+    "c": "ت",
+    "gen": 2,
+    "cat": "mlrs"
+   },
+   {
+    "m": "ATS-59",
+    "n": 18,
+    "orig": "SUN",
+    "s": "wiki_army",
+    "c": "ت",
+    "gen": 2,
+    "cat": "mlrs"
+   },
+   {
+    "m": "BM-21",
+    "n": 256,
+    "orig": "SUN",
+    "s": "wiki_army",
+    "c": "ت",
+    "gen": 2,
+    "cat": "mlrs"
+   },
+   {
+    "m": "K-136 Kooryong",
+    "n": 36,
+    "orig": "KOR",
+    "s": "wiki_army",
+    "c": "ت",
+    "gen": 2,
+    "cat": "mlrs"
+   },
+   {
+    "m": "M270",
+    "n": 26,
+    "orig": "USA",
+    "s": "wiki_army",
+    "c": "ت",
+    "gen": 2,
+    "cat": "mlrs"
+   },
+   {
+    "m": "SP-122",
+    "n": 38,
+    "orig": "SUN",
+    "s": "wiki_army",
+    "c": "ت",
+    "gen": 2,
+    "cat": "spg"
+   },
+   {
+    "m": "M-46",
+    "n": 100,
+    "orig": "SUN",
+    "s": "wiki_army",
+    "c": "ت",
+    "gen": 2,
+    "cat": "spg"
+   },
+   {
+    "m": "M109",
+    "n": 325,
+    "orig": "USA",
+    "s": "wiki_army",
+    "c": "ت",
+    "gen": 2,
+    "cat": "spg"
+   },
+   {
+    "m": "M110",
+    "n": 50,
+    "orig": "INT",
+    "s": "wiki_army",
+    "c": "ت",
+    "gen": 2,
+    "cat": "spg"
+   },
+   {
+    "m": "D-30",
+    "n": 100,
+    "orig": "SUN",
+    "s": "wiki_army",
+    "c": "ت",
+    "gen": 2,
+    "cat": "towed"
+   },
+   {
+    "m": "M-30",
+    "n": 122,
+    "orig": "SUN",
+    "s": "wiki_army",
+    "c": "ت",
+    "gen": 2,
+    "cat": "towed"
+   },
+   {
+    "m": "M-46",
+    "n": 320,
+    "orig": "SUN",
+    "s": "wiki_army",
+    "c": "ت",
+    "gen": 2,
+    "cat": "towed"
+   },
+   {
+    "m": "GH 52",
+    "n": 16,
+    "orig": "FIN",
+    "s": "wiki_army",
+    "c": "ت",
+    "gen": 2,
+    "cat": "towed"
+   },
+   {
+    "m": "M-160",
+    "n": 30,
+    "orig": "SUN",
+    "s": "wiki_army",
+    "c": "ت",
+    "gen": 2,
+    "cat": "spg"
+   },
+   {
+    "m": "Skyguard Amoun",
+    "n": 36,
+    "orig": "CHE",
+    "s": "wiki_army",
+    "c": "ت",
+    "note": "72 GDF units used with one Skyguard unit and two Sparrow SAM launchers per battery",
+    "gen": 2,
+    "cat": "towed"
+   },
+   {
+    "m": "M167 VADS",
+    "n": 72,
+    "orig": "USA",
+    "s": "wiki_army",
+    "c": "ت",
+    "gen": 2,
+    "cat": "towed"
+   },
+   {
+    "m": "ZPU",
+    "n": 200,
+    "orig": "SUN",
+    "s": "wiki_army",
+    "c": "ت",
+    "gen": 2,
+    "cat": "towed"
+   },
+   {
+    "m": "ZU-23-2",
+    "n": 280,
+    "orig": "SUN",
+    "s": "wiki_army",
+    "c": "ت",
+    "note": "280 as Nile 23 and Sinai 23, and 650 upgraded with radar guidance",
+    "gen": 2,
+    "cat": "towed"
+   },
+   {
+    "m": "61-K",
+    "n": 200,
+    "orig": "SUN",
+    "s": "wiki_army",
+    "c": "ت",
+    "note": "700",
+    "gen": 2,
+    "cat": "towed"
+   },
+   {
+    "m": "S-60",
+    "n": 200,
+    "orig": "SUN",
+    "s": "wiki_army",
+    "c": "ت",
+    "note": "600",
+    "gen": 2,
+    "cat": "towed"
+   }
+  ],
+  "air": [
+   {
+    "m": "Dassault Rafale (DM/EM F4.2 Variant)",
+    "n": 46,
+    "orig": "FRA",
+    "s": "wiki_air",
+    "c": "ت",
+    "note": "8 more to be delivered by end of 2026",
+    "gen": 4,
+    "cat": "fighter"
+   },
+   {
+    "m": "F-16 Fighting Falcon (C/D Block 40/52)",
+    "n": 220,
+    "orig": "USA",
+    "s": "wiki_air",
+    "c": "ت",
+    "note": "All variants upgraded to Block 40/52",
+    "gen": 3,
+    "cat": "fighter"
+   },
+   {
+    "m": "MiG-29M (M/M2)",
+    "n": 45,
+    "orig": "RUS",
+    "s": "wiki_air",
+    "c": "ت",
+    "gen": 3,
+    "cat": "fighter"
+   },
+   {
+    "m": "Mirage 2000",
+    "n": 18,
+    "orig": "FRA",
+    "s": "wiki_air",
+    "c": "ت",
+    "gen": 3,
+    "cat": "fighter"
+   },
+   {
+    "m": "E-2 Hawkeye (E-2C)",
+    "n": 7,
+    "orig": "USA",
+    "s": "wiki_air",
+    "c": "ت",
+    "gen": 2,
+    "cat": "awacs"
+   },
+   {
+    "m": "Saab GlobalEye (Global 6500)",
+    "n": 2,
+    "orig": "SWE",
+    "s": "wiki_air",
+    "c": "ت",
+    "note": "On July 27th 2026, Saab announced that an order worth €910 million for 2 Saab GlobalEye aircraft The deliveries are expected in 2030.",
+    "gen": 2,
+    "cat": "awacs"
+   },
+   {
+    "m": "Antonov An-74 (An-74TK-200A)",
+    "n": 3,
+    "orig": "UKR",
+    "s": "wiki_air",
+    "c": "ت",
+    "gen": 2,
+    "cat": "transport"
+   },
+   {
+    "m": "Beechcraft 1900",
+    "n": 4,
+    "orig": "USA",
+    "s": "wiki_air",
+    "c": "ت",
+    "gen": 2,
+    "cat": "transport"
+   },
+   {
+    "m": "CASA C-295",
+    "n": 24,
+    "orig": "ESP",
+    "s": "wiki_air",
+    "c": "ت",
+    "gen": 2,
+    "cat": "transport"
+   },
+   {
+    "m": "C-130 Hercules (C-130H)",
+    "n": 20,
+    "orig": "USA",
+    "s": "wiki_air",
+    "c": "ت",
+    "note": "2 used for ELINT.",
+    "gen": 2,
+    "cat": "transport"
+   },
+   {
+    "m": "C-130J Super Hercules (C-130J-30)",
+    "n": 2,
+    "orig": "USA",
+    "s": "wiki_air",
+    "c": "ت",
+    "note": "10 more on order",
+    "gen": 2,
+    "cat": "transport"
+   },
+   {
+    "m": "Ilyushin Il-76 (Il-76MF)",
+    "n": 2,
+    "orig": "RUS",
+    "s": "wiki_air",
+    "c": "ت",
+    "note": "obtained from Royal Jordanian Air Force",
+    "gen": 2,
+    "cat": "transport"
+   },
+   {
+    "m": "Aérospatiale Gazelle (SA342K)",
+    "n": 45,
+    "orig": "FRA",
+    "s": "wiki_air",
+    "c": "ت",
+    "gen": 2,
+    "cat": "heli_attack"
+   },
+   {
+    "m": "AgustaWestland AW109",
+    "n": 3,
+    "orig": "ITA",
+    "s": "wiki_air",
+    "c": "ت",
+    "gen": 2,
+    "cat": "heli_util"
+   },
+   {
+    "m": "AgustaWestland AW139",
+    "n": 4,
+    "orig": "ITA",
+    "s": "wiki_air",
+    "c": "ت",
+    "note": "2 used for SAR.",
+    "gen": 2,
+    "cat": "heli_util"
+   },
+   {
+    "m": "AgustaWestland AW149",
+    "n": 5,
+    "orig": "ITA",
+    "s": "wiki_air",
+    "c": "ت",
+    "gen": 2,
+    "cat": "heli_util"
+   },
+   {
+    "m": "AgustaWestland AW189",
+    "n": 8,
+    "orig": "ITA",
+    "s": "wiki_air",
+    "c": "ت",
+    "note": "8 on order",
+    "gen": 2,
+    "cat": "heli_util"
+   },
+   {
+    "m": "AH-64 Apache (AH-64E)",
+    "n": 45,
+    "orig": "USA",
+    "s": "wiki_air",
+    "c": "ت",
+    "note": "10 More AH-64E's on order, to be delivered by 2031 All AH-64D variants have been upgraded to the E variant",
+    "gen": 4,
+    "cat": "heli_attack"
+   },
+   {
+    "m": "CH-47 Chinook (CH-47D)",
+    "n": 15,
+    "orig": "USA",
+    "s": "wiki_air",
+    "c": "ت",
+    "gen": 3,
+    "cat": "heli_util"
+   },
+   {
+    "m": "CH-47 Chinook (CH-47C)",
+    "n": 3,
+    "orig": "USA",
+    "s": "wiki_air",
+    "c": "ت",
+    "gen": 3,
+    "cat": "heli_util"
+   },
+   {
+    "m": "CH-47 Chinook (CH-47F)",
+    "n": 5,
+    "orig": "USA",
+    "s": "wiki_air",
+    "c": "ت",
+    "note": "7 more to be delivered by December 2026.",
+    "gen": 3,
+    "cat": "heli_util"
+   },
+   {
+    "m": "Kamov Ka-52",
+    "n": 46,
+    "orig": "RUS",
+    "s": "wiki_air",
+    "c": "ت",
+    "gen": 4,
+    "cat": "heli_attack"
+   },
+   {
+    "m": "Mil Mi-8 (Mi-8T)",
+    "n": 40,
+    "orig": "SUN",
+    "s": "wiki_air",
+    "c": "ت",
+    "gen": 2,
+    "cat": "heli_util"
+   },
+   {
+    "m": "Mil Mi-17 (Mi-17-1V)",
+    "n": 3,
+    "orig": "SUN",
+    "s": "wiki_air",
+    "c": "ت",
+    "gen": 2,
+    "cat": "heli_util"
+   },
+   {
+    "m": "Mil Mi-24 (Mi-24V)",
+    "n": 13,
+    "orig": "SUN",
+    "s": "wiki_air",
+    "c": "ت",
+    "gen": 3,
+    "cat": "heli_attack"
+   },
+   {
+    "m": "SH-2G Super Seasprite",
+    "n": 7,
+    "orig": "USA",
+    "s": "wiki_air",
+    "c": "ت",
+    "gen": 2,
+    "cat": "heli_util"
+   },
+   {
+    "m": "UH-60 Black Hawk (UH-60L)",
+    "n": 4,
+    "orig": "USA",
+    "s": "wiki_air",
+    "c": "ت",
+    "gen": 2,
+    "cat": "heli_util"
+   },
+   {
+    "m": "Westland Sea King (Commando Mk.2/1)",
+    "n": 22,
+    "orig": "GBR",
+    "s": "wiki_air",
+    "c": "ت",
+    "gen": 2,
+    "cat": "heli_util"
+   },
+   {
+    "m": "Alpha Jet",
+    "n": 53,
+    "orig": "FRA",
+    "s": "wiki_air",
+    "c": "ت",
+    "gen": 2,
+    "cat": "trainer"
+   },
+   {
+    "m": "Aero L-39",
+    "n": 11,
+    "orig": "CZE",
+    "s": "wiki_air",
+    "c": "ت",
+    "gen": 2,
+    "cat": "trainer"
+   },
+   {
+    "m": "Embraer EMB-312",
+    "n": 14,
+    "orig": "BRA",
+    "s": "wiki_air",
+    "c": "ت",
+    "gen": 2,
+    "cat": "trainer"
+   },
+   {
+    "m": "Grob G 115",
+    "n": 74,
+    "orig": "DEU",
+    "s": "wiki_air",
+    "c": "ت",
+    "gen": 2,
+    "cat": "trainer"
+   },
+   {
+    "m": "K-8",
+    "n": 30,
+    "orig": "CHN",
+    "s": "wiki_air",
+    "c": "ت",
+    "gen": 2,
+    "cat": "trainer"
+   },
+   {
+    "m": "Air Tractor AT-802 (AT-802U)",
+    "n": 12,
+    "orig": "USA",
+    "s": "wiki_air",
+    "c": "ت",
+    "note": "12 AT-802U (acquired from the UAE in 2016, first spotted in service in January 2018)",
+    "gen": 3,
+    "cat": "trainer"
+   },
+   {
+    "m": "WJ-700",
+    "n": 10,
+    "orig": "CHN",
+    "s": "wiki_air",
+    "c": "ت",
+    "gen": 1,
+    "cat": "uav_isr"
+   }
+  ],
+  "ad": [
+   {
+    "m": "S-300 (S-300VM (SA-23))",
+    "n": 4,
+    "orig": "RUS",
+    "s": "wiki_army",
+    "c": "ت",
+    "note": "Preparation to receive the S-300VM were under way in November 2014 First components delivered in March 2015. AA Range = 200 km, AA Ceiling =",
+    "gen": 3,
+    "cat": "long"
+   },
+   {
+    "m": "HQ9-B",
+    "n": 4,
+    "orig": "CHN",
+    "s": "wiki_army",
+    "c": "ت",
+    "gen": 2,
+    "cat": "short"
+   },
+   {
+    "m": "IRIS-T SLM, SLX, SLS",
+    "n": 7,
+    "orig": "DEU",
+    "s": "wiki_army",
+    "c": "ت",
+    "note": "The German government approved the sale of 7 IRIS-T SLM tactical medium range AD systems to Egypt in September 2018.",
+    "gen": 2,
+    "cat": "medium"
+   },
+   {
+    "m": "NASAMS (NASAMS 3)",
+    "n": 4,
+    "orig": "USA",
+    "s": "wiki_army",
+    "c": "ت",
+    "gen": 2,
+    "cat": "medium"
+   },
+   {
+    "m": "Volga (Tayer el-Sabah SA-2)",
+    "n": 100,
+    "orig": "SUN",
+    "s": "wiki_army",
+    "c": "ت",
+    "note": "100 units were delivered by USSR from 1970 to 1972 for use in the Yom Kippur War. The Egyptians were impressed by the system's performance a",
+    "gen": 1,
+    "cat": "short"
+   },
+   {
+    "m": "MIM-23 Hawk (Phase III)",
+    "n": 62,
+    "orig": "USA",
+    "s": "wiki_army",
+    "c": "ت",
+    "note": "On 25 February 2014, Egypt ordered new 186 rocket motors to extend the life of their Hawk batteries. Since there are 3 missiles per launch u",
+    "gen": 2,
+    "cat": "medium"
+   },
+   {
+    "m": "Pechora 2M (2M (SA-3))",
+    "n": 70,
+    "orig": "SUN",
+    "s": "wiki_army",
+    "c": "ت",
+    "note": "Originally Egypt received 200 units from USSR between 1970 and 1972 and they were used extensively during the Yom Kippur War. These units ag",
+    "gen": 2,
+    "cat": "short"
+   },
+   {
+    "m": "Kub (SA-6)",
+    "n": 56,
+    "orig": "SUN",
+    "s": "wiki_army",
+    "c": "ت",
+    "note": "Purchased from the Soviet Union after the disastrous 6 Day War and was used to great effect in the Yom Kippur War virtually denying the enti",
+    "gen": 2,
+    "cat": "medium"
+   },
+   {
+    "m": "Tor (M1 M2 (SA-15))",
+    "n": 16,
+    "orig": "SUN",
+    "s": "wiki_army",
+    "c": "ت",
+    "note": "16 units were purchased from Russia. The Tor-M2 was not previously known to be in Egyptian service until it was revealed in a video of an ai",
+    "gen": 3,
+    "cat": "short"
+   },
+   {
+    "m": "AN/TWQ-1 Avenger",
+    "n": 75,
+    "orig": "USA",
+    "s": "wiki_army",
+    "c": "ت",
+    "note": "Egypt originally ordered 50 units, but in 2006 it chose to order a further 25 units which all were delivered by September 2008. AA Range = 8",
+    "gen": 2,
+    "cat": "short"
+   },
+   {
+    "m": "Crotale (VT-1)",
+    "n": 36,
+    "orig": "FRA",
+    "s": "wiki_army",
+    "c": "ت",
+    "note": "Purchased from France in 1980. AA Range = 11 km, AA Ceiling = 6 km, Speed = 3.53",
+    "gen": 2,
+    "cat": "short"
+   },
+   {
+    "m": "MIM-72 Chaparral (MIM-72C)",
+    "n": 280,
+    "orig": "USA",
+    "s": "wiki_army",
+    "c": "ت",
+    "note": "Purchased from U.S. stock in 1987,2014 AA Range = 9 km, AA Ceiling = 4 km, Speed = Mach 1.5",
+    "gen": 2,
+    "cat": "short"
+   },
+   {
+    "m": "Strela-1 (SA-9)",
+    "n": 20,
+    "orig": "SUN",
+    "s": "wiki_army",
+    "c": "ت",
+    "note": "AA Range = 4.2 km, AA Ceiling = 3.5 km, Speed = Mach 1.8",
+    "gen": 2,
+    "cat": "short"
+   },
+   {
+    "m": "ZSU-57-2",
+    "n": 40,
+    "orig": "SUN",
+    "s": "wiki_army",
+    "c": "ت",
+    "note": "100 ordered in 1960 from Soviet Union and delivered between 1961 and 1962, with 40 remaining in storage today.",
+    "gen": 5,
+    "cat": "short"
+   }
+  ],
+  "msl": [
+   {
+    "m": "9K52 Luna-M",
+    "n": 9,
+    "orig": "SUN",
+    "s": "wiki_army",
+    "c": "ت",
+    "gen": 2,
+    "cat": "srbm"
+   }
+  ],
+  "navy": []
+ },
+ "ind": {
+  "tech": {
+   "arm": 2,
+   "air": 1,
+   "uav": 1,
+   "msl": 1,
+   "navy": 1,
+   "ew": 1,
+   "ind": 2
+  },
+  "makes": [
+   "تجميع أبرامز M1A1",
+   "مدرعات فهد/سينا",
+   "ذخيرة"
+  ],
+  "s": "tierA",
+  "c": "ت"
+ },
+ "pol": {
+  "factions": [
+   "army",
+   "security",
+   "street",
+   "biz"
+  ],
+  "stab": {
+   "v": 52,
+   "s": "tierA",
+   "c": "ت"
+  },
+  "warHome": [],
+  "insurgency": "أزمة اقتصادية"
+ },
+ "rel": {
+  "ARE": 10,
+  "BHR": 10,
+  "DJI": 10,
+  "DZA": 10,
+  "ETH": -50,
+  "IRQ": 45,
+  "ISR": 15,
+  "JOR": 10,
+  "KWT": 10,
+  "LBN": 10,
+  "LBY": 25,
+  "MAR": 10,
+  "MRT": 10,
+  "OMN": 10,
+  "PSX": 10,
+  "QAT": 10,
+  "RUS": 35,
+  "SAU": 60,
+  "SDN": 50,
+  "SOM": 10,
+  "SYR": 10,
+  "TUN": 10,
+  "TUR": 30,
+  "USA": 45,
+  "YEM": 10
+ },
+ "treaties": [
+  "ARAB"
+ ],
+ "sanctions": [],
+ "conflicts": [],
+ "notes": ""
+}

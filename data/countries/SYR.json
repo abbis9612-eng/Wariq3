@@ -1,0 +1,320 @@
+{
+ "id": "SYR",
+ "ar": "سوريا",
+ "en": "Syria",
+ "tier": "A",
+ "asOf": "2026-11",
+ "src": {
+  "wiki_air": {
+   "t": "Wikipedia: Syrian Air Force",
+   "u": "https://en.wikipedia.org/wiki/Syrian_Air_Force?oldid=1385260014",
+   "y": 2026,
+   "note": "نسخة الصفحة بتاريخ السحب؛ أرقام ويكيبيديا تنراجع ويا مصادر ثانية"
+  },
+  "wiki_army": {
+   "t": "Wikipedia: Syrian Army",
+   "u": "https://en.wikipedia.org/wiki/Syrian_Army?oldid=1383086720",
+   "y": 2026,
+   "note": "نسخة الصفحة بتاريخ السحب؛ أرقام ويكيبيديا تنراجع ويا مصادر ثانية"
+  },
+  "wiki_navy": {
+   "t": "Wikipedia: Syrian Navy",
+   "u": "https://en.wikipedia.org/wiki/Syrian_Navy?oldid=1385749548",
+   "y": 2026,
+   "note": "نسخة الصفحة بتاريخ السحب؛ أرقام ويكيبيديا تنراجع ويا مصادر ثانية"
+  },
+  "fdd_syr26": {
+   "t": "FDD Long War Journal: Syria's military is rebuilding (17 Sep 2026) — ميليشيات راجلة بعجلات غير مدرعة، كم دبابة T-72/T-55",
+   "u": "https://www.fdd.org/analysis/2026/09/17/syrias-military-is-rebuilding-but-foreign-influence-may-slow-security-progress/",
+   "y": 2026
+  },
+  "mil_syr26": {
+   "t": "Militarnyi: Israel destroys Syrian aircraft (آب 2026) — ~2 سوخوي-22 مجددة وكم L-39 ومروحيات قديمة",
+   "u": "https://militarnyi.com/en/news/israel-destroys-syrian-aircraft-as-country-makes-first-attempts-to-revive-its-air-force/",
+   "y": 2026
+  },
+  "aj_syr26": {
+   "t": "Al Jazeera: Syria's challenges to rebuild its armed forces (4 Jan 2026)",
+   "u": "https://www.aljazeera.com/news/2026/1/4/syrias-challenges-to-rebuild-its-armed-forces",
+   "y": 2026
+  },
+  "iiss_eq": {
+   "t": "Wikipedia: List of countries by level of military equipment (من IISS Military Balance ومصادر ثانية)",
+   "u": "https://en.wikipedia.org/wiki/List_of_countries_by_level_of_military_equipment?oldid=1384804191",
+   "y": 2025
+  },
+  "iiss_pers": {
+   "t": "Wikipedia: List of countries by number of military and paramilitary personnel (جدول IISS Military Balance)",
+   "u": "https://en.wikipedia.org/wiki/List_of_countries_by_number_of_military_and_paramilitary_personnel?oldid=1380910017",
+   "y": 2025
+  },
+  "wb": {
+   "t": "World Bank WDI (SP.POP.TOTL, NY.GDP.MKTP.CD, NY.GDP.MKTP.KD.ZG, MS.MIL.XPND.CD/GD.ZS ← SIPRI, MS.MIL.TOTL.P1, FP.CPI.TOTL.ZG)",
+   "u": "https://api.worldbank.org/v2/",
+   "y": 2026
+  },
+  "govt": {
+   "t": "تصنيف نظام الحكم: دساتير الدول + CIA World Factbook «Government type» + V-Dem/Freedom House لدرجة الحرية (تصنيف المصمم 2026)",
+   "u": "https://www.cia.gov/the-world-factbook/field/government-type/",
+   "y": 2026
+  },
+  "leaders": {
+   "t": "Wikipedia: List of current heads of state and government",
+   "u": "https://en.wikipedia.org/wiki/List_of_current_heads_of_state_and_government?oldid=1386623862",
+   "y": 2026,
+   "note": "سحب نوفمبر 2026"
+  },
+  "rules": {
+   "t": "قواعد من blocs.json وconflicts.json وsanctions.json (تكتل دفاعي +40، معاهدة +50، حرب −90، عقوبات ثقيلة −40...)",
+   "u": "data/world/",
+   "y": 2026
+  },
+  "relk": {
+   "t": "تقدير المصمم للعلاقات الثنائية المعروفة (تشرين الثاني 2026): حروب، نزاعات حدودية، تحالفات غير رسمية، تطبيع، عداء تاريخي",
+   "u": "https://en.wikipedia.org/wiki/Foreign_relations_by_country",
+   "y": 2026
+  },
+  "tierA": {
+   "t": "تقدير المصمم (تشرين الثاني 2026) لصناعة السلاح والاستقرار: SIPRI Arms Transfers Database (أكبر المصدّرين 2020–24)، SIPRI Top 100 Arms-Producing Companies، Fragile States Index 2025، أخبار 2026",
+   "u": "https://www.sipri.org/databases/armstransfers",
+   "y": 2026
+  }
+ },
+ "gov": {
+  "type": "trans",
+  "ar": "مرحلة انتقالية",
+  "free": 0,
+  "hos": {
+   "role": "President",
+   "name": "Ahmed al-Sharaa"
+  },
+  "hog": null,
+  "s": "govt,leaders",
+  "c": "ح"
+ },
+ "pop": {
+  "v": 25620427,
+  "y": 2025,
+  "s": "wb",
+  "c": "ح"
+ },
+ "eco": {
+  "gdpBusd": {
+   "v": 23.7,
+   "y": 2022,
+   "s": "wb",
+   "c": "ح"
+  },
+  "growth": {
+   "v": -0.2,
+   "y": 2022,
+   "s": "wb",
+   "c": "ح"
+  },
+  "infl": {
+   "v": 13.4,
+   "y": 2019,
+   "s": "wb",
+   "c": "ح"
+  },
+  "oilRentPct": {
+   "v": 4.0,
+   "y": 2020,
+   "s": "wb",
+   "c": "ح"
+  }
+ },
+ "mil": {
+  "budgetBusd": {
+   "v": 2.49,
+   "y": 2011,
+   "s": "wb",
+   "c": "ح"
+  },
+  "budgetPctGdp": {
+   "v": 4.06,
+   "y": 2010,
+   "s": "wb",
+   "c": "ح"
+  },
+  "personnelWB": {
+   "v": 269000,
+   "y": 2020,
+   "s": "wb",
+   "c": "ح"
+  },
+  "sum": {
+   "tanks": {
+    "v": 40,
+    "s": "fdd_syr26",
+    "c": "ت",
+    "note": "كم دبابة T-72/T-55 باقية؛ إسرائيل دمرت أغلب معدات الجيش السابق كانون الأول 2024"
+   },
+   "carriers": {
+    "v": 0,
+    "s": "iiss_eq",
+    "c": "ت"
+   },
+   "amphib": {
+    "v": 3,
+    "s": "iiss_eq",
+    "c": "ت"
+   },
+   "cruisers": {
+    "v": 0,
+    "s": "iiss_eq",
+    "c": "ت"
+   },
+   "destroyers": {
+    "v": 0,
+    "s": "iiss_eq",
+    "c": "ت"
+   },
+   "frigates": {
+    "v": 0,
+    "s": "aj_syr26",
+    "c": "ت"
+   },
+   "corvettes": {
+    "v": 0,
+    "s": "aj_syr26",
+    "c": "ت"
+   },
+   "subNuc": {
+    "v": 0,
+    "s": "iiss_eq",
+    "c": "ت"
+   },
+   "subs": {
+    "v": 0,
+    "s": "iiss_eq",
+    "c": "ت"
+   },
+   "combatAir": {
+    "v": 4,
+    "s": "mil_syr26",
+    "c": "ت",
+    "note": "محاولات إحياء القوة الجوية؛ إسرائيل تضربها"
+   },
+   "attackHeli": {
+    "v": 20,
+    "s": "iiss_eq",
+    "c": "ت"
+   },
+   "sats": {
+    "v": 0,
+    "s": "iiss_eq",
+    "c": "ت"
+   },
+   "active": {
+    "v": 100000,
+    "s": "aj_syr26,fdd_syr26",
+    "c": "ت",
+    "note": "الجيش الجديد (فصائل مدموجة) — الرقم غير مؤكد"
+   }
+  },
+  "land": [],
+  "air": [],
+  "ad": [],
+  "msl": [],
+  "navy": []
+ },
+ "ind": {
+  "tech": {
+   "arm": 0,
+   "air": 0,
+   "uav": 1,
+   "msl": 0,
+   "navy": 0,
+   "ew": 0,
+   "ind": 0
+  },
+  "makes": [],
+  "s": "tierA",
+  "c": "ت"
+ },
+ "pol": {
+  "factions": [
+   "army",
+   "factions",
+   "street",
+   "biz"
+  ],
+  "stab": {
+   "v": 35,
+   "s": "tierA",
+   "c": "ت"
+  },
+  "warHome": [],
+  "insurgency": "دمج الفصائل وقسد، جنوب محتل، خلايا داعش"
+ },
+ "rel": {
+  "ARE": 10,
+  "AUT": -10,
+  "BEL": -10,
+  "BGR": -10,
+  "BHR": 10,
+  "CYP": -10,
+  "CZE": -10,
+  "DEU": -10,
+  "DJI": 10,
+  "DNK": -10,
+  "DZA": 10,
+  "EGY": 10,
+  "ESP": -10,
+  "EST": -10,
+  "FIN": -10,
+  "FRA": -10,
+  "GRC": -10,
+  "HRV": -10,
+  "HUN": -10,
+  "IRL": -10,
+  "IRN": -45,
+  "IRQ": 25,
+  "ISR": -50,
+  "ITA": -10,
+  "JOR": 10,
+  "KWT": 10,
+  "LBN": 10,
+  "LBY": 10,
+  "LTU": -10,
+  "LVA": -10,
+  "MAR": 10,
+  "MRT": 10,
+  "NLD": -10,
+  "OMN": 10,
+  "POL": -10,
+  "PRT": -10,
+  "PSX": 10,
+  "QAT": 10,
+  "ROU": -10,
+  "RUS": 5,
+  "SAU": 50,
+  "SDN": 10,
+  "SOM": 10,
+  "SVK": -10,
+  "SVN": -10,
+  "SWE": -10,
+  "TUN": 10,
+  "TUR": 70,
+  "USA": 20,
+  "YEM": 10
+ },
+ "treaties": [
+  "ARAB"
+ ],
+ "sanctions": [
+  {
+   "by": [
+    "USA",
+    "EU"
+   ],
+   "level": "light",
+   "ar": "أغلبها انشالت (قانون قيصر انلغى كانون الأول 2025)، وتبقى بعض القيود"
+  }
+ ],
+ "conflicts": [
+  "syria_south"
+ ],
+ "notes": "سوريا الجديدة (الرئيس أحمد الشرع): جيش يبتدي من الصفر تقريباً، الجنوب تحت احتلال/ضربات إسرائيلية، قسد اندمجت كانون الثاني 2026 (جزئياً)."
+}

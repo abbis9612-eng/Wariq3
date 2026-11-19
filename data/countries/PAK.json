@@ -1,0 +1,785 @@
+{
+ "id": "PAK",
+ "ar": "باكستان",
+ "en": "Pakistan",
+ "tier": "A",
+ "asOf": "2026-11",
+ "src": {
+  "wiki_air": {
+   "t": "Wikipedia: Pakistan Air Force",
+   "u": "https://en.wikipedia.org/wiki/Pakistan_Air_Force?oldid=1386606785",
+   "y": 2026,
+   "note": "نسخة الصفحة بتاريخ السحب؛ أرقام ويكيبيديا تنراجع ويا مصادر ثانية"
+  },
+  "wiki_army": {
+   "t": "Wikipedia: List of equipment of the Pakistan Army",
+   "u": "https://en.wikipedia.org/wiki/List_of_equipment_of_the_Pakistan_Army?oldid=1386033000",
+   "y": 2026,
+   "note": "نسخة الصفحة بتاريخ السحب؛ أرقام ويكيبيديا تنراجع ويا مصادر ثانية"
+  },
+  "wiki_navy": {
+   "t": "Wikipedia: List of active Pakistan Navy vessels",
+   "u": "https://en.wikipedia.org/wiki/List_of_active_Pakistan_Navy_vessels?oldid=1381770401",
+   "y": 2026,
+   "note": "نسخة الصفحة بتاريخ السحب؛ أرقام ويكيبيديا تنراجع ويا مصادر ثانية"
+  },
+  "iiss_eq": {
+   "t": "Wikipedia: List of countries by level of military equipment (من IISS Military Balance ومصادر ثانية)",
+   "u": "https://en.wikipedia.org/wiki/List_of_countries_by_level_of_military_equipment?oldid=1384804191",
+   "y": 2025
+  },
+  "iiss_pers": {
+   "t": "Wikipedia: List of countries by number of military and paramilitary personnel (جدول IISS Military Balance)",
+   "u": "https://en.wikipedia.org/wiki/List_of_countries_by_number_of_military_and_paramilitary_personnel?oldid=1380910017",
+   "y": 2025
+  },
+  "wb": {
+   "t": "World Bank WDI (SP.POP.TOTL, NY.GDP.MKTP.CD, NY.GDP.MKTP.KD.ZG, MS.MIL.XPND.CD/GD.ZS ← SIPRI, MS.MIL.TOTL.P1, FP.CPI.TOTL.ZG)",
+   "u": "https://api.worldbank.org/v2/",
+   "y": 2026
+  },
+  "govt": {
+   "t": "تصنيف نظام الحكم: دساتير الدول + CIA World Factbook «Government type» + V-Dem/Freedom House لدرجة الحرية (تصنيف المصمم 2026)",
+   "u": "https://www.cia.gov/the-world-factbook/field/government-type/",
+   "y": 2026
+  },
+  "leaders": {
+   "t": "Wikipedia: List of current heads of state and government",
+   "u": "https://en.wikipedia.org/wiki/List_of_current_heads_of_state_and_government?oldid=1386623862",
+   "y": 2026,
+   "note": "سحب نوفمبر 2026"
+  },
+  "rules": {
+   "t": "قواعد من blocs.json وconflicts.json وsanctions.json (تكتل دفاعي +40، معاهدة +50، حرب −90، عقوبات ثقيلة −40...)",
+   "u": "data/world/",
+   "y": 2026
+  },
+  "relk": {
+   "t": "تقدير المصمم للعلاقات الثنائية المعروفة (تشرين الثاني 2026): حروب، نزاعات حدودية، تحالفات غير رسمية، تطبيع، عداء تاريخي",
+   "u": "https://en.wikipedia.org/wiki/Foreign_relations_by_country",
+   "y": 2026
+  },
+  "tierA": {
+   "t": "تقدير المصمم (تشرين الثاني 2026) لصناعة السلاح والاستقرار: SIPRI Arms Transfers Database (أكبر المصدّرين 2020–24)، SIPRI Top 100 Arms-Producing Companies، Fragile States Index 2025، أخبار 2026",
+   "u": "https://www.sipri.org/databases/armstransfers",
+   "y": 2026
+  }
+ },
+ "gov": {
+  "type": "parl",
+  "ar": "جمهورية برلمانية",
+  "free": 1,
+  "hos": {
+   "role": "President",
+   "name": "Asif Ali Zardari"
+  },
+  "hog": {
+   "role": "Prime Minister",
+   "name": "Shehbaz Sharif"
+  },
+  "s": "govt,leaders",
+  "c": "ح"
+ },
+ "pop": {
+  "v": 255219554,
+  "y": 2025,
+  "s": "wb",
+  "c": "ح"
+ },
+ "eco": {
+  "gdpBusd": {
+   "v": 407.3,
+   "y": 2025,
+   "s": "wb",
+   "c": "ح"
+  },
+  "growth": {
+   "v": 3.7,
+   "y": 2025,
+   "s": "wb",
+   "c": "ح"
+  },
+  "infl": {
+   "v": 3.5,
+   "y": 2025,
+   "s": "wb",
+   "c": "ح"
+  },
+  "oilRentPct": {
+   "v": 0.4,
+   "y": 2021,
+   "s": "wb",
+   "c": "ح"
+  }
+ },
+ "mil": {
+  "budgetBusd": {
+   "v": 11.87,
+   "y": 2025,
+   "s": "wb",
+   "c": "ح"
+  },
+  "budgetPctGdp": {
+   "v": 2.91,
+   "y": 2025,
+   "s": "wb",
+   "c": "ح"
+  },
+  "personnelWB": {
+   "v": 943000,
+   "y": 2020,
+   "s": "wb",
+   "c": "ح"
+  },
+  "sum": {
+   "tanks": {
+    "v": 2537,
+    "s": "iiss_eq",
+    "c": "ت"
+   },
+   "carriers": {
+    "v": 0,
+    "s": "iiss_eq",
+    "c": "ت"
+   },
+   "amphib": {
+    "v": 8,
+    "s": "iiss_eq",
+    "c": "ت"
+   },
+   "cruisers": {
+    "v": 0,
+    "s": "iiss_eq",
+    "c": "ت"
+   },
+   "destroyers": {
+    "v": 0,
+    "s": "iiss_eq",
+    "c": "ت"
+   },
+   "frigates": {
+    "v": 10,
+    "s": "iiss_eq",
+    "c": "ت"
+   },
+   "corvettes": {
+    "v": 6,
+    "s": "iiss_eq",
+    "c": "ت"
+   },
+   "subNuc": {
+    "v": 0,
+    "s": "iiss_eq",
+    "c": "ت"
+   },
+   "subs": {
+    "v": 8,
+    "s": "iiss_eq",
+    "c": "ت"
+   },
+   "combatAir": {
+    "v": 583,
+    "s": "iiss_eq",
+    "c": "ت"
+   },
+   "attackHeli": {
+    "v": 65,
+    "s": "iiss_eq",
+    "c": "ت"
+   },
+   "sats": {
+    "v": 0,
+    "s": "iiss_eq",
+    "c": "ت"
+   },
+   "active": {
+    "v": 660000,
+    "s": "iiss_pers",
+    "c": "ت"
+   },
+   "reserve": {
+    "v": 550000,
+    "s": "iiss_pers",
+    "c": "ت"
+   },
+   "para": {
+    "v": 291000,
+    "s": "iiss_pers",
+    "c": "ت"
+   }
+  },
+  "land": [
+   {
+    "m": "HIT Dragoon 2",
+    "n": 600,
+    "orig": "PAK",
+    "s": "wiki_army",
+    "c": "ت",
+    "note": "4x4 multirole armoured fighting vehicle. Based on Dragoon 300.",
+    "gen": 2,
+    "cat": "ifv"
+   },
+   {
+    "m": "M113",
+    "n": 113,
+    "orig": "USA",
+    "s": "wiki_army",
+    "c": "ت",
+    "note": "Multirole armoured personnel carrier and infantry fighting vehicle. Mostly modernized & upgraded, American built M113A1/A2, Pakistani built ",
+    "gen": 2,
+    "cat": "ifv"
+   },
+   {
+    "m": "Textron Commando",
+    "n": 400,
+    "orig": "USA",
+    "s": "wiki_army",
+    "c": "ت",
+    "note": "Modernized M1117 Guardian armoured security vehicle.",
+    "gen": 2,
+    "cat": "ifv"
+   },
+   {
+    "m": "Otokar Akrep",
+    "n": 1800,
+    "orig": "TUR",
+    "s": "wiki_army",
+    "c": "ت",
+    "note": "Armoured infantry mobility vehicle.",
+    "gen": 2,
+    "cat": "ifv"
+   },
+   {
+    "m": "Otokar Cobra",
+    "n": 800,
+    "orig": "TUR",
+    "s": "wiki_army",
+    "c": "ت",
+    "note": "Armoured infantry mobility vehicle.",
+    "gen": 2,
+    "cat": "ifv"
+   },
+   {
+    "m": "Puma",
+    "n": 80,
+    "orig": "ITA",
+    "s": "wiki_army",
+    "c": "ت",
+    "note": "6x6 armoured fighting vehicle.",
+    "gen": 4,
+    "cat": "ifv"
+   },
+   {
+    "m": "Iveco VM 90",
+    "n": 2200,
+    "orig": "ITA",
+    "s": "wiki_army",
+    "c": "ت",
+    "note": "Multirole armoured fighting vehicle.",
+    "gen": 2,
+    "cat": "ifv"
+   },
+   {
+    "m": "Al-Fahd",
+    "n": 1000,
+    "orig": "SAU",
+    "s": "wiki_army",
+    "c": "ت",
+    "note": "Multirole armoured fighting vehicle.",
+    "gen": 2,
+    "cat": "ifv"
+   },
+   {
+    "m": "UR-416",
+    "n": 45,
+    "orig": "DEU",
+    "s": "wiki_army",
+    "c": "ت",
+    "note": "Armoured personnel carrier.",
+    "gen": 2,
+    "cat": "ifv"
+   },
+   {
+    "m": "Type 63",
+    "n": 100,
+    "orig": "CHN",
+    "s": "wiki_army",
+    "c": "ت",
+    "note": "Armoured personnel carrier.",
+    "gen": 2,
+    "cat": "ifv"
+   },
+   {
+    "m": "Dongfeng Mengshi CSK-182",
+    "n": 300,
+    "orig": "CHN",
+    "s": "wiki_army",
+    "c": "ت",
+    "note": "Armoured infantry mobility vehicle.",
+    "gen": 2,
+    "cat": "ifv"
+   },
+   {
+    "m": "Lazar 2",
+    "n": 23,
+    "orig": "SRB",
+    "s": "wiki_army",
+    "c": "ت",
+    "note": "Armoured personnel carrier.",
+    "gen": 2,
+    "cat": "ifv"
+   },
+   {
+    "m": "BTR-70",
+    "n": 120,
+    "orig": "SUN",
+    "s": "wiki_army",
+    "c": "ت",
+    "note": "Amphibious armoured personnel carrier.",
+    "gen": 2,
+    "cat": "ifv"
+   },
+   {
+    "m": "BTR-80",
+    "n": 120,
+    "orig": "SUN",
+    "s": "wiki_army",
+    "c": "ت",
+    "note": "Amphibious armoured personnel carrier.",
+    "gen": 3,
+    "cat": "ifv"
+   },
+   {
+    "m": "International MaxxPro",
+    "n": 525,
+    "orig": "USA",
+    "s": "wiki_army",
+    "c": "ت",
+    "note": "4x4. MaxxPro DXM and MaxxPro Dash DXM variants in service.",
+    "gen": 2,
+    "cat": "mrap"
+   },
+   {
+    "m": "BMC Kirpi",
+    "n": 100,
+    "orig": "TUR",
+    "s": "wiki_army",
+    "c": "ت",
+    "note": "4x4.",
+    "gen": 2,
+    "cat": "mrap"
+   },
+   {
+    "m": "Casspir",
+    "n": 150,
+    "orig": "ZAF",
+    "s": "wiki_army",
+    "c": "ت",
+    "note": "Limited number in service.",
+    "gen": 2,
+    "cat": "mrap"
+   },
+   {
+    "m": "MaxxPro MRV",
+    "n": 40,
+    "orig": "USA",
+    "s": "wiki_army",
+    "c": "ت",
+    "note": "Light armoured recovery vehicle. Based on MaxxPro.",
+    "gen": 2,
+    "cat": "mrap"
+   },
+   {
+    "m": "Cougar JERRV",
+    "n": 20,
+    "orig": "USA",
+    "s": "wiki_army",
+    "c": "ت",
+    "note": "Mine-clearing vehicle. Buffalo Explosive Ordnance Disposal version.",
+    "gen": 2,
+    "cat": "mrap"
+   }
+  ],
+  "air": [
+   {
+    "m": "Mil Mi-17 (Mi-171 Mi-17-1V Mi-171Sh Mi-17V-5)",
+    "n": 48,
+    "orig": "RUS",
+    "s": "wiki_army",
+    "c": "ت",
+    "gen": 2,
+    "cat": "heli_util"
+   },
+   {
+    "m": "Changhe Z-10 (Z-10ME)",
+    "n": 4,
+    "orig": "CHN",
+    "s": "wiki_army",
+    "c": "ت",
+    "gen": 2,
+    "cat": "heli_attack"
+   },
+   {
+    "m": "Bell AH-1 Cobra (AH-1F)",
+    "n": 50,
+    "orig": "USA",
+    "s": "wiki_army",
+    "c": "ت",
+    "gen": 2,
+    "cat": "heli_attack"
+   },
+   {
+    "m": "Eurocopter AS350 Écureuil",
+    "n": 4,
+    "orig": "FRA",
+    "s": "wiki_army",
+    "c": "ت",
+    "gen": 2,
+    "cat": "heli_attack"
+   },
+   {
+    "m": "Eurocopter Fennec (AS550 C3)",
+    "n": 35,
+    "orig": "FRA",
+    "s": "wiki_army",
+    "c": "ت",
+    "gen": 2,
+    "cat": "heli_attack"
+   },
+   {
+    "m": "Mil Mi-35 (Mi-35M3)",
+    "n": 4,
+    "orig": "RUS",
+    "s": "wiki_army",
+    "c": "ت",
+    "gen": 3,
+    "cat": "heli_attack"
+   },
+   {
+    "m": "Aérospatiale/IAR SA 330 Puma (SA 330L)",
+    "n": 43,
+    "orig": "FRA",
+    "s": "wiki_army",
+    "c": "ت",
+    "gen": 4,
+    "cat": "heli_util"
+   },
+   {
+    "m": "IAR 330 Puma (SA 330L)",
+    "n": 4,
+    "orig": "ROU",
+    "s": "wiki_army",
+    "c": "ت",
+    "gen": 4,
+    "cat": "heli_util"
+   },
+   {
+    "m": "Aérospatiale Alouette III (SA 316B)",
+    "n": 13,
+    "orig": "FRA",
+    "s": "wiki_army",
+    "c": "ت",
+    "gen": 2,
+    "cat": "heli_util"
+   },
+   {
+    "m": "Aérospatiale Lama (SA 315B)",
+    "n": 17,
+    "orig": "FRA",
+    "s": "wiki_army",
+    "c": "ت",
+    "gen": 2,
+    "cat": "heli_util"
+   },
+   {
+    "m": "AgustaWestland AW139 (AW139M)",
+    "n": 7,
+    "orig": "ITA",
+    "s": "wiki_army",
+    "c": "ت",
+    "gen": 2,
+    "cat": "heli_util"
+   },
+   {
+    "m": "Bell UH-1 Iroquois (UH-1H)",
+    "n": 1,
+    "orig": "USA",
+    "s": "wiki_army",
+    "c": "ت",
+    "gen": 2,
+    "cat": "heli_util"
+   },
+   {
+    "m": "Bell 412 (412EP)",
+    "n": 31,
+    "orig": "USA",
+    "s": "wiki_army",
+    "c": "ت",
+    "gen": 2,
+    "cat": "heli_util"
+   },
+   {
+    "m": "Bell 206 JetRanger (206B)",
+    "n": 18,
+    "orig": "USA",
+    "s": "wiki_army",
+    "c": "ت",
+    "gen": 2,
+    "cat": "heli_util"
+   },
+   {
+    "m": "Enstrom F-28 (280FX)",
+    "n": 19,
+    "orig": "USA",
+    "s": "wiki_army",
+    "c": "ت",
+    "gen": 2,
+    "cat": "heli_util"
+   },
+   {
+    "m": "Schweizer 300 (300C)",
+    "n": 25,
+    "orig": "USA",
+    "s": "wiki_army",
+    "c": "ت",
+    "gen": 2,
+    "cat": "heli_util"
+   },
+   {
+    "m": "RQ-11 Raven (Raven B)",
+    "n": 85,
+    "orig": "USA",
+    "s": "wiki_army",
+    "c": "ت",
+    "gen": 2,
+    "cat": "uav_isr"
+   }
+  ],
+  "ad": [],
+  "msl": [],
+  "navy": [
+   {
+    "m": "Agosta-90B class",
+    "n": 3,
+    "orig": "FRA",
+    "s": "wiki_navy",
+    "c": "ت",
+    "gen": 2,
+    "cat": "sub"
+   },
+   {
+    "m": "Agosta-70 class",
+    "n": 2,
+    "orig": "FRA",
+    "s": "wiki_navy",
+    "c": "ت",
+    "gen": 2,
+    "cat": "sub"
+   },
+   {
+    "m": "Hangor class",
+    "n": 7,
+    "orig": "CHN",
+    "s": "wiki_navy",
+    "c": "ت",
+    "gen": 2,
+    "cat": "sub"
+   },
+   {
+    "m": "Cosmos class",
+    "n": 3,
+    "orig": "ITA",
+    "s": "wiki_navy",
+    "c": "ت",
+    "gen": 2,
+    "cat": "sub"
+   },
+   {
+    "m": "Tughril class",
+    "n": 4,
+    "orig": "CHN",
+    "s": "wiki_navy",
+    "c": "ت",
+    "gen": 2,
+    "cat": "frigate"
+   },
+   {
+    "m": "Zulfiquar class",
+    "n": 4,
+    "orig": "CHN",
+    "s": "wiki_navy",
+    "c": "ت",
+    "gen": 2,
+    "cat": "frigate"
+   },
+   {
+    "m": "Oliver Hazard Perry class",
+    "n": 1,
+    "orig": "USA",
+    "s": "wiki_navy",
+    "c": "ت",
+    "gen": 2,
+    "cat": "frigate"
+   },
+   {
+    "m": "Jinnah class",
+    "n": 1,
+    "orig": "PAK",
+    "s": "wiki_navy",
+    "c": "ت",
+    "gen": 2,
+    "cat": "frigate"
+   },
+   {
+    "m": "Babur class",
+    "n": 2,
+    "orig": "TUR",
+    "s": "wiki_navy",
+    "c": "ت",
+    "note": "Based on Turkish MILGEM-class corvette. PNS Babur commissioned on 6 September 2024. PNS Khaiber handed over to the Pakistan Navy on 20 Decem",
+    "gen": 2,
+    "cat": "corvette"
+   },
+   {
+    "m": "Yarmook class",
+    "n": 4,
+    "orig": "NLD",
+    "s": "wiki_navy",
+    "c": "ت",
+    "note": "Dutch shipbuilder Damen built PNS Yarmook was commissioned in February 2020. PNS Tabuk was commissioned on 12 November 2020. Batch-II ships ",
+    "gen": 2,
+    "cat": "corvette"
+   },
+   {
+    "m": "Azmat class",
+    "n": 4,
+    "orig": "CHN",
+    "s": "wiki_navy",
+    "c": "ت",
+    "gen": 2,
+    "cat": "missile_boat"
+   },
+   {
+    "m": "Jalalat class",
+    "n": 2,
+    "orig": "PAK",
+    "s": "wiki_navy",
+    "c": "ت",
+    "gen": 2,
+    "cat": "missile_boat"
+   },
+   {
+    "m": "Jurrat class",
+    "n": 2,
+    "orig": "PAK",
+    "s": "wiki_navy",
+    "c": "ت",
+    "gen": 2,
+    "cat": "missile_boat"
+   },
+   {
+    "m": "Marine Assault Boats (MAB)",
+    "n": 20,
+    "orig": "PAK",
+    "s": "wiki_navy",
+    "c": "ت",
+    "gen": 2,
+    "cat": "patrol"
+   },
+   {
+    "m": "MRTP-33/35",
+    "n": 2,
+    "orig": "TUR",
+    "s": "wiki_navy",
+    "c": "ت",
+    "gen": 2,
+    "cat": "patrol"
+   },
+   {
+    "m": "Griffon 2400TD",
+    "n": 3,
+    "orig": "GBR",
+    "s": "wiki_navy",
+    "c": "ت",
+    "gen": 2,
+    "cat": "amphib"
+   },
+   {
+    "m": "Gwadar class",
+    "n": 2,
+    "orig": "PAK",
+    "s": "wiki_navy",
+    "c": "ت",
+    "gen": 2,
+    "cat": "patrol"
+   },
+   {
+    "m": "Madadgar class",
+    "n": 2,
+    "orig": "PAK",
+    "s": "wiki_navy",
+    "c": "ت",
+    "gen": 2,
+    "cat": "patrol"
+   }
+  ]
+ },
+ "ind": {
+  "tech": {
+   "arm": 3,
+   "air": 3,
+   "uav": 2,
+   "msl": 4,
+   "navy": 2,
+   "ew": 2,
+   "ind": 2
+  },
+  "makes": [
+   "JF-17 (مع الصين)",
+   "الخالد",
+   "صواريخ شاهين وغوري وبابر"
+  ],
+  "s": "tierA",
+  "c": "ت"
+ },
+ "pol": {
+  "factions": [
+   "army",
+   "parties",
+   "street",
+   "biz"
+  ],
+  "stab": {
+   "v": 40,
+   "s": "tierA",
+   "c": "ت"
+  },
+  "warHome": [],
+  "insurgency": "طالبان باكستان وبلوشستان"
+ },
+ "rel": {
+  "AFG": -60,
+  "BLR": 10,
+  "CHN": 80,
+  "IND": -85,
+  "IRN": 15,
+  "KAZ": 10,
+  "KGZ": 10,
+  "RUS": 10,
+  "SAU": 75,
+  "TJK": 10,
+  "TUR": 65,
+  "USA": 25,
+  "UZB": 10
+ },
+ "treaties": [
+  "PACT_SAU",
+  "SCO"
+ ],
+ "sanctions": [],
+ "conflicts": [
+  "ind_pak",
+  "pak_afg"
+ ],
+ "notes": ""
+}

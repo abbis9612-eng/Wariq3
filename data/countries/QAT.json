@@ -1,0 +1,542 @@
+{
+ "id": "QAT",
+ "ar": "قطر",
+ "en": "Qatar",
+ "tier": "A",
+ "asOf": "2026-11",
+ "src": {
+  "wiki_air": {
+   "t": "Wikipedia: Qatar Emiri Air Force",
+   "u": "https://en.wikipedia.org/wiki/Qatar_Emiri_Air_Force?oldid=1373038905",
+   "y": 2026,
+   "note": "نسخة الصفحة بتاريخ السحب؛ أرقام ويكيبيديا تنراجع ويا مصادر ثانية"
+  },
+  "wiki_army": {
+   "t": "Wikipedia: Qatar Armed Forces",
+   "u": "https://en.wikipedia.org/wiki/Qatar_Armed_Forces?oldid=1379717097",
+   "y": 2026,
+   "note": "نسخة الصفحة بتاريخ السحب؛ أرقام ويكيبيديا تنراجع ويا مصادر ثانية"
+  },
+  "wiki_navy": {
+   "t": "Wikipedia: Qatari Emiri Navy",
+   "u": "https://en.wikipedia.org/wiki/Qatari_Emiri_Navy?oldid=1371484976",
+   "y": 2026,
+   "note": "نسخة الصفحة بتاريخ السحب؛ أرقام ويكيبيديا تنراجع ويا مصادر ثانية"
+  },
+  "iiss_eq": {
+   "t": "Wikipedia: List of countries by level of military equipment (من IISS Military Balance ومصادر ثانية)",
+   "u": "https://en.wikipedia.org/wiki/List_of_countries_by_level_of_military_equipment?oldid=1384804191",
+   "y": 2025
+  },
+  "iiss_pers": {
+   "t": "Wikipedia: List of countries by number of military and paramilitary personnel (جدول IISS Military Balance)",
+   "u": "https://en.wikipedia.org/wiki/List_of_countries_by_number_of_military_and_paramilitary_personnel?oldid=1380910017",
+   "y": 2025
+  },
+  "wb": {
+   "t": "World Bank WDI (SP.POP.TOTL, NY.GDP.MKTP.CD, NY.GDP.MKTP.KD.ZG, MS.MIL.XPND.CD/GD.ZS ← SIPRI, MS.MIL.TOTL.P1, FP.CPI.TOTL.ZG)",
+   "u": "https://api.worldbank.org/v2/",
+   "y": 2026
+  },
+  "govt": {
+   "t": "تصنيف نظام الحكم: دساتير الدول + CIA World Factbook «Government type» + V-Dem/Freedom House لدرجة الحرية (تصنيف المصمم 2026)",
+   "u": "https://www.cia.gov/the-world-factbook/field/government-type/",
+   "y": 2026
+  },
+  "leaders": {
+   "t": "Wikipedia: List of current heads of state and government",
+   "u": "https://en.wikipedia.org/wiki/List_of_current_heads_of_state_and_government?oldid=1386623862",
+   "y": 2026,
+   "note": "سحب نوفمبر 2026"
+  },
+  "rules": {
+   "t": "قواعد من blocs.json وconflicts.json وsanctions.json (تكتل دفاعي +40، معاهدة +50، حرب −90، عقوبات ثقيلة −40...)",
+   "u": "data/world/",
+   "y": 2026
+  },
+  "relk": {
+   "t": "تقدير المصمم للعلاقات الثنائية المعروفة (تشرين الثاني 2026): حروب، نزاعات حدودية، تحالفات غير رسمية، تطبيع، عداء تاريخي",
+   "u": "https://en.wikipedia.org/wiki/Foreign_relations_by_country",
+   "y": 2026
+  },
+  "tierA": {
+   "t": "تقدير المصمم (تشرين الثاني 2026) لصناعة السلاح والاستقرار: SIPRI Arms Transfers Database (أكبر المصدّرين 2020–24)، SIPRI Top 100 Arms-Producing Companies، Fragile States Index 2025، أخبار 2026",
+   "u": "https://www.sipri.org/databases/armstransfers",
+   "y": 2026
+  }
+ },
+ "gov": {
+  "type": "amon",
+  "ar": "ملكية مطلقة/قوية",
+  "free": 0,
+  "hos": {
+   "role": "Emir",
+   "name": "Tamim bin Hamad Al Thani"
+  },
+  "hog": {
+   "role": "Prime Minister",
+   "name": "Mohammed bin Abdulrahman bin Jassim Al Thani"
+  },
+  "s": "govt,leaders",
+  "c": "ح"
+ },
+ "pop": {
+  "v": 2972215,
+  "y": 2025,
+  "s": "wb",
+  "c": "ح"
+ },
+ "eco": {
+  "gdpBusd": {
+   "v": 215.6,
+   "y": 2025,
+   "s": "wb",
+   "c": "ح"
+  },
+  "growth": {
+   "v": 2.9,
+   "y": 2025,
+   "s": "wb",
+   "c": "ح"
+  },
+  "infl": {
+   "v": 1.3,
+   "y": 2024,
+   "s": "wb",
+   "c": "ح"
+  },
+  "oilRentPct": {
+   "v": 15.3,
+   "y": 2021,
+   "s": "wb",
+   "c": "ح"
+  }
+ },
+ "mil": {
+  "budgetBusd": {
+   "v": 15.41,
+   "y": 2022,
+   "s": "wb",
+   "c": "ح"
+  },
+  "budgetPctGdp": {
+   "v": 6.5,
+   "y": 2022,
+   "s": "wb",
+   "c": "ح"
+  },
+  "personnelWB": {
+   "v": 22000,
+   "y": 2020,
+   "s": "wb",
+   "c": "ح"
+  },
+  "sum": {
+   "tanks": {
+    "v": 62,
+    "s": "iiss_eq",
+    "c": "ت"
+   },
+   "carriers": {
+    "v": 0,
+    "s": "iiss_eq",
+    "c": "ت"
+   },
+   "amphib": {
+    "v": 0,
+    "s": "iiss_eq",
+    "c": "ت"
+   },
+   "cruisers": {
+    "v": 0,
+    "s": "iiss_eq",
+    "c": "ت"
+   },
+   "destroyers": {
+    "v": 0,
+    "s": "iiss_eq",
+    "c": "ت"
+   },
+   "frigates": {
+    "v": 0,
+    "s": "iiss_eq",
+    "c": "ت"
+   },
+   "corvettes": {
+    "v": 0,
+    "s": "iiss_eq",
+    "c": "ت"
+   },
+   "subNuc": {
+    "v": 0,
+    "s": "iiss_eq",
+    "c": "ت"
+   },
+   "subs": {
+    "v": 0,
+    "s": "iiss_eq",
+    "c": "ت"
+   },
+   "combatAir": {
+    "v": 74,
+    "s": "iiss_eq",
+    "c": "ت"
+   },
+   "attackHeli": {
+    "v": 24,
+    "s": "iiss_eq",
+    "c": "ت"
+   },
+   "sats": {
+    "v": 1,
+    "s": "iiss_eq",
+    "c": "ت"
+   },
+   "active": {
+    "v": 16500,
+    "s": "iiss_pers",
+    "c": "ت"
+   },
+   "reserve": {
+    "v": 0,
+    "s": "iiss_pers",
+    "c": "ت"
+   },
+   "para": {
+    "v": 5000,
+    "s": "iiss_pers",
+    "c": "ت"
+   }
+  },
+  "land": [],
+  "air": [
+   {
+    "m": "Dassault Rafale (EQ (F3-R))",
+    "n": 30,
+    "orig": "FRA",
+    "s": "wiki_air",
+    "c": "ت",
+    "gen": 4,
+    "cat": "fighter"
+   },
+   {
+    "m": "Dassault Rafale (DQ (F3-R))",
+    "n": 6,
+    "orig": "FRA",
+    "s": "wiki_air",
+    "c": "ت",
+    "gen": 4,
+    "cat": "trainer"
+   },
+   {
+    "m": "Eurofighter Typhoon (Tranche 3A)",
+    "n": 20,
+    "orig": "DEU",
+    "s": "wiki_air",
+    "c": "ت",
+    "note": "12 being sold to Turkey",
+    "gen": 4,
+    "cat": "fighter"
+   },
+   {
+    "m": "Eurofighter Typhoon (Tranche 3A)",
+    "n": 4,
+    "orig": "DEU",
+    "s": "wiki_air",
+    "c": "ت",
+    "gen": 4,
+    "cat": "trainer"
+   },
+   {
+    "m": "F-15 Advanced Eagle (F-15QA)",
+    "n": 48,
+    "orig": "USA",
+    "s": "wiki_air",
+    "c": "ت",
+    "gen": 3,
+    "cat": "fighter"
+   },
+   {
+    "m": "C-17 Globemaster III (–)",
+    "n": 8,
+    "orig": "USA",
+    "s": "wiki_air",
+    "c": "ت",
+    "note": "1 used by the Qatar Amiri Flight",
+    "gen": 2,
+    "cat": "transport"
+   },
+   {
+    "m": "C-130J Super Hercules (–)",
+    "n": 4,
+    "orig": "USA",
+    "s": "wiki_air",
+    "c": "ت",
+    "gen": 2,
+    "cat": "transport"
+   },
+   {
+    "m": "Pilatus PC-24 (–)",
+    "n": 1,
+    "orig": "CHE",
+    "s": "wiki_air",
+    "c": "ت",
+    "gen": 2,
+    "cat": "transport"
+   },
+   {
+    "m": "AH-64 Apache (AH-64E)",
+    "n": 24,
+    "orig": "USA",
+    "s": "wiki_air",
+    "c": "ت",
+    "gen": 4,
+    "cat": "heli_attack"
+   },
+   {
+    "m": "Aérospatiale Gazelle (SA342)",
+    "n": 13,
+    "orig": "FRA",
+    "s": "wiki_air",
+    "c": "ت",
+    "gen": 2,
+    "cat": "heli_util"
+   },
+   {
+    "m": "NHIndustries NH90 (TTH)",
+    "n": 15,
+    "orig": "FRA",
+    "s": "wiki_air",
+    "c": "ت",
+    "gen": 2,
+    "cat": "heli_util"
+   },
+   {
+    "m": "NHIndustries NH90 (NFH)",
+    "n": 12,
+    "orig": "FRA",
+    "s": "wiki_air",
+    "c": "ت",
+    "gen": 2,
+    "cat": "heli_util"
+   },
+   {
+    "m": "AgustaWestland AW139 (–)",
+    "n": 19,
+    "orig": "ITA",
+    "s": "wiki_air",
+    "c": "ت",
+    "gen": 2,
+    "cat": "heli_util"
+   },
+   {
+    "m": "AgustaWestland AW109 (–)",
+    "n": 2,
+    "orig": "ITA",
+    "s": "wiki_air",
+    "c": "ت",
+    "gen": 2,
+    "cat": "heli_util"
+   },
+   {
+    "m": "PAC Super Mushshak (MFI-395)",
+    "n": 8,
+    "orig": "PAK",
+    "s": "wiki_air",
+    "c": "ت",
+    "gen": 2,
+    "cat": "trainer"
+   },
+   {
+    "m": "Pilatus PC-21 (–)",
+    "n": 24,
+    "orig": "CHE",
+    "s": "wiki_air",
+    "c": "ت",
+    "gen": 2,
+    "cat": "trainer"
+   },
+   {
+    "m": "Pilatus PC-24 (–)",
+    "n": 1,
+    "orig": "CHE",
+    "s": "wiki_air",
+    "c": "ت",
+    "gen": 2,
+    "cat": "trainer"
+   },
+   {
+    "m": "M-346 Master (T346A)",
+    "n": 6,
+    "orig": "ITA",
+    "s": "wiki_air",
+    "c": "ت",
+    "note": "Operated at the International Flight Training School.",
+    "gen": 2,
+    "cat": "fighter"
+   },
+   {
+    "m": "BAE Hawk (Hawk 167)",
+    "n": 9,
+    "orig": "GBR",
+    "s": "wiki_air",
+    "c": "ت",
+    "note": "Operated in the UK.",
+    "gen": 2,
+    "cat": "fighter"
+   },
+   {
+    "m": "AgustaWestland AW169 (–)",
+    "n": 4,
+    "orig": "ITA",
+    "s": "wiki_air",
+    "c": "ت",
+    "gen": 2,
+    "cat": "heli_util"
+   },
+   {
+    "m": "Baykar Bayraktar TB2 (–)",
+    "n": 6,
+    "orig": "TUR",
+    "s": "wiki_air",
+    "c": "ت",
+    "note": "With 3 ground stations.",
+    "gen": 4,
+    "cat": "uav_isr"
+   },
+   {
+    "m": "Dassault Mirage 2000 (2000-5EDA)",
+    "n": 9,
+    "orig": "FRA",
+    "s": "wiki_air",
+    "c": "ت",
+    "note": "9 ordered in 1994.",
+    "gen": 3,
+    "cat": "fighter"
+   },
+   {
+    "m": "Alphajet (Alphajet E)",
+    "n": 6,
+    "orig": "FRA",
+    "s": "wiki_air",
+    "c": "ت",
+    "gen": 2,
+    "cat": "attack"
+   },
+   {
+    "m": "Dassault Mirage 2000 (2000-5DDA)",
+    "n": 3,
+    "orig": "FRA",
+    "s": "wiki_air",
+    "c": "ت",
+    "note": "3 ordered in 1994.",
+    "gen": 3,
+    "cat": "trainer"
+   }
+  ],
+  "ad": [],
+  "msl": [],
+  "navy": [
+   {
+    "m": "MRTP 34 class",
+    "n": 31,
+    "orig": "INT",
+    "s": "wiki_navy",
+    "c": "ت",
+    "gen": 2,
+    "cat": "missile_boat"
+   },
+   {
+    "m": "MRTP 16 class",
+    "n": 49,
+    "orig": "INT",
+    "s": "wiki_navy",
+    "c": "ت",
+    "gen": 2,
+    "cat": "missile_boat"
+   },
+   {
+    "m": "Al Fulk",
+    "n": 3,
+    "orig": "INT",
+    "s": "wiki_navy",
+    "c": "ت",
+    "gen": 2,
+    "cat": "carrier"
+   },
+   {
+    "m": "Robha class",
+    "n": 3,
+    "orig": "INT",
+    "s": "wiki_navy",
+    "c": "ت",
+    "gen": 2,
+    "cat": "amphib"
+   }
+  ]
+ },
+ "ind": {
+  "tech": {
+   "arm": 0,
+   "air": 0,
+   "uav": 0,
+   "msl": 0,
+   "navy": 0,
+   "ew": 1,
+   "ind": 2
+  },
+  "makes": [],
+  "s": "tierA",
+  "c": "ت"
+ },
+ "pol": {
+  "factions": [
+   "royal",
+   "army",
+   "clergy",
+   "street",
+   "biz"
+  ],
+  "stab": {
+   "v": 75,
+   "s": "tierA",
+   "c": "ت"
+  },
+  "warHome": []
+ },
+ "rel": {
+  "ARE": 50,
+  "BHR": 50,
+  "DJI": 10,
+  "DZA": 10,
+  "EGY": 10,
+  "IRN": 5,
+  "IRQ": 10,
+  "ISR": -35,
+  "JOR": 10,
+  "KWT": 50,
+  "LBN": 10,
+  "LBY": 10,
+  "MAR": 10,
+  "MRT": 10,
+  "OMN": 50,
+  "PSX": 10,
+  "SAU": 40,
+  "SDN": 10,
+  "SOM": 10,
+  "SYR": 10,
+  "TUN": 10,
+  "TUR": 75,
+  "USA": 60,
+  "YEM": 10
+ },
+ "treaties": [
+  "ARAB",
+  "GCC"
+ ],
+ "sanctions": [],
+ "conflicts": [
+  "iran_war"
+ ],
+ "notes": ""
+}

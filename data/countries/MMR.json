@@ -1,0 +1,269 @@
+{
+ "id": "MMR",
+ "ar": "ميانمار",
+ "en": "Myanmar",
+ "tier": "B",
+ "asOf": "2026-11",
+ "src": {
+  "iiss_eq": {
+   "t": "Wikipedia: List of countries by level of military equipment (من IISS Military Balance ومصادر ثانية)",
+   "u": "https://en.wikipedia.org/wiki/List_of_countries_by_level_of_military_equipment?oldid=1384804191",
+   "y": 2025
+  },
+  "iiss_pers": {
+   "t": "Wikipedia: List of countries by number of military and paramilitary personnel (جدول IISS Military Balance)",
+   "u": "https://en.wikipedia.org/wiki/List_of_countries_by_number_of_military_and_paramilitary_personnel?oldid=1380910017",
+   "y": 2025
+  },
+  "wb": {
+   "t": "World Bank WDI (SP.POP.TOTL, NY.GDP.MKTP.CD, NY.GDP.MKTP.KD.ZG, MS.MIL.XPND.CD/GD.ZS ← SIPRI, MS.MIL.TOTL.P1, FP.CPI.TOTL.ZG)",
+   "u": "https://api.worldbank.org/v2/",
+   "y": 2026
+  },
+  "govt": {
+   "t": "تصنيف نظام الحكم: دساتير الدول + CIA World Factbook «Government type» + V-Dem/Freedom House لدرجة الحرية (تصنيف المصمم 2026)",
+   "u": "https://www.cia.gov/the-world-factbook/field/government-type/",
+   "y": 2026
+  },
+  "leaders": {
+   "t": "Wikipedia: List of current heads of state and government",
+   "u": "https://en.wikipedia.org/wiki/List_of_current_heads_of_state_and_government?oldid=1386623862",
+   "y": 2026,
+   "note": "سحب نوفمبر 2026"
+  },
+  "rules": {
+   "t": "قواعد من blocs.json وconflicts.json وsanctions.json (تكتل دفاعي +40، معاهدة +50، حرب −90، عقوبات ثقيلة −40...)",
+   "u": "data/world/",
+   "y": 2026
+  },
+  "relk": {
+   "t": "تقدير المصمم للعلاقات الثنائية المعروفة (تشرين الثاني 2026): حروب، نزاعات حدودية، تحالفات غير رسمية، تطبيع، عداء تاريخي",
+   "u": "https://en.wikipedia.org/wiki/Foreign_relations_by_country",
+   "y": 2026
+  },
+  "tierA": {
+   "t": "تقدير المصمم (تشرين الثاني 2026) لصناعة السلاح والاستقرار: SIPRI Arms Transfers Database (أكبر المصدّرين 2020–24)، SIPRI Top 100 Arms-Producing Companies، Fragile States Index 2025، أخبار 2026",
+   "u": "https://www.sipri.org/databases/armstransfers",
+   "y": 2026
+  }
+ },
+ "gov": {
+  "type": "mil",
+  "ar": "حكم عسكري",
+  "free": 0,
+  "hos": {
+   "role": "President",
+   "name": "Min Aung Hlaing"
+  },
+  "hog": null,
+  "s": "govt,leaders",
+  "c": "ح"
+ },
+ "pop": {
+  "v": 54850648,
+  "y": 2025,
+  "s": "wb",
+  "c": "ح"
+ },
+ "eco": {
+  "gdpBusd": {
+   "v": 81.7,
+   "y": 2025,
+   "s": "wb",
+   "c": "ح"
+  },
+  "growth": {
+   "v": -2.0,
+   "y": 2025,
+   "s": "wb",
+   "c": "ح"
+  },
+  "infl": {
+   "v": 8.8,
+   "y": 2019,
+   "s": "wb",
+   "c": "ح"
+  },
+  "oilRentPct": {
+   "v": 0.1,
+   "y": 2021,
+   "s": "wb",
+   "c": "ح"
+  }
+ },
+ "mil": {
+  "budgetBusd": {
+   "v": 5.01,
+   "y": 2024,
+   "s": "wb",
+   "c": "ح"
+  },
+  "budgetPctGdp": {
+   "v": 6.6,
+   "y": 2024,
+   "s": "wb",
+   "c": "ح"
+  },
+  "personnelWB": {
+   "v": 463000,
+   "y": 2020,
+   "s": "wb",
+   "c": "ح"
+  },
+  "sum": {
+   "tanks": {
+    "v": 186,
+    "s": "iiss_eq",
+    "c": "ت"
+   },
+   "carriers": {
+    "v": 0,
+    "s": "iiss_eq",
+    "c": "ت"
+   },
+   "amphib": {
+    "v": 1,
+    "s": "iiss_eq",
+    "c": "ت"
+   },
+   "cruisers": {
+    "v": 0,
+    "s": "iiss_eq",
+    "c": "ت"
+   },
+   "destroyers": {
+    "v": 0,
+    "s": "iiss_eq",
+    "c": "ت"
+   },
+   "frigates": {
+    "v": 5,
+    "s": "iiss_eq",
+    "c": "ت"
+   },
+   "corvettes": {
+    "v": 3,
+    "s": "iiss_eq",
+    "c": "ت"
+   },
+   "subNuc": {
+    "v": 0,
+    "s": "iiss_eq",
+    "c": "ت"
+   },
+   "subs": {
+    "v": 1,
+    "s": "iiss_eq",
+    "c": "ت"
+   },
+   "combatAir": {
+    "v": 92,
+    "s": "iiss_eq",
+    "c": "ت"
+   },
+   "attackHeli": {
+    "v": 12,
+    "s": "iiss_eq",
+    "c": "ت"
+   },
+   "sats": {
+    "v": 0,
+    "s": "iiss_eq",
+    "c": "ت"
+   },
+   "active": {
+    "v": 134000,
+    "s": "iiss_pers",
+    "c": "ت"
+   },
+   "reserve": {
+    "v": 0,
+    "s": "iiss_pers",
+    "c": "ت"
+   },
+   "para": {
+    "v": 70000,
+    "s": "iiss_pers",
+    "c": "ت"
+   }
+  },
+  "land": [],
+  "air": [],
+  "ad": [],
+  "msl": [],
+  "navy": []
+ },
+ "ind": null,
+ "pol": {
+  "factions": [
+   "army",
+   "militia",
+   "street",
+   "biz"
+  ],
+  "stab": {
+   "v": 40,
+   "s": "govt",
+   "c": "ت"
+  },
+  "warHome": [
+   "myanmar"
+  ]
+ },
+ "rel": {
+  "AUT": -25,
+  "BEL": -25,
+  "BGR": -25,
+  "CYP": -25,
+  "CZE": -25,
+  "DEU": -25,
+  "DNK": -25,
+  "ESP": -25,
+  "EST": -25,
+  "FIN": -25,
+  "FRA": -25,
+  "GBR": -25,
+  "GRC": -25,
+  "HRV": -25,
+  "HUN": -25,
+  "IDN": 15,
+  "IRL": -25,
+  "ITA": -25,
+  "KHM": 15,
+  "LAO": 15,
+  "LTU": -25,
+  "LVA": -25,
+  "MYS": 15,
+  "NLD": -25,
+  "PHL": 15,
+  "POL": -25,
+  "PRT": -25,
+  "ROU": -25,
+  "SGP": 15,
+  "SVK": -25,
+  "SVN": -25,
+  "SWE": -25,
+  "THA": 15,
+  "TLS": 15,
+  "USA": -25,
+  "VNM": 15
+ },
+ "treaties": [
+  "ASEAN"
+ ],
+ "sanctions": [
+  {
+   "by": [
+    "USA",
+    "EU",
+    "GBR"
+   ],
+   "level": "medium",
+   "ar": "عقوبات على المجلس العسكري"
+  }
+ ],
+ "conflicts": [
+  "myanmar"
+ ],
+ "notes": ""
+}

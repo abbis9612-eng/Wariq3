@@ -1,0 +1,913 @@
+{
+ "id": "TUR",
+ "ar": "تركيا",
+ "en": "Turkey",
+ "tier": "A",
+ "asOf": "2026-11",
+ "src": {
+  "wiki_air": {
+   "t": "Wikipedia: List of Turkish Air Force aircraft",
+   "u": "https://en.wikipedia.org/wiki/List_of_Turkish_Air_Force_aircraft?oldid=1386622354",
+   "y": 2026,
+   "note": "نسخة الصفحة بتاريخ السحب؛ أرقام ويكيبيديا تنراجع ويا مصادر ثانية"
+  },
+  "wiki_army": {
+   "t": "Wikipedia: List of equipment of the Turkish Land Forces",
+   "u": "https://en.wikipedia.org/wiki/List_of_equipment_of_the_Turkish_Land_Forces?oldid=1384749758",
+   "y": 2026,
+   "note": "نسخة الصفحة بتاريخ السحب؛ أرقام ويكيبيديا تنراجع ويا مصادر ثانية"
+  },
+  "wiki_navy": {
+   "t": "Wikipedia: List of active ships of the Turkish Naval Forces",
+   "u": "https://en.wikipedia.org/wiki/List_of_active_ships_of_the_Turkish_Naval_Forces?oldid=1386474827",
+   "y": 2026,
+   "note": "نسخة الصفحة بتاريخ السحب؛ أرقام ويكيبيديا تنراجع ويا مصادر ثانية"
+  },
+  "iiss_eq": {
+   "t": "Wikipedia: List of countries by level of military equipment (من IISS Military Balance ومصادر ثانية)",
+   "u": "https://en.wikipedia.org/wiki/List_of_countries_by_level_of_military_equipment?oldid=1384804191",
+   "y": 2025
+  },
+  "iiss_pers": {
+   "t": "Wikipedia: List of countries by number of military and paramilitary personnel (جدول IISS Military Balance)",
+   "u": "https://en.wikipedia.org/wiki/List_of_countries_by_number_of_military_and_paramilitary_personnel?oldid=1380910017",
+   "y": 2025
+  },
+  "wb": {
+   "t": "World Bank WDI (SP.POP.TOTL, NY.GDP.MKTP.CD, NY.GDP.MKTP.KD.ZG, MS.MIL.XPND.CD/GD.ZS ← SIPRI, MS.MIL.TOTL.P1, FP.CPI.TOTL.ZG)",
+   "u": "https://api.worldbank.org/v2/",
+   "y": 2026
+  },
+  "govt": {
+   "t": "تصنيف نظام الحكم: دساتير الدول + CIA World Factbook «Government type» + V-Dem/Freedom House لدرجة الحرية (تصنيف المصمم 2026)",
+   "u": "https://www.cia.gov/the-world-factbook/field/government-type/",
+   "y": 2026
+  },
+  "leaders": {
+   "t": "Wikipedia: List of current heads of state and government",
+   "u": "https://en.wikipedia.org/wiki/List_of_current_heads_of_state_and_government?oldid=1386623862",
+   "y": 2026,
+   "note": "سحب نوفمبر 2026"
+  },
+  "rules": {
+   "t": "قواعد من blocs.json وconflicts.json وsanctions.json (تكتل دفاعي +40، معاهدة +50، حرب −90، عقوبات ثقيلة −40...)",
+   "u": "data/world/",
+   "y": 2026
+  },
+  "relk": {
+   "t": "تقدير المصمم للعلاقات الثنائية المعروفة (تشرين الثاني 2026): حروب، نزاعات حدودية، تحالفات غير رسمية، تطبيع، عداء تاريخي",
+   "u": "https://en.wikipedia.org/wiki/Foreign_relations_by_country",
+   "y": 2026
+  },
+  "tierA": {
+   "t": "تقدير المصمم (تشرين الثاني 2026) لصناعة السلاح والاستقرار: SIPRI Arms Transfers Database (أكبر المصدّرين 2020–24)، SIPRI Top 100 Arms-Producing Companies، Fragile States Index 2025، أخبار 2026",
+   "u": "https://www.sipri.org/databases/armstransfers",
+   "y": 2026
+  }
+ },
+ "gov": {
+  "type": "auth",
+  "ar": "رئاسي سلطوي",
+  "free": 1,
+  "hos": {
+   "role": "President",
+   "name": "Recep Tayyip Erdoğan"
+  },
+  "hog": null,
+  "s": "govt,leaders",
+  "c": "ح"
+ },
+ "pop": {
+  "v": 85878556,
+  "y": 2025,
+  "s": "wb",
+  "c": "ح"
+ },
+ "eco": {
+  "gdpBusd": {
+   "v": 1597.3,
+   "y": 2025,
+   "s": "wb",
+   "c": "ح"
+  },
+  "growth": {
+   "v": 3.6,
+   "y": 2025,
+   "s": "wb",
+   "c": "ح"
+  },
+  "infl": {
+   "v": 34.9,
+   "y": 2025,
+   "s": "wb",
+   "c": "ح"
+  },
+  "oilRentPct": {
+   "v": 0.1,
+   "y": 2021,
+   "s": "wb",
+   "c": "ح"
+  }
+ },
+ "mil": {
+  "budgetBusd": {
+   "v": 29.99,
+   "y": 2025,
+   "s": "wb",
+   "c": "ح"
+  },
+  "budgetPctGdp": {
+   "v": 1.91,
+   "y": 2025,
+   "s": "wb",
+   "c": "ح"
+  },
+  "personnelWB": {
+   "v": 512000,
+   "y": 2020,
+   "s": "wb",
+   "c": "ح"
+  },
+  "sum": {
+   "tanks": {
+    "v": 4378,
+    "s": "iiss_eq",
+    "c": "ت"
+   },
+   "carriers": {
+    "v": 0,
+    "s": "iiss_eq",
+    "c": "ت"
+   },
+   "amphib": {
+    "v": 5,
+    "s": "iiss_eq",
+    "c": "ت"
+   },
+   "cruisers": {
+    "v": 0,
+    "s": "iiss_eq",
+    "c": "ت"
+   },
+   "destroyers": {
+    "v": 0,
+    "s": "iiss_eq",
+    "c": "ت"
+   },
+   "frigates": {
+    "v": 16,
+    "s": "iiss_eq",
+    "c": "ت"
+   },
+   "corvettes": {
+    "v": 10,
+    "s": "iiss_eq",
+    "c": "ت"
+   },
+   "subNuc": {
+    "v": 0,
+    "s": "iiss_eq",
+    "c": "ت"
+   },
+   "subs": {
+    "v": 12,
+    "s": "iiss_eq",
+    "c": "ت"
+   },
+   "combatAir": {
+    "v": 291,
+    "s": "iiss_eq",
+    "c": "ت"
+   },
+   "attackHeli": {
+    "v": 95,
+    "s": "iiss_eq",
+    "c": "ت"
+   },
+   "sats": {
+    "v": 2,
+    "s": "iiss_eq",
+    "c": "ت"
+   },
+   "active": {
+    "v": 355200,
+    "s": "iiss_pers",
+    "c": "ت"
+   },
+   "reserve": {
+    "v": 378700,
+    "s": "iiss_pers",
+    "c": "ت"
+   },
+   "para": {
+    "v": 161400,
+    "s": "iiss_pers",
+    "c": "ت"
+   }
+  },
+  "land": [
+   {
+    "m": "ACV-15 (ACV-AIFV)",
+    "n": 511,
+    "orig": "TUR",
+    "s": "wiki_army",
+    "c": "ت",
+    "gen": 2,
+    "cat": "ifv"
+   },
+   {
+    "m": "ACV-15 (ACV-AIFVT1)",
+    "n": 134,
+    "orig": "TUR",
+    "s": "wiki_army",
+    "c": "ت",
+    "gen": 2,
+    "cat": "ifv"
+   },
+   {
+    "m": "FNSS Pars (ALPHA 8x8 AT)",
+    "n": 150,
+    "orig": "TUR",
+    "s": "wiki_army",
+    "c": "ت",
+    "gen": 2,
+    "cat": "apc"
+   },
+   {
+    "m": "FNSS Pars (ALPHA 6x6 APC)",
+    "n": 150,
+    "orig": "TUR",
+    "s": "wiki_army",
+    "c": "ت",
+    "gen": 2,
+    "cat": "apc"
+   },
+   {
+    "m": "FNSS Pars (ALPHA 6x6 CCV)",
+    "n": 150,
+    "orig": "TUR",
+    "s": "wiki_army",
+    "c": "ت",
+    "gen": 2,
+    "cat": "apc"
+   },
+   {
+    "m": "FNSS Pars (ALPHA 8x8 ARV)",
+    "n": 150,
+    "orig": "TUR",
+    "s": "wiki_army",
+    "c": "ت",
+    "gen": 2,
+    "cat": "apc"
+   },
+   {
+    "m": "FNSS Pars (PARS IV)",
+    "n": 150,
+    "orig": "TUR",
+    "s": "wiki_army",
+    "c": "ت",
+    "gen": 2,
+    "cat": "apc"
+   },
+   {
+    "m": "FNSS Pars (PARS SCOUT)",
+    "n": 150,
+    "orig": "TUR",
+    "s": "wiki_army",
+    "c": "ت",
+    "gen": 2,
+    "cat": "apc"
+   },
+   {
+    "m": "BMC Kirpi (KIRPI-I)",
+    "n": 1000,
+    "orig": "TUR",
+    "s": "wiki_army",
+    "c": "ت",
+    "gen": 2,
+    "cat": "mrap"
+   },
+   {
+    "m": "BMC Kirpi (KIRPI-II)",
+    "n": 1100,
+    "orig": "TUR",
+    "s": "wiki_army",
+    "c": "ت",
+    "gen": 2,
+    "cat": "mrap"
+   },
+   {
+    "m": "BMC Vuran (Vuran I)",
+    "n": 600,
+    "orig": "TUR",
+    "s": "wiki_army",
+    "c": "ت",
+    "gen": 2,
+    "cat": "mrap"
+   },
+   {
+    "m": "Nurol Ejder (Ejder 4x4)",
+    "n": 360,
+    "orig": "TUR",
+    "s": "wiki_army",
+    "c": "ت",
+    "gen": 2,
+    "cat": "mrap"
+   },
+   {
+    "m": "Otokar Cobra (Cobra I)",
+    "n": 800,
+    "orig": "TUR",
+    "s": "wiki_army",
+    "c": "ت",
+    "gen": 2,
+    "cat": "mrap"
+   },
+   {
+    "m": "Otokar Cobra (Cobra II)",
+    "n": 400,
+    "orig": "TUR",
+    "s": "wiki_army",
+    "c": "ت",
+    "gen": 2,
+    "cat": "mrap"
+   },
+   {
+    "m": "ACV-15 (ACV-AAPC)",
+    "n": 1381,
+    "orig": "TUR",
+    "s": "wiki_army",
+    "c": "ت",
+    "gen": 2,
+    "cat": "apc"
+   },
+   {
+    "m": "ACV-15 (ACV-AAPCT1)",
+    "n": 52,
+    "orig": "TUR",
+    "s": "wiki_army",
+    "c": "ت",
+    "gen": 2,
+    "cat": "apc"
+   },
+   {
+    "m": "M113 (M113A1/A2)",
+    "n": 2813,
+    "orig": "USA",
+    "s": "wiki_army",
+    "c": "ت",
+    "gen": 2,
+    "cat": "apc"
+   },
+   {
+    "m": "FNSS Pars (Pars 4x4)",
+    "n": 135,
+    "orig": "TUR",
+    "s": "wiki_army",
+    "c": "ت",
+    "gen": 2,
+    "cat": "atgm"
+   },
+   {
+    "m": "FNSS Kaplan STA (KAPLAN-10)",
+    "n": 200,
+    "orig": "TUR",
+    "s": "wiki_army",
+    "c": "ت",
+    "gen": 2,
+    "cat": "atgm"
+   },
+   {
+    "m": "FNSS ACV-15 (ACV-15-TOW)",
+    "n": 365,
+    "orig": "TUR",
+    "s": "wiki_army",
+    "c": "ت",
+    "gen": 2,
+    "cat": "atgm"
+   },
+   {
+    "m": "M113 (M113A2T2-TOW)",
+    "n": 156,
+    "orig": "USA",
+    "s": "wiki_army",
+    "c": "ت",
+    "gen": 2,
+    "cat": "atgm"
+   },
+   {
+    "m": "FNSS ACV-15 (ACV-AMV)",
+    "n": 170,
+    "orig": "TUR",
+    "s": "wiki_army",
+    "c": "ت",
+    "gen": 2,
+    "cat": "spg"
+   },
+   {
+    "m": "M125 (M125A1)",
+    "n": 10,
+    "orig": "USA",
+    "s": "wiki_army",
+    "c": "ت",
+    "gen": 2,
+    "cat": "spg"
+   },
+   {
+    "m": "M106 (M106A1)",
+    "n": 179,
+    "orig": "USA",
+    "s": "wiki_army",
+    "c": "ت",
+    "gen": 2,
+    "cat": "spg"
+   },
+   {
+    "m": "M48 Patton",
+    "n": 400,
+    "orig": "USA",
+    "s": "wiki_army",
+    "c": "ت",
+    "gen": 1,
+    "cat": "tank"
+   },
+   {
+    "m": "M60 Patton",
+    "n": 100,
+    "orig": "USA",
+    "s": "wiki_army",
+    "c": "ت",
+    "gen": 2,
+    "cat": "tank"
+   },
+   {
+    "m": "M107",
+    "n": 36,
+    "orig": "USA",
+    "s": "wiki_army",
+    "c": "ت",
+    "gen": 2,
+    "cat": "spg"
+   },
+   {
+    "m": "M108",
+    "n": 25,
+    "orig": "USA",
+    "s": "wiki_army",
+    "c": "ت",
+    "gen": 2,
+    "cat": "spg"
+   },
+   {
+    "m": "M116",
+    "n": 180,
+    "orig": "USA",
+    "s": "wiki_army",
+    "c": "ت",
+    "gen": 2,
+    "cat": "towed"
+   },
+   {
+    "m": "Otokar Akrep",
+    "n": 260,
+    "orig": "TUR",
+    "s": "wiki_army",
+    "c": "ت",
+    "gen": 2,
+    "cat": "apc"
+   },
+   {
+    "m": "9M113 Konkurs",
+    "n": 74,
+    "orig": "SUN",
+    "s": "wiki_army",
+    "c": "ت",
+    "gen": 2,
+    "cat": "atgm"
+   }
+  ],
+  "air": [
+   {
+    "m": "F-16 Fighting Falcon (F-16C/D Block 30TM)",
+    "n": 34,
+    "orig": "USA",
+    "s": "wiki_air",
+    "c": "ت",
+    "note": "Nearly all active aircraft were built under license by TAI. Block 30s are being upgraded to 'TM' standard. Block 40s and 50s have been upgra",
+    "gen": 3,
+    "cat": "fighter"
+   },
+   {
+    "m": "F-16 Fighting Falcon (F-16C/DM Block 40 & 50)",
+    "n": 172,
+    "orig": "USA",
+    "s": "wiki_air",
+    "c": "ت",
+    "note": "Nearly all active aircraft were built under license by TAI. Block 30s are being upgraded to 'TM' standard. Block 40s and 50s have been upgra",
+    "gen": 3,
+    "cat": "fighter"
+   },
+   {
+    "m": "F-4 Phantom II (F-4E Terminator 2020)",
+    "n": 30,
+    "orig": "USA",
+    "s": "wiki_air",
+    "c": "ت",
+    "note": "Upgraded by Israeli Military Industries 18 more in reserve.",
+    "gen": 3,
+    "cat": "bomber"
+   },
+   {
+    "m": "E-7 Peace Eagle (E-7T)",
+    "n": 4,
+    "orig": "USA",
+    "s": "wiki_air",
+    "c": "ت",
+    "note": "Being upgraded with ASELSAN’s ARES-2A ESM/ELINT System, that replaced EL/L-8382.",
+    "gen": 2,
+    "cat": "awacs"
+   },
+   {
+    "m": "CN-235 (CN-235M-100)",
+    "n": 2,
+    "orig": "ESP",
+    "s": "wiki_air",
+    "c": "ت",
+    "note": "1 used for reconnaissance under Treaty on Open Skies, 1 used for maritime patrol.",
+    "gen": 2,
+    "cat": "isr"
+   },
+   {
+    "m": "C-17 Globemaster III (Block 21)",
+    "n": 1,
+    "orig": "USA",
+    "s": "wiki_air",
+    "c": "ت",
+    "note": "Leased from Qatar Emiri Air Force",
+    "gen": 2,
+    "cat": "transport"
+   },
+   {
+    "m": "A400M Atlas (A400M-180)",
+    "n": 10,
+    "orig": "TUR",
+    "s": "wiki_air",
+    "c": "ت",
+    "note": "Built in co-op with TAI",
+    "gen": 2,
+    "cat": "transport"
+   },
+   {
+    "m": "C-130 Hercules (C-130EM/BM Erciyes)",
+    "n": 17,
+    "orig": "USA",
+    "s": "wiki_air",
+    "c": "ت",
+    "note": "6 C-130BM and 11 C-130EM variants. All upgraded by TAI.",
+    "gen": 2,
+    "cat": "transport"
+   },
+   {
+    "m": "AS532 Cougar (AL)",
+    "n": 6,
+    "orig": "FRA",
+    "s": "wiki_air",
+    "c": "ت",
+    "note": "License built by TAI. A contract was signed for the avionics modernization between ASELSAN, ASFAT and AIRBUS.",
+    "gen": 2,
+    "cat": "heli_util"
+   },
+   {
+    "m": "AS532 Cougar (UL)",
+    "n": 15,
+    "orig": "FRA",
+    "s": "wiki_air",
+    "c": "ت",
+    "note": "License built by TAI. A contract was signed for the avionics modernization between ASELSAN, ASFAT and AIRBUS.",
+    "gen": 2,
+    "cat": "heli_util"
+   },
+   {
+    "m": "UH-1 Iroquois (UH-1H)",
+    "n": 56,
+    "orig": "USA",
+    "s": "wiki_air",
+    "c": "ت",
+    "note": "Some underwent avionics modernization.",
+    "gen": 2,
+    "cat": "heli_util"
+   },
+   {
+    "m": "S-70 Black Hawk (T-70)",
+    "n": 5,
+    "orig": "USA",
+    "s": "wiki_air",
+    "c": "ت",
+    "note": "Produced under license by TAI, 1 lost in 2026",
+    "gen": 2,
+    "cat": "heli_util"
+   },
+   {
+    "m": "T625 Gökbey",
+    "n": 6,
+    "orig": "TUR",
+    "s": "wiki_air",
+    "c": "ت",
+    "note": "First indigenous helicopter.",
+    "gen": 2,
+    "cat": "heli_util"
+   },
+   {
+    "m": "SZD-50 Puchacz (SZD-50-3 Puchacz)",
+    "n": 20,
+    "orig": "POL",
+    "s": "wiki_air",
+    "c": "ت",
+    "note": "Owned by Turkish Aeronautical Association.",
+    "gen": 2,
+    "cat": "trainer"
+   },
+   {
+    "m": "SF.260 (SF.260D)",
+    "n": 34,
+    "orig": "ITA",
+    "s": "wiki_air",
+    "c": "ت",
+    "note": "Licensed built by TAI.",
+    "gen": 2,
+    "cat": "trainer"
+   },
+   {
+    "m": "MFI-395 Super Mushshak (MFI-395 IIB)",
+    "n": 52,
+    "orig": "PAK",
+    "s": "wiki_air",
+    "c": "ت",
+    "gen": 2,
+    "cat": "trainer"
+   },
+   {
+    "m": "KT-1 Woongbi (KT-1T)",
+    "n": 40,
+    "orig": "KOR",
+    "s": "wiki_air",
+    "c": "ت",
+    "note": "Licensed built by TAI.",
+    "gen": 2,
+    "cat": "trainer"
+   },
+   {
+    "m": "T-38 Talon (T-38M)",
+    "n": 68,
+    "orig": "USA",
+    "s": "wiki_air",
+    "c": "ت",
+    "note": "Upgraded under project ARI to T-38M.",
+    "gen": 2,
+    "cat": "trainer"
+   },
+   {
+    "m": "CF-5A/B Freedom Fighter (F-5/2000)",
+    "n": 18,
+    "orig": "CAN",
+    "s": "wiki_air",
+    "c": "ت",
+    "note": "Upgraded by Israeli Military Industries. Used by the Turkish Stars demonstration team",
+    "gen": 2,
+    "cat": "trainer"
+   },
+   {
+    "m": "Bayraktar Kızılelma (A)",
+    "n": 3,
+    "orig": "TUR",
+    "s": "wiki_air",
+    "c": "ت",
+    "gen": 4,
+    "cat": "uav_strike"
+   },
+   {
+    "m": "TAI Anka (B / S)",
+    "n": 36,
+    "orig": "TUR",
+    "s": "wiki_air",
+    "c": "ت",
+    "gen": 2,
+    "cat": "uav_strike"
+   },
+   {
+    "m": "Bayraktar Akinci",
+    "n": 20,
+    "orig": "TUR",
+    "s": "wiki_air",
+    "c": "ت",
+    "gen": 4,
+    "cat": "uav_strike"
+   },
+   {
+    "m": "TAI Aksungur",
+    "n": 5,
+    "orig": "TUR",
+    "s": "wiki_air",
+    "c": "ت",
+    "gen": 2,
+    "cat": "uav_strike"
+   },
+   {
+    "m": "TAI/Agusta Westland T129 ATAK (T-129B)",
+    "n": 49,
+    "orig": "TUR",
+    "s": "wiki_army",
+    "c": "ت",
+    "gen": 4,
+    "cat": "heli_attack"
+   },
+   {
+    "m": "Bell 206 JetRanger (AB206R)",
+    "n": 22,
+    "orig": "USA",
+    "s": "wiki_army",
+    "c": "ت",
+    "gen": 2,
+    "cat": "heli_util"
+   }
+  ],
+  "ad": [
+   {
+    "m": "ATILGAN PMSS",
+    "n": 70,
+    "orig": "TUR",
+    "s": "wiki_army",
+    "c": "ت",
+    "gen": 2,
+    "cat": "short"
+   },
+   {
+    "m": "Zıpkın PMADS",
+    "n": 35,
+    "orig": "TUR",
+    "s": "wiki_army",
+    "c": "ت",
+    "gen": 2,
+    "cat": "short"
+   },
+   {
+    "m": "BMC Vuran",
+    "n": 24,
+    "orig": "TUR",
+    "s": "wiki_army",
+    "c": "ت",
+    "gen": 2,
+    "cat": "short"
+   },
+   {
+    "m": "ACV-30 Korkut",
+    "n": 14,
+    "orig": "TUR",
+    "s": "wiki_army",
+    "c": "ت",
+    "gen": 2,
+    "cat": "short"
+   },
+   {
+    "m": "L/60 and L/70 Bofors",
+    "n": 803,
+    "orig": "SWE",
+    "s": "wiki_army",
+    "c": "ت",
+    "gen": 2,
+    "cat": "short"
+   },
+   {
+    "m": "Oerlikon GDF",
+    "n": 120,
+    "orig": "CHE",
+    "s": "wiki_army",
+    "c": "ت",
+    "gen": 2,
+    "cat": "short"
+   },
+   {
+    "m": "Oerlikon 20 mm",
+    "n": 439,
+    "orig": "CHE",
+    "s": "wiki_army",
+    "c": "ت",
+    "gen": 2,
+    "cat": "short"
+   },
+   {
+    "m": "Rheinmetall 20 mm",
+    "n": 300,
+    "orig": "DEU",
+    "s": "wiki_army",
+    "c": "ت",
+    "gen": 2,
+    "cat": "short"
+   },
+   {
+    "m": "M45 Quadmount",
+    "n": 160,
+    "orig": "USA",
+    "s": "wiki_army",
+    "c": "ت",
+    "gen": 2,
+    "cat": "short"
+   },
+   {
+    "m": "M42A1 Duster",
+    "n": 110,
+    "orig": "USA",
+    "s": "wiki_army",
+    "c": "ت",
+    "gen": 2,
+    "cat": "short"
+   }
+  ],
+  "msl": [],
+  "navy": []
+ },
+ "ind": {
+  "tech": {
+   "arm": 4,
+   "air": 3,
+   "uav": 5,
+   "msl": 4,
+   "navy": 4,
+   "ew": 4,
+   "ind": 4
+  },
+  "makes": [
+   "بيرقدار TB2/أكنجي/كيزلالما",
+   "ألتاي",
+   "T129",
+   "تايفون (صاروخ)",
+   "حصار/سيبر"
+  ],
+  "s": "tierA",
+  "c": "ت"
+ },
+ "pol": {
+  "factions": [
+   "army",
+   "security",
+   "street",
+   "biz"
+  ],
+  "stab": {
+   "v": 55,
+   "s": "tierA",
+   "c": "ت"
+  },
+  "warHome": [],
+  "insurgency": "PKK أعلن حل نفسه 2025"
+ },
+ "rel": {
+  "ALB": 40,
+  "ARM": -30,
+  "AZE": 50,
+  "BEL": 40,
+  "BGR": 40,
+  "CAN": 40,
+  "CYP": -60,
+  "CZE": 40,
+  "DEU": 40,
+  "DNK": 40,
+  "EGY": 30,
+  "ESP": 40,
+  "EST": 40,
+  "FIN": 40,
+  "FRA": 40,
+  "GBR": 40,
+  "GRC": -25,
+  "HRV": 40,
+  "HUN": 40,
+  "IRN": 10,
+  "IRQ": 15,
+  "ISR": -60,
+  "ITA": 40,
+  "LTU": 40,
+  "LVA": 40,
+  "MKD": 40,
+  "NLD": 40,
+  "NOR": 40,
+  "PAK": 65,
+  "POL": 40,
+  "PRT": 40,
+  "QAT": 75,
+  "ROU": 40,
+  "RUS": 25,
+  "SAU": 35,
+  "SVK": 40,
+  "SVN": 40,
+  "SWE": 40,
+  "SYR": 70,
+  "USA": 30
+ },
+ "treaties": [
+  "NATO",
+  "PACT_AZE"
+ ],
+ "sanctions": [],
+ "conflicts": [],
+ "notes": ""
+}

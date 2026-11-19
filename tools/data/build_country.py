@@ -29,14 +29,16 @@ def qty(s):
     s = (s or '').replace('\xa0', ' ').strip(); sl = s.lower()
     if not s or any(w in sl for w in ('unknown', 'n/a', 'classified', 'on order', 'planned', 'retired')): return None, None
     if 'dozen' in sl: return 24, 'ت'
-    m = re.search(r'(\d[\d,]*)', s)
+    s = re.sub(r'\[[^\]]*\]|\([^)]*\)', ' ', s)   # حواشي وأقواس (سنوات، طلبات)
+    m = re.search(r'\d{1,3}(?:,\d{3})+(?!\d)|\d+', s)
     if not m: return None, None
-    n = int(m.group(1).replace(',', ''))
+    n = int(m.group(0).replace(',', ''))
+    if 1900 <= n <= 2035 and not re.match(r'^\s*\d+\s*$', s): return None, None   # سنة مو عدد
     approx = bool(re.search(r'[~≈+]|approx|about|est', sl)) or '–' in s or '-' in s
     return n, 'ت' if approx else None
 
 # ===== النوع =====
-LAND = [(r'main battle tank|light tank|\btank\b', 'tank'), (r'infantry fighting', 'ifv'), (r'self[- ]propelled (howitzer|gun|artillery|mortar)|spg|sph', 'spg'),
+LAND = [(r'anti-tank|anti tank|atgm|tank destroyer|guided missile', 'atgm'), (r'main battle tank|light tank|(?<!anti-)\btank\b', 'tank'), (r'infantry fighting', 'ifv'), (r'self[- ]propelled (howitzer|gun|artillery|mortar)|spg|sph', 'spg'),
   (r'multiple rocket|mlrs|rocket launcher|rocket artillery', 'mlrs'), (r'howitzer|field gun|gun-howitzer|towed', 'towed'), (r'anti-aircraft|surface-to-air|\bsam\b|air defen|spaag|anti aircraft', 'shorad'),
   (r'mrap|mine.resistant', 'mrap'), (r'armou?red personnel|\bapc\b|infantry mobility|armou?red (vehicle|car)|reconnaissance vehicle|scout|protected', 'apc'), (r'anti-tank|atgm|tank destroyer', 'atgm'),
   (r'ballistic missile|\bsrbm\b|\bmrbm\b|tactical missile', 'srbm'), (r'cruise missile', 'cruise')]
@@ -77,7 +79,7 @@ for f in sorted(glob.glob(f'{R}/raw/wiki/{ID}_*.json')):
     for t in d['tables']:
         if re.search(BAD_SEC, t['sec'].lower()): continue
         H = t['hdr']; col = lambda *ks: next((i for k in ks for i, h in enumerate(H) if k in h and 'name' not in h and 'pennant' not in h), None)
-        ci_n = 0; ci_o = col('origin', 'country', 'manufacturer'); ci_t = col('type', 'role'); ci_q = col('in service', 'quantity', 'number of', 'total', 'active', 'inventory', 'number'); ci_v = col('variant')
+        ci_n = 0; ci_o = col('origin', 'country', 'manufacturer'); ci_t = col('type', 'role'); ci_q = col('in service', 'quantity', 'number in service', 'number of', 'total', 'active', 'inventory', 'number', 'no.', 'ships', 'units'); ci_v = col('variant')
         if ci_q is None: continue
         grp = ''
         for r in t['rows']:
@@ -116,6 +118,24 @@ for f in sorted(glob.glob(f'{R}/raw/wiki/{ID}_*.json')):
                 if cc in ('srbm', 'cruise'): it['cat'] = cc; msl.append(it); continue
                 it['cat'] = cc; land.append(it)
 
+# ===== حدود معقولية: رقم أكبر = خطأ قراءة، ينشال ويطلع تحذير =====
+CAP = {'tank': 15000, 'ifv': 25000, 'apc': 40000, 'mrap': 15000, 'spg': 8000, 'towed': 10000, 'mlrs': 5000, 'atgm': 20000, 'fighter': 1500, 'attack': 800, 'heli_attack': 1200, 'heli_util': 2500, 'transport': 800, 'trainer': 1500,
+  'uav_isr': 5000, 'uav_strike': 5000, 'tanker': 300, 'awacs': 100, 'bomber': 300, 'isr': 500, 'long': 600, 'medium': 600, 'short': 5000, 'srbm': 3000, 'cruise': 3000}
+for nm, L in (('land', land), ('air', air), ('ad', ad), ('msl', msl), ('navy', navy)):
+    for x in L[:]:
+        lim = CAP.get(x['cat'], 120)
+        if x['n'] > lim: print(f"⚠️ {ID} {nm} {x['m'][:40]} = {x['n']} > {lim} (انشال)"); L.remove(x)
+    # تكرار نفس الموديل من جدولين: خلي الأكبر
+    seen = {}
+    for x in L[:]:
+        k = (x['cat'], re.sub(r'\W', '', x['m'].lower())[:24])
+        if k in seen:
+            y = seen[k]
+            if x['n'] > y['n']: L.remove(y); seen[k] = x
+            else: L.remove(x)
+        else: seen[k] = x
+land = [x for x in land if x['cat'] != 'atgm' or x['n'] <= 3000]
+
 # ===== التصحيح اليدوي =====
 src.update(cur.get('src', {}))
 for o in cur.get('fix', []):   # {"in": "land", "match": "M1A1", "n":…, "s":…, "c":…, "note":…} أو "drop": true
@@ -128,17 +148,51 @@ for o in cur.get('fix', []):   # {"in": "land", "match": "M1A1", "n":…, "s":�
             if k in o: x[k] = o[k]
 for o in cur.get('add', []): {'land': land, 'air': air, 'ad': ad, 'navy': navy, 'msl': msl}[o.pop('in')].append(o)
 
+# ===== الأرقام الموحّدة (milsum، من IISS) =====
+MS = json.load(open(f'{R}/world/milsum.json')); ms = MS['c'].get(ID)
+if ms:
+    for k, v in MS['src'].items(): src[k] = v
+    V = lambda k, sk: {'v': ms[k], 's': sk, 'c': 'ت'} if ms.get(k) is not None else None
+    sumo = {k: V(k, 'iiss_eq') for k in ('tanks', 'carriers', 'amphib', 'cruisers', 'destroyers', 'frigates', 'corvettes', 'subNuc', 'subs', 'combatAir', 'attackHeli', 'sats')}
+    sumo.update({k: V(k, 'iiss_pers') for k in ('active', 'reserve', 'para')})
+    sumo = {k: v for k, v in sumo.items() if v}
+    for k, v in cur.get('sum', {}).items(): sumo[k] = v   # تصحيح بمصدر أحدث
+else: sumo = cur.get('sum', {})
+
 # ===== البنك الدولي =====
 src['wb'] = {'t': 'World Bank WDI (SP.POP.TOTL, NY.GDP.MKTP.CD, NY.GDP.MKTP.KD.ZG, MS.MIL.XPND.CD/GD.ZS ← SIPRI, MS.MIL.TOTL.P1, FP.CPI.TOTL.ZG)', 'u': 'https://api.worldbank.org/v2/', 'y': 2026}
+# ===== الحكم والقادة والعلاقات والصناعة والاستقرار (لكل الدول) =====
+GV = json.load(open(f'{R}/curation/gov.json')); LD = json.load(open(f'{R}/world/leaders.json')); RL = json.load(open(f'{R}/world/rel.json')); TA = json.load(open(f'{R}/curation/tierA.json'))
+BL = json.load(open(f'{R}/world/blocs.json')); CF = json.load(open(f'{R}/world/conflicts.json')); SN = json.load(open(f'{R}/world/sanctions.json'))
+src['govt'] = GV['src']['govt']; src['leaders'] = LD['src']['leaders']; src.update(RL['src']); src['tierA'] = TA['src']['tierA']
+gt, free = GV['c'][ID]; ld = LD['c'].get(ID, {})
+gov = {'type': gt, 'ar': GV['types'][gt], 'free': free, 'hos': ld.get('hos'), 'hog': ld.get('hog'), 's': 'govt,leaders', 'c': 'ح', **(cur.get('gov') or {})}
+gov.pop('head', None); gov.pop('v', None) if 'v' in gov and not isinstance(gov.get('v'), (int, float)) else None
+if cur.get('gov', {}).get('v'): gov['desc'] = cur['gov']['v']
+gov['s'] = 'govt,leaders'; gov['c'] = 'ح'
+rel = {k: v[0] for k, v in RL['c'].get(ID, {}).items()}; rel.update(cur.get('relFix', {}))
+ta = TA['c'].get(ID)
+FACS = {'theo': ['clergy', 'irgc', 'army', 'street', 'biz'], 'amon': ['royal', 'army', 'clergy', 'street', 'biz'], 'one': ['party', 'army', 'street', 'biz'], 'mil': ['army', 'militia', 'street', 'biz'],
+  'auth': ['army', 'security', 'street', 'biz'], 'trans': ['army', 'factions', 'street', 'biz'], 'cmon': ['army', 'parties', 'street', 'biz'], 'parl': ['army', 'parties', 'street', 'biz'], 'pres': ['army', 'parties', 'street', 'biz'], 'semi': ['army', 'parties', 'street', 'biz']}
+war_home = [c['id'] for c in CF['conflicts'] if c['state'] == 'active' and (ID in c.get('b', []) or (ID in c.get('a', []) and not all(x in CL for x in c.get('b', []))))]
+ind = cur.get('ind') or ({'tech': ta['tech'], 'makes': ta['makes'], 's': 'tierA', 'c': 'ت'} if ta else None)
+stab0 = ta['stab'] if ta else max(15, min(80, 55 + 8 * free - 15 * len(war_home)))
+pol = {'factions': (cur.get('pol') or {}).get('factions') or FACS[gt], 'stab': {'v': (cur.get('pol') or {}).get('stab', {}).get('v', stab0), 's': 'tierA' if ta else 'govt', 'c': 'ت'}, 'warHome': war_home}
+if ta and ta.get('ins'): pol['insurgency'] = ta['ins']
+treaties = sorted({k for k, b in BL['blocs'].items() if ID in b['m']} | set(cur.get('treaties', [])) | {f"PACT_{p['b'] if p['a'] == ID else p['a']}" for p in BL['pacts'] if ID in (p['a'], p['b'])})
+sanct = [{'by': x['by'], 'level': x['level'], 'ar': x['ar']} for x in SN['list'] if x['on'] == ID]
+confl = [c['id'] for c in CF['conflicts'] if ID in c.get('a', []) + c.get('b', []) + c.get('hit', [])]
+
 W = lambda k, f=1, nd=None: ({'v': round(WB[k]['v'] * f, nd) if nd is not None else WB[k]['v'] * f, 'y': WB[k]['y'], 's': 'wb', 'c': 'ح'} if k in WB else None)
 out = {'id': ID, 'ar': CL[ID]['ar'], 'en': CL[ID]['en'], 'tier': CL[ID]['tier'], 'asOf': '2026-11', 'src': src,
-  'gov': cur.get('gov'), 'pop': W('pop', 1, 0),
+  'gov': gov, 'pop': cur.get('pop') or W('pop', 1, 0),
   'eco': {k: v for k, v in {'gdpBusd': W('gdp', 1e-9, 1), 'growth': W('growth', 1, 1), 'infl': W('infl', 1, 1), 'oilRentPct': W('oilrent', 1, 1), **cur.get('eco', {})}.items() if v},
-  'mil': {k: v for k, v in {'budgetBusd': W('milx', 1e-9, 2), 'budgetPctGdp': W('milpct', 1, 2), 'personnelWB': W('troops', 1, 0), **cur.get('mil', {}), 'land': land, 'air': air, 'ad': ad, 'msl': msl, 'navy': navy}.items() if v is not None},
-  'ind': cur.get('ind'), 'pol': cur.get('pol'), 'rel': cur.get('rel', {}), 'treaties': cur.get('treaties', []), 'sanctions': cur.get('sanctions', []), 'conflicts': cur.get('conflicts', []), 'notes': cur.get('notes', '')}
+  'mil': {k: v for k, v in {'budgetBusd': W('milx', 1e-9, 2), 'budgetPctGdp': W('milpct', 1, 2), 'personnelWB': W('troops', 1, 0), 'sum': sumo or None, **cur.get('mil', {}), 'land': land, 'air': air, 'ad': ad, 'msl': msl, 'navy': navy}.items() if v is not None},
+  'ind': ind, 'pol': pol, 'rel': rel, 'treaties': treaties, 'sanctions': sanct, 'conflicts': confl, 'notes': cur.get('notes', '')}
 json.dump(out, open(f'{R}/countries/{ID}.json', 'w'), ensure_ascii=False, indent=1)
 tot = lambda L, *cs: sum(x['n'] for x in L if not cs or x['cat'] in cs)
-print(f"{ID}: دبابات {tot(land,'tank')} · مدرعات {tot(land,'ifv','apc','mrap')} · مدفعية {tot(land,'spg','towed','mlrs')} · مقاتلات/هجوم {tot(air,'fighter','attack')} · مروحيات {tot(air,'heli_attack','heli_util')} · مسيّرات {tot(air,'uav_isr','uav_strike')} · دفاع جوي {len(ad)} نوع · بحرية {tot(navy)} · بنود {len(land)+len(air)+len(ad)+len(navy)+len(msl)}")
+sv = lambda k: (sumo.get(k) or {}).get('v', '-')
+print(f"{ID} [موحّد: دبابات {sv('tanks')} · طائرات قتال {sv('combatAir')} · عامل {sv('active')}]  [موديلات: دبابات {tot(land,'tank')} · مدرعات {tot(land,'ifv','apc','mrap')} · مدفعية {tot(land,'spg','towed','mlrs')} · مقاتلات/هجوم {tot(air,'fighter','attack')} · مروحيات {tot(air,'heli_attack','heli_util')} · مسيّرات {tot(air,'uav_isr','uav_strike')} · دفاع جوي {len(ad)} نوع · بحرية {tot(navy)} · بنود {len(land)+len(air)+len(ad)+len(navy)+len(msl)}")
 if SHOW:
     for nm, L in (('land', land), ('air', air), ('ad', ad), ('msl', msl), ('navy', navy)):
         for x in L: print(f"  {nm:5} {x['cat']:11} {x['n']:>6} g{x['gen']} {x['orig']:4} {x['c']} {x['m'][:45]}")

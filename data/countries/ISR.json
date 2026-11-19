@@ -1,0 +1,581 @@
+{
+ "id": "ISR",
+ "ar": "إسرائيل",
+ "en": "Israel",
+ "tier": "A",
+ "asOf": "2026-11",
+ "src": {
+  "wiki_air": {
+   "t": "Wikipedia: Israeli Air Force",
+   "u": "https://en.wikipedia.org/wiki/Israeli_Air_Force?oldid=1380532238",
+   "y": 2026,
+   "note": "نسخة الصفحة بتاريخ السحب؛ أرقام ويكيبيديا تنراجع ويا مصادر ثانية"
+  },
+  "wiki_army": {
+   "t": "Wikipedia: List of equipment of the Israel Defense Forces",
+   "u": "https://en.wikipedia.org/wiki/List_of_equipment_of_the_Israel_Defense_Forces?oldid=1386177429",
+   "y": 2026,
+   "note": "نسخة الصفحة بتاريخ السحب؛ أرقام ويكيبيديا تنراجع ويا مصادر ثانية"
+  },
+  "wiki_navy": {
+   "t": "Wikipedia: Israeli Navy",
+   "u": "https://en.wikipedia.org/wiki/Israeli_Navy?oldid=1385925846",
+   "y": 2026,
+   "note": "نسخة الصفحة بتاريخ السحب؛ أرقام ويكيبيديا تنراجع ويا مصادر ثانية"
+  },
+  "iiss_eq": {
+   "t": "Wikipedia: List of countries by level of military equipment (من IISS Military Balance ومصادر ثانية)",
+   "u": "https://en.wikipedia.org/wiki/List_of_countries_by_level_of_military_equipment?oldid=1384804191",
+   "y": 2025
+  },
+  "iiss_pers": {
+   "t": "Wikipedia: List of countries by number of military and paramilitary personnel (جدول IISS Military Balance)",
+   "u": "https://en.wikipedia.org/wiki/List_of_countries_by_number_of_military_and_paramilitary_personnel?oldid=1380910017",
+   "y": 2025
+  },
+  "wb": {
+   "t": "World Bank WDI (SP.POP.TOTL, NY.GDP.MKTP.CD, NY.GDP.MKTP.KD.ZG, MS.MIL.XPND.CD/GD.ZS ← SIPRI, MS.MIL.TOTL.P1, FP.CPI.TOTL.ZG)",
+   "u": "https://api.worldbank.org/v2/",
+   "y": 2026
+  },
+  "govt": {
+   "t": "تصنيف نظام الحكم: دساتير الدول + CIA World Factbook «Government type» + V-Dem/Freedom House لدرجة الحرية (تصنيف المصمم 2026)",
+   "u": "https://www.cia.gov/the-world-factbook/field/government-type/",
+   "y": 2026
+  },
+  "leaders": {
+   "t": "Wikipedia: List of current heads of state and government",
+   "u": "https://en.wikipedia.org/wiki/List_of_current_heads_of_state_and_government?oldid=1386623862",
+   "y": 2026,
+   "note": "سحب نوفمبر 2026"
+  },
+  "rules": {
+   "t": "قواعد من blocs.json وconflicts.json وsanctions.json (تكتل دفاعي +40، معاهدة +50، حرب −90، عقوبات ثقيلة −40...)",
+   "u": "data/world/",
+   "y": 2026
+  },
+  "relk": {
+   "t": "تقدير المصمم للعلاقات الثنائية المعروفة (تشرين الثاني 2026): حروب، نزاعات حدودية، تحالفات غير رسمية، تطبيع، عداء تاريخي",
+   "u": "https://en.wikipedia.org/wiki/Foreign_relations_by_country",
+   "y": 2026
+  },
+  "tierA": {
+   "t": "تقدير المصمم (تشرين الثاني 2026) لصناعة السلاح والاستقرار: SIPRI Arms Transfers Database (أكبر المصدّرين 2020–24)، SIPRI Top 100 Arms-Producing Companies، Fragile States Index 2025، أخبار 2026",
+   "u": "https://www.sipri.org/databases/armstransfers",
+   "y": 2026
+  }
+ },
+ "gov": {
+  "type": "parl",
+  "ar": "جمهورية برلمانية",
+  "free": 2,
+  "hos": {
+   "role": "President",
+   "name": "Isaac Herzog"
+  },
+  "hog": {
+   "role": "Caretaker Prime Minister",
+   "name": "Benjamin Netanyahu"
+  },
+  "s": "govt,leaders",
+  "c": "ح"
+ },
+ "pop": {
+  "v": 10122800,
+  "y": 2025,
+  "s": "wb",
+  "c": "ح"
+ },
+ "eco": {
+  "gdpBusd": {
+   "v": 610.8,
+   "y": 2025,
+   "s": "wb",
+   "c": "ح"
+  },
+  "growth": {
+   "v": 2.9,
+   "y": 2025,
+   "s": "wb",
+   "c": "ح"
+  },
+  "infl": {
+   "v": 3.0,
+   "y": 2025,
+   "s": "wb",
+   "c": "ح"
+  },
+  "oilRentPct": {
+   "v": 0.0,
+   "y": 2021,
+   "s": "wb",
+   "c": "ح"
+  }
+ },
+ "mil": {
+  "budgetBusd": {
+   "v": 48.28,
+   "y": 2025,
+   "s": "wb",
+   "c": "ح"
+  },
+  "budgetPctGdp": {
+   "v": 7.81,
+   "y": 2025,
+   "s": "wb",
+   "c": "ح"
+  },
+  "personnelWB": {
+   "v": 178000,
+   "y": 2020,
+   "s": "wb",
+   "c": "ح"
+  },
+  "sum": {
+   "tanks": {
+    "v": 1370,
+    "s": "iiss_eq",
+    "c": "ت"
+   },
+   "carriers": {
+    "v": 0,
+    "s": "iiss_eq",
+    "c": "ت"
+   },
+   "amphib": {
+    "v": 0,
+    "s": "iiss_eq",
+    "c": "ت"
+   },
+   "cruisers": {
+    "v": 0,
+    "s": "iiss_eq",
+    "c": "ت"
+   },
+   "destroyers": {
+    "v": 0,
+    "s": "iiss_eq",
+    "c": "ت"
+   },
+   "frigates": {
+    "v": 0,
+    "s": "iiss_eq",
+    "c": "ت"
+   },
+   "corvettes": {
+    "v": 7,
+    "s": "iiss_eq",
+    "c": "ت"
+   },
+   "subNuc": {
+    "v": 0,
+    "s": "iiss_eq",
+    "c": "ت"
+   },
+   "subs": {
+    "v": 5,
+    "s": "iiss_eq",
+    "c": "ت"
+   },
+   "combatAir": {
+    "v": 340,
+    "s": "iiss_eq",
+    "c": "ت"
+   },
+   "attackHeli": {
+    "v": 43,
+    "s": "iiss_eq",
+    "c": "ت"
+   },
+   "sats": {
+    "v": 10,
+    "s": "iiss_eq",
+    "c": "ت"
+   },
+   "active": {
+    "v": 169500,
+    "s": "iiss_pers",
+    "c": "ت"
+   },
+   "reserve": {
+    "v": 465000,
+    "s": "iiss_pers",
+    "c": "ت"
+   },
+   "para": {
+    "v": 8000,
+    "s": "iiss_pers",
+    "c": "ت"
+   }
+  },
+  "land": [
+   {
+    "m": "Merkava Mark 4M",
+    "n": 400,
+    "orig": "ISR",
+    "s": "wiki_army",
+    "c": "ت",
+    "note": "~200 stored.",
+    "gen": 3,
+    "cat": "tank"
+   },
+   {
+    "m": "Merkava Mark IV",
+    "n": 400,
+    "orig": "ISR",
+    "s": "wiki_army",
+    "c": "ت",
+    "note": "~200 stored.",
+    "gen": 3,
+    "cat": "tank"
+   },
+   {
+    "m": "M113",
+    "n": 500,
+    "orig": "USA",
+    "s": "wiki_army",
+    "c": "ت",
+    "note": "Being phased out, used as remotely-operated loitering munitions and for logistical missions during the Gaza war.",
+    "gen": 2,
+    "cat": "apc"
+   },
+   {
+    "m": "Achzarit",
+    "n": 100,
+    "orig": "ISR",
+    "s": "wiki_army",
+    "c": "ت",
+    "note": "Based on the T-54 tank",
+    "gen": 2,
+    "cat": "apc"
+   },
+   {
+    "m": "Namer",
+    "n": 290,
+    "orig": "ISR",
+    "s": "wiki_army",
+    "c": "ت",
+    "note": "531 planned to be in service by 2027. Based on the Merkava chassis.",
+    "gen": 2,
+    "cat": "apc"
+   },
+   {
+    "m": "M109 Doher",
+    "n": 250,
+    "orig": "USA",
+    "s": "wiki_army",
+    "c": "ت",
+    "note": "Upgraded as the M109 Doher. Based on the M109A5. Being replaced by the Ro'em as the primary howitzer of the IDF but will remain in reserve. ",
+    "gen": 2,
+    "cat": "spg"
+   },
+   {
+    "m": "M270 \"Menatetz\"",
+    "n": 30,
+    "orig": "USA",
+    "s": "wiki_army",
+    "c": "ت",
+    "note": "18 in store.",
+    "gen": 2,
+    "cat": "mlrs"
+   }
+  ],
+  "air": [
+   {
+    "m": "F-15 Eagle (F-15A/C)",
+    "n": 66,
+    "orig": "USA",
+    "s": "wiki_air",
+    "c": "ت",
+    "note": "F-15C/D MSIP II",
+    "gen": 3,
+    "cat": "fighter"
+   },
+   {
+    "m": "F-15E Strike Eagle (F-15I)",
+    "n": 66,
+    "orig": "USA",
+    "s": "wiki_air",
+    "c": "ت",
+    "gen": 4,
+    "cat": "fighter"
+   },
+   {
+    "m": "F-16 Fighting Falcon (F-16C/I)",
+    "n": 173,
+    "orig": "USA",
+    "s": "wiki_air",
+    "c": "ت",
+    "note": "F-16C Block 40 and F-16I Block 52+",
+    "gen": 3,
+    "cat": "fighter"
+   },
+   {
+    "m": "F-35 Lightning II (F-35I)",
+    "n": 48,
+    "orig": "USA",
+    "s": "wiki_air",
+    "c": "ت",
+    "note": "52 on order.",
+    "gen": 5,
+    "cat": "fighter"
+   },
+   {
+    "m": "Boeing 707 (EL/M-2075 Phalcon)",
+    "n": 2,
+    "orig": "USA",
+    "s": "wiki_air",
+    "c": "ت",
+    "gen": 2,
+    "cat": "awacs"
+   },
+   {
+    "m": "Gulfstream G550 (CAEW)",
+    "n": 2,
+    "orig": "USA",
+    "s": "wiki_air",
+    "c": "ت",
+    "note": "Equipped with the IAI EL/W-2085 radar. 1 on order.",
+    "gen": 2,
+    "cat": "awacs"
+   },
+   {
+    "m": "Super King Air (B200)",
+    "n": 13,
+    "orig": "USA",
+    "s": "wiki_air",
+    "c": "ت",
+    "gen": 2,
+    "cat": "isr"
+   },
+   {
+    "m": "Gulfstream G550 (SEMA)",
+    "n": 4,
+    "orig": "USA",
+    "s": "wiki_air",
+    "c": "ت",
+    "note": "1 used for reconnaissance.",
+    "gen": 2,
+    "cat": "isr"
+   },
+   {
+    "m": "Super King Air (B200)",
+    "n": 5,
+    "orig": "USA",
+    "s": "wiki_air",
+    "c": "ت",
+    "note": "Two provide multi-engine training.",
+    "gen": 2,
+    "cat": "transport"
+   },
+   {
+    "m": "C-130 Hercules (C-130E/H)",
+    "n": 1,
+    "orig": "USA",
+    "s": "wiki_air",
+    "c": "ت",
+    "gen": 2,
+    "cat": "transport"
+   },
+   {
+    "m": "C-130J Super Hercules (C-130J-30)",
+    "n": 7,
+    "orig": "USA",
+    "s": "wiki_air",
+    "c": "ت",
+    "gen": 2,
+    "cat": "transport"
+   },
+   {
+    "m": "AH-64 Apache (AH-64A/D)",
+    "n": 48,
+    "orig": "USA",
+    "s": "wiki_air",
+    "c": "ت",
+    "note": "30 AH-64E on order. 12 AH-64E ordered in October 2026.",
+    "gen": 3,
+    "cat": "heli_attack"
+   },
+   {
+    "m": "Sikorsky UH-60 (UH-60A/L)",
+    "n": 49,
+    "orig": "USA",
+    "s": "wiki_air",
+    "c": "ت",
+    "note": "1 lost in 2026.",
+    "gen": 2,
+    "cat": "heli_util"
+   },
+   {
+    "m": "Sikorsky CH-53 (S-65C-3)",
+    "n": 21,
+    "orig": "USA",
+    "s": "wiki_air",
+    "c": "ت",
+    "note": "12 CH-53K on order.",
+    "gen": 4,
+    "cat": "heli_util"
+   },
+   {
+    "m": "M-346 Lavi (M-346i)",
+    "n": 30,
+    "orig": "ITA",
+    "s": "wiki_air",
+    "c": "ت",
+    "gen": 2,
+    "cat": "trainer"
+   },
+   {
+    "m": "F-15 Eagle (F-15B/D)",
+    "n": 21,
+    "orig": "USA",
+    "s": "wiki_air",
+    "c": "ت",
+    "gen": 3,
+    "cat": "trainer"
+   },
+   {
+    "m": "F-16 Fighting Falcon (F-16D)",
+    "n": 49,
+    "orig": "USA",
+    "s": "wiki_air",
+    "c": "ت",
+    "note": "Block 40",
+    "gen": 3,
+    "cat": "trainer"
+   },
+   {
+    "m": "T-6 Texan II (T-6A)",
+    "n": 20,
+    "orig": "USA",
+    "s": "wiki_air",
+    "c": "ت",
+    "gen": 2,
+    "cat": "trainer"
+   },
+   {
+    "m": "Grob G 120 (G 120A-1)",
+    "n": 16,
+    "orig": "DEU",
+    "s": "wiki_air",
+    "c": "ت",
+    "gen": 2,
+    "cat": "trainer"
+   },
+   {
+    "m": "AgustaWestland AW119 (AW119Kx)",
+    "n": 8,
+    "orig": "ITA",
+    "s": "wiki_air",
+    "c": "ت",
+    "note": "4 on order.",
+    "gen": 2,
+    "cat": "heli_util"
+   },
+   {
+    "m": "Boeing AH-64 Apache",
+    "n": 30,
+    "orig": "USA",
+    "s": "wiki_army",
+    "c": "ت",
+    "gen": 3,
+    "cat": "heli_attack"
+   },
+   {
+    "m": "Sikorsky CH-53 Sea Stallion",
+    "n": 36,
+    "orig": "USA",
+    "s": "wiki_army",
+    "c": "ت",
+    "gen": 4,
+    "cat": "heli_util"
+   },
+   {
+    "m": "Sikorsky S-70 (UH-60 Black Hawk)",
+    "n": 48,
+    "orig": "USA",
+    "s": "wiki_army",
+    "c": "ت",
+    "gen": 2,
+    "cat": "heli_util"
+   }
+  ],
+  "ad": [
+   {
+    "m": "Iron Dome",
+    "n": 9,
+    "orig": "ISR",
+    "s": "wiki_army",
+    "c": "ت",
+    "note": "Intercepted hundreds of artillery records since declared operational in 2011.",
+    "gen": 2,
+    "cat": "short"
+   }
+  ],
+  "msl": [],
+  "navy": []
+ },
+ "ind": {
+  "tech": {
+   "arm": 4,
+   "air": 4,
+   "uav": 5,
+   "msl": 5,
+   "navy": 3,
+   "ew": 5,
+   "ind": 4
+  },
+  "makes": [
+   "ميركافا",
+   "القبة الحديدية/مقلاع داود/حيتس",
+   "هيرون/هيرميس",
+   "جريكو"
+  ],
+  "s": "tierA",
+  "c": "ت"
+ },
+ "pol": {
+  "factions": [
+   "army",
+   "parties",
+   "street",
+   "biz"
+  ],
+  "stab": {
+   "v": 50,
+   "s": "tierA",
+   "c": "ت"
+  },
+  "warHome": [],
+  "insurgency": "حرب على عدة جبهات وانتخابات"
+ },
+ "rel": {
+  "ARE": 25,
+  "BHR": 15,
+  "DZA": -70,
+  "EGY": 15,
+  "IND": 55,
+  "IRN": -100,
+  "IRQ": -70,
+  "JOR": 5,
+  "LBN": -85,
+  "MAR": 15,
+  "PSX": -95,
+  "QAT": -35,
+  "SAU": -15,
+  "SYR": -50,
+  "TUR": -60,
+  "USA": 90,
+  "YEM": -90
+ },
+ "treaties": [],
+ "sanctions": [],
+ "conflicts": [
+  "iran_war",
+  "lebanon_war",
+  "yemen",
+  "gaza",
+  "syria_south"
+ ],
+ "notes": ""
+}

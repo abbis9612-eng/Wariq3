@@ -1,0 +1,20 @@
+{
+ "src": {
+  "fdd26": {"t": "FDD: Evaluating the Damage to Iran's Ballistic Missile Arsenal (26 May 2026) — فقدت ثلث لنص المخزون وحوالي نص المنصات؛ NYT: باقي ~70٪", "u": "https://www.fdd.org/analysis/2026/05/26/evaluating-the-damage-to-irans-ballistic-missile-arsenal/", "y": 2026},
+  "quwa26": {"t": "Quwa: US-Iran War 2026 — IDF يدّعي ~330 من ~470 منصة انضربت", "u": "https://quwa.org/iran/military-news-iran/us-iran-war-2026-operation-epic-fury-the-strait-of-hormuz-crisis-and-the-limits-of-american-air-power/", "y": 2026},
+  "1945_26": {"t": "19FortyFive (نيسان 2026): خسرت ~90٪ من البحرية النظامية و~300 منصة صواريخ بخمس أسابيع؛ ~120 منظومة دفاع جوي (ثلث ما قبل الحرب)", "u": "https://www.19fortyfive.com/2026/04/the-iran-ceasefire-isnt-peace-its-not-defeat-either-tehran-lost-90-of-its-navy-and-300-missile-launchers-in-5-weeks-the-numbers-tell-a-different-story/", "y": 2026},
+  "alma26": {"t": "Alma Center: Interim assessment, Operation Roaring Lion week 3 (21 Mar 2026)", "u": "https://israel-alma.org/interim-assessment-evaluating-the-strategic-damage-caused-to-iran-in-operation-roaring-lion-week-3-march-21/", "y": 2026}
+ },
+ "sum": {
+  "combatAir": {"v": 90, "s": "1945_26,alma26", "c": "ت", "note": "قبل الحرب 240 (IISS)؛ القوة الجوية «تعطّلت تقريباً» — نخلي ~90 قديمة صالحة (تقدير)"},
+  "corvettes": {"v": 1, "s": "1945_26", "c": "ت", "note": "قبل الحرب 7؛ البحرية النظامية خسرت ~90٪"},
+  "subs": {"v": 5, "s": "1945_26", "c": "ت", "note": "قبل الحرب 19 (أغلبها قزمية)"},
+  "amphib": {"v": 3, "s": "1945_26", "c": "ت"}
+ },
+ "add": [
+  {"in": "msl", "m": "منصات صواريخ باليستية (فاتح، ذو الفقار، عماد، خيبر شكن، سجيل)", "cat": "mrbm", "n": 200, "gen": 3, "orig": "IRN", "s": "fdd26,quwa26", "c": "ت", "note": "قبل الحرب ~470 منصة؛ انضرب ~نصها أو أكثر"},
+  {"in": "msl", "m": "مخزون صواريخ باليستية قصيرة ومتوسطة", "cat": "srbm", "n": 1500, "gen": 3, "orig": "IRN", "s": "fdd26", "c": "ت", "note": "قبل الحرب ~2500–3000؛ باقي 50–70٪ حسب المصدر"},
+  {"in": "msl", "m": "شاهد 136 ومسيّرات انتحارية", "cat": "loitering", "n": 3000, "gen": 3, "orig": "IRN", "s": "fdd26", "c": "ت", "note": "إنتاج مستمر رغم الضربات (تقدير)"}
+ ],
+ "notes": "إيران بحرب ويا أمريكا وإسرائيل من 28 شباط 2026: المرشد السابق انقتل، المرشد الحالي مجتبى خامنئي. أرقام IISS (قبل الحرب) انصلحت للقوة الجوية والبحرية والصواريخ بتقديرات 2026، والمصادر متضاربة كلش (ت). الحرس الثوري البحري (زوارق سريعة) باقي ~50٪."
+}

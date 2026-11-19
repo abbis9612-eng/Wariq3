@@ -1,0 +1,505 @@
+{
+ "id": "DEU",
+ "ar": "ألمانيا",
+ "en": "Germany",
+ "tier": "A",
+ "asOf": "2026-11",
+ "src": {
+  "wiki_air": {
+   "t": "Wikipedia: German Air and Space Force",
+   "u": "https://en.wikipedia.org/wiki/German_Air_and_Space_Force?oldid=1386379452",
+   "y": 2026,
+   "note": "نسخة الصفحة بتاريخ السحب؛ أرقام ويكيبيديا تنراجع ويا مصادر ثانية"
+  },
+  "wiki_navy": {
+   "t": "Wikipedia: List of active German Navy ships",
+   "u": "https://en.wikipedia.org/wiki/List_of_active_German_Navy_ships?oldid=1385816583",
+   "y": 2026,
+   "note": "نسخة الصفحة بتاريخ السحب؛ أرقام ويكيبيديا تنراجع ويا مصادر ثانية"
+  },
+  "iiss_eq": {
+   "t": "Wikipedia: List of countries by level of military equipment (من IISS Military Balance ومصادر ثانية)",
+   "u": "https://en.wikipedia.org/wiki/List_of_countries_by_level_of_military_equipment?oldid=1384804191",
+   "y": 2025
+  },
+  "iiss_pers": {
+   "t": "Wikipedia: List of countries by number of military and paramilitary personnel (جدول IISS Military Balance)",
+   "u": "https://en.wikipedia.org/wiki/List_of_countries_by_number_of_military_and_paramilitary_personnel?oldid=1380910017",
+   "y": 2025
+  },
+  "wb": {
+   "t": "World Bank WDI (SP.POP.TOTL, NY.GDP.MKTP.CD, NY.GDP.MKTP.KD.ZG, MS.MIL.XPND.CD/GD.ZS ← SIPRI, MS.MIL.TOTL.P1, FP.CPI.TOTL.ZG)",
+   "u": "https://api.worldbank.org/v2/",
+   "y": 2026
+  },
+  "govt": {
+   "t": "تصنيف نظام الحكم: دساتير الدول + CIA World Factbook «Government type» + V-Dem/Freedom House لدرجة الحرية (تصنيف المصمم 2026)",
+   "u": "https://www.cia.gov/the-world-factbook/field/government-type/",
+   "y": 2026
+  },
+  "leaders": {
+   "t": "Wikipedia: List of current heads of state and government",
+   "u": "https://en.wikipedia.org/wiki/List_of_current_heads_of_state_and_government?oldid=1386623862",
+   "y": 2026,
+   "note": "سحب نوفمبر 2026"
+  },
+  "rules": {
+   "t": "قواعد من blocs.json وconflicts.json وsanctions.json (تكتل دفاعي +40، معاهدة +50، حرب −90، عقوبات ثقيلة −40...)",
+   "u": "data/world/",
+   "y": 2026
+  },
+  "relk": {
+   "t": "تقدير المصمم للعلاقات الثنائية المعروفة (تشرين الثاني 2026): حروب، نزاعات حدودية، تحالفات غير رسمية، تطبيع، عداء تاريخي",
+   "u": "https://en.wikipedia.org/wiki/Foreign_relations_by_country",
+   "y": 2026
+  },
+  "tierA": {
+   "t": "تقدير المصمم (تشرين الثاني 2026) لصناعة السلاح والاستقرار: SIPRI Arms Transfers Database (أكبر المصدّرين 2020–24)، SIPRI Top 100 Arms-Producing Companies، Fragile States Index 2025، أخبار 2026",
+   "u": "https://www.sipri.org/databases/armstransfers",
+   "y": 2026
+  }
+ },
+ "gov": {
+  "type": "parl",
+  "ar": "جمهورية برلمانية",
+  "free": 2,
+  "hos": {
+   "role": "President",
+   "name": "Frank-Walter Steinmeier"
+  },
+  "hog": {
+   "role": "Chancellor",
+   "name": "Friedrich Merz"
+  },
+  "s": "govt,leaders",
+  "c": "ح"
+ },
+ "pop": {
+  "v": 83491249,
+  "y": 2025,
+  "s": "wb",
+  "c": "ح"
+ },
+ "eco": {
+  "gdpBusd": {
+   "v": 5050.9,
+   "y": 2025,
+   "s": "wb",
+   "c": "ح"
+  },
+  "growth": {
+   "v": 0.2,
+   "y": 2025,
+   "s": "wb",
+   "c": "ح"
+  },
+  "infl": {
+   "v": 2.2,
+   "y": 2025,
+   "s": "wb",
+   "c": "ح"
+  },
+  "oilRentPct": {
+   "v": 0.0,
+   "y": 2021,
+   "s": "wb",
+   "c": "ح"
+  }
+ },
+ "mil": {
+  "budgetBusd": {
+   "v": 113.59,
+   "y": 2025,
+   "s": "wb",
+   "c": "ح"
+  },
+  "budgetPctGdp": {
+   "v": 2.27,
+   "y": 2025,
+   "s": "wb",
+   "c": "ح"
+  },
+  "personnelWB": {
+   "v": 183000,
+   "y": 2020,
+   "s": "wb",
+   "c": "ح"
+  },
+  "sum": {
+   "tanks": {
+    "v": 295,
+    "s": "iiss_eq",
+    "c": "ت"
+   },
+   "carriers": {
+    "v": 0,
+    "s": "iiss_eq",
+    "c": "ت"
+   },
+   "amphib": {
+    "v": 0,
+    "s": "iiss_eq",
+    "c": "ت"
+   },
+   "cruisers": {
+    "v": 0,
+    "s": "iiss_eq",
+    "c": "ت"
+   },
+   "destroyers": {
+    "v": 3,
+    "s": "iiss_eq",
+    "c": "ت"
+   },
+   "frigates": {
+    "v": 7,
+    "s": "iiss_eq",
+    "c": "ت"
+   },
+   "corvettes": {
+    "v": 5,
+    "s": "iiss_eq",
+    "c": "ت"
+   },
+   "subNuc": {
+    "v": 0,
+    "s": "iiss_eq",
+    "c": "ت"
+   },
+   "subs": {
+    "v": 6,
+    "s": "iiss_eq",
+    "c": "ت"
+   },
+   "combatAir": {
+    "v": 209,
+    "s": "iiss_eq",
+    "c": "ت"
+   },
+   "attackHeli": {
+    "v": 51,
+    "s": "iiss_eq",
+    "c": "ت"
+   },
+   "sats": {
+    "v": 7,
+    "s": "iiss_eq",
+    "c": "ت"
+   },
+   "active": {
+    "v": 179850,
+    "s": "iiss_pers",
+    "c": "ت"
+   },
+   "reserve": {
+    "v": 34100,
+    "s": "iiss_pers",
+    "c": "ت"
+   },
+   "para": {
+    "v": 0,
+    "s": "iiss_pers",
+    "c": "ت"
+   }
+  },
+  "land": [],
+  "air": [
+   {
+    "m": "Panavia Tornado (IDS / ECR)",
+    "n": 63,
+    "orig": "INT",
+    "s": "wiki_air",
+    "c": "ت",
+    "note": "IDS To be replaced by F-35 Lightning II & ECR by 15 Eurofighter Typhoon EK",
+    "gen": 3,
+    "cat": "attack"
+   },
+   {
+    "m": "Eurofighter Typhoon (T1, T2, T3, T4)",
+    "n": 141,
+    "orig": "INT",
+    "s": "wiki_air",
+    "c": "ت",
+    "note": "38 Tranche 4 and 20 Tranche 5 on order",
+    "gen": 4,
+    "cat": "fighter"
+   },
+   {
+    "m": "C-130J Super Hercules (KC-130J)",
+    "n": 3,
+    "orig": "USA",
+    "s": "wiki_air",
+    "c": "ت",
+    "gen": 2,
+    "cat": "tanker"
+   },
+   {
+    "m": "Airbus A319 (A319CJ)",
+    "n": 3,
+    "orig": "INT",
+    "s": "wiki_air",
+    "c": "ت",
+    "note": "One used for the Open Skies program",
+    "gen": 2,
+    "cat": "transport"
+   },
+   {
+    "m": "Airbus A321 (A321-200)",
+    "n": 1,
+    "orig": "INT",
+    "s": "wiki_air",
+    "c": "ت",
+    "gen": 2,
+    "cat": "transport"
+   },
+   {
+    "m": "Airbus A321neo (A321LR)",
+    "n": 2,
+    "orig": "INT",
+    "s": "wiki_air",
+    "c": "ت",
+    "gen": 2,
+    "cat": "transport"
+   },
+   {
+    "m": "Airbus A350 (ACJ350)",
+    "n": 3,
+    "orig": "INT",
+    "s": "wiki_air",
+    "c": "ت",
+    "gen": 2,
+    "cat": "transport"
+   },
+   {
+    "m": "Airbus A400M",
+    "n": 53,
+    "orig": "INT",
+    "s": "wiki_air",
+    "c": "ت",
+    "gen": 2,
+    "cat": "tanker"
+   },
+   {
+    "m": "Global Express (5000 / 6000)",
+    "n": 3,
+    "orig": "CAN",
+    "s": "wiki_air",
+    "c": "ت",
+    "note": "3 SIGINT variants on order",
+    "gen": 2,
+    "cat": "transport"
+   },
+   {
+    "m": "C-130J Super Hercules",
+    "n": 3,
+    "orig": "USA",
+    "s": "wiki_air",
+    "c": "ت",
+    "note": "Joint French/German unit",
+    "gen": 2,
+    "cat": "transport"
+   },
+   {
+    "m": "Sikorsky CH-53 (CH-53GA/GS)",
+    "n": 66,
+    "orig": "USA",
+    "s": "wiki_air",
+    "c": "ت",
+    "note": "To be replaced by Boeing CH-47F",
+    "gen": 4,
+    "cat": "heli_util"
+   },
+   {
+    "m": "Eurocopter EC145 (H145M LUH SOF)",
+    "n": 15,
+    "orig": "DEU",
+    "s": "wiki_air",
+    "c": "ت",
+    "gen": 2,
+    "cat": "heli_util"
+   },
+   {
+    "m": "Eurocopter EC145 (H145M LKH)",
+    "n": 2,
+    "orig": "DEU",
+    "s": "wiki_air",
+    "c": "ت",
+    "note": "+ 8 on order",
+    "gen": 2,
+    "cat": "heli_attack"
+   },
+   {
+    "m": "Eurocopter AS532 (AS532 U2)",
+    "n": 3,
+    "orig": "FRA",
+    "s": "wiki_air",
+    "c": "ت",
+    "gen": 2,
+    "cat": "heli_util"
+   },
+   {
+    "m": "Grob G 120TP",
+    "n": 11,
+    "orig": "DEU",
+    "s": "wiki_air",
+    "c": "ت",
+    "gen": 2,
+    "cat": "trainer"
+   },
+   {
+    "m": "IAI Eitan (Heron TP)",
+    "n": 5,
+    "orig": "ISR",
+    "s": "wiki_air",
+    "c": "ت",
+    "note": "3 on order",
+    "gen": 2,
+    "cat": "uav_strike"
+   },
+   {
+    "m": "IAI Heron (Heron 1)",
+    "n": 6,
+    "orig": "ISR",
+    "s": "wiki_air",
+    "c": "ت",
+    "gen": 2,
+    "cat": "uav_isr"
+   }
+  ],
+  "ad": [],
+  "msl": [],
+  "navy": [
+   {
+    "m": "Type 212A U-Boot-Klasse 212 A",
+    "n": 6,
+    "orig": "DEU",
+    "s": "wiki_navy",
+    "c": "ت",
+    "note": "Part of 1 Submarine Squadron of Einsatzflottille 1.",
+    "gen": 2,
+    "cat": "sub"
+   },
+   {
+    "m": "Brandenburg class Type F123",
+    "n": 4,
+    "orig": "DEU",
+    "s": "wiki_navy",
+    "c": "ت",
+    "note": "Forms 2 Frigate Squadron of Einsatzflottille 2.",
+    "gen": 2,
+    "cat": "frigate"
+   },
+   {
+    "m": "Sachsen class Type F124",
+    "n": 3,
+    "orig": "DEU",
+    "s": "wiki_navy",
+    "c": "ت",
+    "note": "Forms 2 Frigate Squadron of Einsatzflottille 2.",
+    "gen": 2,
+    "cat": "frigate"
+   },
+   {
+    "m": "Baden-Württemberg class Type F125",
+    "n": 4,
+    "orig": "DEU",
+    "s": "wiki_navy",
+    "c": "ت",
+    "note": "Forms 4 Frigate Squadron of Einsatzflottille 2.",
+    "gen": 2,
+    "cat": "frigate"
+   },
+   {
+    "m": "Braunschweig class Type K130 batch 1",
+    "n": 5,
+    "orig": "DEU",
+    "s": "wiki_navy",
+    "c": "ت",
+    "note": "Part of 1 Corvette squadron of Einsatzflottille 1.",
+    "gen": 2,
+    "cat": "corvette"
+   }
+  ]
+ },
+ "ind": {
+  "tech": {
+   "arm": 5,
+   "air": 3,
+   "uav": 2,
+   "msl": 4,
+   "navy": 4,
+   "ew": 4,
+   "ind": 5
+  },
+  "makes": [
+   "ليوبارد 2",
+   "بوما",
+   "IRIS-T",
+   "غواصات 212/214",
+   "PzH 2000"
+  ],
+  "s": "tierA",
+  "c": "ت"
+ },
+ "pol": {
+  "factions": [
+   "army",
+   "parties",
+   "street",
+   "biz"
+  ],
+  "stab": {
+   "v": 66,
+   "s": "tierA",
+   "c": "ت"
+  },
+  "warHome": []
+ },
+ "rel": {
+  "ALB": 40,
+  "AUT": 25,
+  "BEL": 65,
+  "BGR": 65,
+  "BLR": -25,
+  "CAN": 40,
+  "CYP": 25,
+  "CZE": 65,
+  "DNK": 65,
+  "ESP": 65,
+  "EST": 65,
+  "FIN": 65,
+  "FRA": 65,
+  "GBR": 40,
+  "GRC": 65,
+  "HRV": 65,
+  "HUN": 65,
+  "IRL": 25,
+  "IRN": -40,
+  "ITA": 65,
+  "LTU": 65,
+  "LVA": 65,
+  "MKD": 40,
+  "MMR": -25,
+  "NLD": 65,
+  "NOR": 40,
+  "POL": 65,
+  "PRK": -40,
+  "PRT": 65,
+  "ROU": 65,
+  "RUS": -55,
+  "SVK": 65,
+  "SVN": 65,
+  "SWE": 65,
+  "SYR": -10,
+  "TUR": 40,
+  "UKR": 70,
+  "USA": 40
+ },
+ "treaties": [
+  "EU",
+  "NATO"
+ ],
+ "sanctions": [],
+ "conflicts": [],
+ "notes": ""
+}

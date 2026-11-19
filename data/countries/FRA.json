@@ -1,0 +1,861 @@
+{
+ "id": "FRA",
+ "ar": "فرنسا",
+ "en": "France",
+ "tier": "A",
+ "asOf": "2026-11",
+ "src": {
+  "wiki_air": {
+   "t": "Wikipedia: French Air and Space Force",
+   "u": "https://en.wikipedia.org/wiki/French_Air_and_Space_Force?oldid=1386300965",
+   "y": 2026,
+   "note": "نسخة الصفحة بتاريخ السحب؛ أرقام ويكيبيديا تنراجع ويا مصادر ثانية"
+  },
+  "wiki_army": {
+   "t": "Wikipedia: List of equipment of the French Army",
+   "u": "https://en.wikipedia.org/wiki/List_of_equipment_of_the_French_Army?oldid=1382371759",
+   "y": 2026,
+   "note": "نسخة الصفحة بتاريخ السحب؛ أرقام ويكيبيديا تنراجع ويا مصادر ثانية"
+  },
+  "wiki_navy": {
+   "t": "Wikipedia: List of active French Navy ships",
+   "u": "https://en.wikipedia.org/wiki/List_of_active_French_Navy_ships?oldid=1385900523",
+   "y": 2026,
+   "note": "نسخة الصفحة بتاريخ السحب؛ أرقام ويكيبيديا تنراجع ويا مصادر ثانية"
+  },
+  "iiss_eq": {
+   "t": "Wikipedia: List of countries by level of military equipment (من IISS Military Balance ومصادر ثانية)",
+   "u": "https://en.wikipedia.org/wiki/List_of_countries_by_level_of_military_equipment?oldid=1384804191",
+   "y": 2025
+  },
+  "iiss_pers": {
+   "t": "Wikipedia: List of countries by number of military and paramilitary personnel (جدول IISS Military Balance)",
+   "u": "https://en.wikipedia.org/wiki/List_of_countries_by_number_of_military_and_paramilitary_personnel?oldid=1380910017",
+   "y": 2025
+  },
+  "wb": {
+   "t": "World Bank WDI (SP.POP.TOTL, NY.GDP.MKTP.CD, NY.GDP.MKTP.KD.ZG, MS.MIL.XPND.CD/GD.ZS ← SIPRI, MS.MIL.TOTL.P1, FP.CPI.TOTL.ZG)",
+   "u": "https://api.worldbank.org/v2/",
+   "y": 2026
+  },
+  "govt": {
+   "t": "تصنيف نظام الحكم: دساتير الدول + CIA World Factbook «Government type» + V-Dem/Freedom House لدرجة الحرية (تصنيف المصمم 2026)",
+   "u": "https://www.cia.gov/the-world-factbook/field/government-type/",
+   "y": 2026
+  },
+  "leaders": {
+   "t": "Wikipedia: List of current heads of state and government",
+   "u": "https://en.wikipedia.org/wiki/List_of_current_heads_of_state_and_government?oldid=1386623862",
+   "y": 2026,
+   "note": "سحب نوفمبر 2026"
+  },
+  "rules": {
+   "t": "قواعد من blocs.json وconflicts.json وsanctions.json (تكتل دفاعي +40، معاهدة +50، حرب −90، عقوبات ثقيلة −40...)",
+   "u": "data/world/",
+   "y": 2026
+  },
+  "relk": {
+   "t": "تقدير المصمم للعلاقات الثنائية المعروفة (تشرين الثاني 2026): حروب، نزاعات حدودية، تحالفات غير رسمية، تطبيع، عداء تاريخي",
+   "u": "https://en.wikipedia.org/wiki/Foreign_relations_by_country",
+   "y": 2026
+  },
+  "tierA": {
+   "t": "تقدير المصمم (تشرين الثاني 2026) لصناعة السلاح والاستقرار: SIPRI Arms Transfers Database (أكبر المصدّرين 2020–24)، SIPRI Top 100 Arms-Producing Companies، Fragile States Index 2025، أخبار 2026",
+   "u": "https://www.sipri.org/databases/armstransfers",
+   "y": 2026
+  }
+ },
+ "gov": {
+  "type": "semi",
+  "ar": "شبه رئاسي",
+  "free": 2,
+  "hos": {
+   "role": "President",
+   "name": "Emmanuel Macron"
+  },
+  "hog": {
+   "role": "Prime Minister",
+   "name": "Sébastien Lecornu"
+  },
+  "s": "govt,leaders",
+  "c": "ح"
+ },
+ "pop": {
+  "v": 68720337,
+  "y": 2025,
+  "s": "wb",
+  "c": "ح"
+ },
+ "eco": {
+  "gdpBusd": {
+   "v": 3366.3,
+   "y": 2025,
+   "s": "wb",
+   "c": "ح"
+  },
+  "growth": {
+   "v": 0.8,
+   "y": 2025,
+   "s": "wb",
+   "c": "ح"
+  },
+  "infl": {
+   "v": 0.9,
+   "y": 2025,
+   "s": "wb",
+   "c": "ح"
+  },
+  "oilRentPct": {
+   "v": 0.0,
+   "y": 2021,
+   "s": "wb",
+   "c": "ح"
+  }
+ },
+ "mil": {
+  "budgetBusd": {
+   "v": 68.01,
+   "y": 2025,
+   "s": "wb",
+   "c": "ح"
+  },
+  "budgetPctGdp": {
+   "v": 2.03,
+   "y": 2025,
+   "s": "wb",
+   "c": "ح"
+  },
+  "personnelWB": {
+   "v": 304000,
+   "y": 2020,
+   "s": "wb",
+   "c": "ح"
+  },
+  "sum": {
+   "tanks": {
+    "v": 222,
+    "s": "iiss_eq",
+    "c": "ت"
+   },
+   "carriers": {
+    "v": 1,
+    "s": "iiss_eq",
+    "c": "ت"
+   },
+   "amphib": {
+    "v": 3,
+    "s": "iiss_eq",
+    "c": "ت"
+   },
+   "cruisers": {
+    "v": 0,
+    "s": "iiss_eq",
+    "c": "ت"
+   },
+   "destroyers": {
+    "v": 2,
+    "s": "iiss_eq",
+    "c": "ت"
+   },
+   "frigates": {
+    "v": 13,
+    "s": "iiss_eq",
+    "c": "ت"
+   },
+   "corvettes": {
+    "v": 6,
+    "s": "iiss_eq",
+    "c": "ت"
+   },
+   "subNuc": {
+    "v": 8,
+    "s": "iiss_eq",
+    "c": "ت"
+   },
+   "subs": {
+    "v": 0,
+    "s": "iiss_eq",
+    "c": "ت"
+   },
+   "combatAir": {
+    "v": 282,
+    "s": "iiss_eq",
+    "c": "ت"
+   },
+   "attackHeli": {
+    "v": 67,
+    "s": "iiss_eq",
+    "c": "ت"
+   },
+   "sats": {
+    "v": 7,
+    "s": "iiss_eq",
+    "c": "ت"
+   },
+   "active": {
+    "v": 203900,
+    "s": "iiss_pers",
+    "c": "ت"
+   },
+   "reserve": {
+    "v": 38100,
+    "s": "iiss_pers",
+    "c": "ت"
+   },
+   "para": {
+    "v": 126600,
+    "s": "iiss_pers",
+    "c": "ت"
+   }
+  },
+  "land": [
+   {
+    "m": "Leclerc",
+    "n": 225,
+    "orig": "FRA",
+    "s": "wiki_army",
+    "c": "ت",
+    "note": "Total - 406 (222 In service & 184 In storage). 200 will be upgraded to the Leclerc XLR.",
+    "gen": 4,
+    "cat": "tank"
+   },
+   {
+    "m": "Leclerc XLR",
+    "n": 21,
+    "orig": "FRA",
+    "s": "wiki_army",
+    "c": "ت",
+    "note": "Total 200 Leclercs will be upgraded to the XLR version.",
+    "gen": 4,
+    "cat": "tank"
+   },
+   {
+    "m": "VBCI",
+    "n": 627,
+    "orig": "FRA",
+    "s": "wiki_army",
+    "c": "ت",
+    "note": "The full delivery of the 520 VCI and 110 VPC ordered (including their respective 32T variants) was fulfilled in 2018 627 units in service as",
+    "gen": 2,
+    "cat": "ifv"
+   },
+   {
+    "m": "VAB",
+    "n": 1474,
+    "orig": "FRA",
+    "s": "wiki_army",
+    "c": "ت",
+    "note": "4,000 units delivered to the French Armed Forces in nearly 30 variants and sub-variants since the VAB's introduction Will be gradually repla",
+    "gen": 2,
+    "cat": "atgm"
+   },
+   {
+    "m": "VBMR-L Serval",
+    "n": 414,
+    "orig": "FRA",
+    "s": "wiki_army",
+    "c": "ت",
+    "note": "Will primarily equip the 11th Airborne Brigade and the 27th Mountain Infantry Brigade. 978 units are on order under the Scorpion program. Th",
+    "gen": 2,
+    "cat": "apc"
+   },
+   {
+    "m": "AMX 10 RC",
+    "n": 181,
+    "orig": "FRA",
+    "s": "wiki_army",
+    "c": "ت",
+    "note": "Will be gradually replaced by the EBRC Jaguar from 2021 onwards 40 were given to Ukraine in March 2023.",
+    "gen": 2,
+    "cat": "atgm"
+   },
+   {
+    "m": "EBRC Jaguar",
+    "n": 128,
+    "orig": "FRA",
+    "s": "wiki_army",
+    "c": "ت",
+    "note": "Successor of the AMX 10 RC, ERC 90 Sagaie and VAB Mephisto 300 units were ordered under the Scorpion program and will be delivered from 2021",
+    "gen": 2,
+    "cat": "apc"
+   },
+   {
+    "m": "Nexter Aravis",
+    "n": 12,
+    "orig": "FRA",
+    "s": "wiki_army",
+    "c": "ت",
+    "note": "The order for 15 Aravis vehicles was placed by the Délégation Générale pour l'Armement in April 2009 for use by the French Army. 11 units we",
+    "gen": 2,
+    "cat": "mrap"
+   },
+   {
+    "m": "VBL",
+    "n": 1373,
+    "orig": "FRA",
+    "s": "wiki_army",
+    "c": "ت",
+    "note": "730 of them are being upgraded to the Ultima-standard with a new engine, new transmission, strengthened suspension and additional armour Wil",
+    "gen": 2,
+    "cat": "apc"
+   },
+   {
+    "m": "PVP",
+    "n": 1102,
+    "orig": "FRA",
+    "s": "wiki_army",
+    "c": "ت",
+    "gen": 2,
+    "cat": "apc"
+   },
+   {
+    "m": "Véhicule à Haute Mobilité (VHM)Véhicule Articulé Chenillé (VAC)VAC NewGen or VAC 270",
+    "n": 52,
+    "orig": "SWE",
+    "s": "wiki_army",
+    "c": "ت",
+    "note": "The Véhicule à Haute Mobilité (High Mobility Vehicle) or VHM is the term used within the French Army to designate the Bandvagn 210 Mk II, wh",
+    "gen": 2,
+    "cat": "apc"
+   },
+   {
+    "m": "CAESAR (155 mm wheeled self-propelled howitzer)",
+    "n": 75,
+    "orig": "FRA",
+    "s": "wiki_army",
+    "c": "ت",
+    "note": "Delivered from 2008 onwards several units + ordered donated to Ukraine The CAESAR Nouvelle Génération (CAESAR New Generation) or CAESAR NG i",
+    "gen": 2,
+    "cat": "spg"
+   },
+   {
+    "m": "LRU MLRS (227mm self-propelled multiple rocket launcher)",
+    "n": 9,
+    "orig": "USA",
+    "s": "wiki_army",
+    "c": "ت",
+    "note": "57 M270 MLRS (called \"Lance-Roquettes Multiple\" or \"LRM\" in French service) were delivered in the early 1990s. 55 in service in 2007 All wer",
+    "gen": 2,
+    "cat": "mlrs"
+   },
+   {
+    "m": "Panhard VPS (Light utility vehicle)",
+    "n": 51,
+    "orig": "FRA",
+    "s": "wiki_army",
+    "c": "ت",
+    "note": "Delivered between 2006 and 2008 Used by the Special Operation Command's units Will be replaced by 241 Véhicules Légers des Forces Spéciales ",
+    "gen": 2,
+    "cat": "apc"
+   },
+   {
+    "m": "Renault Kangoo (Light utility vehicle)",
+    "n": 460,
+    "orig": "FRA",
+    "s": "wiki_army",
+    "c": "ت",
+    "note": "Used by counter-terrorism units.",
+    "gen": 2,
+    "cat": "apc"
+   },
+   {
+    "m": "T4 VLTP NP (Light utility vehicle)",
+    "n": 500,
+    "orig": "JPN",
+    "s": "wiki_army",
+    "c": "ت",
+    "note": "Based on the five-door VDJ76 Toyota Land Cruisers procured from French coach builders Technamm. Delivery of 500 units until the end of May 2",
+    "gen": 2,
+    "cat": "apc"
+   },
+   {
+    "m": "Arquus Trapper VT4 (Light utility vehicle)",
+    "n": 3949,
+    "orig": "FRA",
+    "s": "wiki_army",
+    "c": "ت",
+    "note": "VLTP-NP based on the Ford Everest Militarized by ACMAT and sold under the Arquus brand 4380 units planned Trapper carries a 1-ton payload Tr",
+    "gen": 2,
+    "cat": "apc"
+   },
+   {
+    "m": "Ford Ranger (Light utility vehicle)",
+    "n": 1000,
+    "orig": "USA",
+    "s": "wiki_army",
+    "c": "ت",
+    "note": "Introduced as an urgent operational requirement to replace the Peugeot P4.",
+    "gen": 2,
+    "cat": "apc"
+   },
+   {
+    "m": "Land Rover Defender (Light utility vehicle)",
+    "n": 550,
+    "orig": "GBR",
+    "s": "wiki_army",
+    "c": "ت",
+    "gen": 2,
+    "cat": "apc"
+   },
+   {
+    "m": "Quad Polaris (All-terrain vehicle)",
+    "n": 348,
+    "orig": "USA",
+    "s": "wiki_army",
+    "c": "ت",
+    "note": "Used by French special forces 300 Polaris Sportsman 700 48 Polaris MV 850",
+    "gen": 2,
+    "cat": "apc"
+   }
+  ],
+  "air": [
+   {
+    "m": "Dassault Mirage 2000 (Mirage 2000-5F)",
+    "n": 22,
+    "orig": "FRA",
+    "s": "wiki_air",
+    "c": "ت",
+    "note": "Planned to be retired around 2030, and be replaced by the Rafale on order.",
+    "gen": 3,
+    "cat": "fighter"
+   },
+   {
+    "m": "Dassault Mirage 2000 (Mirage 2000D - RMV)",
+    "n": 50,
+    "orig": "FRA",
+    "s": "wiki_air",
+    "c": "ت",
+    "note": "Of the 52 Mirage 2000D, 50 were modernised to the standard RMV (mid-life upgrade) by June 2026.",
+    "gen": 3,
+    "cat": "bomber"
+   },
+   {
+    "m": "Lockheed C-130 Hercules (C-130H-30)",
+    "n": 12,
+    "orig": "USA",
+    "s": "wiki_air",
+    "c": "ت",
+    "note": "Of the 12 aircraft, 3 were upgraded. The aircraft entered service in 1987. France is planning to retire the C-130H in the near future. The s",
+    "gen": 2,
+    "cat": "transport"
+   },
+   {
+    "m": "Lockheed Martin C-130 Super Hercules (C-130J-30)",
+    "n": 2,
+    "orig": "USA",
+    "s": "wiki_air",
+    "c": "ت",
+    "gen": 2,
+    "cat": "transport"
+   },
+   {
+    "m": "CASA CN235 (CN-235-200)",
+    "n": 19,
+    "orig": "ESP",
+    "s": "wiki_air",
+    "c": "ت",
+    "note": "19 CN-235-200 entered service in 1990. 8 CN-235-300 ordered in 2010. Modernisation of the avionic of the 27 CN235 started in 2023. The succe",
+    "gen": 2,
+    "cat": "transport"
+   },
+   {
+    "m": "CASA CN235 (CN-235-300)",
+    "n": 8,
+    "orig": "ESP",
+    "s": "wiki_air",
+    "c": "ت",
+    "note": "19 CN-235-200 entered service in 1990. 8 CN-235-300 ordered in 2010. Modernisation of the avionic of the 27 CN235 started in 2023. The succe",
+    "gen": 2,
+    "cat": "transport"
+   },
+   {
+    "m": "Airbus A330 (A330-200)",
+    "n": 1,
+    "orig": "FRA",
+    "s": "wiki_air",
+    "c": "ت",
+    "note": "Entered in service in November 2010, purchased second hand.",
+    "gen": 2,
+    "cat": "transport"
+   },
+   {
+    "m": "Dassault Falcon 900",
+    "n": 2,
+    "orig": "FRA",
+    "s": "wiki_air",
+    "c": "ت",
+    "gen": 2,
+    "cat": "transport"
+   },
+   {
+    "m": "Dassault Falcon 900 (Falcon 900 EX-EASY)",
+    "n": 2,
+    "orig": "FRA",
+    "s": "wiki_air",
+    "c": "ت",
+    "note": "It replaced the family of Falcon 2000LX.",
+    "gen": 2,
+    "cat": "transport"
+   },
+   {
+    "m": "Dassault Falcon 7X (–)",
+    "n": 2,
+    "orig": "FRA",
+    "s": "wiki_air",
+    "c": "ت",
+    "note": "Entered service in 2009 and 2010 respectively.",
+    "gen": 2,
+    "cat": "transport"
+   },
+   {
+    "m": "DHC-6 Twin Otter (–)",
+    "n": 5,
+    "orig": "CAN",
+    "s": "wiki_air",
+    "c": "ت",
+    "note": "Entered service in 1978.",
+    "gen": 2,
+    "cat": "transport"
+   },
+   {
+    "m": "Daher TBM700 (TBM700A)",
+    "n": 16,
+    "orig": "FRA",
+    "s": "wiki_air",
+    "c": "ت",
+    "note": "Entered service in 1990.",
+    "gen": 2,
+    "cat": "transport"
+   },
+   {
+    "m": "Boeing E-3 Sentry (E-3F)",
+    "n": 4,
+    "orig": "USA",
+    "s": "wiki_air",
+    "c": "ت",
+    "note": "It entered service in May 1991.",
+    "gen": 2,
+    "cat": "awacs"
+   },
+   {
+    "m": "Dassault Mirage 2000 (Mirage 2000-5F-SF2)",
+    "n": 7,
+    "orig": "FRA",
+    "s": "wiki_air",
+    "c": "ت",
+    "note": "It entered service in 1993, 7 remain in service.",
+    "gen": 3,
+    "cat": "trainer"
+   },
+   {
+    "m": "Alpha Jet (Dassault / Dornier) (Alpha Jet E)",
+    "n": 30,
+    "orig": "FRA",
+    "s": "wiki_air",
+    "c": "ت",
+    "note": "The advanced training mission was transferred entirely to the Pilatus PC-21. The training role of the Alpha Jet is exclusively focuses on th",
+    "gen": 2,
+    "cat": "trainer"
+   },
+   {
+    "m": "Pilatus PC-21 (–)",
+    "n": 26,
+    "orig": "CHE",
+    "s": "wiki_air",
+    "c": "ت",
+    "note": "Purchased as part of the MENTOR 1 programme (replacement of Alpha Jet and the Epsilon): Dec. 2016: 17 PC-21 Jul. 2021: 9 PC-21The aircrafr e",
+    "gen": 2,
+    "cat": "fighter"
+   },
+   {
+    "m": "Embraer EMB 121 Xingu (–)",
+    "n": 16,
+    "orig": "BRA",
+    "s": "wiki_air",
+    "c": "ت",
+    "note": "It is used to train transport pilots. It is used in a secondary role as a liaison aircraft.",
+    "gen": 2,
+    "cat": "trainer"
+   },
+   {
+    "m": "Grob G120 (G120A-F)",
+    "n": 18,
+    "orig": "DEU",
+    "s": "wiki_air",
+    "c": "ت",
+    "note": "Fleet outsourced to the Airbus Flight Academy (G120 after SR20 / SR22 in the training curriculum). Being replaced by the PC-7 MKX.",
+    "gen": 2,
+    "cat": "trainer"
+   },
+   {
+    "m": "Cirrus SR20 (–)",
+    "n": 16,
+    "orig": "USA",
+    "s": "wiki_air",
+    "c": "ت",
+    "note": "Fleet outsourced to the Airbus Flight Academy. Being replaced by the PC-7 MKX.",
+    "gen": 2,
+    "cat": "trainer"
+   },
+   {
+    "m": "Cirrus SR22 (–)",
+    "n": 9,
+    "orig": "USA",
+    "s": "wiki_air",
+    "c": "ت",
+    "note": "Fleet outsourced to the Airbus Flight Academy. Being replaced by the PC-7 MKX.",
+    "gen": 2,
+    "cat": "trainer"
+   },
+   {
+    "m": "Airbus Helicopters H225M Caracal (–)",
+    "n": 11,
+    "orig": "FRA",
+    "s": "wiki_air",
+    "c": "ت",
+    "note": "Orders: Early years 2000: 6 × H225M for the CSAR mission, delivered between February 2005 and May 2007 April 2009: 5 × H225M ordered",
+    "gen": 2,
+    "cat": "heli_util"
+   },
+   {
+    "m": "Eurocopter EC225 Super Puma Mk2 (EC225LP)",
+    "n": 2,
+    "orig": "FRA",
+    "s": "wiki_air",
+    "c": "ت",
+    "note": "Transferred from the French Navy to the 1/67 Pyrénées Squadron as the French Navy introduced the NH90 Caïnman Marine for this mission.",
+    "gen": 4,
+    "cat": "heli_util"
+   },
+   {
+    "m": "Sud-Aviation SA330 Puma (SA.330H)",
+    "n": 15,
+    "orig": "FRA",
+    "s": "wiki_air",
+    "c": "ت",
+    "note": "It entered service in 1974. It is being replaced by the Caracal.",
+    "gen": 4,
+    "cat": "heli_util"
+   },
+   {
+    "m": "Eurocopter AS555 Fennec (–)",
+    "n": 40,
+    "orig": "FRA",
+    "s": "wiki_air",
+    "c": "ت",
+    "note": "It entered service in 1990. To be replaced by the Airbus Helicopters H160M -Guépard [fr].",
+    "gen": 2,
+    "cat": "heli_util"
+   },
+   {
+    "m": "Aerospatiale AS332 Super Puma (Airbus H215) (–)",
+    "n": 3,
+    "orig": "FRA",
+    "s": "wiki_air",
+    "c": "ت",
+    "note": "It entered service in 1984 as a government transport helicopter. The helicopters are being replaced by the Caracal.",
+    "gen": 4,
+    "cat": "heli_util"
+   },
+   {
+    "m": "General Atomics MQ-9 Reaper (MQ-9 block 5 ER)",
+    "n": 12,
+    "orig": "USA",
+    "s": "wiki_air",
+    "c": "ت",
+    "note": "In service since 2013, with multiple orders placed, totalling 4 systems (each with 3 drones).",
+    "gen": 4,
+    "cat": "uav_strike"
+   },
+   {
+    "m": "CERES Airbus Defence and Space / Thales Alenia Space (–)",
+    "n": 3,
+    "orig": "FRA",
+    "s": "wiki_air",
+    "c": "ت",
+    "note": "The satellites were launched in November 2021.",
+    "gen": 2,
+    "cat": "isr"
+   },
+   {
+    "m": "Eurocopter Tiger HAP/HAD",
+    "n": 67,
+    "orig": "INT",
+    "s": "wiki_army",
+    "c": "ت",
+    "note": "67 in service",
+    "gen": 2,
+    "cat": "heli_attack"
+   },
+   {
+    "m": "NHIndustries NH90",
+    "n": 63,
+    "orig": "INT",
+    "s": "wiki_army",
+    "c": "ت",
+    "note": "The total of 63 NH90 Tactical Transport Helicopter (TTH) Standard 1 helicopters delivered in February 2025. Another 18 NH90 TTH Standard 2 h",
+    "gen": 2,
+    "cat": "heli_util"
+   },
+   {
+    "m": "Aérospatiale Puma",
+    "n": 15,
+    "orig": "FRA",
+    "s": "wiki_army",
+    "c": "ت",
+    "note": "15 in service as of December 2025 Being replaced by the NH90",
+    "gen": 4,
+    "cat": "heli_util"
+   },
+   {
+    "m": "Eurocopter Cougar",
+    "n": 24,
+    "orig": "FRA",
+    "s": "wiki_army",
+    "c": "ت",
+    "note": "24 in service as of December 2025 Being replaced by the NH90",
+    "gen": 2,
+    "cat": "heli_util"
+   },
+   {
+    "m": "Eurocopter Caracal",
+    "n": 8,
+    "orig": "FRA",
+    "s": "wiki_army",
+    "c": "ت",
+    "note": "8 in service as of December 2025",
+    "gen": 2,
+    "cat": "heli_util"
+   },
+   {
+    "m": "Aérospatiale Gazelle",
+    "n": 80,
+    "orig": "FRA",
+    "s": "wiki_army",
+    "c": "ت",
+    "note": "80 in service as of December 2025",
+    "gen": 2,
+    "cat": "heli_util"
+   },
+   {
+    "m": "Eurocopter Fennec",
+    "n": 18,
+    "orig": "FRA",
+    "s": "wiki_army",
+    "c": "ت",
+    "note": "18 in service as of December 2025",
+    "gen": 2,
+    "cat": "heli_util"
+   },
+   {
+    "m": "Colibri",
+    "n": 36,
+    "orig": "INT",
+    "s": "wiki_army",
+    "c": "ت",
+    "note": "36 in service as of 2023",
+    "gen": 2,
+    "cat": "heli_util"
+   }
+  ],
+  "ad": [
+   {
+    "m": "Mistral (Short-range surface-to-air missile system)",
+    "n": 234,
+    "orig": "FRA",
+    "s": "wiki_army",
+    "c": "ت",
+    "note": "additional systems on order Unknown number of Mistral MANPADS donated to Ukraine in 2022",
+    "gen": 2,
+    "cat": "short"
+   }
+  ],
+  "msl": [],
+  "navy": []
+ },
+ "ind": {
+  "tech": {
+   "arm": 4,
+   "air": 5,
+   "uav": 3,
+   "msl": 5,
+   "navy": 4,
+   "ew": 4,
+   "ind": 4
+  },
+  "makes": [
+   "رافال",
+   "لوكلير/سيزار",
+   "SAMP/T",
+   "سكالب/إكزوسيت",
+   "غواصات نووية"
+  ],
+  "s": "tierA",
+  "c": "ت"
+ },
+ "pol": {
+  "factions": [
+   "army",
+   "parties",
+   "street",
+   "biz"
+  ],
+  "stab": {
+   "v": 52,
+   "s": "tierA",
+   "c": "ت"
+  },
+  "warHome": [],
+  "insurgency": "حكومات أقلية متتالية"
+ },
+ "rel": {
+  "ALB": 40,
+  "AUT": 25,
+  "BEL": 65,
+  "BGR": 65,
+  "BLR": -25,
+  "CAN": 40,
+  "CYP": 25,
+  "CZE": 65,
+  "DEU": 65,
+  "DNK": 65,
+  "DZA": -30,
+  "ESP": 65,
+  "EST": 65,
+  "FIN": 65,
+  "GBR": 40,
+  "GRC": 65,
+  "HRV": 65,
+  "HUN": 65,
+  "IRL": 25,
+  "IRN": -40,
+  "ITA": 65,
+  "LTU": 65,
+  "LVA": 65,
+  "MKD": 40,
+  "MLI": -45,
+  "MMR": -25,
+  "NER": -40,
+  "NLD": 65,
+  "NOR": 40,
+  "POL": 65,
+  "PRK": -40,
+  "PRT": 65,
+  "ROU": 65,
+  "RUS": -55,
+  "SVK": 65,
+  "SVN": 65,
+  "SWE": 65,
+  "SYR": -10,
+  "TUR": 40,
+  "UKR": 70,
+  "USA": 40
+ },
+ "treaties": [
+  "EU",
+  "NATO"
+ ],
+ "sanctions": [],
+ "conflicts": [],
+ "notes": ""
+}

@@ -1,0 +1,2331 @@
+{
+ "id": "USA",
+ "ar": "الولايات المتحدة",
+ "en": "United States of America",
+ "tier": "A",
+ "asOf": "2026-11",
+ "src": {
+  "wiki_air": {
+   "t": "Wikipedia: List of active United States military aircraft",
+   "u": "https://en.wikipedia.org/wiki/List_of_active_United_States_military_aircraft?oldid=1381346429",
+   "y": 2026,
+   "note": "نسخة الصفحة بتاريخ السحب؛ أرقام ويكيبيديا تنراجع ويا مصادر ثانية"
+  },
+  "wiki_army": {
+   "t": "Wikipedia: List of equipment of the United States Army",
+   "u": "https://en.wikipedia.org/wiki/List_of_equipment_of_the_United_States_Army?oldid=1386201349",
+   "y": 2026,
+   "note": "نسخة الصفحة بتاريخ السحب؛ أرقام ويكيبيديا تنراجع ويا مصادر ثانية"
+  },
+  "wiki_navy": {
+   "t": "Wikipedia: List of current ships of the United States Navy",
+   "u": "https://en.wikipedia.org/wiki/List_of_current_ships_of_the_United_States_Navy?oldid=1386490236",
+   "y": 2026,
+   "note": "نسخة الصفحة بتاريخ السحب؛ أرقام ويكيبيديا تنراجع ويا مصادر ثانية"
+  },
+  "iiss_eq": {
+   "t": "Wikipedia: List of countries by level of military equipment (من IISS Military Balance ومصادر ثانية)",
+   "u": "https://en.wikipedia.org/wiki/List_of_countries_by_level_of_military_equipment?oldid=1384804191",
+   "y": 2025
+  },
+  "iiss_pers": {
+   "t": "Wikipedia: List of countries by number of military and paramilitary personnel (جدول IISS Military Balance)",
+   "u": "https://en.wikipedia.org/wiki/List_of_countries_by_number_of_military_and_paramilitary_personnel?oldid=1380910017",
+   "y": 2025
+  },
+  "wb": {
+   "t": "World Bank WDI (SP.POP.TOTL, NY.GDP.MKTP.CD, NY.GDP.MKTP.KD.ZG, MS.MIL.XPND.CD/GD.ZS ← SIPRI, MS.MIL.TOTL.P1, FP.CPI.TOTL.ZG)",
+   "u": "https://api.worldbank.org/v2/",
+   "y": 2026
+  },
+  "govt": {
+   "t": "تصنيف نظام الحكم: دساتير الدول + CIA World Factbook «Government type» + V-Dem/Freedom House لدرجة الحرية (تصنيف المصمم 2026)",
+   "u": "https://www.cia.gov/the-world-factbook/field/government-type/",
+   "y": 2026
+  },
+  "leaders": {
+   "t": "Wikipedia: List of current heads of state and government",
+   "u": "https://en.wikipedia.org/wiki/List_of_current_heads_of_state_and_government?oldid=1386623862",
+   "y": 2026,
+   "note": "سحب نوفمبر 2026"
+  },
+  "rules": {
+   "t": "قواعد من blocs.json وconflicts.json وsanctions.json (تكتل دفاعي +40، معاهدة +50، حرب −90، عقوبات ثقيلة −40...)",
+   "u": "data/world/",
+   "y": 2026
+  },
+  "relk": {
+   "t": "تقدير المصمم للعلاقات الثنائية المعروفة (تشرين الثاني 2026): حروب، نزاعات حدودية، تحالفات غير رسمية، تطبيع، عداء تاريخي",
+   "u": "https://en.wikipedia.org/wiki/Foreign_relations_by_country",
+   "y": 2026
+  },
+  "tierA": {
+   "t": "تقدير المصمم (تشرين الثاني 2026) لصناعة السلاح والاستقرار: SIPRI Arms Transfers Database (أكبر المصدّرين 2020–24)، SIPRI Top 100 Arms-Producing Companies، Fragile States Index 2025، أخبار 2026",
+   "u": "https://www.sipri.org/databases/armstransfers",
+   "y": 2026
+  }
+ },
+ "gov": {
+  "type": "pres",
+  "ar": "جمهورية رئاسية",
+  "free": 2,
+  "hos": {
+   "role": "President",
+   "name": "Donald Trump"
+  },
+  "hog": null,
+  "s": "govt,leaders",
+  "c": "ح"
+ },
+ "pop": {
+  "v": 341784857,
+  "y": 2025,
+  "s": "wb",
+  "c": "ح"
+ },
+ "eco": {
+  "gdpBusd": {
+   "v": 30769.7,
+   "y": 2025,
+   "s": "wb",
+   "c": "ح"
+  },
+  "growth": {
+   "v": 2.2,
+   "y": 2025,
+   "s": "wb",
+   "c": "ح"
+  },
+  "infl": {
+   "v": 2.9,
+   "y": 2024,
+   "s": "wb",
+   "c": "ح"
+  },
+  "oilRentPct": {
+   "v": 0.6,
+   "y": 2021,
+   "s": "wb",
+   "c": "ح"
+  }
+ },
+ "mil": {
+  "budgetBusd": {
+   "v": 954.39,
+   "y": 2025,
+   "s": "wb",
+   "c": "ح"
+  },
+  "budgetPctGdp": {
+   "v": 3.12,
+   "y": 2025,
+   "s": "wb",
+   "c": "ح"
+  },
+  "personnelWB": {
+   "v": 1395000,
+   "y": 2020,
+   "s": "wb",
+   "c": "ح"
+  },
+  "sum": {
+   "tanks": {
+    "v": 4650,
+    "s": "iiss_eq",
+    "c": "ت"
+   },
+   "carriers": {
+    "v": 11,
+    "s": "iiss_eq",
+    "c": "ت"
+   },
+   "amphib": {
+    "v": 42,
+    "s": "iiss_eq",
+    "c": "ت"
+   },
+   "cruisers": {
+    "v": 5,
+    "s": "iiss_eq",
+    "c": "ت"
+   },
+   "destroyers": {
+    "v": 78,
+    "s": "iiss_eq",
+    "c": "ت"
+   },
+   "frigates": {
+    "v": 27,
+    "s": "iiss_eq",
+    "c": "ت"
+   },
+   "corvettes": {
+    "v": 0,
+    "s": "iiss_eq",
+    "c": "ت"
+   },
+   "subNuc": {
+    "v": 68,
+    "s": "iiss_eq",
+    "c": "ت"
+   },
+   "subs": {
+    "v": 0,
+    "s": "iiss_eq",
+    "c": "ت"
+   },
+   "combatAir": {
+    "v": 3368,
+    "s": "iiss_eq",
+    "c": "ت"
+   },
+   "attackHeli": {
+    "v": 867,
+    "s": "iiss_eq",
+    "c": "ت"
+   },
+   "sats": {
+    "v": 141,
+    "s": "iiss_eq",
+    "c": "ت"
+   },
+   "active": {
+    "v": 1340150,
+    "s": "iiss_pers",
+    "c": "ت"
+   },
+   "reserve": {
+    "v": 804800,
+    "s": "iiss_pers",
+    "c": "ت"
+   },
+   "para": {
+    "v": 0,
+    "s": "iiss_pers",
+    "c": "ت"
+   }
+  },
+  "land": [
+   {
+    "m": "M109A6 Paladin",
+    "n": 370,
+    "orig": "USA",
+    "s": "wiki_army",
+    "c": "ت",
+    "gen": 2,
+    "cat": "spg"
+   },
+   {
+    "m": "M109A7",
+    "n": 300,
+    "orig": "USA",
+    "s": "wiki_army",
+    "c": "ت",
+    "note": "689 more on order.",
+    "gen": 2,
+    "cat": "spg"
+   },
+   {
+    "m": "M119",
+    "n": 821,
+    "orig": "GBR",
+    "s": "wiki_army",
+    "c": "ت",
+    "note": "M119A2/3.",
+    "gen": 2,
+    "cat": "towed"
+   },
+   {
+    "m": "M777",
+    "n": 1000,
+    "orig": "GBR",
+    "s": "wiki_army",
+    "c": "ت",
+    "note": "M777A2.",
+    "gen": 2,
+    "cat": "towed"
+   },
+   {
+    "m": "M142 HIMARS",
+    "n": 368,
+    "orig": "USA",
+    "s": "wiki_army",
+    "c": "ت",
+    "note": "M270 pod mounted on a standard Army Medium Tactical Vehicle (MTV) truck frame.",
+    "gen": 2,
+    "cat": "mlrs"
+   },
+   {
+    "m": "M270",
+    "n": 991,
+    "orig": "USA",
+    "s": "wiki_army",
+    "c": "ت",
+    "note": "M270A1/A2. Armored, self-propelled, multiple rocket launcher.",
+    "gen": 2,
+    "cat": "mlrs"
+   },
+   {
+    "m": "M1 Abrams",
+    "n": 2640,
+    "orig": "USA",
+    "s": "wiki_army",
+    "c": "ت",
+    "gen": 3,
+    "cat": "tank"
+   },
+   {
+    "m": "M1126 Stryker",
+    "n": 4383,
+    "orig": "CAN",
+    "s": "wiki_army",
+    "c": "ت",
+    "gen": 2,
+    "cat": "ifv"
+   },
+   {
+    "m": "M2 Bradley",
+    "n": 2100,
+    "orig": "USA",
+    "s": "wiki_army",
+    "c": "ت",
+    "gen": 3,
+    "cat": "ifv"
+   },
+   {
+    "m": "M3 Bradley",
+    "n": 1200,
+    "orig": "USA",
+    "s": "wiki_army",
+    "c": "ت",
+    "gen": 2,
+    "cat": "ifv"
+   },
+   {
+    "m": "Armored Ground Mobility System",
+    "n": 50,
+    "orig": "AUT",
+    "s": "wiki_army",
+    "c": "ت",
+    "gen": 2,
+    "cat": "apc"
+   },
+   {
+    "m": "Armored Multi-Purpose Vehicle",
+    "n": 276,
+    "orig": "GBR",
+    "s": "wiki_army",
+    "c": "ت",
+    "gen": 2,
+    "cat": "apc"
+   },
+   {
+    "m": "M113",
+    "n": 4700,
+    "orig": "USA",
+    "s": "wiki_army",
+    "c": "ت",
+    "gen": 2,
+    "cat": "apc"
+   },
+   {
+    "m": "M1117",
+    "n": 1837,
+    "orig": "USA",
+    "s": "wiki_army",
+    "c": "ت",
+    "gen": 2,
+    "cat": "apc"
+   },
+   {
+    "m": "M1200 Armored Knight",
+    "n": 465,
+    "orig": "USA",
+    "s": "wiki_army",
+    "c": "ت",
+    "gen": 2,
+    "cat": "apc"
+   },
+   {
+    "m": "International MaxxPro",
+    "n": 2934,
+    "orig": "USA",
+    "s": "wiki_army",
+    "c": "ت",
+    "gen": 2,
+    "cat": "mrap"
+   },
+   {
+    "m": "M-ATV",
+    "n": 5651,
+    "orig": "USA",
+    "s": "wiki_army",
+    "c": "ت",
+    "gen": 2,
+    "cat": "mrap"
+   },
+   {
+    "m": "Buffalo",
+    "n": 650,
+    "orig": "USA",
+    "s": "wiki_army",
+    "c": "ت",
+    "gen": 2,
+    "cat": "mrap"
+   },
+   {
+    "m": "RG-31",
+    "n": 516,
+    "orig": "ZAF",
+    "s": "wiki_army",
+    "c": "ت",
+    "gen": 2,
+    "cat": "mrap"
+   },
+   {
+    "m": "RG-33",
+    "n": 2386,
+    "orig": "ZAF",
+    "s": "wiki_army",
+    "c": "ت",
+    "gen": 2,
+    "cat": "mrap"
+   }
+  ],
+  "air": [
+   {
+    "m": "OA-1K Skyraider II",
+    "n": 8,
+    "orig": "USA",
+    "s": "wiki_air",
+    "c": "ت",
+    "note": "SOF support",
+    "gen": 2,
+    "cat": "attack"
+   },
+   {
+    "m": "A-10C Thunderbolt II",
+    "n": 162,
+    "orig": "USA",
+    "s": "wiki_air",
+    "c": "ت",
+    "note": "The Air Force is seeking to retire all A-10s in FY2026.",
+    "gen": 2,
+    "cat": "attack"
+   },
+   {
+    "m": "B-1 Lancer",
+    "n": 40,
+    "orig": "USA",
+    "s": "wiki_air",
+    "c": "ت",
+    "note": "Long-range conventional bomber. Employs variable-sweep wing design. To be replaced by the B-21 Raider around 2032. The Air Force is seeking ",
+    "gen": 2,
+    "cat": "bomber"
+   },
+   {
+    "m": "B-2 Spirit",
+    "n": 20,
+    "orig": "USA",
+    "s": "wiki_air",
+    "c": "ت",
+    "note": "Stealth long-range nuclear-capable heavy bomber. To be replaced by the B-21 Raider around 2032. One aircraft to be divested in FY2025.",
+    "gen": 2,
+    "cat": "bomber"
+   },
+   {
+    "m": "B-21 Raider",
+    "n": 3,
+    "orig": "USA",
+    "s": "wiki_air",
+    "c": "ت",
+    "note": "Stealth long-range nuclear-capable heavy bomber. The first B-21 test aircraft made its maiden flight in November 2023. To replace the B-2 Sp",
+    "gen": 2,
+    "cat": "bomber"
+   },
+   {
+    "m": "B-52H Stratofortress",
+    "n": 72,
+    "orig": "USA",
+    "s": "wiki_air",
+    "c": "ت",
+    "note": "Currently undergoing re-engining. Expected to serve into the 2050s. One aircraft crashed on 15 June 2026.",
+    "gen": 2,
+    "cat": "bomber"
+   },
+   {
+    "m": "C-5M Super Galaxy",
+    "n": 52,
+    "orig": "USA",
+    "s": "wiki_air",
+    "c": "ت",
+    "gen": 2,
+    "cat": "transport"
+   },
+   {
+    "m": "C-12C/D/F/J Huron",
+    "n": 29,
+    "orig": "USA",
+    "s": "wiki_air",
+    "c": "ت",
+    "gen": 2,
+    "cat": "transport"
+   },
+   {
+    "m": "C-17A Globemaster III",
+    "n": 219,
+    "orig": "USA",
+    "s": "wiki_air",
+    "c": "ت",
+    "note": "These were produced by McDonnell-Douglas prior to the merger with Boeing.",
+    "gen": 2,
+    "cat": "transport"
+   },
+   {
+    "m": "C-21A Learjet 35",
+    "n": 19,
+    "orig": "USA",
+    "s": "wiki_air",
+    "c": "ت",
+    "gen": 2,
+    "cat": "transport"
+   },
+   {
+    "m": "VC-25A",
+    "n": 2,
+    "orig": "USA",
+    "s": "wiki_air",
+    "c": "ت",
+    "gen": 2,
+    "cat": "transport"
+   },
+   {
+    "m": "C-32A/B Air Force Two",
+    "n": 4,
+    "orig": "USA",
+    "s": "wiki_air",
+    "c": "ت",
+    "gen": 2,
+    "cat": "transport"
+   },
+   {
+    "m": "C-37A/B Gulfstream V",
+    "n": 9,
+    "orig": "USA",
+    "s": "wiki_air",
+    "c": "ت",
+    "note": "VIP transport. 16 planned.",
+    "gen": 2,
+    "cat": "transport"
+   },
+   {
+    "m": "C-40B/C",
+    "n": 4,
+    "orig": "USA",
+    "s": "wiki_air",
+    "c": "ت",
+    "gen": 2,
+    "cat": "transport"
+   },
+   {
+    "m": "C-130H Hercules",
+    "n": 126,
+    "orig": "USA",
+    "s": "wiki_air",
+    "c": "ت",
+    "note": "The C-130J is replacing the C-130H on a one-for-one basis. The Air Force has Congressionally mandated floor of 271 C-130 aircraft. The Air F",
+    "gen": 2,
+    "cat": "transport"
+   },
+   {
+    "m": "LC-130H Hercules",
+    "n": 10,
+    "orig": "USA",
+    "s": "wiki_air",
+    "c": "ت",
+    "note": "Assigned to 109th Airlift Wing",
+    "gen": 2,
+    "cat": "transport"
+   },
+   {
+    "m": "C-130J Super Hercules/J-30 Super Hercules",
+    "n": 151,
+    "orig": "USA",
+    "s": "wiki_air",
+    "c": "ت",
+    "gen": 2,
+    "cat": "transport"
+   },
+   {
+    "m": "AC-130J Ghostrider",
+    "n": 31,
+    "orig": "USA",
+    "s": "wiki_air",
+    "c": "ت",
+    "note": "Final aircraft delivered in 2022.",
+    "gen": 2,
+    "cat": "attack"
+   },
+   {
+    "m": "WC-130J Hercules",
+    "n": 10,
+    "orig": "USA",
+    "s": "wiki_air",
+    "c": "ت",
+    "note": "Assigned to 403d Wing",
+    "gen": 2,
+    "cat": "isr"
+   },
+   {
+    "m": "TC-135S/W",
+    "n": 3,
+    "orig": "USA",
+    "s": "wiki_air",
+    "c": "ت",
+    "gen": 2,
+    "cat": "trainer"
+   },
+   {
+    "m": "RC-135S/U/V/W Cobra Ball/Combat Sent/Rivet Joint",
+    "n": 25,
+    "orig": "USA",
+    "s": "wiki_air",
+    "c": "ت",
+    "gen": 2,
+    "cat": "isr"
+   },
+   {
+    "m": "C-146A Wolfhound",
+    "n": 20,
+    "orig": "DEU",
+    "s": "wiki_air",
+    "c": "ت",
+    "note": "Delivered 2011–2017. Flown with the 524th Special Operations Squadron",
+    "gen": 2,
+    "cat": "transport"
+   },
+   {
+    "m": "E-3B/G Sentry (AWACS)",
+    "n": 15,
+    "orig": "USA",
+    "s": "wiki_air",
+    "c": "ت",
+    "note": "To be replaced by the E-2D Hawkeye.",
+    "gen": 2,
+    "cat": "awacs"
+   },
+   {
+    "m": "E-9A Widget",
+    "n": 2,
+    "orig": "CAN",
+    "s": "wiki_air",
+    "c": "ت",
+    "note": "Military surveillance version of the DHC-8-100, used for missile range control.",
+    "gen": 2,
+    "cat": "isr"
+   },
+   {
+    "m": "F-15C/D Eagle",
+    "n": 108,
+    "orig": "USA",
+    "s": "wiki_air",
+    "c": "ت",
+    "note": "F-15C retired from active service in 2025. 12 D variants are used for training. The Air Force is seeking to divest 13 F-15C and Ds s in FY20",
+    "gen": 3,
+    "cat": "fighter"
+   },
+   {
+    "m": "F-15E Strike Eagle",
+    "n": 218,
+    "orig": "USA",
+    "s": "wiki_air",
+    "c": "ت",
+    "note": "The Air Force is seeking to divest 21 F-15Es FY2026.",
+    "gen": 4,
+    "cat": "fighter"
+   },
+   {
+    "m": "F-15EX Eagle II",
+    "n": 8,
+    "orig": "USA",
+    "s": "wiki_air",
+    "c": "ت",
+    "note": "F-15C/D Eagle replacement. 267 planned.",
+    "gen": 4,
+    "cat": "fighter"
+   },
+   {
+    "m": "QF-16A/C",
+    "n": 73,
+    "orig": "USA",
+    "s": "wiki_air",
+    "c": "ت",
+    "note": "Conversion of an F-16 Fighting Falcon to full-scale aerial target. Final deliveries will take place 2024–2025. 126 planned.",
+    "gen": 3,
+    "cat": "uav_isr"
+   },
+   {
+    "m": "F-16C/D Fighting Falcon",
+    "n": 762,
+    "orig": "USA",
+    "s": "wiki_air",
+    "c": "ت",
+    "note": "The Air Force is seeking to divest 62 F-16C/Ds in FY2026.",
+    "gen": 3,
+    "cat": "fighter"
+   },
+   {
+    "m": "F-22A Raptor",
+    "n": 183,
+    "orig": "USA",
+    "s": "wiki_air",
+    "c": "ت",
+    "note": "Stealth aircraft. To be succeeded by the F-47.",
+    "gen": 5,
+    "cat": "fighter"
+   },
+   {
+    "m": "F-35A Lightning II",
+    "n": 302,
+    "orig": "USA",
+    "s": "wiki_air",
+    "c": "ت",
+    "note": "7 on order 1,763 planned.",
+    "gen": 5,
+    "cat": "fighter"
+   },
+   {
+    "m": "TG-15A",
+    "n": 2,
+    "orig": "INT",
+    "s": "wiki_air",
+    "c": "ت",
+    "gen": 2,
+    "cat": "trainer"
+   },
+   {
+    "m": "TG-15B",
+    "n": 3,
+    "orig": "INT",
+    "s": "wiki_air",
+    "c": "ت",
+    "gen": 2,
+    "cat": "trainer"
+   },
+   {
+    "m": "TG-16A",
+    "n": 19,
+    "orig": "INT",
+    "s": "wiki_air",
+    "c": "ت",
+    "gen": 2,
+    "cat": "trainer"
+   },
+   {
+    "m": "TG-17A",
+    "n": 1,
+    "orig": "INT",
+    "s": "wiki_air",
+    "c": "ت",
+    "note": "MDM MDM-1 Fox donated to the 94th Flying Training Squadron.",
+    "gen": 2,
+    "cat": "trainer"
+   },
+   {
+    "m": "TH-1H Iroquois",
+    "n": 28,
+    "orig": "USA",
+    "s": "wiki_air",
+    "c": "ت",
+    "note": "Light lift training helicopter To be replaced by the MH-139A.",
+    "gen": 2,
+    "cat": "trainer"
+   },
+   {
+    "m": "UH-1N Twin Huey/UH-1N Operational Support Airlift",
+    "n": 63,
+    "orig": "USA",
+    "s": "wiki_air",
+    "c": "ت",
+    "note": "Light lift helicopter. To be replaced by the MH-139 Grey Wolf. The Air Force is seeking to divest 4 UH-1Ns in FY2026.",
+    "gen": 2,
+    "cat": "heli_util"
+   },
+   {
+    "m": "MH-139A Grey Wolf",
+    "n": 7,
+    "orig": "INT",
+    "s": "wiki_air",
+    "c": "ت",
+    "note": "6 test aircraft and 1 production aircraft have been delivered. 20 on order. 42 planned.",
+    "gen": 2,
+    "cat": "transport"
+   },
+   {
+    "m": "P-9A Pale Ale",
+    "n": 4,
+    "orig": "CAN",
+    "s": "wiki_air",
+    "c": "ت",
+    "note": "Government-owned contractor-operated fleet tasked with monitoring drug trafficking.",
+    "gen": 2,
+    "cat": "isr"
+   },
+   {
+    "m": "T-1A Jayhawk",
+    "n": 127,
+    "orig": "USA",
+    "s": "wiki_air",
+    "c": "ت",
+    "note": "Multi-engine trainer. The Air Force is seeking to divest 35 T-1s in FY2026.",
+    "gen": 2,
+    "cat": "trainer"
+   },
+   {
+    "m": "T-6A Texan II",
+    "n": 442,
+    "orig": "USA",
+    "s": "wiki_air",
+    "c": "ت",
+    "gen": 2,
+    "cat": "trainer"
+   },
+   {
+    "m": "T-7 Red Hawk",
+    "n": 2,
+    "orig": "USA",
+    "s": "wiki_air",
+    "c": "ت",
+    "note": "Replacement for the T-38 Talon. The first five test aircraft will be production representative. 351 planned.",
+    "gen": 2,
+    "cat": "trainer"
+   },
+   {
+    "m": "T-38A/C/AT-38B Talon",
+    "n": 495,
+    "orig": "USA",
+    "s": "wiki_air",
+    "c": "ت",
+    "note": "To be replaced by the T-7A. The Air Force is seeking to divest 17 T-38A/Cs in FY2026.",
+    "gen": 2,
+    "cat": "trainer"
+   },
+   {
+    "m": "T-41D Mescalero",
+    "n": 4,
+    "orig": "USA",
+    "s": "wiki_air",
+    "c": "ت",
+    "gen": 2,
+    "cat": "trainer"
+   },
+   {
+    "m": "T-51A Cessna",
+    "n": 3,
+    "orig": "USA",
+    "s": "wiki_air",
+    "c": "ت",
+    "gen": 2,
+    "cat": "trainer"
+   },
+   {
+    "m": "T-53A Kadet II",
+    "n": 24,
+    "orig": "USA",
+    "s": "wiki_air",
+    "c": "ت",
+    "note": "USAFA flight training aircraft",
+    "gen": 2,
+    "cat": "trainer"
+   },
+   {
+    "m": "U-2S Dragon Lady",
+    "n": 27,
+    "orig": "USA",
+    "s": "wiki_air",
+    "c": "ت",
+    "note": "The Air Force plans to divest all U-2s and TU-2s in FY2027.",
+    "gen": 2,
+    "cat": "isr"
+   },
+   {
+    "m": "TU-2S Dragon Lady",
+    "n": 4,
+    "orig": "USA",
+    "s": "wiki_air",
+    "c": "ت",
+    "note": "The Air Force is seeking to divest all U-2s and TU-2s in FY2027.",
+    "gen": 2,
+    "cat": "trainer"
+   },
+   {
+    "m": "U-28A Draco/PC-12",
+    "n": 30,
+    "orig": "CHE",
+    "s": "wiki_air",
+    "c": "ت",
+    "note": "PC-12 used for training. Used by SOCOM for reconnaissance. To be replaced in SOCOM by the OA-1K Sky Warden.",
+    "gen": 2,
+    "cat": "transport"
+   },
+   {
+    "m": "UV-18B Twin Otter",
+    "n": 3,
+    "orig": "CAN",
+    "s": "wiki_air",
+    "c": "ت",
+    "note": "USAFA parachute training aircraft",
+    "gen": 2,
+    "cat": "transport"
+   },
+   {
+    "m": "CV-22B Osprey",
+    "n": 52,
+    "orig": "USA",
+    "s": "wiki_air",
+    "c": "ت",
+    "note": "2 on order. Two aging CV-22Bs will be divested in FY2025 and be replaced with new aircraft.",
+    "gen": 2,
+    "cat": "transport"
+   },
+   {
+    "m": "BQM-167 Skeeter",
+    "n": 37,
+    "orig": "INT",
+    "s": "wiki_air",
+    "c": "ت",
+    "note": "Subscale aerial target. 800+ planned.",
+    "gen": 2,
+    "cat": "uav_isr"
+   },
+   {
+    "m": "CN-235",
+    "n": 5,
+    "orig": "ESP",
+    "s": "wiki_air",
+    "c": "ت",
+    "note": "Flown with the 427th Special Operations Squadron",
+    "gen": 2,
+    "cat": "isr"
+   },
+   {
+    "m": "CH-47D/F Chinook",
+    "n": 510,
+    "orig": "USA",
+    "s": "wiki_air",
+    "c": "ت",
+    "note": "30 on order (figure includes MH47G)",
+    "gen": 3,
+    "cat": "heli_util"
+   },
+   {
+    "m": "UH-60A/L/M Black Hawk",
+    "n": 1443,
+    "orig": "USA",
+    "s": "wiki_air",
+    "c": "ت",
+    "note": "751 x UH-60A, 592 x UH-60L, 100 x UH-60M. 1227 UH-60M planned. UH-60A and UH-60L models being upgraded and converted UH-60V. To be replaced ",
+    "gen": 2,
+    "cat": "heli_util"
+   },
+   {
+    "m": "AH-64D/E Apache Longbow, Guardian",
+    "n": 824,
+    "orig": "USA",
+    "s": "wiki_air",
+    "c": "ت",
+    "note": "15 on order.",
+    "gen": 3,
+    "cat": "heli_util"
+   },
+   {
+    "m": "UH-72A/B Lakota",
+    "n": 478,
+    "orig": "USA",
+    "s": "wiki_air",
+    "c": "ت",
+    "note": "30 on order.",
+    "gen": 2,
+    "cat": "heli_util"
+   },
+   {
+    "m": "Mil Mi-8/Mi-17",
+    "n": 10,
+    "orig": "RUS",
+    "s": "wiki_air",
+    "c": "ت",
+    "gen": 2,
+    "cat": "heli_util"
+   },
+   {
+    "m": "Mil Mi-24",
+    "n": 1,
+    "orig": "RUS",
+    "s": "wiki_air",
+    "c": "ت",
+    "gen": 3,
+    "cat": "heli_util"
+   },
+   {
+    "m": "UH-1Y Venom",
+    "n": 160,
+    "orig": "USA",
+    "s": "wiki_air",
+    "c": "ت",
+    "gen": 2,
+    "cat": "heli_util"
+   },
+   {
+    "m": "AH-1Z Viper",
+    "n": 189,
+    "orig": "USA",
+    "s": "wiki_air",
+    "c": "ت",
+    "note": "The Marine Corps plans to divest 10 AH-1Z in FY2025.",
+    "gen": 2,
+    "cat": "heli_util"
+   },
+   {
+    "m": "UH-60A/L Blackhawk",
+    "n": 4,
+    "orig": "USA",
+    "s": "wiki_air",
+    "c": "ت",
+    "gen": 2,
+    "cat": "heli_util"
+   },
+   {
+    "m": "UH-72A Lakota",
+    "n": 5,
+    "orig": "DEU",
+    "s": "wiki_air",
+    "c": "ت",
+    "gen": 2,
+    "cat": "heli_util"
+   },
+   {
+    "m": "AH-6 Little Bird",
+    "n": 47,
+    "orig": "USA",
+    "s": "wiki_army",
+    "c": "ت",
+    "gen": 2,
+    "cat": "heli_attack"
+   },
+   {
+    "m": "EH-60 Black Hawk",
+    "n": 64,
+    "orig": "USA",
+    "s": "wiki_army",
+    "c": "ت",
+    "gen": 2,
+    "cat": "heli_util"
+   },
+   {
+    "m": "MH-47 Chinook",
+    "n": 36,
+    "orig": "USA",
+    "s": "wiki_army",
+    "c": "ت",
+    "gen": 2,
+    "cat": "heli_util"
+   },
+   {
+    "m": "UH-72 Lakota",
+    "n": 470,
+    "orig": "USA",
+    "s": "wiki_army",
+    "c": "ت",
+    "gen": 2,
+    "cat": "heli_util"
+   },
+   {
+    "m": "AeroVironment Switchblade",
+    "n": 4400,
+    "orig": "USA",
+    "s": "wiki_army",
+    "c": "ت",
+    "gen": 2,
+    "cat": "uav_strike"
+   },
+   {
+    "m": "RQ-11B Raven",
+    "n": 5000,
+    "orig": "USA",
+    "s": "wiki_army",
+    "c": "ت",
+    "gen": 2,
+    "cat": "uav_isr"
+   },
+   {
+    "m": "Prioria Robotics Maveric",
+    "n": 36,
+    "orig": "USA",
+    "s": "wiki_army",
+    "c": "ت",
+    "gen": 2,
+    "cat": "uav_isr"
+   },
+   {
+    "m": "RQ-20A Puma",
+    "n": 325,
+    "orig": "USA",
+    "s": "wiki_army",
+    "c": "ت",
+    "gen": 4,
+    "cat": "uav_isr"
+   },
+   {
+    "m": "RQ-7 Shadow",
+    "n": 500,
+    "orig": "USA",
+    "s": "wiki_army",
+    "c": "ت",
+    "gen": 2,
+    "cat": "uav_isr"
+   },
+   {
+    "m": "MQ-1C Gray Eagle",
+    "n": 180,
+    "orig": "USA",
+    "s": "wiki_army",
+    "c": "ت",
+    "gen": 2,
+    "cat": "uav_isr"
+   },
+   {
+    "m": "CQ-10 SnowGoose",
+    "n": 28,
+    "orig": "CAN",
+    "s": "wiki_army",
+    "c": "ت",
+    "gen": 2,
+    "cat": "uav_isr"
+   },
+   {
+    "m": "XPV-1 Tern",
+    "n": 15,
+    "orig": "USA",
+    "s": "wiki_army",
+    "c": "ت",
+    "gen": 2,
+    "cat": "uav_isr"
+   },
+   {
+    "m": "XPV-2 Mako",
+    "n": 14,
+    "orig": "USA",
+    "s": "wiki_army",
+    "c": "ت",
+    "gen": 2,
+    "cat": "uav_isr"
+   }
+  ],
+  "ad": [
+   {
+    "m": "AN/TWQ-1",
+    "n": 453,
+    "orig": "USA",
+    "s": "wiki_army",
+    "c": "ت",
+    "note": "System mounted on HMMWV",
+    "gen": 2,
+    "cat": "short"
+   },
+   {
+    "m": "MIM-104",
+    "n": 55,
+    "orig": "USA",
+    "s": "wiki_army",
+    "c": "ت",
+    "gen": 2,
+    "cat": "short"
+   },
+   {
+    "m": "THAAD",
+    "n": 7,
+    "orig": "USA",
+    "s": "wiki_army",
+    "c": "ت",
+    "gen": 4,
+    "cat": "long"
+   }
+  ],
+  "msl": [],
+  "navy": [
+   {
+    "m": "USS Abraham Lincoln",
+    "n": 72,
+    "orig": "INT",
+    "s": "wiki_navy",
+    "c": "ت",
+    "gen": 2,
+    "cat": "carrier"
+   },
+   {
+    "m": "USS America",
+    "n": 6,
+    "orig": "INT",
+    "s": "wiki_navy",
+    "c": "ت",
+    "gen": 2,
+    "cat": "amphib"
+   },
+   {
+    "m": "USS Anchorage",
+    "n": 23,
+    "orig": "INT",
+    "s": "wiki_navy",
+    "c": "ت",
+    "gen": 2,
+    "cat": "amphib"
+   },
+   {
+    "m": "USS Arleigh Burke",
+    "n": 51,
+    "orig": "INT",
+    "s": "wiki_navy",
+    "c": "ت",
+    "gen": 2,
+    "cat": "destroyer"
+   },
+   {
+    "m": "USS Arlington",
+    "n": 24,
+    "orig": "INT",
+    "s": "wiki_navy",
+    "c": "ت",
+    "gen": 2,
+    "cat": "amphib"
+   },
+   {
+    "m": "USS Ashland",
+    "n": 48,
+    "orig": "INT",
+    "s": "wiki_navy",
+    "c": "ت",
+    "gen": 2,
+    "cat": "amphib"
+   },
+   {
+    "m": "USS Bainbridge",
+    "n": 96,
+    "orig": "INT",
+    "s": "wiki_navy",
+    "c": "ت",
+    "gen": 2,
+    "cat": "destroyer"
+   },
+   {
+    "m": "USS Barry",
+    "n": 52,
+    "orig": "INT",
+    "s": "wiki_navy",
+    "c": "ت",
+    "gen": 2,
+    "cat": "destroyer"
+   },
+   {
+    "m": "USS Bataan",
+    "n": 5,
+    "orig": "INT",
+    "s": "wiki_navy",
+    "c": "ت",
+    "gen": 2,
+    "cat": "amphib"
+   },
+   {
+    "m": "USS Benfold",
+    "n": 65,
+    "orig": "INT",
+    "s": "wiki_navy",
+    "c": "ت",
+    "gen": 2,
+    "cat": "destroyer"
+   },
+   {
+    "m": "USS Blue Ridge",
+    "n": 19,
+    "orig": "INT",
+    "s": "wiki_navy",
+    "c": "ت",
+    "gen": 2,
+    "cat": "amphib"
+   },
+   {
+    "m": "USS Boxer",
+    "n": 4,
+    "orig": "INT",
+    "s": "wiki_navy",
+    "c": "ت",
+    "gen": 2,
+    "cat": "amphib"
+   },
+   {
+    "m": "USS Bulkeley",
+    "n": 84,
+    "orig": "INT",
+    "s": "wiki_navy",
+    "c": "ت",
+    "gen": 2,
+    "cat": "destroyer"
+   },
+   {
+    "m": "USS Carl M. Levin",
+    "n": 120,
+    "orig": "INT",
+    "s": "wiki_navy",
+    "c": "ت",
+    "gen": 2,
+    "cat": "destroyer"
+   },
+   {
+    "m": "USS Carl Vinson",
+    "n": 70,
+    "orig": "INT",
+    "s": "wiki_navy",
+    "c": "ت",
+    "gen": 2,
+    "cat": "carrier"
+   },
+   {
+    "m": "USS Carney",
+    "n": 64,
+    "orig": "INT",
+    "s": "wiki_navy",
+    "c": "ت",
+    "gen": 2,
+    "cat": "destroyer"
+   },
+   {
+    "m": "USS Carter Hall",
+    "n": 50,
+    "orig": "INT",
+    "s": "wiki_navy",
+    "c": "ت",
+    "gen": 2,
+    "cat": "amphib"
+   },
+   {
+    "m": "USS Chafee",
+    "n": 90,
+    "orig": "INT",
+    "s": "wiki_navy",
+    "c": "ت",
+    "gen": 2,
+    "cat": "destroyer"
+   },
+   {
+    "m": "USS Chung-Hoon",
+    "n": 93,
+    "orig": "INT",
+    "s": "wiki_navy",
+    "c": "ت",
+    "gen": 2,
+    "cat": "destroyer"
+   },
+   {
+    "m": "USS Cole",
+    "n": 67,
+    "orig": "INT",
+    "s": "wiki_navy",
+    "c": "ت",
+    "gen": 2,
+    "cat": "destroyer"
+   },
+   {
+    "m": "USS Comstock",
+    "n": 45,
+    "orig": "INT",
+    "s": "wiki_navy",
+    "c": "ت",
+    "gen": 2,
+    "cat": "amphib"
+   },
+   {
+    "m": "USS Connecticut",
+    "n": 22,
+    "orig": "INT",
+    "s": "wiki_navy",
+    "c": "ت",
+    "gen": 2,
+    "cat": "sub"
+   },
+   {
+    "m": "USS Curtis Wilbur",
+    "n": 54,
+    "orig": "INT",
+    "s": "wiki_navy",
+    "c": "ت",
+    "gen": 2,
+    "cat": "destroyer"
+   },
+   {
+    "m": "USS Daniel Inouye",
+    "n": 118,
+    "orig": "INT",
+    "s": "wiki_navy",
+    "c": "ت",
+    "gen": 2,
+    "cat": "destroyer"
+   },
+   {
+    "m": "USS Decatur",
+    "n": 73,
+    "orig": "INT",
+    "s": "wiki_navy",
+    "c": "ت",
+    "gen": 2,
+    "cat": "destroyer"
+   },
+   {
+    "m": "USS Delbert D. Black",
+    "n": 119,
+    "orig": "INT",
+    "s": "wiki_navy",
+    "c": "ت",
+    "gen": 2,
+    "cat": "destroyer"
+   },
+   {
+    "m": "USS Dewey",
+    "n": 105,
+    "orig": "INT",
+    "s": "wiki_navy",
+    "c": "ت",
+    "gen": 2,
+    "cat": "destroyer"
+   },
+   {
+    "m": "USS Donald Cook",
+    "n": 75,
+    "orig": "INT",
+    "s": "wiki_navy",
+    "c": "ت",
+    "gen": 2,
+    "cat": "destroyer"
+   },
+   {
+    "m": "USS Dwight D. Eisenhower",
+    "n": 69,
+    "orig": "INT",
+    "s": "wiki_navy",
+    "c": "ت",
+    "gen": 2,
+    "cat": "carrier"
+   },
+   {
+    "m": "USS Emory S. Land",
+    "n": 39,
+    "orig": "INT",
+    "s": "wiki_navy",
+    "c": "ت",
+    "gen": 2,
+    "cat": "sub"
+   },
+   {
+    "m": "USS Essex",
+    "n": 2,
+    "orig": "INT",
+    "s": "wiki_navy",
+    "c": "ت",
+    "gen": 2,
+    "cat": "amphib"
+   },
+   {
+    "m": "USS Farragut",
+    "n": 99,
+    "orig": "INT",
+    "s": "wiki_navy",
+    "c": "ت",
+    "gen": 2,
+    "cat": "destroyer"
+   },
+   {
+    "m": "USS Fitzgerald",
+    "n": 62,
+    "orig": "INT",
+    "s": "wiki_navy",
+    "c": "ت",
+    "gen": 2,
+    "cat": "destroyer"
+   },
+   {
+    "m": "USS Forrest Sherman",
+    "n": 98,
+    "orig": "INT",
+    "s": "wiki_navy",
+    "c": "ت",
+    "gen": 2,
+    "cat": "destroyer"
+   },
+   {
+    "m": "USS Fort Lauderdale",
+    "n": 28,
+    "orig": "INT",
+    "s": "wiki_navy",
+    "c": "ت",
+    "gen": 2,
+    "cat": "amphib"
+   },
+   {
+    "m": "USS Frank Cable",
+    "n": 40,
+    "orig": "INT",
+    "s": "wiki_navy",
+    "c": "ت",
+    "gen": 2,
+    "cat": "sub"
+   },
+   {
+    "m": "USS George Washington",
+    "n": 73,
+    "orig": "INT",
+    "s": "wiki_navy",
+    "c": "ت",
+    "gen": 2,
+    "cat": "carrier"
+   },
+   {
+    "m": "USS George H.W. Bush",
+    "n": 77,
+    "orig": "INT",
+    "s": "wiki_navy",
+    "c": "ت",
+    "gen": 2,
+    "cat": "carrier"
+   },
+   {
+    "m": "USS Gerald R. Ford",
+    "n": 78,
+    "orig": "INT",
+    "s": "wiki_navy",
+    "c": "ت",
+    "gen": 2,
+    "cat": "carrier"
+   },
+   {
+    "m": "USS Gonzalez",
+    "n": 66,
+    "orig": "INT",
+    "s": "wiki_navy",
+    "c": "ت",
+    "gen": 2,
+    "cat": "destroyer"
+   },
+   {
+    "m": "USS Gravely",
+    "n": 107,
+    "orig": "INT",
+    "s": "wiki_navy",
+    "c": "ت",
+    "gen": 2,
+    "cat": "destroyer"
+   },
+   {
+    "m": "USS Green Bay",
+    "n": 20,
+    "orig": "INT",
+    "s": "wiki_navy",
+    "c": "ت",
+    "gen": 2,
+    "cat": "amphib"
+   },
+   {
+    "m": "USS Gridley",
+    "n": 101,
+    "orig": "INT",
+    "s": "wiki_navy",
+    "c": "ت",
+    "gen": 2,
+    "cat": "destroyer"
+   },
+   {
+    "m": "USS Gunston Hall",
+    "n": 44,
+    "orig": "INT",
+    "s": "wiki_navy",
+    "c": "ت",
+    "gen": 2,
+    "cat": "amphib"
+   },
+   {
+    "m": "USS Halsey",
+    "n": 97,
+    "orig": "INT",
+    "s": "wiki_navy",
+    "c": "ت",
+    "gen": 2,
+    "cat": "destroyer"
+   },
+   {
+    "m": "USS Harpers Ferry",
+    "n": 49,
+    "orig": "INT",
+    "s": "wiki_navy",
+    "c": "ت",
+    "gen": 2,
+    "cat": "amphib"
+   },
+   {
+    "m": "USS Harry S. Truman",
+    "n": 75,
+    "orig": "INT",
+    "s": "wiki_navy",
+    "c": "ت",
+    "gen": 2,
+    "cat": "carrier"
+   },
+   {
+    "m": "USS Higgins",
+    "n": 76,
+    "orig": "INT",
+    "s": "wiki_navy",
+    "c": "ت",
+    "gen": 2,
+    "cat": "destroyer"
+   },
+   {
+    "m": "USS Hopper",
+    "n": 70,
+    "orig": "INT",
+    "s": "wiki_navy",
+    "c": "ت",
+    "gen": 2,
+    "cat": "destroyer"
+   },
+   {
+    "m": "USS Howard",
+    "n": 83,
+    "orig": "INT",
+    "s": "wiki_navy",
+    "c": "ت",
+    "gen": 2,
+    "cat": "destroyer"
+   },
+   {
+    "m": "USS Iwo Jima",
+    "n": 7,
+    "orig": "INT",
+    "s": "wiki_navy",
+    "c": "ت",
+    "gen": 2,
+    "cat": "amphib"
+   },
+   {
+    "m": "USS James E. Williams",
+    "n": 95,
+    "orig": "INT",
+    "s": "wiki_navy",
+    "c": "ت",
+    "gen": 2,
+    "cat": "destroyer"
+   },
+   {
+    "m": "USS Jason Dunham",
+    "n": 109,
+    "orig": "INT",
+    "s": "wiki_navy",
+    "c": "ت",
+    "gen": 2,
+    "cat": "destroyer"
+   },
+   {
+    "m": "USS Jimmy Carter",
+    "n": 23,
+    "orig": "INT",
+    "s": "wiki_navy",
+    "c": "ت",
+    "gen": 2,
+    "cat": "sub"
+   },
+   {
+    "m": "USS John C. Stennis",
+    "n": 74,
+    "orig": "INT",
+    "s": "wiki_navy",
+    "c": "ت",
+    "gen": 2,
+    "cat": "carrier"
+   },
+   {
+    "m": "USS John Finn",
+    "n": 113,
+    "orig": "INT",
+    "s": "wiki_navy",
+    "c": "ت",
+    "gen": 2,
+    "cat": "destroyer"
+   },
+   {
+    "m": "USS John P. Murtha",
+    "n": 26,
+    "orig": "INT",
+    "s": "wiki_navy",
+    "c": "ت",
+    "gen": 2,
+    "cat": "amphib"
+   },
+   {
+    "m": "USS John Paul Jones",
+    "n": 53,
+    "orig": "INT",
+    "s": "wiki_navy",
+    "c": "ت",
+    "gen": 2,
+    "cat": "destroyer"
+   },
+   {
+    "m": "USS John S. McCain",
+    "n": 56,
+    "orig": "INT",
+    "s": "wiki_navy",
+    "c": "ت",
+    "gen": 2,
+    "cat": "destroyer"
+   },
+   {
+    "m": "USS Kearsarge",
+    "n": 3,
+    "orig": "INT",
+    "s": "wiki_navy",
+    "c": "ت",
+    "gen": 2,
+    "cat": "amphib"
+   },
+   {
+    "m": "USS Kidd",
+    "n": 100,
+    "orig": "INT",
+    "s": "wiki_navy",
+    "c": "ت",
+    "gen": 2,
+    "cat": "destroyer"
+   },
+   {
+    "m": "USS Laboon",
+    "n": 58,
+    "orig": "INT",
+    "s": "wiki_navy",
+    "c": "ت",
+    "gen": 2,
+    "cat": "destroyer"
+   },
+   {
+    "m": "USS Lassen",
+    "n": 82,
+    "orig": "INT",
+    "s": "wiki_navy",
+    "c": "ت",
+    "gen": 2,
+    "cat": "destroyer"
+   },
+   {
+    "m": "USS Mahan",
+    "n": 72,
+    "orig": "INT",
+    "s": "wiki_navy",
+    "c": "ت",
+    "gen": 2,
+    "cat": "destroyer"
+   },
+   {
+    "m": "USS Makin Island",
+    "n": 8,
+    "orig": "INT",
+    "s": "wiki_navy",
+    "c": "ت",
+    "gen": 2,
+    "cat": "amphib"
+   },
+   {
+    "m": "USS Mason",
+    "n": 87,
+    "orig": "INT",
+    "s": "wiki_navy",
+    "c": "ت",
+    "gen": 2,
+    "cat": "destroyer"
+   },
+   {
+    "m": "USS McCampbell",
+    "n": 85,
+    "orig": "INT",
+    "s": "wiki_navy",
+    "c": "ت",
+    "gen": 2,
+    "cat": "destroyer"
+   },
+   {
+    "m": "USS McFaul",
+    "n": 74,
+    "orig": "INT",
+    "s": "wiki_navy",
+    "c": "ت",
+    "gen": 2,
+    "cat": "destroyer"
+   },
+   {
+    "m": "USS Mesa Verde",
+    "n": 19,
+    "orig": "INT",
+    "s": "wiki_navy",
+    "c": "ت",
+    "gen": 2,
+    "cat": "amphib"
+   },
+   {
+    "m": "USS Michael Murphy",
+    "n": 112,
+    "orig": "INT",
+    "s": "wiki_navy",
+    "c": "ت",
+    "gen": 2,
+    "cat": "destroyer"
+   },
+   {
+    "m": "USS Milius",
+    "n": 69,
+    "orig": "INT",
+    "s": "wiki_navy",
+    "c": "ت",
+    "gen": 2,
+    "cat": "destroyer"
+   },
+   {
+    "m": "USS Mitscher",
+    "n": 57,
+    "orig": "INT",
+    "s": "wiki_navy",
+    "c": "ت",
+    "gen": 2,
+    "cat": "destroyer"
+   },
+   {
+    "m": "USS Momsen",
+    "n": 92,
+    "orig": "INT",
+    "s": "wiki_navy",
+    "c": "ت",
+    "gen": 2,
+    "cat": "destroyer"
+   },
+   {
+    "m": "USS Mount Whitney",
+    "n": 20,
+    "orig": "INT",
+    "s": "wiki_navy",
+    "c": "ت",
+    "gen": 2,
+    "cat": "amphib"
+   },
+   {
+    "m": "USS Mustin",
+    "n": 89,
+    "orig": "INT",
+    "s": "wiki_navy",
+    "c": "ت",
+    "gen": 2,
+    "cat": "destroyer"
+   },
+   {
+    "m": "USS New Orleans",
+    "n": 18,
+    "orig": "INT",
+    "s": "wiki_navy",
+    "c": "ت",
+    "gen": 2,
+    "cat": "amphib"
+   },
+   {
+    "m": "USS New York",
+    "n": 21,
+    "orig": "INT",
+    "s": "wiki_navy",
+    "c": "ت",
+    "gen": 2,
+    "cat": "amphib"
+   },
+   {
+    "m": "USS Nimitz",
+    "n": 68,
+    "orig": "INT",
+    "s": "wiki_navy",
+    "c": "ت",
+    "gen": 2,
+    "cat": "carrier"
+   },
+   {
+    "m": "USS Nitze",
+    "n": 94,
+    "orig": "INT",
+    "s": "wiki_navy",
+    "c": "ت",
+    "gen": 2,
+    "cat": "destroyer"
+   },
+   {
+    "m": "USS O'Kane",
+    "n": 77,
+    "orig": "INT",
+    "s": "wiki_navy",
+    "c": "ت",
+    "gen": 2,
+    "cat": "destroyer"
+   },
+   {
+    "m": "USS Oak Hill",
+    "n": 51,
+    "orig": "INT",
+    "s": "wiki_navy",
+    "c": "ت",
+    "gen": 2,
+    "cat": "amphib"
+   },
+   {
+    "m": "USS Oscar Austin",
+    "n": 79,
+    "orig": "INT",
+    "s": "wiki_navy",
+    "c": "ت",
+    "gen": 2,
+    "cat": "destroyer"
+   },
+   {
+    "m": "USS Paul Hamilton",
+    "n": 60,
+    "orig": "INT",
+    "s": "wiki_navy",
+    "c": "ت",
+    "gen": 2,
+    "cat": "destroyer"
+   },
+   {
+    "m": "USS Paul Ignatius",
+    "n": 117,
+    "orig": "INT",
+    "s": "wiki_navy",
+    "c": "ت",
+    "gen": 2,
+    "cat": "destroyer"
+   },
+   {
+    "m": "USS Pearl Harbor",
+    "n": 52,
+    "orig": "INT",
+    "s": "wiki_navy",
+    "c": "ت",
+    "gen": 2,
+    "cat": "amphib"
+   },
+   {
+    "m": "USS Pinckney",
+    "n": 91,
+    "orig": "INT",
+    "s": "wiki_navy",
+    "c": "ت",
+    "gen": 2,
+    "cat": "destroyer"
+   },
+   {
+    "m": "USS Porter",
+    "n": 78,
+    "orig": "INT",
+    "s": "wiki_navy",
+    "c": "ت",
+    "gen": 2,
+    "cat": "destroyer"
+   },
+   {
+    "m": "USS Portland",
+    "n": 27,
+    "orig": "INT",
+    "s": "wiki_navy",
+    "c": "ت",
+    "gen": 2,
+    "cat": "amphib"
+   },
+   {
+    "m": "USS Preble",
+    "n": 88,
+    "orig": "INT",
+    "s": "wiki_navy",
+    "c": "ت",
+    "gen": 2,
+    "cat": "destroyer"
+   },
+   {
+    "m": "USS Rafael Peralta",
+    "n": 115,
+    "orig": "INT",
+    "s": "wiki_navy",
+    "c": "ت",
+    "gen": 2,
+    "cat": "destroyer"
+   },
+   {
+    "m": "USS Ralph Johnson",
+    "n": 114,
+    "orig": "INT",
+    "s": "wiki_navy",
+    "c": "ت",
+    "gen": 2,
+    "cat": "destroyer"
+   },
+   {
+    "m": "USS Ramage",
+    "n": 61,
+    "orig": "INT",
+    "s": "wiki_navy",
+    "c": "ت",
+    "gen": 2,
+    "cat": "destroyer"
+   },
+   {
+    "m": "USS Richard M. McCool Jr.",
+    "n": 29,
+    "orig": "INT",
+    "s": "wiki_navy",
+    "c": "ت",
+    "gen": 2,
+    "cat": "amphib"
+   },
+   {
+    "m": "USS Ronald Reagan",
+    "n": 76,
+    "orig": "INT",
+    "s": "wiki_navy",
+    "c": "ت",
+    "gen": 2,
+    "cat": "carrier"
+   },
+   {
+    "m": "USS Roosevelt",
+    "n": 80,
+    "orig": "INT",
+    "s": "wiki_navy",
+    "c": "ت",
+    "gen": 2,
+    "cat": "destroyer"
+   },
+   {
+    "m": "USS Ross",
+    "n": 71,
+    "orig": "INT",
+    "s": "wiki_navy",
+    "c": "ت",
+    "gen": 2,
+    "cat": "destroyer"
+   },
+   {
+    "m": "USS Rushmore",
+    "n": 47,
+    "orig": "INT",
+    "s": "wiki_navy",
+    "c": "ت",
+    "gen": 2,
+    "cat": "amphib"
+   },
+   {
+    "m": "USS Russell",
+    "n": 59,
+    "orig": "INT",
+    "s": "wiki_navy",
+    "c": "ت",
+    "gen": 2,
+    "cat": "destroyer"
+   },
+   {
+    "m": "USS Sampson",
+    "n": 102,
+    "orig": "INT",
+    "s": "wiki_navy",
+    "c": "ت",
+    "gen": 2,
+    "cat": "destroyer"
+   },
+   {
+    "m": "USS San Antonio",
+    "n": 17,
+    "orig": "INT",
+    "s": "wiki_navy",
+    "c": "ت",
+    "gen": 2,
+    "cat": "amphib"
+   },
+   {
+    "m": "USS San Diego",
+    "n": 22,
+    "orig": "INT",
+    "s": "wiki_navy",
+    "c": "ت",
+    "gen": 2,
+    "cat": "amphib"
+   },
+   {
+    "m": "USS Seawolf",
+    "n": 21,
+    "orig": "INT",
+    "s": "wiki_navy",
+    "c": "ت",
+    "gen": 2,
+    "cat": "sub"
+   },
+   {
+    "m": "USS Shoup",
+    "n": 86,
+    "orig": "INT",
+    "s": "wiki_navy",
+    "c": "ت",
+    "gen": 2,
+    "cat": "destroyer"
+   },
+   {
+    "m": "USS Somerset",
+    "n": 25,
+    "orig": "INT",
+    "s": "wiki_navy",
+    "c": "ت",
+    "gen": 2,
+    "cat": "amphib"
+   },
+   {
+    "m": "USS Spruance",
+    "n": 111,
+    "orig": "INT",
+    "s": "wiki_navy",
+    "c": "ت",
+    "gen": 2,
+    "cat": "destroyer"
+   },
+   {
+    "m": "USS Sterett",
+    "n": 104,
+    "orig": "INT",
+    "s": "wiki_navy",
+    "c": "ت",
+    "gen": 2,
+    "cat": "destroyer"
+   },
+   {
+    "m": "USS Stethem",
+    "n": 63,
+    "orig": "INT",
+    "s": "wiki_navy",
+    "c": "ت",
+    "gen": 2,
+    "cat": "destroyer"
+   },
+   {
+    "m": "USS Stockdale",
+    "n": 106,
+    "orig": "INT",
+    "s": "wiki_navy",
+    "c": "ت",
+    "gen": 2,
+    "cat": "destroyer"
+   },
+   {
+    "m": "USS Stout",
+    "n": 55,
+    "orig": "INT",
+    "s": "wiki_navy",
+    "c": "ت",
+    "gen": 2,
+    "cat": "destroyer"
+   },
+   {
+    "m": "USS The Sullivans",
+    "n": 68,
+    "orig": "INT",
+    "s": "wiki_navy",
+    "c": "ت",
+    "gen": 2,
+    "cat": "destroyer"
+   },
+   {
+    "m": "USS Theodore Roosevelt",
+    "n": 71,
+    "orig": "INT",
+    "s": "wiki_navy",
+    "c": "ت",
+    "gen": 2,
+    "cat": "carrier"
+   },
+   {
+    "m": "USS Thomas Hudner",
+    "n": 116,
+    "orig": "INT",
+    "s": "wiki_navy",
+    "c": "ت",
+    "gen": 2,
+    "cat": "destroyer"
+   },
+   {
+    "m": "USS Tortuga",
+    "n": 46,
+    "orig": "INT",
+    "s": "wiki_navy",
+    "c": "ت",
+    "gen": 3,
+    "cat": "amphib"
+   },
+   {
+    "m": "USS Tripoli",
+    "n": 7,
+    "orig": "INT",
+    "s": "wiki_navy",
+    "c": "ت",
+    "gen": 2,
+    "cat": "amphib"
+   },
+   {
+    "m": "USS Truxtun",
+    "n": 103,
+    "orig": "INT",
+    "s": "wiki_navy",
+    "c": "ت",
+    "gen": 2,
+    "cat": "destroyer"
+   },
+   {
+    "m": "USS Wasp",
+    "n": 1,
+    "orig": "INT",
+    "s": "wiki_navy",
+    "c": "ت",
+    "gen": 2,
+    "cat": "amphib"
+   },
+   {
+    "m": "USS Wayne E. Meyer",
+    "n": 108,
+    "orig": "INT",
+    "s": "wiki_navy",
+    "c": "ت",
+    "gen": 2,
+    "cat": "destroyer"
+   },
+   {
+    "m": "USS William P. Lawrence",
+    "n": 110,
+    "orig": "INT",
+    "s": "wiki_navy",
+    "c": "ت",
+    "gen": 2,
+    "cat": "destroyer"
+   },
+   {
+    "m": "USS Winston S. Churchill",
+    "n": 81,
+    "orig": "INT",
+    "s": "wiki_navy",
+    "c": "ت",
+    "gen": 2,
+    "cat": "destroyer"
+   }
+  ]
+ },
+ "ind": {
+  "tech": {
+   "arm": 5,
+   "air": 5,
+   "uav": 5,
+   "msl": 5,
+   "navy": 5,
+   "ew": 5,
+   "ind": 5
+  },
+  "makes": [
+   "كل شي: F-35، أبرامز، باتريوت، صواريخ عابرة، حاملات"
+  ],
+  "s": "tierA",
+  "c": "ت"
+ },
+ "pol": {
+  "factions": [
+   "army",
+   "parties",
+   "street",
+   "biz"
+  ],
+  "stab": {
+   "v": 62,
+   "s": "tierA",
+   "c": "ت"
+  },
+  "warHome": [],
+  "insurgency": "استقطاب سياسي حاد"
+ },
+ "rel": {
+  "AFG": -25,
+  "ALB": 40,
+  "ARE": 60,
+  "AUS": 80,
+  "BEL": 40,
+  "BGR": 40,
+  "BLR": -25,
+  "BRA": 15,
+  "CAN": 55,
+  "CHN": -40,
+  "CUB": -70,
+  "CZE": 40,
+  "DEU": 40,
+  "DNK": 40,
+  "EGY": 45,
+  "ESP": 40,
+  "EST": 40,
+  "FIN": 40,
+  "FRA": 40,
+  "GBR": 80,
+  "GRC": 40,
+  "HRV": 40,
+  "HUN": 40,
+  "IND": 40,
+  "IRN": -95,
+  "IRQ": 25,
+  "ISR": 90,
+  "ITA": 40,
+  "JOR": 65,
+  "JPN": 80,
+  "KOR": 75,
+  "LTU": 40,
+  "LVA": 40,
+  "MEX": 35,
+  "MKD": 40,
+  "MMR": -25,
+  "NLD": 40,
+  "NOR": 40,
+  "PAK": 25,
+  "PHL": 50,
+  "POL": 40,
+  "PRK": -85,
+  "PRT": 40,
+  "QAT": 60,
+  "ROU": 40,
+  "RUS": -45,
+  "SAU": 60,
+  "SVK": 40,
+  "SVN": 40,
+  "SWE": 40,
+  "SYR": 20,
+  "TUR": 30,
+  "TWN": 70,
+  "UKR": 45,
+  "VEN": 35,
+  "ZAF": -10
+ },
+ "treaties": [
+  "NATO",
+  "PACT_AUS",
+  "PACT_JPN",
+  "PACT_KOR",
+  "PACT_PHL",
+  "PACT_VEN"
+ ],
+ "sanctions": [],
+ "conflicts": [
+  "iran_war"
+ ],
+ "notes": ""
+}

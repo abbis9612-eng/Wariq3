@@ -1,0 +1,1334 @@
+{
+ "id": "IND",
+ "ar": "الهند",
+ "en": "India",
+ "tier": "A",
+ "asOf": "2026-11",
+ "src": {
+  "wiki_air": {
+   "t": "Wikipedia: List of active Indian military aircraft",
+   "u": "https://en.wikipedia.org/wiki/List_of_active_Indian_military_aircraft?oldid=1380516996",
+   "y": 2026,
+   "note": "نسخة الصفحة بتاريخ السحب؛ أرقام ويكيبيديا تنراجع ويا مصادر ثانية"
+  },
+  "wiki_army": {
+   "t": "Wikipedia: List of equipment of the Indian Army",
+   "u": "https://en.wikipedia.org/wiki/List_of_equipment_of_the_Indian_Army?oldid=1385985382",
+   "y": 2026,
+   "note": "نسخة الصفحة بتاريخ السحب؛ أرقام ويكيبيديا تنراجع ويا مصادر ثانية"
+  },
+  "wiki_navy": {
+   "t": "Wikipedia: List of active Indian Navy ships",
+   "u": "https://en.wikipedia.org/wiki/List_of_active_Indian_Navy_ships?oldid=1385812889",
+   "y": 2026,
+   "note": "نسخة الصفحة بتاريخ السحب؛ أرقام ويكيبيديا تنراجع ويا مصادر ثانية"
+  },
+  "iiss_eq": {
+   "t": "Wikipedia: List of countries by level of military equipment (من IISS Military Balance ومصادر ثانية)",
+   "u": "https://en.wikipedia.org/wiki/List_of_countries_by_level_of_military_equipment?oldid=1384804191",
+   "y": 2025
+  },
+  "iiss_pers": {
+   "t": "Wikipedia: List of countries by number of military and paramilitary personnel (جدول IISS Military Balance)",
+   "u": "https://en.wikipedia.org/wiki/List_of_countries_by_number_of_military_and_paramilitary_personnel?oldid=1380910017",
+   "y": 2025
+  },
+  "wb": {
+   "t": "World Bank WDI (SP.POP.TOTL, NY.GDP.MKTP.CD, NY.GDP.MKTP.KD.ZG, MS.MIL.XPND.CD/GD.ZS ← SIPRI, MS.MIL.TOTL.P1, FP.CPI.TOTL.ZG)",
+   "u": "https://api.worldbank.org/v2/",
+   "y": 2026
+  },
+  "govt": {
+   "t": "تصنيف نظام الحكم: دساتير الدول + CIA World Factbook «Government type» + V-Dem/Freedom House لدرجة الحرية (تصنيف المصمم 2026)",
+   "u": "https://www.cia.gov/the-world-factbook/field/government-type/",
+   "y": 2026
+  },
+  "leaders": {
+   "t": "Wikipedia: List of current heads of state and government",
+   "u": "https://en.wikipedia.org/wiki/List_of_current_heads_of_state_and_government?oldid=1386623862",
+   "y": 2026,
+   "note": "سحب نوفمبر 2026"
+  },
+  "rules": {
+   "t": "قواعد من blocs.json وconflicts.json وsanctions.json (تكتل دفاعي +40، معاهدة +50، حرب −90، عقوبات ثقيلة −40...)",
+   "u": "data/world/",
+   "y": 2026
+  },
+  "relk": {
+   "t": "تقدير المصمم للعلاقات الثنائية المعروفة (تشرين الثاني 2026): حروب، نزاعات حدودية، تحالفات غير رسمية، تطبيع، عداء تاريخي",
+   "u": "https://en.wikipedia.org/wiki/Foreign_relations_by_country",
+   "y": 2026
+  },
+  "tierA": {
+   "t": "تقدير المصمم (تشرين الثاني 2026) لصناعة السلاح والاستقرار: SIPRI Arms Transfers Database (أكبر المصدّرين 2020–24)، SIPRI Top 100 Arms-Producing Companies، Fragile States Index 2025، أخبار 2026",
+   "u": "https://www.sipri.org/databases/armstransfers",
+   "y": 2026
+  }
+ },
+ "gov": {
+  "type": "parl",
+  "ar": "جمهورية برلمانية",
+  "free": 1,
+  "hos": {
+   "role": "President",
+   "name": "Droupadi Murmu"
+  },
+  "hog": {
+   "role": "Prime Minister",
+   "name": "Narendra Modi"
+  },
+  "s": "govt,leaders",
+  "c": "ح"
+ },
+ "pop": {
+  "v": 1463865525,
+  "y": 2025,
+  "s": "wb",
+  "c": "ح"
+ },
+ "eco": {
+  "gdpBusd": {
+   "v": 3956.1,
+   "y": 2025,
+   "s": "wb",
+   "c": "ح"
+  },
+  "growth": {
+   "v": 7.6,
+   "y": 2025,
+   "s": "wb",
+   "c": "ح"
+  },
+  "infl": {
+   "v": 2.4,
+   "y": 2025,
+   "s": "wb",
+   "c": "ح"
+  },
+  "oilRentPct": {
+   "v": 0.3,
+   "y": 2021,
+   "s": "wb",
+   "c": "ح"
+  }
+ },
+ "mil": {
+  "budgetBusd": {
+   "v": 92.06,
+   "y": 2025,
+   "s": "wb",
+   "c": "ح"
+  },
+  "budgetPctGdp": {
+   "v": 2.3,
+   "y": 2025,
+   "s": "wb",
+   "c": "ح"
+  },
+  "personnelWB": {
+   "v": 3068000,
+   "y": 2020,
+   "s": "wb",
+   "c": "ح"
+  },
+  "sum": {
+   "tanks": {
+    "v": 4664,
+    "s": "iiss_eq",
+    "c": "ت"
+   },
+   "carriers": {
+    "v": 2,
+    "s": "iiss_eq",
+    "c": "ت"
+   },
+   "amphib": {
+    "v": 19,
+    "s": "iiss_eq",
+    "c": "ت"
+   },
+   "cruisers": {
+    "v": 0,
+    "s": "iiss_eq",
+    "c": "ت"
+   },
+   "destroyers": {
+    "v": 13,
+    "s": "iiss_eq",
+    "c": "ت"
+   },
+   "frigates": {
+    "v": 19,
+    "s": "iiss_eq",
+    "c": "ت"
+   },
+   "corvettes": {
+    "v": 22,
+    "s": "iiss_eq",
+    "c": "ت"
+   },
+   "subNuc": {
+    "v": 3,
+    "s": "iiss_eq",
+    "c": "ت"
+   },
+   "subs": {
+    "v": 17,
+    "s": "iiss_eq",
+    "c": "ت"
+   },
+   "combatAir": {
+    "v": 926,
+    "s": "iiss_eq",
+    "c": "ت"
+   },
+   "attackHeli": {
+    "v": 127,
+    "s": "iiss_eq",
+    "c": "ت"
+   },
+   "sats": {
+    "v": 61,
+    "s": "iiss_eq",
+    "c": "ت"
+   },
+   "active": {
+    "v": 1500700,
+    "s": "iiss_pers",
+    "c": "ت"
+   },
+   "reserve": {
+    "v": 1155000,
+    "s": "iiss_pers",
+    "c": "ت"
+   },
+   "para": {
+    "v": 2532050,
+    "s": "iiss_pers",
+    "c": "ت"
+   }
+  },
+  "land": [
+   {
+    "m": "Arjun Mk 1Arjun Mk 1A",
+    "n": 124,
+    "orig": "IND",
+    "s": "wiki_army",
+    "c": "ت",
+    "note": "Status: In service. 5 Mk 1A to be inducted in 2024. 118 Mk 1A on order",
+    "gen": 2,
+    "cat": "tank"
+   },
+   {
+    "m": "T-90S Bhishma T-90S Bhishma Mk 2 T-90 Bhishma Mk 3",
+    "n": 1300,
+    "orig": "RUS",
+    "s": "wiki_army",
+    "c": "ت",
+    "note": "Status: In service. Initial orders were a combination of Russian-made and locally assembled units before being licence-produced by Heavy Veh",
+    "gen": 4,
+    "cat": "tank"
+   },
+   {
+    "m": "T-72M1 AjeyaT-72 Ajeya Mk 2 T-72 Combat Improved Ajeya",
+    "n": 2418,
+    "orig": "SUN",
+    "s": "wiki_army",
+    "c": "ت",
+    "note": "Status: In service. To be replaced by Future Ready Combat Vehicle and Future Main Battle Tank programmes. 968 T72M1 upgraded by HVF. 1400 T-",
+    "gen": 3,
+    "cat": "tank"
+   },
+   {
+    "m": "BMP-2 Sarath",
+    "n": 2400,
+    "orig": "IND",
+    "s": "wiki_army",
+    "c": "ت",
+    "note": "Status: In service. All BMP-2/2K vehicles are to be upgraded to BMP-2M standard. Manufactured locally in India by Ordnance Factory Medak. In",
+    "gen": 3,
+    "cat": "ifv"
+   },
+   {
+    "m": "Tata Kestrel",
+    "n": 15,
+    "orig": "IND",
+    "s": "wiki_army",
+    "c": "ت",
+    "note": "Status: In service. 9 on order with additional 105 planned.",
+    "gen": 2,
+    "cat": "ifv"
+   },
+   {
+    "m": "NBC Reconnaissance Vehicle",
+    "n": 16,
+    "orig": "IND",
+    "s": "wiki_army",
+    "c": "ت",
+    "note": "Status: In service. BMP-2 based CRBN developed by CVRDE and produced by Ordnance Factory Medak.",
+    "gen": 2,
+    "cat": "apc"
+   },
+   {
+    "m": "Kalyani M4",
+    "n": 126,
+    "orig": "IND",
+    "s": "wiki_army",
+    "c": "ت",
+    "note": "Status: In Service. Additional units were ordered for the deployment along the LAC. To be equipped with Spike anti-tank guided missile and 2",
+    "gen": 2,
+    "cat": "apc"
+   },
+   {
+    "m": "Quick Reaction Fighting Vehicle",
+    "n": 36,
+    "orig": "IND",
+    "s": "wiki_army",
+    "c": "ت",
+    "note": "Status: In service. First batch of Quick Reaction Fighting Vehicle inducted.",
+    "gen": 2,
+    "cat": "apc"
+   },
+   {
+    "m": "Casspir",
+    "n": 200,
+    "orig": "ZAF",
+    "s": "wiki_army",
+    "c": "ت",
+    "note": "Status: In service.",
+    "gen": 2,
+    "cat": "apc"
+   },
+   {
+    "m": "OFB Aditya",
+    "n": 1600,
+    "orig": "IND",
+    "s": "wiki_army",
+    "c": "ت",
+    "note": "Status: In service. Based on Casspir. Manufactured at Ordnance Factory Medak and Vehicle Factory Jabalpur.",
+    "gen": 2,
+    "cat": "apc"
+   },
+   {
+    "m": "K9 Vajra-T",
+    "n": 100,
+    "orig": "KOR",
+    "s": "wiki_army",
+    "c": "ت",
+    "note": "Status: In service. 1st batch of 100 units ordered in 2016. Delivered by 2021. 2nd batch for 100 units ordered in December 2024. Additional ",
+    "gen": 2,
+    "cat": "spg"
+   },
+   {
+    "m": "BAE Systems M777",
+    "n": 145,
+    "orig": "GBR",
+    "s": "wiki_army",
+    "c": "ت",
+    "note": "Status: In service. Total 145 ordered. Assembled in India by Mahindra Defense",
+    "gen": 2,
+    "cat": "towed"
+   },
+   {
+    "m": "Dhanush",
+    "n": 36,
+    "orig": "IND",
+    "s": "wiki_army",
+    "c": "ت",
+    "note": "Status: In service. 114 guns on order. Order may increase to 414.",
+    "gen": 2,
+    "cat": "towed"
+   },
+   {
+    "m": "Haubits FH77 B02",
+    "n": 300,
+    "orig": "SWE",
+    "s": "wiki_army",
+    "c": "ت",
+    "note": "Status: In service. To be replaced by end of 2025 with OFB Dhanush howitzer. Gun made by Bofors. 410 howitzers acquired from 1986 to 1991, r",
+    "gen": 2,
+    "cat": "towed"
+   },
+   {
+    "m": "D-30",
+    "n": 520,
+    "orig": "SUN",
+    "s": "wiki_army",
+    "c": "ت",
+    "note": "Status: In service.",
+    "gen": 2,
+    "cat": "towed"
+   },
+   {
+    "m": "M-46 Soltam",
+    "n": 180,
+    "orig": "SUN",
+    "s": "wiki_army",
+    "c": "ت",
+    "note": "Status: in service. 180 units upgraded to 155 mm standard by Soltam. Upgunned 130 mm M-46",
+    "gen": 2,
+    "cat": "towed"
+   },
+   {
+    "m": "IOB Sharang",
+    "n": 159,
+    "orig": "SUN",
+    "s": "wiki_army",
+    "c": "ت",
+    "note": "Status: In service. 300 on order Upgunned 130 mm M-46. Further induction halted in Sept 25 after defects were found.",
+    "gen": 2,
+    "cat": "towed"
+   },
+   {
+    "m": "OFB Indian Field Gun Mk 1/2/3",
+    "n": 2400,
+    "orig": "IND",
+    "s": "wiki_army",
+    "c": "ت",
+    "note": "Status: In service.",
+    "gen": 2,
+    "cat": "towed"
+   },
+   {
+    "m": "M-46",
+    "n": 1000,
+    "orig": "IND",
+    "s": "wiki_army",
+    "c": "ت",
+    "note": "Status: in service. 180 upgraded to 155 mm standard by Soltam in 2008. 300 M-46 guns being upgraded by OFB to 155 mm/45 calibre \"Sharang\" gu",
+    "gen": 2,
+    "cat": "towed"
+   },
+   {
+    "m": "محلي (بلا اسم)",
+    "n": 200,
+    "orig": "IND",
+    "s": "wiki_army",
+    "c": "ت",
+    "note": "RFP in November 2023 Potential guns: IFG Mk2 SPH (6×6 truck) Garuda 105 (4×4 truck) Garuda 105 V2 (4×4 AFV)",
+    "gen": 2,
+    "cat": "spg"
+   },
+   {
+    "m": "Towed Gun System (TGS)",
+    "n": 1,
+    "orig": "IND",
+    "s": "wiki_army",
+    "c": "ت",
+    "note": "Future mainstay gun of the Indian Army artillery. Procurement of 400 guns cleared by Ministry of Defence. Tender for 400 guns and towing veh",
+    "gen": 2,
+    "cat": "towed"
+   },
+   {
+    "m": "Mounted Gun System (MGS)",
+    "n": 814,
+    "orig": "IND",
+    "s": "wiki_army",
+    "c": "ت",
+    "note": "Prototypes based on the Dhanush, the ATAGS exist. Foreign proposals based on the CAESAr, the ATMOS 2000, Archer.",
+    "gen": 2,
+    "cat": "spg"
+   },
+   {
+    "m": "Agnibaan",
+    "n": 150,
+    "orig": "SUN",
+    "s": "wiki_army",
+    "c": "ت",
+    "note": "Status: In service. Indian upgraded version of the Soviet BM-21 Grad. Upgraded locally and firing range extended up to 40 km by DRDO. 5 regi",
+    "gen": 2,
+    "cat": "mlrs"
+   },
+   {
+    "m": "Pinaka MBRL",
+    "n": 126,
+    "orig": "IND",
+    "s": "wiki_army",
+    "c": "ت",
+    "note": "Status: In service. Mark 1: 37–45 km range; Guided: 75–80 km range. As of 2014, about 5,000 missiles are being produced every year. 7 regime",
+    "gen": 2,
+    "cat": "mlrs"
+   },
+   {
+    "m": "Smerch 9K58 MBRL",
+    "n": 42,
+    "orig": "IND",
+    "s": "wiki_army",
+    "c": "ت",
+    "note": "Status: In service. Maximum range: 90 km. 3 regiments active as of 2024 (14 launchers each). A regiment has 3 batteries (4 launchers) and 2 ",
+    "gen": 2,
+    "cat": "mlrs"
+   },
+   {
+    "m": "Suryastra",
+    "n": 2,
+    "orig": "IND",
+    "s": "wiki_army",
+    "c": "ت",
+    "note": "Status: Live fire trials. Maximum range: 150 km and 300 km.",
+    "gen": 2,
+    "cat": "mlrs"
+   },
+   {
+    "m": "ZU-23-2",
+    "n": 320,
+    "orig": "SUN",
+    "s": "wiki_army",
+    "c": "ت",
+    "note": "Status: In service. Upgraded locally with electro-optical fire control system for detecting, tracking and engaging targets with precision.",
+    "gen": 2,
+    "cat": "towed"
+   }
+  ],
+  "air": [
+   {
+    "m": "Dassault Mirage 2000 (Mirage 2000H/I)",
+    "n": 36,
+    "orig": "FRA",
+    "s": "wiki_air",
+    "c": "ت",
+    "note": "All aircraft being upgraded to 2000I variant",
+    "gen": 3,
+    "cat": "fighter"
+   },
+   {
+    "m": "Dassault Rafale (Rafale EH)",
+    "n": 28,
+    "orig": "FRA",
+    "s": "wiki_air",
+    "c": "ت",
+    "note": "Single-seat version, 114 planned",
+    "gen": 4,
+    "cat": "fighter"
+   },
+   {
+    "m": "Dassault Rafale (Rafale DH)",
+    "n": 8,
+    "orig": "FRA",
+    "s": "wiki_air",
+    "c": "ت",
+    "note": "Two-seat version",
+    "gen": 4,
+    "cat": "fighter"
+   },
+   {
+    "m": "HAL Tejas (Tejas Mk 1)",
+    "n": 30,
+    "orig": "IND",
+    "s": "wiki_air",
+    "c": "ت",
+    "gen": 2,
+    "cat": "fighter"
+   },
+   {
+    "m": "Mikoyan MiG-29 (MiG-29B)",
+    "n": 40,
+    "orig": "SUN",
+    "s": "wiki_air",
+    "c": "ت",
+    "gen": 3,
+    "cat": "fighter"
+   },
+   {
+    "m": "Mikoyan MiG-29 (MiG-29UPG)",
+    "n": 12,
+    "orig": "SUN",
+    "s": "wiki_air",
+    "c": "ت",
+    "note": "Upgraded version of MiG-29B",
+    "gen": 3,
+    "cat": "fighter"
+   },
+   {
+    "m": "Mikoyan MiG-29 (MiG-29UB)",
+    "n": 7,
+    "orig": "SUN",
+    "s": "wiki_air",
+    "c": "ت",
+    "note": "Two-seat version",
+    "gen": 3,
+    "cat": "fighter"
+   },
+   {
+    "m": "Sukhoi Su-30MKI",
+    "n": 258,
+    "orig": "RUS",
+    "s": "wiki_air",
+    "c": "ت",
+    "note": "12 on order, 84 to be upgraded",
+    "gen": 4,
+    "cat": "fighter"
+   },
+   {
+    "m": "SEPECAT Jaguar (Jaguar-IM)",
+    "n": 8,
+    "orig": "GBR",
+    "s": "wiki_air",
+    "c": "ت",
+    "note": "Single-seat maritime strike version",
+    "gen": 2,
+    "cat": "attack"
+   },
+   {
+    "m": "SEPECAT Jaguar (Jaguar-IS)",
+    "n": 78,
+    "orig": "GBR",
+    "s": "wiki_air",
+    "c": "ت",
+    "note": "Single-seat ground attack version",
+    "gen": 2,
+    "cat": "attack"
+   },
+   {
+    "m": "HAL Tejas (Tejas Mk 1 Trainer)",
+    "n": 8,
+    "orig": "IND",
+    "s": "wiki_air",
+    "c": "ت",
+    "note": "10 on order",
+    "gen": 2,
+    "cat": "fighter"
+   },
+   {
+    "m": "SEPECAT Jaguar (Jaguar-IB)",
+    "n": 26,
+    "orig": "GBR",
+    "s": "wiki_air",
+    "c": "ت",
+    "note": "Two-seat training version",
+    "gen": 2,
+    "cat": "fighter"
+   },
+   {
+    "m": "Beriev A-50 (A-50EI)",
+    "n": 3,
+    "orig": "SUN",
+    "s": "wiki_air",
+    "c": "ت",
+    "gen": 2,
+    "cat": "awacs"
+   },
+   {
+    "m": "Embraer EMB-145I (Netra Mk1/Mk1A)",
+    "n": 3,
+    "orig": "BRA",
+    "s": "wiki_air",
+    "c": "ت",
+    "note": "6 planned",
+    "gen": 2,
+    "cat": "awacs"
+   },
+   {
+    "m": "Bombardier Global 5000",
+    "n": 2,
+    "orig": "CAN",
+    "s": "wiki_air",
+    "c": "ت",
+    "note": "Operated by Aviation Research Centre of R&AW",
+    "gen": 2,
+    "cat": "isr"
+   },
+   {
+    "m": "Boeing 707 (707-337C)",
+    "n": 1,
+    "orig": "USA",
+    "s": "wiki_air",
+    "c": "ت",
+    "note": "Operated by Aviation Research Centre of R&AW",
+    "gen": 2,
+    "cat": "isr"
+   },
+   {
+    "m": "Boeing 737 (737-700)",
+    "n": 2,
+    "orig": "USA",
+    "s": "wiki_air",
+    "c": "ت",
+    "note": "Operated by Aviation Research Centre of R&AW",
+    "gen": 2,
+    "cat": "isr"
+   },
+   {
+    "m": "Gulfstream III (III SRA)",
+    "n": 3,
+    "orig": "USA",
+    "s": "wiki_air",
+    "c": "ت",
+    "note": "Operated by Aviation Research Centre of R&AW",
+    "gen": 2,
+    "cat": "isr"
+   },
+   {
+    "m": "Gulfstream G100 (1125 Astra)",
+    "n": 2,
+    "orig": "ISR",
+    "s": "wiki_air",
+    "c": "ت",
+    "note": "Operated by Aviation Research Centre of R&AW",
+    "gen": 2,
+    "cat": "isr"
+   },
+   {
+    "m": "Boeing KC-135 (KC-135R)",
+    "n": 1,
+    "orig": "USA",
+    "s": "wiki_air",
+    "c": "ت",
+    "note": "Wet leased from Metrea",
+    "gen": 2,
+    "cat": "tanker"
+   },
+   {
+    "m": "Ilyushin Il-78 (Il-78MKI)",
+    "n": 6,
+    "orig": "SUN",
+    "s": "wiki_air",
+    "c": "ت",
+    "gen": 2,
+    "cat": "tanker"
+   },
+   {
+    "m": "Airbus A321 (A321-200)",
+    "n": 4,
+    "orig": "INT",
+    "s": "wiki_air",
+    "c": "ت",
+    "gen": 2,
+    "cat": "transport"
+   },
+   {
+    "m": "Boeing 777 (777-300ER)",
+    "n": 2,
+    "orig": "USA",
+    "s": "wiki_air",
+    "c": "ت",
+    "note": "Used as Air India One",
+    "gen": 2,
+    "cat": "transport"
+   },
+   {
+    "m": "Embraer Legacy 600 (Legacy 6000)",
+    "n": 4,
+    "orig": "BRA",
+    "s": "wiki_air",
+    "c": "ت",
+    "gen": 2,
+    "cat": "transport"
+   },
+   {
+    "m": "Airbus C-295 (C-295W)",
+    "n": 16,
+    "orig": "IND",
+    "s": "wiki_air",
+    "c": "ت",
+    "note": "40 on order",
+    "gen": 2,
+    "cat": "transport"
+   },
+   {
+    "m": "Antonov An-32 (An-32RE)",
+    "n": 55,
+    "orig": "SUN",
+    "s": "wiki_air",
+    "c": "ت",
+    "gen": 2,
+    "cat": "transport"
+   },
+   {
+    "m": "Antonov An-32",
+    "n": 47,
+    "orig": "SUN",
+    "s": "wiki_air",
+    "c": "ت",
+    "gen": 2,
+    "cat": "transport"
+   },
+   {
+    "m": "Dornier 228 (228-201)",
+    "n": 62,
+    "orig": "DEU",
+    "s": "wiki_air",
+    "c": "ت",
+    "note": "6 on order",
+    "gen": 2,
+    "cat": "transport"
+   },
+   {
+    "m": "Hawker Siddeley HS 748",
+    "n": 56,
+    "orig": "GBR",
+    "s": "wiki_air",
+    "c": "ت",
+    "gen": 2,
+    "cat": "transport"
+   },
+   {
+    "m": "Lockheed Martin C-130J (C-130J-30)",
+    "n": 12,
+    "orig": "USA",
+    "s": "wiki_air",
+    "c": "ت",
+    "gen": 2,
+    "cat": "transport"
+   },
+   {
+    "m": "Boeing C-17 (C-17A)",
+    "n": 11,
+    "orig": "USA",
+    "s": "wiki_air",
+    "c": "ت",
+    "gen": 2,
+    "cat": "transport"
+   },
+   {
+    "m": "Ilyushin Il-76 (Il-76MD)",
+    "n": 17,
+    "orig": "SUN",
+    "s": "wiki_air",
+    "c": "ت",
+    "gen": 2,
+    "cat": "transport"
+   },
+   {
+    "m": "Aérospatiale Alouette III (Chetak)",
+    "n": 79,
+    "orig": "FRA",
+    "s": "wiki_air",
+    "c": "ت",
+    "gen": 2,
+    "cat": "heli_util"
+   },
+   {
+    "m": "HAL Dhruv (Dhruv Mk I/III)",
+    "n": 95,
+    "orig": "IND",
+    "s": "wiki_air",
+    "c": "ت",
+    "gen": 2,
+    "cat": "heli_util"
+   },
+   {
+    "m": "Boeing CH-47 (CH-47F)",
+    "n": 15,
+    "orig": "USA",
+    "s": "wiki_air",
+    "c": "ت",
+    "gen": 3,
+    "cat": "heli_util"
+   },
+   {
+    "m": "Mil Mi-17 (Mi-17V-5)",
+    "n": 222,
+    "orig": "RUS",
+    "s": "wiki_air",
+    "c": "ت",
+    "gen": 2,
+    "cat": "heli_util"
+   },
+   {
+    "m": "Boeing AH-64 (AH-64E)",
+    "n": 22,
+    "orig": "USA",
+    "s": "wiki_air",
+    "c": "ت",
+    "gen": 4,
+    "cat": "heli_attack"
+   },
+   {
+    "m": "HAL Prachand",
+    "n": 10,
+    "orig": "IND",
+    "s": "wiki_air",
+    "c": "ت",
+    "note": "66 on order",
+    "gen": 2,
+    "cat": "heli_attack"
+   },
+   {
+    "m": "Mil Mi-24 (Mi-25/35P)",
+    "n": 15,
+    "orig": "RUS",
+    "s": "wiki_air",
+    "c": "ت",
+    "gen": 3,
+    "cat": "heli_attack"
+   },
+   {
+    "m": "BAE Hawk (Hawk 132)",
+    "n": 102,
+    "orig": "GBR",
+    "s": "wiki_air",
+    "c": "ت",
+    "gen": 2,
+    "cat": "trainer"
+   },
+   {
+    "m": "HAL Kiran (HJT-16)",
+    "n": 77,
+    "orig": "IND",
+    "s": "wiki_air",
+    "c": "ت",
+    "gen": 2,
+    "cat": "trainer"
+   },
+   {
+    "m": "HAL HTT-40",
+    "n": 3,
+    "orig": "IND",
+    "s": "wiki_air",
+    "c": "ت",
+    "note": "67 on order",
+    "gen": 2,
+    "cat": "trainer"
+   },
+   {
+    "m": "Pilatus PC-7 (PC-7 Mk II)",
+    "n": 74,
+    "orig": "CHE",
+    "s": "wiki_air",
+    "c": "ت",
+    "gen": 2,
+    "cat": "trainer"
+   },
+   {
+    "m": "Pipistrel Virus (Garud)",
+    "n": 72,
+    "orig": "SVN",
+    "s": "wiki_air",
+    "c": "ت",
+    "gen": 2,
+    "cat": "trainer"
+   },
+   {
+    "m": "IAI Heron (Heron Mk II)",
+    "n": 9,
+    "orig": "ISR",
+    "s": "wiki_air",
+    "c": "ت",
+    "note": "2 on order",
+    "gen": 2,
+    "cat": "uav_isr"
+   },
+   {
+    "m": "Aérospatiale SA 315B (Cheetah)",
+    "n": 115,
+    "orig": "FRA",
+    "s": "wiki_air",
+    "c": "ت",
+    "note": "To be phased out by 2033.",
+    "gen": 2,
+    "cat": "heli_util"
+   },
+   {
+    "m": "HAL Dhruv (Dhruv Mk I/II/III)",
+    "n": 78,
+    "orig": "IND",
+    "s": "wiki_air",
+    "c": "ت",
+    "note": "25 on order",
+    "gen": 2,
+    "cat": "heli_util"
+   },
+   {
+    "m": "HAL Rudra",
+    "n": 74,
+    "orig": "IND",
+    "s": "wiki_air",
+    "c": "ت",
+    "gen": 2,
+    "cat": "heli_attack"
+   },
+   {
+    "m": "DRDO Nishant",
+    "n": 13,
+    "orig": "IND",
+    "s": "wiki_air",
+    "c": "ت",
+    "gen": 2,
+    "cat": "uav_isr"
+   },
+   {
+    "m": "IAI Searcher (Searcher Mk I/II)",
+    "n": 12,
+    "orig": "ISR",
+    "s": "wiki_air",
+    "c": "ت",
+    "gen": 2,
+    "cat": "uav_isr"
+   },
+   {
+    "m": "IFT Switch (Switch 1.0)",
+    "n": 200,
+    "orig": "IND",
+    "s": "wiki_air",
+    "c": "ت",
+    "note": "More on order",
+    "gen": 2,
+    "cat": "uav_isr"
+   },
+   {
+    "m": "Newspace Beluga/Nimbus",
+    "n": 100,
+    "orig": "IND",
+    "s": "wiki_air",
+    "c": "ت",
+    "gen": 2,
+    "cat": "uav_isr"
+   },
+   {
+    "m": "Raphe mPhibr MR (MR-20)",
+    "n": 48,
+    "orig": "IND",
+    "s": "wiki_air",
+    "c": "ت",
+    "gen": 2,
+    "cat": "uav_isr"
+   },
+   {
+    "m": "Elbit Hermes 900 (Drishti-10)",
+    "n": 1,
+    "orig": "ISR",
+    "s": "wiki_air",
+    "c": "ت",
+    "note": "1 on order",
+    "gen": 2,
+    "cat": "uav_isr"
+   },
+   {
+    "m": "Mikoyan MiG-29K",
+    "n": 34,
+    "orig": "RUS",
+    "s": "wiki_air",
+    "c": "ت",
+    "gen": 3,
+    "cat": "fighter"
+   },
+   {
+    "m": "Mikoyan MiG-29K (MiG-29KUB)",
+    "n": 6,
+    "orig": "RUS",
+    "s": "wiki_air",
+    "c": "ت",
+    "note": "Two seater",
+    "gen": 3,
+    "cat": "fighter"
+   },
+   {
+    "m": "Boeing P-8 (P-8I)",
+    "n": 12,
+    "orig": "USA",
+    "s": "wiki_air",
+    "c": "ت",
+    "note": "6 planned",
+    "gen": 2,
+    "cat": "transport"
+   },
+   {
+    "m": "Britten-Norman BN-2 (BN-2B/2T)",
+    "n": 4,
+    "orig": "GBR",
+    "s": "wiki_air",
+    "c": "ت",
+    "gen": 2,
+    "cat": "transport"
+   },
+   {
+    "m": "Kamov Ka-27 (Ka-28)",
+    "n": 14,
+    "orig": "RUS",
+    "s": "wiki_air",
+    "c": "ت",
+    "gen": 2,
+    "cat": "heli_util"
+   },
+   {
+    "m": "Westland Sea King (WS-61 Mk 42B)",
+    "n": 25,
+    "orig": "GBR",
+    "s": "wiki_air",
+    "c": "ت",
+    "gen": 2,
+    "cat": "heli_util"
+   },
+   {
+    "m": "Westland Sea King (WS-61 Mk 42C)",
+    "n": 25,
+    "orig": "GBR",
+    "s": "wiki_air",
+    "c": "ت",
+    "gen": 2,
+    "cat": "heli_util"
+   },
+   {
+    "m": "Kamov Ka-31",
+    "n": 14,
+    "orig": "RUS",
+    "s": "wiki_air",
+    "c": "ت",
+    "gen": 2,
+    "cat": "heli_util"
+   },
+   {
+    "m": "Sikorsky SH-60 (MH-60R)",
+    "n": 22,
+    "orig": "USA",
+    "s": "wiki_air",
+    "c": "ت",
+    "note": "2 on order",
+    "gen": 2,
+    "cat": "heli_util"
+   },
+   {
+    "m": "IAI Heron (Heron Mk I)",
+    "n": 10,
+    "orig": "ISR",
+    "s": "wiki_air",
+    "c": "ت",
+    "gen": 2,
+    "cat": "uav_isr"
+   },
+   {
+    "m": "General Atomics MQ-9 Reaper (SeaGuardian)",
+    "n": 2,
+    "orig": "USA",
+    "s": "wiki_air",
+    "c": "ت",
+    "note": "15 on order",
+    "gen": 4,
+    "cat": "uav_isr"
+   },
+   {
+    "m": "Dornier 228 (228-101/201)",
+    "n": 41,
+    "orig": "DEU",
+    "s": "wiki_air",
+    "c": "ت",
+    "note": "2 upgraded in 2024, 2 inducted in 2026; 8 on order",
+    "gen": 2,
+    "cat": "isr"
+   },
+   {
+    "m": "HAL Dhruv (Dhruv Mk I)",
+    "n": 4,
+    "orig": "IND",
+    "s": "wiki_air",
+    "c": "ت",
+    "gen": 2,
+    "cat": "heli_util"
+   },
+   {
+    "m": "HAL Dhruv (Dhruv Mk III)",
+    "n": 19,
+    "orig": "IND",
+    "s": "wiki_air",
+    "c": "ت",
+    "note": "11 on order",
+    "gen": 2,
+    "cat": "heli_util"
+   },
+   {
+    "m": "Vision-60 robotic MULE",
+    "n": 100,
+    "orig": "USA",
+    "s": "wiki_army",
+    "c": "ت",
+    "note": "Status: In service. Made in India by AeroArc and Ghost Robotics in joint venture with ToT.",
+    "gen": 2,
+    "cat": "uav_isr"
+   },
+   {
+    "m": "All Terrain Tactical Haulers (ATT Haulers)",
+    "n": 300,
+    "orig": "ISR",
+    "s": "wiki_army",
+    "c": "ت",
+    "note": "Status: In service. Made in India by TVS Sundaram and Marom Dolphin joint venture with ToT.",
+    "gen": 2,
+    "cat": "uav_isr"
+   }
+  ],
+  "ad": [
+   {
+    "m": "Abhra (MR-SAM)",
+    "n": 5,
+    "orig": "IND",
+    "s": "wiki_army",
+    "c": "ت",
+    "note": "Status: In service. MR-SAM is a medium range air defence system with a max range of 70–80 km. It is used to counter aerial threats such as F",
+    "gen": 2,
+    "cat": "short"
+   },
+   {
+    "m": "Akash",
+    "n": 2,
+    "orig": "IND",
+    "s": "wiki_army",
+    "c": "ت",
+    "note": "Status: In service. Akash 1S has 40 km operational range and flight ceiling of 20 km. 2 regiments of Akash Prime on order for Army. Akash-NG",
+    "gen": 2,
+    "cat": "medium"
+   },
+   {
+    "m": "Anant Shastra (QRSAM)",
+    "n": 5,
+    "orig": "IND",
+    "s": "wiki_army",
+    "c": "ت",
+    "note": "Status: In service. Used in limited numbers.",
+    "gen": 2,
+    "cat": "short"
+   },
+   {
+    "m": "9K33 Osa (SA-8 Gecko)",
+    "n": 80,
+    "orig": "SUN",
+    "s": "wiki_army",
+    "c": "ت",
+    "note": "Status: In service (Phasing out). To be replaced by QRSAM.",
+    "gen": 2,
+    "cat": "short"
+   },
+   {
+    "m": "S-125 (SA-3 Goa)",
+    "n": 25,
+    "orig": "SUN",
+    "s": "wiki_army",
+    "c": "ت",
+    "note": "Status: In service (Phasing out). To be replaced by Akash. Used for point-defense of airbases.",
+    "gen": 2,
+    "cat": "medium"
+   },
+   {
+    "m": "Kub (SA-6 Gainful)",
+    "n": 180,
+    "orig": "SUN",
+    "s": "wiki_army",
+    "c": "ت",
+    "note": "Status: In service (Phasing out) To be replaced by Akash. Used by 501 and 502 AD Group of Army as of 2012",
+    "gen": 2,
+    "cat": "medium"
+   },
+   {
+    "m": "9K35 Strela-10 (SA-13 Gopher)",
+    "n": 200,
+    "orig": "SUN",
+    "s": "wiki_army",
+    "c": "ت",
+    "note": "Status: In service Currently under upgradation with indigenous EO systems and the 9M333 missiles.",
+    "gen": 2,
+    "cat": "short"
+   },
+   {
+    "m": "ZSU-23-4M Shilka",
+    "n": 75,
+    "orig": "SUN",
+    "s": "wiki_army",
+    "c": "ت",
+    "note": "Status: In service. Upgraded by Bharat Electronics Limited with AESA Fire Control Radar. 75 in service as of 2024.",
+    "gen": 2,
+    "cat": "short"
+   },
+   {
+    "m": "2K22 Tunguska",
+    "n": 80,
+    "orig": "RUS",
+    "s": "wiki_army",
+    "c": "ت",
+    "note": "Status: In service. 2S6M variant in service with Corps of Army Air Defence.",
+    "gen": 2,
+    "cat": "short"
+   },
+   {
+    "m": "Carrier Air Defence Tracked (CADET)",
+    "n": 90,
+    "orig": "IND",
+    "s": "wiki_army",
+    "c": "ت",
+    "note": "Status: Tender (RFI) issued in 2024. Track-based (4 crew) platform with high power-to-weight ratio. To be integrated with Akashteer Control ",
+    "gen": 2,
+    "cat": "short"
+   }
+  ],
+  "msl": [
+   {
+    "m": "Pralay",
+    "n": 370,
+    "orig": "IND",
+    "s": "wiki_army",
+    "c": "ت",
+    "note": "Status: In service. 150–400 km range.",
+    "gen": 2,
+    "cat": "srbm"
+   },
+   {
+    "m": "BrahMos",
+    "n": 120,
+    "orig": "IND",
+    "s": "wiki_army",
+    "c": "ت",
+    "note": "Status: In service. 290–700 km range. 5 regiments are operational. Each regiment have 24 launchers or 72 ready to fire missiles.",
+    "gen": 2,
+    "cat": "cruise"
+   }
+  ],
+  "navy": []
+ },
+ "ind": {
+  "tech": {
+   "arm": 3,
+   "air": 3,
+   "uav": 3,
+   "msl": 4,
+   "navy": 4,
+   "ew": 3,
+   "ind": 4
+  },
+  "makes": [
+   "تيجاس",
+   "أرجون",
+   "براهموس (مع روسيا)",
+   "آكاش",
+   "أغني",
+   "حاملة فيكرانت"
+  ],
+  "s": "tierA",
+  "c": "ت"
+ },
+ "pol": {
+  "factions": [
+   "army",
+   "parties",
+   "street",
+   "biz"
+  ],
+  "stab": {
+   "v": 60,
+   "s": "tierA",
+   "c": "ت"
+  },
+  "warHome": [],
+  "insurgency": "ماويين (تضعف)، مانيبور"
+ },
+ "rel": {
+  "BGD": -10,
+  "BLR": 10,
+  "CHN": -30,
+  "IRN": 20,
+  "ISR": 55,
+  "KAZ": 10,
+  "KGZ": 10,
+  "PAK": -85,
+  "RUS": 50,
+  "TJK": 10,
+  "USA": 40,
+  "UZB": 10
+ },
+ "treaties": [
+  "SCO"
+ ],
+ "sanctions": [],
+ "conflicts": [
+  "ind_pak"
+ ],
+ "notes": ""
+}

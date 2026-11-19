@@ -1,0 +1,822 @@
+{
+ "id": "KOR",
+ "ar": "كوريا الجنوبية",
+ "en": "South Korea",
+ "tier": "A",
+ "asOf": "2026-11",
+ "src": {
+  "wiki_air": {
+   "t": "Wikipedia: Republic of Korea Air Force",
+   "u": "https://en.wikipedia.org/wiki/Republic_of_Korea_Air_Force?oldid=1383796288",
+   "y": 2026,
+   "note": "نسخة الصفحة بتاريخ السحب؛ أرقام ويكيبيديا تنراجع ويا مصادر ثانية"
+  },
+  "wiki_army": {
+   "t": "Wikipedia: List of equipment of the Republic of Korea Army",
+   "u": "https://en.wikipedia.org/wiki/List_of_equipment_of_the_Republic_of_Korea_Army?oldid=1384593693",
+   "y": 2026,
+   "note": "نسخة الصفحة بتاريخ السحب؛ أرقام ويكيبيديا تنراجع ويا مصادر ثانية"
+  },
+  "iiss_eq": {
+   "t": "Wikipedia: List of countries by level of military equipment (من IISS Military Balance ومصادر ثانية)",
+   "u": "https://en.wikipedia.org/wiki/List_of_countries_by_level_of_military_equipment?oldid=1384804191",
+   "y": 2025
+  },
+  "iiss_pers": {
+   "t": "Wikipedia: List of countries by number of military and paramilitary personnel (جدول IISS Military Balance)",
+   "u": "https://en.wikipedia.org/wiki/List_of_countries_by_number_of_military_and_paramilitary_personnel?oldid=1380910017",
+   "y": 2025
+  },
+  "wb": {
+   "t": "World Bank WDI (SP.POP.TOTL, NY.GDP.MKTP.CD, NY.GDP.MKTP.KD.ZG, MS.MIL.XPND.CD/GD.ZS ← SIPRI, MS.MIL.TOTL.P1, FP.CPI.TOTL.ZG)",
+   "u": "https://api.worldbank.org/v2/",
+   "y": 2026
+  },
+  "govt": {
+   "t": "تصنيف نظام الحكم: دساتير الدول + CIA World Factbook «Government type» + V-Dem/Freedom House لدرجة الحرية (تصنيف المصمم 2026)",
+   "u": "https://www.cia.gov/the-world-factbook/field/government-type/",
+   "y": 2026
+  },
+  "leaders": {
+   "t": "Wikipedia: List of current heads of state and government",
+   "u": "https://en.wikipedia.org/wiki/List_of_current_heads_of_state_and_government?oldid=1386623862",
+   "y": 2026,
+   "note": "سحب نوفمبر 2026"
+  },
+  "rules": {
+   "t": "قواعد من blocs.json وconflicts.json وsanctions.json (تكتل دفاعي +40، معاهدة +50، حرب −90، عقوبات ثقيلة −40...)",
+   "u": "data/world/",
+   "y": 2026
+  },
+  "relk": {
+   "t": "تقدير المصمم للعلاقات الثنائية المعروفة (تشرين الثاني 2026): حروب، نزاعات حدودية، تحالفات غير رسمية، تطبيع، عداء تاريخي",
+   "u": "https://en.wikipedia.org/wiki/Foreign_relations_by_country",
+   "y": 2026
+  },
+  "tierA": {
+   "t": "تقدير المصمم (تشرين الثاني 2026) لصناعة السلاح والاستقرار: SIPRI Arms Transfers Database (أكبر المصدّرين 2020–24)، SIPRI Top 100 Arms-Producing Companies، Fragile States Index 2025، أخبار 2026",
+   "u": "https://www.sipri.org/databases/armstransfers",
+   "y": 2026
+  }
+ },
+ "gov": {
+  "type": "pres",
+  "ar": "جمهورية رئاسية",
+  "free": 2,
+  "hos": {
+   "role": "President",
+   "name": "Lee Jae Myung"
+  },
+  "hog": null,
+  "s": "govt,leaders",
+  "c": "ح"
+ },
+ "pop": {
+  "v": 51684564,
+  "y": 2025,
+  "s": "wb",
+  "c": "ح"
+ },
+ "eco": {
+  "gdpBusd": {
+   "v": 1872.4,
+   "y": 2025,
+   "s": "wb",
+   "c": "ح"
+  },
+  "growth": {
+   "v": 1.0,
+   "y": 2025,
+   "s": "wb",
+   "c": "ح"
+  },
+  "infl": {
+   "v": 2.1,
+   "y": 2025,
+   "s": "wb",
+   "c": "ح"
+  },
+  "oilRentPct": {
+   "v": 0.0,
+   "y": 2021,
+   "s": "wb",
+   "c": "ح"
+  }
+ },
+ "mil": {
+  "budgetBusd": {
+   "v": 47.77,
+   "y": 2025,
+   "s": "wb",
+   "c": "ح"
+  },
+  "budgetPctGdp": {
+   "v": 2.6,
+   "y": 2025,
+   "s": "wb",
+   "c": "ح"
+  },
+  "personnelWB": {
+   "v": 569000,
+   "y": 2020,
+   "s": "wb",
+   "c": "ح"
+  },
+  "sum": {
+   "tanks": {
+    "v": 2501,
+    "s": "iiss_eq",
+    "c": "ت"
+   },
+   "carriers": {
+    "v": 0,
+    "s": "iiss_eq",
+    "c": "ت"
+   },
+   "amphib": {
+    "v": 10,
+    "s": "iiss_eq",
+    "c": "ت"
+   },
+   "cruisers": {
+    "v": 3,
+    "s": "iiss_eq",
+    "c": "ت"
+   },
+   "destroyers": {
+    "v": 6,
+    "s": "iiss_eq",
+    "c": "ت"
+   },
+   "frigates": {
+    "v": 14,
+    "s": "iiss_eq",
+    "c": "ت"
+   },
+   "corvettes": {
+    "v": 12,
+    "s": "iiss_eq",
+    "c": "ت"
+   },
+   "subNuc": {
+    "v": 0,
+    "s": "iiss_eq",
+    "c": "ت"
+   },
+   "subs": {
+    "v": 20,
+    "s": "iiss_eq",
+    "c": "ت"
+   },
+   "combatAir": {
+    "v": 580,
+    "s": "iiss_eq",
+    "c": "ت"
+   },
+   "attackHeli": {
+    "v": 96,
+    "s": "iiss_eq",
+    "c": "ت"
+   },
+   "sats": {
+    "v": 0,
+    "s": "iiss_eq",
+    "c": "ت"
+   },
+   "active": {
+    "v": 450000,
+    "s": "iiss_pers",
+    "c": "ت"
+   },
+   "reserve": {
+    "v": 3100000,
+    "s": "iiss_pers",
+    "c": "ت"
+   },
+   "para": {
+    "v": 13500,
+    "s": "iiss_pers",
+    "c": "ت"
+   }
+  },
+  "land": [
+   {
+    "m": "K1/K1E2",
+    "n": 1027,
+    "orig": "KOR",
+    "s": "wiki_army",
+    "c": "ت",
+    "note": "Produced from 1985 to 1998. All K1 are being upgraded to the K1E1 standard (equivalent to K1A2), completion expected in 2026. A further upgr",
+    "gen": 2,
+    "cat": "tank"
+   },
+   {
+    "m": "K1A2",
+    "n": 484,
+    "orig": "KOR",
+    "s": "wiki_army",
+    "c": "ت",
+    "note": "Produced from 1999 to 2010. All K1A1s will be upgraded to the K1A2 model. Upgrades are expected to be completed by 2022.",
+    "gen": 2,
+    "cat": "tank"
+   },
+   {
+    "m": "T-62 \"Tiran-6\"",
+    "n": 17,
+    "orig": "SUN",
+    "s": "wiki_army",
+    "c": "ت",
+    "note": "Used for \"aggressor\" training. Their presence was considered classified but released to the public after the army's invitation events.",
+    "gen": 2,
+    "cat": "tank"
+   },
+   {
+    "m": "T-72M1",
+    "n": 5,
+    "orig": "SUN",
+    "s": "wiki_army",
+    "c": "ت",
+    "note": "Used for \"aggressor\" training. Their presence was considered classified but released to the public after the army's invitation events.",
+    "gen": 3,
+    "cat": "tank"
+   },
+   {
+    "m": "T-80UT-80UK",
+    "n": 33,
+    "orig": "SUN",
+    "s": "wiki_army",
+    "c": "ت",
+    "note": "Used for \"aggressor\" training. T-80U delivered between 1995 and 1997. 2 T-80UK delivered in 2005. These tanks were transferred as a partial ",
+    "gen": 3,
+    "cat": "tank"
+   },
+   {
+    "m": "K200/A1",
+    "n": 1700,
+    "orig": "KOR",
+    "s": "wiki_army",
+    "c": "ت",
+    "note": "Excludes non-armored personnel carrier variant K200 platforms.",
+    "gen": 2,
+    "cat": "apc"
+   },
+   {
+    "m": "K21",
+    "n": 466,
+    "orig": "KOR",
+    "s": "wiki_army",
+    "c": "ت",
+    "note": "Additional 120 K21s will be introduced by 2027.",
+    "gen": 4,
+    "cat": "ifv"
+   },
+   {
+    "m": "BMP-3",
+    "n": 33,
+    "orig": "SUN",
+    "s": "wiki_army",
+    "c": "ت",
+    "note": "Used for \"aggressor\" training. Given by Russia in 1996 and 2005 as a partial payment of debts incurred during the Soviet era. In 2016, Mosco",
+    "gen": 4,
+    "cat": "ifv"
+   },
+   {
+    "m": "K806 White Tiger",
+    "n": 100,
+    "orig": "KOR",
+    "s": "wiki_army",
+    "c": "ت",
+    "note": "Evolution of the KW1 Scorpion.",
+    "gen": 2,
+    "cat": "apc"
+   },
+   {
+    "m": "K808 White Tiger",
+    "n": 500,
+    "orig": "KOR",
+    "s": "wiki_army",
+    "c": "ت",
+    "note": "The ROK Army has selected Hyundai Rotem over the Samsung Techwin and Doosan DST consortium as the preferred bidder for 600 wheeled armored v",
+    "gen": 2,
+    "cat": "apc"
+   },
+   {
+    "m": "Barracuda (TM-170)",
+    "n": 10,
+    "orig": "KOR",
+    "s": "wiki_army",
+    "c": "ت",
+    "note": "Being used by United Nations peacekeepers.",
+    "gen": 2,
+    "cat": "apc"
+   },
+   {
+    "m": "MaxxPro",
+    "n": 10,
+    "orig": "USA",
+    "s": "wiki_army",
+    "c": "ت",
+    "note": "Used by the Korean special forces in Afghanistan.",
+    "gen": 2,
+    "cat": "mrap"
+   },
+   {
+    "m": "M2/M2A1/M3/M101KM101A1",
+    "n": 3000,
+    "orig": "USA",
+    "s": "wiki_army",
+    "c": "ت",
+    "note": "In reserve/storageMade under license.",
+    "gen": 2,
+    "cat": "towed"
+   },
+   {
+    "m": "M114",
+    "n": 1400,
+    "orig": "USA",
+    "s": "wiki_army",
+    "c": "ت",
+    "note": "Mainly used by the Republic of Korea Reserve Forces.",
+    "gen": 2,
+    "cat": "towed"
+   },
+   {
+    "m": "KH179",
+    "n": 1400,
+    "orig": "KOR",
+    "s": "wiki_army",
+    "c": "ت",
+    "gen": 2,
+    "cat": "towed"
+   },
+   {
+    "m": "K55/K55A1",
+    "n": 1040,
+    "orig": "USA",
+    "s": "wiki_army",
+    "c": "ت",
+    "note": "M109A2 built under license by Samsung Techwin. All K55s have been upgraded to K55A1. Will eventually be replaced by the K9 Thunder.",
+    "gen": 2,
+    "cat": "spg"
+   },
+   {
+    "m": "K9/A1 Thunder",
+    "n": 1240,
+    "orig": "KOR",
+    "s": "wiki_army",
+    "c": "ت",
+    "note": "Around 1,000 more planned. (complete upgrade of K9A1 to K9A2 by 2027).",
+    "gen": 2,
+    "cat": "spg"
+   },
+   {
+    "m": "K105A1",
+    "n": 200,
+    "orig": "KOR",
+    "s": "wiki_army",
+    "c": "ت",
+    "note": "Initially called the EVO-105; M101 howitzer mounted on a truck.",
+    "gen": 2,
+    "cat": "spg"
+   },
+   {
+    "m": "KM167A3 Vulcan",
+    "n": 1000,
+    "orig": "USA",
+    "s": "wiki_army",
+    "c": "ت",
+    "note": "Built in Korea under license by S&T Dynamics.",
+    "gen": 2,
+    "cat": "towed"
+   },
+   {
+    "m": "Oerlikon 35 mm(GDF-003)",
+    "n": 36,
+    "orig": "CHE",
+    "s": "wiki_army",
+    "c": "ت",
+    "note": "Uses Skyguard system, two guns linked to one radar.",
+    "gen": 2,
+    "cat": "towed"
+   }
+  ],
+  "air": [
+   {
+    "m": "F-5 Tiger II (KF-5E/F)",
+    "n": 61,
+    "orig": "USA",
+    "s": "wiki_air",
+    "c": "ت",
+    "gen": 2,
+    "cat": "fighter"
+   },
+   {
+    "m": "F-15E Strike Eagle (F-15K)",
+    "n": 59,
+    "orig": "USA",
+    "s": "wiki_air",
+    "c": "ت",
+    "gen": 4,
+    "cat": "fighter"
+   },
+   {
+    "m": "F-16 Fighting Falcon (KF-16C/U)",
+    "n": 118,
+    "orig": "USA",
+    "s": "wiki_air",
+    "c": "ت",
+    "gen": 3,
+    "cat": "fighter"
+   },
+   {
+    "m": "F-16 Fighting Falcon (KF-16D)",
+    "n": 49,
+    "orig": "USA",
+    "s": "wiki_air",
+    "c": "ت",
+    "note": "Also provide conversion training",
+    "gen": 3,
+    "cat": "fighter"
+   },
+   {
+    "m": "F-35 Lightning II (F-35A)",
+    "n": 40,
+    "orig": "USA",
+    "s": "wiki_air",
+    "c": "ت",
+    "note": "20 on order",
+    "gen": 5,
+    "cat": "fighter"
+   },
+   {
+    "m": "KF-21 Boramae (Block 1)",
+    "n": 6,
+    "orig": "KOR",
+    "s": "wiki_air",
+    "c": "ت",
+    "note": "20 on order",
+    "gen": 5,
+    "cat": "fighter"
+   },
+   {
+    "m": "T-50 Golden Eagle (FA-50)",
+    "n": 60,
+    "orig": "KOR",
+    "s": "wiki_air",
+    "c": "ت",
+    "gen": 3,
+    "cat": "fighter"
+   },
+   {
+    "m": "Bombardier Global 6500",
+    "n": 4,
+    "orig": "CAN",
+    "s": "wiki_air",
+    "c": "ت",
+    "note": "Ordered in October 2025.",
+    "gen": 2,
+    "cat": "awacs"
+   },
+   {
+    "m": "E-7 Wedgetail (E-737)",
+    "n": 4,
+    "orig": "USA",
+    "s": "wiki_air",
+    "c": "ت",
+    "note": "Equipped with a MESA radar",
+    "gen": 2,
+    "cat": "awacs"
+   },
+   {
+    "m": "Dassault Falcon (2000)",
+    "n": 2,
+    "orig": "FRA",
+    "s": "wiki_air",
+    "c": "ت",
+    "note": "4 on order",
+    "gen": 2,
+    "cat": "isr"
+   },
+   {
+    "m": "Hawker 800 (RC-800s)",
+    "n": 8,
+    "orig": "GBR",
+    "s": "wiki_air",
+    "c": "ت",
+    "gen": 2,
+    "cat": "isr"
+   },
+   {
+    "m": "Boeing 737 (737 MAX 8)",
+    "n": 1,
+    "orig": "USA",
+    "s": "wiki_air",
+    "c": "ت",
+    "gen": 2,
+    "cat": "transport"
+   },
+   {
+    "m": "Boeing 747 (747-8I)",
+    "n": 1,
+    "orig": "USA",
+    "s": "wiki_air",
+    "c": "ت",
+    "note": "Presidential transport operated as Code One leased from Korean Air",
+    "gen": 2,
+    "cat": "transport"
+   },
+   {
+    "m": "CASA CN-235",
+    "n": 18,
+    "orig": "ESP",
+    "s": "wiki_air",
+    "c": "ت",
+    "gen": 2,
+    "cat": "transport"
+   },
+   {
+    "m": "C-130 Hercules (C-130H)",
+    "n": 12,
+    "orig": "USA",
+    "s": "wiki_air",
+    "c": "ت",
+    "gen": 2,
+    "cat": "transport"
+   },
+   {
+    "m": "C-130J Super Hercules",
+    "n": 4,
+    "orig": "USA",
+    "s": "wiki_air",
+    "c": "ت",
+    "gen": 2,
+    "cat": "transport"
+   },
+   {
+    "m": "AS332 Super Puma",
+    "n": 3,
+    "orig": "FRA",
+    "s": "wiki_air",
+    "c": "ت",
+    "gen": 4,
+    "cat": "heli_util"
+   },
+   {
+    "m": "Bell 412",
+    "n": 3,
+    "orig": "USA",
+    "s": "wiki_air",
+    "c": "ت",
+    "gen": 2,
+    "cat": "heli_util"
+   },
+   {
+    "m": "CH-47 Chinook (HH-47D)",
+    "n": 9,
+    "orig": "USA",
+    "s": "wiki_air",
+    "c": "ت",
+    "gen": 3,
+    "cat": "heli_util"
+   },
+   {
+    "m": "Sikorsky S-70 (HH-60P)",
+    "n": 17,
+    "orig": "USA",
+    "s": "wiki_air",
+    "c": "ت",
+    "gen": 2,
+    "cat": "heli_util"
+   },
+   {
+    "m": "Sikorsky S-92",
+    "n": 3,
+    "orig": "USA",
+    "s": "wiki_air",
+    "c": "ت",
+    "gen": 2,
+    "cat": "heli_util"
+   },
+   {
+    "m": "KC-100 Naraon (KT-100)",
+    "n": 23,
+    "orig": "KOR",
+    "s": "wiki_air",
+    "c": "ت",
+    "gen": 2,
+    "cat": "trainer"
+   },
+   {
+    "m": "KT-1 Woongbi",
+    "n": 103,
+    "orig": "KOR",
+    "s": "wiki_air",
+    "c": "ت",
+    "gen": 2,
+    "cat": "trainer"
+   },
+   {
+    "m": "KT-1 Woongbi (KA-1)",
+    "n": 103,
+    "orig": "KOR",
+    "s": "wiki_air",
+    "c": "ت",
+    "gen": 2,
+    "cat": "attack"
+   },
+   {
+    "m": "T-50 Golden Eagle",
+    "n": 72,
+    "orig": "KOR",
+    "s": "wiki_air",
+    "c": "ت",
+    "gen": 3,
+    "cat": "trainer"
+   },
+   {
+    "m": "T-50 Golden Eagle (T-50B)",
+    "n": 10,
+    "orig": "KOR",
+    "s": "wiki_air",
+    "c": "ت",
+    "note": "Used by Black Eagles aerobatic team",
+    "gen": 3,
+    "cat": "trainer"
+   },
+   {
+    "m": "T-50 Golden Eagle (TA-50)",
+    "n": 22,
+    "orig": "KOR",
+    "s": "wiki_air",
+    "c": "ت",
+    "note": "20 Block II on order.",
+    "gen": 3,
+    "cat": "trainer"
+   },
+   {
+    "m": "RQ-4 Global Hawk",
+    "n": 4,
+    "orig": "USA",
+    "s": "wiki_air",
+    "c": "ت",
+    "gen": 2,
+    "cat": "uav_isr"
+   },
+   {
+    "m": "Bell 505",
+    "n": 50,
+    "orig": "INT",
+    "s": "wiki_army",
+    "c": "ت",
+    "gen": 2,
+    "cat": "heli_util"
+   },
+   {
+    "m": "KAI RQ-101 Songgolmae",
+    "n": 4,
+    "orig": "INT",
+    "s": "wiki_army",
+    "c": "ت",
+    "gen": 2,
+    "cat": "uav_isr"
+   },
+   {
+    "m": "IAI Searcher",
+    "n": 2,
+    "orig": "INT",
+    "s": "wiki_army",
+    "c": "ت",
+    "gen": 2,
+    "cat": "uav_isr"
+   }
+  ],
+  "ad": [
+   {
+    "m": "K263A1",
+    "n": 200,
+    "orig": "KOR",
+    "s": "wiki_army",
+    "c": "ت",
+    "note": "K200 self-propelled AAA variant.",
+    "gen": 2,
+    "cat": "short"
+   },
+   {
+    "m": "K30 Biho",
+    "n": 176,
+    "orig": "KOR",
+    "s": "wiki_army",
+    "c": "ت",
+    "gen": 2,
+    "cat": "short"
+   },
+   {
+    "m": "K-SAM Chunma",
+    "n": 120,
+    "orig": "FRA",
+    "s": "wiki_army",
+    "c": "ت",
+    "note": "Crotale NG system in indigenous design by LIG Nex1.",
+    "gen": 2,
+    "cat": "short"
+   },
+   {
+    "m": "Javelin",
+    "n": 100,
+    "orig": "GBR",
+    "s": "wiki_army",
+    "c": "ت",
+    "gen": 2,
+    "cat": "short"
+   },
+   {
+    "m": "Mistral",
+    "n": 406,
+    "orig": "FRA",
+    "s": "wiki_army",
+    "c": "ت",
+    "gen": 2,
+    "cat": "short"
+   },
+   {
+    "m": "SA-16 Igla-1E",
+    "n": 50,
+    "orig": "RUS",
+    "s": "wiki_army",
+    "c": "ت",
+    "note": "Given by Russia as a partial payment of debts incurred during the Soviet era.",
+    "gen": 2,
+    "cat": "short"
+   }
+  ],
+  "msl": [
+   {
+    "m": "Hyunmoo-2",
+    "n": 30,
+    "orig": "INT",
+    "s": "wiki_army",
+    "c": "ت",
+    "gen": 2,
+    "cat": "srbm"
+   },
+   {
+    "m": "ATACMS",
+    "n": 111,
+    "orig": "INT",
+    "s": "wiki_army",
+    "c": "ت",
+    "gen": 2,
+    "cat": "srbm"
+   }
+  ],
+  "navy": []
+ },
+ "ind": {
+  "tech": {
+   "arm": 5,
+   "air": 4,
+   "uav": 3,
+   "msl": 4,
+   "navy": 5,
+   "ew": 4,
+   "ind": 5
+  },
+  "makes": [
+   "K2",
+   "K9",
+   "KF-21",
+   "تشونغونغ",
+   "هيونمو",
+   "مدمرات وغواصات"
+  ],
+  "s": "tierA",
+  "c": "ت"
+ },
+ "pol": {
+  "factions": [
+   "army",
+   "parties",
+   "street",
+   "biz"
+  ],
+  "stab": {
+   "v": 64,
+   "s": "tierA",
+   "c": "ت"
+  },
+  "warHome": []
+ },
+ "rel": {
+  "CHN": 5,
+  "JPN": 30,
+  "PRK": -85,
+  "RUS": -40,
+  "USA": 75
+ },
+ "treaties": [
+  "PACT_USA"
+ ],
+ "sanctions": [],
+ "conflicts": [],
+ "notes": ""
+}

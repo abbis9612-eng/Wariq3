@@ -1,0 +1,1709 @@
+{
+ "id": "CHN",
+ "ar": "الصين",
+ "en": "China",
+ "tier": "A",
+ "asOf": "2026-11",
+ "src": {
+  "wiki_air": {
+   "t": "Wikipedia: List of active People's Liberation Army aircraft",
+   "u": "https://en.wikipedia.org/wiki/List_of_active_People's_Liberation_Army_aircraft?oldid=1352368528",
+   "y": 2026,
+   "note": "نسخة الصفحة بتاريخ السحب؛ أرقام ويكيبيديا تنراجع ويا مصادر ثانية"
+  },
+  "wiki_army": {
+   "t": "Wikipedia: List of equipment of the People's Liberation Army Ground Force",
+   "u": "https://en.wikipedia.org/wiki/List_of_equipment_of_the_People's_Liberation_Army_Ground_Force?oldid=1385360877",
+   "y": 2026,
+   "note": "نسخة الصفحة بتاريخ السحب؛ أرقام ويكيبيديا تنراجع ويا مصادر ثانية"
+  },
+  "wiki_navy": {
+   "t": "Wikipedia: List of ships of the People's Liberation Army Navy",
+   "u": "https://en.wikipedia.org/wiki/List_of_ships_of_the_People's_Liberation_Army_Navy?oldid=1385249818",
+   "y": 2026,
+   "note": "نسخة الصفحة بتاريخ السحب؛ أرقام ويكيبيديا تنراجع ويا مصادر ثانية"
+  },
+  "iiss_eq": {
+   "t": "Wikipedia: List of countries by level of military equipment (من IISS Military Balance ومصادر ثانية)",
+   "u": "https://en.wikipedia.org/wiki/List_of_countries_by_level_of_military_equipment?oldid=1384804191",
+   "y": 2025
+  },
+  "iiss_pers": {
+   "t": "Wikipedia: List of countries by number of military and paramilitary personnel (جدول IISS Military Balance)",
+   "u": "https://en.wikipedia.org/wiki/List_of_countries_by_number_of_military_and_paramilitary_personnel?oldid=1380910017",
+   "y": 2025
+  },
+  "wb": {
+   "t": "World Bank WDI (SP.POP.TOTL, NY.GDP.MKTP.CD, NY.GDP.MKTP.KD.ZG, MS.MIL.XPND.CD/GD.ZS ← SIPRI, MS.MIL.TOTL.P1, FP.CPI.TOTL.ZG)",
+   "u": "https://api.worldbank.org/v2/",
+   "y": 2026
+  },
+  "govt": {
+   "t": "تصنيف نظام الحكم: دساتير الدول + CIA World Factbook «Government type» + V-Dem/Freedom House لدرجة الحرية (تصنيف المصمم 2026)",
+   "u": "https://www.cia.gov/the-world-factbook/field/government-type/",
+   "y": 2026
+  },
+  "leaders": {
+   "t": "Wikipedia: List of current heads of state and government",
+   "u": "https://en.wikipedia.org/wiki/List_of_current_heads_of_state_and_government?oldid=1386623862",
+   "y": 2026,
+   "note": "سحب نوفمبر 2026"
+  },
+  "rules": {
+   "t": "قواعد من blocs.json وconflicts.json وsanctions.json (تكتل دفاعي +40، معاهدة +50، حرب −90، عقوبات ثقيلة −40...)",
+   "u": "data/world/",
+   "y": 2026
+  },
+  "relk": {
+   "t": "تقدير المصمم للعلاقات الثنائية المعروفة (تشرين الثاني 2026): حروب، نزاعات حدودية، تحالفات غير رسمية، تطبيع، عداء تاريخي",
+   "u": "https://en.wikipedia.org/wiki/Foreign_relations_by_country",
+   "y": 2026
+  },
+  "tierA": {
+   "t": "تقدير المصمم (تشرين الثاني 2026) لصناعة السلاح والاستقرار: SIPRI Arms Transfers Database (أكبر المصدّرين 2020–24)، SIPRI Top 100 Arms-Producing Companies، Fragile States Index 2025، أخبار 2026",
+   "u": "https://www.sipri.org/databases/armstransfers",
+   "y": 2026
+  }
+ },
+ "gov": {
+  "type": "one",
+  "ar": "حزب واحد",
+  "free": 0,
+  "hos": {
+   "role": "General Secretary of the Communist Party",
+   "name": "Xi Jinping"
+  },
+  "hog": null,
+  "s": "govt,leaders",
+  "c": "ح"
+ },
+ "pop": {
+  "v": 1406585000,
+  "y": 2025,
+  "s": "wb",
+  "c": "ح"
+ },
+ "eco": {
+  "gdpBusd": {
+   "v": 19498.0,
+   "y": 2025,
+   "s": "wb",
+   "c": "ح"
+  },
+  "growth": {
+   "v": 5.0,
+   "y": 2025,
+   "s": "wb",
+   "c": "ح"
+  },
+  "infl": {
+   "v": 0.1,
+   "y": 2025,
+   "s": "wb",
+   "c": "ح"
+  },
+  "oilRentPct": {
+   "v": 0.3,
+   "y": 2021,
+   "s": "wb",
+   "c": "ح"
+  }
+ },
+ "mil": {
+  "budgetBusd": {
+   "v": 335.52,
+   "y": 2025,
+   "s": "wb",
+   "c": "ح"
+  },
+  "budgetPctGdp": {
+   "v": 1.72,
+   "y": 2025,
+   "s": "wb",
+   "c": "ح"
+  },
+  "personnelWB": {
+   "v": 2535000,
+   "y": 2020,
+   "s": "wb",
+   "c": "ح"
+  },
+  "sum": {
+   "tanks": {
+    "v": 5000,
+    "s": "iiss_eq",
+    "c": "ت"
+   },
+   "carriers": {
+    "v": 3,
+    "s": "iiss_eq",
+    "c": "ت"
+   },
+   "amphib": {
+    "v": 57,
+    "s": "iiss_eq",
+    "c": "ت"
+   },
+   "cruisers": {
+    "v": 10,
+    "s": "iiss_eq",
+    "c": "ت"
+   },
+   "destroyers": {
+    "v": 52,
+    "s": "iiss_eq",
+    "c": "ت"
+   },
+   "frigates": {
+    "v": 54,
+    "s": "iiss_eq",
+    "c": "ت"
+   },
+   "corvettes": {
+    "v": 72,
+    "s": "iiss_eq",
+    "c": "ت"
+   },
+   "subNuc": {
+    "v": 12,
+    "s": "iiss_eq",
+    "c": "ت"
+   },
+   "subs": {
+    "v": 47,
+    "s": "iiss_eq",
+    "c": "ت"
+   },
+   "combatAir": {
+    "v": 1570,
+    "s": "iiss_eq",
+    "c": "ت"
+   },
+   "attackHeli": {
+    "v": 500,
+    "s": "iiss_eq",
+    "c": "ت"
+   },
+   "sats": {
+    "v": 132,
+    "s": "iiss_eq",
+    "c": "ت"
+   },
+   "active": {
+    "v": 2035000,
+    "s": "iiss_pers",
+    "c": "ت"
+   },
+   "reserve": {
+    "v": 510000,
+    "s": "iiss_pers",
+    "c": "ت"
+   },
+   "para": {
+    "v": 500000,
+    "s": "iiss_pers",
+    "c": "ت"
+   }
+  },
+  "land": [
+   {
+    "m": "PCL-171",
+    "n": 120,
+    "orig": "CHN",
+    "s": "wiki_army",
+    "c": "ت",
+    "note": "In service. 122mm howitzer mounted on the CTL181A assault vehicle chassis. Deployed to the PLAGF light high-mobility combined arms brigades.",
+    "gen": 2,
+    "cat": "spg"
+   },
+   {
+    "m": "PLL-09",
+    "n": 600,
+    "orig": "CHN",
+    "s": "wiki_army",
+    "c": "ت",
+    "note": "In service. 122mm howitzer mounted on the Type 08 chassis. Deployed to the PLAGF medium combined arms brigades.",
+    "gen": 2,
+    "cat": "spg"
+   },
+   {
+    "m": "PLZ-07A/B",
+    "n": 700,
+    "orig": "CHN",
+    "s": "wiki_army",
+    "c": "ت",
+    "note": "PLZ-07B is amphibious capable. In service. 122mm howitzer mounted on the modified ZBD-04 or ZBD-05 chassis. Deployed to the PLAGF heavy and ",
+    "gen": 2,
+    "cat": "spg"
+   },
+   {
+    "m": "PLZ-05",
+    "n": 320,
+    "orig": "CHN",
+    "s": "wiki_army",
+    "c": "ت",
+    "note": "In service. 155mm howitzer mounted on the tracked chassis. Deployed to the PLAGF combined corps for attachment to light and medium combined ",
+    "gen": 2,
+    "cat": "spg"
+   },
+   {
+    "m": "PLZ-83A/B",
+    "n": 150,
+    "orig": "INT",
+    "s": "wiki_army",
+    "c": "ت",
+    "gen": 2,
+    "cat": "spg"
+   },
+   {
+    "m": "PLZ-89",
+    "n": 300,
+    "orig": "CHN",
+    "s": "wiki_army",
+    "c": "ت",
+    "note": "Phasing out. Amphibious-capable, self-propelled tracked howitzer. Deployed to the PLAGF mechanized regiments.",
+    "gen": 2,
+    "cat": "spg"
+   },
+   {
+    "m": "PL-96 (D-30)",
+    "n": 300,
+    "orig": "SUN",
+    "s": "wiki_army",
+    "c": "ت",
+    "gen": 2,
+    "cat": "towed"
+   },
+   {
+    "m": "PL-59 (M-46)",
+    "n": 100,
+    "orig": "SUN",
+    "s": "wiki_army",
+    "c": "ت",
+    "gen": 2,
+    "cat": "towed"
+   },
+   {
+    "m": "PL-66 (D-20)",
+    "n": 500,
+    "orig": "SUN",
+    "s": "wiki_army",
+    "c": "ت",
+    "gen": 2,
+    "cat": "towed"
+   },
+   {
+    "m": "PL-54 (M-30)",
+    "n": 1700,
+    "orig": "SUN",
+    "s": "wiki_army",
+    "c": "ت",
+    "gen": 2,
+    "cat": "towed"
+   },
+   {
+    "m": "PL-54-1 (M-30)",
+    "n": 3000,
+    "orig": "SUN",
+    "s": "wiki_army",
+    "c": "ت",
+    "gen": 2,
+    "cat": "towed"
+   },
+   {
+    "m": "PLZ-10",
+    "n": 800,
+    "orig": "CHN",
+    "s": "wiki_army",
+    "c": "ت",
+    "note": "Gun-mortar variant of Type 89A infantry fighting vehicle. (In service)",
+    "gen": 2,
+    "cat": "spg"
+   },
+   {
+    "m": "PLL-05",
+    "n": 450,
+    "orig": "CHN",
+    "s": "wiki_army",
+    "c": "ت",
+    "gen": 2,
+    "cat": "spg"
+   },
+   {
+    "m": "PHL-11",
+    "n": 350,
+    "orig": "CHN",
+    "s": "wiki_army",
+    "c": "ت",
+    "note": "In service. 122mm truck-mounted MLRS.",
+    "gen": 2,
+    "cat": "mlrs"
+   },
+   {
+    "m": "PHL-20 (SR-7)",
+    "n": 30,
+    "orig": "CHN",
+    "s": "wiki_army",
+    "c": "ت",
+    "note": "In service. 122mm/220mm modular multiple launch rocket, based on the FAW MV3 assault vehicle chassis.",
+    "gen": 2,
+    "cat": "mlrs"
+   },
+   {
+    "m": "PHL-21",
+    "n": 10,
+    "orig": "CHN",
+    "s": "wiki_army",
+    "c": "ت",
+    "note": "In service. 122mm/220mm modular multiple launch rocket observed in PLAGF service, based on the Dongfeng Mengshi assault vehicle chassis.",
+    "gen": 2,
+    "cat": "mlrs"
+   },
+   {
+    "m": "PHL-81/90",
+    "n": 200,
+    "orig": "CHN",
+    "s": "wiki_army",
+    "c": "ت",
+    "note": "Phasing out. 122mm truck-mounted MLRS.",
+    "gen": 2,
+    "cat": "mlrs"
+   },
+   {
+    "m": "PHL-03",
+    "n": 175,
+    "orig": "CHN",
+    "s": "wiki_army",
+    "c": "ت",
+    "gen": 2,
+    "cat": "mlrs"
+   },
+   {
+    "m": "PHL-16",
+    "n": 120,
+    "orig": "CHN",
+    "s": "wiki_army",
+    "c": "ت",
+    "note": "Modular 300mm/370mm/750mm ammunition system",
+    "gen": 2,
+    "cat": "mlrs"
+   },
+   {
+    "m": "PHZ-11",
+    "n": 120,
+    "orig": "CHN",
+    "s": "wiki_army",
+    "c": "ت",
+    "note": "In service. 122mm tracked MLRS.",
+    "gen": 2,
+    "cat": "mlrs"
+   },
+   {
+    "m": "PHZ-89",
+    "n": 375,
+    "orig": "CHN",
+    "s": "wiki_army",
+    "c": "ت",
+    "note": "Phasing out. 122mm tracked MLRS. Type 89s have been modified to include a cover for the 40-round rocket pack. Additionally, the left rear si",
+    "gen": 2,
+    "cat": "mlrs"
+   },
+   {
+    "m": "PH-63",
+    "n": 1390,
+    "orig": "CHN",
+    "s": "wiki_army",
+    "c": "ت",
+    "gen": 2,
+    "cat": "mlrs"
+   },
+   {
+    "m": "PG-99 (Type 90)",
+    "n": 7000,
+    "orig": "CHN",
+    "s": "wiki_army",
+    "c": "ت",
+    "note": "2 x 35 mm towed autocannon based on Type 90 2 X 35 mm, licensed production of Swiss Oerlikon 35 mm twin cannon. Military designation PG-99. ",
+    "gen": 2,
+    "cat": "towed"
+   },
+   {
+    "m": "PG-87",
+    "n": 7000,
+    "orig": "CHN",
+    "s": "wiki_army",
+    "c": "ت",
+    "note": "2 x 25 mm, improved version of the Type 85. Capable of radar-based automatic engagement.",
+    "gen": 2,
+    "cat": "towed"
+   },
+   {
+    "m": "PG-74",
+    "n": 7000,
+    "orig": "CHN",
+    "s": "wiki_army",
+    "c": "ت",
+    "note": "2 x 37 mm towed autocannon; replaced PG-55/PG-65. phased out.",
+    "gen": 2,
+    "cat": "towed"
+   },
+   {
+    "m": "Type 99",
+    "n": 1400,
+    "orig": "CHN",
+    "s": "wiki_army",
+    "c": "ت",
+    "note": "Type 99: 600+ Type 99A: 700+ Type 99B: 100+",
+    "gen": 2,
+    "cat": "tank"
+   },
+   {
+    "m": "Type 96",
+    "n": 2600,
+    "orig": "CHN",
+    "s": "wiki_army",
+    "c": "ت",
+    "note": "Type 96: 1,000 Type 96A: 1,500",
+    "gen": 3,
+    "cat": "tank"
+   },
+   {
+    "m": "Type 88",
+    "n": 500,
+    "orig": "CHN",
+    "s": "wiki_army",
+    "c": "ت",
+    "note": "Variants: Type 88A/88B",
+    "gen": 2,
+    "cat": "tank"
+   },
+   {
+    "m": "Type 15 tank",
+    "n": 1000,
+    "orig": "CHN",
+    "s": "wiki_army",
+    "c": "ت",
+    "gen": 2,
+    "cat": "tank"
+   },
+   {
+    "m": "ZBL-08",
+    "n": 3250,
+    "orig": "CHN",
+    "s": "wiki_army",
+    "c": "ت",
+    "gen": 2,
+    "cat": "ifv"
+   },
+   {
+    "m": "ZBD-05",
+    "n": 1500,
+    "orig": "CHN",
+    "s": "wiki_army",
+    "c": "ت",
+    "note": "Equipped with the PLA Ground Force amphibious assault brigade",
+    "gen": 2,
+    "cat": "ifv"
+   },
+   {
+    "m": "ZBD-04A",
+    "n": 2600,
+    "orig": "CHN",
+    "s": "wiki_army",
+    "c": "ت",
+    "gen": 2,
+    "cat": "ifv"
+   },
+   {
+    "m": "ZBD-04",
+    "n": 400,
+    "orig": "CHN",
+    "s": "wiki_army",
+    "c": "ت",
+    "gen": 2,
+    "cat": "ifv"
+   },
+   {
+    "m": "ZSL-92B",
+    "n": 600,
+    "orig": "CHN",
+    "s": "wiki_army",
+    "c": "ت",
+    "note": "WZ-551 with 30 mm autocannon",
+    "gen": 2,
+    "cat": "ifv"
+   },
+   {
+    "m": "ZSL-92",
+    "n": 550,
+    "orig": "CHN",
+    "s": "wiki_army",
+    "c": "ت",
+    "note": "WZ-551 with 25 mm autocannon",
+    "gen": 2,
+    "cat": "ifv"
+   },
+   {
+    "m": "ZBD-86A",
+    "n": 1750,
+    "orig": "CHN",
+    "s": "wiki_army",
+    "c": "ت",
+    "note": "Improved Type 86 with a 30 mm autocannon",
+    "gen": 2,
+    "cat": "ifv"
+   },
+   {
+    "m": "ZBD-86",
+    "n": 1250,
+    "orig": "CHN",
+    "s": "wiki_army",
+    "c": "ت",
+    "note": "Chinese infantry fighting vehicle based on the BMP-1",
+    "gen": 2,
+    "cat": "ifv"
+   },
+   {
+    "m": "ZSL-10",
+    "n": 5950,
+    "orig": "CHN",
+    "s": "wiki_army",
+    "c": "ت",
+    "gen": 2,
+    "cat": "apc"
+   },
+   {
+    "m": "ZSL-92A",
+    "n": 700,
+    "orig": "CHN",
+    "s": "wiki_army",
+    "c": "ت",
+    "gen": 2,
+    "cat": "apc"
+   },
+   {
+    "m": "ZSL-93",
+    "n": 50,
+    "orig": "CHN",
+    "s": "wiki_army",
+    "c": "ت",
+    "note": "PLA designation for WZ-523",
+    "gen": 2,
+    "cat": "apc"
+   },
+   {
+    "m": "ZSD-89/ZSD-89A",
+    "n": 1750,
+    "orig": "CHN",
+    "s": "wiki_army",
+    "c": "ت",
+    "gen": 2,
+    "cat": "apc"
+   }
+  ],
+  "air": [
+   {
+    "m": "Chengdu J-10 (J-10A)",
+    "n": 236,
+    "orig": "CHN",
+    "s": "wiki_air",
+    "c": "ت",
+    "gen": 3,
+    "cat": "fighter"
+   },
+   {
+    "m": "Chengdu J-10 (J-10S)",
+    "n": 77,
+    "orig": "CHN",
+    "s": "wiki_air",
+    "c": "ت",
+    "gen": 3,
+    "cat": "fighter"
+   },
+   {
+    "m": "Chengdu J-10 (J-10B)",
+    "n": 55,
+    "orig": "CHN",
+    "s": "wiki_air",
+    "c": "ت",
+    "gen": 3,
+    "cat": "fighter"
+   },
+   {
+    "m": "Chengdu J-10 (J-10C)",
+    "n": 240,
+    "orig": "CHN",
+    "s": "wiki_air",
+    "c": "ت",
+    "gen": 4,
+    "cat": "fighter"
+   },
+   {
+    "m": "Chengdu J-20 (J-20A/S)",
+    "n": 300,
+    "orig": "CHN",
+    "s": "wiki_air",
+    "c": "ت",
+    "gen": 5,
+    "cat": "fighter"
+   },
+   {
+    "m": "Shenyang J-8 (J-8F/H)",
+    "n": 40,
+    "orig": "CHN",
+    "s": "wiki_air",
+    "c": "ت",
+    "note": "Phasing out",
+    "gen": 2,
+    "cat": "fighter"
+   },
+   {
+    "m": "Shenyang J-11 (J-11/B/BS/BG)",
+    "n": 245,
+    "orig": "CHN",
+    "s": "wiki_air",
+    "c": "ت",
+    "note": "Older airframes are being modernized",
+    "gen": 2,
+    "cat": "fighter"
+   },
+   {
+    "m": "Shenyang J-16 (J-16/D)",
+    "n": 330,
+    "orig": "CHN",
+    "s": "wiki_air",
+    "c": "ت",
+    "gen": 4,
+    "cat": "fighter"
+   },
+   {
+    "m": "Shenyang J-35 (J-35A)",
+    "n": 4,
+    "orig": "CHN",
+    "s": "wiki_air",
+    "c": "ت",
+    "gen": 5,
+    "cat": "fighter"
+   },
+   {
+    "m": "Sukhoi Su-27 (Su-27UBK)",
+    "n": 32,
+    "orig": "SUN",
+    "s": "wiki_air",
+    "c": "ت",
+    "note": "Older airframes slowly being phased out",
+    "gen": 3,
+    "cat": "fighter"
+   },
+   {
+    "m": "Sukhoi Su-30 (Su-30MKK/MK2)",
+    "n": 97,
+    "orig": "RUS",
+    "s": "wiki_air",
+    "c": "ت",
+    "gen": 4,
+    "cat": "fighter"
+   },
+   {
+    "m": "Sukhoi Su-35 (Su-35S)",
+    "n": 24,
+    "orig": "RUS",
+    "s": "wiki_air",
+    "c": "ت",
+    "gen": 4,
+    "cat": "fighter"
+   },
+   {
+    "m": "Xian H-6 (H-6A)",
+    "n": 12,
+    "orig": "CHN",
+    "s": "wiki_air",
+    "c": "ت",
+    "gen": 2,
+    "cat": "bomber"
+   },
+   {
+    "m": "Xian H-6 (H-6G/GMod)",
+    "n": 27,
+    "orig": "CHN",
+    "s": "wiki_air",
+    "c": "ت",
+    "gen": 2,
+    "cat": "bomber"
+   },
+   {
+    "m": "Xian H-6 (H-6J)",
+    "n": 18,
+    "orig": "CHN",
+    "s": "wiki_air",
+    "c": "ت",
+    "gen": 2,
+    "cat": "bomber"
+   },
+   {
+    "m": "Xian H-6 (H-6H/M)",
+    "n": 40,
+    "orig": "CHN",
+    "s": "wiki_air",
+    "c": "ت",
+    "gen": 2,
+    "cat": "bomber"
+   },
+   {
+    "m": "Xian H-6 (H-6K)",
+    "n": 110,
+    "orig": "CHN",
+    "s": "wiki_air",
+    "c": "ت",
+    "gen": 2,
+    "cat": "bomber"
+   },
+   {
+    "m": "Xian H-6 (H-6N)",
+    "n": 12,
+    "orig": "CHN",
+    "s": "wiki_air",
+    "c": "ت",
+    "gen": 2,
+    "cat": "bomber"
+   },
+   {
+    "m": "Xian JH-7 (JH-7A)",
+    "n": 200,
+    "orig": "CHN",
+    "s": "wiki_air",
+    "c": "ت",
+    "note": "Older airframes slowly being phased out",
+    "gen": 2,
+    "cat": "bomber"
+   },
+   {
+    "m": "Boeing 737",
+    "n": 2,
+    "orig": "USA",
+    "s": "wiki_air",
+    "c": "ت",
+    "gen": 2,
+    "cat": "awacs"
+   },
+   {
+    "m": "KJ-2000",
+    "n": 4,
+    "orig": "CHN",
+    "s": "wiki_air",
+    "c": "ت",
+    "note": "Chinese radar installed on an Ilyushin Il-76 airframe",
+    "gen": 5,
+    "cat": "awacs"
+   },
+   {
+    "m": "Shaanxi KJ-200",
+    "n": 4,
+    "orig": "CHN",
+    "s": "wiki_air",
+    "c": "ت",
+    "gen": 5,
+    "cat": "awacs"
+   },
+   {
+    "m": "Shaanxi KJ-500",
+    "n": 40,
+    "orig": "CHN",
+    "s": "wiki_air",
+    "c": "ت",
+    "gen": 2,
+    "cat": "awacs"
+   },
+   {
+    "m": "Shaanxi Y-8 (Y-8T)",
+    "n": 6,
+    "orig": "CHN",
+    "s": "wiki_air",
+    "c": "ت",
+    "gen": 2,
+    "cat": "awacs"
+   },
+   {
+    "m": "JZ-8 (JZ-8/F)",
+    "n": 48,
+    "orig": "CHN",
+    "s": "wiki_air",
+    "c": "ت",
+    "gen": 2,
+    "cat": "isr"
+   },
+   {
+    "m": "Shaanxi Y-9 (Y-9LG/X)",
+    "n": 17,
+    "orig": "CHN",
+    "s": "wiki_air",
+    "c": "ت",
+    "gen": 2,
+    "cat": "isr"
+   },
+   {
+    "m": "Tupolev Tu-154 (Tu-154M/D)",
+    "n": 4,
+    "orig": "SUN",
+    "s": "wiki_air",
+    "c": "ت",
+    "gen": 2,
+    "cat": "isr"
+   },
+   {
+    "m": "Airbus A319",
+    "n": 3,
+    "orig": "CHN",
+    "s": "wiki_air",
+    "c": "ت",
+    "gen": 2,
+    "cat": "transport"
+   },
+   {
+    "m": "Boeing 737",
+    "n": 10,
+    "orig": "USA",
+    "s": "wiki_air",
+    "c": "ت",
+    "gen": 2,
+    "cat": "transport"
+   },
+   {
+    "m": "Ilyushin Il-76 (Il-76MD/TD)",
+    "n": 20,
+    "orig": "SUN",
+    "s": "wiki_air",
+    "c": "ت",
+    "gen": 2,
+    "cat": "transport"
+   },
+   {
+    "m": "Shaanxi Y-8 (Y-8C)",
+    "n": 30,
+    "orig": "CHN",
+    "s": "wiki_air",
+    "c": "ت",
+    "gen": 2,
+    "cat": "transport"
+   },
+   {
+    "m": "Shaanxi Y-9",
+    "n": 30,
+    "orig": "CHN",
+    "s": "wiki_air",
+    "c": "ت",
+    "gen": 2,
+    "cat": "transport"
+   },
+   {
+    "m": "Shijiazhuang Y-5",
+    "n": 70,
+    "orig": "CHN",
+    "s": "wiki_air",
+    "c": "ت",
+    "gen": 2,
+    "cat": "transport"
+   },
+   {
+    "m": "Tupolev Tu-154 (Tu-154M)",
+    "n": 8,
+    "orig": "SUN",
+    "s": "wiki_air",
+    "c": "ت",
+    "gen": 2,
+    "cat": "transport"
+   },
+   {
+    "m": "Xian Y-7 (Y-7/H)",
+    "n": 41,
+    "orig": "CHN",
+    "s": "wiki_air",
+    "c": "ت",
+    "gen": 2,
+    "cat": "transport"
+   },
+   {
+    "m": "Xian Y-20",
+    "n": 55,
+    "orig": "CHN",
+    "s": "wiki_air",
+    "c": "ت",
+    "gen": 2,
+    "cat": "transport"
+   },
+   {
+    "m": "Changhe Z-8",
+    "n": 18,
+    "orig": "CHN",
+    "s": "wiki_air",
+    "c": "ت",
+    "gen": 2,
+    "cat": "heli_util"
+   },
+   {
+    "m": "Eurocopter AS332",
+    "n": 6,
+    "orig": "FRA",
+    "s": "wiki_air",
+    "c": "ت",
+    "gen": 2,
+    "cat": "heli_util"
+   },
+   {
+    "m": "Eurocopter EC225",
+    "n": 3,
+    "orig": "FRA",
+    "s": "wiki_air",
+    "c": "ت",
+    "gen": 2,
+    "cat": "heli_util"
+   },
+   {
+    "m": "Harbin Z-20 (Z-20S)",
+    "n": 30,
+    "orig": "CHN",
+    "s": "wiki_air",
+    "c": "ت",
+    "gen": 2,
+    "cat": "heli_util"
+   },
+   {
+    "m": "Mil Mi-8 (Mi-17/171)",
+    "n": 6,
+    "orig": "SUN",
+    "s": "wiki_air",
+    "c": "ت",
+    "gen": 2,
+    "cat": "heli_util"
+   },
+   {
+    "m": "Chengdu J-7 (JJ-7/A)",
+    "n": 200,
+    "orig": "CHN",
+    "s": "wiki_air",
+    "c": "ت",
+    "gen": 1,
+    "cat": "trainer"
+   },
+   {
+    "m": "Guizhou JL-9",
+    "n": 45,
+    "orig": "CHN",
+    "s": "wiki_air",
+    "c": "ت",
+    "gen": 2,
+    "cat": "trainer"
+   },
+   {
+    "m": "Hongdu JL-8",
+    "n": 350,
+    "orig": "CHN",
+    "s": "wiki_air",
+    "c": "ت",
+    "gen": 2,
+    "cat": "trainer"
+   },
+   {
+    "m": "Hongdu JL-10",
+    "n": 50,
+    "orig": "CHN",
+    "s": "wiki_air",
+    "c": "ت",
+    "gen": 2,
+    "cat": "trainer"
+   },
+   {
+    "m": "Nanchang CJ-6 (CJ-6/A/B)",
+    "n": 400,
+    "orig": "CHN",
+    "s": "wiki_air",
+    "c": "ت",
+    "gen": 1,
+    "cat": "trainer"
+   },
+   {
+    "m": "Xian HYJ-7",
+    "n": 12,
+    "orig": "CHN",
+    "s": "wiki_air",
+    "c": "ت",
+    "gen": 1,
+    "cat": "trainer"
+   },
+   {
+    "m": "AVIC WZ-8",
+    "n": 2,
+    "orig": "CHN",
+    "s": "wiki_air",
+    "c": "ت",
+    "gen": 2,
+    "cat": "uav_isr"
+   },
+   {
+    "m": "Chengdu GJ-1",
+    "n": 12,
+    "orig": "CHN",
+    "s": "wiki_air",
+    "c": "ت",
+    "gen": 2,
+    "cat": "uav_isr"
+   },
+   {
+    "m": "Chengdu WZ-10",
+    "n": 8,
+    "orig": "CHN",
+    "s": "wiki_air",
+    "c": "ت",
+    "gen": 2,
+    "cat": "uav_isr"
+   },
+   {
+    "m": "Guizhou WZ-7",
+    "n": 24,
+    "orig": "CHN",
+    "s": "wiki_air",
+    "c": "ت",
+    "gen": 2,
+    "cat": "uav_isr"
+   },
+   {
+    "m": "Hongdu GJ-11",
+    "n": 2,
+    "orig": "CHN",
+    "s": "wiki_air",
+    "c": "ت",
+    "gen": 2,
+    "cat": "uav_isr"
+   },
+   {
+    "m": "Shenyang J-11 (J-11B/BS)",
+    "n": 50,
+    "orig": "CHN",
+    "s": "wiki_air",
+    "c": "ت",
+    "gen": 2,
+    "cat": "fighter"
+   },
+   {
+    "m": "Shenyang J-15",
+    "n": 60,
+    "orig": "CHN",
+    "s": "wiki_air",
+    "c": "ت",
+    "gen": 2,
+    "cat": "fighter"
+   },
+   {
+    "m": "Shenyang J-15 (J-15T)",
+    "n": 50,
+    "orig": "CHN",
+    "s": "wiki_air",
+    "c": "ت",
+    "gen": 2,
+    "cat": "fighter"
+   },
+   {
+    "m": "Shenyang J-35",
+    "n": 4,
+    "orig": "CHN",
+    "s": "wiki_air",
+    "c": "ت",
+    "gen": 5,
+    "cat": "fighter"
+   },
+   {
+    "m": "Shaanxi Y-8 (KJ-200)",
+    "n": 6,
+    "orig": "CHN",
+    "s": "wiki_air",
+    "c": "ت",
+    "gen": 5,
+    "cat": "awacs"
+   },
+   {
+    "m": "Shaanxi Y-8 (Y-8J)",
+    "n": 4,
+    "orig": "CHN",
+    "s": "wiki_air",
+    "c": "ت",
+    "gen": 2,
+    "cat": "awacs"
+   },
+   {
+    "m": "Xi'an KJ-600",
+    "n": 3,
+    "orig": "CHN",
+    "s": "wiki_air",
+    "c": "ت",
+    "gen": 1,
+    "cat": "awacs"
+   },
+   {
+    "m": "Shaanxi Y-8 (Y-8JB)",
+    "n": 4,
+    "orig": "CHN",
+    "s": "wiki_air",
+    "c": "ت",
+    "gen": 2,
+    "cat": "isr"
+   },
+   {
+    "m": "Shaanxi Y-8 (Y-8X)",
+    "n": 3,
+    "orig": "CHN",
+    "s": "wiki_air",
+    "c": "ت",
+    "gen": 2,
+    "cat": "isr"
+   },
+   {
+    "m": "Shaanxi Y-9 (Y-9JZ)",
+    "n": 10,
+    "orig": "CHN",
+    "s": "wiki_air",
+    "c": "ت",
+    "gen": 2,
+    "cat": "isr"
+   },
+   {
+    "m": "Bombardier CRJ200 (CRJ-200)",
+    "n": 2,
+    "orig": "CAN",
+    "s": "wiki_air",
+    "c": "ت",
+    "gen": 5,
+    "cat": "transport"
+   },
+   {
+    "m": "Bombardier CRJ700 (CRJ-700)",
+    "n": 2,
+    "orig": "CAN",
+    "s": "wiki_air",
+    "c": "ت",
+    "gen": 1,
+    "cat": "transport"
+   },
+   {
+    "m": "Xian Y-7 (Y-7G)",
+    "n": 2,
+    "orig": "CHN",
+    "s": "wiki_air",
+    "c": "ت",
+    "gen": 2,
+    "cat": "transport"
+   },
+   {
+    "m": "Aérospatiale SA 321",
+    "n": 8,
+    "orig": "FRA",
+    "s": "wiki_air",
+    "c": "ت",
+    "gen": 2,
+    "cat": "heli_util"
+   },
+   {
+    "m": "Changhe Z-8 (Z-8/C/J)",
+    "n": 50,
+    "orig": "CHN",
+    "s": "wiki_air",
+    "c": "ت",
+    "gen": 2,
+    "cat": "heli_util"
+   },
+   {
+    "m": "Changhe Z-8 (Z-8JH)",
+    "n": 4,
+    "orig": "CHN",
+    "s": "wiki_air",
+    "c": "ت",
+    "gen": 2,
+    "cat": "heli_util"
+   },
+   {
+    "m": "Changhe Z-8 (Z-8S)",
+    "n": 2,
+    "orig": "CHN",
+    "s": "wiki_air",
+    "c": "ت",
+    "gen": 2,
+    "cat": "heli_util"
+   },
+   {
+    "m": "Changhe Z-18",
+    "n": 4,
+    "orig": "CHN",
+    "s": "wiki_air",
+    "c": "ت",
+    "gen": 2,
+    "cat": "heli_util"
+   },
+   {
+    "m": "Changhe Z-18 (Z-18F)",
+    "n": 10,
+    "orig": "CHN",
+    "s": "wiki_air",
+    "c": "ت",
+    "gen": 2,
+    "cat": "heli_util"
+   },
+   {
+    "m": "Changhe Z-18 (Z-18J)",
+    "n": 4,
+    "orig": "CHN",
+    "s": "wiki_air",
+    "c": "ت",
+    "gen": 2,
+    "cat": "heli_util"
+   },
+   {
+    "m": "Harbin Z-9 (Z-9C)",
+    "n": 14,
+    "orig": "CHN",
+    "s": "wiki_air",
+    "c": "ت",
+    "gen": 2,
+    "cat": "heli_util"
+   },
+   {
+    "m": "Harbin Z-9 (Z-9D)",
+    "n": 11,
+    "orig": "CHN",
+    "s": "wiki_air",
+    "c": "ت",
+    "gen": 2,
+    "cat": "heli_util"
+   },
+   {
+    "m": "Harbin Z-9 (Z-9S)",
+    "n": 2,
+    "orig": "CHN",
+    "s": "wiki_air",
+    "c": "ت",
+    "gen": 2,
+    "cat": "heli_util"
+   },
+   {
+    "m": "Harbin Z-20 (Z-20F)",
+    "n": 2,
+    "orig": "CHN",
+    "s": "wiki_air",
+    "c": "ت",
+    "gen": 2,
+    "cat": "heli_util"
+   },
+   {
+    "m": "Harbin Z-20 (Z-20J)",
+    "n": 2,
+    "orig": "CHN",
+    "s": "wiki_air",
+    "c": "ت",
+    "gen": 2,
+    "cat": "heli_util"
+   },
+   {
+    "m": "Kamov Ka-27 (Ka-27PS)",
+    "n": 3,
+    "orig": "SUN",
+    "s": "wiki_air",
+    "c": "ت",
+    "gen": 2,
+    "cat": "heli_util"
+   },
+   {
+    "m": "Kamov Ka-28",
+    "n": 14,
+    "orig": "SUN",
+    "s": "wiki_air",
+    "c": "ت",
+    "gen": 2,
+    "cat": "heli_util"
+   },
+   {
+    "m": "Kamov Ka-31",
+    "n": 9,
+    "orig": "RUS",
+    "s": "wiki_air",
+    "c": "ت",
+    "gen": 2,
+    "cat": "heli_util"
+   },
+   {
+    "m": "Mil Mi-8",
+    "n": 8,
+    "orig": "SUN",
+    "s": "wiki_air",
+    "c": "ت",
+    "gen": 2,
+    "cat": "heli_util"
+   },
+   {
+    "m": "Guizhou JL-9 (JL-9G)",
+    "n": 12,
+    "orig": "CHN",
+    "s": "wiki_air",
+    "c": "ت",
+    "gen": 2,
+    "cat": "trainer"
+   },
+   {
+    "m": "Nanchang CJ-6",
+    "n": 38,
+    "orig": "CHN",
+    "s": "wiki_air",
+    "c": "ت",
+    "gen": 1,
+    "cat": "trainer"
+   },
+   {
+    "m": "Xian Y-7 (HY-7)",
+    "n": 12,
+    "orig": "CHN",
+    "s": "wiki_air",
+    "c": "ت",
+    "gen": 2,
+    "cat": "trainer"
+   },
+   {
+    "m": "Harbin Z-19",
+    "n": 200,
+    "orig": "CHN",
+    "s": "wiki_air",
+    "c": "ت",
+    "gen": 2,
+    "cat": "heli_attack"
+   },
+   {
+    "m": "Changhe Z-10",
+    "n": 300,
+    "orig": "CHN",
+    "s": "wiki_air",
+    "c": "ت",
+    "gen": 2,
+    "cat": "heli_attack"
+   },
+   {
+    "m": "Harbin Z-9 (Z-9WZ)",
+    "n": 120,
+    "orig": "CHN",
+    "s": "wiki_air",
+    "c": "ت",
+    "gen": 2,
+    "cat": "heli_util"
+   },
+   {
+    "m": "Mil Mi-17 (Mi-17/Mi-17-1V/Mi-17-V-5/Mi-17-V-7)",
+    "n": 88,
+    "orig": "RUS",
+    "s": "wiki_air",
+    "c": "ت",
+    "gen": 2,
+    "cat": "heli_util"
+   },
+   {
+    "m": "Harbin Z-20 (Z-20T)",
+    "n": 40,
+    "orig": "CHN",
+    "s": "wiki_air",
+    "c": "ت",
+    "gen": 2,
+    "cat": "heli_util"
+   },
+   {
+    "m": "Changhe Z-8 (Z-8A/B/L)",
+    "n": 135,
+    "orig": "CHN",
+    "s": "wiki_air",
+    "c": "ت",
+    "gen": 2,
+    "cat": "heli_util"
+   },
+   {
+    "m": "Mil Mi-17 (Mi-171)",
+    "n": 140,
+    "orig": "SUN",
+    "s": "wiki_air",
+    "c": "ت",
+    "gen": 2,
+    "cat": "heli_util"
+   },
+   {
+    "m": "Sikorsky S-70 (S-70C2)",
+    "n": 19,
+    "orig": "USA",
+    "s": "wiki_air",
+    "c": "ت",
+    "gen": 2,
+    "cat": "heli_util"
+   },
+   {
+    "m": "Harbin Z-20",
+    "n": 150,
+    "orig": "CHN",
+    "s": "wiki_air",
+    "c": "ت",
+    "gen": 2,
+    "cat": "heli_util"
+   },
+   {
+    "m": "HC120 Colibri",
+    "n": 15,
+    "orig": "FRA",
+    "s": "wiki_air",
+    "c": "ت",
+    "gen": 2,
+    "cat": "heli_util"
+   },
+   {
+    "m": "Changhe Z-11",
+    "n": 53,
+    "orig": "CHN",
+    "s": "wiki_air",
+    "c": "ت",
+    "gen": 2,
+    "cat": "heli_util"
+   },
+   {
+    "m": "Xian Y-7",
+    "n": 2,
+    "orig": "CHN",
+    "s": "wiki_air",
+    "c": "ت",
+    "gen": 2,
+    "cat": "transport"
+   },
+   {
+    "m": "Shaanxi Y-8",
+    "n": 2,
+    "orig": "CHN",
+    "s": "wiki_air",
+    "c": "ت",
+    "gen": 2,
+    "cat": "transport"
+   },
+   {
+    "m": "CASC CH-4B",
+    "n": 5,
+    "orig": "CHN",
+    "s": "wiki_air",
+    "c": "ت",
+    "gen": 3,
+    "cat": "uav_isr"
+   },
+   {
+    "m": "Changhe Z-8/Changhe Z-18",
+    "n": 135,
+    "orig": "CHN",
+    "s": "wiki_army",
+    "c": "ت",
+    "note": "9 Z-8A; 96 Z-8B; 6 Z-8L; 20+ Z-18",
+    "gen": 2,
+    "cat": "heli_util"
+   },
+   {
+    "m": "Harbin Z-9",
+    "n": 120,
+    "orig": "CHN",
+    "s": "wiki_army",
+    "c": "ت",
+    "note": "21 Z-9A; 31 Z-9W; 10 Z-9WA; 193 Z-9WZ",
+    "gen": 2,
+    "cat": "heli_util"
+   },
+   {
+    "m": "H120 Colibri",
+    "n": 15,
+    "orig": "FRA",
+    "s": "wiki_army",
+    "c": "ت",
+    "gen": 2,
+    "cat": "heli_util"
+   },
+   {
+    "m": "Mil Mi-17",
+    "n": 88,
+    "orig": "SUN",
+    "s": "wiki_army",
+    "c": "ت",
+    "note": "22 Mi-17; 22 Mi-17 Hip H; 3 Mi-17-1V Hip H; 38 Mi-17V-5 Hip H; 25 Mi-17V-7 Hip H;",
+    "gen": 2,
+    "cat": "heli_util"
+   },
+   {
+    "m": "Mil Mi-8/Mil Mi-171",
+    "n": 140,
+    "orig": "SUN",
+    "s": "wiki_army",
+    "c": "ت",
+    "note": "50 Mi-8T Hip; 140 Mi-171",
+    "gen": 2,
+    "cat": "heli_util"
+   },
+   {
+    "m": "Mil Mi-26",
+    "n": 4,
+    "orig": "SUN",
+    "s": "wiki_army",
+    "c": "ت",
+    "gen": 2,
+    "cat": "heli_util"
+   },
+   {
+    "m": "Sikorsky S-70C2",
+    "n": 19,
+    "orig": "USA",
+    "s": "wiki_army",
+    "c": "ت",
+    "note": "Initially a civilian variant operated by State Council-affiliated agencies for disaster relief, transport, and high-altitude logistics in Ti",
+    "gen": 2,
+    "cat": "heli_util"
+   }
+  ],
+  "ad": [
+   {
+    "m": "PGZ-09",
+    "n": 120,
+    "orig": "CHN",
+    "s": "wiki_army",
+    "c": "ت",
+    "note": "In service. 2 X 35 mm and optionally 4 X fire-and-forget FN-6 missiles.",
+    "gen": 2,
+    "cat": "short"
+   },
+   {
+    "m": "PGZ-95 / PGZ-04",
+    "n": 270,
+    "orig": "CHN",
+    "s": "wiki_army",
+    "c": "ت",
+    "note": "In service 4 X 25 mm and 4 X fire-and-forget QW-2 or FN-6 missiles.",
+    "gen": 2,
+    "cat": "short"
+   },
+   {
+    "m": "PGZ-88",
+    "n": 6,
+    "orig": "CHN",
+    "s": "wiki_army",
+    "c": "ت",
+    "note": "In limited service for training. 2 X 37 mm self-propelled anti-aircraft system",
+    "gen": 2,
+    "cat": "short"
+   },
+   {
+    "m": "HQ-16A/B",
+    "n": 250,
+    "orig": "CHN",
+    "s": "wiki_army",
+    "c": "ت",
+    "note": "Medium range air defense system",
+    "gen": 2,
+    "cat": "medium"
+   },
+   {
+    "m": "HQ-6D",
+    "n": 30,
+    "orig": "CHN",
+    "s": "wiki_army",
+    "c": "ت",
+    "note": "Low attitude, short-range surface-to-air missile system developed from the Italian Aspide missile.",
+    "gen": 2,
+    "cat": "short"
+   },
+   {
+    "m": "HQ-17/A",
+    "n": 250,
+    "orig": "CHN",
+    "s": "wiki_army",
+    "c": "ت",
+    "note": "Low to medium altitude, short-range surface-to-air missile system.",
+    "gen": 2,
+    "cat": "short"
+   },
+   {
+    "m": "9K331 Tor-M1",
+    "n": 24,
+    "orig": "SUN",
+    "s": "wiki_army",
+    "c": "ت",
+    "note": "Low to medium altitude, short-range surface-to-air missile system.",
+    "gen": 3,
+    "cat": "short"
+   },
+   {
+    "m": "HQ-7A/B",
+    "n": 200,
+    "orig": "CHN",
+    "s": "wiki_army",
+    "c": "ت",
+    "note": "Low attitude, short-range surface-to-air missile system developed from the French Crotale missile.",
+    "gen": 2,
+    "cat": "short"
+   }
+  ],
+  "msl": [],
+  "navy": []
+ },
+ "ind": {
+  "tech": {
+   "arm": 5,
+   "air": 5,
+   "uav": 5,
+   "msl": 5,
+   "navy": 5,
+   "ew": 5,
+   "ind": 5
+  },
+  "makes": [
+   "J-20/J-35",
+   "Type 99A",
+   "HQ-9",
+   "DF-21/26",
+   "حاملات وType 055"
+  ],
+  "s": "tierA",
+  "c": "ت"
+ },
+ "pol": {
+  "factions": [
+   "party",
+   "army",
+   "street",
+   "biz"
+  ],
+  "stab": {
+   "v": 72,
+   "s": "tierA",
+   "c": "ت"
+  },
+  "warHome": []
+ },
+ "rel": {
+  "ARE": 35,
+  "AUS": -15,
+  "BLR": 10,
+  "IND": -30,
+  "IRN": 40,
+  "IRQ": 35,
+  "JPN": -45,
+  "KAZ": 10,
+  "KGZ": 10,
+  "KOR": 5,
+  "PAK": 80,
+  "PHL": -50,
+  "PRK": 55,
+  "RUS": 65,
+  "SAU": 35,
+  "TJK": 10,
+  "TWN": -80,
+  "USA": -40,
+  "UZB": 10,
+  "VNM": -15
+ },
+ "treaties": [
+  "PACT_PRK",
+  "SCO"
+ ],
+ "sanctions": [],
+ "conflicts": [],
+ "notes": ""
+}

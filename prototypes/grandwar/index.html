@@ -5,12 +5,12 @@
 <style>
 /* GW11 A1: نظام التصميم — هوية ملف المالك (زيتوني عسكري + نحاسي). غامق أول، وفاتح يتبع التلفون أو زر الثيم */
 :root{--bg:#1b2019;--panel:rgba(32,38,30,.97);--panel2:#262d24;--chip:rgba(235,229,210,.07);--chip2:rgba(235,229,210,.12);--line:rgba(235,229,210,.16);--ink:#ece6d3;--dim:#a9ab94;
---gold:#d6b03b;--gold-l:rgba(214,176,59,.55);--brass-ink:#1c1a10;--act:var(--act);--act-l:var(--act-l);--pos:#86c891;--neg:#ef7c64;--pos-s:#59b866;--warn-s:#d9b23f;--neg-s:#d9533f;
---me:var(--me);--me-l:#6d9be6;--foe:#c8402f;--on-acc:var(--on-acc);--scrim:rgba(8,10,7,.62);--shadow:0 -6px 24px rgba(0,0,0,.35);--fs-s:11.5px;--fs:13px;--fs-m:14px;--fs-l:17px;--fs-xl:22px;color-scheme:dark}
+--gold:#d6b03b;--gold-l:rgba(214,176,59,.55);--brass-ink:#1c1a10;--act:#b8442f;--act-l:#e0705a;--pos:#86c891;--neg:#ef7c64;--pos-s:#59b866;--warn-s:#d9b23f;--neg-s:#d9533f;
+--me:#2f6fd0;--me-l:#6d9be6;--foe:#c8402f;--on-acc:#fff;--scrim:rgba(8,10,7,.62);--shadow:0 -6px 24px rgba(0,0,0,.35);--fs-s:11.5px;--fs:13px;--fs-m:14px;--fs-l:17px;--fs-xl:22px;color-scheme:dark}
 @media (prefers-color-scheme:light){:root:not([data-theme="dark"]){--bg:#e9e2cd;--panel:rgba(247,242,228,.98);--panel2:#ede6d1;--chip:rgba(34,40,30,.05);--chip2:rgba(34,40,30,.1);--line:rgba(60,56,40,.2);--ink:#22281e;--dim:#62664f;
---gold:#8a6904;--gold-l:rgba(138,105,4,.45);--brass-ink:#fff8e2;--act:#b23a22;--act-l:#d6614a;--pos:#2f7a3d;--neg:#b23a22;--pos-s:#3c9a4a;--warn-s:#b8901a;--neg-s:#c0442e;--me-l:var(--me);--scrim:rgba(40,36,25,.35);--shadow:0 -6px 22px rgba(60,50,30,.18);color-scheme:light}}
+--gold:#8a6904;--gold-l:rgba(138,105,4,.45);--brass-ink:#fff8e2;--act:#b23a22;--act-l:#d6614a;--pos:#2f7a3d;--neg:#b23a22;--pos-s:#3c9a4a;--warn-s:#b8901a;--neg-s:#c0442e;--me-l:#2f6fd0;--scrim:rgba(40,36,25,.35);--shadow:0 -6px 22px rgba(60,50,30,.18);color-scheme:light}}
 :root[data-theme="light"]{--bg:#e9e2cd;--panel:rgba(247,242,228,.98);--panel2:#ede6d1;--chip:rgba(34,40,30,.05);--chip2:rgba(34,40,30,.1);--line:rgba(60,56,40,.2);--ink:#22281e;--dim:#62664f;
---gold:#8a6904;--gold-l:rgba(138,105,4,.45);--brass-ink:#fff8e2;--act:#b23a22;--act-l:#d6614a;--pos:#2f7a3d;--neg:#b23a22;--pos-s:#3c9a4a;--warn-s:#b8901a;--neg-s:#c0442e;--me-l:var(--me);--scrim:rgba(40,36,25,.35);--shadow:0 -6px 22px rgba(60,50,30,.18);color-scheme:light}
+--gold:#8a6904;--gold-l:rgba(138,105,4,.45);--brass-ink:#fff8e2;--act:#b23a22;--act-l:#d6614a;--pos:#2f7a3d;--neg:#b23a22;--pos-s:#3c9a4a;--warn-s:#b8901a;--neg-s:#c0442e;--me-l:#2f6fd0;--scrim:rgba(40,36,25,.35);--shadow:0 -6px 22px rgba(60,50,30,.18);color-scheme:light}
 *{box-sizing:border-box;margin:0;padding:0}html,body{height:100%;background:var(--bg);overflow:hidden;font:500 13px/1.35 "IBM Plex Sans Arabic",Tahoma,sans-serif;color:var(--ink);-webkit-user-select:none;user-select:none;-webkit-tap-highlight-color:transparent}
 canvas{position:fixed;inset:0;width:100%;height:100%;touch-action:none}
 button{font:inherit;color:inherit;background:none;border:0;cursor:pointer}
@@ -99,6 +99,9 @@ button:focus-visible{outline:2px solid var(--gold);outline-offset:2px}
 .tut{display:grid;gap:8px}.tut div{background:var(--chip);border:1px solid var(--line);border-radius:12px;padding:9px 11px}.tut b{display:block;font:700 15px 'Reem Kufi';color:var(--gold)}
 .ezr{display:flex;align-items:center;gap:8px;padding:7px 0;border-top:1px solid var(--line)}.ezr span{flex:1}.ezr button{min-width:74px;min-height:36px;border-radius:9px;background:var(--chip);border:1px solid var(--line);font-weight:700}.ezr button.on{background:var(--gold);color:var(--brass-ink)}
 .gb{display:grid;grid-template-columns:1fr 1fr;gap:6px;margin-top:6px}.gb button{min-height:42px;border-radius:10px;background:var(--chip);border:1px solid var(--line);font-weight:600}
+#end{position:fixed;inset:0;background:var(--scrim);display:grid;place-items:center;z-index:12;padding:14px}#end .box{background:var(--panel2);border:1px solid var(--line);border-radius:18px;padding:16px;max-width:400px;width:100%;max-height:calc(100% - 10px);overflow:auto;box-shadow:var(--shadow)}
+.grd{display:flex;align-items:center;gap:14px}.grd .L{font:700 64px/1 'Reem Kufi';width:84px;height:84px;display:grid;place-items:center;border-radius:16px;background:var(--chip);border:2px solid var(--gold);color:var(--gold)}.grd h1{font:700 22px 'Reem Kufi'}
+.vp{margin:6px 0}.vp .h{display:flex;justify-content:space-between;font-size:var(--fs)}.vp .bar{height:7px}
 </style></head><body>
 <canvas id="c"></canvas>
 <div id="top">
@@ -150,6 +153,7 @@ button:focus-visible{outline:2px solid var(--gold);outline-offset:2px}
 <script src="econ.js"></script>
 <script src="dip.js"></script>
 <script src="advise.js"></script>
+<script src="grade.js"></script>
 <script src="fx.js"></script>
 <script src="view.js"></script>
 <script src="bv.js"></script>
@@ -496,11 +500,7 @@ function events() {
     if (l.k === 'dip' && l.a === 'peace') endPeace();
   }
 }
-function endGame(loser, why) {
-  SPEED = 0; setSpeed(0);
-  const win = loser !== ME; $('end').hidden = false;
-  $('end').innerHTML = `<div class="box" style="background:var(--panel2);border:1px solid var(--line);border-radius:16px;padding:18px;max-width:360px;text-align:center"><h1 style="font:700 26px 'Reem Kufi';color:${win ? 'var(--me-l)' : 'var(--neg)'}">${win ? 'انتصرنا! 🎖' : 'خسرنا الحرب'}</h1><p style="margin:10px 0">${why === 'mor' ? (win ? 'الشعب الإيراني ما تحمّل الحرب والدولة انهارت.' : 'معنويات الشعب انهارت والدولة طلبت هدنة.') : win ? 'إيران خسرت أغلب مدنها واستسلمت.' : 'العراق خسر أغلب مدنه.'}</p><p style="opacity:.75">${Math.round(WD.t / 24)} يوم حرب</p><button onclick="location.reload()" style="margin-top:10px;background:var(--gold);color:var(--brass-ink);border-radius:12px;padding:10px 20px;font-weight:700">حرب جديدة</button></div>`;
-}
+function endGame(loser, why) { showEnd(); }
 function setSpeed(s) { SPEED = s; document.querySelectorAll('.spd button').forEach(b => b.classList.toggle('on', +b.dataset.s === s)); }
 document.querySelectorAll('.spd button').forEach(b => b.onclick = () => setSpeed(+b.dataset.s));
 function armies() {
@@ -539,6 +539,28 @@ function advDo(a) {
 }
 function advBind(el) { el.querySelectorAll('[data-adv]').forEach(b => b.onclick = () => advDo(ADVL[+b.dataset.adv].a)); }
 $('advChip').onclick = () => { SUB.rep = 'sum'; openSheet(repPanel, 'tabRep'); };
+// GW11 B5: طرق الفوز والتقييم، وشاشة النهاية
+const GX = () => ({ SIM, ECON, DIP });
+const VPN = [['mil', '⚔ عسكري', 'مدن إيران اللي بيدنا، ومدننا اللي باقية، والإسقاط'], ['eco', '💰 اقتصادي', 'الخزينة، وصادرات النفط، وبلا دين'], ['dip', '🤝 سياسي', 'حلفاء ويانا، عقوبات على إيران، ومين أتعب'], ['pop', '🙂 الشعب', 'المعنويات، وما خسرنا مدن']];
+const vpBars = G => VPN.map(([k, n, d]) => `<div class="vp"><div class="h"><span><b>${n}</b> <small class="dim">${d}</small></span><b>${G.p[k]}٪</b></div><div class="bar"><u style="width:${G.p[k]}%;background:${G.p[k] >= 60 ? 'var(--pos-s)' : G.p[k] >= 35 ? 'var(--warn-s)' : 'var(--neg-s)'}"></u></div></div>`).join('');
+function showEnd() {
+  const o = WD.over; if (!o) return; SPEED = 0; setSpeed(0); $('modal').hidden = true; closeSheet();
+  const G = GRADE.grade(WD, AW, GX(), ME), sc = SIM.score(WD), allies = DIP.COUNTRIES.filter(C => WD.dip.c[C.id].st === 'ally0').map(C => C.f).join(' ');
+  let h, txt;
+  if (o.peace) { h = { win: 'انتصرنا بالسلام 🎖', draw: 'سلام بتعادل 🕊', loss: 'خسرنا الحرب بالسلام' }[o.res]; txt = { sq: 'الطرفين رجعوا لحدودهم قبل الحرب.', keep: o.by === ME ? 'المناطق الإيرانية اللي أخذناها صارت إلنا.' : 'إيران احتفظت بالمناطق اللي أخذتها منا.', rep: 'حدود قبل الحرب، وإيران دفعت 10 مليار تعويضات.' }[o.peace]; }
+  else if (o.end === 'dur') { h = 'انتهت مدة الحرب ⏱'; txt = `${WD.cfg.dur} يوم حرب خلصت، وهذا تقييمك.`; }
+  else if (o.loser === 1 - ME) { h = 'انتصرنا! 🎖'; txt = o.why === 'mor' ? 'الشعب الإيراني ما تحمّل الحرب والدولة انهارت.' : 'إيران خسرت أغلب مدنها واستسلمت.'; }
+  else { h = 'خسرنا الحرب'; txt = o.why === 'mor' ? 'معنويات الشعب انهارت والدولة طلبت هدنة.' : 'العراق خسر أغلب مدنه.'; }
+  const ST_ = WD.stats || [];
+  $('end').hidden = false;
+  $('end').innerHTML = `<div class="box"><div class="grd"><div class="L">${G.g}</div><div><h1>${h}</h1><div class="dim">${G.t} · ${G.score} من 100${G.ez ? ' · 🎁 بالوضع الخاص' : ''}</div></div></div>
+  <p style="margin:10px 0">${txt}</p>${vpBars(G)}
+  <div class="kpis">${[['📅 ' + Math.round(WD.t / 24), 'يوم'], ['🏙 ' + sc.vp[0], 'نقاط مدننا'], ['💰 ' + WD.eco[ME].cash.toFixed(1), 'مليار $'], ['🙂 ' + Math.round(WD.eco[ME].mor), 'معنويات'], ['🎯 ' + AW.kills[ME], 'أسقطنا'], [allies || '—', 'حلفاؤنا']].map(([v, l]) => `<div class="kpi"><b>${v}</b><span>${l}</span></div>`).join('')}</div>
+  ${ST_.length > 2 ? `<div class="dim" style="margin-top:6px">نقاط المدن طول الحرب: <b style="color:#5b8de0">إحنا</b> · <b style="color:#d9533f">إيران</b></div>${chartSvg([{ v: ST_.map(r => r[1]), c: '#5b8de0' }, { v: ST_.map(r => r[2]), c: '#d9533f' }])}` : ''}
+  <div class="acts" style="margin-top:12px"><button class="go" id="endNew">🆕 حرب جديدة</button><button id="endMap">🗺 شوف الخريطة</button></div></div>`;
+  $('endNew').onclick = () => { location.search = '?new=1'; };
+  $('endMap').onclick = () => { $('end').hidden = true; };
+}
 function chartSvg(series, h = 46) {
   const all = series.flatMap(x => x.v).filter(v => v != null); if (all.length < 2) return '';
   let lo = Math.min(...all), hi = Math.max(...all); if (hi - lo < 1e-6) { hi += 1; lo -= 1; }
@@ -560,6 +582,7 @@ function repPanel(refresh) {
   el.innerHTML = `${GRAB}<div class="eh"><b>📜 التقرير</b><span class="dim">يوم ${Math.floor(WD.t / 24) + 1} من الحرب</span><button class="x" id="shX" aria-label="سكّر">✕</button></div>
   ${subBar('rep', SUBS)}<section data-s="sum">
   <h3>🧭 المستشارين</h3>${advHtml()}
+  ${(() => { const G = GRADE.grade(WD, AW, GX(), ME); return `<h3>🏆 طرق الفوز · التقييم هسه <b style="font-size:18px">${G.g}</b> <small class="dim">(${G.t}، ${G.score}/100)</small></h3>${vpBars(G)}${WD.cfg && WD.cfg.dur ? `<div class="dim">الحرب تخلص بيوم ${WD.cfg.dur} (باقي ${Math.max(0, WD.cfg.dur - Math.floor(WD.t / 24))} يوم)</div>` : ''}`; })()}
   <h3>آخر يوم</h3>
   <div class="kpis">${kpi('🏙 ' + (L ? L[1] : '—'), 'نقاط مدننا', 1)}${kpi('💰 ' + WD.eco[ME].cash.toFixed(1), 'مليار $', 3)}${kpi('🙂 ' + Math.round(WD.eco[ME].mor), 'المعنويات', 4)}${kpi('🪖 ' + SIM.score(WD).divs[0], 'فرقنا', 5)}${kpi('✈ ' + pl, 'طياراتنا', 7)}${kpi('🎯 ' + AW.kills[ME], 'أسقطنا طيارة', 9)}</div>
   ${L && P7 && L !== P7 ? `<div class="dim">آخر ${L[0] - P7[0]} أيام: مدننا ${L[1] - P7[1] >= 0 ? '+' : ''}${L[1] - P7[1]} نقطة · مناطقنا ${L[11] - P7[11] >= 0 ? '+' : ''}${L[11] - P7[11]} · خزينتنا ${(L[3] - P7[3] >= 0 ? '+' : '') + (L[3] - P7[3]).toFixed(1)} مليار · أسقطنا ${L[9] - P7[9]} وأسقطوا ${L[10] - P7[10]}</div>` : '<div class="dim">الملخص والرسوم تبدي بعد أول يوم.</div>'}
@@ -977,14 +1000,7 @@ function dipPopups() {
     $('oN').onclick = () => { DIP.answerOffer(WD, false); m.hidden = true; toast('⚔ رفضنا العرض'); setSpeed(was || 1); };
   }
 }
-function endPeace() {
-  const o = WD.over; if (!o || !o.peace) return; SPEED = 0; setSpeed(0); $('modal').hidden = true;
-  const R = { win: ['انتصرنا بالسلام 🎖', 'var(--me-l)'], draw: ['سلام بتعادل 🕊', 'var(--gold)'], loss: ['خسرنا الحرب بالسلام', 'var(--neg)'] }[o.res];
-  const txt = { sq: 'الطرفين رجعوا لحدودهم قبل الحرب.', keep: o.by === ME ? 'المناطق الإيرانية اللي أخذناها صارت إلنا.' : 'إيران احتفظت بالمناطق اللي أخذتها منا.', rep: 'حدود قبل الحرب، وإيران دفعت 10 مليار تعويضات.' }[o.peace];
-  const sc = SIM.score(WD), allies = DIP.COUNTRIES.filter(C => WD.dip.c[C.id].st === 'ally0').map(C => C.f).join(' ');
-  $('end').hidden = false;
-  $('end').innerHTML = `<div class="box" style="background:var(--panel2);border:1px solid var(--line);border-radius:16px;padding:18px;max-width:360px;text-align:center"><h1 style="font:700 26px 'Reem Kufi';color:${R[1]}">${R[0]}</h1><p style="margin:10px 0">${txt}</p><p style="opacity:.8;font-size:12.5px">${Math.round(WD.t / 24)} يوم حرب · نقاط مدننا ${sc.vp[0]} · خزينتنا ${WD.eco[0].cash.toFixed(1)} مليار · معنويات الشعب ${Math.round(WD.eco[0].mor)}${allies ? ' · حلفاؤنا ' + allies : ''}</p><button onclick="location.search='?new=1'" style="margin-top:10px;background:var(--gold);color:var(--brass-ink);border-radius:12px;padding:10px 20px;font-weight:700">حرب جديدة</button></div>`;
-}
+function endPeace() { if (WD.over && WD.over.peace) showEnd(); }
 const relBar = (v, col) => `<span class="rb"><u style="${v >= 0 ? 'left:50%;width:' + v / 2 + '%' : 'right:50%;width:' + -v / 2 + '%'};background:${col}"></u></span>`;
 function dipPanel(refresh) {
   const el = $('sheet'), D = WD.dip, top = el.scrollTop, w0 = DIP.weary(WD, 0), w1 = DIP.weary(WD, 1);

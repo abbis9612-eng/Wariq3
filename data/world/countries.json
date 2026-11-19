@@ -1,0 +1,2043 @@
+[
+ {
+  "id": "AUS",
+  "ar": "أستراليا",
+  "en": "Australia",
+  "cont": "oc",
+  "tier": "A",
+  "base": {
+   "pop": 25364307,
+   "gdpMusd": 1396567,
+   "src": "Natural Earth 5.1 (POP_EST/GDP_MD ~2019) — أساس مؤقت يتبدّل بالبحث",
+   "conf": "تقدير قديم"
+  }
+ },
+ {
+  "id": "DEU",
+  "ar": "ألمانيا",
+  "en": "Germany",
+  "cont": "eu",
+  "tier": "A",
+  "base": {
+   "pop": 83132799,
+   "gdpMusd": 3861123,
+   "src": "Natural Earth 5.1 (POP_EST/GDP_MD ~2019) — أساس مؤقت يتبدّل بالبحث",
+   "conf": "تقدير قديم"
+  }
+ },
+ {
+  "id": "UKR",
+  "ar": "أوكرانيا",
+  "en": "Ukraine",
+  "cont": "eu",
+  "tier": "A",
+  "base": {
+   "pop": 44385155,
+   "gdpMusd": 153781,
+   "src": "Natural Earth 5.1 (POP_EST/GDP_MD ~2019) — أساس مؤقت يتبدّل بالبحث",
+   "conf": "تقدير قديم"
+  }
+ },
+ {
+  "id": "ESP",
+  "ar": "إسبانيا",
+  "en": "Spain",
+  "cont": "eu",
+  "tier": "A",
+  "base": {
+   "pop": 47076781,
+   "gdpMusd": 1393490,
+   "src": "Natural Earth 5.1 (POP_EST/GDP_MD ~2019) — أساس مؤقت يتبدّل بالبحث",
+   "conf": "تقدير قديم"
+  }
+ },
+ {
+  "id": "ISR",
+  "ar": "إسرائيل",
+  "en": "Israel",
+  "cont": "as",
+  "tier": "A",
+  "base": {
+   "pop": 9053300,
+   "gdpMusd": 394652,
+   "src": "Natural Earth 5.1 (POP_EST/GDP_MD ~2019) — أساس مؤقت يتبدّل بالبحث",
+   "conf": "تقدير قديم"
+  }
+ },
+ {
+  "id": "IDN",
+  "ar": "إندونيسيا",
+  "en": "Indonesia",
+  "cont": "as",
+  "tier": "A",
+  "base": {
+   "pop": 270625568,
+   "gdpMusd": 1119190,
+   "src": "Natural Earth 5.1 (POP_EST/GDP_MD ~2019) — أساس مؤقت يتبدّل بالبحث",
+   "conf": "تقدير قديم"
+  }
+ },
+ {
+  "id": "IRN",
+  "ar": "إيران",
+  "en": "Iran",
+  "cont": "as",
+  "tier": "A",
+  "base": {
+   "pop": 82913906,
+   "gdpMusd": 453996,
+   "src": "Natural Earth 5.1 (POP_EST/GDP_MD ~2019) — أساس مؤقت يتبدّل بالبحث",
+   "conf": "تقدير قديم"
+  }
+ },
+ {
+  "id": "ITA",
+  "ar": "إيطاليا",
+  "en": "Italy",
+  "cont": "eu",
+  "tier": "A",
+  "base": {
+   "pop": 60297396,
+   "gdpMusd": 2003576,
+   "src": "Natural Earth 5.1 (POP_EST/GDP_MD ~2019) — أساس مؤقت يتبدّل بالبحث",
+   "conf": "تقدير قديم"
+  }
+ },
+ {
+  "id": "JOR",
+  "ar": "الأردن",
+  "en": "Jordan",
+  "cont": "as",
+  "tier": "A",
+  "base": {
+   "pop": 10101694,
+   "gdpMusd": 44502,
+   "src": "Natural Earth 5.1 (POP_EST/GDP_MD ~2019) — أساس مؤقت يتبدّل بالبحث",
+   "conf": "تقدير قديم"
+  }
+ },
+ {
+  "id": "ARE",
+  "ar": "الإمارات العربية المتحدة",
+  "en": "United Arab Emirates",
+  "cont": "as",
+  "tier": "A",
+  "base": {
+   "pop": 9770529,
+   "gdpMusd": 421142,
+   "src": "Natural Earth 5.1 (POP_EST/GDP_MD ~2019) — أساس مؤقت يتبدّل بالبحث",
+   "conf": "تقدير قديم"
+  }
+ },
+ {
+  "id": "BRA",
+  "ar": "البرازيل",
+  "en": "Brazil",
+  "cont": "sa",
+  "tier": "A",
+  "base": {
+   "pop": 211049527,
+   "gdpMusd": 1839758,
+   "src": "Natural Earth 5.1 (POP_EST/GDP_MD ~2019) — أساس مؤقت يتبدّل بالبحث",
+   "conf": "تقدير قديم"
+  }
+ },
+ {
+  "id": "DZA",
+  "ar": "الجزائر",
+  "en": "Algeria",
+  "cont": "af",
+  "tier": "A",
+  "base": {
+   "pop": 43053054,
+   "gdpMusd": 171091,
+   "src": "Natural Earth 5.1 (POP_EST/GDP_MD ~2019) — أساس مؤقت يتبدّل بالبحث",
+   "conf": "تقدير قديم"
+  }
+ },
+ {
+  "id": "SAU",
+  "ar": "السعودية",
+  "en": "Saudi Arabia",
+  "cont": "as",
+  "tier": "A",
+  "base": {
+   "pop": 34268528,
+   "gdpMusd": 792966,
+   "src": "Natural Earth 5.1 (POP_EST/GDP_MD ~2019) — أساس مؤقت يتبدّل بالبحث",
+   "conf": "تقدير قديم"
+  }
+ },
+ {
+  "id": "CHN",
+  "ar": "الصين",
+  "en": "China",
+  "cont": "as",
+  "tier": "A",
+  "base": {
+   "pop": 1397715000,
+   "gdpMusd": 14342903,
+   "src": "Natural Earth 5.1 (POP_EST/GDP_MD ~2019) — أساس مؤقت يتبدّل بالبحث",
+   "conf": "تقدير قديم"
+  }
+ },
+ {
+  "id": "IRQ",
+  "ar": "العراق",
+  "en": "Iraq",
+  "cont": "as",
+  "tier": "A",
+  "base": {
+   "pop": 39309783,
+   "gdpMusd": 234094,
+   "src": "Natural Earth 5.1 (POP_EST/GDP_MD ~2019) — أساس مؤقت يتبدّل بالبحث",
+   "conf": "تقدير قديم"
+  }
+ },
+ {
+  "id": "GBR",
+  "ar": "المملكة المتحدة",
+  "en": "United Kingdom",
+  "cont": "eu",
+  "tier": "A",
+  "base": {
+   "pop": 66834405,
+   "gdpMusd": 2829108,
+   "src": "Natural Earth 5.1 (POP_EST/GDP_MD ~2019) — أساس مؤقت يتبدّل بالبحث",
+   "conf": "تقدير قديم"
+  }
+ },
+ {
+  "id": "IND",
+  "ar": "الهند",
+  "en": "India",
+  "cont": "as",
+  "tier": "A",
+  "base": {
+   "pop": 1366417754,
+   "gdpMusd": 2868929,
+   "src": "Natural Earth 5.1 (POP_EST/GDP_MD ~2019) — أساس مؤقت يتبدّل بالبحث",
+   "conf": "تقدير قديم"
+  }
+ },
+ {
+  "id": "USA",
+  "ar": "الولايات المتحدة",
+  "en": "United States of America",
+  "cont": "na",
+  "tier": "A",
+  "base": {
+   "pop": 328239523,
+   "gdpMusd": 21433226,
+   "src": "Natural Earth 5.1 (POP_EST/GDP_MD ~2019) — أساس مؤقت يتبدّل بالبحث",
+   "conf": "تقدير قديم"
+  }
+ },
+ {
+  "id": "JPN",
+  "ar": "اليابان",
+  "en": "Japan",
+  "cont": "as",
+  "tier": "A",
+  "base": {
+   "pop": 126264931,
+   "gdpMusd": 5081769,
+   "src": "Natural Earth 5.1 (POP_EST/GDP_MD ~2019) — أساس مؤقت يتبدّل بالبحث",
+   "conf": "تقدير قديم"
+  }
+ },
+ {
+  "id": "PAK",
+  "ar": "باكستان",
+  "en": "Pakistan",
+  "cont": "as",
+  "tier": "A",
+  "base": {
+   "pop": 216565318,
+   "gdpMusd": 278221,
+   "src": "Natural Earth 5.1 (POP_EST/GDP_MD ~2019) — أساس مؤقت يتبدّل بالبحث",
+   "conf": "تقدير قديم"
+  }
+ },
+ {
+  "id": "POL",
+  "ar": "بولندا",
+  "en": "Poland",
+  "cont": "eu",
+  "tier": "A",
+  "base": {
+   "pop": 37970874,
+   "gdpMusd": 595858,
+   "src": "Natural Earth 5.1 (POP_EST/GDP_MD ~2019) — أساس مؤقت يتبدّل بالبحث",
+   "conf": "تقدير قديم"
+  }
+ },
+ {
+  "id": "TWN",
+  "ar": "تايوان",
+  "en": "Taiwan",
+  "cont": "as",
+  "tier": "A",
+  "base": {
+   "pop": 23568378,
+   "gdpMusd": 1127000,
+   "src": "Natural Earth 5.1 (POP_EST/GDP_MD ~2019) — أساس مؤقت يتبدّل بالبحث",
+   "conf": "تقدير قديم"
+  }
+ },
+ {
+  "id": "TUR",
+  "ar": "تركيا",
+  "en": "Turkey",
+  "cont": "as",
+  "tier": "A",
+  "base": {
+   "pop": 83429615,
+   "gdpMusd": 761425,
+   "src": "Natural Earth 5.1 (POP_EST/GDP_MD ~2019) — أساس مؤقت يتبدّل بالبحث",
+   "conf": "تقدير قديم"
+  }
+ },
+ {
+  "id": "RUS",
+  "ar": "روسيا",
+  "en": "Russia",
+  "cont": "eu",
+  "tier": "A",
+  "base": {
+   "pop": 144373535,
+   "gdpMusd": 1699876,
+   "src": "Natural Earth 5.1 (POP_EST/GDP_MD ~2019) — أساس مؤقت يتبدّل بالبحث",
+   "conf": "تقدير قديم"
+  }
+ },
+ {
+  "id": "SYR",
+  "ar": "سوريا",
+  "en": "Syria",
+  "cont": "as",
+  "tier": "A",
+  "base": {
+   "pop": 17070135,
+   "gdpMusd": 98830,
+   "src": "Natural Earth 5.1 (POP_EST/GDP_MD ~2019) — أساس مؤقت يتبدّل بالبحث",
+   "conf": "تقدير قديم"
+  }
+ },
+ {
+  "id": "FRA",
+  "ar": "فرنسا",
+  "en": "France",
+  "cont": "eu",
+  "tier": "A",
+  "base": {
+   "pop": 67059887,
+   "gdpMusd": 2715518,
+   "src": "Natural Earth 5.1 (POP_EST/GDP_MD ~2019) — أساس مؤقت يتبدّل بالبحث",
+   "conf": "تقدير قديم"
+  }
+ },
+ {
+  "id": "QAT",
+  "ar": "قطر",
+  "en": "Qatar",
+  "cont": "as",
+  "tier": "A",
+  "base": {
+   "pop": 2832067,
+   "gdpMusd": 175837,
+   "src": "Natural Earth 5.1 (POP_EST/GDP_MD ~2019) — أساس مؤقت يتبدّل بالبحث",
+   "conf": "تقدير قديم"
+  }
+ },
+ {
+  "id": "KOR",
+  "ar": "كوريا الجنوبية",
+  "en": "South Korea",
+  "cont": "as",
+  "tier": "A",
+  "base": {
+   "pop": 51709098,
+   "gdpMusd": 1646739,
+   "src": "Natural Earth 5.1 (POP_EST/GDP_MD ~2019) — أساس مؤقت يتبدّل بالبحث",
+   "conf": "تقدير قديم"
+  }
+ },
+ {
+  "id": "PRK",
+  "ar": "كوريا الشمالية",
+  "en": "North Korea",
+  "cont": "as",
+  "tier": "A",
+  "base": {
+   "pop": 25666161,
+   "gdpMusd": 40000,
+   "src": "Natural Earth 5.1 (POP_EST/GDP_MD ~2019) — أساس مؤقت يتبدّل بالبحث",
+   "conf": "تقدير قديم"
+  }
+ },
+ {
+  "id": "EGY",
+  "ar": "مصر",
+  "en": "Egypt",
+  "cont": "af",
+  "tier": "A",
+  "base": {
+   "pop": 100388073,
+   "gdpMusd": 303092,
+   "src": "Natural Earth 5.1 (POP_EST/GDP_MD ~2019) — أساس مؤقت يتبدّل بالبحث",
+   "conf": "تقدير قديم"
+  }
+ },
+ {
+  "id": "AZE",
+  "ar": "أذربيجان",
+  "en": "Azerbaijan",
+  "cont": "as",
+  "tier": "B",
+  "base": {
+   "pop": 10023318,
+   "gdpMusd": 48047,
+   "src": "Natural Earth 5.1 (POP_EST/GDP_MD ~2019) — أساس مؤقت يتبدّل بالبحث",
+   "conf": "تقدير قديم"
+  }
+ },
+ {
+  "id": "ARM",
+  "ar": "أرمينيا",
+  "en": "Armenia",
+  "cont": "as",
+  "tier": "B",
+  "base": {
+   "pop": 2957731,
+   "gdpMusd": 13672,
+   "src": "Natural Earth 5.1 (POP_EST/GDP_MD ~2019) — أساس مؤقت يتبدّل بالبحث",
+   "conf": "تقدير قديم"
+  }
+ },
+ {
+  "id": "AFG",
+  "ar": "أفغانستان",
+  "en": "Afghanistan",
+  "cont": "as",
+  "tier": "B",
+  "base": {
+   "pop": 38041754,
+   "gdpMusd": 19291,
+   "src": "Natural Earth 5.1 (POP_EST/GDP_MD ~2019) — أساس مؤقت يتبدّل بالبحث",
+   "conf": "تقدير قديم"
+  }
+ },
+ {
+  "id": "AGO",
+  "ar": "أنغولا",
+  "en": "Angola",
+  "cont": "af",
+  "tier": "B",
+  "base": {
+   "pop": 31825295,
+   "gdpMusd": 88815,
+   "src": "Natural Earth 5.1 (POP_EST/GDP_MD ~2019) — أساس مؤقت يتبدّل بالبحث",
+   "conf": "تقدير قديم"
+  }
+ },
+ {
+  "id": "UZB",
+  "ar": "أوزبكستان",
+  "en": "Uzbekistan",
+  "cont": "as",
+  "tier": "B",
+  "base": {
+   "pop": 33580650,
+   "gdpMusd": 57921,
+   "src": "Natural Earth 5.1 (POP_EST/GDP_MD ~2019) — أساس مؤقت يتبدّل بالبحث",
+   "conf": "تقدير قديم"
+  }
+ },
+ {
+  "id": "ETH",
+  "ar": "إثيوبيا",
+  "en": "Ethiopia",
+  "cont": "af",
+  "tier": "B",
+  "base": {
+   "pop": 112078730,
+   "gdpMusd": 95912,
+   "src": "Natural Earth 5.1 (POP_EST/GDP_MD ~2019) — أساس مؤقت يتبدّل بالبحث",
+   "conf": "تقدير قديم"
+  }
+ },
+ {
+  "id": "EST",
+  "ar": "إستونيا",
+  "en": "Estonia",
+  "cont": "eu",
+  "tier": "B",
+  "base": {
+   "pop": 1326590,
+   "gdpMusd": 31471,
+   "src": "Natural Earth 5.1 (POP_EST/GDP_MD ~2019) — أساس مؤقت يتبدّل بالبحث",
+   "conf": "تقدير قديم"
+  }
+ },
+ {
+  "id": "ARG",
+  "ar": "الأرجنتين",
+  "en": "Argentina",
+  "cont": "sa",
+  "tier": "B",
+  "base": {
+   "pop": 44938712,
+   "gdpMusd": 445445,
+   "src": "Natural Earth 5.1 (POP_EST/GDP_MD ~2019) — أساس مؤقت يتبدّل بالبحث",
+   "conf": "تقدير قديم"
+  }
+ },
+ {
+  "id": "BHR",
+  "ar": "البحرين",
+  "en": "Bahrain",
+  "cont": "as",
+  "tier": "B",
+  "base": {
+   "pop": 1641172,
+   "gdpMusd": 38574,
+   "src": "Natural Earth 5.1 (POP_EST/GDP_MD ~2019) — أساس مؤقت يتبدّل بالبحث",
+   "conf": "تقدير قديم"
+  }
+ },
+ {
+  "id": "PRT",
+  "ar": "البرتغال",
+  "en": "Portugal",
+  "cont": "eu",
+  "tier": "B",
+  "base": {
+   "pop": 10269417,
+   "gdpMusd": 238785,
+   "src": "Natural Earth 5.1 (POP_EST/GDP_MD ~2019) — أساس مؤقت يتبدّل بالبحث",
+   "conf": "تقدير قديم"
+  }
+ },
+ {
+  "id": "CZE",
+  "ar": "التشيك",
+  "en": "Czechia",
+  "cont": "eu",
+  "tier": "B",
+  "base": {
+   "pop": 10669709,
+   "gdpMusd": 250680,
+   "src": "Natural Earth 5.1 (POP_EST/GDP_MD ~2019) — أساس مؤقت يتبدّل بالبحث",
+   "conf": "تقدير قديم"
+  }
+ },
+ {
+  "id": "DNK",
+  "ar": "الدنمارك",
+  "en": "Denmark",
+  "cont": "eu",
+  "tier": "B",
+  "base": {
+   "pop": 5818553,
+   "gdpMusd": 350104,
+   "src": "Natural Earth 5.1 (POP_EST/GDP_MD ~2019) — أساس مؤقت يتبدّل بالبحث",
+   "conf": "تقدير قديم"
+  }
+ },
+ {
+  "id": "SDN",
+  "ar": "السودان",
+  "en": "Sudan",
+  "cont": "af",
+  "tier": "B",
+  "base": {
+   "pop": 42813238,
+   "gdpMusd": 30513,
+   "src": "Natural Earth 5.1 (POP_EST/GDP_MD ~2019) — أساس مؤقت يتبدّل بالبحث",
+   "conf": "تقدير قديم"
+  }
+ },
+ {
+  "id": "SWE",
+  "ar": "السويد",
+  "en": "Sweden",
+  "cont": "eu",
+  "tier": "B",
+  "base": {
+   "pop": 10285453,
+   "gdpMusd": 530883,
+   "src": "Natural Earth 5.1 (POP_EST/GDP_MD ~2019) — أساس مؤقت يتبدّل بالبحث",
+   "conf": "تقدير قديم"
+  }
+ },
+ {
+  "id": "PHL",
+  "ar": "الفلبين",
+  "en": "Philippines",
+  "cont": "as",
+  "tier": "B",
+  "base": {
+   "pop": 108116615,
+   "gdpMusd": 376795,
+   "src": "Natural Earth 5.1 (POP_EST/GDP_MD ~2019) — أساس مؤقت يتبدّل بالبحث",
+   "conf": "تقدير قديم"
+  }
+ },
+ {
+  "id": "KWT",
+  "ar": "الكويت",
+  "en": "Kuwait",
+  "cont": "as",
+  "tier": "B",
+  "base": {
+   "pop": 4207083,
+   "gdpMusd": 134628,
+   "src": "Natural Earth 5.1 (POP_EST/GDP_MD ~2019) — أساس مؤقت يتبدّل بالبحث",
+   "conf": "تقدير قديم"
+  }
+ },
+ {
+  "id": "HUN",
+  "ar": "المجر",
+  "en": "Hungary",
+  "cont": "eu",
+  "tier": "B",
+  "base": {
+   "pop": 9769949,
+   "gdpMusd": 163469,
+   "src": "Natural Earth 5.1 (POP_EST/GDP_MD ~2019) — أساس مؤقت يتبدّل بالبحث",
+   "conf": "تقدير قديم"
+  }
+ },
+ {
+  "id": "MAR",
+  "ar": "المغرب",
+  "en": "Morocco",
+  "cont": "af",
+  "tier": "B",
+  "base": {
+   "pop": 36471769,
+   "gdpMusd": 119700,
+   "src": "Natural Earth 5.1 (POP_EST/GDP_MD ~2019) — أساس مؤقت يتبدّل بالبحث",
+   "conf": "تقدير قديم"
+  }
+ },
+ {
+  "id": "MEX",
+  "ar": "المكسيك",
+  "en": "Mexico",
+  "cont": "na",
+  "tier": "B",
+  "base": {
+   "pop": 127575529,
+   "gdpMusd": 1268870,
+   "src": "Natural Earth 5.1 (POP_EST/GDP_MD ~2019) — أساس مؤقت يتبدّل بالبحث",
+   "conf": "تقدير قديم"
+  }
+ },
+ {
+  "id": "NOR",
+  "ar": "النرويج",
+  "en": "Norway",
+  "cont": "eu",
+  "tier": "B",
+  "base": {
+   "pop": 5347896,
+   "gdpMusd": 403336,
+   "src": "Natural Earth 5.1 (POP_EST/GDP_MD ~2019) — أساس مؤقت يتبدّل بالبحث",
+   "conf": "تقدير قديم"
+  }
+ },
+ {
+  "id": "AUT",
+  "ar": "النمسا",
+  "en": "Austria",
+  "cont": "eu",
+  "tier": "B",
+  "base": {
+   "pop": 8877067,
+   "gdpMusd": 445075,
+   "src": "Natural Earth 5.1 (POP_EST/GDP_MD ~2019) — أساس مؤقت يتبدّل بالبحث",
+   "conf": "تقدير قديم"
+  }
+ },
+ {
+  "id": "YEM",
+  "ar": "اليمن",
+  "en": "Yemen",
+  "cont": "as",
+  "tier": "B",
+  "base": {
+   "pop": 29161922,
+   "gdpMusd": 22581,
+   "src": "Natural Earth 5.1 (POP_EST/GDP_MD ~2019) — أساس مؤقت يتبدّل بالبحث",
+   "conf": "تقدير قديم"
+  }
+ },
+ {
+  "id": "GRC",
+  "ar": "اليونان",
+  "en": "Greece",
+  "cont": "eu",
+  "tier": "B",
+  "base": {
+   "pop": 10716322,
+   "gdpMusd": 209852,
+   "src": "Natural Earth 5.1 (POP_EST/GDP_MD ~2019) — أساس مؤقت يتبدّل بالبحث",
+   "conf": "تقدير قديم"
+  }
+ },
+ {
+  "id": "BEL",
+  "ar": "بلجيكا",
+  "en": "Belgium",
+  "cont": "eu",
+  "tier": "B",
+  "base": {
+   "pop": 11484055,
+   "gdpMusd": 533097,
+   "src": "Natural Earth 5.1 (POP_EST/GDP_MD ~2019) — أساس مؤقت يتبدّل بالبحث",
+   "conf": "تقدير قديم"
+  }
+ },
+ {
+  "id": "BGR",
+  "ar": "بلغاريا",
+  "en": "Bulgaria",
+  "cont": "eu",
+  "tier": "B",
+  "base": {
+   "pop": 6975761,
+   "gdpMusd": 68558,
+   "src": "Natural Earth 5.1 (POP_EST/GDP_MD ~2019) — أساس مؤقت يتبدّل بالبحث",
+   "conf": "تقدير قديم"
+  }
+ },
+ {
+  "id": "BGD",
+  "ar": "بنغلاديش",
+  "en": "Bangladesh",
+  "cont": "as",
+  "tier": "B",
+  "base": {
+   "pop": 163046161,
+   "gdpMusd": 302571,
+   "src": "Natural Earth 5.1 (POP_EST/GDP_MD ~2019) — أساس مؤقت يتبدّل بالبحث",
+   "conf": "تقدير قديم"
+  }
+ },
+ {
+  "id": "PER",
+  "ar": "بيرو",
+  "en": "Peru",
+  "cont": "sa",
+  "tier": "B",
+  "base": {
+   "pop": 32510453,
+   "gdpMusd": 226848,
+   "src": "Natural Earth 5.1 (POP_EST/GDP_MD ~2019) — أساس مؤقت يتبدّل بالبحث",
+   "conf": "تقدير قديم"
+  }
+ },
+ {
+  "id": "BLR",
+  "ar": "بيلاروسيا",
+  "en": "Belarus",
+  "cont": "eu",
+  "tier": "B",
+  "base": {
+   "pop": 9466856,
+   "gdpMusd": 63080,
+   "src": "Natural Earth 5.1 (POP_EST/GDP_MD ~2019) — أساس مؤقت يتبدّل بالبحث",
+   "conf": "تقدير قديم"
+  }
+ },
+ {
+  "id": "THA",
+  "ar": "تايلاند",
+  "en": "Thailand",
+  "cont": "as",
+  "tier": "B",
+  "base": {
+   "pop": 69625582,
+   "gdpMusd": 543548,
+   "src": "Natural Earth 5.1 (POP_EST/GDP_MD ~2019) — أساس مؤقت يتبدّل بالبحث",
+   "conf": "تقدير قديم"
+  }
+ },
+ {
+  "id": "CHL",
+  "ar": "تشيلي",
+  "en": "Chile",
+  "cont": "sa",
+  "tier": "B",
+  "base": {
+   "pop": 18952038,
+   "gdpMusd": 282318,
+   "src": "Natural Earth 5.1 (POP_EST/GDP_MD ~2019) — أساس مؤقت يتبدّل بالبحث",
+   "conf": "تقدير قديم"
+  }
+ },
+ {
+  "id": "TUN",
+  "ar": "تونس",
+  "en": "Tunisia",
+  "cont": "af",
+  "tier": "B",
+  "base": {
+   "pop": 11694719,
+   "gdpMusd": 38796,
+   "src": "Natural Earth 5.1 (POP_EST/GDP_MD ~2019) — أساس مؤقت يتبدّل بالبحث",
+   "conf": "تقدير قديم"
+  }
+ },
+ {
+  "id": "ZAF",
+  "ar": "جنوب أفريقيا",
+  "en": "South Africa",
+  "cont": "af",
+  "tier": "B",
+  "base": {
+   "pop": 58558270,
+   "gdpMusd": 351431,
+   "src": "Natural Earth 5.1 (POP_EST/GDP_MD ~2019) — أساس مؤقت يتبدّل بالبحث",
+   "conf": "تقدير قديم"
+  }
+ },
+ {
+  "id": "GEO",
+  "ar": "جورجيا",
+  "en": "Georgia",
+  "cont": "as",
+  "tier": "B",
+  "base": {
+   "pop": 3720382,
+   "gdpMusd": 17477,
+   "src": "Natural Earth 5.1 (POP_EST/GDP_MD ~2019) — أساس مؤقت يتبدّل بالبحث",
+   "conf": "تقدير قديم"
+  }
+ },
+ {
+  "id": "ROU",
+  "ar": "رومانيا",
+  "en": "Romania",
+  "cont": "eu",
+  "tier": "B",
+  "base": {
+   "pop": 19356544,
+   "gdpMusd": 250077,
+   "src": "Natural Earth 5.1 (POP_EST/GDP_MD ~2019) — أساس مؤقت يتبدّل بالبحث",
+   "conf": "تقدير قديم"
+  }
+ },
+ {
+  "id": "LKA",
+  "ar": "سريلانكا",
+  "en": "Sri Lanka",
+  "cont": "as",
+  "tier": "B",
+  "base": {
+   "pop": 21803000,
+   "gdpMusd": 84008,
+   "src": "Natural Earth 5.1 (POP_EST/GDP_MD ~2019) — أساس مؤقت يتبدّل بالبحث",
+   "conf": "تقدير قديم"
+  }
+ },
+ {
+  "id": "OMN",
+  "ar": "سلطنة عمان",
+  "en": "Oman",
+  "cont": "as",
+  "tier": "B",
+  "base": {
+   "pop": 4974986,
+   "gdpMusd": 76331,
+   "src": "Natural Earth 5.1 (POP_EST/GDP_MD ~2019) — أساس مؤقت يتبدّل بالبحث",
+   "conf": "تقدير قديم"
+  }
+ },
+ {
+  "id": "SVK",
+  "ar": "سلوفاكيا",
+  "en": "Slovakia",
+  "cont": "eu",
+  "tier": "B",
+  "base": {
+   "pop": 5454073,
+   "gdpMusd": 105079,
+   "src": "Natural Earth 5.1 (POP_EST/GDP_MD ~2019) — أساس مؤقت يتبدّل بالبحث",
+   "conf": "تقدير قديم"
+  }
+ },
+ {
+  "id": "SGP",
+  "ar": "سنغافورة",
+  "en": "Singapore",
+  "cont": "as",
+  "tier": "B",
+  "base": {
+   "pop": 5703569,
+   "gdpMusd": 372062,
+   "src": "Natural Earth 5.1 (POP_EST/GDP_MD ~2019) — أساس مؤقت يتبدّل بالبحث",
+   "conf": "تقدير قديم"
+  }
+ },
+ {
+  "id": "CHE",
+  "ar": "سويسرا",
+  "en": "Switzerland",
+  "cont": "eu",
+  "tier": "B",
+  "base": {
+   "pop": 8574832,
+   "gdpMusd": 703082,
+   "src": "Natural Earth 5.1 (POP_EST/GDP_MD ~2019) — أساس مؤقت يتبدّل بالبحث",
+   "conf": "تقدير قديم"
+  }
+ },
+ {
+  "id": "SRB",
+  "ar": "صربيا",
+  "en": "Serbia",
+  "cont": "eu",
+  "tier": "B",
+  "base": {
+   "pop": 6944975,
+   "gdpMusd": 51475,
+   "src": "Natural Earth 5.1 (POP_EST/GDP_MD ~2019) — أساس مؤقت يتبدّل بالبحث",
+   "conf": "تقدير قديم"
+  }
+ },
+ {
+  "id": "PSX",
+  "ar": "فلسطين",
+  "en": "Palestine",
+  "cont": "as",
+  "tier": "B",
+  "base": {
+   "pop": 4685306,
+   "gdpMusd": 16276,
+   "src": "Natural Earth 5.1 (POP_EST/GDP_MD ~2019) — أساس مؤقت يتبدّل بالبحث",
+   "conf": "تقدير قديم"
+  }
+ },
+ {
+  "id": "VEN",
+  "ar": "فنزويلا",
+  "en": "Venezuela",
+  "cont": "sa",
+  "tier": "B",
+  "base": {
+   "pop": 28515829,
+   "gdpMusd": 482359,
+   "src": "Natural Earth 5.1 (POP_EST/GDP_MD ~2019) — أساس مؤقت يتبدّل بالبحث",
+   "conf": "تقدير قديم"
+  }
+ },
+ {
+  "id": "FIN",
+  "ar": "فنلندا",
+  "en": "Finland",
+  "cont": "eu",
+  "tier": "B",
+  "base": {
+   "pop": 5520314,
+   "gdpMusd": 269296,
+   "src": "Natural Earth 5.1 (POP_EST/GDP_MD ~2019) — أساس مؤقت يتبدّل بالبحث",
+   "conf": "تقدير قديم"
+  }
+ },
+ {
+  "id": "VNM",
+  "ar": "فيتنام",
+  "en": "Vietnam",
+  "cont": "as",
+  "tier": "B",
+  "base": {
+   "pop": 96462106,
+   "gdpMusd": 261921,
+   "src": "Natural Earth 5.1 (POP_EST/GDP_MD ~2019) — أساس مؤقت يتبدّل بالبحث",
+   "conf": "تقدير قديم"
+  }
+ },
+ {
+  "id": "CYP",
+  "ar": "قبرص",
+  "en": "Cyprus",
+  "cont": "as",
+  "tier": "B",
+  "base": {
+   "pop": 1198575,
+   "gdpMusd": 24948,
+   "src": "Natural Earth 5.1 (POP_EST/GDP_MD ~2019) — أساس مؤقت يتبدّل بالبحث",
+   "conf": "تقدير قديم"
+  }
+ },
+ {
+  "id": "KAZ",
+  "ar": "كازاخستان",
+  "en": "Kazakhstan",
+  "cont": "as",
+  "tier": "B",
+  "base": {
+   "pop": 18513930,
+   "gdpMusd": 181665,
+   "src": "Natural Earth 5.1 (POP_EST/GDP_MD ~2019) — أساس مؤقت يتبدّل بالبحث",
+   "conf": "تقدير قديم"
+  }
+ },
+ {
+  "id": "HRV",
+  "ar": "كرواتيا",
+  "en": "Croatia",
+  "cont": "eu",
+  "tier": "B",
+  "base": {
+   "pop": 4067500,
+   "gdpMusd": 60752,
+   "src": "Natural Earth 5.1 (POP_EST/GDP_MD ~2019) — أساس مؤقت يتبدّل بالبحث",
+   "conf": "تقدير قديم"
+  }
+ },
+ {
+  "id": "CAN",
+  "ar": "كندا",
+  "en": "Canada",
+  "cont": "na",
+  "tier": "B",
+  "base": {
+   "pop": 37589262,
+   "gdpMusd": 1736425,
+   "src": "Natural Earth 5.1 (POP_EST/GDP_MD ~2019) — أساس مؤقت يتبدّل بالبحث",
+   "conf": "تقدير قديم"
+  }
+ },
+ {
+  "id": "CUB",
+  "ar": "كوبا",
+  "en": "Cuba",
+  "cont": "na",
+  "tier": "B",
+  "base": {
+   "pop": 11333483,
+   "gdpMusd": 100023,
+   "src": "Natural Earth 5.1 (POP_EST/GDP_MD ~2019) — أساس مؤقت يتبدّل بالبحث",
+   "conf": "تقدير قديم"
+  }
+ },
+ {
+  "id": "COL",
+  "ar": "كولومبيا",
+  "en": "Colombia",
+  "cont": "sa",
+  "tier": "B",
+  "base": {
+   "pop": 50339443,
+   "gdpMusd": 323615,
+   "src": "Natural Earth 5.1 (POP_EST/GDP_MD ~2019) — أساس مؤقت يتبدّل بالبحث",
+   "conf": "تقدير قديم"
+  }
+ },
+ {
+  "id": "KEN",
+  "ar": "كينيا",
+  "en": "Kenya",
+  "cont": "af",
+  "tier": "B",
+  "base": {
+   "pop": 52573973,
+   "gdpMusd": 95503,
+   "src": "Natural Earth 5.1 (POP_EST/GDP_MD ~2019) — أساس مؤقت يتبدّل بالبحث",
+   "conf": "تقدير قديم"
+  }
+ },
+ {
+  "id": "LVA",
+  "ar": "لاتفيا",
+  "en": "Latvia",
+  "cont": "eu",
+  "tier": "B",
+  "base": {
+   "pop": 1912789,
+   "gdpMusd": 34102,
+   "src": "Natural Earth 5.1 (POP_EST/GDP_MD ~2019) — أساس مؤقت يتبدّل بالبحث",
+   "conf": "تقدير قديم"
+  }
+ },
+ {
+  "id": "LBN",
+  "ar": "لبنان",
+  "en": "Lebanon",
+  "cont": "as",
+  "tier": "B",
+  "base": {
+   "pop": 6855713,
+   "gdpMusd": 51991,
+   "src": "Natural Earth 5.1 (POP_EST/GDP_MD ~2019) — أساس مؤقت يتبدّل بالبحث",
+   "conf": "تقدير قديم"
+  }
+ },
+ {
+  "id": "LBY",
+  "ar": "ليبيا",
+  "en": "Libya",
+  "cont": "af",
+  "tier": "B",
+  "base": {
+   "pop": 6777452,
+   "gdpMusd": 52091,
+   "src": "Natural Earth 5.1 (POP_EST/GDP_MD ~2019) — أساس مؤقت يتبدّل بالبحث",
+   "conf": "تقدير قديم"
+  }
+ },
+ {
+  "id": "LTU",
+  "ar": "ليتوانيا",
+  "en": "Lithuania",
+  "cont": "eu",
+  "tier": "B",
+  "base": {
+   "pop": 2786844,
+   "gdpMusd": 54627,
+   "src": "Natural Earth 5.1 (POP_EST/GDP_MD ~2019) — أساس مؤقت يتبدّل بالبحث",
+   "conf": "تقدير قديم"
+  }
+ },
+ {
+  "id": "MYS",
+  "ar": "ماليزيا",
+  "en": "Malaysia",
+  "cont": "as",
+  "tier": "B",
+  "base": {
+   "pop": 31949777,
+   "gdpMusd": 364681,
+   "src": "Natural Earth 5.1 (POP_EST/GDP_MD ~2019) — أساس مؤقت يتبدّل بالبحث",
+   "conf": "تقدير قديم"
+  }
+ },
+ {
+  "id": "MMR",
+  "ar": "ميانمار",
+  "en": "Myanmar",
+  "cont": "as",
+  "tier": "B",
+  "base": {
+   "pop": 54045420,
+   "gdpMusd": 76085,
+   "src": "Natural Earth 5.1 (POP_EST/GDP_MD ~2019) — أساس مؤقت يتبدّل بالبحث",
+   "conf": "تقدير قديم"
+  }
+ },
+ {
+  "id": "NGA",
+  "ar": "نيجيريا",
+  "en": "Nigeria",
+  "cont": "af",
+  "tier": "B",
+  "base": {
+   "pop": 200963599,
+   "gdpMusd": 448120,
+   "src": "Natural Earth 5.1 (POP_EST/GDP_MD ~2019) — أساس مؤقت يتبدّل بالبحث",
+   "conf": "تقدير قديم"
+  }
+ },
+ {
+  "id": "NZL",
+  "ar": "نيوزيلندا",
+  "en": "New Zealand",
+  "cont": "oc",
+  "tier": "B",
+  "base": {
+   "pop": 4917000,
+   "gdpMusd": 206928,
+   "src": "Natural Earth 5.1 (POP_EST/GDP_MD ~2019) — أساس مؤقت يتبدّل بالبحث",
+   "conf": "تقدير قديم"
+  }
+ },
+ {
+  "id": "NLD",
+  "ar": "هولندا",
+  "en": "Netherlands",
+  "cont": "eu",
+  "tier": "B",
+  "base": {
+   "pop": 17332850,
+   "gdpMusd": 907050,
+   "src": "Natural Earth 5.1 (POP_EST/GDP_MD ~2019) — أساس مؤقت يتبدّل بالبحث",
+   "conf": "تقدير قديم"
+  }
+ },
+ {
+  "id": "ALB",
+  "ar": "ألبانيا",
+  "en": "Albania",
+  "cont": "eu",
+  "tier": "C",
+  "base": {
+   "pop": 2854191,
+   "gdpMusd": 15279,
+   "src": "Natural Earth 5.1 (POP_EST/GDP_MD ~2019) — أساس مؤقت يتبدّل بالبحث",
+   "conf": "تقدير قديم"
+  }
+ },
+ {
+  "id": "UGA",
+  "ar": "أوغندا",
+  "en": "Uganda",
+  "cont": "af",
+  "tier": "C",
+  "base": {
+   "pop": 44269594,
+   "gdpMusd": 35165,
+   "src": "Natural Earth 5.1 (POP_EST/GDP_MD ~2019) — أساس مؤقت يتبدّل بالبحث",
+   "conf": "تقدير قديم"
+  }
+ },
+ {
+  "id": "ERI",
+  "ar": "إريتريا",
+  "en": "Eritrea",
+  "cont": "af",
+  "tier": "C",
+  "base": {
+   "pop": 6081196,
+   "gdpMusd": 2065,
+   "src": "Natural Earth 5.1 (POP_EST/GDP_MD ~2019) — أساس مؤقت يتبدّل بالبحث",
+   "conf": "تقدير قديم"
+  }
+ },
+ {
+  "id": "SWZ",
+  "ar": "إسواتيني",
+  "en": "eSwatini",
+  "cont": "af",
+  "tier": "C",
+  "base": {
+   "pop": 1148130,
+   "gdpMusd": 4471,
+   "src": "Natural Earth 5.1 (POP_EST/GDP_MD ~2019) — أساس مؤقت يتبدّل بالبحث",
+   "conf": "تقدير قديم"
+  }
+ },
+ {
+  "id": "URY",
+  "ar": "الأوروغواي",
+  "en": "Uruguay",
+  "cont": "sa",
+  "tier": "C",
+  "base": {
+   "pop": 3461734,
+   "gdpMusd": 56045,
+   "src": "Natural Earth 5.1 (POP_EST/GDP_MD ~2019) — أساس مؤقت يتبدّل بالبحث",
+   "conf": "تقدير قديم"
+  }
+ },
+ {
+  "id": "ECU",
+  "ar": "الإكوادور",
+  "en": "Ecuador",
+  "cont": "sa",
+  "tier": "C",
+  "base": {
+   "pop": 17373662,
+   "gdpMusd": 107435,
+   "src": "Natural Earth 5.1 (POP_EST/GDP_MD ~2019) — أساس مؤقت يتبدّل بالبحث",
+   "conf": "تقدير قديم"
+  }
+ },
+ {
+  "id": "BIH",
+  "ar": "البوسنة والهرسك",
+  "en": "Bosnia and Herz.",
+  "cont": "eu",
+  "tier": "C",
+  "base": {
+   "pop": 3301000,
+   "gdpMusd": 20164,
+   "src": "Natural Earth 5.1 (POP_EST/GDP_MD ~2019) — أساس مؤقت يتبدّل بالبحث",
+   "conf": "تقدير قديم"
+  }
+ },
+ {
+  "id": "SLV",
+  "ar": "السلفادور",
+  "en": "El Salvador",
+  "cont": "na",
+  "tier": "C",
+  "base": {
+   "pop": 6453553,
+   "gdpMusd": 27022,
+   "src": "Natural Earth 5.1 (POP_EST/GDP_MD ~2019) — أساس مؤقت يتبدّل بالبحث",
+   "conf": "تقدير قديم"
+  }
+ },
+ {
+  "id": "SEN",
+  "ar": "السنغال",
+  "en": "Senegal",
+  "cont": "af",
+  "tier": "C",
+  "base": {
+   "pop": 16296364,
+   "gdpMusd": 23578,
+   "src": "Natural Earth 5.1 (POP_EST/GDP_MD ~2019) — أساس مؤقت يتبدّل بالبحث",
+   "conf": "تقدير قديم"
+  }
+ },
+ {
+  "id": "SOM",
+  "ar": "الصومال",
+  "en": "Somalia",
+  "cont": "af",
+  "tier": "C",
+  "base": {
+   "pop": 10192317.3,
+   "gdpMusd": 4719,
+   "src": "Natural Earth 5.1 (POP_EST/GDP_MD ~2019) — أساس مؤقت يتبدّل بالبحث",
+   "conf": "تقدير قديم"
+  }
+ },
+ {
+  "id": "GAB",
+  "ar": "الغابون",
+  "en": "Gabon",
+  "cont": "af",
+  "tier": "C",
+  "base": {
+   "pop": 2172579,
+   "gdpMusd": 16874,
+   "src": "Natural Earth 5.1 (POP_EST/GDP_MD ~2019) — أساس مؤقت يتبدّل بالبحث",
+   "conf": "تقدير قديم"
+  }
+ },
+ {
+  "id": "CMR",
+  "ar": "الكاميرون",
+  "en": "Cameroon",
+  "cont": "af",
+  "tier": "C",
+  "base": {
+   "pop": 25876380,
+   "gdpMusd": 39007,
+   "src": "Natural Earth 5.1 (POP_EST/GDP_MD ~2019) — أساس مؤقت يتبدّل بالبحث",
+   "conf": "تقدير قديم"
+  }
+ },
+ {
+  "id": "NER",
+  "ar": "النيجر",
+  "en": "Niger",
+  "cont": "af",
+  "tier": "C",
+  "base": {
+   "pop": 23310715,
+   "gdpMusd": 12911,
+   "src": "Natural Earth 5.1 (POP_EST/GDP_MD ~2019) — أساس مؤقت يتبدّل بالبحث",
+   "conf": "تقدير قديم"
+  }
+ },
+ {
+  "id": "PNG",
+  "ar": "بابوا غينيا الجديدة",
+  "en": "Papua New Guinea",
+  "cont": "oc",
+  "tier": "C",
+  "base": {
+   "pop": 8776109,
+   "gdpMusd": 24829,
+   "src": "Natural Earth 5.1 (POP_EST/GDP_MD ~2019) — أساس مؤقت يتبدّل بالبحث",
+   "conf": "تقدير قديم"
+  }
+ },
+ {
+  "id": "PRY",
+  "ar": "باراغواي",
+  "en": "Paraguay",
+  "cont": "sa",
+  "tier": "C",
+  "base": {
+   "pop": 7044636,
+   "gdpMusd": 38145,
+   "src": "Natural Earth 5.1 (POP_EST/GDP_MD ~2019) — أساس مؤقت يتبدّل بالبحث",
+   "conf": "تقدير قديم"
+  }
+ },
+ {
+  "id": "PAN",
+  "ar": "بنما",
+  "en": "Panama",
+  "cont": "na",
+  "tier": "C",
+  "base": {
+   "pop": 4246439,
+   "gdpMusd": 66800,
+   "src": "Natural Earth 5.1 (POP_EST/GDP_MD ~2019) — أساس مؤقت يتبدّل بالبحث",
+   "conf": "تقدير قديم"
+  }
+ },
+ {
+  "id": "BEN",
+  "ar": "بنين",
+  "en": "Benin",
+  "cont": "af",
+  "tier": "C",
+  "base": {
+   "pop": 11801151,
+   "gdpMusd": 14390,
+   "src": "Natural Earth 5.1 (POP_EST/GDP_MD ~2019) — أساس مؤقت يتبدّل بالبحث",
+   "conf": "تقدير قديم"
+  }
+ },
+ {
+  "id": "BWA",
+  "ar": "بوتسوانا",
+  "en": "Botswana",
+  "cont": "af",
+  "tier": "C",
+  "base": {
+   "pop": 2303697,
+   "gdpMusd": 18340,
+   "src": "Natural Earth 5.1 (POP_EST/GDP_MD ~2019) — أساس مؤقت يتبدّل بالبحث",
+   "conf": "تقدير قديم"
+  }
+ },
+ {
+  "id": "BFA",
+  "ar": "بوركينا فاسو",
+  "en": "Burkina Faso",
+  "cont": "af",
+  "tier": "C",
+  "base": {
+   "pop": 20321378,
+   "gdpMusd": 15990,
+   "src": "Natural Earth 5.1 (POP_EST/GDP_MD ~2019) — أساس مؤقت يتبدّل بالبحث",
+   "conf": "تقدير قديم"
+  }
+ },
+ {
+  "id": "BDI",
+  "ar": "بوروندي",
+  "en": "Burundi",
+  "cont": "af",
+  "tier": "C",
+  "base": {
+   "pop": 11530580,
+   "gdpMusd": 3012,
+   "src": "Natural Earth 5.1 (POP_EST/GDP_MD ~2019) — أساس مؤقت يتبدّل بالبحث",
+   "conf": "تقدير قديم"
+  }
+ },
+ {
+  "id": "BOL",
+  "ar": "بوليفيا",
+  "en": "Bolivia",
+  "cont": "sa",
+  "tier": "C",
+  "base": {
+   "pop": 11513100,
+   "gdpMusd": 40895,
+   "src": "Natural Earth 5.1 (POP_EST/GDP_MD ~2019) — أساس مؤقت يتبدّل بالبحث",
+   "conf": "تقدير قديم"
+  }
+ },
+ {
+  "id": "TKM",
+  "ar": "تركمانستان",
+  "en": "Turkmenistan",
+  "cont": "as",
+  "tier": "C",
+  "base": {
+   "pop": 5942089,
+   "gdpMusd": 40761,
+   "src": "Natural Earth 5.1 (POP_EST/GDP_MD ~2019) — أساس مؤقت يتبدّل بالبحث",
+   "conf": "تقدير قديم"
+  }
+ },
+ {
+  "id": "TTO",
+  "ar": "ترينيداد وتوباغو",
+  "en": "Trinidad and Tobago",
+  "cont": "na",
+  "tier": "C",
+  "base": {
+   "pop": 1394973,
+   "gdpMusd": 24269,
+   "src": "Natural Earth 5.1 (POP_EST/GDP_MD ~2019) — أساس مؤقت يتبدّل بالبحث",
+   "conf": "تقدير قديم"
+  }
+ },
+ {
+  "id": "TCD",
+  "ar": "تشاد",
+  "en": "Chad",
+  "cont": "af",
+  "tier": "C",
+  "base": {
+   "pop": 15946876,
+   "gdpMusd": 11314,
+   "src": "Natural Earth 5.1 (POP_EST/GDP_MD ~2019) — أساس مؤقت يتبدّل بالبحث",
+   "conf": "تقدير قديم"
+  }
+ },
+ {
+  "id": "TZA",
+  "ar": "تنزانيا",
+  "en": "Tanzania",
+  "cont": "af",
+  "tier": "C",
+  "base": {
+   "pop": 58005463,
+   "gdpMusd": 63177,
+   "src": "Natural Earth 5.1 (POP_EST/GDP_MD ~2019) — أساس مؤقت يتبدّل بالبحث",
+   "conf": "تقدير قديم"
+  }
+ },
+ {
+  "id": "TGO",
+  "ar": "توغو",
+  "en": "Togo",
+  "cont": "af",
+  "tier": "C",
+  "base": {
+   "pop": 8082366,
+   "gdpMusd": 5490,
+   "src": "Natural Earth 5.1 (POP_EST/GDP_MD ~2019) — أساس مؤقت يتبدّل بالبحث",
+   "conf": "تقدير قديم"
+  }
+ },
+ {
+  "id": "TLS",
+  "ar": "تيمور الشرقية",
+  "en": "Timor-Leste",
+  "cont": "as",
+  "tier": "C",
+  "base": {
+   "pop": 1293119,
+   "gdpMusd": 2017,
+   "src": "Natural Earth 5.1 (POP_EST/GDP_MD ~2019) — أساس مؤقت يتبدّل بالبحث",
+   "conf": "تقدير قديم"
+  }
+ },
+ {
+  "id": "JAM",
+  "ar": "جامايكا",
+  "en": "Jamaica",
+  "cont": "na",
+  "tier": "C",
+  "base": {
+   "pop": 2948279,
+   "gdpMusd": 16458,
+   "src": "Natural Earth 5.1 (POP_EST/GDP_MD ~2019) — أساس مؤقت يتبدّل بالبحث",
+   "conf": "تقدير قديم"
+  }
+ },
+ {
+  "id": "CAF",
+  "ar": "جمهورية أفريقيا الوسطى",
+  "en": "Central African Rep.",
+  "cont": "af",
+  "tier": "C",
+  "base": {
+   "pop": 4745185,
+   "gdpMusd": 2220,
+   "src": "Natural Earth 5.1 (POP_EST/GDP_MD ~2019) — أساس مؤقت يتبدّل بالبحث",
+   "conf": "تقدير قديم"
+  }
+ },
+ {
+  "id": "IRL",
+  "ar": "جمهورية أيرلندا",
+  "en": "Ireland",
+  "cont": "eu",
+  "tier": "C",
+  "base": {
+   "pop": 4941444,
+   "gdpMusd": 388698,
+   "src": "Natural Earth 5.1 (POP_EST/GDP_MD ~2019) — أساس مؤقت يتبدّل بالبحث",
+   "conf": "تقدير قديم"
+  }
+ },
+ {
+  "id": "DOM",
+  "ar": "جمهورية الدومينيكان",
+  "en": "Dominican Rep.",
+  "cont": "na",
+  "tier": "C",
+  "base": {
+   "pop": 10738958,
+   "gdpMusd": 88941,
+   "src": "Natural Earth 5.1 (POP_EST/GDP_MD ~2019) — أساس مؤقت يتبدّل بالبحث",
+   "conf": "تقدير قديم"
+  }
+ },
+ {
+  "id": "COG",
+  "ar": "جمهورية الكونغو",
+  "en": "Congo",
+  "cont": "af",
+  "tier": "C",
+  "base": {
+   "pop": 5380508,
+   "gdpMusd": 12267,
+   "src": "Natural Earth 5.1 (POP_EST/GDP_MD ~2019) — أساس مؤقت يتبدّل بالبحث",
+   "conf": "تقدير قديم"
+  }
+ },
+ {
+  "id": "COD",
+  "ar": "جمهورية الكونغو الديمقراطية",
+  "en": "Dem. Rep. Congo",
+  "cont": "af",
+  "tier": "C",
+  "base": {
+   "pop": 86790567,
+   "gdpMusd": 50400,
+   "src": "Natural Earth 5.1 (POP_EST/GDP_MD ~2019) — أساس مؤقت يتبدّل بالبحث",
+   "conf": "تقدير قديم"
+  }
+ },
+ {
+  "id": "SDS",
+  "ar": "جنوب السودان",
+  "en": "S. Sudan",
+  "cont": "af",
+  "tier": "C",
+  "base": {
+   "pop": 11062113,
+   "gdpMusd": 11998,
+   "src": "Natural Earth 5.1 (POP_EST/GDP_MD ~2019) — أساس مؤقت يتبدّل بالبحث",
+   "conf": "تقدير قديم"
+  }
+ },
+ {
+  "id": "DJI",
+  "ar": "جيبوتي",
+  "en": "Djibouti",
+  "cont": "af",
+  "tier": "C",
+  "base": {
+   "pop": 973560,
+   "gdpMusd": 3324,
+   "src": "Natural Earth 5.1 (POP_EST/GDP_MD ~2019) — أساس مؤقت يتبدّل بالبحث",
+   "conf": "تقدير قديم"
+  }
+ },
+ {
+  "id": "RWA",
+  "ar": "رواندا",
+  "en": "Rwanda",
+  "cont": "af",
+  "tier": "C",
+  "base": {
+   "pop": 12626950,
+   "gdpMusd": 10354,
+   "src": "Natural Earth 5.1 (POP_EST/GDP_MD ~2019) — أساس مؤقت يتبدّل بالبحث",
+   "conf": "تقدير قديم"
+  }
+ },
+ {
+  "id": "ZMB",
+  "ar": "زامبيا",
+  "en": "Zambia",
+  "cont": "af",
+  "tier": "C",
+  "base": {
+   "pop": 17861030,
+   "gdpMusd": 23309,
+   "src": "Natural Earth 5.1 (POP_EST/GDP_MD ~2019) — أساس مؤقت يتبدّل بالبحث",
+   "conf": "تقدير قديم"
+  }
+ },
+ {
+  "id": "ZWE",
+  "ar": "زيمبابوي",
+  "en": "Zimbabwe",
+  "cont": "af",
+  "tier": "C",
+  "base": {
+   "pop": 14645468,
+   "gdpMusd": 21440,
+   "src": "Natural Earth 5.1 (POP_EST/GDP_MD ~2019) — أساس مؤقت يتبدّل بالبحث",
+   "conf": "تقدير قديم"
+  }
+ },
+ {
+  "id": "CIV",
+  "ar": "ساحل العاج",
+  "en": "Côte d'Ivoire",
+  "cont": "af",
+  "tier": "C",
+  "base": {
+   "pop": 25716544,
+   "gdpMusd": 58539,
+   "src": "Natural Earth 5.1 (POP_EST/GDP_MD ~2019) — أساس مؤقت يتبدّل بالبحث",
+   "conf": "تقدير قديم"
+  }
+ },
+ {
+  "id": "SVN",
+  "ar": "سلوفينيا",
+  "en": "Slovenia",
+  "cont": "eu",
+  "tier": "C",
+  "base": {
+   "pop": 2087946,
+   "gdpMusd": 54174,
+   "src": "Natural Earth 5.1 (POP_EST/GDP_MD ~2019) — أساس مؤقت يتبدّل بالبحث",
+   "conf": "تقدير قديم"
+  }
+ },
+ {
+  "id": "SLE",
+  "ar": "سيراليون",
+  "en": "Sierra Leone",
+  "cont": "af",
+  "tier": "C",
+  "base": {
+   "pop": 7813215,
+   "gdpMusd": 4121,
+   "src": "Natural Earth 5.1 (POP_EST/GDP_MD ~2019) — أساس مؤقت يتبدّل بالبحث",
+   "conf": "تقدير قديم"
+  }
+ },
+ {
+  "id": "TJK",
+  "ar": "طاجيكستان",
+  "en": "Tajikistan",
+  "cont": "as",
+  "tier": "C",
+  "base": {
+   "pop": 9321018,
+   "gdpMusd": 8116,
+   "src": "Natural Earth 5.1 (POP_EST/GDP_MD ~2019) — أساس مؤقت يتبدّل بالبحث",
+   "conf": "تقدير قديم"
+  }
+ },
+ {
+  "id": "GMB",
+  "ar": "غامبيا",
+  "en": "Gambia",
+  "cont": "af",
+  "tier": "C",
+  "base": {
+   "pop": 2347706,
+   "gdpMusd": 1826,
+   "src": "Natural Earth 5.1 (POP_EST/GDP_MD ~2019) — أساس مؤقت يتبدّل بالبحث",
+   "conf": "تقدير قديم"
+  }
+ },
+ {
+  "id": "GHA",
+  "ar": "غانا",
+  "en": "Ghana",
+  "cont": "af",
+  "tier": "C",
+  "base": {
+   "pop": 30417856,
+   "gdpMusd": 66983,
+   "src": "Natural Earth 5.1 (POP_EST/GDP_MD ~2019) — أساس مؤقت يتبدّل بالبحث",
+   "conf": "تقدير قديم"
+  }
+ },
+ {
+  "id": "GTM",
+  "ar": "غواتيمالا",
+  "en": "Guatemala",
+  "cont": "na",
+  "tier": "C",
+  "base": {
+   "pop": 16604026,
+   "gdpMusd": 76710,
+   "src": "Natural Earth 5.1 (POP_EST/GDP_MD ~2019) — أساس مؤقت يتبدّل بالبحث",
+   "conf": "تقدير قديم"
+  }
+ },
+ {
+  "id": "GIN",
+  "ar": "غينيا",
+  "en": "Guinea",
+  "cont": "af",
+  "tier": "C",
+  "base": {
+   "pop": 12771246,
+   "gdpMusd": 12296,
+   "src": "Natural Earth 5.1 (POP_EST/GDP_MD ~2019) — أساس مؤقت يتبدّل بالبحث",
+   "conf": "تقدير قديم"
+  }
+ },
+ {
+  "id": "GNQ",
+  "ar": "غينيا الاستوائية",
+  "en": "Eq. Guinea",
+  "cont": "af",
+  "tier": "C",
+  "base": {
+   "pop": 1355986,
+   "gdpMusd": 11026,
+   "src": "Natural Earth 5.1 (POP_EST/GDP_MD ~2019) — أساس مؤقت يتبدّل بالبحث",
+   "conf": "تقدير قديم"
+  }
+ },
+ {
+  "id": "GNB",
+  "ar": "غينيا بيساو",
+  "en": "Guinea-Bissau",
+  "cont": "af",
+  "tier": "C",
+  "base": {
+   "pop": 1920922,
+   "gdpMusd": 1339,
+   "src": "Natural Earth 5.1 (POP_EST/GDP_MD ~2019) — أساس مؤقت يتبدّل بالبحث",
+   "conf": "تقدير قديم"
+  }
+ },
+ {
+  "id": "KGZ",
+  "ar": "قيرغيزستان",
+  "en": "Kyrgyzstan",
+  "cont": "as",
+  "tier": "C",
+  "base": {
+   "pop": 6456900,
+   "gdpMusd": 8454,
+   "src": "Natural Earth 5.1 (POP_EST/GDP_MD ~2019) — أساس مؤقت يتبدّل بالبحث",
+   "conf": "تقدير قديم"
+  }
+ },
+ {
+  "id": "KHM",
+  "ar": "كمبوديا",
+  "en": "Cambodia",
+  "cont": "as",
+  "tier": "C",
+  "base": {
+   "pop": 16486542,
+   "gdpMusd": 27089,
+   "src": "Natural Earth 5.1 (POP_EST/GDP_MD ~2019) — أساس مؤقت يتبدّل بالبحث",
+   "conf": "تقدير قديم"
+  }
+ },
+ {
+  "id": "CRI",
+  "ar": "كوستاريكا",
+  "en": "Costa Rica",
+  "cont": "na",
+  "tier": "C",
+  "base": {
+   "pop": 5047561,
+   "gdpMusd": 61801,
+   "src": "Natural Earth 5.1 (POP_EST/GDP_MD ~2019) — أساس مؤقت يتبدّل بالبحث",
+   "conf": "تقدير قديم"
+  }
+ },
+ {
+  "id": "LAO",
+  "ar": "لاوس",
+  "en": "Laos",
+  "cont": "as",
+  "tier": "C",
+  "base": {
+   "pop": 7169455,
+   "gdpMusd": 18173,
+   "src": "Natural Earth 5.1 (POP_EST/GDP_MD ~2019) — أساس مؤقت يتبدّل بالبحث",
+   "conf": "تقدير قديم"
+  }
+ },
+ {
+  "id": "LBR",
+  "ar": "ليبيريا",
+  "en": "Liberia",
+  "cont": "af",
+  "tier": "C",
+  "base": {
+   "pop": 4937374,
+   "gdpMusd": 3070,
+   "src": "Natural Earth 5.1 (POP_EST/GDP_MD ~2019) — أساس مؤقت يتبدّل بالبحث",
+   "conf": "تقدير قديم"
+  }
+ },
+ {
+  "id": "LSO",
+  "ar": "ليسوتو",
+  "en": "Lesotho",
+  "cont": "af",
+  "tier": "C",
+  "base": {
+   "pop": 2125268,
+   "gdpMusd": 2376,
+   "src": "Natural Earth 5.1 (POP_EST/GDP_MD ~2019) — أساس مؤقت يتبدّل بالبحث",
+   "conf": "تقدير قديم"
+  }
+ },
+ {
+  "id": "MWI",
+  "ar": "مالاوي",
+  "en": "Malawi",
+  "cont": "af",
+  "tier": "C",
+  "base": {
+   "pop": 18628747,
+   "gdpMusd": 7666,
+   "src": "Natural Earth 5.1 (POP_EST/GDP_MD ~2019) — أساس مؤقت يتبدّل بالبحث",
+   "conf": "تقدير قديم"
+  }
+ },
+ {
+  "id": "MLI",
+  "ar": "مالي",
+  "en": "Mali",
+  "cont": "af",
+  "tier": "C",
+  "base": {
+   "pop": 19658031,
+   "gdpMusd": 17279,
+   "src": "Natural Earth 5.1 (POP_EST/GDP_MD ~2019) — أساس مؤقت يتبدّل بالبحث",
+   "conf": "تقدير قديم"
+  }
+ },
+ {
+  "id": "MDG",
+  "ar": "مدغشقر",
+  "en": "Madagascar",
+  "cont": "af",
+  "tier": "C",
+  "base": {
+   "pop": 26969307,
+   "gdpMusd": 14114,
+   "src": "Natural Earth 5.1 (POP_EST/GDP_MD ~2019) — أساس مؤقت يتبدّل بالبحث",
+   "conf": "تقدير قديم"
+  }
+ },
+ {
+  "id": "MKD",
+  "ar": "مقدونيا الشمالية",
+  "en": "North Macedonia",
+  "cont": "eu",
+  "tier": "C",
+  "base": {
+   "pop": 2083459,
+   "gdpMusd": 12547,
+   "src": "Natural Earth 5.1 (POP_EST/GDP_MD ~2019) — أساس مؤقت يتبدّل بالبحث",
+   "conf": "تقدير قديم"
+  }
+ },
+ {
+  "id": "MNG",
+  "ar": "منغوليا",
+  "en": "Mongolia",
+  "cont": "as",
+  "tier": "C",
+  "base": {
+   "pop": 3225167,
+   "gdpMusd": 13996,
+   "src": "Natural Earth 5.1 (POP_EST/GDP_MD ~2019) — أساس مؤقت يتبدّل بالبحث",
+   "conf": "تقدير قديم"
+  }
+ },
+ {
+  "id": "MRT",
+  "ar": "موريتانيا",
+  "en": "Mauritania",
+  "cont": "af",
+  "tier": "C",
+  "base": {
+   "pop": 4525696,
+   "gdpMusd": 7600,
+   "src": "Natural Earth 5.1 (POP_EST/GDP_MD ~2019) — أساس مؤقت يتبدّل بالبحث",
+   "conf": "تقدير قديم"
+  }
+ },
+ {
+  "id": "MOZ",
+  "ar": "موزمبيق",
+  "en": "Mozambique",
+  "cont": "af",
+  "tier": "C",
+  "base": {
+   "pop": 30366036,
+   "gdpMusd": 15291,
+   "src": "Natural Earth 5.1 (POP_EST/GDP_MD ~2019) — أساس مؤقت يتبدّل بالبحث",
+   "conf": "تقدير قديم"
+  }
+ },
+ {
+  "id": "MDA",
+  "ar": "مولدوفا",
+  "en": "Moldova",
+  "cont": "eu",
+  "tier": "C",
+  "base": {
+   "pop": 2657637,
+   "gdpMusd": 11968,
+   "src": "Natural Earth 5.1 (POP_EST/GDP_MD ~2019) — أساس مؤقت يتبدّل بالبحث",
+   "conf": "تقدير قديم"
+  }
+ },
+ {
+  "id": "NAM",
+  "ar": "ناميبيا",
+  "en": "Namibia",
+  "cont": "af",
+  "tier": "C",
+  "base": {
+   "pop": 2494530,
+   "gdpMusd": 12366,
+   "src": "Natural Earth 5.1 (POP_EST/GDP_MD ~2019) — أساس مؤقت يتبدّل بالبحث",
+   "conf": "تقدير قديم"
+  }
+ },
+ {
+  "id": "NPL",
+  "ar": "نيبال",
+  "en": "Nepal",
+  "cont": "as",
+  "tier": "C",
+  "base": {
+   "pop": 28608710,
+   "gdpMusd": 30641,
+   "src": "Natural Earth 5.1 (POP_EST/GDP_MD ~2019) — أساس مؤقت يتبدّل بالبحث",
+   "conf": "تقدير قديم"
+  }
+ },
+ {
+  "id": "NIC",
+  "ar": "نيكاراغوا",
+  "en": "Nicaragua",
+  "cont": "na",
+  "tier": "C",
+  "base": {
+   "pop": 6545502,
+   "gdpMusd": 12520,
+   "src": "Natural Earth 5.1 (POP_EST/GDP_MD ~2019) — أساس مؤقت يتبدّل بالبحث",
+   "conf": "تقدير قديم"
+  }
+ },
+ {
+  "id": "HTI",
+  "ar": "هايتي",
+  "en": "Haiti",
+  "cont": "na",
+  "tier": "C",
+  "base": {
+   "pop": 11263077,
+   "gdpMusd": 14332,
+   "src": "Natural Earth 5.1 (POP_EST/GDP_MD ~2019) — أساس مؤقت يتبدّل بالبحث",
+   "conf": "تقدير قديم"
+  }
+ },
+ {
+  "id": "HND",
+  "ar": "هندوراس",
+  "en": "Honduras",
+  "cont": "na",
+  "tier": "C",
+  "base": {
+   "pop": 9746117,
+   "gdpMusd": 25095,
+   "src": "Natural Earth 5.1 (POP_EST/GDP_MD ~2019) — أساس مؤقت يتبدّل بالبحث",
+   "conf": "تقدير قديم"
+  }
+ }
+]

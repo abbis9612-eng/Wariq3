@@ -1,0 +1,294 @@
+{
+ "src": {
+  "org": {
+   "t": "المواقع الرسمية للمنظمات (nato.int، gcc-sg.org، lasportal.org، sectsco.org، european-union.europa.eu، asean.org، opec.org، odkb-csto.org)",
+   "u": "https://www.nato.int/cps/en/natohq/topics_52044.htm",
+   "y": 2026
+  },
+  "saupak": {
+   "t": "Al Jazeera / Dawn: Saudi–Pakistan Strategic Mutual Defense Agreement (17 Sep 2025)",
+   "u": "https://www.aljazeera.com/news/2025/9/18/watershed-how-saudi-pakistan-defence-pact-reshapes-regions-geopolitics",
+   "y": 2025
+  },
+  "rusprk": {
+   "t": "Russia–DPRK Treaty on Comprehensive Strategic Partnership (June 2024, mutual assistance art. 4)",
+   "u": "https://en.wikipedia.org/wiki/Russia%E2%80%93North_Korea_Treaty_on_Comprehensive_Strategic_Partnership",
+   "y": 2024
+  },
+  "usven": {
+   "t": "Military Times: Hegseth announces US–Venezuela military partnership agreement (19 Nov 2026)",
+   "u": "https://militarytimes.com/news/pentagon-congress/2026/11/19/hegseth-in-caracas-announces-us-venezuela-military-partnership-agreement",
+   "y": 2026
+  },
+  "known": {
+   "t": "معاهدات دفاع ثنائية معروفة (US–Japan 1960، US–ROK 1953، US–Philippines 1951، ANZUS 1951، China–DPRK 1961، Turkey–Azerbaijan Shusha 2021، Russia–Belarus Union State)",
+   "u": "https://en.wikipedia.org/wiki/List_of_military_alliances",
+   "y": 2026
+  }
+ },
+ "blocs": {
+  "NATO": {
+   "ar": "حلف الناتو",
+   "kind": "defense",
+   "art5": true,
+   "m": [
+    "ALB",
+    "BEL",
+    "BGR",
+    "CAN",
+    "HRV",
+    "CZE",
+    "DNK",
+    "EST",
+    "FIN",
+    "FRA",
+    "DEU",
+    "GRC",
+    "HUN",
+    "ITA",
+    "LVA",
+    "LTU",
+    "NLD",
+    "MKD",
+    "NOR",
+    "POL",
+    "PRT",
+    "ROU",
+    "SVK",
+    "SVN",
+    "ESP",
+    "SWE",
+    "TUR",
+    "GBR",
+    "USA"
+   ],
+   "note": "آيسلندا ولوكسمبورغ والجبل الأسود أعضاء بس خارج قائمة اللعبة (صغيرة)",
+   "s": "org",
+   "c": "ح"
+  },
+  "CSTO": {
+   "ar": "منظمة معاهدة الأمن الجماعي",
+   "kind": "defense",
+   "art5": true,
+   "m": [
+    "RUS",
+    "BLR",
+    "KAZ",
+    "KGZ",
+    "TJK",
+    "ARM"
+   ],
+   "note": "أرمينيا جمّدت مشاركتها (2024)",
+   "s": "org",
+   "c": "ح"
+  },
+  "GCC": {
+   "ar": "مجلس التعاون الخليجي",
+   "kind": "defense",
+   "art5": true,
+   "m": [
+    "SAU",
+    "ARE",
+    "QAT",
+    "KWT",
+    "BHR",
+    "OMN"
+   ],
+   "s": "org",
+   "c": "ح"
+  },
+  "ARAB": {
+   "ar": "الجامعة العربية",
+   "kind": "political",
+   "m": [
+    "DZA",
+    "BHR",
+    "DJI",
+    "EGY",
+    "IRQ",
+    "JOR",
+    "KWT",
+    "LBN",
+    "LBY",
+    "MRT",
+    "MAR",
+    "OMN",
+    "PSX",
+    "QAT",
+    "SAU",
+    "SOM",
+    "SDN",
+    "SYR",
+    "TUN",
+    "ARE",
+    "YEM"
+   ],
+   "note": "جزر القمر عضو (خارج القائمة)",
+   "s": "org",
+   "c": "ح"
+  },
+  "SCO": {
+   "ar": "منظمة شنغهاي",
+   "kind": "political",
+   "m": [
+    "CHN",
+    "RUS",
+    "IND",
+    "PAK",
+    "IRN",
+    "KAZ",
+    "KGZ",
+    "TJK",
+    "UZB",
+    "BLR"
+   ],
+   "s": "org",
+   "c": "ح"
+  },
+  "EU": {
+   "ar": "الاتحاد الأوروبي",
+   "kind": "economic",
+   "m": [
+    "AUT",
+    "BEL",
+    "BGR",
+    "HRV",
+    "CYP",
+    "CZE",
+    "DNK",
+    "EST",
+    "FIN",
+    "FRA",
+    "DEU",
+    "GRC",
+    "HUN",
+    "IRL",
+    "ITA",
+    "LVA",
+    "LTU",
+    "NLD",
+    "POL",
+    "PRT",
+    "ROU",
+    "SVK",
+    "SVN",
+    "ESP",
+    "SWE"
+   ],
+   "note": "لوكسمبورغ ومالطا خارج القائمة",
+   "s": "org",
+   "c": "ح"
+  },
+  "ASEAN": {
+   "ar": "آسيان",
+   "kind": "economic",
+   "m": [
+    "IDN",
+    "MYS",
+    "PHL",
+    "SGP",
+    "THA",
+    "VNM",
+    "MMR",
+    "KHM",
+    "LAO",
+    "TLS"
+   ],
+   "s": "org",
+   "c": "ح"
+  },
+  "OPEC": {
+   "ar": "أوبك",
+   "kind": "economic",
+   "m": [
+    "DZA",
+    "COG",
+    "GNQ",
+    "GAB",
+    "IRN",
+    "IRQ",
+    "KWT",
+    "LBY",
+    "NGA",
+    "SAU",
+    "ARE",
+    "VEN"
+   ],
+   "s": "org",
+   "c": "ح"
+  }
+ },
+ "pacts": [
+  {
+   "a": "USA",
+   "b": "JPN",
+   "ar": "معاهدة الأمن الأمريكية اليابانية",
+   "s": "known",
+   "c": "ح"
+  },
+  {
+   "a": "USA",
+   "b": "KOR",
+   "ar": "معاهدة الدفاع المشترك الأمريكية الكورية",
+   "s": "known",
+   "c": "ح"
+  },
+  {
+   "a": "USA",
+   "b": "PHL",
+   "ar": "معاهدة الدفاع المشترك",
+   "s": "known",
+   "c": "ح"
+  },
+  {
+   "a": "USA",
+   "b": "AUS",
+   "ar": "أنزوس",
+   "s": "known",
+   "c": "ح"
+  },
+  {
+   "a": "CHN",
+   "b": "PRK",
+   "ar": "معاهدة الصداقة والتعاون والمساعدة المتبادلة",
+   "s": "known",
+   "c": "ح"
+  },
+  {
+   "a": "RUS",
+   "b": "PRK",
+   "ar": "الشراكة الاستراتيجية الشاملة (مساعدة متبادلة)",
+   "s": "rusprk",
+   "c": "ح"
+  },
+  {
+   "a": "RUS",
+   "b": "BLR",
+   "ar": "دولة الاتحاد",
+   "s": "known",
+   "c": "ح"
+  },
+  {
+   "a": "TUR",
+   "b": "AZE",
+   "ar": "إعلان شوشا (تحالف)",
+   "s": "known",
+   "c": "ح"
+  },
+  {
+   "a": "SAU",
+   "b": "PAK",
+   "ar": "اتفاقية الدفاع الاستراتيجي المشترك (2025)",
+   "s": "saupak",
+   "c": "ح"
+  },
+  {
+   "a": "USA",
+   "b": "VEN",
+   "ar": "شراكة عسكرية (تشرين الثاني 2026)",
+   "kind": "partnership",
+   "s": "usven",
+   "c": "ح"
+  }
+ ]
+}

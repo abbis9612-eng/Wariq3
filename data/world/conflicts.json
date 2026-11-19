@@ -1,0 +1,322 @@
+{
+ "src": {
+  "iranwar": {
+   "t": "Wikipedia: 2026 Iran war (حالة 19 تشرين الثاني 2026: قتال متجدد منذ أيلول، حصار بحري أمريكي، هرمز أقل من الطبيعي ~65٪)",
+   "u": "https://en.wikipedia.org/wiki/2026_Iran_war",
+   "y": 2026
+  },
+  "iranceas": {
+   "t": "Wikipedia: 2026 Iran war ceasefire (8 نيسان – 8 تموز 2026، مذكرة إسلام آباد)",
+   "u": "https://en.wikipedia.org/wiki/2026_Iran_war_ceasefire",
+   "y": 2026
+  },
+  "aj1119": {
+   "t": "Al Jazeera live 19 Nov 2026: Houthi attack hits tower in Riyadh; ships on fire in Hormuz",
+   "u": "https://www.aljazeera.com/news/liveblog/2026/11/19/iran-war-live-saudi-led-coalition-strikes-yemen-ships-on-fire-in-hormuz",
+   "y": 2026
+  },
+  "ajhez": {
+   "t": "Al Jazeera (Apr 2026): Hezbollah and Houthis join Iran in strike on Israel; Israel strikes Hezbollah (Nov 2026)",
+   "u": "https://www.aljazeera.com/news/2026/4/6/lebanons-hezbollah-and-yemens-houthis-join-iran-in-strike-on-israel",
+   "y": 2026
+  },
+  "ukrtalks": {
+   "t": "NPR / Al Jazeera (Nov 2026): US-mediated Russia–Ukraine talks in Abu Dhabi; no comprehensive ceasefire",
+   "u": "https://www.aljazeera.com/news/2026/11/16/nato-will-collapse-russia-stalls-ukraine-talks-seeks-to-divide-europe",
+   "y": 2026
+  },
+  "deepstate": {
+   "t": "DeepState via Ukrainska Pravda: 116,165 km² occupied = 19.25% of Ukraine; Donetsk 78.1% (1 Jan 2026)",
+   "u": "https://www.pravda.com.ua/eng/news/2026/01/01/8014292/",
+   "y": 2026
+  },
+  "gaza": {
+   "t": "Al Jazeera (18 Nov 2026) / Amnesty: Gaza ceasefire since 10 Oct 2025, near collapse; Israel controls ~60% of Gaza",
+   "u": "https://www.aljazeera.com/news/2026/11/18/board-of-peace-warns-gaza-ceasefire-faces-imminent-collapse-without-action",
+   "y": 2026
+  },
+  "sudan": {
+   "t": "Al Jazeera (Oct 2026): SAF controls Khartoum, north, east, centre; RSF most of Darfur and west",
+   "u": "https://www.aljazeera.com/news/2026/10/4/is-the-sudanese-army-gaining-momentum-against-the-rsf",
+   "y": 2026
+  },
+  "ven": {
+   "t": "Military Times / NewsOnAir: Maduro captured by US forces 3 Jan 2026; acting president Delcy Rodríguez; US–Venezuela military partnership 19 Nov 2026",
+   "u": "https://militarytimes.com/news/pentagon-congress/2026/11/19/hegseth-in-caracas-announces-us-venezuela-military-partnership-agreement",
+   "y": 2026
+  },
+  "syria": {
+   "t": "Middle East Eye / Reuters (Jan 2026): Damascus retook Raqqa and Deir ez-Zor, SDF integration deal; Israel holds parts of the south",
+   "u": "https://www.middleeasteye.net/news/syrian-government-and-sdf-agree-ceasefire-and-integration-deal",
+   "y": 2026
+  },
+  "drc": {
+   "t": "Global R2P (Nov 2026): M23/AFC fighting continues in North Kivu",
+   "u": "https://www.globalr2p.org/countries/democratic-republic-of-the-congo/",
+   "y": 2026
+  },
+  "lists": {
+   "t": "قوائم النزاعات الجارية (Defense Matrix Lab، Warmonit) — تشرين الثاني 2026",
+   "u": "https://www.defensematrixlab.com/en/active-conflicts",
+   "y": 2026
+  }
+ },
+ "asOf": "2026-11-19",
+ "startNote": "بداية اللعبة = آخر صورة حقيقية (أواخر تشرين الثاني 2026). إذا المالك يريد 1 كانون الثاني 2026، تنعاد الصورة لذاك التاريخ (قبل حرب إيران وإزاحة مادورو).",
+ "changes2026": [
+  "فنزويلا: أمريكا أزاحت مادورو (3 كانون الثاني 2026)، وديلسي رودريغيز رئيسة بالوكالة، وشراكة عسكرية ويا أمريكا (19 تشرين الثاني 2026)",
+  "سوريا: الحكومة رجّعت شمال شرق البلد ودمجت «قسد» (كانون الثاني 2026)",
+  "إيران: حرب من 28 شباط 2026"
+ ],
+ "conflicts": [
+  {
+   "id": "iran_war",
+   "ar": "حرب إيران 2026",
+   "state": "active",
+   "since": "2026-02-28",
+   "a": [
+    "USA",
+    "ISR"
+   ],
+   "b": [
+    "IRN"
+   ],
+   "proxies_b": [
+    "حزب الله (لبنان)",
+    "الحوثيين (اليمن)"
+   ],
+   "hit": [
+    "BHR",
+    "KWT",
+    "QAT",
+    "SAU",
+    "ARE",
+    "JOR"
+   ],
+   "facts": [
+    "حصار بحري أمريكي على موانئ إيران (رجع تموز 2026)",
+    "مضيق هرمز شغال ~35٪ من الطبيعي، وناقلات تنضرب",
+    "هدنة 8 نيسان – 8 تموز ثم رجع القتال، ومن أيلول تجدد",
+    "إيران تضرب قواعد أمريكية بالخليج والأردن",
+    "المرشد الحالي مجتبى خامنئي (حسب تقارير تشرين الثاني 2026)"
+   ],
+   "s": "iranwar,iranceas",
+   "c": "ح"
+  },
+  {
+   "id": "lebanon_war",
+   "ar": "حرب لبنان 2026",
+   "state": "active",
+   "since": "2026-04",
+   "a": [
+    "ISR"
+   ],
+   "b": [
+    "LBN"
+   ],
+   "note": "الطرف الفعلي حزب الله؛ الدولة اللبنانية مو طرف رسمي",
+   "s": "ajhez",
+   "c": "ح"
+  },
+  {
+   "id": "yemen",
+   "ar": "الحوثيين ضد السعودية وإسرائيل",
+   "state": "active",
+   "since": "2026-03-28",
+   "a": [
+    "SAU",
+    "ISR"
+   ],
+   "b": [
+    "YEM"
+   ],
+   "note": "الحوثيين مسيطرين على صنعاء والشمال الغربي؛ الحكومة المعترف بيها بالجنوب والشرق. 19 تشرين الثاني 2026 ضربوا برج بالرياض",
+   "s": "aj1119",
+   "c": "ت"
+  },
+  {
+   "id": "ukraine",
+   "ar": "الحرب الروسية الأوكرانية",
+   "state": "active",
+   "since": "2022-02-24",
+   "a": [
+    "RUS"
+   ],
+   "b": [
+    "UKR"
+   ],
+   "control": {
+    "occupiedPctOfUKR": {
+     "v": 19.25,
+     "asOf": "2026-01-01",
+     "s": "deepstate",
+     "c": "ح"
+    },
+    "donetskPct": {
+     "v": 78.1,
+     "asOf": "2026-01-01",
+     "s": "deepstate",
+     "c": "ح"
+    },
+    "note": "روسيا ماسكة القرم، وأغلب لوهانسك، و~78٪ دونيتسك (مطلع 2026)، وأجزاء من زاباروجيا وخيرسون؛ مفاوضات أبوظبي تشرين الثاني 2026 بلا وقف نار. خط السيطرة بالتفصيل بـ W2"
+   },
+   "s": "deepstate,ukrtalks",
+   "c": "ح"
+  },
+  {
+   "id": "gaza",
+   "ar": "غزة",
+   "state": "ceasefire_fragile",
+   "since": "2025-10-10",
+   "a": [
+    "ISR"
+   ],
+   "b": [
+    "PSX"
+   ],
+   "control": {
+    "israelPctOfGaza": {
+     "v": 60,
+     "s": "gaza",
+     "c": "ت"
+    }
+   },
+   "s": "gaza",
+   "c": "ح"
+  },
+  {
+   "id": "sudan",
+   "ar": "الحرب الأهلية السودانية",
+   "state": "active",
+   "since": "2023-04-15",
+   "a": [
+    "SDN"
+   ],
+   "b": [
+    "قوات الدعم السريع"
+   ],
+   "control": {
+    "note": "الجيش: الخرطوم والشمال والشرق والوسط (~60٪+)؛ الدعم السريع: أغلب دارفور والغرب؛ كردفان والنيل الأزرق متنازع"
+   },
+   "s": "sudan",
+   "c": "ت"
+  },
+  {
+   "id": "myanmar",
+   "ar": "الحرب الأهلية بميانمار",
+   "state": "active",
+   "since": "2021-02",
+   "a": [
+    "MMR"
+   ],
+   "b": [
+    "جماعات مسلحة عرقية وقوى المقاومة"
+   ],
+   "s": "lists",
+   "c": "ت"
+  },
+  {
+   "id": "drc_m23",
+   "ar": "شرق الكونغو (M23)",
+   "state": "active",
+   "since": "2022",
+   "a": [
+    "COD"
+   ],
+   "b": [
+    "M23/AFC (مدعومة من رواندا)"
+   ],
+   "note": "اتفاق سلام الكونغو ورواندا 2025 ما وقف القتال",
+   "s": "drc",
+   "c": "ت"
+  },
+  {
+   "id": "sahel",
+   "ar": "تمرد الساحل",
+   "state": "active",
+   "since": "2012",
+   "a": [
+    "MLI",
+    "BFA",
+    "NER"
+   ],
+   "b": [
+    "جماعات جهادية (JNIM، داعش الساحل)"
+   ],
+   "s": "lists",
+   "c": "ت"
+  },
+  {
+   "id": "somalia",
+   "ar": "الصومال ضد الشباب",
+   "state": "active",
+   "since": "2006",
+   "a": [
+    "SOM"
+   ],
+   "b": [
+    "حركة الشباب"
+   ],
+   "s": "lists",
+   "c": "ت"
+  },
+  {
+   "id": "syria_south",
+   "ar": "جنوب سوريا",
+   "state": "tension",
+   "since": "2024-12",
+   "a": [
+    "ISR"
+   ],
+   "b": [
+    "SYR"
+   ],
+   "note": "إسرائيل ماسكة منطقة عازلة بالجنوب؛ دمشق رجّعت الرقة ودير الزور ووقّعت دمج «قسد» (كانون الثاني 2026)",
+   "s": "syria",
+   "c": "ت"
+  },
+  {
+   "id": "ind_pak",
+   "ar": "الهند وباكستان",
+   "state": "tension",
+   "since": "2025-05",
+   "a": [
+    "IND"
+   ],
+   "b": [
+    "PAK"
+   ],
+   "note": "وقف نار أيار 2025، توتر مستمر",
+   "s": "lists",
+   "c": "ت"
+  },
+  {
+   "id": "pak_afg",
+   "ar": "باكستان وأفغانستان",
+   "state": "tension",
+   "since": "2025-10",
+   "a": [
+    "PAK"
+   ],
+   "b": [
+    "AFG"
+   ],
+   "s": "lists",
+   "c": "ت"
+  },
+  {
+   "id": "tha_khm",
+   "ar": "تايلاند وكمبوديا",
+   "state": "tension",
+   "since": "2025-07",
+   "a": [
+    "THA"
+   ],
+   "b": [
+    "KHM"
+   ],
+   "s": "lists",
+   "c": "ت"
+  }
+ ]
+}

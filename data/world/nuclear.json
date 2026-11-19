@@ -1,0 +1,229 @@
+{
+ "src": {
+  "sipri26": {
+   "t": "SIPRI Yearbook 2026, ch.8, Table 8A.1 World nuclear forces, January 2026 (Kristensen & Korda)",
+   "u": "https://www.sipri.org/sites/default/files/YB26%2008%20World%20Nuclear%20Forces.pdf",
+   "y": 2026
+  }
+ },
+ "asOf": "2026-01",
+ "note": "كل الأرقام تقديرية (SIPRI). العقائد مختصرة من المعلن العام (ت).",
+ "states": [
+  {
+   "id": "USA",
+   "deployed": {
+    "v": 1770,
+    "s": "sipri26",
+    "c": "ت"
+   },
+   "stored": {
+    "v": 1930,
+    "s": "sipri26",
+    "c": "ت"
+   },
+   "stockpile": {
+    "v": 3700,
+    "s": "sipri26",
+    "c": "ت"
+   },
+   "total": {
+    "v": 5042,
+    "s": "sipri26",
+    "c": "ت"
+   },
+   "doctrine": "ردع واستعمال بـ«ظروف قصوى» لحماية المصالح الحيوية لأمريكا وحلفائها"
+  },
+  {
+   "id": "RUS",
+   "deployed": {
+    "v": 1796,
+    "s": "sipri26",
+    "c": "ت"
+   },
+   "stored": {
+    "v": 2604,
+    "s": "sipri26",
+    "c": "ت"
+   },
+   "stockpile": {
+    "v": 4400,
+    "s": "sipri26",
+    "c": "ت"
+   },
+   "total": {
+    "v": 5420,
+    "s": "sipri26",
+    "c": "ت"
+   },
+   "doctrine": "استعمال إذا هجوم نووي، أو هجوم تقليدي يهدد وجود الدولة (عقيدة 2024 وسّعت الشروط)"
+  },
+  {
+   "id": "GBR",
+   "deployed": {
+    "v": 120,
+    "s": "sipri26",
+    "c": "ت"
+   },
+   "stored": {
+    "v": 105,
+    "s": "sipri26",
+    "c": "ت"
+   },
+   "stockpile": {
+    "v": 225,
+    "s": "sipri26",
+    "c": "ت"
+   },
+   "total": {
+    "v": 225,
+    "s": "sipri26",
+    "c": "ت"
+   },
+   "doctrine": "ردع أدنى، استعمال بظروف قصوى للدفاع عن نفسها وحلفاء الناتو"
+  },
+  {
+   "id": "FRA",
+   "deployed": {
+    "v": 280,
+    "s": "sipri26",
+    "c": "ت"
+   },
+   "stored": {
+    "v": 10,
+    "s": "sipri26",
+    "c": "ت"
+   },
+   "stockpile": {
+    "v": 290,
+    "s": "sipri26",
+    "c": "ت"
+   },
+   "total": {
+    "v": 370,
+    "s": "sipri26",
+    "c": "ت"
+   },
+   "doctrine": "ردع «المصالح الحيوية»، وإنذار نووي ممكن"
+  },
+  {
+   "id": "CHN",
+   "deployed": {
+    "v": 34,
+    "s": "sipri26",
+    "c": "ت"
+   },
+   "stored": {
+    "v": 586,
+    "s": "sipri26",
+    "c": "ت"
+   },
+   "stockpile": {
+    "v": 620,
+    "s": "sipri26",
+    "c": "ت"
+   },
+   "total": {
+    "v": 620,
+    "s": "sipri26",
+    "c": "ت"
+   },
+   "doctrine": "عدم البدء أولاً (معلن)"
+  },
+  {
+   "id": "IND",
+   "deployed": {
+    "v": 12,
+    "s": "sipri26",
+    "c": "ت"
+   },
+   "stored": {
+    "v": 178,
+    "s": "sipri26",
+    "c": "ت"
+   },
+   "stockpile": {
+    "v": 190,
+    "s": "sipri26",
+    "c": "ت"
+   },
+   "total": {
+    "v": 190,
+    "s": "sipri26",
+    "c": "ت"
+   },
+   "doctrine": "عدم البدء أولاً، ورد ساحق"
+  },
+  {
+   "id": "PAK",
+   "deployed": {
+    "v": 0,
+    "s": "sipri26",
+    "c": "ت"
+   },
+   "stored": {
+    "v": 170,
+    "s": "sipri26",
+    "c": "ت"
+   },
+   "stockpile": {
+    "v": 170,
+    "s": "sipri26",
+    "c": "ت"
+   },
+   "total": {
+    "v": 170,
+    "s": "sipri26",
+    "c": "ت"
+   },
+   "doctrine": "ردع شامل كامل، الاستعمال الأول ممكن ضد تفوّق تقليدي"
+  },
+  {
+   "id": "PRK",
+   "deployed": {
+    "v": 0,
+    "s": "sipri26",
+    "c": "ت"
+   },
+   "stored": {
+    "v": 60,
+    "s": "sipri26",
+    "c": "ت"
+   },
+   "stockpile": {
+    "v": 60,
+    "s": "sipri26",
+    "c": "ت"
+   },
+   "total": {
+    "v": 60,
+    "s": "sipri26",
+    "c": "ت"
+   },
+   "doctrine": "قانون 2022: استعمال وقائي إذا تهديد للقيادة أو الدولة"
+  },
+  {
+   "id": "ISR",
+   "deployed": {
+    "v": 0,
+    "s": "sipri26",
+    "c": "ت"
+   },
+   "stored": {
+    "v": 90,
+    "s": "sipri26",
+    "c": "ت"
+   },
+   "stockpile": {
+    "v": 90,
+    "s": "sipri26",
+    "c": "ت"
+   },
+   "total": {
+    "v": 90,
+    "s": "sipri26",
+    "c": "ت"
+   },
+   "doctrine": "غموض: ما تأكد ولا تنفي ولا تعلن عقيدة"
+  }
+ ]
+}

@@ -1,0 +1,137 @@
+{
+ "src": {
+  "snap": {
+   "t": "UN snapback sanctions on Iran in effect 27 Sep 2025 (NPR, Bloomberg, CFR)",
+   "u": "https://www.npr.org/2025/09/28/nx-s1-5555869/un-sanctions-iran",
+   "y": 2025
+  },
+  "caesar": {
+   "t": "OFAC / PBS: Caesar Act repealed via FY2026 NDAA (18 Dec 2025)",
+   "u": "https://www.pbs.org/newshour/world/syria-welcomes-permanent-repeal-of-sweeping-u-s-sanctions-imposed-during-assad-regime",
+   "y": 2025
+  },
+  "iranwar": {
+   "t": "Wikipedia: 2026 Iran war (US naval blockade of Iranian ports reinstated July 2026)",
+   "u": "https://en.wikipedia.org/wiki/2026_Iran_war",
+   "y": 2026
+  },
+  "known": {
+   "t": "أنظمة عقوبات معروفة ومستمرة (OFAC، EU sanctions map، UN 1718 Committee)",
+   "u": "https://www.sanctionsmap.eu/",
+   "y": 2026
+  }
+ },
+ "list": [
+  {
+   "on": "RUS",
+   "by": [
+    "USA",
+    "EU",
+    "GBR",
+    "JPN",
+    "CAN",
+    "AUS",
+    "KOR",
+    "NOR"
+   ],
+   "level": "heavy",
+   "ar": "عقوبات واسعة منذ 2022 (طاقة، بنوك، تقنية، سلاح)",
+   "s": "known",
+   "c": "ح"
+  },
+  {
+   "on": "IRN",
+   "by": [
+    "UN",
+    "USA",
+    "EU",
+    "GBR"
+   ],
+   "level": "heavy",
+   "ar": "عقوبات الأمم المتحدة رجعت (سناب باك 2025) + عقوبات أمريكية + حصار بحري أمريكي على الموانئ (2026)",
+   "s": "snap,iranwar",
+   "c": "ح"
+  },
+  {
+   "on": "PRK",
+   "by": [
+    "UN",
+    "USA",
+    "EU",
+    "JPN",
+    "KOR"
+   ],
+   "level": "heavy",
+   "ar": "عقوبات الأمم المتحدة الشاملة",
+   "s": "known",
+   "c": "ح"
+  },
+  {
+   "on": "BLR",
+   "by": [
+    "USA",
+    "EU",
+    "GBR",
+    "CAN"
+   ],
+   "level": "medium",
+   "ar": "عقوبات لدعم روسيا",
+   "s": "known",
+   "c": "ح"
+  },
+  {
+   "on": "CUB",
+   "by": [
+    "USA"
+   ],
+   "level": "heavy",
+   "ar": "الحظر الأمريكي",
+   "s": "known",
+   "c": "ح"
+  },
+  {
+   "on": "MMR",
+   "by": [
+    "USA",
+    "EU",
+    "GBR"
+   ],
+   "level": "medium",
+   "ar": "عقوبات على المجلس العسكري",
+   "s": "known",
+   "c": "ح"
+  },
+  {
+   "on": "SYR",
+   "by": [
+    "USA",
+    "EU"
+   ],
+   "level": "light",
+   "ar": "أغلبها انشالت (قانون قيصر انلغى كانون الأول 2025)، وتبقى بعض القيود",
+   "s": "caesar",
+   "c": "ح"
+  },
+  {
+   "on": "VEN",
+   "by": [
+    "USA"
+   ],
+   "level": "light",
+   "ar": "تخفيف بعد إزاحة مادورو (كانون الثاني 2026) والشراكة العسكرية؛ التفاصيل تتراجع",
+   "s": "known",
+   "c": "ت"
+  },
+  {
+   "on": "AFG",
+   "by": [
+    "UN",
+    "USA"
+   ],
+   "level": "medium",
+   "ar": "عقوبات على قيادة طالبان",
+   "s": "known",
+   "c": "ح"
+  }
+ ]
+}

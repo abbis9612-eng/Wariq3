@@ -60,9 +60,26 @@
     t9: { n: '9M331 ×8', ic: '🚀', cat: 'sam', pool: '9M331', q: 8, side: 1, cost: .004, days: 15, d: 'لتور' },
     line: { n: 'خط إنتاج جديد', ic: '🏭', cat: 'line', cost: [1.2, .8], days: [60, 50], d: 'تقدر تصنع شيين بنفس الوقت أكثر' },
   };
+  // ===== GW11 C2: المورّد وقطع الغيار =====
+  // كل سلاح من وين: العراق يعتمد على أمريكا (أبرامز، F-16، باتريوت) وروسيا (BMP وT-72 بالآلية، سوخوي-25، بانتسير) والصين (CH-4)؛
+  // إيران أغلبه محلي (كرار، F-14 المصلّحة، مهاجر، صياد، تور المحلي) وروسيا (سوخوي-24، S-300).
+  // إذا العلاقة ويا المورّد نزلت: قطع الغيار تقل ← الشراء أغلى وأبطأ أو يوقف، الطيارات تنحبس بالأرض، والفرق المدرعة تتعوض أبطأ.
+  const SUPPLY = [
+    { arm: 'us', mec: 'ru', f16: 'us', su25: 'ru', ch4: 'cn', pac2: 'us', pac3: 'us', e57: 'ru' },
+    { su24: 'ru', n48: 'ru' },
+  ];
+  const SUP_N = { us: '🇺🇸 أمريكا', ru: '🇷🇺 روسيا', cn: '🇨🇳 الصين' };
+  // معامل قطع الغيار 0–1 حسب العلاقة (الحليفة بالحرب كامل)
+  function parts(W, s, k) {
+    const sup = SUPPLY[s][k]; if (!sup || !W.dip || !W.dip.c[sup]) return 1;
+    const c = W.dip.c[sup]; if (c.st === 'ally' + s) return 1; if (c.st === 'ally' + (1 - s)) return 0;
+    const r = c.rel[s]; return r >= 10 ? 1 : r >= -10 ? .7 : r >= -40 ? .4 : r >= -70 ? .15 : 0;
+  }
   const byS = (v, s) => Array.isArray(v) ? v[s] : v;
-  const costOf = (k, s) => byS(ITEMS[k].cost, s);
-  const daysOf = (k, s) => byS(ITEMS[k].days, s);
+  // الكلفة والأيام: إذا قطع الغيار ناقصة نشتري من السوق السوداء (أغلى وأبطأ)
+  const pk = (W, k, s) => W ? parts(W, s, k) : 1;
+  const costOf = (k, s, W) => byS(ITEMS[k].cost, s) * (1 + (1 - pk(W, k, s)) * .8);
+  const daysOf = (k, s, W) => byS(ITEMS[k].days, s) / Math.max(.35, pk(W, k, s));
   const itemsFor = s => Object.keys(ITEMS).filter(k => ITEMS[k].side == null || ITEMS[k].side === s);
 
   // أقرب منطقة للنقطة (لحد 60 كم)
@@ -112,12 +129,13 @@
   // ===== الطلب (الشراء) =====
   function canBuy(W, s, k) {
     const it = ITEMS[k]; if (!it || (it.side != null && it.side !== s)) return 'مو متوفر';
-    const e = W.eco[s]; if (e.cash - costOf(k, s) < -LAND[s].lim * .5) return 'الفلوس ما تكفي (وصلنا حد الدين)';
+    if (parts(W, s, k) <= 0) return `${SUP_N[SUPPLY[s][k]] || 'المورّد'} قاطع عنا: ما يبيع ولا قطع غيار`;
+    const e = W.eco[s]; if (e.cash - costOf(k, s, W) < -LAND[s].lim * .5) return 'الفلوس ما تكفي (وصلنا حد الدين)';
     return null;
   }
   function buy(W, s, k, why) {
     const err = canBuy(W, s, k); if (err) return err;
-    const e = W.eco[s], c = costOf(k, s), d = daysOf(k, s);
+    const e = W.eco[s], c = costOf(k, s, W), d = daysOf(k, s, W);
     e.cash -= c; e.spent = (e.spent || 0) + c;
     const o = { id: e.oid++, k, left: d, tot: d, paid: c, t: W.t }; e.q.push(o);
     if (!why) W.log.push({ t: W.t, side: s, k: 'order', it: k });
@@ -191,6 +209,9 @@
       W.stats = W.stats || []; W.stats.push([day, vp[0], vp[1], +W.eco[0].cash.toFixed(2), Math.round(W.eco[0].mor), dv[0], dv[1], pl[0], pl[1], A ? A.kills[0] : 0, A ? A.kills[1] : 0, W.ctrl.reduce((n, x) => n + (x === 0 ? 1 : 0), 0)]);
       if (W.stats.length > 400) W.stats.shift(); }
     if (A) A.sor = [0, 0];
+    // C2: قطع الغيار: الطيارات اللي ما عدها قطع تنحبس بالأرض، والفرق تتعوض أبطأ (sim.js يقرا W.partsF)
+    W.partsF = [0, 1].map(s => ({ arm: parts(W, s, 'arm'), mec: parts(W, s, 'mec'), inf: 1 }));
+    if (A) for (const b of A.bases) { const f = parts(W, b.side, b.type); b.gnd = f < 1 ? Math.floor(b.n0 * (1 - f) * .7) : 0; b.ready = Math.min(b.ready, b.n0 - b.gnd); }
     for (const s of [0, 1]) if (s === 1 || W.eco[s].auto) aiEco(W, A, s);
     for (const s of [0, 1]) W.eco[s].day = day;
   }
@@ -216,7 +237,7 @@
     if (W.t > 24 * 3) e.prio = e.mor > 40 && e.cash > -L.lim * .3 ? 'war' : e.mor < 30 ? 'civ' : 'bal';
     const queued = k => e.q.filter(o => o.k === k).length;
     const room = () => e.q.length < e.lines + 1;
-    const afford = k => e.cash - costOf(k, s) > -L.lim * .25;
+    const afford = k => parts(W, s, k) > 0 && e.cash - costOf(k, s, W) > -L.lim * .25;
     const planes = () => { if (A) for (const k of itemsFor(s)) { const it = ITEMS[k]; if (it.cat !== 'plane' || !room()) continue; const miss = A.bases.filter(b => b.side === s && b.type === it.plane).reduce((n, b) => n + b.max - b.n0, 0); if (miss >= it.q && queued(k) < Math.min(3, Math.floor(miss / it.q)) && afford(k)) buy(W, s, k, 'ai'); } };
     const divs = () => { const n = W.divs.filter(d => !d.dead && d.side === s).length + e.q.filter(o => ITEMS[o.k].cat === 'div').length;
       if (W.ob && n < W.ob[s] && room()) { const k = e.cash > 12 ? (n % 2 ? 'arm' : 'mec') : 'inf'; if (afford(k)) buy(W, s, k, 'ai'); } };
@@ -234,6 +255,6 @@
   // معامل المعنويات على راحة الفرق (sim.js يقراه): تحت 50 التنظيم يرجع أبطأ
   const morF = (W, s) => !W.eco ? 1 : W.eco[s].mor >= 50 ? 1 : .6 + .4 * W.eco[s].mor / 50;
 
-  const API = { SITES, LAND, ITEMS, PRIO, UPKEEP, init, ensure, budget, oilOf, siteState, canBuy, buy, cancel, deliver, daily, hitOil, oilTarget, itemsFor, costOf, daysOf, morF, aiEco };
+  const API = { SUPPLY, SUP_N, parts, SITES, LAND, ITEMS, PRIO, UPKEEP, init, ensure, budget, oilOf, siteState, canBuy, buy, cancel, deliver, daily, hitOil, oilTarget, itemsFor, costOf, daysOf, morF, aiEco };
   if (typeof module !== 'undefined') module.exports = API; else root.ECON = API;
 })(this);

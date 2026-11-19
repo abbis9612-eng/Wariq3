@@ -203,7 +203,7 @@
       if (d.dead) continue;
       if (!d.path.length) { // راحة: تنظيم وتحصين وتعويض
         d.ent = Math.min(1, d.ent + 1 / 96);
-        if (W.t - d.lastFight > 6 && W.sup[d.side][d.cell]) { d.org = Math.min(d.orgMax, d.org + d.orgMax / 40 * morF(W, d.side)); d.str = Math.min(1, d.str + .0012); }
+        if (W.t - d.lastFight > 6 && W.sup[d.side][d.cell]) { d.org = Math.min(d.orgMax, d.org + d.orgMax / 40 * morF(W, d.side)); d.str = Math.min(1, d.str + .0012 * (W.partsF ? W.partsF[d.side][d.kind] ?? 1 : 1)); }   // C2: قطع الغيار
         if (!W.sup[d.side][d.cell]) { d.str = Math.max(.05, d.str - .0008); d.org = Math.max(0, Math.min(d.org, d.orgMax * .5)); }
         continue;
       }

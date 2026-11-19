@@ -932,10 +932,10 @@ function prodPanel(refresh) {
   const sp = P.prod * (e.mor < 30 ? .75 : 1);
   const its = ECON.itemsFor(ME), cat = c => its.filter(k => ECON.ITEMS[k].cat === c);
   const miss = t => AW.bases.filter(b => b.side === ME && b.type === t).reduce((n, b) => n + b.max - b.n0, 0);
-  const btn = k => { const it = ECON.ITEMS[k], c = ECON.costOf(k, ME), d = ECON.daysOf(k, ME), err = ECON.canBuy(WD, ME, k);
+  const btn = k => { const it = ECON.ITEMS[k], c = ECON.costOf(k, ME, WD), d = ECON.daysOf(k, ME, WD), err = ECON.canBuy(WD, ME, k), sup = ECON.SUPPLY[ME][k], pf = ECON.parts(WD, ME, k);
     const extra = it.cat === 'plane' ? `ناقص ${miss(it.plane)}` : it.cat === 'sam' ? `بالمخزن ${AW.pool[ME][it.pool] || 0}` : it.cat === 'line' ? `عندنا ${e.lines}` : '';
-    return `<button data-buy="${k}" ${err ? 'disabled' : ''}><b>${it.ic} ${it.n}</b><i>${c >= 1 ? c.toFixed(1) + ' مليار' : Math.round(c * 1000) + ' مليون'} $ · ${Math.round(d / sp)} يوم${extra ? ' · ' + extra : ''}</i></button>`; };
-  const SUBS = [['buy', '🛒 اطلب'], ['q', '⏳ الطابور', e.q.length]];
+    return `<button data-buy="${k}" ${err ? 'disabled' : ''}><b>${it.ic} ${it.n}</b><i>${c >= 1 ? c.toFixed(1) + ' مليار' : Math.round(c * 1000) + ' مليون'} $ · ${Math.round(d / sp)} يوم${extra ? ' · ' + extra : ''}</i><i>${sup ? ECON.SUP_N[sup].split(' ')[0] + (pf < 1 ? ` <b class="neg">قطع ${Math.round(pf * 100)}٪</b>` : '') : '🇮🇶 محلي'}</i>${err ? `<span class="why0">${err}</span>` : ''}</button>`; };
+  const SUBS = [['buy', '🛒 اطلب'], ['q', '⏳ الطابور', e.q.length], ['sup', '🔧 المورّدين', ['us', 'ru', 'cn'].some(x => Object.keys(ECON.SUPPLY[ME]).some(k => ECON.SUPPLY[ME][k] === x && ECON.parts(WD, ME, k) < 1)) ? '!' : 0]];
   el.innerHTML = `${GRAB}<div class="eh"><b>🏭 الإنتاج والشراء</b><span class="dim">${B$(e.cash)}</span><button class="x" id="shX" aria-label="سكّر">✕</button></div>
   ${subBar('prod', SUBS)}<section data-s="q"><div class="dim">${e.lines} خطوط إنتاج: تشتغل على أول ${e.lines} طلبات، والباقي ينتظر. السرعة ×${sp.toFixed(2)} (${P.n}${e.mor < 30 ? '، والمعنويات نازلة' : ''}).</div>
   </section><section data-s="buy"><div class="seg" style="margin-top:6px"><button id="auto" class="${e.auto ? 'on' : ''}">🤖 الوزير يشتري لحاله</button><button id="man" class="${e.auto ? '' : 'on'}">✋ أنا أقرر</button></div>
@@ -947,7 +947,12 @@ function prodPanel(refresh) {
   <div class="dim" style="margin:3px 0">البطاريات تاخذ من مخزون البلد كل يوم (والبطارية اللي إلها ⭐ أولوية تاخذ أكثر).</div>
   <h3>المصانع</h3><div class="buy">${cat('line').map(btn).join('')}</div></section>
   <section data-s="q"><h3>الطابور (${e.q.length})</h3>
-  ${e.q.length ? e.q.map((o, i) => { const it = ECON.ITEMS[o.k], act = i < e.lines; return `<div class="ord ${act ? '' : 'wait'}"><div class="h"><span>${it.ic}</span><b>${it.n}</b><span>${act ? 'باقي ~' + Math.max(1, Math.ceil(o.left / sp)) + ' يوم' : '⏳ ينتظر خط'}</span><button data-can="${o.id}" aria-label="ألغي الطلب" style="min-width:40px;min-height:36px">✕</button></div><div class="bar"><u style="width:${(1 - o.left / o.tot) * 100}%"></u></div></div>`; }).join('') : '<div class="dim">ما اكو طلبات. اختار من «🛒 اطلب».</div>'}</section>`;
+  ${e.q.length ? e.q.map((o, i) => { const it = ECON.ITEMS[o.k], act = i < e.lines; return `<div class="ord ${act ? '' : 'wait'}"><div class="h"><span>${it.ic}</span><b>${it.n}</b><span>${act ? 'باقي ~' + Math.max(1, Math.ceil(o.left / sp)) + ' يوم' : '⏳ ينتظر خط'}</span><button data-can="${o.id}" aria-label="ألغي الطلب" style="min-width:40px;min-height:36px">✕</button></div><div class="bar"><u style="width:${(1 - o.left / o.tot) * 100}%"></u></div></div>`; }).join('') : '<div class="dim">ما اكو طلبات. اختار من «🛒 اطلب».</div>'}</section>
+  <section data-s="sup"><div class="dim" style="margin-top:6px">سلاحنا من برّا: إذا العلاقة ويا المورّد نزلت، قطع الغيار تقل: الشراء يغلى ويبطأ (أو يوقف)، الطيارات تنحبس بالأرض، والفرق تتعوض أبطأ. حسّن العلاقة من 🤝 السياسة، أو اصنع محلي.</div>
+  ${['us', 'ru', 'cn'].map(x => { const ks = Object.keys(ECON.SUPPLY[ME]).filter(k => ECON.SUPPLY[ME][k] === x); const pf = ECON.parts(WD, ME, ks[0]), c = WD.dip.c[x];
+    return `<div class="ctry"><div class="h"><b>${ECON.SUP_N[x]}</b><span class="st ${pf >= 1 ? 'a0' : pf > 0 ? '' : 'a1'}">قطع الغيار ${Math.round(pf * 100)}٪</span></div><div class="rel"><span>العلاقة</span>${relBar(c.rel[ME], 'var(--me-l)')}<span>${Math.round(c.rel[ME])}</span></div>
+    <div class="dim">${ks.map(k => ECON.ITEMS[k].ic + ' ' + (k === 'arm' ? 'الدروع (أبرامز)' : k === 'mec' ? 'الآليات (BMP)' : ECON.ITEMS[k].n.replace(/ ×\d+.*/, ''))).join(' · ')}</div>
+    <div class="dim">${pf >= 1 ? '✅ كامل' : pf > 0 ? `⚠️ الشراء ×${(1 + (1 - pf) * .8).toFixed(1)} بالسعر وأبطأ، وطياراته ${Math.round((1 - pf) * 70)}٪ منها محبوسة` : '⛔ قاطع: ما يبيع، والطيارات محبوسة'} · قطع كاملة من علاقة 10+</div></div>`; }).join('')}</section>`;
   subApply(el, 'prod', SUBS); if (refresh) el.scrollTop = top;
   $('auto').onclick = () => { e.auto = true; toast('🤖 الوزير يدير الشراء والأولوية'); prodPanel(true); };
   $('man').onclick = () => { e.auto = false; toast('✋ انت تقرر كل شراء'); prodPanel(true); };

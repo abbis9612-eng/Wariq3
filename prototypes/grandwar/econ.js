@@ -183,6 +183,11 @@
       e.hist.push([day, +e.cash.toFixed(2), Math.round(e.mor)]); if (e.hist.length > 120) e.hist.shift();
       if (e.cash < -L.lim && !e.broke) { e.broke = 1; W.log.push({ t: W.t, side: s, k: 'broke' }); } else if (e.cash > 0) e.broke = 0;
     }
+    // GW11 B1: سجل يومي للتقرير والرسوم: [يوم، نقاطنا، نقاطهم، خزينتنا، معنوياتنا، فرقنا، فرقهم، طياراتنا، طياراتهم، أسقطنا، أسقطوا، مناطقنا]
+    { const vp = [0, 0], dv = [0, 0], pl = [0, 0]; W.cells.forEach((c, i) => { if (c.vp) vp[W.ctrl[i]] += c.vp; }); for (const d of W.divs) if (!d.dead) dv[d.side]++;
+      if (A) for (const b of A.bases) pl[b.side] += b.n0;
+      W.stats = W.stats || []; W.stats.push([day, vp[0], vp[1], +W.eco[0].cash.toFixed(2), Math.round(W.eco[0].mor), dv[0], dv[1], pl[0], pl[1], A ? A.kills[0] : 0, A ? A.kills[1] : 0, W.ctrl.reduce((n, x) => n + (x === 0 ? 1 : 0), 0)]);
+      if (W.stats.length > 400) W.stats.shift(); }
     if (A) A.sor = [0, 0];
     for (const s of [0, 1]) if (s === 1 || W.eco[s].auto) aiEco(W, A, s);
     for (const s of [0, 1]) W.eco[s].day = day;

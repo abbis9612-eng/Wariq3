@@ -78,7 +78,7 @@
   const byS = (v, s) => Array.isArray(v) ? v[s] : v;
   // الكلفة والأيام: إذا قطع الغيار ناقصة نشتري من السوق السوداء (أغلى وأبطأ)
   const pk = (W, k, s) => W ? parts(W, s, k) : 1;
-  const costOf = (k, s, W) => byS(ITEMS[k].cost, s) * (1 + (1 - pk(W, k, s)) * .8);
+  const costOf = (k, s, W) => byS(ITEMS[k].cost, s) * (1 + (1 - pk(W, k, s)) * .8) * (ITEMS[k].req && W && W.indF ? W.indF[s].locCost : 1);   // C3: المحلي أرخص بالصناعة
   const daysOf = (k, s, W) => byS(ITEMS[k].days, s) / Math.max(.35, pk(W, k, s));
   const itemsFor = s => Object.keys(ITEMS).filter(k => ITEMS[k].side == null || ITEMS[k].side === s);
 
@@ -109,14 +109,14 @@
     // GW11 C1: هرمز مغلق ← صادرات الخليج: العراق الجنوب ~5٪، وإيران ~25٪ (ميناء جاسك)
     if (W.dip && W.dip.hz && W.dip.hz.closed) { if (routes.south != null) routes.south *= .05; if (s === 1) routes.kharg = (routes.kharg ?? 1) * .25; }
     let prod = 0, exp = 0;
-    for (const f of O.sites) if (!f.term && f.side === s) { const q = f.out * siteState(W, f).f; prod += q; exp += q * (routes[f.route] ?? 1); }
+    for (const f of O.sites) if (!f.term && f.side === s) { const q = f.out * siteState(W, f).f * (W.indF ? W.indF[s].oil : 1); prod += q; exp += q * (routes[f.route] ?? 1); }
     return { prod, exp: exp * LAND[s].exp };
   }
   // ميزانية اليوم (بدون شراء): كل بند لحاله حتى ينعرض للاعب
   function budget(W, A, s) {
     const e = W.eco[s], L = LAND[s], P = PRIO[e.prio], o = oilOf(W, s);
     const price = W.oil.price * L.disc * (s === 1 && W.dip && W.dip.sanc > W.t ? .8 : 1);   // GW10: العقوبات الأمريكية تكبّر خصم إيران
-    const oil = o.exp * price * 1e-3, other = L.other * P.other;
+    const oil = o.exp * price * 1e-3, other = L.other * P.other * (s === 0 && W.homeF ? W.homeF.other : 1);   // C6: رجال الأعمال الزعلانين
     let army = 0; for (const d of W.divs) if (!d.dead && d.side === s && !d.ally) army += UPKEEP[d.kind] * (W.t - d.lastFight < 24 ? 2.5 : d.path.length ? 1.5 : 1) * L.mil;
     const civ = L.civ * P.civ;
     const air = (A && A.sor ? A.sor[s] : 0) * SORTIE[s];
@@ -129,6 +129,7 @@
   // ===== الطلب (الشراء) =====
   function canBuy(W, s, k) {
     const it = ITEMS[k]; if (!it || (it.side != null && it.side !== s)) return 'مو متوفر';
+    if (it.req && W.ind && W.ind[s].tech[it.req[0]] < it.req[1]) return `يحتاج بحث «${{ arm: 'الدروع', uav: 'المسيّرات', msl: 'الصواريخ', ew: 'الإلكترونيات', ind: 'الصناعة' }[it.req[0]]}» مستوى ${it.req[1]}`;
     if (parts(W, s, k) <= 0) return `${SUP_N[SUPPLY[s][k]] || 'المورّد'} قاطع عنا: ما يبيع ولا قطع غيار`;
     const e = W.eco[s]; if (e.cash - costOf(k, s, W) < -LAND[s].lim * .5) return 'الفلوس ما تكفي (وصلنا حد الدين)';
     return null;
@@ -152,7 +153,7 @@
       // بأكبر مدينة مزودة بأرضنا (مثل التعبئة)، وتنضم لأقرب جيش
       let best = -1, bv = -1; W.cells.forEach((c, i) => { if (W.ctrl[i] === s && c.s === s && W.sup[s][i] && (c.vp || 0) > bv) { bv = c.vp || 0; best = i; } });
       if (best < 0) return false;
-      W.num = W.num || [100, 200]; const d = SIM.addDiv(W, s, o.k, best, W.num[s]++); d.org = d.orgMax * .6; SIM.joinArmy(W, d);
+      W.num = W.num || [100, 200]; const d = SIM.addDiv(W, s, it.kind || o.k, best, W.num[s]++); if (it.req) d.n += s ? '' : ' (محلية)'; d.org = d.orgMax * .6; SIM.joinArmy(W, d);
       W.log.push({ t: W.t, side: s, k: 'built', it: o.k, gift: o.gift, div: d.n, cell: best });
     } else if (it.cat === 'plane') {
       if (!A) return true;
@@ -191,12 +192,12 @@
     const lostQ = O.sites.reduce((q, f) => q + (f.term ? 0 : f.out * (1 - siteState(W, f).f)), 0);
     const tgt = 88 + lostQ * 6;
     O.price = Math.max(60, Math.min(150, O.price + (tgt - O.price) * .06 + (W.rnd() - .5) * 3));
-    for (const f of O.sites) if (f.dmg > 0) f.dmg = Math.max(0, f.dmg - 24);
+    for (const f of O.sites) if (f.dmg > 0) f.dmg = Math.max(0, f.dmg - 24 * (W.indF ? W.indF[f.side].fix : 1));   // C5: قطاع النفط يصلّح أسرع
     for (const s of [0, 1]) {
       const e = W.eco[s], P = PRIO[e.prio], L = LAND[s];
       const B = budget(W, A, s); e.cash += B.net; e.last = B;
       // الإنتاج: الخطوط تشتغل على أول الطلبات بالترتيب
-      const sp = P.prod * (e.mor < 30 ? .75 : 1) * (s === 0 && W.cfg && W.cfg.ez && W.cfg.ez.on && W.cfg.ez.fast ? 2 : 1);   // الوضع الخاص: إنتاج أسرع ×2
+      const sp = P.prod * (W.indF ? W.indF[s].prod : 1) * (e.mor < 30 ? .75 : 1) * (s === 0 && W.cfg && W.cfg.ez && W.cfg.ez.on && W.cfg.ez.fast ? 2 : 1);   // الوضع الخاص: إنتاج أسرع ×2
       for (let k = 0; k < Math.min(e.lines, e.q.length); k++) e.q[k].left -= sp * (ITEMS[e.q[k].k].cat === 'div' && e.mor < 30 ? .8 : 1);
       for (let k = e.q.length - 1; k >= 0; k--) if (e.q[k].left <= 0) { const o = e.q[k]; if (deliver(W, A, s, o, SIM)) e.q.splice(k, 1); }
       morale(W, s, B);

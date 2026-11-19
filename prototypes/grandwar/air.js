@@ -329,7 +329,7 @@
     // وقود: طلعة أقصاها ~ساعة ونص
     if ((p.t > (T.endur || 95) || W.wx === 'dust' || (W.night && !T.night)) && (p.st === 'out' || p.st === 'orbit')) p.st = 'back';   // الوقود، أو الغبار، أو الليل لطيارة بلا رؤية ليلية ← رجوع
     // عيون الجو: كل طيارة تشوف شوية تحتها، ومسيّرة الاستطلاع ~40 كم (تنقرى ساعة بساعة بـ sim.intel)
-    if (W.spots && p.st !== 'roll' && p.st !== 'final' && (p.eyeT = (p.eyeT || 0) - dt) <= 0) { p.eyeT = .5; const sp = W.spots[p.side]; if (sp.length < 400) sp.push([p.x, p.y, T.eye || 12]); }
+    if (W.spots && p.st !== 'roll' && p.st !== 'final' && (p.eyeT = (p.eyeT || 0) - dt) <= 0) { p.eyeT = .5; const sp = W.spots[p.side]; if (sp.length < 400) sp.push([p.x, p.y, (T.eye || 12) * (W.indF ? W.indF[p.side].eye : 1)]); }   // C4: بحث المسيّرات
     let tx = M.p[0], ty = M.p[1], spd = T.v, turn = 6; const d = Math.hypot(tx - p.x, ty - p.y);
     // تهرّب: صاروخ جاي عليه قريب ← لفّة حادة (يحط الصاروخ على جنبه) وينزل ويرمي مشاعل/رقائق
     const threat = A.msls.find(m => m.tgt === p && !m.done && m.t > 0 && Math.hypot(m.x - p.x, m.y - p.y) < 18);
@@ -450,7 +450,7 @@
       e.mag.ready--; e.toFire--; e.shots++; e.next = A.t + (e.mag.gun ? .02 : S.gap); s.fired++;
       const d0 = Math.hypot(e.T.x - s.p[0], e.T.y - s.p[1]), rr = e.mag.r[e.c];
       // الاحتمال: قاعدة النظام × تشويش الطيارة × (أضعف بآخر المدى)
-      let pk = e.mag.pk[e.c] * (e.c === 'air' ? PLANES[e.T.type].ecm : 1) * (e.c === 'tbm' ? 1 : 1 - .35 * Math.pow(Math.min(1, d0 / rr), 2));
+      let pk = e.mag.pk[e.c] * (W.indF ? W.indF[s.side].samPk : 1) * (e.c === 'air' ? PLANES[e.T.type].ecm : 1) * (e.c === 'tbm' ? 1 : 1 - .35 * Math.pow(Math.min(1, d0 / rr), 2));
       if (e.mag.gun) { if (A.rnd() < pk) { hitTarget(A, W, e.T, s.side, s.n, 'gun', s); s.hits++; } emit(A, { k: 'gun', side: s.side, x: s.p[0], y: s.p[1], tx: e.T.x, ty: e.T.y }); continue; }
       guided++;
       const z0 = 0, tmax = (c => c === 'tbm' ? (rr + 40) / (e.mag.v * .7) : rr / (e.mag.v * .7) + .1)(e.c);

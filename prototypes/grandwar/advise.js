@@ -23,6 +23,9 @@
     // 5) بطارية دفاع جوي تخلص صواريخها والمخزن فاضي
     if (A) A.sams.forEach((s, i) => { if (s.side !== me || out.some(o => o.id === 'sam')) return; const m = s.mags.find(q => !q.gun); if (!m) return;
       if (m.ready + m.stock <= m.orig * .25 && !(A.pool[me][m.n] > 0)) add({ id: 'sam', w: 1, p: 75, t: `🚀 ${s.n}: باقي ${m.ready + m.stock} صاروخ ${m.n} ومخزن البلد فاضي. اشتري`, a: 'prod', l: 'اشتري' }); });
+    // C6: الداخل
+    if (W.home) { const H = W.home; if (H.warn.coup || H.warn.rev || H.warn.bank) add({ id: 'homew', w: 1, p: 97, t: H.warn.coup ? `⚠️ الجيش زعلان (${Math.round(H.fac.army)}): انقلاب بعد ${14 - H.warn.coup} يوم. ادفع للجيش أو حقق انتصار` : H.warn.rev ? `⚠️ الاستقرار ${Math.round(H.stab)}: ثورة بعد ${14 - H.warn.rev} يوم` : `⚠️ إفلاس بعد ${30 - H.warn.bank} يوم: خفّف الصرف واطلب مساعدة`, a: 'eco:home', l: 'الداخل' });
+      if (H.iss.length) add({ id: 'iss', w: 1, p: 72, t: `🏛 قضية تنتظرك: ${X.HOME ? X.HOME.ISS[H.iss[0].k].t : ''}`, a: 'eco:home', l: 'قرّر' }); }
     // C2: مورّد قاطع أو مقصّر بقطع الغيار
     if (W.dip) for (const x of ['us', 'ru', 'cn']) { const ks = Object.keys(ECON.SUPPLY[me]).filter(k => ECON.SUPPLY[me][k] === x); if (!ks.length) continue; const pf = ECON.parts(W, me, ks[0]); if (pf < 1) { add({ id: 'parts', w: 1, p: 68, t: `🔧 قطع غيار ${ECON.SUP_N[x]} ${Math.round(pf * 100)}٪: ${ks.includes('f16') ? 'طيارات F-16 محبوسة، ' : ''}الشراء أغلى. حسّن العلاقة`, a: 'dip:ctry', l: 'السياسة' }); break; } }
     // 6) المعنويات

@@ -16,7 +16,7 @@
     const eco = cl(Math.max(0, Math.min(1, (e.cash + L.lim) / (L.lim + 30))) * 50 + Math.min(1, ex / ex0) * 30 + (e.cash >= 0 ? 20 : 0));
     const D = W.dip; let dip = 0;
     if (D) { const allies = DIP.COUNTRIES.filter(C => D.c[C.id].st === 'ally' + me).length; dip = cl(Math.min(2, allies) * 20 + (D.sanc > W.t ? 15 : 0) + Math.max(0, Math.min(1, (DIP.weary(W, o) - DIP.weary(W, me) + .5))) * 45); }
-    const pop = cl(e.mor * .8 + kept * 20);
+    const pop = cl(W.home ? e.mor * .5 + W.home.stab * .3 + kept * 20 : e.mor * .8 + kept * 20);   // C6: الاستقرار
     return { mil: Math.round(mil), eco: Math.round(eco), dip: Math.round(dip), pop: Math.round(pop) };
   }
   const GR = [[85, 'S', 'قائد أسطوري'], [70, 'A', 'نصر واضح'], [55, 'B', 'قيادة ناجحة'], [40, 'C', 'صمود'], [-1, 'D', 'قيادة متعثرة']];

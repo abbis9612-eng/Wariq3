@@ -154,6 +154,8 @@ button:focus-visible{outline:2px solid var(--gold);outline-offset:2px}
 <script src="dip.js"></script>
 <script src="advise.js"></script>
 <script src="grade.js"></script>
+<script src="ind.js"></script>
+<script src="home.js"></script>
 <script src="fx.js"></script>
 <script src="view.js"></script>
 <script src="bv.js"></script>
@@ -174,10 +176,10 @@ const ME = 0;
 // GW7: «كمّل» = نفتح الصفحة بـ ?load=خانة، فالحرب تنبني من الحفظ بدل البداية
 const ST = (() => { try { const t = '__t'; localStorage.setItem(t, 1); localStorage.removeItem(t); return localStorage; } catch (e) { return null; } })();
 let LOADED = null, LOADERR = null;
-AIR.useEcon(ECON);
-if (Q.get('load') != null && ST) { try { const s0 = SAVE.read(ST, Q.get('load')); if (s0) LOADED = SAVE.restore(s0, C, { roads: window.ROADS }, SIM, AIR, ECON, DIP); else LOADERR = 'ما لكيت حفظ بهالخانة'; } catch (e) { LOADERR = e.message; LOADED = null; } }
+AIR.useEcon(ECON); IND.register(ECON);
+if (Q.get('load') != null && ST) { try { const s0 = SAVE.read(ST, Q.get('load')); if (s0) LOADED = SAVE.restore(s0, C, { roads: window.ROADS }, SIM, AIR, ECON, DIP, IND, HOME); else LOADERR = 'ما لكيت حفظ بهالخانة'; } catch (e) { LOADERR = e.message; LOADED = null; } }
 const SEED = LOADED ? LOADED.seed : +(Q.get('seed') || (Date.now() % 100000));
-const WD = LOADED ? LOADED.W : SIM.World(C, { seed: SEED, roads: window.ROADS }); if (!LOADED) { SIM.scenario(WD); ECON.init(WD); DIP.init(WD); WD.cfg = { diff: 'mid', dur: 0, ez: {} }; }
+const WD = LOADED ? LOADED.W : SIM.World(C, { seed: SEED, roads: window.ROADS }); if (!LOADED) { SIM.scenario(WD); ECON.init(WD); DIP.init(WD); IND.init(WD); IND.effects(WD); HOME.init(WD); HOME.effects(WD); WD.cfg = { diff: 'mid', dur: 0, ez: {} }; }
 const AW = LOADED ? LOADED.A : AIR.create(WD); const AIRK = [0, 1, 1.5, 2.2];
 const cells = C.cells;
 // ===== الكاميرا =====
@@ -466,7 +468,7 @@ function hud() {
 function badges() {
   const e = WD.eco[ME], D = WD.dip, set = (id, v) => { const b = $(id); if (b && b.dataset.b !== String(v || '')) b.dataset.b = v || ''; };
   set('tabDip', D && (D.offer || D.ev.length) ? '!' : '');
-  set('tabEco', e.cash < 0 ? '!' : '');
+  set('tabEco', e.cash < 0 || (WD.home && WD.home.iss.length) ? '!' : '');
   set('tabProd', !e.auto && e.q.length < e.lines ? e.lines - e.q.length : '');
   set('tabRep', NEWS.unread > 9 ? '9+' : NEWS.unread || '');
 }
@@ -492,6 +494,11 @@ function events() {
     if (l.k === 'bridgefix') toast(mine ? `🔧 إيران صلّحت جسر ${l.n}` : `🔧 مهندسينا صلّحوا جسر ${l.n}`);
     if (l.k === 'wx') toast(l.wx === 'dust' ? `🌫 عاصفة غبار (~${l.h} ساعة): الطيران موقوف، والهجوم والحركة أبطأ` : l.wx === 'rain' ? `🌧 مطر وطين (~${l.h} س): الحركة أبطأ والقصف أقل دقة` : l.wx === 'cloud' ? '☁️ غيوم: القصف أقل دقة شوية' : '☀️ الجو صفى');
     if (l.k === 'dip') dipToast(l);
+    if (l.k === 'home') { if (l.a === 'issue') toast(`🏛 قضية: ${HOME.ISS[l.i].t}`, 'bad'); if (l.a === 'milhit') toast(`🏴 فصائل زعلانة قصفت ${l.n}: المدرج متعطل`, 'bad'); if (l.a === 'auto') toast(`🏛 المستشارين حلّوا «${HOME.ISS[l.i].t}» لحالهم`);
+      if (l.a === 'warn') toast({ coup: `⚠️ الجيش زعلان كلش: انقلاب بعد ${l.left} يوم إذا ما تصلّح`, rev: `⚠️ الاستقرار منهار: ثورة بعد ${l.left} يوم`, bank: `⚠️ الدولة على حافة الإفلاس: ${l.left} يوم` }[l.w], 'bad'); }
+    if (l.k === 'tech' && mine) toast(`🔬 البحث: ${IND.BR[l.b].n} وصل مستوى ${l.l}`, 'good');
+    if (l.k === 'nat' && mine) toast(`🇮🇶 السلاح الوطني: خلصت مرحلة «${IND.NAT[l.st - 1].n}»`, 'good');
+    if (l.k === 'sec' && mine) toast(`🏗 قطاع ${IND.SEC[l.sec].n} وصل مستوى ${l.l}`, 'good');
     if (l.k === 'built' && mine && !l.gift) toast(`🏭 وصل: ${ECON.ITEMS[l.it].n}${l.div ? ' ← ' + l.div + (cells[l.cell]?.city ? ' بـ' + cells[l.cell].city : '') : l.base ? ' ← ' + l.base : ''}`, 'good');
     if (l.k === 'oilhit') toast(mine ? `🛢🔥 ضربنا ${l.n}: نفطهم ينقص ~${l.d} يوم` : `⚠️🛢 إيران ضربت ${l.n}: صادراتنا تنقص ~${l.d} يوم`, mine ? 'good' : 'bad');
     if (l.k === 'broke' && mine) toast('💸 الخزينة وصلت حد الدين: الرواتب تأخرت والشعب زعلان. خفّف الشراء أو اضرب نفطهم', 'bad');
@@ -525,7 +532,7 @@ const NCAT = m => /^(✈|🎯|💥|🚀|🛡|📡|🌫|☁|🌧|☀)/u.test(m) ?
 // GW11 B2: المستشارين
 let ADVL = [];
 const advHtml = () => ADVL.length ? ADVL.map((o, i) => `<div class="adv ${o.w ? 'w' : ''}"><span>${o.t}</span><button data-adv="${i}">${o.l}</button></div>`).join('') : '<div class="dim">ماكو شي مستعجل. الأمور ماشية 👍</div>';
-function advRefresh() { ADVL = ADV.list(WD, AW, { SIM, ECON, DIP }, ME); const n = ADVL.filter(o => o.w).length, c = $('advChip'); c.hidden = !n; if (n) c.textContent = `🧭 ${n} ${n > 1 ? 'تحذيرات' : 'تحذير'}`; }
+function advRefresh() { ADVL = ADV.list(WD, AW, { SIM, ECON, DIP, HOME }, ME); const n = ADVL.filter(o => o.w).length, c = $('advChip'); c.hidden = !n; if (n) c.textContent = `🧭 ${n} ${n > 1 ? 'تحذيرات' : 'تحذير'}`; }
 function advDo(a) {
   const [k, v] = a.split(':');
   if (k === 'prod') { SUB.prod = 'buy'; openSheet(prodPanel, 'tabProd'); return; }
@@ -550,7 +557,7 @@ function showEnd() {
   if (o.peace) { h = { win: 'انتصرنا بالسلام 🎖', draw: 'سلام بتعادل 🕊', loss: 'خسرنا الحرب بالسلام' }[o.res]; txt = { sq: 'الطرفين رجعوا لحدودهم قبل الحرب.', keep: o.by === ME ? 'المناطق الإيرانية اللي أخذناها صارت إلنا.' : 'إيران احتفظت بالمناطق اللي أخذتها منا.', rep: 'حدود قبل الحرب، وإيران دفعت 10 مليار تعويضات.' }[o.peace]; }
   else if (o.end === 'dur') { h = 'انتهت مدة الحرب ⏱'; txt = `${WD.cfg.dur} يوم حرب خلصت، وهذا تقييمك.`; }
   else if (o.loser === 1 - ME) { h = 'انتصرنا! 🎖'; txt = o.why === 'mor' ? 'الشعب الإيراني ما تحمّل الحرب والدولة انهارت.' : 'إيران خسرت أغلب مدنها واستسلمت.'; }
-  else { h = 'خسرنا الحرب'; txt = o.why === 'mor' ? 'معنويات الشعب انهارت والدولة طلبت هدنة.' : 'العراق خسر أغلب مدنه.'; }
+  else { h = { coup: 'انقلاب عسكري ⚠️', rev: 'ثورة شعبية ⚠️', bank: 'الدولة أفلست 💸' }[o.why] || 'خسرنا الحرب'; txt = { mor: 'معنويات الشعب انهارت والدولة طلبت هدنة.', coup: 'الجيش زعل أسبوعين وقادته أطاحوا بالحكومة.', rev: 'الاستقرار انهار والناس أسقطت الحكومة.', bank: 'الدين بقى فوق حده شهر والدولة عجزت عن الرواتب.' }[o.why] || 'العراق خسر أغلب مدنه.'; }
   const ST_ = WD.stats || [];
   $('end').hidden = false;
   $('end').innerHTML = `<div class="box"><div class="grd"><div class="L">${G.g}</div><div><h1>${h}</h1><div class="dim">${G.t} · ${G.score} من 100${G.ez ? ' · 🎁 بالوضع الخاص' : ''}</div></div></div>
@@ -893,7 +900,7 @@ function ecoPanel(refresh) {
   const el = $('sheet'), e = WD.eco[ME], B = e.last || ECON.budget(WD, AW, ME), L = ECON.LAND[ME], top = el.scrollTop;
   const mine = WD.oil.sites.filter(f => f.side === ME), theirs = WD.oil.sites.filter(f => f.side !== ME && !f.off);
   const pr = Object.entries(ECON.PRIO);
-  const SUBS = [['cash', '💰 الخزينة'], ['oil', '🛢 النفط'], ['mor', '🙂 الشعب']];
+  const HH = WD.home; const SUBS = [['cash', '💰 الخزينة'], ['oil', '🛢 النفط'], ['mor', '🙂 الشعب'], ['home', '🏛 الداخل', HH.iss.length]];
   el.innerHTML = `${GRAB}<div class="eh"><b>💰 الاقتصاد</b><span class="dim">${WD.eco[ME].auto ? '🤖 الوزير يشتري' : '✋ انت تشتري'}</span><button class="x" id="shX" aria-label="سكّر">✕</button></div>
   ${subBar('eco', SUBS)}<section data-s="cash">
   <div style="display:flex;align-items:baseline;gap:10px;margin-top:4px"><span class="big ${e.cash < 0 ? 'neg' : ''}">${B$(e.cash)}</span><span class="${B.net >= 0 ? 'pos' : 'neg'}" style="font-weight:700">${M$(B.net)} باليوم</span></div>
@@ -916,6 +923,12 @@ function ecoPanel(refresh) {
   <div class="bar" style="height:6px"><u style="width:${e.mor}%;background:${e.mor >= 50 ? 'var(--pos-s)' : e.mor >= 25 ? 'var(--gold)' : 'var(--neg-s)'}"></u></div>
   ${e.morWhy.length ? `<div class="why">${e.morWhy.map(w => `<span class="${w[0] >= 0 ? 'pos' : 'neg'}">${w[0] >= 0 ? '+' : ''}${w[0].toFixed(1)} ${w[1]}</span>`).join('')}</div>` : ''}
   <div class="dim" style="margin-top:3px">تنزل بخسارة المدن والفرق، والدين، وطول الحرب. تصعد بالانتصارات. تحت 50 الفرق ترتاح أبطأ، تحت 30 الإنتاج أبطأ، تحت 25 نستسلم أبكر، وبالصفر الدولة تنهار.</div></section>
+  <section data-s="home">${(() => { const H = WD.home, W_ = H.warn; const col = v => v >= 50 ? 'var(--pos-s)' : v >= 25 ? 'var(--warn-s)' : 'var(--neg-s)';
+    return `${H.iss.map((q, i) => { const I = HOME.ISS[q.k]; return `<div class="ctry" style="border-color:var(--neg-s);margin-top:8px"><b>🏛 ${I.t}</b>${q.crit ? ' <small class="neg">مصيرية</small>' : ''}<div class="dim">${I.x}</div><div class="acts">${I.o.map((o, j) => `<button data-iss="${i}:${j}" class="${j ? '' : 'go'}">${o[0]}</button>`).join('')}</div></div>`; }).join('')}
+    <h3>الاستقرار: ${Math.round(H.stab)}</h3><div class="bar" style="height:7px"><u style="width:${H.stab}%;background:${col(H.stab)}"></u></div>
+    ${W_.coup || W_.rev || W_.bank ? `<div class="adv w"><span>${W_.coup ? `⚠️ انقلاب بعد ${14 - W_.coup} يوم إذا الجيش يبقى تحت 20. ` : ''}${W_.rev ? `⚠️ ثورة بعد ${14 - W_.rev} يوم إذا الاستقرار يبقى تحت 15. ` : ''}${W_.bank ? `⚠️ إفلاس بعد ${30 - W_.bank} يوم إذا الدين يبقى فوق حده بنص. ` : ''}</span></div>` : ''}
+    <h3>الفئات</h3>${HOME.FK.map(k => { const F = HOME.FAC[k], v = H.fac[k], w = H.why.filter(x => x[0] === k); return `<div class="vp"><div class="h"><span>${F.ic} <b>${F.n}</b></span><b>${Math.round(v)}</b></div><div class="bar"><u style="width:${v}%;background:${col(v)}"></u></div><div class="dim">${F.d}${w.length ? ' · اليوم: ' + w.map(x => `<span class="${x[1] >= 0 ? 'pos' : 'neg'}">${x[1] >= 0 ? '+' : ''}${x[1].toFixed(1)} ${x[2]}</span>`).join('، ') : ''}</div></div>`; }).join('')}
+    <div class="dim">نخسر إذا: الجيش تحت 20 لأسبوعين (انقلاب)، أو الاستقرار تحت 15 لأسبوعين (ثورة)، أو الدين فوق حده بنص لشهر (إفلاس). القضايا اللي ما ترد عليها 5 أيام، المستشارين يحلوها لحالهم.</div>`; })()}</section>
   <section data-s="oil">${DIP.hzClosed(WD) ? '<div class="adv w"><span>⚓⛔ مضيق هرمز مغلق: صادرات البصرة البحرية واقفة. شوف 🤝 السياسة</span></div>' : ''}<div class="dim" style="margin-top:6px">سعر النفط اليوم <b>$${Math.round(WD.oil.price)}</b> · صادراتنا ${B.exp.toFixed(2)} مليون برميل/يوم · إنتاجنا ${B.prod.toFixed(2)}</div>
   <h3>نفطنا</h3>
   ${mine.map(f => { const st = ECON.siteState(WD, f); return `<div class="oil" data-go="${WD.oil.sites.indexOf(f)}"><span>${f.term ? '⚓' : '🛢'}</span><span><b>${f.n}</b> <span class="dim">${OILST[st.k]}${f.dmg > 0 ? ' ' + Math.ceil(f.dmg / 24) + ' يوم' : ''}</span></span><span>${f.term ? (f.term === 'south' ? 'تصدير الجنوب' : '') : Math.round(f.out * st.f * 1000) + ' ألف ب/ي'}</span></div>`; }).join('')}
@@ -924,6 +937,7 @@ function ecoPanel(refresh) {
   ${theirs.map(f => { const st = ECON.siteState(WD, f); return `<div class="oil" data-go="${WD.oil.sites.indexOf(f)}"><span>${f.term ? '⚓' : '🛢'}</span><span><b>${f.n}</b> <span class="dim">${OILST[st.k]}${f.dmg > 0 ? ' ' + Math.ceil(f.dmg / 24) + ' يوم' : ''}</span></span><span>${f.term ? 'تصدير' : '~' + Math.round(f.out * 1000) + ' ألف'}</span></div>`; }).join('')}
   <div class="dim">إيران تبيع نفطها بخصم (العقوبات) من جزيرة خرج. اضربها من بطاقة المطار «🛢 نفط». خزينتهم تقريباً ${Math.round(WD.eco[1].cash / 5) * 5} مليار، ومعنوياتهم ${WD.eco[1].mor > 55 ? 'عالية' : WD.eco[1].mor > 35 ? 'متوسطة' : 'نازلة'} (تقدير المخابرات).</div></section>`;
   subApply(el, 'eco', SUBS); if (refresh) el.scrollTop = top;
+  el.querySelectorAll('[data-iss]').forEach(b => b.onclick = () => { const [i, j] = b.dataset.iss.split(':').map(Number); const r = HOME.choose(WD, i, j); toast(`🏛 قررنا: ${r}`, 'good'); hud(); advRefresh(); ecoPanel(true); });
   el.querySelectorAll('[data-pr]').forEach(b => b.onclick = () => { e.prio = b.dataset.pr; if (e.auto) { e.auto = false; toast('✋ صرت انت تدير الاقتصاد (الوزير وقف)'); } toast(`⚙️ أولوية الاقتصاد: ${ECON.PRIO[e.prio].n}`); ecoPanel(true); });
   el.querySelectorAll('[data-go]').forEach(b => b.onclick = () => { const f = WD.oil.sites[+b.dataset.go]; if (!f.p) return; cam.x = f.p[0]; cam.y = f.p[1]; cam.s = Math.max(cam.s, 1); closeSheet(); });
 }
@@ -935,7 +949,7 @@ function prodPanel(refresh) {
   const btn = k => { const it = ECON.ITEMS[k], c = ECON.costOf(k, ME, WD), d = ECON.daysOf(k, ME, WD), err = ECON.canBuy(WD, ME, k), sup = ECON.SUPPLY[ME][k], pf = ECON.parts(WD, ME, k);
     const extra = it.cat === 'plane' ? `ناقص ${miss(it.plane)}` : it.cat === 'sam' ? `بالمخزن ${AW.pool[ME][it.pool] || 0}` : it.cat === 'line' ? `عندنا ${e.lines}` : '';
     return `<button data-buy="${k}" ${err ? 'disabled' : ''}><b>${it.ic} ${it.n}</b><i>${c >= 1 ? c.toFixed(1) + ' مليار' : Math.round(c * 1000) + ' مليون'} $ · ${Math.round(d / sp)} يوم${extra ? ' · ' + extra : ''}</i><i>${sup ? ECON.SUP_N[sup].split(' ')[0] + (pf < 1 ? ` <b class="neg">قطع ${Math.round(pf * 100)}٪</b>` : '') : '🇮🇶 محلي'}</i>${err ? `<span class="why0">${err}</span>` : ''}</button>`; };
-  const SUBS = [['buy', '🛒 اطلب'], ['q', '⏳ الطابور', e.q.length], ['sup', '🔧 المورّدين', ['us', 'ru', 'cn'].some(x => Object.keys(ECON.SUPPLY[ME]).some(k => ECON.SUPPLY[ME][k] === x && ECON.parts(WD, ME, k) < 1)) ? '!' : 0]];
+  const SUBS = [['buy', '🛒 اطلب'], ['q', '⏳ الطابور', e.q.length], ['rd', '🔬 البحث'], ['nat', '🇮🇶 الوطني والقطاعات'], ['sup', '🔧 المورّدين', ['us', 'ru', 'cn'].some(x => Object.keys(ECON.SUPPLY[ME]).some(k => ECON.SUPPLY[ME][k] === x && ECON.parts(WD, ME, k) < 1)) ? '!' : 0]];
   el.innerHTML = `${GRAB}<div class="eh"><b>🏭 الإنتاج والشراء</b><span class="dim">${B$(e.cash)}</span><button class="x" id="shX" aria-label="سكّر">✕</button></div>
   ${subBar('prod', SUBS)}<section data-s="q"><div class="dim">${e.lines} خطوط إنتاج: تشتغل على أول ${e.lines} طلبات، والباقي ينتظر. السرعة ×${sp.toFixed(2)} (${P.n}${e.mor < 30 ? '، والمعنويات نازلة' : ''}).</div>
   </section><section data-s="buy"><div class="seg" style="margin-top:6px"><button id="auto" class="${e.auto ? 'on' : ''}">🤖 الوزير يشتري لحاله</button><button id="man" class="${e.auto ? '' : 'on'}">✋ أنا أقرر</button></div>
@@ -948,12 +962,30 @@ function prodPanel(refresh) {
   <h3>المصانع</h3><div class="buy">${cat('line').map(btn).join('')}</div></section>
   <section data-s="q"><h3>الطابور (${e.q.length})</h3>
   ${e.q.length ? e.q.map((o, i) => { const it = ECON.ITEMS[o.k], act = i < e.lines; return `<div class="ord ${act ? '' : 'wait'}"><div class="h"><span>${it.ic}</span><b>${it.n}</b><span>${act ? 'باقي ~' + Math.max(1, Math.ceil(o.left / sp)) + ' يوم' : '⏳ ينتظر خط'}</span><button data-can="${o.id}" aria-label="ألغي الطلب" style="min-width:40px;min-height:36px">✕</button></div><div class="bar"><u style="width:${(1 - o.left / o.tot) * 100}%"></u></div></div>`; }).join('') : '<div class="dim">ما اكو طلبات. اختار من «🛒 اطلب».</div>'}</section>
+  <section data-s="rd">${(() => { const I = WD.ind[ME]; return `<div class="dim" style="margin-top:6px">الميزانية تروح للفرع المختار. كل مستوى إله أثر بالحرب، ويفتح منتجات محلية.</div>
+  <h3>ميزانية البحث باليوم</h3><div class="seg">${IND.BUD.map(([v, n], i) => `<button data-bud="${i}" class="${I.bud === i ? 'on' : ''}">${n}${v ? ' ' + Math.round(v * 1000) + 'م' : ''}</button>`).join('')}</div>
+  ${IND.BRK.map(k => { const B = IND.BR[k], l = I.tech[k], on = I.rb === k, nd = IND.need(l); return `<div class="ctry" style="${on ? 'border-color:var(--gold)' : ''}"><div class="h"><span style="font-size:18px">${B.ic}</span><b>${B.n}</b><span class="st">${'■'.repeat(l)}${'□'.repeat(5 - l)} ${l}/5</span></div><div class="dim">${B.d}</div>
+    ${l < 5 ? (on ? `<div class="bar" style="margin-top:4px"><u style="width:${Math.min(100, I.rp / nd * 100)}%"></u></div><div class="dim">🔬 يشتغل: ${I.rp.toFixed(2)} من ${nd} مليار${IND.BUD[I.bud][0] ? ` · باقي ~${Math.ceil((nd - I.rp) / IND.BUD[I.bud][0])} يوم` : ' · الميزانية متوقفة'}</div>` : `<div class="acts" style="margin-top:4px"><button data-rb="${k}">ابحث هنا (المستوى الجاي ${nd} مليار)</button></div>`) : '<div class="dim pos">✅ أعلى مستوى</div>'}</div>`; }).join('')}
+  <div class="dim">إيران: دروع ${WD.ind[1].tech.arm}، مسيّرات ${WD.ind[1].tech.uav}، صواريخ ${WD.ind[1].tech.msl} (تقدير المخابرات)</div>`; })()}</section>
+  <section data-s="nat">${(() => { const I = WD.ind[ME], N = I.nat, nx = IND.NAT[N.st]; return `<h3>🇮🇶 السلاح الوطني</h3>
+  <div class="ctry"><div class="h"><span class="st">${[1, 2, 3, 4].map(i => i <= N.st ? '●' : '○').join(' ')}</span><b>${N.st >= 3 && N.name ? '«' + N.name + '»' : 'المرحلة ' + N.st + ' من 4'}</b></div>
+  <div class="dim">${IND.NAT.map((x, i) => `${i < N.st ? '✅' : i === N.st ? '▶' : '·'} ${x.n}: ${x.d}`).join('<br>')}</div>
+  ${N.run ? `<div class="dim">⏳ «${nx.n}» باقي ${N.run.left} يوم</div>` : nx ? `<div class="acts" style="margin-top:6px"><button class="go" id="natGo">ابدأ «${nx.n}» (${nx.cost} مليار، ${nx.days} يوم، بحث ${nx.req}+)</button></div>` : ''}
+  ${N.st >= 2 ? `<div style="display:flex;gap:6px;margin-top:6px;align-items:center"><input id="natName" maxlength="16" placeholder="اسم السلاح" value="${(N.name || '').replace(/"/g, '')}" style="flex:1;min-height:38px;border-radius:9px;border:1px solid var(--line);background:var(--chip);color:var(--ink);padding:0 10px;font:inherit"><input id="natCol" type="color" value="${N.col}" style="width:44px;height:38px;border:0;background:none"><button id="natSave" style="min-height:38px;padding:0 12px;border-radius:9px;background:var(--gold);color:var(--brass-ink);font-weight:700">احفظ</button></div>` : '<div class="dim">التسمية واللون من المرحلة 3 (تصميم وطني)</div>'}</div>
+  <h3>🏗 القطاعات</h3>${Object.entries(IND.SEC).map(([k, S]) => `<div class="ctry"><div class="h"><span style="font-size:18px">${S.ic}</span><b>${S.n}</b><span class="st">${I.sec[k]}/5</span></div><div class="dim">${S.d}</div>
+    ${I.secRun && I.secRun.k === k ? `<div class="dim">⏳ يتطوّر: باقي ${I.secRun.left} يوم</div>` : I.sec[k] < 5 ? `<div class="acts" style="margin-top:4px"><button data-sec="${k}" ${I.secRun ? 'disabled' : ''}>طوّر (${IND.secCost(I.sec[k])} مليار، ${IND.SEC_DAYS} يوم)</button></div>` : ''}</div>`).join('')}`; })()}</section>
   <section data-s="sup"><div class="dim" style="margin-top:6px">سلاحنا من برّا: إذا العلاقة ويا المورّد نزلت، قطع الغيار تقل: الشراء يغلى ويبطأ (أو يوقف)، الطيارات تنحبس بالأرض، والفرق تتعوض أبطأ. حسّن العلاقة من 🤝 السياسة، أو اصنع محلي.</div>
   ${['us', 'ru', 'cn'].map(x => { const ks = Object.keys(ECON.SUPPLY[ME]).filter(k => ECON.SUPPLY[ME][k] === x); const pf = ECON.parts(WD, ME, ks[0]), c = WD.dip.c[x];
     return `<div class="ctry"><div class="h"><b>${ECON.SUP_N[x]}</b><span class="st ${pf >= 1 ? 'a0' : pf > 0 ? '' : 'a1'}">قطع الغيار ${Math.round(pf * 100)}٪</span></div><div class="rel"><span>العلاقة</span>${relBar(c.rel[ME], 'var(--me-l)')}<span>${Math.round(c.rel[ME])}</span></div>
     <div class="dim">${ks.map(k => ECON.ITEMS[k].ic + ' ' + (k === 'arm' ? 'الدروع (أبرامز)' : k === 'mec' ? 'الآليات (BMP)' : ECON.ITEMS[k].n.replace(/ ×\d+.*/, ''))).join(' · ')}</div>
     <div class="dim">${pf >= 1 ? '✅ كامل' : pf > 0 ? `⚠️ الشراء ×${(1 + (1 - pf) * .8).toFixed(1)} بالسعر وأبطأ، وطياراته ${Math.round((1 - pf) * 70)}٪ منها محبوسة` : '⛔ قاطع: ما يبيع، والطيارات محبوسة'} · قطع كاملة من علاقة 10+</div></div>`; }).join('')}</section>`;
   subApply(el, 'prod', SUBS); if (refresh) el.scrollTop = top;
+  const I = WD.ind[ME], R = (r, ok) => { if (typeof r === 'string') toast('❌ ' + r, 'bad'); else toast(ok, 'good'); hud(); prodPanel(true); };
+  el.querySelectorAll('[data-bud]').forEach(b => b.onclick = () => { IND.setBudget(WD, ME, +b.dataset.bud); prodPanel(true); });
+  el.querySelectorAll('[data-rb]').forEach(b => b.onclick = () => { IND.setBranch(WD, ME, b.dataset.rb); toast(`🔬 البحث هسه على ${IND.BR[b.dataset.rb].n}`); prodPanel(true); });
+  el.querySelectorAll('[data-sec]').forEach(b => b.onclick = () => R(IND.secGo(WD, ME, b.dataset.sec), `🏗 بدينا نطوّر ${IND.SEC[b.dataset.sec].n}`));
+  if ($('natGo')) $('natGo').onclick = () => R(IND.natGo(WD, ME), '🇮🇶 بدت مرحلة جديدة بالسلاح الوطني');
+  if ($('natSave')) $('natSave').onclick = () => { I.nat.name = $('natName').value.trim().slice(0, 16); I.nat.col = $('natCol').value; toast(`🇮🇶 سمّينا سلاحنا الوطني «${I.nat.name || '—'}»`, 'good'); prodPanel(true); };
   $('auto').onclick = () => { e.auto = true; toast('🤖 الوزير يدير الشراء والأولوية'); prodPanel(true); };
   $('man').onclick = () => { e.auto = false; toast('✋ انت تقرر كل شراء'); prodPanel(true); };
   el.querySelectorAll('[data-buy]').forEach(b => b.onclick = () => { const k = b.dataset.buy, r = ECON.buy(WD, ME, k); if (typeof r === 'string') toast('❌ ' + r, 'bad'); else { toast(`🏭 طلبنا ${ECON.ITEMS[k].n} (−${ECON.costOf(k, ME) >= 1 ? ECON.costOf(k, ME).toFixed(1) + ' مليار' : Math.round(ECON.costOf(k, ME) * 1000) + ' مليون'})`, 'good'); hud(); } prodPanel(true); });
@@ -1103,7 +1135,7 @@ function frame(now) {
   if (SPEED && !WD.over) {
     const tac = cam.s >= 1.7 && lastNb > 0; const want = tac ? Math.min(HPS[SPEED], TACR[SPEED]) : HPS[SPEED]; RATE += (want - RATE) * Math.min(1, dt * 2.5); if (Math.abs(RATE - want) < want * .02) RATE = want; $('rate').textContent = rateTxt(RATE);
     acc += dt * RATE; $('tac').hidden = !tac; if (tac) $('tac').textContent = `⏱ بطيء: قريب من المعركة (${rateTxt(RATE)})`;
-    let n = 0; while (acc >= 1 && n < 40) { if (WD.t % 6 === 0) { SIM.ai(WD, 1); SIM.ai(WD, ME); } SIM.step(WD); if (WD.t % 24 === 0) { ECON.daily(WD, AW, SIM); DIP.daily(WD, AW, SIM, ECON); advRefresh(); dipPopups(); if (!$('sheet').hidden) renderSheet(true); } acc -= 1; n++; }
+    let n = 0; while (acc >= 1 && n < 40) { if (WD.t % 6 === 0) { SIM.ai(WD, 1); SIM.ai(WD, ME); } SIM.step(WD); if (WD.t % 24 === 0) { ECON.daily(WD, AW, SIM); DIP.daily(WD, AW, SIM, ECON); IND.daily(WD, AW, { SIM, ECON, DIP }); HOME.daily(WD, AW, { SIM, ECON, DIP }); advRefresh(); dipPopups(); if (!$('sheet').hidden) renderSheet(true); } acc -= 1; n++; }
     // الجو ويا الساعة، ومن تقرّب يبطأ أكثر حتى تشوف الإطلاق والمطاردة بعينك
     const af = Math.min(1.6, Math.max(.3, .25 * RATE * 3600 / 38)); AIR.step(AW, WD, SIM, dt * (cam.s >= 1.7 ? Math.min(af, .45) : af));
     for (const e of AW.ev) VIEW.airEvent(e, toast, ME); AW.ev.length = 0;

@@ -63,6 +63,7 @@
     if (fromCell != null && W.edgeOf.get(fromCell + ',' + tgtCell)?.r) a *= RIVER_ATK;
     if (!W.sup[d.side][d.cell]) a *= .6;
     a *= .5 + .5 * Math.min(1, d.org / d.orgMax * 1.25);
+    if (d.kind !== 'inf' && W.indF) a *= W.indF[d.side].armAtk;   // C4: بحث الدروع والسلاح الوطني
     return a;
   }
   const hdOf = ds => ds.length ? ds.reduce((s, d) => s + TEMPL[d.kind].hd * d.str, 0) / ds.reduce((s, d) => s + d.str, 0) : 0;
@@ -84,7 +85,7 @@
       for (const s of [0, 1]) {
         const C = W.supC[s]; C.fill(1e9); const sup = W.sup[s]; sup.fill(0); const q = [];
         W.cells.forEach((c, i) => { if (W.ctrl[i] === s && c.s === s && (c.vp || 0) >= 3) { C[i] = 0; q.push(i); } });
-        while (q.length) { let bi = 0; for (let k = 1; k < q.length; k++) if (C[q[k]] < C[q[bi]]) bi = k; const i = q.splice(bi, 1)[0]; if (C[i] > SUP_BUDGET) continue; sup[i] = 1;
+        while (q.length) { let bi = 0; for (let k = 1; k < q.length; k++) if (C[q[k]] < C[q[bi]]) bi = k; const i = q.splice(bi, 1)[0]; if (C[i] > SUP_BUDGET + (W.indF ? W.indF[s].sup : 0) + (s === 0 && W.homeF ? W.homeF.sup : 0)) continue; sup[i] = 1;
           for (const j of W.cells[i].nb) if (W.ctrl[j] === s) { const nc = C[i] + edgeCost(W, i, j); if (nc < C[j]) { if (C[j] === 1e9) q.push(j); C[j] = nc; } } }
       }
       return;
@@ -154,7 +155,7 @@
     W.t++;
     if (inTruce(W)) for (const d of W.divs) if (!d.dead && d.path.length && W.ctrl[d.path[0]] !== d.side) { d.path = []; d.prog = 0; if (d.mode === 'manual') d.mode = 'hold'; }
     weather(W);
-    for (const b of W.bridges) if (b.down > 0 && --b.down === 0) W.log.push({ t: W.t, side: b.by, k: 'bridgefix', cell: b.i, n: b.n });
+    for (const b of W.bridges) if (b.down > 0) { b.down = Math.max(0, b.down - (W.indF ? W.indF[W.ctrl[b.i]].br : 1)); if (b.down === 0) W.log.push({ t: W.t, side: b.by, k: 'bridgefix', cell: b.i, n: b.n }); }   // C5: النقل يصلّح أسرع
     if (W.t % 6 === 1) supply(W);
     if (!W.noFog) intel(W);
     const D = alive(W);
@@ -203,7 +204,7 @@
       if (d.dead) continue;
       if (!d.path.length) { // راحة: تنظيم وتحصين وتعويض
         d.ent = Math.min(1, d.ent + 1 / 96);
-        if (W.t - d.lastFight > 6 && W.sup[d.side][d.cell]) { d.org = Math.min(d.orgMax, d.org + d.orgMax / 40 * morF(W, d.side)); d.str = Math.min(1, d.str + .0012 * (W.partsF ? W.partsF[d.side][d.kind] ?? 1 : 1)); }   // C2: قطع الغيار
+        if (W.t - d.lastFight > 6 && W.sup[d.side][d.cell]) { d.org = Math.min(d.orgMax, d.org + d.orgMax / 40 * morF(W, d.side) * (d.side === 0 && W.homeF ? W.homeF.org : 1)); d.str = Math.min(1, d.str + .0012 * (W.partsF ? W.partsF[d.side][d.kind] ?? 1 : 1)); }   // C2: قطع الغيار   // C6: الجيش الزعلان يرتاح أبطأ
         if (!W.sup[d.side][d.cell]) { d.str = Math.max(.05, d.str - .0008); d.org = Math.max(0, Math.min(d.org, d.orgMax * .5)); }
         continue;
       }
@@ -444,7 +445,7 @@
   }
   // ضربة جوية أو صاروخ على منطقة: ينزل تنظيم وعدد فرق العدو بيها
   function airHit(W, side, cell, power) {
-    power *= (W.night ? .8 : 1) * (WX[W.wx || 'clear'].air || 1);   // بالليل والغيم القصف أقل دقة
+    power *= (W.night ? .8 : 1) * (WX[W.wx || 'clear'].air || 1) * (W.indF ? W.indF[1 - side].ewDef : 1);   // C4: التشويش يضعف ضرباتهم   // بالليل والغيم القصف أقل دقة
     const en = W.divs.filter(d => !d.dead && d.side !== side && d.cell === cell); if (!en.length) return 0;
     for (const d of en) { d.org = Math.max(0, d.org - power * 4 / en.length); d.str = Math.max(.05, d.str - power * .005 / en.length); d.hitT = W.t; }
     W.log.push({ t: W.t, side, k: 'air', cell }); return en.length;

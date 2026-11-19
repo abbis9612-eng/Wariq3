@@ -3,7 +3,7 @@
 // الحفظ: الحرب كلها بالضبط (المناطق، الفرق، المعارك، الخطط، الاستخبارات، الجسور، الطقس، الأرقام العشوائية)،
 // والجو «على الأرض»: المطارات والبطاريات والمخازن؛ الطيارات اللي بالجو ترجع لقواعدها، والصواريخ بالجو تنشال.
 (function (root) {
-  const V = 5;
+  const V = 7;
   const MIG = {
     // 1 ← 2 (GW8): الاقتصاد (W.eco، W.oil) جديد؛ ينبني من حالة الحرب وقت التحميل (ECON.ensure بـ restore)
     1: s => { s.v = 2; return s; },
@@ -12,6 +12,10 @@
     // 3 ← 4 (GW11 B1): W.stats (سجل يومي للتقرير) جديد؛ يبدي فاضي
     3: s => { s.v = 4; s.W.stats = s.W.stats || []; return s; },
     // 4 ← 5 (GW11 B4): W.cfg (الصعوبة، المدة، الوضع الخاص)؛ الحفظ القديم = متوسط بلا مدة
+    // 5 ← 6 (GW11 C3–C5): W.ind (البحث، التصنيع الوطني، القطاعات) جديد؛ ينبني بـ IND.ensure
+    5: s => { s.v = 6; return s; },
+    // 6 ← 7 (GW11 C6): W.home (الاستقرار والفئات والقضايا)؛ ينبني بـ HOME.ensure
+    6: s => { s.v = 7; return s; },
     4: s => { s.v = 5; s.W.cfg = s.W.cfg || { diff: 'mid', dur: 0, ez: {} }; return s; },
   };
   // أشياء ثابتة تنبني من الخريطة (ما تنحفظ)
@@ -54,7 +58,7 @@
     return s;
   }
   // يرجّع العالم والجو من الحفظ (W جديد من الخريطة + الحالة فوقه)
-  function restore(s, C, opt, SIM, AIR, ECON, DIP) {
+  function restore(s, C, opt, SIM, AIR, ECON, DIP, IND, HOME) {
     s = migrate(s);
     const W = SIM.World(C, { ...opt, seed: s.seed });
     const w = dec(s.W); for (const k in w) W[k] = w[k];
@@ -64,7 +68,7 @@
     const A = AIR.create(W); const a = dec(s.A);
     for (const k in a) A[k] = a[k];
     A.rnd = W.rnd; A.planes = []; A.msls = []; A.ev = []; A.queue = []; A.raids = {}; A.decoys = [];
-    if (ECON) ECON.ensure(W); if (DIP) DIP.ensure(W);   // حفظ قديم بلا اقتصاد ← نبنيه (ما يسحب أرقام عشوائية)
+    if (ECON) ECON.ensure(W); if (DIP) DIP.ensure(W); if (IND) { IND.ensure(W); IND.effects(W); } if (HOME) { HOME.ensure(W); HOME.effects(W); }   // حفظ قديم بلا اقتصاد ← نبنيه (ما يسحب أرقام عشوائية)
     W.rnd.set(s.rng);   // آخر شي: بناء الجو يسحب أرقام عشوائية، فنرجّع الحالة بعده حتى الحرب تكمل بالضبط
     return { W, A, ui: s.ui, saved: s.saved, seed: s.seed };
   }

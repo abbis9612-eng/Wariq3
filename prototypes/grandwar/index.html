@@ -3,55 +3,62 @@
 <title>الحرب الكبرى</title>
 <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Arabic:wght@400;500;600;700&family=Reem+Kufi:wght@600;700&display=swap" rel="stylesheet">
 <style>
-:root{--ink:#f3ead6;--panel:rgba(24,22,19,.88);--line:rgba(255,235,190,.16);--gold:#e2b552;--me:#2f6fd0;--foe:#c8402f}
-*{box-sizing:border-box;margin:0;padding:0}html,body{height:100%;background:#1a1815;overflow:hidden;font:500 13px/1.35 "IBM Plex Sans Arabic",Tahoma,sans-serif;color:var(--ink);-webkit-user-select:none;user-select:none;-webkit-tap-highlight-color:transparent}
+/* GW11 A1: نظام التصميم — هوية ملف المالك (زيتوني عسكري + نحاسي). غامق أول، وفاتح يتبع التلفون أو زر الثيم */
+:root{--bg:#1b2019;--panel:rgba(32,38,30,.97);--panel2:#262d24;--chip:rgba(235,229,210,.07);--chip2:rgba(235,229,210,.12);--line:rgba(235,229,210,.16);--ink:#ece6d3;--dim:#a9ab94;
+--gold:#d6b03b;--gold-l:rgba(214,176,59,.55);--brass-ink:#1c1a10;--act:var(--act);--act-l:var(--act-l);--pos:#86c891;--neg:#ef7c64;--pos-s:#59b866;--warn-s:#d9b23f;--neg-s:#d9533f;
+--me:var(--me);--me-l:#6d9be6;--foe:#c8402f;--on-acc:var(--on-acc);--scrim:rgba(8,10,7,.62);--shadow:0 -6px 24px rgba(0,0,0,.35);--fs-s:11.5px;--fs:13px;--fs-m:14px;--fs-l:17px;--fs-xl:22px;color-scheme:dark}
+@media (prefers-color-scheme:light){:root:not([data-theme="dark"]){--bg:#e9e2cd;--panel:rgba(247,242,228,.98);--panel2:#ede6d1;--chip:rgba(34,40,30,.05);--chip2:rgba(34,40,30,.1);--line:rgba(60,56,40,.2);--ink:#22281e;--dim:#62664f;
+--gold:#8a6904;--gold-l:rgba(138,105,4,.45);--brass-ink:#fff8e2;--act:#b23a22;--act-l:#d6614a;--pos:#2f7a3d;--neg:#b23a22;--pos-s:#3c9a4a;--warn-s:#b8901a;--neg-s:#c0442e;--me-l:var(--me);--scrim:rgba(40,36,25,.35);--shadow:0 -6px 22px rgba(60,50,30,.18);color-scheme:light}}
+:root[data-theme="light"]{--bg:#e9e2cd;--panel:rgba(247,242,228,.98);--panel2:#ede6d1;--chip:rgba(34,40,30,.05);--chip2:rgba(34,40,30,.1);--line:rgba(60,56,40,.2);--ink:#22281e;--dim:#62664f;
+--gold:#8a6904;--gold-l:rgba(138,105,4,.45);--brass-ink:#fff8e2;--act:#b23a22;--act-l:#d6614a;--pos:#2f7a3d;--neg:#b23a22;--pos-s:#3c9a4a;--warn-s:#b8901a;--neg-s:#c0442e;--me-l:var(--me);--scrim:rgba(40,36,25,.35);--shadow:0 -6px 22px rgba(60,50,30,.18);color-scheme:light}
+*{box-sizing:border-box;margin:0;padding:0}html,body{height:100%;background:var(--bg);overflow:hidden;font:500 13px/1.35 "IBM Plex Sans Arabic",Tahoma,sans-serif;color:var(--ink);-webkit-user-select:none;user-select:none;-webkit-tap-highlight-color:transparent}
 canvas{position:fixed;inset:0;width:100%;height:100%;touch-action:none}
 button{font:inherit;color:inherit;background:none;border:0;cursor:pointer}
-#top{position:fixed;top:0;left:0;right:0;background:linear-gradient(var(--panel),rgba(24,22,19,.8));border-bottom:1px solid var(--line);padding:calc(6px + env(safe-area-inset-top)) 10px 6px;backdrop-filter:blur(6px);z-index:5}
+#top{position:fixed;top:0;left:0;right:0;background:linear-gradient(var(--panel),var(--panel));border-bottom:1px solid var(--line);padding:calc(6px + env(safe-area-inset-top)) 10px 6px;backdrop-filter:blur(6px);z-index:5}
 .r1{display:flex;align-items:center;gap:8px}.flag{font-size:22px;line-height:1}.cn{font:700 16px "Reem Kufi",sans-serif;color:var(--gold)}
 .date{margin-inline-start:auto;display:flex;align-items:center;gap:6px;font-weight:600;font-variant-numeric:tabular-nums}
-.spd{display:flex;gap:3px}.spd button{width:30px;height:28px;border-radius:7px;background:rgba(255,255,255,.08);border:1px solid var(--line);font-size:11px;font-weight:700}.spd button.on{background:var(--gold);color:#221b0e}
-.res{display:flex;gap:5px;margin-top:6px}.res span{flex:1;min-width:0;background:rgba(255,255,255,.06);border:1px solid var(--line);border-radius:8px;padding:2px 3px;text-align:center;white-space:nowrap;font-size:12px;font-weight:600}.res i{font-style:normal;display:block;font-size:9.5px;opacity:.7;font-weight:500}
+.spd{display:flex;gap:3px}.spd button{width:30px;height:28px;border-radius:7px;background:var(--chip);border:1px solid var(--line);font-size:11px;font-weight:700}.spd button.on{background:var(--gold);color:var(--brass-ink)}
+.res{display:flex;gap:5px;margin-top:6px}.res span{flex:1;min-width:0;background:var(--chip);border:1px solid var(--line);border-radius:8px;padding:2px 3px;text-align:center;white-space:nowrap;font-size:12px;font-weight:600}.res i{font-style:normal;display:block;font-size:9.5px;opacity:.7;font-weight:500}
 #vpbar{height:6px;border-radius:3px;margin-top:6px;background:var(--foe);overflow:hidden;position:relative}#vpbar u{position:absolute;right:0;top:0;bottom:0;background:var(--me);transition:width .5s}
 #card{position:fixed;left:8px;right:8px;bottom:calc(62px + env(safe-area-inset-bottom));background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:9px 11px;backdrop-filter:blur(6px);z-index:5}
 #card[hidden]{display:none}
 .ch{display:flex;align-items:center;gap:8px}.ch .t{font:700 15px "Reem Kufi",sans-serif}.ch .s{font-size:11.5px;opacity:.75}.ch .x{margin-inline-start:auto;font-size:11px;border-radius:10px;padding:1px 8px;white-space:nowrap}
-.x.auto{background:rgba(89,194,106,.2);border:1px solid rgba(89,194,106,.6)}.x.hold{background:rgba(226,181,82,.2);border:1px solid rgba(226,181,82,.6)}.x.manual{background:rgba(63,127,224,.25);border:1px solid rgba(63,127,224,.6)}
+.x.auto{background:var(--chip2);border:1px solid var(--pos-s)}.x.hold{background:var(--chip2);border:1px solid var(--gold-l)}.x.manual{background:var(--chip2);border:1px solid var(--me)}
 .list{display:flex;gap:5px;overflow-x:auto;margin:7px 0;padding-bottom:2px;scrollbar-width:none}.list::-webkit-scrollbar{display:none}
-.dv{flex:0 0 auto;min-width:96px;background:rgba(255,255,255,.06);border:1px solid var(--line);border-radius:9px;padding:4px 6px;font-size:11px}.dv b{display:block;font-size:11.5px;white-space:nowrap}
-.bar{height:4px;border-radius:2px;background:rgba(255,255,255,.12);margin-top:2px;overflow:hidden}.bar u{display:block;height:100%;background:#59c26a}.bar u.o{background:#e2b552}
+.dv{flex:0 0 auto;min-width:96px;background:var(--chip);border:1px solid var(--line);border-radius:9px;padding:4px 6px;font-size:11px}.dv b{display:block;font-size:11.5px;white-space:nowrap}
+.bar{height:4px;border-radius:2px;background:var(--chip2);margin-top:2px;overflow:hidden}.bar u{display:block;height:100%;background:var(--pos-s)}.bar u.o{background:var(--gold)}
 .adt{width:100%;border-collapse:collapse;font-size:11px;margin-top:3px}.adt th{font-weight:700;opacity:.7;text-align:start;padding:2px 3px}.adt td{padding:3px 3px;border-top:1px solid var(--line);vertical-align:top}.adt td:first-child{white-space:nowrap;font-weight:700}
-.acts{display:flex;gap:6px}.acts button{flex:1;text-align:center;border-radius:9px;padding:7px 2px;background:rgba(255,255,255,.07);border:1px solid var(--line);font-weight:600;font-size:12.5px}.acts button.go{background:#b8442f;border-color:#e0705a}.acts button.on{outline:2px solid var(--gold)}
+.acts{display:flex;gap:6px}.acts button{flex:1;text-align:center;border-radius:9px;padding:7px 2px;background:var(--chip);border:1px solid var(--line);font-weight:600;font-size:12.5px}.acts button.go{background:var(--act);border-color:var(--act-l)}.acts button.on{outline:2px solid var(--gold)}
 #tabs{position:fixed;left:0;right:0;bottom:0;display:flex;background:var(--panel);border-top:1px solid var(--line);padding:5px 4px calc(5px + env(safe-area-inset-bottom));z-index:5}
 #tabs button{flex:1;text-align:center;font-size:10.5px;font-weight:600;opacity:.8}#tabs button em{display:block;font-style:normal;font-size:19px;line-height:1.25}#tabs button.on{opacity:1;color:var(--gold)}
 #zoom{position:fixed;left:8px;display:flex;flex-direction:column;gap:5px;z-index:4}#zoom button{width:36px;height:36px;border-radius:10px;background:var(--panel);border:1px solid var(--line);font-size:17px}
-#tac{position:fixed;left:50%;transform:translateX(-50%);white-space:nowrap;bottom:calc(68px + env(safe-area-inset-bottom));background:rgba(24,22,19,.85);border:1px solid rgba(226,181,82,.6);color:#e2b552;border-radius:10px;padding:3px 10px;font-size:12px;font-weight:700;z-index:4;pointer-events:none}#tac[hidden]{display:none}
-#hint{position:fixed;left:50%;transform:translateX(-50%);background:rgba(184,68,47,.95);border-radius:12px;padding:6px 14px;font-weight:600;z-index:6;white-space:nowrap}#hint[hidden]{display:none}
+#tac{position:fixed;left:50%;transform:translateX(-50%);white-space:nowrap;bottom:calc(68px + env(safe-area-inset-bottom));background:var(--panel);border:1px solid var(--gold-l);color:var(--gold);border-radius:10px;padding:3px 10px;font-size:12px;font-weight:700;z-index:4;pointer-events:none}#tac[hidden]{display:none}
+#hint{position:fixed;left:50%;transform:translateX(-50%);background:var(--act);border-radius:12px;padding:6px 14px;font-weight:600;z-index:6;white-space:nowrap}#hint[hidden]{display:none}
 #toasts{position:fixed;right:8px;left:52px;display:flex;flex-direction:column;gap:4px;z-index:4;pointer-events:none;align-items:flex-start}
-.toast{background:var(--panel);border:1px solid var(--line);border-radius:10px;padding:4px 10px;font-size:12px;animation:tin .25s ease-out;max-width:100%}.toast.bad{border-color:rgba(220,90,70,.7)}.toast.good{border-color:rgba(90,160,240,.7)}
+.toast{background:var(--panel);border:1px solid var(--line);border-radius:10px;padding:4px 10px;font-size:12px;animation:tin .25s ease-out;max-width:100%}.toast.bad{border-color:var(--neg-s)}.toast.good{border-color:var(--me)}
 @keyframes tin{from{opacity:0;transform:translateY(-6px)}}
-#intro{position:fixed;inset:0;background:rgba(10,9,8,.72);display:grid;place-items:center;z-index:9;padding:18px}#intro[hidden]{display:none}
-#intro .box{background:#221f1a;border:1px solid var(--line);border-radius:16px;padding:16px 16px 14px;max-width:420px}
+#intro{position:fixed;inset:0;background:var(--scrim);display:grid;place-items:center;z-index:9;padding:18px}#intro[hidden]{display:none}
+#intro .box{background:var(--panel2);border:1px solid var(--line);border-radius:16px;padding:16px 16px 14px;max-width:420px}
 #intro h1{font:700 24px "Reem Kufi",sans-serif;color:var(--gold);text-align:center}#intro p{margin:8px 0;font-size:13.5px;line-height:1.6}#intro ul{margin:4px 0 10px;padding-inline-start:18px;font-size:13px;line-height:1.65}
-#intro button{width:100%;margin-top:6px;background:var(--gold);color:#221b0e;border-radius:12px;padding:10px;font-weight:700;font-size:16px}
-#intro #cont{background:#2f6fd0;color:#fff}
-#saves{position:fixed;left:8px;right:8px;top:calc(110px + env(safe-area-inset-top));background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:10px 12px;z-index:7;backdrop-filter:blur(6px)}#saves[hidden]{display:none}.slot{background:rgba(255,255,255,.05);border:1px solid var(--line);border-radius:10px;padding:7px 9px;margin:6px 0}.slot b{font:700 14px 'Reem Kufi'}.slot .acts{margin-top:5px}
+#intro button{width:100%;margin-top:6px;background:var(--gold);color:var(--brass-ink);border-radius:12px;padding:10px;font-weight:700;font-size:16px}
+#intro #cont{background:var(--me);color:var(--on-acc)}
+#saves{position:fixed;left:8px;right:8px;top:calc(110px + env(safe-area-inset-top));background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:10px 12px;z-index:7;backdrop-filter:blur(6px)}#saves[hidden]{display:none}.slot{background:var(--chip);border:1px solid var(--line);border-radius:10px;padding:7px 9px;margin:6px 0}.slot b{font:700 14px 'Reem Kufi'}.slot .acts{margin-top:5px}
 #armies{position:fixed;left:0;right:0;bottom:calc(58px + env(safe-area-inset-bottom));max-height:62vh;overflow:auto;background:var(--panel);border-top:1px solid var(--line);border-radius:16px 16px 0 0;padding:10px 12px;z-index:6;backdrop-filter:blur(6px)}#armies[hidden]{display:none}
-.arm{background:rgba(255,255,255,.05);border:1px solid var(--line);border-radius:12px;padding:8px 10px;margin:7px 0}.arm .h{display:flex;align-items:center;gap:8px}.arm b{font:700 15px 'Reem Kufi'}.arm .acts{margin-top:6px}
+.arm{background:var(--chip);border:1px solid var(--line);border-radius:12px;padding:8px 10px;margin:7px 0}.arm .h{display:flex;align-items:center;gap:8px}.arm b{font:700 15px 'Reem Kufi'}.arm .acts{margin-top:6px}
 #sheet{position:fixed;left:0;right:0;bottom:calc(58px + env(safe-area-inset-bottom));max-height:66vh;overflow:auto;background:var(--panel);border-top:1px solid var(--line);border-radius:16px 16px 0 0;padding:10px 12px 12px;z-index:6;backdrop-filter:blur(6px)}#sheet[hidden]{display:none}
-#sheet h3{font:700 14px 'Reem Kufi';color:var(--gold);margin:10px 0 3px}.eh{display:flex;align-items:center;gap:8px}.eh b{font:700 17px 'Reem Kufi';color:var(--gold)}.eh .x{margin-inline-start:auto;font-size:18px}
-.big{font:700 22px 'Reem Kufi';font-variant-numeric:tabular-nums}.pos{color:#7fd08a}.neg{color:#ff8a7a}.dim{opacity:.7;font-size:11.5px}
+#sheet h3{font:700 var(--fs-m) 'Reem Kufi';color:var(--gold);margin:12px 0 4px;text-wrap:balance}.eh{display:flex;align-items:center;gap:8px}.eh b{font:700 17px 'Reem Kufi';color:var(--gold)}.eh .x{margin-inline-start:auto;font-size:18px}
+.big{font:700 22px 'Reem Kufi';font-variant-numeric:tabular-nums}.pos{color:var(--pos)}.neg{color:var(--neg)}.dim{color:var(--dim);font-size:var(--fs-s)}
 .bt{width:100%;border-collapse:collapse;font-size:12px;font-variant-numeric:tabular-nums}.bt td{padding:2px 3px;border-top:1px solid var(--line)}.bt td:last-child{text-align:end;white-space:nowrap}
-.seg{display:flex;gap:5px}.seg button{flex:1;border-radius:9px;padding:6px 2px;background:rgba(255,255,255,.07);border:1px solid var(--line);font-weight:700;font-size:12.5px}.seg button.on{background:var(--gold);color:#221b0e}
+.seg{display:flex;gap:5px}.seg button{flex:1;border-radius:9px;padding:6px 2px;background:var(--chip);border:1px solid var(--line);font-weight:700;font-size:12.5px}.seg button.on{background:var(--gold);color:var(--brass-ink)}
 .oil{display:flex;align-items:center;gap:6px;padding:3px 0;border-top:1px solid var(--line);font-size:12px}.oil span:last-child{margin-inline-start:auto;font-variant-numeric:tabular-nums;white-space:nowrap}
-.why{display:flex;flex-wrap:wrap;gap:4px;margin-top:3px}.why span{font-size:11px;border-radius:8px;padding:1px 6px;background:rgba(255,255,255,.07)}
-.ord{background:rgba(255,255,255,.05);border:1px solid var(--line);border-radius:10px;padding:5px 8px;margin:4px 0;font-size:12px}.ord .h{display:flex;align-items:center;gap:6px}.ord .h span:last-of-type{margin-inline-start:auto;font-variant-numeric:tabular-nums}.ord.wait{opacity:.6}
-.buy{display:grid;grid-template-columns:1fr 1fr;gap:5px}.buy button{text-align:start;background:rgba(255,255,255,.06);border:1px solid var(--line);border-radius:10px;padding:5px 7px;font-size:11.5px;line-height:1.3}.buy button b{display:block;font-size:12.5px}.buy button:disabled{opacity:.4}.buy button i{font-style:normal;opacity:.75}
-#modal{position:fixed;inset:0;background:rgba(10,9,8,.6);display:grid;place-items:center;z-index:12;padding:18px}#modal[hidden]{display:none}#modal .box{background:#221f1a;border:1px solid var(--line);border-radius:16px;padding:14px;max-width:400px;width:100%}#modal h2{font:700 18px 'Reem Kufi';color:var(--gold);margin-bottom:6px}#modal p{font-size:13.5px;line-height:1.6;margin-bottom:8px}#modal .acts{flex-direction:column}#modal .acts button{padding:9px 6px}
-.ctry{background:rgba(255,255,255,.05);border:1px solid var(--line);border-radius:11px;padding:6px 9px;margin:5px 0}.ctry .h{display:flex;align-items:center;gap:7px}.ctry .h b{font:700 14px 'Reem Kufi'}.ctry .h .st{margin-inline-start:auto;font-size:11px;border-radius:9px;padding:1px 7px;background:rgba(255,255,255,.08)}.ctry .st.a0{background:rgba(63,127,224,.35)}.ctry .st.a1{background:rgba(200,64,47,.4)}
-.rel{display:grid;grid-template-columns:44px 1fr 30px;align-items:center;gap:5px;font-size:11px;margin-top:2px}.rel .rb{height:5px;border-radius:3px;background:rgba(255,255,255,.1);position:relative;overflow:hidden}.rel .rb u{position:absolute;top:0;bottom:0}.rel .rb::after{content:"";position:absolute;left:50%;top:-1px;bottom:-1px;width:1px;background:rgba(255,255,255,.35)}
+.why{display:flex;flex-wrap:wrap;gap:4px;margin-top:3px}.why span{font-size:11px;border-radius:8px;padding:1px 6px;background:var(--chip)}
+.ord{background:var(--chip);border:1px solid var(--line);border-radius:10px;padding:5px 8px;margin:4px 0;font-size:12px}.ord .h{display:flex;align-items:center;gap:6px}.ord .h span:last-of-type{margin-inline-start:auto;font-variant-numeric:tabular-nums}.ord.wait{opacity:.6}
+.buy{display:grid;grid-template-columns:1fr 1fr;gap:5px}.buy button{text-align:start;background:var(--chip);border:1px solid var(--line);border-radius:10px;padding:5px 7px;font-size:11.5px;line-height:1.3}.buy button b{display:block;font-size:12.5px}.buy button:disabled{opacity:.4}.buy button i{font-style:normal;opacity:.75}
+#modal{position:fixed;inset:0;background:var(--scrim);display:grid;place-items:center;z-index:12;padding:18px}#modal[hidden]{display:none}#modal .box{background:var(--panel2);border:1px solid var(--line);border-radius:16px;padding:14px;max-width:400px;width:100%}#modal h2{font:700 18px 'Reem Kufi';color:var(--gold);margin-bottom:6px}#modal p{font-size:13.5px;line-height:1.6;margin-bottom:8px}#modal .acts{flex-direction:column}#modal .acts button{padding:9px 6px}
+.ctry{background:var(--chip);border:1px solid var(--line);border-radius:11px;padding:6px 9px;margin:5px 0}.ctry .h{display:flex;align-items:center;gap:7px}.ctry .h b{font:700 14px 'Reem Kufi'}.ctry .h .st{margin-inline-start:auto;font-size:11px;border-radius:9px;padding:1px 7px;background:var(--chip)}.ctry .st.a0{background:var(--chip2)}.ctry .st.a1{background:var(--chip2)}
+.rel{display:grid;grid-template-columns:44px 1fr 30px;align-items:center;gap:5px;font-size:11px;margin-top:2px}.rel .rb{height:5px;border-radius:3px;background:var(--chip2);position:relative;overflow:hidden}.rel .rb u{position:absolute;top:0;bottom:0}.rel .rb::after{content:"";position:absolute;left:50%;top:-1px;bottom:-1px;width:1px;background:var(--line)}
 .ctry .acts{margin-top:5px;flex-wrap:wrap}.ctry .acts button{flex:1 1 30%;font-size:11.5px;padding:5px 2px}
-.trm{display:grid;grid-template-columns:1fr auto;gap:2px 8px;align-items:center;padding:5px 0;border-top:1px solid var(--line);font-size:12px}.trm button{background:rgba(255,255,255,.08);border:1px solid var(--line);border-radius:9px;padding:5px 9px;font-weight:700}.trm .dim{grid-column:1/-1}
+.trm{display:grid;grid-template-columns:1fr auto;gap:2px 8px;align-items:center;padding:5px 0;border-top:1px solid var(--line);font-size:12px}.trm button{background:var(--chip);border:1px solid var(--line);border-radius:9px;padding:5px 9px;font-weight:700}.trm .dim{grid-column:1/-1}
 #bv{position:fixed;inset:0;z-index:20;background:#6d6050}#bv[hidden]{display:none}#bvc{position:absolute;inset:0;width:100%;height:100%;touch-action:none}
 #bvTop{position:absolute;top:0;left:0;right:0;background:linear-gradient(rgba(20,18,15,.88),rgba(20,18,15,.7));padding:calc(6px + env(safe-area-inset-top)) 10px 7px;font-size:12px}
 #bvTop b{font:700 15px 'Reem Kufi';color:#e2b552}#bvX{margin-inline-start:auto;background:#b8442f;border-radius:9px;padding:4px 10px;font-weight:700}
@@ -60,7 +67,15 @@ button{font:inherit;color:inherit;background:none;border:0;cursor:pointer}
 #bvHint{position:absolute;top:calc(118px + env(safe-area-inset-top));left:50%;transform:translateX(-50%);background:rgba(184,68,47,.95);border-radius:12px;padding:5px 12px;font-weight:700;font-size:12.5px;white-space:nowrap}#bvHint[hidden]{display:none}
 #bvNote{position:absolute;top:calc(112px + env(safe-area-inset-top));left:10px;right:10px;transition:opacity 1s;text-align:center;font-size:11px;opacity:.8;background:rgba(20,18,15,.6);border-radius:8px;padding:3px 6px;pointer-events:none}
 #bvRes{position:absolute;left:12%;right:12%;top:38%;background:rgba(24,22,19,.94);border:1px solid rgba(255,235,190,.2);border-radius:16px;padding:14px;text-align:center;display:flex;flex-direction:column;gap:6px}#bvRes[hidden]{display:none}#bvRes button{background:#e2b552;color:#221b0e;border-radius:10px;padding:8px;font-weight:700;margin-top:4px}
-#end{position:fixed;inset:0;background:rgba(10,9,8,.75);display:grid;place-items:center;z-index:9}#end[hidden]{display:none}
+#end{position:fixed;inset:0;background:var(--scrim);display:grid;place-items:center;z-index:9}#end[hidden]{display:none}
+
+/* A1: مكوّنات موحّدة */
+.kpis{display:grid;grid-template-columns:repeat(auto-fit,minmax(88px,1fr));gap:6px;margin:6px 0}.kpi{background:var(--chip);border:1px solid var(--line);border-radius:11px;padding:6px 8px;text-align:center}.kpi b{display:block;font:700 var(--fs-l) 'Reem Kufi';font-variant-numeric:tabular-nums}.kpi span{font-size:var(--fs-s);color:var(--dim)}
+.row{display:flex;align-items:baseline;gap:8px;padding:4px 0;border-top:1px solid var(--line);font-size:var(--fs)}.row:first-child{border-top:0}.row b{margin-inline-start:auto;font-variant-numeric:tabular-nums;white-space:nowrap}
+.why0{display:block;font-size:var(--fs-s);color:var(--neg);margin-top:2px}
+button:focus-visible{outline:2px solid var(--gold);outline-offset:2px}
+.badge{position:relative}.badge[data-b]:not([data-b=""])::after{content:attr(data-b);position:absolute;top:0;inset-inline-end:calc(50% - 22px);min-width:16px;height:16px;padding:0 4px;border-radius:8px;background:var(--neg-s);color:var(--on-acc);font:700 10px/16px "IBM Plex Sans Arabic";font-style:normal}
+@media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
 </style></head><body>
 <canvas id="c"></canvas>
 <div id="top">
@@ -69,7 +84,7 @@ button{font:inherit;color:inherit;background:none;border:0;cursor:pointer}
   <div class="res"><span id="rVp"></span><span id="rDiv"></span><span id="rTook"></span><span id="rLost"></span><span id="rCash"></span><span id="rMor"></span></div>
   <div id="vpbar"><u></u></div>
 </div>
-<div id="zoom"><button id="zin">＋</button><button id="zout">－</button><button id="zme" title="رجوع للجبهة">◎</button><button id="snd">🔊</button><button id="sv" title="حفظ">💾</button></div>
+<div id="zoom"><button id="zin">＋</button><button id="zout">－</button><button id="zme" title="رجوع للجبهة">◎</button><button id="snd">🔊</button><button id="sv" title="حفظ">💾</button><button id="thm" title="الثيم: فاتح / غامق">🌓</button></div>
 <div id="saves" hidden></div><input type="file" id="imp" accept=".json,application/json" hidden>
 <div id="toasts"></div>
 <div id="hint" hidden></div>
@@ -115,6 +130,10 @@ button{font:inherit;color:inherit;background:none;border:0;cursor:pointer}
 <script src="save.js"></script>
 <script>
 'use strict';
+// GW11 A1: الثيم (يتبع التلفون، وزر 🌓 يختار ويتذكر)
+const THEME = { get() { try { return localStorage.getItem('gw.theme') || ''; } catch (e) { return ''; } }, set(v) { try { v ? localStorage.setItem('gw.theme', v) : localStorage.removeItem('gw.theme'); } catch (e) { } } };
+function applyTheme(v) { if (v) document.documentElement.dataset.theme = v; else delete document.documentElement.dataset.theme; }
+applyTheme(THEME.get());
 const G = window.GEO, C = window.CELLS, Q = new URLSearchParams(location.search);
 const $ = id => document.getElementById(id);
 const cv = $('c'), g = cv.getContext('2d');
@@ -441,7 +460,7 @@ function events() {
 function endGame(loser, why) {
   SPEED = 0; setSpeed(0);
   const win = loser !== ME; $('end').hidden = false;
-  $('end').innerHTML = `<div class="box" style="background:#221f1a;border:1px solid var(--line);border-radius:16px;padding:18px;max-width:360px;text-align:center"><h1 style="font:700 26px 'Reem Kufi';color:${win ? '#7fb0ff' : '#ff8a7a'}">${win ? 'انتصرنا! 🎖' : 'خسرنا الحرب'}</h1><p style="margin:10px 0">${why === 'mor' ? (win ? 'الشعب الإيراني ما تحمّل الحرب والدولة انهارت.' : 'معنويات الشعب انهارت والدولة طلبت هدنة.') : win ? 'إيران خسرت أغلب مدنها واستسلمت.' : 'العراق خسر أغلب مدنه.'}</p><p style="opacity:.75">${Math.round(WD.t / 24)} يوم حرب</p><button onclick="location.reload()" style="margin-top:10px;background:var(--gold);color:#221b0e;border-radius:12px;padding:10px 20px;font-weight:700">حرب جديدة</button></div>`;
+  $('end').innerHTML = `<div class="box" style="background:var(--panel2);border:1px solid var(--line);border-radius:16px;padding:18px;max-width:360px;text-align:center"><h1 style="font:700 26px 'Reem Kufi';color:${win ? 'var(--me-l)' : 'var(--neg)'}">${win ? 'انتصرنا! 🎖' : 'خسرنا الحرب'}</h1><p style="margin:10px 0">${why === 'mor' ? (win ? 'الشعب الإيراني ما تحمّل الحرب والدولة انهارت.' : 'معنويات الشعب انهارت والدولة طلبت هدنة.') : win ? 'إيران خسرت أغلب مدنها واستسلمت.' : 'العراق خسر أغلب مدنه.'}</p><p style="opacity:.75">${Math.round(WD.t / 24)} يوم حرب</p><button onclick="location.reload()" style="margin-top:10px;background:var(--gold);color:var(--brass-ink);border-radius:12px;padding:10px 20px;font-weight:700">حرب جديدة</button></div>`;
 }
 function setSpeed(s) { SPEED = s; document.querySelectorAll('.spd button').forEach(b => b.classList.toggle('on', +b.dataset.s === s)); }
 document.querySelectorAll('.spd button').forEach(b => b.onclick = () => setSpeed(+b.dataset.s));
@@ -470,7 +489,7 @@ function card() {
   $('card').hidden = false;
   $('card').innerHTML = `<div class="ch"><span style="font-size:18px">🪖</span><div><div class="t">${ds.length > 1 ? ds.length + ' فرق' : ds[0].n}</div><div class="s">${where} · ${SIM.TERR[c.t].n}${inBattle ? ' · ⚔ تقاتل' : ''}${!WD.sup[ME][ds[0].cell] ? ' · ⚠️ مقطوعة الإمداد' : WD.supC && WD.supC[ME][ds[0].cell] > 9 ? ' · 🚚 إمداد بعيد' : ''}</div></div><span class="x ${mode}">${MN[mode]}</span></div>
   <div class="list">${ds.map(d => `<div class="dv"><b>${d.n}</b>القوة ${Math.round(d.str * 100)}%<div class="bar"><u style="width:${d.str * 100}%"></u></div>التنظيم ${Math.round(d.org / d.orgMax * 100)}%<div class="bar"><u class="o" style="width:${d.org / d.orgMax * 100}%"></u></div></div>`).join('')}</div>
-  ${pl ? `<div class="s" style="margin:-2px 0 6px;font-size:12px">🏹 ${planTxt(pl)} <button id="aCan" style="margin-inline-start:6px;background:rgba(255,255,255,.1);border:1px solid var(--line);border-radius:8px;padding:1px 8px;font-size:11.5px">إلغاء الخطة</button></div>` : ''}
+  ${pl ? `<div class="s" style="margin:-2px 0 6px;font-size:12px">🏹 ${planTxt(pl)} <button id="aCan" style="margin-inline-start:6px;background:var(--chip);border:1px solid var(--line);border-radius:8px;padding:1px 8px;font-size:11.5px">إلغاء الخطة</button></div>` : ''}
   <div class="acts"><button class="go ${PICK === true ? 'on' : ''}" id="aGo">⚔ هجوم</button><button class="${PICK === 'arrow' ? 'on' : ''}" id="aArrow">🏹 سهم</button><button id="aHold">📌 ثبات</button><button id="aAuto">🤖</button><button id="aX">✕</button></div>`;
   $('aArrow').onclick = () => { PICK = PICK === 'arrow' ? false : 'arrow'; $('hint').hidden = !PICK; $('hint').textContent = 'اسحب إصبعك من فرقك لحد الهدف'; $('hint').style.top = (TOPH() + 8) + 'px'; card(); };
   if ($('aCan')) $('aCan').onclick = () => { SIM.cancelPlan(WD, pl); toast('✋ الخطة انلغت والفرق رجعت للقائد'); card(); };
@@ -673,8 +692,8 @@ function spark(hist, k, col, lo, hi) {
   if (hist.length < 2) return '';
   const xs = hist.map(h => h[k]); lo = Math.min(lo ?? Infinity, ...xs); hi = Math.max(hi ?? -Infinity, ...xs); if (hi - lo < 1e-6) hi = lo + 1;
   const pts = xs.map((v, i) => `${(i / (xs.length - 1) * 100).toFixed(1)},${(28 - (v - lo) / (hi - lo) * 26).toFixed(1)}`).join(' ');
-  const z = lo < 0 && hi > 0 ? `<line x1="0" x2="100" y1="${(28 + lo / (hi - lo) * 26).toFixed(1)}" y2="${(28 + lo / (hi - lo) * 26).toFixed(1)}" stroke="rgba(255,255,255,.25)" stroke-dasharray="2 2" vector-effect="non-scaling-stroke"/>` : '';
-  return `<svg viewBox="0 0 100 30" preserveAspectRatio="none" style="width:100%;height:34px;display:block">${z}<polyline points="${pts}" fill="none" stroke="${col}" stroke-width="2" vector-effect="non-scaling-stroke"/></svg>`;
+  const z = lo < 0 && hi > 0 ? `<line x1="0" x2="100" y1="${(28 + lo / (hi - lo) * 26).toFixed(1)}" y2="${(28 + lo / (hi - lo) * 26).toFixed(1)}" style="stroke:var(--line)" stroke-dasharray="2 2" vector-effect="non-scaling-stroke"/>` : '';
+  return `<svg viewBox="0 0 100 30" preserveAspectRatio="none" style="width:100%;height:34px;display:block">${z}<polyline points="${pts}" style="fill:none;stroke:${col}" stroke-width="2" vector-effect="non-scaling-stroke"/></svg>`;
 }
 function ecoPanel(refresh) {
   const el = $('sheet'), e = WD.eco[ME], B = e.last || ECON.budget(WD, AW, ME), L = ECON.LAND[ME], top = el.scrollTop;
@@ -683,7 +702,7 @@ function ecoPanel(refresh) {
   el.innerHTML = `<div class="eh"><b>💰 الاقتصاد</b><span class="dim">${WD.eco[ME].auto ? '🤖 الوزير يشتري' : '✋ انت تشتري'}</span><button class="x" id="shX">✕</button></div>
   <div style="display:flex;align-items:baseline;gap:10px;margin-top:4px"><span class="big ${e.cash < 0 ? 'neg' : ''}">${B$(e.cash)}</span><span class="${B.net >= 0 ? 'pos' : 'neg'}" style="font-weight:700">${M$(B.net)} باليوم</span></div>
   <div class="dim">${e.cash < -L.lim ? '💸 تجاوزنا حد الدين: الرواتب متأخرة والمعنويات تنزل بسرعة' : e.cash < 0 ? `🏦 بالدين (الحد ${L.lim} مليار). الدين ينقص المعنويات وعليه فائدة` : `تقدر تستدين لحد ${L.lim} مليار، بس الدين ينقص المعنويات`}</div>
-  ${e.hist.length > 2 ? `<div class="dim" style="margin-top:4px">الخزينة آخر ${e.hist.length} يوم (من ${B$(Math.min(...e.hist.map(h => h[1])))} لـ ${B$(Math.max(...e.hist.map(h => h[1])))})</div>${spark(e.hist, 1, '#e2b552')}` : ''}
+  ${e.hist.length > 2 ? `<div class="dim" style="margin-top:4px">الخزينة آخر ${e.hist.length} يوم (من ${B$(Math.min(...e.hist.map(h => h[1])))} لـ ${B$(Math.max(...e.hist.map(h => h[1])))})</div>${spark(e.hist, 1, 'var(--gold)')}` : ''}
   <h3>الدخل والمصاريف باليوم</h3>
   <table class="bt">
     <tr><td>🛢 نفط: ${B.exp.toFixed(2)} مليون برميل × $${Math.round(B.price)}</td><td class="pos">${M$(B.oil)}</td></tr>
@@ -698,7 +717,7 @@ function ecoPanel(refresh) {
   <div class="seg">${pr.map(([k, p]) => `<button data-pr="${k}" class="${e.prio === k ? 'on' : ''}">${p.n}</button>`).join('')}</div>
   <div class="dim" style="margin-top:3px">${ECON.PRIO[e.prio].d}${e.auto ? ' · الوزير يغيّرها لحاله' : ''}</div>
   <h3>معنويات الشعب: ${Math.round(e.mor)} ${e.dm != null ? `<span class="${e.dm >= 0 ? 'pos' : 'neg'}" style="font-size:12px">(${e.dm >= 0 ? '+' : ''}${e.dm.toFixed(1)} اليوم)</span>` : ''}</h3>
-  <div class="bar" style="height:6px"><u style="width:${e.mor}%;background:${e.mor >= 50 ? '#59c26a' : e.mor >= 25 ? '#e2b552' : '#d9533f'}"></u></div>
+  <div class="bar" style="height:6px"><u style="width:${e.mor}%;background:${e.mor >= 50 ? 'var(--pos-s)' : e.mor >= 25 ? 'var(--gold)' : 'var(--neg-s)'}"></u></div>
   ${e.morWhy.length ? `<div class="why">${e.morWhy.map(w => `<span class="${w[0] >= 0 ? 'pos' : 'neg'}">${w[0] >= 0 ? '+' : ''}${w[0].toFixed(1)} ${w[1]}</span>`).join('')}</div>` : ''}
   <div class="dim" style="margin-top:3px">تنزل بخسارة المدن والفرق، والدين، وطول الحرب. تصعد بالانتصارات. تحت 50 الفرق ترتاح أبطأ، تحت 30 الإنتاج أبطأ، تحت 25 نستسلم أبكر، وبالصفر الدولة تنهار.</div>
   <h3>نفطنا</h3>
@@ -787,11 +806,11 @@ function dipPopups() {
 }
 function endPeace() {
   const o = WD.over; if (!o || !o.peace) return; SPEED = 0; setSpeed(0); $('modal').hidden = true;
-  const R = { win: ['انتصرنا بالسلام 🎖', '#7fb0ff'], draw: ['سلام بتعادل 🕊', '#e2b552'], loss: ['خسرنا الحرب بالسلام', '#ff8a7a'] }[o.res];
+  const R = { win: ['انتصرنا بالسلام 🎖', 'var(--me-l)'], draw: ['سلام بتعادل 🕊', 'var(--gold)'], loss: ['خسرنا الحرب بالسلام', 'var(--neg)'] }[o.res];
   const txt = { sq: 'الطرفين رجعوا لحدودهم قبل الحرب.', keep: o.by === ME ? 'المناطق الإيرانية اللي أخذناها صارت إلنا.' : 'إيران احتفظت بالمناطق اللي أخذتها منا.', rep: 'حدود قبل الحرب، وإيران دفعت 10 مليار تعويضات.' }[o.peace];
   const sc = SIM.score(WD), allies = DIP.COUNTRIES.filter(C => WD.dip.c[C.id].st === 'ally0').map(C => C.f).join(' ');
   $('end').hidden = false;
-  $('end').innerHTML = `<div class="box" style="background:#221f1a;border:1px solid var(--line);border-radius:16px;padding:18px;max-width:360px;text-align:center"><h1 style="font:700 26px 'Reem Kufi';color:${R[1]}">${R[0]}</h1><p style="margin:10px 0">${txt}</p><p style="opacity:.8;font-size:12.5px">${Math.round(WD.t / 24)} يوم حرب · نقاط مدننا ${sc.vp[0]} · خزينتنا ${WD.eco[0].cash.toFixed(1)} مليار · معنويات الشعب ${Math.round(WD.eco[0].mor)}${allies ? ' · حلفاؤنا ' + allies : ''}</p><button onclick="location.search='?new=1'" style="margin-top:10px;background:var(--gold);color:#221b0e;border-radius:12px;padding:10px 20px;font-weight:700">حرب جديدة</button></div>`;
+  $('end').innerHTML = `<div class="box" style="background:var(--panel2);border:1px solid var(--line);border-radius:16px;padding:18px;max-width:360px;text-align:center"><h1 style="font:700 26px 'Reem Kufi';color:${R[1]}">${R[0]}</h1><p style="margin:10px 0">${txt}</p><p style="opacity:.8;font-size:12.5px">${Math.round(WD.t / 24)} يوم حرب · نقاط مدننا ${sc.vp[0]} · خزينتنا ${WD.eco[0].cash.toFixed(1)} مليار · معنويات الشعب ${Math.round(WD.eco[0].mor)}${allies ? ' · حلفاؤنا ' + allies : ''}</p><button onclick="location.search='?new=1'" style="margin-top:10px;background:var(--gold);color:var(--brass-ink);border-radius:12px;padding:10px 20px;font-weight:700">حرب جديدة</button></div>`;
 }
 const relBar = (v, col) => `<span class="rb"><u style="${v >= 0 ? 'left:50%;width:' + v / 2 + '%' : 'right:50%;width:' + -v / 2 + '%'};background:${col}"></u></span>`;
 function dipPanel(refresh) {
@@ -805,9 +824,9 @@ function dipPanel(refresh) {
   ${D.offer ? `<div class="ctry" style="border-color:var(--gold)"><b>✉️ عرض من إيران:</b> ${DIP.TERMS[D.offer.k].n}<div class="acts"><button class="go" id="oY">✅ نقبل</button><button id="oN">❌ نرفض</button></div></div>` : ''}
   ${D.truce > WD.t ? `<div class="dim" style="color:var(--gold)">🕊 هدنة: باقي ${Math.ceil((D.truce - WD.t) / 24)} يوم. ما اكو هجوم ولا ضربات.</div>` : ''}
   <h3>ميزان الحرب: مين تعبان أكثر</h3>
-  <div class="rel"><span>إحنا</span><span class="rb"><u style="left:0;width:${Math.min(100, w0 * 70)}%;background:#5b8de0"></u></span><span>${Math.round(w0 * 100)}٪</span></div>
-  <div class="rel"><span>إيران</span><span class="rb"><u style="left:0;width:${Math.min(100, w1 * 70)}%;background:#d9533f"></u></span><span>${Math.round(w1 * 100)}٪</span></div>
-  ${D.hist.length > 2 ? `<svg viewBox="0 0 100 30" preserveAspectRatio="none" style="width:100%;height:30px;display:block;margin-top:3px"><polyline points="${D.hist.map((h, i) => `${(i / (D.hist.length - 1) * 100).toFixed(1)},${(29 - Math.min(1.4, h[1]) / 1.4 * 28).toFixed(1)}`).join(' ')}" fill="none" stroke="#5b8de0" stroke-width="2" vector-effect="non-scaling-stroke"/><polyline points="${D.hist.map((h, i) => `${(i / (D.hist.length - 1) * 100).toFixed(1)},${(29 - Math.min(1.4, h[2]) / 1.4 * 28).toFixed(1)}`).join(' ')}" fill="none" stroke="#d9533f" stroke-width="2" vector-effect="non-scaling-stroke"/></svg>` : ''}
+  <div class="rel"><span>إحنا</span><span class="rb"><u style="left:0;width:${Math.min(100, w0 * 70)}%;background:var(--me-l)"></u></span><span>${Math.round(w0 * 100)}٪</span></div>
+  <div class="rel"><span>إيران</span><span class="rb"><u style="left:0;width:${Math.min(100, w1 * 70)}%;background:var(--neg-s)"></u></span><span>${Math.round(w1 * 100)}٪</span></div>
+  ${D.hist.length > 2 ? `<svg viewBox="0 0 100 30" preserveAspectRatio="none" style="width:100%;height:30px;display:block;margin-top:3px"><polyline points="${D.hist.map((h, i) => `${(i / (D.hist.length - 1) * 100).toFixed(1)},${(29 - Math.min(1.4, h[1]) / 1.4 * 28).toFixed(1)}`).join(' ')}" style="fill:none;stroke:var(--me-l)" stroke-width="2" vector-effect="non-scaling-stroke"/><polyline points="${D.hist.map((h, i) => `${(i / (D.hist.length - 1) * 100).toFixed(1)},${(29 - Math.min(1.4, h[2]) / 1.4 * 28).toFixed(1)}`).join(' ')}" style="fill:none;stroke:var(--neg-s)" stroke-width="2" vector-effect="non-scaling-stroke"/></svg>` : ''}
   <div class="dim">التعب من: معنويات الشعب، المدن اللي انخسرت، الدين، طول الحرب، وحلفاء العدو. إيران تقبل السلام لما تتعب.</div>
   <h3>هدنة وسلام</h3>
   <div class="dim">${med ? `🕊 الوسيط: ${CN(med.id)} (يزيد فرصة القبول)` : 'ما اكو وسيط هسه: قطر أو تركيا أو باكستان تتوسط إذا علاقتها 30+ ويا الطرفين'}${D.peaceCd > WD.t ? ` · رفضوا قريب، انتظر ${Math.ceil((D.peaceCd - WD.t) / 24)} يوم` : ''}</div>
@@ -817,8 +836,8 @@ function dipPanel(refresh) {
   <div class="dim">🤝 بعثة: ${Math.round(DIP.C_MISSION * 1000)} مليون، والعلاقة +6–11 (كل أسبوع). 📦 مساعدة: تنجح أكثر كل ما العلاقة أعلى (فوق 25). ⚔ تحالف: لازم علاقة عالية كلش.${DIP.truce(WD) ? '' : ''}</div>
   ${DIP.COUNTRIES.map(C => { const c = D.c[C.id], st = c.st;
     return `<div class="ctry"><div class="h"><span style="font-size:18px">${C.f}</span><b>${C.n}</b>${C.power ? '<span class="dim">قوة كبرى</span>' : ''}<span class="st ${st === 'ally0' ? 'a0' : st === 'ally1' ? 'a1' : ''}">${stN(c)}</span></div>
-    <div class="rel"><span>ويانا</span>${relBar(c.rel[0], '#5b8de0')}<span>${Math.round(c.rel[0])}</span></div>
-    <div class="rel"><span>ويا إيران</span>${relBar(c.rel[1], '#d9533f')}<span>${Math.round(c.rel[1])}</span></div>
+    <div class="rel"><span>ويانا</span>${relBar(c.rel[0], 'var(--me-l)')}<span>${Math.round(c.rel[0])}</span></div>
+    <div class="rel"><span>ويا إيران</span>${relBar(c.rel[1], 'var(--neg-s)')}<span>${Math.round(c.rel[1])}</span></div>
     ${st === 'ally1' ? '' : `<div class="acts"><button data-m="${C.id}">🤝 بعثة${cdTxt(C.id, 'm')}</button>${C.will !== 'none' && C.aid && C.aid[0].length ? `<button data-a="${C.id}">📦 مساعدة ${cdTxt(C.id, 'a') || Math.round(DIP.aidP(WD, ME, C.id) * 100) + '٪'}</button>` : ''}${C.join && st === 'neutral' ? `<button data-j="${C.id}">⚔ تحالف (${C.join}+)${cdTxt(C.id, 'j')}</button>` : ''}${C.sanc ? `<button data-s="${C.id}">🚫 عقوبات${D.sanc > WD.t ? ' ✓' : cdTxt(C.id, 's')}</button>` : ''}</div>`}</div>`; }).join('')}`;
   if (refresh) el.scrollTop = top;
   $('shX').onclick = () => { el.hidden = true; SHEET = null; tabOn(0); };
@@ -863,6 +882,7 @@ function savesPanel() {
   $('svImp').onclick = () => $('imp').click();
 }
 $('imp').onchange = async e => { const f = e.target.files[0]; if (!f) return; try { const s0 = SAVE.migrate(JSON.parse(await f.text())); SAVE.write(ST, 2, s0); toast('⬆ رجع الحفظ لـ«خانة 2»، هسه نحمّله', 'good'); setTimeout(() => { location.search = '?load=2'; }, 600); } catch (err) { toast('❌ الملف مو حفظ صالح: ' + err.message, 'bad'); } };
+$('thm').onclick = () => { const cur = document.documentElement.dataset.theme || (matchMedia('(prefers-color-scheme: light)').matches ? 'light' : 'dark'); const v = cur === 'light' ? 'dark' : 'light'; applyTheme(v); THEME.set(v); toast(v === 'light' ? '☀️ ثيم فاتح (أوضح بالشمس)' : '🌙 ثيم غامق'); };
 $('sv').onclick = () => { const was = SPEED; savesPanel(); };
 // حفظ تلقائي: كل يوم لعبة (منتصف الليل)، ولما التلفون يطلع من الصفحة
 let lastAutoDay = Math.floor(WD.t / 24);

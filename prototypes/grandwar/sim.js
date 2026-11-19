@@ -436,9 +436,39 @@
     for (const d of en) { d.org = Math.max(0, d.org - power * 4 / en.length); d.str = Math.max(.05, d.str - power * .005 / en.length); d.hitT = W.t; }
     W.log.push({ t: W.t, side, k: 'air', cell }); return en.length;
   }
+  // ===== GW11 B3: توقّع الهجوم قبل ما تأمر =====
+  // نفس حساب المعركة بـ step() (عرض الجبهة، الالتفاف، الأرض، النهر، الإمداد، التحصين، الليل والطقس) على نسخ من الفرق،
+  // بمولّد أرقام خاص (ما يغيّر حالة الحرب)، كم مرة، ونرجّع: الفرصة، الساعات، خسائر الطرفين.
+  // defs: (اختياري) اللي نعرفه عن العدو بالمنطقة (ضباب الحرب)؛ بدونه ناخذ الحقيقي
+  function forecast(W, att, tg, runs = 24, defs) {
+    att = att.filter(d => !d.dead && (d.cell === tg || W.cells[d.cell].nb.includes(tg))); if (!att.length) return null;
+    const side = att[0].side, def0 = (defs || W.divs.filter(d => !d.dead && d.cell === tg && d.side !== side)).map(d => ({ ...d, cell: tg }));
+    if (!def0.length) return { empty: true, chance: 1 };
+    const tr = TERR[W.cells[tg].t]; let seed = (tg * 7919 + W.t * 31 + att.length) % 2147483646 + 1; const rnd = () => (seed = seed * 16807 % 2147483647) / 2147483647;
+    let wins = 0, hW = 0, la = 0, ld = 0;
+    for (let r = 0; r < runs; r++) {
+      const A = att.map(d => ({ ...d })), D = def0.map(d => ({ ...d })); let h = 0, won = false;
+      for (h = 1; h <= 168; h++) {
+        const Aa = A.filter(a => a.org >= 1).sort((a, b) => b.str * b.org - a.str * a.org), Dd0 = D.filter(d => d.org >= 1);
+        if (!Dd0.length) { won = true; break; } if (!Aa.length) break;
+        const As = Aa.slice(0, tr.w + 1 + (new Set(Aa.map(a => a.cell)).size > 1 ? 1 : 0)), Dd = Dd0.slice(0, tr.w + 2);
+        const hA = hdOf(As), hD = hdOf(Dd), flank = new Set(As.map(a => a.cell)).size > 1 ? 1.15 : 1, luck = .85 + rnd() * .3;
+        const aPow = As.reduce((t, a) => t + atkOf(W, a, tg, a.cell, hD), 0) * flank * luck * envAtk(W, side);
+        const dPow = Dd.reduce((t, d) => t + atkOf(W, d, tg, null, hA) / tr.atk * (d.kind === 'inf' ? 1 : 1 / tr.armor), 0) * (1.15 - (luck - 1));
+        const dCap = Dd.reduce((t, d) => t + TEMPL[d.kind].def * d.str * (1 + .6 * d.ent) * (W.sup[d.side][d.cell] ? 1 : .6), 0), aCap = As.reduce((t, a) => t + TEMPL[a.kind].brk * a.str, 0);
+        const hOnD = hits(aPow, dCap), hOnA = hits(dPow, aCap);
+        for (const d of Dd) { d.org = Math.max(0, d.org - hOnD / Dd.length * K_ORG); d.str = Math.max(.02, d.str - hOnD / Dd.length * K_STR); }
+        for (const a of As) { a.org = Math.max(0, a.org - hOnA / As.length * K_ORG); a.str = Math.max(.02, a.str - hOnA / As.length * K_STR); }
+      }
+      if (won) { wins++; hW += h; }
+      la += A.reduce((t, a, i) => t + att[i].str - a.str, 0) / att.reduce((t, a) => t + a.str, 0);
+      ld += D.reduce((t, d, i) => t + def0[i].str - d.str, 0) / def0.reduce((t, d) => t + d.str, 0);
+    }
+    return { chance: wins / runs, hours: wins ? hW / wins : null, la: la / runs, ld: ld / runs, nd: def0.length, na: att.length };
+  }
   // تلخيص الحرب
   function score(W) { const vp = [0, 0]; W.cells.forEach((c, i) => { if (c.vp) vp[W.ctrl[i]] += c.vp; }); return { vp, cells: [0, 1].map(s => W.ctrl.reduce((n, x) => n + (x === s ? 1 : 0), 0)), divs: [0, 1].map(s => alive(W).filter(d => d.side === s).length), lost: W.lost.slice() }; }
 
-  const API = { inTruce, getNID: () => NID, setNID: v => { NID = v; }, WX, weather, envAtk, envMv, hitBridge, edgeCost, SUP_BUDGET, intel, known, isSeen, initIntel, makePlan, cancelPlan, runPlans, cellChain, joinArmy, airHit, TEMPL, TERR, KIND_N, World, addDiv, step, ai, order, route, scenario, supply, score, alive, divsIn, frontCells, power };
+  const API = { forecast, inTruce, getNID: () => NID, setNID: v => { NID = v; }, WX, weather, envAtk, envMv, hitBridge, edgeCost, SUP_BUDGET, intel, known, isSeen, initIntel, makePlan, cancelPlan, runPlans, cellChain, joinArmy, airHit, TEMPL, TERR, KIND_N, World, addDiv, step, ai, order, route, scenario, supply, score, alive, divsIn, frontCells, power };
   if (typeof module !== 'undefined') module.exports = API; else root.SIM = API;
 })(this);

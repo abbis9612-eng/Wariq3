@@ -88,6 +88,8 @@ button:focus-visible{outline:2px solid var(--gold);outline-offset:2px}
 .leg{display:grid;grid-template-columns:34px 1fr;gap:6px 10px;align-items:center;font-size:var(--fs);margin-top:6px}.leg i{display:inline-block;justify-self:center}
 #advChip{position:absolute;top:100%;inset-inline-start:8px;margin-top:6px;background:var(--neg-s);color:var(--on-acc);border-radius:16px;padding:6px 11px;font-weight:700;font-size:12.5px;box-shadow:var(--shadow);min-height:34px}#advChip[hidden]{display:none}
 .adv{display:flex;align-items:center;gap:8px;padding:7px 9px;margin:5px 0;border-radius:11px;background:var(--chip);border:1px solid var(--line);font-size:var(--fs)}.adv.w{border-inline-start:4px solid var(--neg-s)}.adv span{flex:1;min-width:0}.adv button{flex:0 0 auto;min-height:36px;padding:4px 10px;border-radius:9px;background:var(--gold);color:var(--brass-ink);font-weight:700}
+.kv{display:grid;grid-template-columns:1fr 1fr;gap:4px 12px;margin:7px 0;font-size:var(--fs)}.kv b{float:inline-end;font-variant-numeric:tabular-nums}
+.fc{border:1px solid var(--line);border-radius:11px;padding:6px 9px;margin:6px 0;background:var(--chip)}.fc .big{font-size:26px}
 </style></head><body>
 <canvas id="c"></canvas>
 <div id="top">
@@ -573,10 +575,15 @@ function card() {
   const c = cells[ds[0].cell]; const where = c.city || 'منطقة';
   const inBattle = ds.some(d => WD.battles.has(d.path[0]) || WD.battles.has(d.cell));
   $('card').hidden = false;
-  $('card').innerHTML = `<div class="ch"><span style="font-size:18px">🪖</span><div><div class="t">${ds.length > 1 ? ds.length + ' فرق' : ds[0].n}</div><div class="s">${where} · ${SIM.TERR[c.t].n}${inBattle ? ' · ⚔ تقاتل' : ''}${!WD.sup[ME][ds[0].cell] ? ' · ⚠️ مقطوعة الإمداد' : WD.supC && WD.supC[ME][ds[0].cell] > 9 ? ' · 🚚 إمداد بعيد' : ''}</div></div><span class="x ${mode}">${MN[mode]}</span></div>
-  <div class="list">${ds.map(d => `<div class="dv"><b>${d.n}</b>القوة ${Math.round(d.str * 100)}%<div class="bar"><u style="width:${d.str * 100}%"></u></div>التنظيم ${Math.round(d.org / d.orgMax * 100)}%<div class="bar"><u class="o" style="width:${d.org / d.orgMax * 100}%"></u></div></div>`).join('')}</div>
-  ${pl ? `<div class="s" style="margin:-2px 0 6px;font-size:12px">🏹 ${planTxt(pl)} <button id="aCan" style="margin-inline-start:6px;background:var(--chip);border:1px solid var(--line);border-radius:8px;padding:1px 8px;font-size:11.5px">إلغاء الخطة</button></div>` : ''}
-  <div class="acts"><button class="go ${PICK === true ? 'on' : ''}" id="aGo">⚔ هجوم</button><button class="${PICK === 'arrow' ? 'on' : ''}" id="aArrow">🏹 سهم</button><button id="aHold">📌 ثبات</button><button id="aAuto">🤖</button><button id="aX">✕</button></div>`;
+  const d0 = ds[0], one = ds.length === 1, avg = k => ds.reduce((t, d) => t + k(d), 0) / ds.length;
+  const sup = ds.every(d => WD.sup[ME][d.cell]), str = avg(d => d.str), org = avg(d => d.org / d.orgMax), ent = avg(d => d.ent);
+  const bar = (v, cls) => `<div class="bar"><u class="${cls || ''}" style="width:${v * 100}%;background:${v > .6 ? 'var(--pos-s)' : v > .35 ? 'var(--warn-s)' : 'var(--neg-s)'}"></u></div>`;
+  $('card').innerHTML = `<div class="ch"><span style="font-size:18px">🪖</span><div><div class="t">${one ? d0.n : ds.length + ' فرق'}</div><div class="s">📍 ${where} · ${SIM.TERR[c.t].n}${inBattle ? ' · ⚔ تقاتل' : ''}</div></div><span class="x ${mode}">${MN[mode]}</span></div>
+  <div class="kv"><span>القوة <b>${Math.round(str * 100)}٪</b>${bar(str)}</span><span>التنظيم <b>${Math.round(org * 100)}٪</b>${bar(org)}</span><span>الإمداد <b class="${sup ? 'pos' : 'neg'}">${sup ? 'واصل' : 'مقطوع ⛓'}</b></span><span>التحصين <b>${Math.round(ent * 100)}٪</b></span></div>
+  ${one ? '' : `<div class="list">${ds.map(d => `<div class="dv"><b>${d.n}</b>${Math.round(d.str * 100)}٪ · ${Math.round(d.org / d.orgMax * 100)}٪${bar(d.str)}</div>`).join('')}</div>`}
+  ${pl ? `<div class="s" style="margin:2px 0 6px;font-size:12px">🏹 ${planTxt(pl)} <button id="aCan" style="margin-inline-start:6px;background:var(--chip);border:1px solid var(--line);border-radius:8px;padding:3px 10px;font-size:12px;min-height:32px">إلغاء الخطة</button></div>` : ''}
+  <div class="acts"><button class="go ${PICK === true ? 'on' : ''}" id="aGo">⚔ هجوم / تحرّك</button><button class="${PICK === 'arrow' ? 'on' : ''}" id="aArrow">🏹 سهم</button></div>
+  <div class="acts" style="margin-top:6px"><button id="aHold">📌 اثبت</button><button id="aAuto">🤖 تلقائي</button><button id="aX">✕ سكّر</button></div>`;
   $('aArrow').onclick = () => { PICK = PICK === 'arrow' ? false : 'arrow'; $('hint').hidden = !PICK; $('hint').textContent = 'اسحب إصبعك من فرقك لحد الهدف'; $('hint').style.top = (TOPH() + 8) + 'px'; card(); };
   if ($('aCan')) $('aCan').onclick = () => { SIM.cancelPlan(WD, pl); toast('✋ الخطة انلغت والفرق رجعت للقائد'); card(); };
   $('aGo').onclick = () => { PICK = PICK === true ? false : true; $('hint').hidden = !PICK; $('hint').textContent = 'اضغط المنطقة اللي تريد توصلها'; $('hint').style.top = (TOPH() + 8) + 'px'; card(); };
@@ -681,9 +688,29 @@ function drawPlans() {
   }
   if (DRAW && DRAW.pts.length > 1) bigArrow(DRAW.pts, '#e2b552', true);
 }
+let PEND = null;
+function forecastCard(ds, ci) {
+  const c = cells[ci], seen = SIM.isSeen(WD, ME, ci, 2), kn = SIM.known(WD, ME).filter(e => e.cell === ci);
+  const fc = SIM.forecast(WD, ds, ci, 24, kn); PICK = false; $('hint').hidden = true;
+  const adj = ds.filter(d => cells[d.cell].nb.includes(ci));
+  const pct = v => Math.round(v * 100) + '٪';
+  const body = !fc ? '<div class="dim">ما اكو فرقة جارة للمنطقة</div>' : fc.empty ? `<div>${seen ? '✅ فاضية: ناخذها بدون قتال (بس بعد ما توصل)' : '❔ ما نعرف شنو بيها (آخر مرة شفناها قديمة). ممكن بيها عدو: دز مسيّرة استطلاع أول'}</div>`
+    : `<div style="display:flex;align-items:baseline;gap:10px"><span class="big ${fc.chance >= .6 ? 'pos' : fc.chance >= .4 ? '' : 'neg'}">${pct(fc.chance)}</span><span>فرصة نكسرهم</span></div>
+    <div class="kv"><span>المدة <b>${fc.hours ? (fc.hours < 30 ? '~' + Math.round(fc.hours) + ' ساعة' : '~' + (fc.hours / 24).toFixed(1) + ' يوم') : '—'}</b></span><span>خسائرنا <b class="neg">~${pct(fc.la)}</b></span><span>خسائرهم <b class="pos">~${pct(fc.ld)}</b></span><span>${fc.na} ضد ${fc.nd} ${seen ? '' : '(تقدير قديم)'}</span></div>
+    <div class="dim">${fc.chance < .4 ? 'نصيحة: جيب فرق أكثر من أكثر من جهة، أو ارتاح لحد ما يرجع التنظيم، أو ضربة طيارات أول.' : 'محسوبة بنفس قواعد المعركة (الأرض والنهر والإمداد والتحصين والليل والطقس)، على اللي نعرفه.'}</div>`;
+  $('card').innerHTML = `<div class="ch"><span style="font-size:18px">⚔</span><div><div class="t">هجوم على ${c.city || 'المنطقة'}</div><div class="s">${SIM.TERR[c.t].n}${WD.edgeOf ? '' : ''} · ${adj.length} من ${ds.length} فرق جارة تهاجم</div></div></div>
+  <div class="fc">${body}</div>
+  <div class="acts"><button class="go" id="fGo">✅ هاجم</button><button id="fNo">↩ رجوع</button></div>`;
+  $('card').hidden = false;
+  $('fGo').onclick = () => { PEND = ci; orderTo(ci); };
+  $('fNo').onclick = () => { PEND = null; card(); };
+}
 function orderTo(ci) {
   if (DIP.truce(WD) && WD.ctrl[ci] !== ME) { toast('🕊 هدنة: ما نقدر نهاجم لحد ما تخلص (' + Math.ceil((WD.dip.truce - WD.t) / 24) + ' يوم)', 'bad'); PICK = false; $('hint').hidden = true; return; }
   const ds = SIM.alive(WD).filter(d => SEL.has(d.id)); let ok = 0;
+  // GW11 B3: هجوم على منطقة جارة بيها عدو ← نوري التوقّع ونطلب تأكيد
+  if (WD.ctrl[ci] !== ME && PEND !== ci && ds.some(d => cells[d.cell].nb.includes(ci))) { forecastCard(ds, ci); return; }
+  PEND = null;
   for (const d of ds) if (SIM.order(WD, d, ci, 'manual', true)) ok++;
   PICK = false; $('hint').hidden = true; HOVER = -1;
   const c = cells[ci]; const enemy = WD.ctrl[ci] !== ME;

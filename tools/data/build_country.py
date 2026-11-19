@@ -175,6 +175,9 @@ ta = TA['c'].get(ID)
 FACS = {'theo': ['clergy', 'irgc', 'army', 'street', 'biz'], 'amon': ['royal', 'army', 'clergy', 'street', 'biz'], 'one': ['party', 'army', 'street', 'biz'], 'mil': ['army', 'militia', 'street', 'biz'],
   'auth': ['army', 'security', 'street', 'biz'], 'trans': ['army', 'factions', 'street', 'biz'], 'cmon': ['army', 'parties', 'street', 'biz'], 'parl': ['army', 'parties', 'street', 'biz'], 'pres': ['army', 'parties', 'street', 'biz'], 'semi': ['army', 'parties', 'street', 'biz']}
 war_home = [c['id'] for c in CF['conflicts'] if c['state'] == 'active' and (ID in c.get('b', []) or (ID in c.get('a', []) and not all(x in CL for x in c.get('b', []))))]
+if ta and ta.get('tanksActive') is not None and sumo is not None:
+    sumo['tanksActive'] = {'v': ta['tanksActive'], 's': 'tierA', 'c': 'ت', 'note': 'العاملة؛ الباقي من sum.tanks مخزون'}
+    if sumo.get('tanks') and sumo['tanks']['v'] < ta['tanksActive']: sumo['tanks'] = dict(sumo['tanks'], v=ta['tanksActive'])
 ind = cur.get('ind') or ({'tech': ta['tech'], 'makes': ta['makes'], 's': 'tierA', 'c': 'ت'} if ta else None)
 stab0 = ta['stab'] if ta else max(15, min(80, 55 + 8 * free - 15 * len(war_home)))
 pol = {'factions': (cur.get('pol') or {}).get('factions') or FACS[gt], 'stab': {'v': (cur.get('pol') or {}).get('stab', {}).get('v', stab0), 's': 'tierA' if ta else 'govt', 'c': 'ت'}, 'warHome': war_home}

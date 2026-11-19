@@ -206,6 +206,12 @@
     "v": 8000,
     "s": "iiss_pers",
     "c": "ت"
+   },
+   "tanksActive": {
+    "v": 500,
+    "s": "tierA",
+    "c": "ت",
+    "note": "العاملة؛ الباقي من sum.tanks مخزون"
    }
   },
   "land": [

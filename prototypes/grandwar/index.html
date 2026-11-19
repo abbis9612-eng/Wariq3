@@ -38,6 +38,15 @@ button{font:inherit;color:inherit;background:none;border:0;cursor:pointer}
 #saves{position:fixed;left:8px;right:8px;top:calc(110px + env(safe-area-inset-top));background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:10px 12px;z-index:7;backdrop-filter:blur(6px)}#saves[hidden]{display:none}.slot{background:rgba(255,255,255,.05);border:1px solid var(--line);border-radius:10px;padding:7px 9px;margin:6px 0}.slot b{font:700 14px 'Reem Kufi'}.slot .acts{margin-top:5px}
 #armies{position:fixed;left:0;right:0;bottom:calc(58px + env(safe-area-inset-bottom));max-height:62vh;overflow:auto;background:var(--panel);border-top:1px solid var(--line);border-radius:16px 16px 0 0;padding:10px 12px;z-index:6;backdrop-filter:blur(6px)}#armies[hidden]{display:none}
 .arm{background:rgba(255,255,255,.05);border:1px solid var(--line);border-radius:12px;padding:8px 10px;margin:7px 0}.arm .h{display:flex;align-items:center;gap:8px}.arm b{font:700 15px 'Reem Kufi'}.arm .acts{margin-top:6px}
+#sheet{position:fixed;left:0;right:0;bottom:calc(58px + env(safe-area-inset-bottom));max-height:66vh;overflow:auto;background:var(--panel);border-top:1px solid var(--line);border-radius:16px 16px 0 0;padding:10px 12px 12px;z-index:6;backdrop-filter:blur(6px)}#sheet[hidden]{display:none}
+#sheet h3{font:700 14px 'Reem Kufi';color:var(--gold);margin:10px 0 3px}.eh{display:flex;align-items:center;gap:8px}.eh b{font:700 17px 'Reem Kufi';color:var(--gold)}.eh .x{margin-inline-start:auto;font-size:18px}
+.big{font:700 22px 'Reem Kufi';font-variant-numeric:tabular-nums}.pos{color:#7fd08a}.neg{color:#ff8a7a}.dim{opacity:.7;font-size:11.5px}
+.bt{width:100%;border-collapse:collapse;font-size:12px;font-variant-numeric:tabular-nums}.bt td{padding:2px 3px;border-top:1px solid var(--line)}.bt td:last-child{text-align:end;white-space:nowrap}
+.seg{display:flex;gap:5px}.seg button{flex:1;border-radius:9px;padding:6px 2px;background:rgba(255,255,255,.07);border:1px solid var(--line);font-weight:700;font-size:12.5px}.seg button.on{background:var(--gold);color:#221b0e}
+.oil{display:flex;align-items:center;gap:6px;padding:3px 0;border-top:1px solid var(--line);font-size:12px}.oil span:last-child{margin-inline-start:auto;font-variant-numeric:tabular-nums;white-space:nowrap}
+.why{display:flex;flex-wrap:wrap;gap:4px;margin-top:3px}.why span{font-size:11px;border-radius:8px;padding:1px 6px;background:rgba(255,255,255,.07)}
+.ord{background:rgba(255,255,255,.05);border:1px solid var(--line);border-radius:10px;padding:5px 8px;margin:4px 0;font-size:12px}.ord .h{display:flex;align-items:center;gap:6px}.ord .h span:last-of-type{margin-inline-start:auto;font-variant-numeric:tabular-nums}.ord.wait{opacity:.6}
+.buy{display:grid;grid-template-columns:1fr 1fr;gap:5px}.buy button{text-align:start;background:rgba(255,255,255,.06);border:1px solid var(--line);border-radius:10px;padding:5px 7px;font-size:11.5px;line-height:1.3}.buy button b{display:block;font-size:12.5px}.buy button:disabled{opacity:.4}.buy button i{font-style:normal;opacity:.75}
 #bv{position:fixed;inset:0;z-index:20;background:#6d6050}#bv[hidden]{display:none}#bvc{position:absolute;inset:0;width:100%;height:100%;touch-action:none}
 #bvTop{position:absolute;top:0;left:0;right:0;background:linear-gradient(rgba(20,18,15,.88),rgba(20,18,15,.7));padding:calc(6px + env(safe-area-inset-top)) 10px 7px;font-size:12px}
 #bvTop b{font:700 15px 'Reem Kufi';color:#e2b552}#bvX{margin-inline-start:auto;background:#b8442f;border-radius:9px;padding:4px 10px;font-weight:700}
@@ -52,7 +61,7 @@ button{font:inherit;color:inherit;background:none;border:0;cursor:pointer}
 <div id="top">
   <div class="r1"><span class="flag">🇮🇶</span><span class="cn">العراق</span><span style="font-size:11px;opacity:.7">ضد إيران 🇮🇷</span>
     <div class="date"><span><span id="dt"></span><small id="rate" style="display:block;font-size:10px;opacity:.75;font-weight:500"></small></span><div class="spd"><button data-s="0">⏸</button><button data-s="1" class="on">▶</button><button data-s="2">▶▶</button><button data-s="3">⏩</button></div></div></div>
-  <div class="res"><span id="rVp"></span><span id="rDiv"></span><span id="rBat"></span><span id="rTook"></span><span id="rLost"></span></div>
+  <div class="res"><span id="rVp"></span><span id="rDiv"></span><span id="rTook"></span><span id="rLost"></span><span id="rCash"></span><span id="rMor"></span></div>
   <div id="vpbar"><u></u></div>
 </div>
 <div id="zoom"><button id="zin">＋</button><button id="zout">－</button><button id="zme" title="رجوع للجبهة">◎</button><button id="snd">🔊</button><button id="sv" title="حفظ">💾</button></div>
@@ -61,7 +70,7 @@ button{font:inherit;color:inherit;background:none;border:0;cursor:pointer}
 <div id="hint" hidden></div>
 <div id="tac" hidden>⏱ بطيء: قريب من المعركة</div>
 <div id="card" hidden></div>
-<div id="tabs"><button class="on"><em>🗺️</em>الخريطة</button><button id="tabArmy"><em>🪖</em>الجيش</button><button data-soon="1"><em>🏭</em>الإنتاج</button><button data-soon="1"><em>💰</em>الاقتصاد</button><button data-soon="1"><em>🤝</em>السياسة</button><button data-soon="1"><em>🔬</em>البحث</button></div>
+<div id="tabs"><button class="on"><em>🗺️</em>الخريطة</button><button id="tabArmy"><em>🪖</em>الجيش</button><button id="tabProd"><em>🏭</em>الإنتاج</button><button id="tabEco"><em>💰</em>الاقتصاد</button><button data-soon="1"><em>🤝</em>السياسة</button><button data-soon="1"><em>🔬</em>البحث</button></div>
 <div id="intro"><div class="box">
   <h1>الحرب الكبرى</h1>
   <p>14 آذار 2027. الحرب بدت بين العراق وإيران. انت قائد الجيش العراقي.</p>
@@ -71,7 +80,8 @@ button{font:inherit;color:inherit;background:none;border:0;cursor:pointer}
     <li><b>اضغط فرقة</b> وبعدين <b>«هجوم/تحرّك»</b> واضغط المنطقة اللي تريدها. أو خليها <b>«تلقائي»</b> والقائد يمسك الجبهة ويهاجم لما يشوف فرصة.</li>
     <li><b>قرّب بإصبعين</b> وتشوف الدبابات والمدرعات نفسها، والوقت يبطأ لحاله لدقيقة بالثانية حتى تشوف القتال بإيقاعه الحقيقي.</li>
     <li><b>الوقت:</b> ▶ عشر دقايق بالثانية، ▶▶ ساعة، ⏩ ست ساعات. التقدّم بأرض العدو بطيء مثل الحقيقة (دروع ~45 كم باليوم).</li>
-    <li>المدن الكبيرة نقاط. اللي يخسر 70% من نقاط مدنه يستسلم.</li>
+    <li><b>💰 الاقتصاد و🏭 الإنتاج</b> (تحت): فلوسك من النفط (حقول البصرة تتصدّر من الفاو)، والحرب تكلّف. الفرق والطيارات والصواريخ الجديدة تنشترى وتوصل بعد أيام. ضرب نفط العدو يقطع فلوسه.</li>
+    <li>المدن الكبيرة نقاط. اللي يخسر 70% من نقاط مدنه يستسلم، أو إذا معنويات الشعب انهارت.</li>
   </ul>
   <button id="cont" hidden></button>
   <button id="go">ابدأ الحرب ▶</button>
@@ -84,12 +94,13 @@ button{font:inherit;color:inherit;background:none;border:0;cursor:pointer}
   <div id="bvHint" hidden></div>
   <div id="bvNote">مشهد حقيقي: المسافات بالمتر والوقت بالثانية الحقيقية. الآليات مكبّرة ×5 حتى تنشاف. 🎥 المخرج يقطع لأهم لحظة، واسحب بإصبعك حتى تتحكم.</div>
   <div id="bvRes" hidden></div></div>
-<div id="armies" hidden></div>
+<div id="armies" hidden></div><div id="sheet" hidden></div>
 <script src="data.js"></script>
 <script src="cells.js"></script>
 <script src="roads.js"></script>
 <script src="sim.js"></script>
 <script src="air.js"></script>
+<script src="econ.js"></script>
 <script src="fx.js"></script>
 <script src="view.js"></script>
 <script src="bv.js"></script>
@@ -106,9 +117,10 @@ const ME = 0;
 // GW7: «كمّل» = نفتح الصفحة بـ ?load=خانة، فالحرب تنبني من الحفظ بدل البداية
 const ST = (() => { try { const t = '__t'; localStorage.setItem(t, 1); localStorage.removeItem(t); return localStorage; } catch (e) { return null; } })();
 let LOADED = null, LOADERR = null;
-if (Q.get('load') != null && ST) { try { const s0 = SAVE.read(ST, Q.get('load')); if (s0) LOADED = SAVE.restore(s0, C, { roads: window.ROADS }, SIM, AIR); else LOADERR = 'ما لكيت حفظ بهالخانة'; } catch (e) { LOADERR = e.message; LOADED = null; } }
+AIR.useEcon(ECON);
+if (Q.get('load') != null && ST) { try { const s0 = SAVE.read(ST, Q.get('load')); if (s0) LOADED = SAVE.restore(s0, C, { roads: window.ROADS }, SIM, AIR, ECON); else LOADERR = 'ما لكيت حفظ بهالخانة'; } catch (e) { LOADERR = e.message; LOADED = null; } }
 const SEED = LOADED ? LOADED.seed : +(Q.get('seed') || (Date.now() % 100000));
-const WD = LOADED ? LOADED.W : SIM.World(C, { seed: SEED, roads: window.ROADS }); if (!LOADED) SIM.scenario(WD);
+const WD = LOADED ? LOADED.W : SIM.World(C, { seed: SEED, roads: window.ROADS }); if (!LOADED) { SIM.scenario(WD); ECON.init(WD); }
 const AW = LOADED ? LOADED.A : AIR.create(WD); const AIRK = [0, 1, 1.5, 2.2];
 const cells = C.cells;
 // ===== الكاميرا =====
@@ -348,6 +360,21 @@ function drawBridges() {
     g.restore(); if (b.down > 0 && cam.s > .8) text(`🔧 ${b.down} س`, x, y - 10, 9.5, '#fff', 'rgba(150,20,10,.8)', 700);
     if (PICK === 'bridge') { g.beginPath(); g.arc(x, y, 11, 0, 7); g.strokeStyle = '#ffd65a'; g.lineWidth = 2; g.stroke(); } }
 }
+// GW8: حقول النفط والموانئ على الخريطة
+function drawOil() {
+  if (cam.s < .4 || !WD.oil) return; const k = Math.min(1.25, cam.s * .8);
+  for (const f of WD.oil.sites) { if (!f.p) continue; const [x, y] = w2s(...f.p); if (x < -20 || x > W + 20 || y < 60 || y > H) continue;
+    const st = ECON.siteState(WD, f).k, col = st === 'lost' ? '#777' : f.side === ME ? '#2f6fd0' : '#c8402f';
+    g.beginPath(); g.arc(x, y, 7.5 * k, 0, 7); g.fillStyle = 'rgba(20,18,15,.85)'; g.fill(); g.lineWidth = 2; g.strokeStyle = col; g.stroke();
+    // برج حفر صغير (أو خزان للميناء)
+    g.strokeStyle = '#f3ead6'; g.lineWidth = 1.2; g.beginPath();
+    if (f.term) { g.rect(x - 4 * k, y - 2 * k, 8 * k, 5 * k); g.moveTo(x - 4 * k, y - 2 * k); g.lineTo(x, y - 5 * k); g.lineTo(x + 4 * k, y - 2 * k); }
+    else { g.moveTo(x - 3.5 * k, y + 4 * k); g.lineTo(x, y - 5 * k); g.lineTo(x + 3.5 * k, y + 4 * k); g.moveTo(x - 2 * k, y); g.lineTo(x + 2 * k, y); }
+    g.stroke();
+    if (st === 'dmg') { g.fillStyle = 'rgba(255,110,40,.9)'; g.beginPath(); g.arc(x + 5 * k, y - 5 * k, 3 * k, 0, 7); g.fill(); }
+    if (cam.s > 1.3 || st !== 'ok' && cam.s > .75) text(f.n + (st === 'dmg' ? ` 🔥${Math.ceil(f.dmg / 24)}ي` : st === 'lost' ? ' ✕' : ''), x, y + 15 * k, 9.5, f.side === ME ? '#cfe0ff' : '#ffd2c8', 'rgba(20,18,15,.75)', 600);
+    if (PICK === 'oil' && f.side !== ME) { g.beginPath(); g.arc(x, y, 13, 0, 7); g.strokeStyle = '#ffd65a'; g.lineWidth = 2; g.stroke(); } }
+}
 function drawPaths() {
   g.save(); g.setLineDash([6, 5]); g.lineWidth = 2.5; g.strokeStyle = 'rgba(255,214,90,.95)';
   for (const d of SIM.alive(WD)) {
@@ -373,8 +400,9 @@ function hud() {
   $('dt').textContent = `${d.getDate()} ${AR_M[d.getMonth()]} ${d.getFullYear()} · ${String(d.getHours()).padStart(2, '0')}:00 ${WD.night ? '🌙' : '☀️'}${WD.wx && WD.wx !== 'clear' ? { cloud: '☁️', rain: '🌧', dust: '🌫' }[WD.wx] : ''}`;
   const sc = SIM.score(WD), tot = WD.vpTotal[0] + WD.vpTotal[1];
   $('rVp').innerHTML = `🏙 ${sc.vp[0]}<i>نقاط مدننا</i>`; $('rDiv').innerHTML = `🪖 ${sc.divs[0]}<i>فرقنا</i>`;
-  $('rBat').innerHTML = `⚔ ${WD.battles.size}<i>معارك هسه</i>`; $('rTook').innerHTML = `✈ ${AW.bases.filter(b => b.side === ME && !AIR.PLANES[b.type].drone).reduce((n, b) => n + b.n0, 0)}<i>طياراتنا</i>`;
+  $('rTook').innerHTML = `✈ ${AW.bases.filter(b => b.side === ME && !AIR.PLANES[b.type].drone).reduce((n, b) => n + b.n0, 0)}<i>طياراتنا</i>`;
   $('rLost').innerHTML = `🎯 ${AW.kills[ME]}<i>أسقطنا طيارة</i>`;
+  const e = WD.eco[ME]; $('rCash').innerHTML = `<b class="${e.cash < 0 ? 'neg' : ''}">💰 ${e.cash.toFixed(1)}</b><i>مليار $</i>`; $('rMor').innerHTML = `${e.mor >= 60 ? '🙂' : e.mor >= 35 ? '😐' : '😟'} ${Math.round(e.mor)}<i>معنويات</i>`;
   $('vpbar').firstElementChild.style.width = (sc.vp[0] / tot * 100) + '%';
 }
 function toast(msg, cls = '') { const t = document.createElement('div'); t.className = 'toast ' + cls; t.textContent = msg; $('toasts').prepend(t); while ($('toasts').children.length > 3) $('toasts').lastChild.remove(); setTimeout(() => t.remove(), 4500); }
@@ -394,13 +422,16 @@ function events() {
     if (l.k === 'bridge') toast(mine ? `🌉 قطعنا جسر ${l.n}: إمدادهم لازم يدوّر طريق ثاني` : `⚠️ إيران قطعت جسر ${l.n}: إمدادنا يدوّر طريق ثاني`, mine ? 'good' : 'bad');
     if (l.k === 'bridgefix') toast(mine ? `🔧 إيران صلّحت جسر ${l.n}` : `🔧 مهندسينا صلّحوا جسر ${l.n}`);
     if (l.k === 'wx') toast(l.wx === 'dust' ? `🌫 عاصفة غبار (~${l.h} ساعة): الطيران موقوف، والهجوم والحركة أبطأ` : l.wx === 'rain' ? `🌧 مطر وطين (~${l.h} س): الحركة أبطأ والقصف أقل دقة` : l.wx === 'cloud' ? '☁️ غيوم: القصف أقل دقة شوية' : '☀️ الجو صفى');
-    if (l.k === 'capitulate') endGame(l.side);
+    if (l.k === 'built' && mine) toast(`🏭 وصل: ${ECON.ITEMS[l.it].n}${l.div ? ' ← ' + l.div + (cells[l.cell]?.city ? ' بـ' + cells[l.cell].city : '') : l.base ? ' ← ' + l.base : ''}`, 'good');
+    if (l.k === 'oilhit') toast(mine ? `🛢🔥 ضربنا ${l.n}: نفطهم ينقص ~${l.d} يوم` : `⚠️🛢 إيران ضربت ${l.n}: صادراتنا تنقص ~${l.d} يوم`, mine ? 'good' : 'bad');
+    if (l.k === 'broke' && mine) toast('💸 الخزينة وصلت حد الدين: الرواتب تأخرت والشعب زعلان. خفّف الشراء أو اضرب نفطهم', 'bad');
+    if (l.k === 'capitulate') endGame(l.side, l.why);
   }
 }
-function endGame(loser) {
+function endGame(loser, why) {
   SPEED = 0; setSpeed(0);
   const win = loser !== ME; $('end').hidden = false;
-  $('end').innerHTML = `<div class="box" style="background:#221f1a;border:1px solid var(--line);border-radius:16px;padding:18px;max-width:360px;text-align:center"><h1 style="font:700 26px 'Reem Kufi';color:${win ? '#7fb0ff' : '#ff8a7a'}">${win ? 'انتصرنا! 🎖' : 'خسرنا الحرب'}</h1><p style="margin:10px 0">${win ? 'إيران خسرت أغلب مدنها واستسلمت.' : 'العراق خسر أغلب مدنه.'}</p><p style="opacity:.75">${Math.round(WD.t / 24)} يوم حرب</p><button onclick="location.reload()" style="margin-top:10px;background:var(--gold);color:#221b0e;border-radius:12px;padding:10px 20px;font-weight:700">حرب جديدة</button></div>`;
+  $('end').innerHTML = `<div class="box" style="background:#221f1a;border:1px solid var(--line);border-radius:16px;padding:18px;max-width:360px;text-align:center"><h1 style="font:700 26px 'Reem Kufi';color:${win ? '#7fb0ff' : '#ff8a7a'}">${win ? 'انتصرنا! 🎖' : 'خسرنا الحرب'}</h1><p style="margin:10px 0">${why === 'mor' ? (win ? 'الشعب الإيراني ما تحمّل الحرب والدولة انهارت.' : 'معنويات الشعب انهارت والدولة طلبت هدنة.') : win ? 'إيران خسرت أغلب مدنها واستسلمت.' : 'العراق خسر أغلب مدنه.'}</p><p style="opacity:.75">${Math.round(WD.t / 24)} يوم حرب</p><button onclick="location.reload()" style="margin-top:10px;background:var(--gold);color:#221b0e;border-radius:12px;padding:10px 20px;font-weight:700">حرب جديدة</button></div>`;
 }
 function setSpeed(s) { SPEED = s; document.querySelectorAll('.spd button').forEach(b => b.classList.toggle('on', +b.dataset.s === s)); }
 document.querySelectorAll('.spd button').forEach(b => b.onclick = () => setSpeed(+b.dataset.s));
@@ -415,8 +446,8 @@ function armies() {
   el.querySelectorAll('[data-sel]').forEach(b => b.onclick = () => { const id = +b.dataset.sel; const ds = SIM.alive(WD).filter(d => d.army === id); SEL = new Set(ds.map(d => d.id)); SELB = -1; let x = 0, y = 0; ds.forEach(d => { x += cells[d.cell].c[0]; y += cells[d.cell].c[1]; }); if (ds.length) { cam.x = x / ds.length; cam.y = y / ds.length; cam.s = Math.min(cam.s, .9); } el.hidden = true; card(); });
   el.querySelectorAll('[data-st]').forEach(b => b.onclick = () => { const a = WD.armies[+b.dataset.st]; a.stance = a.stance === 'defend' ? 'auto' : 'defend'; toast(a.stance === 'defend' ? `🛡 ${a.n}: يمسك الجبهة وما يهاجم` : `🤖 ${a.n}: القائد يهاجم لما يشوف فرصة`); el.hidden = true; armies(); });
 }
-$('tabArmy').onclick = armies;
-document.querySelectorAll('#tabs [data-soon]').forEach(b => b.onclick = () => toast('🔜 هذا القسم بالخطوة الثالثة (الدولة والإنتاج من لعبتك)'));
+$('tabArmy').onclick = () => { $('sheet').hidden = true; SHEET = null; armies(); };
+document.querySelectorAll('#tabs [data-soon]').forEach(b => b.onclick = () => toast('🔜 هذا القسم بعدين (عالم أوسع، GW10)'));
 const KN = SIM.KIND_N;
 function card() {
   const ds = SIM.alive(WD).filter(d => SEL.has(d.id));
@@ -438,17 +469,17 @@ function card() {
   $('aAuto').onclick = () => { ds.forEach(d => d.mode = 'auto'); PICK = false; $('hint').hidden = true; toast('🤖 القائد يمسك الجبهة ويهاجم لما يشوف فرصة'); card(); };
   $('aX').onclick = () => { SEL.clear(); card(); };
 }
-const MK = { auto: '🤖 تلقائي', cas: '🎯 إسناد للقوات', cap: '🛡 حماية الأجواء', strike: '💥 ضرب دفاع جوي', recon: '📡 استطلاع', bridge: '🌉 ضرب جسر' };
+const MK = { auto: '🤖 تلقائي', cas: '🎯 إسناد للقوات', cap: '🛡 حماية الأجواء', strike: '💥 ضرب دفاع جوي', recon: '📡 استطلاع', bridge: '🌉 ضرب جسر', oil: '🛢 ضرب نفط' };
 function baseCard() {
   const b = AW.bases[SELB]; if (!b) return; const T = AIR.PLANES[b.type];
   const flying = AW.planes.filter(p => p.base === SELB).length;
   $('card').hidden = false;
   $('card').innerHTML = `<div class="ch"><span style="font-size:18px">✈</span><div><div class="t">${b.n}</div><div class="s">${b.n0} طيارة ${T.n} · جاهزة ${b.ready} · بالجو ${flying}${b.down ? ' · ⚠️ المدرج متضرر' : ''}</div></div><span class="x ${b.mission.kind === 'auto' ? 'auto' : 'manual'}">${MK[b.mission.kind]}</span></div>
   <div class="s" style="margin:6px 0 7px;font-size:11.5px;opacity:.8">${T.isr ? 'مسيّرة استطلاع: تطير عالي (5 كم) وبطيئة، تحوم فوق المنطقة وتكشف فرق العدو ~40 كم حولها. بدونها ما تشوف عمق العدو. الدفاع الجوي ومقاتلاتهم يقدرون يسقطونها.' : T.ag > 1 ? 'طيارة هجوم أرضي: تطير واطي تحت أفق الرادار، بس تنضرب من الدفاع المحمول فوق قوات العدو.' : 'مقاتلة: تحمي الأجواء وتسقط طيارات العدو، وتقدر تسند بقنابل موجهة من فوق.'}${T.isr ? '' : ' الطيارة العالية يشوفها S-300 من ~360 كم؛ الواطية (100 م) يشوفها من ~60 كم بس. اضغط أي بطارية تشوف شنو تقدر.'}</div>
-  ${T.isr ? `<div class="acts"><button class="go" id="bRec">📡 استطلاع هنا</button><button id="bAuto">🤖</button></div>` : `<div class="acts"><button class="go" id="bCas">🎯 إسناد</button><button id="bCap">🛡 حماية</button><button id="bStr">💥 دفاع</button><button id="bBr">🌉 جسر</button><button id="bAuto">🤖</button></div>`}`;
+  ${T.isr ? `<div class="acts"><button class="go" id="bRec">📡 استطلاع هنا</button><button id="bAuto">🤖</button></div>` : `<div class="acts"><button class="go" id="bCas">🎯 إسناد</button><button id="bCap">🛡 حماية</button><button id="bStr">💥 دفاع</button><button id="bBr">🌉 جسر</button><button id="bOil">🛢 نفط</button><button id="bAuto">🤖</button></div>`}`;
   const pick = (k, msg) => () => { PICK = k; $('hint').hidden = false; $('hint').textContent = msg; $('hint').style.top = (TOPH() + 8) + 'px'; };
   if (T.isr) $('bRec').onclick = pick('recon', 'اضغط المنطقة اللي تريد تعرف شنو بيها (المسيّرة تشوف ~40 كم حولها)');
-  else { $('bCas').onclick = pick('cas', 'اضغط المنطقة اللي تريد الطيارات تضرب بيها'); $('bCap').onclick = pick('cap', 'اضغط المنطقة اللي تريد تحمي أجواءها'); $('bStr').onclick = pick('strike', 'اضغط بطارية الدفاع الجوي الإيرانية'); $('bBr').onclick = pick('bridge', 'اضغط جسر (العلامات الصفرة) حتى تقطعه: إمداد العدو يمر منه'); }
+  else { $('bCas').onclick = pick('cas', 'اضغط المنطقة اللي تريد الطيارات تضرب بيها'); $('bCap').onclick = pick('cap', 'اضغط المنطقة اللي تريد تحمي أجواءها'); $('bStr').onclick = pick('strike', 'اضغط بطارية الدفاع الجوي الإيرانية'); $('bBr').onclick = pick('bridge', 'اضغط جسر (العلامات الصفرة) حتى تقطعه: إمداد العدو يمر منه'); $('bOil').onclick = pick('oil', 'اضغط حقل نفط أو ميناء إيراني 🛢 (المدى ~300 كم، وانتبه لدفاعهم الجوي)'); }
   $('bAuto').onclick = () => { b.mission = { kind: 'auto' }; toast('🤖 المطار يقرر بنفسه وين يضرب'); baseCard(); };
 }
 // GW5: بطاقة بطارية الدفاع الجوي — شنو تقدر تضرب بالواقع، كم مرة وحدة، كم صاروخ، والاحتمالات
@@ -489,6 +520,11 @@ function airOrder(x, y, wx, wy) {
     const bi = WD.bridges.findIndex(q => Math.hypot(w2s(...q.p)[0] - x, w2s(...q.p)[1] - y) < 26);
     if (bi < 0) { toast('❌ ما اكو جسر هنا (قرّب الخريطة تشوف الجسور)', 'bad'); return; }
     const br = WD.bridges[bi]; b.mission = { kind: 'bridge', p: br.p, br: bi }; toast(`🌉 ${b.n} راح تضرب جسر ${br.n}`); baseCard(); return;
+  }
+  if (k === 'oil') {
+    const oi = WD.oil.sites.findIndex(f => f.p && f.side !== ME && Math.hypot(w2s(...f.p)[0] - x, w2s(...f.p)[1] - y) < 26);
+    if (oi < 0) { toast('❌ ما اكو نفط إيراني هنا (العلامات 🛢 الحمرة)', 'bad'); return; }
+    const f = WD.oil.sites[oi]; b.mission = { kind: 'oil', p: f.p, oil: oi }; toast(`🛢 ${b.n} راح تضرب ${f.n} (~${Math.round(Math.hypot(f.p[0] - b.p[0], f.p[1] - b.p[1]))} كم)`); baseCard(); return;
   }
   if (k === 'strike') {
     const si = AW.sams.findIndex(q => q.side !== ME && Math.hypot(w2s(...q.p)[0] - x, w2s(...q.p)[1] - y) < 40);
@@ -568,6 +604,7 @@ function tap(x, y) {
   if (bi >= 0) { if (AW.bases[bi].side === ME) { SEL.clear(); SELB = bi; baseCard(); } else toast(`🇮🇷 مطار ${AW.bases[bi].n}: ${AW.bases[bi].n0} طيارة ${AIR.PLANES[AW.bases[bi].type].n}`); return; }
   const si = AW.sams.findIndex(q => { const [bx, by] = w2s(...q.p); return Math.hypot(bx - x, by - y) < 18; });
   if (si >= 0) { SEL.clear(); samCard(si); return; }
+  if (cam.s >= .4) { const oi = WD.oil.sites.findIndex(f => f.p && Math.hypot(w2s(...f.p)[0] - x, w2s(...f.p)[1] - y) < 14); if (oi >= 0) { const f = WD.oil.sites[oi]; toast(`🛢 ${f.n} (${f.side === ME ? 'إلنا' : 'إيران'}): ${f.term ? 'ميناء تصدير' : (f.out * 1000).toFixed(0) + ' ألف برميل/يوم'} · ${OILST[ECON.siteState(WD, f).k]}${f.dmg > 0 ? ' ' + Math.ceil(f.dmg / 24) + ' يوم' : ''}`); return; } }
   if (SELB !== -1) { SELB = -1; $('card').hidden = true; }
   // ضغط على معركة
   for (const b of WD.battles.values()) if (b.sx != null && Math.hypot(b.sx - x, b.sy - y) < 20) { battleCard(b); return; }
@@ -614,6 +651,86 @@ function battleInfo(b) {
   toast(`⚔ ${c.city || 'معركة'}: ${mine ? 'إحنا نهاجم' : 'إيران تهاجم'} (${b.na} ضد ${b.nd}) · ${win > .55 ? 'إحنا غالبين' : win < .45 ? 'إيران غالبة' : 'متعادلة'} · ${why.join('، ')}`);
 }
 
+// ===== GW8: الاقتصاد والإنتاج =====
+const OILST = { ok: '✅ شغال', risk: '⚠️ قرب الجبهة (ينتج أقل)', dmg: '🔥 مضروب', lost: '❌ بيد العدو' };
+const M$ = v => { const m = Math.round(v * 1000); return (m > 0 ? '+' : m < 0 ? '−' : '') + Math.abs(m) + ' م$'; };
+const B$ = v => (v < 0 ? '−' : '') + Math.abs(v).toFixed(1) + ' مليار $';
+let SHEET = null;
+function openSheet(fn) { const el = $('sheet'); if (!el.hidden && SHEET === fn) { el.hidden = true; SHEET = null; tabOn(0); return; } $('armies').hidden = true; SHEET = fn; fn(); el.hidden = false; }
+function tabOn(id) { document.querySelectorAll('#tabs button').forEach((b, i) => b.classList.toggle('on', id ? b.id === id : i === 0)); }
+function spark(hist, k, col, lo, hi) {
+  if (hist.length < 2) return '';
+  const xs = hist.map(h => h[k]); lo = Math.min(lo ?? Infinity, ...xs); hi = Math.max(hi ?? -Infinity, ...xs); if (hi - lo < 1e-6) hi = lo + 1;
+  const pts = xs.map((v, i) => `${(i / (xs.length - 1) * 100).toFixed(1)},${(28 - (v - lo) / (hi - lo) * 26).toFixed(1)}`).join(' ');
+  const z = lo < 0 && hi > 0 ? `<line x1="0" x2="100" y1="${(28 + lo / (hi - lo) * 26).toFixed(1)}" y2="${(28 + lo / (hi - lo) * 26).toFixed(1)}" stroke="rgba(255,255,255,.25)" stroke-dasharray="2 2" vector-effect="non-scaling-stroke"/>` : '';
+  return `<svg viewBox="0 0 100 30" preserveAspectRatio="none" style="width:100%;height:34px;display:block">${z}<polyline points="${pts}" fill="none" stroke="${col}" stroke-width="2" vector-effect="non-scaling-stroke"/></svg>`;
+}
+function ecoPanel(refresh) {
+  const el = $('sheet'), e = WD.eco[ME], B = e.last || ECON.budget(WD, AW, ME), L = ECON.LAND[ME], top = el.scrollTop;
+  const mine = WD.oil.sites.filter(f => f.side === ME), theirs = WD.oil.sites.filter(f => f.side !== ME && !f.off);
+  const pr = Object.entries(ECON.PRIO);
+  el.innerHTML = `<div class="eh"><b>💰 الاقتصاد</b><span class="dim">${WD.eco[ME].auto ? '🤖 الوزير يشتري' : '✋ انت تشتري'}</span><button class="x" id="shX">✕</button></div>
+  <div style="display:flex;align-items:baseline;gap:10px;margin-top:4px"><span class="big ${e.cash < 0 ? 'neg' : ''}">${B$(e.cash)}</span><span class="${B.net >= 0 ? 'pos' : 'neg'}" style="font-weight:700">${M$(B.net)} باليوم</span></div>
+  <div class="dim">${e.cash < -L.lim ? '💸 تجاوزنا حد الدين: الرواتب متأخرة والمعنويات تنزل بسرعة' : e.cash < 0 ? `🏦 بالدين (الحد ${L.lim} مليار). الدين ينقص المعنويات وعليه فائدة` : `تقدر تستدين لحد ${L.lim} مليار، بس الدين ينقص المعنويات`}</div>
+  ${e.hist.length > 2 ? `<div class="dim" style="margin-top:4px">الخزينة آخر ${e.hist.length} يوم (من ${B$(Math.min(...e.hist.map(h => h[1])))} لـ ${B$(Math.max(...e.hist.map(h => h[1])))})</div>${spark(e.hist, 1, '#e2b552')}` : ''}
+  <h3>الدخل والمصاريف باليوم</h3>
+  <table class="bt">
+    <tr><td>🛢 نفط: ${B.exp.toFixed(2)} مليون برميل × $${Math.round(B.price)}</td><td class="pos">${M$(B.oil)}</td></tr>
+    <tr><td>🧾 ضرائب ودخل ثاني</td><td class="pos">${M$(B.other)}</td></tr>
+    <tr><td>🏛 رواتب ومصاريف الدولة</td><td class="neg">${M$(-B.civ)}</td></tr>
+    <tr><td>🪖 الجيش (الفرق بالقتال تكلّف ×2.5)</td><td class="neg">${M$(-B.army)}</td></tr>
+    <tr><td>✈ الطلعات</td><td class="neg">${M$(-B.air)}</td></tr>
+    ${B.fix ? `<tr><td>🔧 تصليح حقول</td><td class="neg">${M$(-B.fix)}</td></tr>` : ''}${B.debt ? `<tr><td>🏦 فوائد الدين</td><td class="neg">${M$(-B.debt)}</td></tr>` : ''}
+  </table>
+  <div class="dim" style="margin-top:3px">سعر النفط $${Math.round(WD.oil.price)} (الحرب ترفعه، وكل ضربة على حقل تقفزه). المشتريات تنقص من الخزينة وقت الطلب (🏭 الإنتاج).</div>
+  <h3>أولوية الاقتصاد</h3>
+  <div class="seg">${pr.map(([k, p]) => `<button data-pr="${k}" class="${e.prio === k ? 'on' : ''}">${p.n}</button>`).join('')}</div>
+  <div class="dim" style="margin-top:3px">${ECON.PRIO[e.prio].d}${e.auto ? ' · الوزير يغيّرها لحاله' : ''}</div>
+  <h3>معنويات الشعب: ${Math.round(e.mor)} ${e.dm != null ? `<span class="${e.dm >= 0 ? 'pos' : 'neg'}" style="font-size:12px">(${e.dm >= 0 ? '+' : ''}${e.dm.toFixed(1)} اليوم)</span>` : ''}</h3>
+  <div class="bar" style="height:6px"><u style="width:${e.mor}%;background:${e.mor >= 50 ? '#59c26a' : e.mor >= 25 ? '#e2b552' : '#d9533f'}"></u></div>
+  ${e.morWhy.length ? `<div class="why">${e.morWhy.map(w => `<span class="${w[0] >= 0 ? 'pos' : 'neg'}">${w[0] >= 0 ? '+' : ''}${w[0].toFixed(1)} ${w[1]}</span>`).join('')}</div>` : ''}
+  <div class="dim" style="margin-top:3px">تنزل بخسارة المدن والفرق، والدين، وطول الحرب. تصعد بالانتصارات. تحت 50 الفرق ترتاح أبطأ، تحت 30 الإنتاج أبطأ، تحت 25 نستسلم أبكر، وبالصفر الدولة تنهار.</div>
+  <h3>نفطنا</h3>
+  ${mine.map(f => { const st = ECON.siteState(WD, f); return `<div class="oil" data-go="${WD.oil.sites.indexOf(f)}"><span>${f.term ? '⚓' : '🛢'}</span><span><b>${f.n}</b> <span class="dim">${OILST[st.k]}${f.dmg > 0 ? ' ' + Math.ceil(f.dmg / 24) + ' يوم' : ''}</span></span><span>${f.term ? (f.term === 'south' ? 'تصدير الجنوب' : '') : Math.round(f.out * st.f * 1000) + ' ألف ب/ي'}</span></div>`; }).join('')}
+  <div class="dim">حقول البصرة وميسان تتصدّر من موانئ الفاو: إذا انضربت أو انحتلت، أغلب فلوسنا تنقطع. كركوك تطلع بأنبوب جيهان.</div>
+  <h3>نفط إيران (اللي نعرفه)</h3>
+  ${theirs.map(f => { const st = ECON.siteState(WD, f); return `<div class="oil" data-go="${WD.oil.sites.indexOf(f)}"><span>${f.term ? '⚓' : '🛢'}</span><span><b>${f.n}</b> <span class="dim">${OILST[st.k]}${f.dmg > 0 ? ' ' + Math.ceil(f.dmg / 24) + ' يوم' : ''}</span></span><span>${f.term ? 'تصدير' : '~' + Math.round(f.out * 1000) + ' ألف'}</span></div>`; }).join('')}
+  <div class="dim">إيران تبيع نفطها بخصم (العقوبات) من جزيرة خرج. اضربها من بطاقة المطار «🛢 نفط». خزينتهم تقريباً ${Math.round(WD.eco[1].cash / 5) * 5} مليار، ومعنوياتهم ${WD.eco[1].mor > 55 ? 'عالية' : WD.eco[1].mor > 35 ? 'متوسطة' : 'نازلة'} (تقدير المخابرات).</div>`;
+  if (refresh) el.scrollTop = top;
+  $('shX').onclick = () => { el.hidden = true; SHEET = null; tabOn(0); };
+  el.querySelectorAll('[data-pr]').forEach(b => b.onclick = () => { e.prio = b.dataset.pr; if (e.auto) { e.auto = false; toast('✋ صرت انت تدير الاقتصاد (الوزير وقف)'); } toast(`⚙️ أولوية الاقتصاد: ${ECON.PRIO[e.prio].n}`); ecoPanel(true); });
+  el.querySelectorAll('[data-go]').forEach(b => b.onclick = () => { const f = WD.oil.sites[+b.dataset.go]; if (!f.p) return; cam.x = f.p[0]; cam.y = f.p[1]; cam.s = Math.max(cam.s, 1); el.hidden = true; SHEET = null; tabOn(0); });
+}
+function prodPanel(refresh) {
+  const el = $('sheet'), e = WD.eco[ME], top = el.scrollTop, P = ECON.PRIO[e.prio];
+  const sp = P.prod * (e.mor < 30 ? .75 : 1);
+  const its = ECON.itemsFor(ME), cat = c => its.filter(k => ECON.ITEMS[k].cat === c);
+  const miss = t => AW.bases.filter(b => b.side === ME && b.type === t).reduce((n, b) => n + b.max - b.n0, 0);
+  const btn = k => { const it = ECON.ITEMS[k], c = ECON.costOf(k, ME), d = ECON.daysOf(k, ME), err = ECON.canBuy(WD, ME, k);
+    const extra = it.cat === 'plane' ? `ناقص ${miss(it.plane)}` : it.cat === 'sam' ? `بالمخزن ${AW.pool[ME][it.pool] || 0}` : it.cat === 'line' ? `عندنا ${e.lines}` : '';
+    return `<button data-buy="${k}" ${err ? 'disabled' : ''}><b>${it.ic} ${it.n}</b><i>${c >= 1 ? c.toFixed(1) + ' مليار' : Math.round(c * 1000) + ' مليون'} $ · ${Math.round(d / sp)} يوم${extra ? ' · ' + extra : ''}</i></button>`; };
+  el.innerHTML = `<div class="eh"><b>🏭 الإنتاج والشراء</b><span class="dim">${B$(e.cash)}</span><button class="x" id="shX">✕</button></div>
+  <div class="dim">${e.lines} خطوط إنتاج: تشتغل على أول ${e.lines} طلبات، والباقي ينتظر. السرعة ×${sp.toFixed(2)} (${P.n}${e.mor < 30 ? '، والمعنويات نازلة' : ''}).</div>
+  <div class="seg" style="margin-top:6px"><button id="auto" class="${e.auto ? 'on' : ''}">🤖 الوزير يشتري لحاله</button><button id="man" class="${e.auto ? '' : 'on'}">✋ أنا أقرر</button></div>
+  <div class="dim" style="margin-top:3px">${e.auto ? 'الوزير يعوّض الفرق والطيارات والصواريخ اللي تخسرها، ويبني خطوط. تقدر تطلب انت هم.' : 'محد يشتري غيرك: إذا ما عوّضت الخسائر، الجيش يصغر.'}</div>
+  <h3>الطابور (${e.q.length})</h3>
+  ${e.q.length ? e.q.map((o, i) => { const it = ECON.ITEMS[o.k], act = i < e.lines; return `<div class="ord ${act ? '' : 'wait'}"><div class="h"><span>${it.ic}</span><b>${it.n}</b><span>${act ? 'باقي ~' + Math.max(1, Math.ceil(o.left / sp)) + ' يوم' : '⏳ ينتظر خط'}</span><button data-can="${o.id}" style="padding:0 6px">✕</button></div><div class="bar"><u style="width:${(1 - o.left / o.tot) * 100}%"></u></div></div>`; }).join('') : '<div class="dim">ما اكو طلبات. اختار من تحت.</div>'}
+  <h3>فرق جديدة</h3><div class="buy">${cat('div').map(btn).join('')}</div>
+  <div class="dim" style="margin:3px 0">الفرقة الجديدة تطلع بأكبر مدينة مزودة وتنضم لأقرب جيش. جيشنا هسه ${SIM.alive(WD).filter(d => d.side === ME).length} فرقة.</div>
+  <h3>طيارات</h3><div class="buy">${cat('plane').map(btn).join('')}</div>
+  <h3>صواريخ دفاع جوي (لمخزون البلد)</h3><div class="buy">${cat('sam').map(btn).join('')}</div>
+  <div class="dim" style="margin:3px 0">البطاريات تاخذ من مخزون البلد كل يوم (والبطارية اللي إلها ⭐ أولوية تاخذ أكثر).</div>
+  <h3>المصانع</h3><div class="buy">${cat('line').map(btn).join('')}</div>`;
+  if (refresh) el.scrollTop = top;
+  $('shX').onclick = () => { el.hidden = true; SHEET = null; tabOn(0); };
+  $('auto').onclick = () => { e.auto = true; toast('🤖 الوزير يدير الشراء والأولوية'); prodPanel(true); };
+  $('man').onclick = () => { e.auto = false; toast('✋ انت تقرر كل شراء'); prodPanel(true); };
+  el.querySelectorAll('[data-buy]').forEach(b => b.onclick = () => { const k = b.dataset.buy, r = ECON.buy(WD, ME, k); if (typeof r === 'string') toast('❌ ' + r, 'bad'); else { toast(`🏭 طلبنا ${ECON.ITEMS[k].n} (−${ECON.costOf(k, ME) >= 1 ? ECON.costOf(k, ME).toFixed(1) + ' مليار' : Math.round(ECON.costOf(k, ME) * 1000) + ' مليون'})`, 'good'); hud(); } prodPanel(true); });
+  el.querySelectorAll('[data-can]').forEach(b => b.onclick = () => { const back = ECON.cancel(WD, ME, +b.dataset.can); toast(`↩ ألغينا الطلب ورجع ${back >= 1 ? back.toFixed(1) + ' مليار' : Math.round(back * 1000) + ' مليون'}`); hud(); prodPanel(true); });
+}
+$('tabEco').onclick = () => { tabOn('tabEco'); openSheet(ecoPanel); };
+$('tabProd').onclick = () => { tabOn('tabProd'); openSheet(prodPanel); };
+
 // ===== GW7: الحفظ =====
 const gameDate = t => { const d = new Date(START.getTime() + t * 3600e3); return `${d.getDate()} ${AR_M[d.getMonth()]} ${d.getFullYear()} ${String(d.getHours()).padStart(2, '0')}:00`; };
 const SLOTN = ['حفظ تلقائي', 'خانة 1', 'خانة 2'];
@@ -659,7 +776,7 @@ function frame(now) {
   if (SPEED && !WD.over) {
     const tac = cam.s >= 1.7 && lastNb > 0; const want = tac ? Math.min(HPS[SPEED], TACR[SPEED]) : HPS[SPEED]; RATE += (want - RATE) * Math.min(1, dt * 2.5); if (Math.abs(RATE - want) < want * .02) RATE = want; $('rate').textContent = rateTxt(RATE);
     acc += dt * RATE; $('tac').hidden = !tac; if (tac) $('tac').textContent = `⏱ بطيء: قريب من المعركة (${rateTxt(RATE)})`;
-    let n = 0; while (acc >= 1 && n < 40) { if (WD.t % 6 === 0) { SIM.ai(WD, 1); SIM.ai(WD, ME); } SIM.step(WD); acc -= 1; n++; }
+    let n = 0; while (acc >= 1 && n < 40) { if (WD.t % 6 === 0) { SIM.ai(WD, 1); SIM.ai(WD, ME); } SIM.step(WD); if (WD.t % 24 === 0) { ECON.daily(WD, AW, SIM); if (!$('sheet').hidden) SHEET && SHEET(true); } acc -= 1; n++; }
     // الجو ويا الساعة، ومن تقرّب يبطأ أكثر حتى تشوف الإطلاق والمطاردة بعينك
     const af = Math.min(1.6, Math.max(.3, .25 * RATE * 3600 / 38)); AIR.step(AW, WD, SIM, dt * (cam.s >= 1.7 ? Math.min(af, .45) : af));
     for (const e of AW.ev) VIEW.airEvent(e, toast, ME); AW.ev.length = 0;
@@ -671,7 +788,7 @@ function frame(now) {
   smoothAll(dt); drawMapCached(); drawSky(dt);
   VIEW.gs = RATE * 3600; FX.update(SPEED && !WD.over ? dt : 0);
   VIEW.drawBases(SELB);
-  buildClusters(); drawPaths(); drawBridges(); FX.drawGround(); drawPlans();
+  buildClusters(); drawPaths(); drawBridges(); drawOil(); FX.drawGround(); drawPlans();
   const near = false; let nb = 0; // BV0: الخريطة بالمربعات بس؛ القتال الحقيقي بـ«مشهد المعركة»
   if (near) {
     const vis = SIM.alive(WD).filter(d => { const [x, y] = w2s(...divPos(d)); return x > -120 && x < W + 120 && y > -120 && y < H + 120; });
@@ -683,7 +800,7 @@ function frame(now) {
   requestAnimationFrame(frame);
 }
 // للفحص الآلي
-window.G_ = { WD, AW, SIM, cam, VIEW, FX, enterBattle, battleCard, armies, get SEL() { return SEL; }, sel: ids => { SEL = new Set(ids); card(); }, orderTo, setSpeed, tap, get clusters() { return clusters; } };
+window.G_ = { WD, AW, SIM, ECON, ecoPanel, prodPanel, cam, VIEW, FX, enterBattle, battleCard, armies, get SEL() { return SEL; }, sel: ids => { SEL = new Set(ids); card(); }, orderTo, setSpeed, tap, get clusters() { return clusters; } };
 Promise.all(['base_me', 'base_south', 'abrams', 'abrams_t', 't72', 't72_t', 'bmp', 'grad', 'truck', 'f16', 'su25', 'f14', 'patriot', 's400', 'zolf', 'fx_explo1', 'fx_explo2', 'fx_fire', 'fx_cloud', 'f16_sheet', 'su25_sheet', 'f14_sheet', ...['aerial_sand', 'dirt_aerial_02', 'rocky_terrain_02', 'aerial_mud_1', 'aerial_asphalt_01', 'aerial_grass_rock', 'palm', 'tree', 'acacia', 'h1', 'h2', 'h3', 'h4'].map(n => 'bv/' + n)].map(load)).then(() => {
   // تسخين: نرسم كل صورة مرة بلوحة صغيرة وقت التحميل، حتى أول ظهور للطيارة ما يقطّع (فك الصورة ياخذ ~0.3 ث على التلفون)
   { const wc = document.createElement('canvas'); wc.width = wc.height = 4; const wx = wc.getContext('2d'); for (const k in IMG) if (IMG[k].width) wx.drawImage(IMG[k], 0, 0, 4, 4); }

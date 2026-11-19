@@ -21,6 +21,8 @@
     marsh: { atk: .55, spd: .4, w: 2, armor: .55, n: 'أهوار' }, city: { atk: .7, spd: .8, w: 3, armor: .65, n: 'مدينة' },
   };
   const RIVER_ATK = .7, RIVER_SPD = .6;
+  // GW8: معنويات الشعب تحت 50 = التنظيم يرجع أبطأ بالراحة
+  const morF = (W, s) => !W.eco ? 1 : W.eco[s].mor >= 50 ? 1 : .6 + .4 * W.eco[s].mor / 50;
   const K_ORG = 1.0, K_STR = .0035;
 
   // مولّد أرقام عشوائية بحالة تنحفظ (GW7): نفس الحالة = نفس الحرب بالضبط بعد التحميل
@@ -197,7 +199,7 @@
       if (d.dead) continue;
       if (!d.path.length) { // راحة: تنظيم وتحصين وتعويض
         d.ent = Math.min(1, d.ent + 1 / 96);
-        if (W.t - d.lastFight > 6 && W.sup[d.side][d.cell]) { d.org = Math.min(d.orgMax, d.org + d.orgMax / 40); d.str = Math.min(1, d.str + .0012); }
+        if (W.t - d.lastFight > 6 && W.sup[d.side][d.cell]) { d.org = Math.min(d.orgMax, d.org + d.orgMax / 40 * morF(W, d.side)); d.str = Math.min(1, d.str + .0012); }
         if (!W.sup[d.side][d.cell]) { d.str = Math.max(.05, d.str - .0008); d.org = Math.max(0, Math.min(d.org, d.orgMax * .5)); }
         continue;
       }
@@ -226,13 +228,15 @@
     for (const s of [0, 1]) {
       const n = alive(W).filter(d => d.side === s).length;
       W.mob = W.mob || [0, 0]; W.ob = W.ob || [n, n];
-      if (n < W.ob[s] && W.t - W.mob[s] >= 24 * 8) {
+      if (!W.eco && n < W.ob[s] && W.t - W.mob[s] >= 24 * 8) { // GW8: مع الاقتصاد الفرق الجديدة تنشترى (econ.js)
         let best = -1, bv = -1; W.cells.forEach((c, i) => { if (W.ctrl[i] === s && c.s === s && W.sup[s][i] && (c.vp || 0) > bv) { bv = c.vp || 0; best = i; } });
         if (best >= 0) { W.mob[s] = W.t; W.num = W.num || [100, 200]; const d = addDiv(W, s, 'inf', best, W.num[s]++); d.org = d.orgMax * .5; d.str = .7; joinArmy(W, d); W.log.push({ t: W.t, side: s, k: 'mob', div: d.n, cell: best }); }
       }
       // استسلام: إذا الدولة خسرت 70% من نقاط مدنها
       const own = W.cells.reduce((v, c, i) => v + (c.s === s && W.ctrl[i] === s ? (c.vp || 0) : 0), 0);
-      if (!W.over && own <= W.vpTotal[s] * .3) { W.over = { t: W.t, loser: s }; W.log.push({ t: W.t, side: s, k: 'capitulate' }); }
+      // GW8: الشعب المنهار (معنويات تحت 25) يستسلم أبكر، وإذا وصلت صفر الدولة تنهار
+      const mor = W.eco ? W.eco[s].mor : 50;
+      if (!W.over && (own <= W.vpTotal[s] * (mor < 25 ? .45 : .3) || mor <= 0)) { W.over = { t: W.t, loser: s, why: mor <= 0 ? 'mor' : 'vp' }; W.log.push({ t: W.t, side: s, k: 'capitulate', why: W.over.why }); }
     }
   }
   function retreat(W, d, byCell) {

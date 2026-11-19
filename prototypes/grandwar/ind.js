@@ -37,6 +37,14 @@
     tr: { n: 'نقل وطرق', ic: '🛣', d: 'كل مستوى: الإمداد يوصل أبعد +1، والجسور تتصلح أسرع +20٪' },
   };
   const secCost = l => +(.8 * (l + 1)).toFixed(1), SEC_DAYS = 20;
+  // C9: مشاريع كبرى حربية (واحد بالمرة)
+  const MEGA = {
+    pipe: { n: '🛢 أنابيب وموانئ بديلة', cost: 6, days: 45, d: 'توسيع أنبوب جيهان وخط البصرة–العقبة: إذا هرمز انغلق أو الفاو انضربت يطلع 40٪ من نفط الجنوب بدل 5٪' },
+    fort: { n: '🛡 تحصين المدن والملاجئ', cost: 4, days: 30, d: 'ضربات إيران على مدننا وقواتنا بالمدن أضعف 25٪، والمعنويات أثبت' },
+    radar: { n: '📡 رادار إنذار مبكر', cost: 3, days: 30, d: 'دفاعنا الجوي أدق +6٪ ويشوف الضربات أبكر' },
+  };
+  function megaGo(W, s, k) { const I = W.ind[s]; I.mega = I.mega || {}; const M = MEGA[k]; if (!M) return 'غلط'; if (I.mega[k]) return 'مكتمل'; if (I.megaRun) return 'اكو مشروع كبير شغال';
+    const e = W.eco[s]; if (e.cash - M.cost < -5) return 'الفلوس ما تكفي'; e.cash -= M.cost; I.megaRun = { k, left: M.days }; W.log.push({ t: W.t, side: s, k: 'megago', m: k }); return { ok: true }; }
 
   function init(W) {
     W.ind = [0, 1].map(s => ({ tech: { ...START[s] }, rb: s ? 'msl' : 'arm', rp: 0, bud: s ? 2 : 1, nat: { st: 0, run: null, name: s ? 'كرار' : '', col: '#5a7d3a' }, sec: { war: 0, oil: 0, tr: 0 }, secRun: null }));
@@ -47,8 +55,9 @@
   // آثار يقراها sim/air/econ (أرقام بسيطة على W)
   function effects(W) {
     W.indF = [0, 1].map(s => { const I = W.ind[s], t = I.tech, g = k => Math.max(0, t[k] - START[s][k]);
-      return { armAtk: 1 + .03 * g('arm') + (I.nat.st >= 2 ? .05 : 0) + (I.nat.st >= 3 ? .05 : 0), eye: 1 + .1 * g('uav'), samPk: 1 + .03 * g('msl'), ewDef: 1 - .05 * g('ew'),
-        prod: (1 + .08 * g('ind')) * (1 + .06 * I.sec.war), locCost: 1 - .05 * g('ind'), oil: 1 + .03 * I.sec.oil, fix: 1 + .2 * I.sec.oil, sup: I.sec.tr, br: 1 + .2 * I.sec.tr, exp: I.nat.st >= 4 ? .02 : 0 }; });
+      const mg = I.mega || {};
+      return { armAtk: 1 + .03 * g('arm') + (I.nat.st >= 2 ? .05 : 0) + (I.nat.st >= 3 ? .05 : 0), eye: 1 + .1 * g('uav'), samPk: (1 + .03 * g('msl')) * (mg.radar ? 1.06 : 1), ewDef: 1 - .05 * g('ew'),
+        prod: (1 + .08 * g('ind')) * (1 + .06 * I.sec.war), pipe: !!(I.mega && I.mega.pipe), fort: I.mega && I.mega.fort ? .75 : 1, locCost: 1 - .05 * g('ind'), oil: 1 + .03 * I.sec.oil, fix: 1 + .2 * I.sec.oil, sup: I.sec.tr, br: 1 + .2 * I.sec.tr, exp: I.nat.st >= 4 ? .02 : 0 }; });
   }
   // البحث: تبدّل الفرع (النقاط تبقى للفرع الجديد بنص قيمتها) والميزانية
   function setBranch(W, s, b) { const I = W.ind[s]; if (I.rb === b || !BR[b]) return; I.rp *= .5; I.rb = b; }
@@ -70,6 +79,7 @@
       if (I.nat.run && --I.nat.run.left <= 0) { I.nat.run = null; I.nat.st++; W.log.push({ t: W.t, side: s, k: 'nat', st: I.nat.st }); }
       if (I.secRun && --I.secRun.left <= 0) { const k = I.secRun.k; I.sec[k]++; I.secRun = null; if (k === 'war' && I.sec.war % 2 === 0 && e) e.lines++; W.log.push({ t: W.t, side: s, k: 'sec', sec: k, l: I.sec[k] }); }
       if (e && I.nat.st >= 4) e.cash += .02;
+      if (I.megaRun && --I.megaRun.left <= 0) { I.mega = I.mega || {}; I.mega[I.megaRun.k] = 1; W.log.push({ t: W.t, side: s, k: 'mega', m: I.megaRun.k }); I.megaRun = null; }
     }
     // ذكاء إيران: ميزانية متوسطة، يبدّل للفرع الأضعف، ويطوّر صناعة حربية إذا عنده فلوس
     const J = W.ind[1]; if (J.tech[J.rb] >= 5) setBranch(W, 1, BRK.sort((a, c) => J.tech[a] - J.tech[c])[0]);
@@ -80,6 +90,6 @@
   }
   // المنتجات المحلية تنضاف لكتالوج الاقتصاد
   function register(ECON) { for (const k in LOCAL) ECON.ITEMS[k] = LOCAL[k]; }
-  const API = { register, BR, BRK, START, BUD, need, LOCAL, NAT, SEC, secCost, SEC_DAYS, init, ensure, has, effects, setBranch, setBudget, natGo, secGo, daily };
+  const API = { MEGA, megaGo, register, BR, BRK, START, BUD, need, LOCAL, NAT, SEC, secCost, SEC_DAYS, init, ensure, has, effects, setBranch, setBudget, natGo, secGo, daily };
   if (typeof module !== 'undefined') module.exports = API; else root.IND = API;
 })(this);

@@ -496,6 +496,7 @@ function events() {
     if (l.k === 'dip') dipToast(l);
     if (l.k === 'home') { if (l.a === 'issue') toast(`🏛 قضية: ${HOME.ISS[l.i].t}`, 'bad'); if (l.a === 'milhit') toast(`🏴 فصائل زعلانة قصفت ${l.n}: المدرج متعطل`, 'bad'); if (l.a === 'auto') toast(`🏛 المستشارين حلّوا «${HOME.ISS[l.i].t}» لحالهم`);
       if (l.a === 'warn') toast({ coup: `⚠️ الجيش زعلان كلش: انقلاب بعد ${l.left} يوم إذا ما تصلّح`, rev: `⚠️ الاستقرار منهار: ثورة بعد ${l.left} يوم`, bank: `⚠️ الدولة على حافة الإفلاس: ${l.left} يوم` }[l.w], 'bad'); }
+    if (l.k === 'mega' && mine) toast(`🏗 خلص المشروع: ${IND.MEGA[l.m].n}`, 'good');
     if (l.k === 'tech' && mine) toast(`🔬 البحث: ${IND.BR[l.b].n} وصل مستوى ${l.l}`, 'good');
     if (l.k === 'nat' && mine) toast(`🇮🇶 السلاح الوطني: خلصت مرحلة «${IND.NAT[l.st - 1].n}»`, 'good');
     if (l.k === 'sec' && mine) toast(`🏗 قطاع ${IND.SEC[l.sec].n} وصل مستوى ${l.l}`, 'good');
@@ -918,7 +919,13 @@ function ecoPanel(refresh) {
   <div class="dim" style="margin-top:3px">سعر النفط $${Math.round(WD.oil.price)} (الحرب ترفعه، وكل ضربة على حقل تقفزه). المشتريات تنقص من الخزينة وقت الطلب (🏭 الإنتاج).</div>
   <h3>أولوية الاقتصاد</h3>
   <div class="seg">${pr.map(([k, p]) => `<button data-pr="${k}" class="${e.prio === k ? 'on' : ''}">${p.n}</button>`).join('')}</div>
-  <div class="dim" style="margin-top:3px">${ECON.PRIO[e.prio].d}${e.auto ? ' · الوزير يغيّرها لحاله' : ''}</div></section>
+  <div class="dim" style="margin-top:3px">${ECON.PRIO[e.prio].d}${e.auto ? ' · الوزير يغيّرها لحاله' : ''}</div>
+  <h3>🎛 أدوات الميزانية</h3>
+  <div class="dim">رواتب وخدمات الدولة</div><div class="seg">${[['cut', 'تقشف −15٪'], ['norm', 'عادي'], ['more', 'زيادة +10٪']].map(([k, n]) => `<button data-civ="${k}" class="${(e.civL || 'norm') === k ? 'on' : ''}">${n}</button>`).join('')}</div>
+  <div class="dim" style="margin-top:6px">جاهزية الطيران (طلعات أكثر = كلفة أكثر)</div><div class="seg">${[['low', 'منخفضة'], ['norm', 'عادية'], ['high', 'عالية']].map(([k, n]) => `<button data-air="${k}" class="${(e.airL || 'norm') === k ? 'on' : ''}">${n}</button>`).join('')}</div>
+  <div class="ezr"><span><b>⛽ دعم الوقود والكهرباء</b><br><small class="dim">20 مليون باليوم: الشارع والمعنويات أحسن</small></span><button data-tg="fuel" class="${e.fuel ? 'on' : ''}">${e.fuel ? 'شغّال' : 'مطفي'}</button></div>
+  <div class="ezr"><span><b>🪖 التعبئة العامة</b><br><small class="dim">فرق المشاة أرخص وأسرع ×0.6، بس الدخل غير النفطي ×0.9 والمعنويات تنزل</small></span><button data-tg="mob" class="${e.mob ? 'on' : ''}">${e.mob ? 'شغّالة' : 'مطفية'}</button></div>
+  <div class="ezr"><span><b>🏦 السحب من احتياطي البنك المركزي</b><br><small class="dim">+12 مليار مرة وحدة، بس تضخم: المعنويات −4 ورجال الأعمال −10</small></span><button id="cbBtn" ${e.cb ? 'disabled' : ''}>${e.cb ? 'انسحب' : 'اسحب'}</button></div></section>
   <section data-s="mor"><h3>معنويات الشعب: ${Math.round(e.mor)} ${e.dm != null ? `<span class="${e.dm >= 0 ? 'pos' : 'neg'}" style="font-size:12px">(${e.dm >= 0 ? '+' : ''}${e.dm.toFixed(1)} اليوم)</span>` : ''}</h3>
   <div class="bar" style="height:6px"><u style="width:${e.mor}%;background:${e.mor >= 50 ? 'var(--pos-s)' : e.mor >= 25 ? 'var(--gold)' : 'var(--neg-s)'}"></u></div>
   ${e.morWhy.length ? `<div class="why">${e.morWhy.map(w => `<span class="${w[0] >= 0 ? 'pos' : 'neg'}">${w[0] >= 0 ? '+' : ''}${w[0].toFixed(1)} ${w[1]}</span>`).join('')}</div>` : ''}
@@ -937,6 +944,10 @@ function ecoPanel(refresh) {
   ${theirs.map(f => { const st = ECON.siteState(WD, f); return `<div class="oil" data-go="${WD.oil.sites.indexOf(f)}"><span>${f.term ? '⚓' : '🛢'}</span><span><b>${f.n}</b> <span class="dim">${OILST[st.k]}${f.dmg > 0 ? ' ' + Math.ceil(f.dmg / 24) + ' يوم' : ''}</span></span><span>${f.term ? 'تصدير' : '~' + Math.round(f.out * 1000) + ' ألف'}</span></div>`; }).join('')}
   <div class="dim">إيران تبيع نفطها بخصم (العقوبات) من جزيرة خرج. اضربها من بطاقة المطار «🛢 نفط». خزينتهم تقريباً ${Math.round(WD.eco[1].cash / 5) * 5} مليار، ومعنوياتهم ${WD.eco[1].mor > 55 ? 'عالية' : WD.eco[1].mor > 35 ? 'متوسطة' : 'نازلة'} (تقدير المخابرات).</div></section>`;
   subApply(el, 'eco', SUBS); if (refresh) el.scrollTop = top;
+  el.querySelectorAll('[data-civ]').forEach(b => b.onclick = () => { e.civL = b.dataset.civ; ecoPanel(true); });
+  el.querySelectorAll('[data-air]').forEach(b => b.onclick = () => { e.airL = b.dataset.air; ecoPanel(true); });
+  el.querySelectorAll('[data-tg]').forEach(b => b.onclick = () => { e[b.dataset.tg] = !e[b.dataset.tg]; toast(`${b.dataset.tg === 'fuel' ? '⛽ دعم الوقود' : '🪖 التعبئة العامة'}: ${e[b.dataset.tg] ? 'شغّال' : 'مطفي'}`); ecoPanel(true); });
+  if ($('cbBtn') && !e.cb) { const b = $('cbBtn'); b.onclick = () => { if (!b.dataset.arm) { b.dataset.arm = 1; b.textContent = 'متأكد؟'; return; } ECON.cbDraw(WD, ME); toast('🏦 سحبنا 12 مليار من الاحتياطي', 'good'); hud(); ecoPanel(true); }; }
   el.querySelectorAll('[data-iss]').forEach(b => b.onclick = () => { const [i, j] = b.dataset.iss.split(':').map(Number); const r = HOME.choose(WD, i, j); toast(`🏛 قررنا: ${r}`, 'good'); hud(); advRefresh(); ecoPanel(true); });
   el.querySelectorAll('[data-pr]').forEach(b => b.onclick = () => { e.prio = b.dataset.pr; if (e.auto) { e.auto = false; toast('✋ صرت انت تدير الاقتصاد (الوزير وقف)'); } toast(`⚙️ أولوية الاقتصاد: ${ECON.PRIO[e.prio].n}`); ecoPanel(true); });
   el.querySelectorAll('[data-go]').forEach(b => b.onclick = () => { const f = WD.oil.sites[+b.dataset.go]; if (!f.p) return; cam.x = f.p[0]; cam.y = f.p[1]; cam.s = Math.max(cam.s, 1); closeSheet(); });
@@ -972,6 +983,7 @@ function prodPanel(refresh) {
   <div class="dim">${IND.NAT.map((x, i) => `${i < N.st ? '✅' : i === N.st ? '▶' : '·'} ${x.n}: ${x.d}`).join('<br>')}</div>
   ${N.run ? `<div class="dim">⏳ «${nx.n}» باقي ${N.run.left} يوم</div>` : nx ? `<div class="acts" style="margin-top:6px"><button class="go" id="natGo">ابدأ «${nx.n}» (${nx.cost} مليار، ${nx.days} يوم، بحث ${nx.req}+)</button></div>` : ''}
   ${N.st >= 2 ? `<div style="display:flex;gap:6px;margin-top:6px;align-items:center"><input id="natName" maxlength="16" placeholder="اسم السلاح" value="${(N.name || '').replace(/"/g, '')}" style="flex:1;min-height:38px;border-radius:9px;border:1px solid var(--line);background:var(--chip);color:var(--ink);padding:0 10px;font:inherit"><input id="natCol" type="color" value="${N.col}" style="width:44px;height:38px;border:0;background:none"><button id="natSave" style="min-height:38px;padding:0 12px;border-radius:9px;background:var(--gold);color:var(--brass-ink);font-weight:700">احفظ</button></div>` : '<div class="dim">التسمية واللون من المرحلة 3 (تصميم وطني)</div>'}</div>
+  <h3>🏗 مشاريع كبرى</h3>${Object.entries(IND.MEGA).map(([k, M]) => { const done = I.mega && I.mega[k], run = I.megaRun && I.megaRun.k === k; return `<div class="ctry"><div class="h"><b>${M.n}</b><span class="st ${done ? 'a0' : ''}">${done ? 'مكتمل ✓' : run ? 'باقي ' + I.megaRun.left + ' يوم' : M.cost + ' مليار · ' + M.days + ' يوم'}</span></div><div class="dim">${M.d}</div>${done || run ? '' : `<div class="acts" style="margin-top:4px"><button data-mega="${k}" ${I.megaRun ? 'disabled' : ''}>ابدأ المشروع</button></div>`}</div>`; }).join('')}
   <h3>🏗 القطاعات</h3>${Object.entries(IND.SEC).map(([k, S]) => `<div class="ctry"><div class="h"><span style="font-size:18px">${S.ic}</span><b>${S.n}</b><span class="st">${I.sec[k]}/5</span></div><div class="dim">${S.d}</div>
     ${I.secRun && I.secRun.k === k ? `<div class="dim">⏳ يتطوّر: باقي ${I.secRun.left} يوم</div>` : I.sec[k] < 5 ? `<div class="acts" style="margin-top:4px"><button data-sec="${k}" ${I.secRun ? 'disabled' : ''}>طوّر (${IND.secCost(I.sec[k])} مليار، ${IND.SEC_DAYS} يوم)</button></div>` : ''}</div>`).join('')}`; })()}</section>
   <section data-s="sup"><div class="dim" style="margin-top:6px">سلاحنا من برّا: إذا العلاقة ويا المورّد نزلت، قطع الغيار تقل: الشراء يغلى ويبطأ (أو يوقف)، الطيارات تنحبس بالأرض، والفرق تتعوض أبطأ. حسّن العلاقة من 🤝 السياسة، أو اصنع محلي.</div>
@@ -983,6 +995,7 @@ function prodPanel(refresh) {
   const I = WD.ind[ME], R = (r, ok) => { if (typeof r === 'string') toast('❌ ' + r, 'bad'); else toast(ok, 'good'); hud(); prodPanel(true); };
   el.querySelectorAll('[data-bud]').forEach(b => b.onclick = () => { IND.setBudget(WD, ME, +b.dataset.bud); prodPanel(true); });
   el.querySelectorAll('[data-rb]').forEach(b => b.onclick = () => { IND.setBranch(WD, ME, b.dataset.rb); toast(`🔬 البحث هسه على ${IND.BR[b.dataset.rb].n}`); prodPanel(true); });
+  el.querySelectorAll('[data-mega]').forEach(b => b.onclick = () => R(IND.megaGo(WD, ME, b.dataset.mega), `🏗 بدينا «${IND.MEGA[b.dataset.mega].n}»`));
   el.querySelectorAll('[data-sec]').forEach(b => b.onclick = () => R(IND.secGo(WD, ME, b.dataset.sec), `🏗 بدينا نطوّر ${IND.SEC[b.dataset.sec].n}`));
   if ($('natGo')) $('natGo').onclick = () => R(IND.natGo(WD, ME), '🇮🇶 بدت مرحلة جديدة بالسلاح الوطني');
   if ($('natSave')) $('natSave').onclick = () => { I.nat.name = $('natName').value.trim().slice(0, 16); I.nat.col = $('natCol').value; toast(`🇮🇶 سمّينا سلاحنا الوطني «${I.nat.name || '—'}»`, 'good'); prodPanel(true); };
@@ -1015,6 +1028,8 @@ function dipToast(l) {
   if (l.a === 'truce') toast('🕊 هدنة 7 أيام: القتال وقف', 'good');
   if (l.a === 'truceend') toast('⚔ الهدنة خلصت، والحرب رجعت', 'bad');
   if (l.a === 'offer') toast('✉️ إيران بعثت عرض: افتح 🤝 السياسة');
+  if (l.a === 'spyok' && mine) toast(`🕵 نجحت: ${DIP.OPS[l.op].n}`, 'good');
+  if (l.a === 'spyno' && mine) toast(`🕵 فشلت وانكشفت: ${DIP.OPS[l.op].n}`, 'bad');
   if (l.a === 'hzwarn') toast('⚓ إيران تهدد تغلق مضيق هرمز خلال يومين!', 'bad');
   if (l.a === 'hzclose') toast('⚓⛔ إيران أغلقت مضيق هرمز: صادرات البصرة توقفت، والنفط قفز', 'bad');
   if (l.a === 'hzopen') toast(l.how === 'us' ? '⚓✅ البحرية الأمريكية فتحت مضيق هرمز' : l.how === 'truce' ? '⚓ هرمز انفتح ويا الهدنة' : '⚓ إيران فتحت مضيق هرمز', 'good');
@@ -1051,7 +1066,7 @@ function dipPanel(refresh) {
   const stN = c => c.st === 'ally0' ? '⚔ ويانا بالحرب' : c.st === 'ally1' ? '⚔ ويا إيران' : c.rel[0] >= 60 ? 'صديقة' : c.rel[1] >= 60 ? 'صديقة إيران' : c.rel[0] <= -40 ? 'عدائية' : 'محايدة';
   const cdTxt = (id, a) => { const h = DIP.cdLeft(WD, ME, id, a); return h ? ` (${Math.ceil(h / 24)}ي)` : ''; };
   const trm = k => { const T = DIP.TERMS[k], v = DIP.verdict(WD, 1, k, !!med); return `<div class="trm"><span><b>${T.n}</b></span><button data-pr="${k}" ${D.truce > WD.t && k === 'truce' ? 'disabled' : ''}>اعرض</button><span class="dim">${T.d} · <b class="${v.m >= 0 ? 'pos' : 'neg'}">إيران: ${DIP.guess(v)}</b></span></div>`; };
-  const SUBS = [['war', '🕊 الحرب والسلام', D.offer ? '!' : 0], ['ctry', '🌍 الدول']];
+  const SUBS = [['war', '🕊 الحرب والسلام', D.offer ? '!' : 0], ['ctry', '🌍 الدول'], ['spy', '🕵 المخابرات']];
   el.innerHTML = `${GRAB}<div class="eh"><b>🤝 السياسة والعالم</b><button class="x" id="shX" aria-label="سكّر">✕</button></div>
   ${subBar('dip', SUBS)}<section data-s="war">
   ${D.offer ? `<div class="ctry" style="border-color:var(--gold)"><b>✉️ عرض من إيران:</b> ${DIP.TERMS[D.offer.k].n}<div class="acts"><button class="go" id="oY">✅ نقبل</button><button id="oN">❌ نرفض</button></div></div>` : ''}
@@ -1068,6 +1083,9 @@ function dipPanel(refresh) {
   <div class="dim">${med ? `🕊 الوسيط: ${CN(med.id)} (يزيد فرصة القبول)` : 'ما اكو وسيط هسه: قطر أو تركيا أو باكستان تتوسط إذا علاقتها 30+ ويا الطرفين'}${D.peaceCd > WD.t ? ` · رفضوا قريب، انتظر ${Math.ceil((D.peaceCd - WD.t) / 24)} يوم` : ''}</div>
   ${['truce', 'sq', 'keep', 'rep'].map(trm).join('')}
   ${D.inbound.filter(q => q.s === ME).length ? `<h3>جاي بالطريق</h3>${D.inbound.filter(q => q.s === ME).map(q => `<div class="oil"><span>${DIP.BY[q.id].f}</span><span>${PKG(q.pkg)}${q.pkg.startsWith('div:') ? ' ' + SIM.KIND_N[q.pkg.slice(4)] : ''}</span><span>${Math.max(1, Math.ceil((q.at - WD.t) / 24))} يوم</span></div>`).join('')}` : ''}
+  </section><section data-s="spy"><div class="dim" style="margin-top:6px">عمليات سرية ضد إيران. كل وحدة بكلفة ونسبة نجاح (تزيد بالبحث)، وبينهن 7 أيام. الفشل ينكشف: معنوياتنا −1، وروسيا والصين يزعلون.${(D.opCd || 0) > WD.t ? ` <b class="neg">المخابرات مشغولة ${Math.ceil((D.opCd - WD.t) / 24)} يوم</b>` : ''}</div>
+  ${Object.entries(DIP.OPS).map(([k, O]) => `<div class="ctry"><div class="h"><b>${O.n}</b><span class="st">${Math.round(DIP.opP(WD, ME, k) * 100)}٪ · ${Math.round(O.c * 1000)} مليون</span></div><div class="dim">${O.d}</div><div class="acts" style="margin-top:4px"><button data-op="${k}" ${(D.opCd || 0) > WD.t ? 'disabled' : ''}>نفّذ</button></div></div>`).join('')}
+  ${D.reveal > WD.t ? `<div class="adv"><span>🛰 كاشفين جيش إيران كله: باقي ${Math.ceil(D.reveal - WD.t)} ساعة</span></div>` : ''}
   </section><section data-s="ctry">
   <div class="dim" style="margin-top:6px">🤝 بعثة: ${Math.round(DIP.C_MISSION * 1000)} مليون، والعلاقة +6–11 (كل أسبوع). 📦 مساعدة: تنجح أكثر كل ما العلاقة أعلى (فوق 25). ⚔ تحالف: لازم علاقة عالية كلش.${DIP.truce(WD) ? '' : ''}</div>
   ${DIP.COUNTRIES.map(C => { const c = D.c[C.id], st = c.st;
@@ -1077,6 +1095,7 @@ function dipPanel(refresh) {
     ${st === 'ally1' ? '' : `<div class="acts"><button data-m="${C.id}">🤝 بعثة${cdTxt(C.id, 'm')}</button>${C.will !== 'none' && C.aid && C.aid[0].length ? `<button data-a="${C.id}">📦 مساعدة ${cdTxt(C.id, 'a') || Math.round(DIP.aidP(WD, ME, C.id) * 100) + '٪'}</button>` : ''}${C.join && st === 'neutral' ? `<button data-j="${C.id}">⚔ تحالف (${C.join}+)${cdTxt(C.id, 'j')}</button>` : ''}${C.sanc ? `<button data-s="${C.id}">🚫 عقوبات${D.sanc > WD.t ? ' ✓' : cdTxt(C.id, 's')}</button>` : ''}</div>`}</div>`; }).join('')}</section>`;
   subApply(el, 'dip', SUBS); if (refresh) el.scrollTop = top;
   const res = (r, ok, no) => { if (typeof r === 'string') toast('❌ ' + r, 'bad'); else toast(r.ok === false ? no(r) : ok(r), r.ok === false ? 'bad' : 'good'); events(); hud(); dipPanel(true); };
+  el.querySelectorAll('[data-op]').forEach(b => b.onclick = () => res(DIP.spy(WD, ME, b.dataset.op, ECON), () => `🕵 العملية نجحت: ${DIP.OPS[b.dataset.op].n}`, r => `🕵 العملية فشلت وانكشفت (الفرصة كانت ${Math.round(r.p * 100)}٪)`));
   if ($('hzAsk')) $('hzAsk').onclick = () => res(DIP.askHz(WD, ME), () => '⚓ أمريكا وافقت على عملية فتح هرمز', r => `أمريكا ما وافقت (الفرصة ${Math.round(r.p * 100)}٪)`);
   if ($('oY')) { $('oY').onclick = () => { DIP.answerOffer(WD, true); events(); if (!WD.over) dipPanel(true); }; $('oN').onclick = () => { DIP.answerOffer(WD, false); toast('⚔ رفضنا العرض'); dipPanel(true); }; }
   el.querySelectorAll('[data-m]').forEach(b => b.onclick = () => res(DIP.mission(WD, ME, b.dataset.m), r => `🤝 ${CN(b.dataset.m)}: العلاقة +${r.dv}`));

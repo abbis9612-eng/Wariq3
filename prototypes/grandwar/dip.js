@@ -205,6 +205,25 @@
     else if (w1 > .6 && W.rnd() < .3) { D.offer = { k: 'truce', t: W.t }; say(W, { side: 1, a: 'offer', k: 'truce' }); }
     else if (w0 > 1 && vpOf(W).held[1] > 0 && W.rnd() < .4) { D.offer = { k: 'keep', t: W.t }; say(W, { side: 1, a: 'offer', k: 'keep' }); }
   }
+  // ===== GW11 C7: العمليات السرية (من لعبة المالك الأصلية) =====
+  // كلفة (مليار) ونسبة نجاح (تزيد بالبحث)، ومهلة 7 أيام بين عملية وعملية. الفشل: ينكشف (معنوياتنا −1، روسيا والصين −3)
+  const OPS = {
+    recon: { n: '🛰 كشف جيش إيران', c: .15, p: .8, br: 'uav', d: 'نشوف كل فرق إيران 48 ساعة (مصادر وأقمار صناعية حليفة)' },
+    oil: { n: '🛢 تخريب منشأة نفط', c: .3, p: .5, br: 'ew', d: 'نعطّل حقل أو ميناء إيراني أيام بدون طيارات' },
+    riot: { n: '📢 تحريض مظاهرات بطهران', c: .2, p: .55, br: 'ew', d: 'معنويات إيران −6' },
+    comm: { n: '📶 قطع اتصالات جيش', c: .25, p: .5, br: 'ew', d: 'تنظيم أكبر جيش إيراني قدّامنا ينزل 30٪' },
+  };
+  const opP = (W, s, k) => Math.min(.95, OPS[k].p + (W.ind ? .04 * Math.max(0, W.ind[s].tech[OPS[k].br] - 1) : 0));
+  function spy(W, s, k, ECON) {
+    const O = OPS[k]; if (!O) return 'غلط'; const D = W.dip; if ((D.opCd || 0) > W.t) return 'المخابرات مشغولة، انتظر ' + Math.ceil((D.opCd - W.t) / 24) + ' يوم';
+    const e = W.eco && W.eco[s]; if (e && e.cash - O.c < -8) return 'الفلوس ما تكفي'; if (e) e.cash -= O.c; D.opCd = W.t + 24 * 7;
+    const p = opP(W, s, k); if (W.rnd() > p) { if (W.eco) W.eco[s].mor = Math.max(0, W.eco[s].mor - 1); rel(W, 'ru', s, -3); rel(W, 'cn', s, -3); say(W, { side: s, a: 'spyno', op: k }); return { ok: false, p }; }
+    if (k === 'recon') D.reveal = W.t + 48;
+    if (k === 'oil' && ECON) { const t = W.oil.sites.map((f, i) => ({ f, i })).filter(x => x.f.side !== s && !x.f.off && !(x.f.dmg > 0)); if (t.length) { const x = t[Math.floor(W.rnd() * t.length)]; ECON.hitOil(W, x.i, s, 1); } }
+    if (k === 'riot' && W.eco) W.eco[1 - s].mor = Math.max(0, W.eco[1 - s].mor - 6);
+    if (k === 'comm' && W.armies) { const cnt = {}; for (const d of W.divs) if (!d.dead && d.side !== s) cnt[d.army] = (cnt[d.army] || 0) + 1; const a = +Object.keys(cnt).sort((x, y) => cnt[y] - cnt[x])[0]; for (const d of W.divs) if (!d.dead && d.army === a) d.org *= .7; }
+    say(W, { side: s, a: 'spyok', op: k }); return { ok: true, p };
+  }
   // ===== GW11 C1: مضيق هرمز =====
   // كل صادرات البصرة البحرية تعبر هرمز. إيران تقدر تغلقه (ألغام وزوارق وصواريخ ساحلية): صادرات الجنوب العراقية تقريباً توقف،
   // وحتى صادرات إيران تنزل (تبقى بس من ميناء جاسك ~25٪). النفط يقفز، والخليج وأمريكا والصين يزعلون.
@@ -248,6 +267,6 @@
   // للمحاكاة والجو: هدنة هسه؟
   const truce = W => !!(W.dip && W.dip.truce > W.t);
 
-  const API = { HZ, hz, hzClosed, closeHz, openHz, askHz, aidP, COUNTRIES, BY, TERMS, EVENTS, EV, C_MISSION, init, ensure, daily, weary, verdict, guess, mission, askAid, askJoin, askSanc, propose, accept, answerOffer, choose, truce, vpOf, cdLeft, join };
+  const API = { OPS, opP, spy, HZ, hz, hzClosed, closeHz, openHz, askHz, aidP, COUNTRIES, BY, TERMS, EVENTS, EV, C_MISSION, init, ensure, daily, weary, verdict, guess, mission, askAid, askJoin, askSanc, propose, accept, answerOffer, choose, truce, vpOf, cdLeft, join };
   if (typeof module !== 'undefined') module.exports = API; else root.DIP = API;
 })(this);

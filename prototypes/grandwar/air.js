@@ -304,7 +304,7 @@
       if (W.wx === 'dust' || (W.night && !PLANES[b.type].night)) continue;   // R5c: عاصفة غبار = ما اكو طيران؛ سوخوي-25 ما تطير بالليل (بلا رؤية ليلية)
       let m = b.mission.kind === 'auto' ? planFor(A, W, b) : b.mission;
       if (W.dip && W.dip.truce > W.t && m && m.kind !== 'cap' && m.kind !== 'recon') m = null;   // GW10: بالهدنة بس دوريات واستطلاع
-      b.cd = 12 + A.rnd() * 14;
+      b.cd = (12 + A.rnd() * 14) * (W.eco ? { low: 1.4, norm: 1, high: .75 }[W.eco[b.side].airL || 'norm'] : 1);   // C8: جاهزية الطيران
       if (!m || m.kind === 'idle' || !m.p) continue;
       const T = PLANES[b.type];
       const k = Math.min(b.ready, m.kind === 'recon' ? 1 : m.kind === 'cap' ? 2 : m.kind === 'strike' ? 4 : 2); b.ready -= k; A.sor = A.sor || [0, 0]; A.sor[b.side] += k;

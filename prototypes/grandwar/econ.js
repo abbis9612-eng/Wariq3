@@ -78,8 +78,9 @@
   const byS = (v, s) => Array.isArray(v) ? v[s] : v;
   // الكلفة والأيام: إذا قطع الغيار ناقصة نشتري من السوق السوداء (أغلى وأبطأ)
   const pk = (W, k, s) => W ? parts(W, s, k) : 1;
-  const costOf = (k, s, W) => byS(ITEMS[k].cost, s) * (1 + (1 - pk(W, k, s)) * .8) * (ITEMS[k].req && W && W.indF ? W.indF[s].locCost : 1);   // C3: المحلي أرخص بالصناعة
-  const daysOf = (k, s, W) => byS(ITEMS[k].days, s) / Math.max(.35, pk(W, k, s));
+  const mobF = (W, k, s) => W && W.eco && W.eco[s].mob && k === 'inf' ? .6 : 1;
+  const costOf = (k, s, W) => byS(ITEMS[k].cost, s) * mobF(W, k, s) * (1 + (1 - pk(W, k, s)) * .8) * (ITEMS[k].req && W && W.indF ? W.indF[s].locCost : 1);   // C3: المحلي أرخص بالصناعة
+  const daysOf = (k, s, W) => byS(ITEMS[k].days, s) / Math.max(.35, pk(W, k, s)) * mobF(W, k, s);
   const itemsFor = s => Object.keys(ITEMS).filter(k => ITEMS[k].side == null || ITEMS[k].side === s);
 
   // أقرب منطقة للنقطة (لحد 60 كم)
@@ -107,7 +108,8 @@
     const O = W.oil, routes = {};
     for (const f of O.sites) if (f.term && f.side === s) routes[f.term] = siteState(W, f).f;
     // GW11 C1: هرمز مغلق ← صادرات الخليج: العراق الجنوب ~5٪، وإيران ~25٪ (ميناء جاسك)
-    if (W.dip && W.dip.hz && W.dip.hz.closed) { if (routes.south != null) routes.south *= .05; if (s === 1) routes.kharg = (routes.kharg ?? 1) * .25; }
+    const pipe = W.indF && W.indF[s].pipe; if (pipe && routes.south != null) routes.south = Math.max(routes.south, .4);   // C9: أنابيب بديلة
+    if (W.dip && W.dip.hz && W.dip.hz.closed) { if (routes.south != null) routes.south = pipe ? .4 : routes.south * .05; if (s === 1) routes.kharg = (routes.kharg ?? 1) * .25; }
     let prod = 0, exp = 0;
     for (const f of O.sites) if (!f.term && f.side === s) { const q = f.out * siteState(W, f).f * (W.indF ? W.indF[s].oil : 1); prod += q; exp += q * (routes[f.route] ?? 1); }
     return { prod, exp: exp * LAND[s].exp };
@@ -116,10 +118,10 @@
   function budget(W, A, s) {
     const e = W.eco[s], L = LAND[s], P = PRIO[e.prio], o = oilOf(W, s);
     const price = W.oil.price * L.disc * (s === 1 && W.dip && W.dip.sanc > W.t ? .8 : 1);   // GW10: العقوبات الأمريكية تكبّر خصم إيران
-    const oil = o.exp * price * 1e-3, other = L.other * P.other * (s === 0 && W.homeF ? W.homeF.other : 1);   // C6: رجال الأعمال الزعلانين
+    const oil = o.exp * price * 1e-3, other = L.other * P.other * (s === 0 && W.homeF ? W.homeF.other : 1) * (e.mob ? .9 : 1);   // C8: التعبئة العامة تسحب عمال   // C6: رجال الأعمال الزعلانين
     let army = 0; for (const d of W.divs) if (!d.dead && d.side === s && !d.ally) army += UPKEEP[d.kind] * (W.t - d.lastFight < 24 ? 2.5 : d.path.length ? 1.5 : 1) * L.mil;
-    const civ = L.civ * P.civ;
-    const air = (A && A.sor ? A.sor[s] : 0) * SORTIE[s];
+    const civ = L.civ * P.civ * ({ cut: .85, norm: 1, more: 1.1 }[e.civL || 'norm']) + (e.fuel ? .02 : 0);   // C8: الرواتب والخدمات، ودعم الوقود
+    const air = (A && A.sor ? A.sor[s] : 0) * SORTIE[s] * ({ low: .7, norm: 1, high: 1.5 }[e.airL || 'norm']);   // C8: جاهزية الطيران
     const fix = W.oil.sites.filter(f => f.side === s && f.dmg > 0).length * .002;
     const debt = e.cash < 0 ? -e.cash * .0003 : 0;
     const inc = oil + other, out = civ + army + air + fix + debt;
@@ -220,6 +222,8 @@
   function morale(W, s, B) {
     const e = W.eco[s], P = PRIO[e.prio], why = [];
     let dm = P.mor; if (P.mor) why.push([P.mor, P.n]);
+    if (e.civL === 'cut') { dm -= .1; why.push([-.1, 'تقشف بالرواتب']); } else if (e.civL === 'more') { dm += .06; why.push([.06, 'زيادة رواتب وخدمات']); }
+    if (e.fuel) { dm += .05; why.push([.05, 'دعم الوقود']); } if (e.mob) { dm -= .05; why.push([-.05, 'التعبئة العامة']); }
     const wear = W.t > 24 * 30 ? -.05 : -.03; dm += wear; why.push([wear, 'طول الحرب']);
     if (e.cash < -LAND[s].lim) { dm -= 1.5; why.push([-1.5, 'رواتب متأخرة']); } else if (e.cash < 0) { dm -= .4; why.push([-.4, 'الدولة بالدين']); }
     for (let i = W.log.length - 1; i >= 0 && W.log[i].t > W.t - 24; i--) {
@@ -256,6 +260,8 @@
   // معامل المعنويات على راحة الفرق (sim.js يقراه): تحت 50 التنظيم يرجع أبطأ
   const morF = (W, s) => !W.eco ? 1 : W.eco[s].mor >= 50 ? 1 : .6 + .4 * W.eco[s].mor / 50;
 
-  const API = { SUPPLY, SUP_N, parts, SITES, LAND, ITEMS, PRIO, UPKEEP, init, ensure, budget, oilOf, siteState, canBuy, buy, cancel, deliver, daily, hitOil, oilTarget, itemsFor, costOf, daysOf, morF, aiEco };
+  // C8: سحب من احتياطي البنك المركزي: مرة وحدة، +12 مليار، بس تضخم: المعنويات −4 ورجال الأعمال يزعلون
+  function cbDraw(W, s) { const e = W.eco[s]; if (e.cb) return 'سحبنا من الاحتياطي قبل'; e.cb = 1; e.cbT = W.t; e.cash += 12; e.mor = Math.max(0, e.mor - 4); if (W.home && s === 0) W.home.fac.biz = Math.max(0, W.home.fac.biz - 10); W.log.push({ t: W.t, side: s, k: 'cb' }); return { ok: true }; }
+  const API = { cbDraw, SUPPLY, SUP_N, parts, SITES, LAND, ITEMS, PRIO, UPKEEP, init, ensure, budget, oilOf, siteState, canBuy, buy, cancel, deliver, daily, hitOil, oilTarget, itemsFor, costOf, daysOf, morF, aiEco };
   if (typeof module !== 'undefined') module.exports = API; else root.ECON = API;
 })(this);

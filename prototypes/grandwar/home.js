@@ -35,6 +35,8 @@
     if (e.prio === 'war') { d('street', -.15, 'اقتصاد الحرب'); d('army', .1, 'اقتصاد الحرب'); } else if (e.prio === 'civ') { d('street', .1, 'الأولوية مدنية'); d('biz', .1, 'الأولوية مدنية'); }
     if (W.dip && W.dip.hz && W.dip.hz.closed) { d('biz', -.3, 'هرمز مغلق'); d('street', -.2, 'هرمز مغلق'); }
     if (W.dip && W.dip.c.us.st === 'ally0') d('mil', -.25, 'التحالف ويا أمريكا');
+    if (e.civL === 'cut') { d('street', -.3, 'تقشف'); d('army', -.15, 'تقشف'); } else if (e.civL === 'more') d('street', .2, 'زيادة رواتب');
+    if (e.fuel) d('street', .15, 'دعم الوقود'); if (e.mob) { d('army', .1, 'التعبئة'); d('biz', -.15, 'التعبئة'); }
     d('street', (e.mor - F.street) * .03, 'المعنويات');
     // أحداث آخر يوم
     for (let i = W.log.length - 1; i >= 0 && W.log[i].t > W.t - 24; i--) { const l = W.log[i];

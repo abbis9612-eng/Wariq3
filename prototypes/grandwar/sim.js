@@ -145,7 +145,7 @@
     for (const [c, sn] of W.snap[s]) if (!fresh.has(c) && W.t - sn.t <= 96) for (const q of sn.divs) out.push({ ...q, cell: c, ghost: W.t - sn.t });
     return out;
   }
-  const ezIntel = (W, s) => s === 0 && W.cfg && W.cfg.ez && W.cfg.ez.on && W.cfg.ez.intel;   // GW11 B4: الوضع الخاص «كشف كامل» للاعب
+  const ezIntel = (W, s) => s === 0 && ((W.cfg && W.cfg.ez && W.cfg.ez.on && W.cfg.ez.intel) || (W.dip && W.dip.reveal > W.t));   // + C7: عملية الكشف   // GW11 B4: الوضع الخاص «كشف كامل» للاعب
   const isSeen = (W, s, cell, h = 2) => W.noFog || ezIntel(W, s) || !W.seen || W.t - W.seen[s][cell] <= h;
 
   // ساعة وحدة
@@ -445,7 +445,7 @@
   }
   // ضربة جوية أو صاروخ على منطقة: ينزل تنظيم وعدد فرق العدو بيها
   function airHit(W, side, cell, power) {
-    power *= (W.night ? .8 : 1) * (WX[W.wx || 'clear'].air || 1) * (W.indF ? W.indF[1 - side].ewDef : 1);   // C4: التشويش يضعف ضرباتهم   // بالليل والغيم القصف أقل دقة
+    power *= (W.night ? .8 : 1) * (WX[W.wx || 'clear'].air || 1) * (W.indF ? W.indF[1 - side].ewDef * (W.cells[cell].vp ? W.indF[1 - side].fort : 1) : 1);   // C4: التشويش، وC9: تحصين المدن   // بالليل والغيم القصف أقل دقة
     const en = W.divs.filter(d => !d.dead && d.side !== side && d.cell === cell); if (!en.length) return 0;
     for (const d of en) { d.org = Math.max(0, d.org - power * 4 / en.length); d.str = Math.max(.05, d.str - power * .005 / en.length); d.hitT = W.t; }
     W.log.push({ t: W.t, side, k: 'air', cell }); return en.length;

@@ -23,7 +23,8 @@
   const RIVER_ATK = .7, RIVER_SPD = .6;
   const K_ORG = 1.0, K_STR = .0035;
 
-  function mulberry(a) { return () => { a |= 0; a = a + 0x6D2B79F5 | 0; let t = Math.imul(a ^ a >>> 15, 1 | a); t = t + Math.imul(t ^ t >>> 7, 61 | t) ^ t; return ((t ^ t >>> 14) >>> 0) / 4294967296; }; }
+  // مولّد أرقام عشوائية بحالة تنحفظ (GW7): نفس الحالة = نفس الحرب بالضبط بعد التحميل
+  function mulberry(a) { const f = () => { a |= 0; a = a + 0x6D2B79F5 | 0; let t = Math.imul(a ^ a >>> 15, 1 | a); t = t + Math.imul(t ^ t >>> 7, 61 | t) ^ t; return ((t ^ t >>> 14) >>> 0) / 4294967296; }; f.get = () => a; f.set = v => { a = v; }; return f; }
 
   function World(C, opt = {}) {
     const cells = C.cells, N = cells.length;
@@ -431,6 +432,6 @@
   // تلخيص الحرب
   function score(W) { const vp = [0, 0]; W.cells.forEach((c, i) => { if (c.vp) vp[W.ctrl[i]] += c.vp; }); return { vp, cells: [0, 1].map(s => W.ctrl.reduce((n, x) => n + (x === s ? 1 : 0), 0)), divs: [0, 1].map(s => alive(W).filter(d => d.side === s).length), lost: W.lost.slice() }; }
 
-  const API = { WX, weather, envAtk, envMv, hitBridge, edgeCost, SUP_BUDGET, intel, known, isSeen, initIntel, makePlan, cancelPlan, runPlans, cellChain, joinArmy, airHit, TEMPL, TERR, KIND_N, World, addDiv, step, ai, order, route, scenario, supply, score, alive, divsIn, frontCells, power };
+  const API = { getNID: () => NID, setNID: v => { NID = v; }, WX, weather, envAtk, envMv, hitBridge, edgeCost, SUP_BUDGET, intel, known, isSeen, initIntel, makePlan, cancelPlan, runPlans, cellChain, joinArmy, airHit, TEMPL, TERR, KIND_N, World, addDiv, step, ai, order, route, scenario, supply, score, alive, divsIn, frontCells, power };
   if (typeof module !== 'undefined') module.exports = API; else root.SIM = API;
 })(this);

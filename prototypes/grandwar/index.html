@@ -34,6 +34,8 @@ button{font:inherit;color:inherit;background:none;border:0;cursor:pointer}
 #intro .box{background:#221f1a;border:1px solid var(--line);border-radius:16px;padding:16px 16px 14px;max-width:420px}
 #intro h1{font:700 24px "Reem Kufi",sans-serif;color:var(--gold);text-align:center}#intro p{margin:8px 0;font-size:13.5px;line-height:1.6}#intro ul{margin:4px 0 10px;padding-inline-start:18px;font-size:13px;line-height:1.65}
 #intro button{width:100%;margin-top:6px;background:var(--gold);color:#221b0e;border-radius:12px;padding:10px;font-weight:700;font-size:16px}
+#intro #cont{background:#2f6fd0;color:#fff}
+#saves{position:fixed;left:8px;right:8px;top:calc(110px + env(safe-area-inset-top));background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:10px 12px;z-index:7;backdrop-filter:blur(6px)}#saves[hidden]{display:none}.slot{background:rgba(255,255,255,.05);border:1px solid var(--line);border-radius:10px;padding:7px 9px;margin:6px 0}.slot b{font:700 14px 'Reem Kufi'}.slot .acts{margin-top:5px}
 #armies{position:fixed;left:0;right:0;bottom:calc(58px + env(safe-area-inset-bottom));max-height:62vh;overflow:auto;background:var(--panel);border-top:1px solid var(--line);border-radius:16px 16px 0 0;padding:10px 12px;z-index:6;backdrop-filter:blur(6px)}#armies[hidden]{display:none}
 .arm{background:rgba(255,255,255,.05);border:1px solid var(--line);border-radius:12px;padding:8px 10px;margin:7px 0}.arm .h{display:flex;align-items:center;gap:8px}.arm b{font:700 15px 'Reem Kufi'}.arm .acts{margin-top:6px}
 #bv{position:fixed;inset:0;z-index:20;background:#6d6050}#bv[hidden]{display:none}#bvc{position:absolute;inset:0;width:100%;height:100%;touch-action:none}
@@ -53,7 +55,8 @@ button{font:inherit;color:inherit;background:none;border:0;cursor:pointer}
   <div class="res"><span id="rVp"></span><span id="rDiv"></span><span id="rBat"></span><span id="rTook"></span><span id="rLost"></span></div>
   <div id="vpbar"><u></u></div>
 </div>
-<div id="zoom"><button id="zin">＋</button><button id="zout">－</button><button id="zme" title="رجوع للجبهة">◎</button><button id="snd">🔊</button></div>
+<div id="zoom"><button id="zin">＋</button><button id="zout">－</button><button id="zme" title="رجوع للجبهة">◎</button><button id="snd">🔊</button><button id="sv" title="حفظ">💾</button></div>
+<div id="saves" hidden></div><input type="file" id="imp" accept=".json,application/json" hidden>
 <div id="toasts"></div>
 <div id="hint" hidden></div>
 <div id="tac" hidden>⏱ بطيء: قريب من المعركة</div>
@@ -70,6 +73,7 @@ button{font:inherit;color:inherit;background:none;border:0;cursor:pointer}
     <li><b>الوقت:</b> ▶ عشر دقايق بالثانية، ▶▶ ساعة، ⏩ ست ساعات. التقدّم بأرض العدو بطيء مثل الحقيقة (دروع ~45 كم باليوم).</li>
     <li>المدن الكبيرة نقاط. اللي يخسر 70% من نقاط مدنه يستسلم.</li>
   </ul>
+  <button id="cont" hidden></button>
   <button id="go">ابدأ الحرب ▶</button>
 </div></div>
 <div id="end" hidden></div>
@@ -90,6 +94,7 @@ button{font:inherit;color:inherit;background:none;border:0;cursor:pointer}
 <script src="view.js"></script>
 <script src="bv.js"></script>
 <script src="bview.js"></script>
+<script src="save.js"></script>
 <script>
 'use strict';
 const G = window.GEO, C = window.CELLS, Q = new URLSearchParams(location.search);
@@ -98,12 +103,16 @@ const cv = $('c'), g = cv.getContext('2d');
 let DPR = Math.min(2, devicePixelRatio || 1), W, H;
 const ME = 0;
 // ===== المحاكاة =====
-const SEED = +(Q.get('seed') || (Date.now() % 100000));
-const WD = SIM.World(C, { seed: SEED, roads: window.ROADS }); SIM.scenario(WD);
-const AW = AIR.create(WD); const AIRK = [0, 1, 1.5, 2.2];
+// GW7: «كمّل» = نفتح الصفحة بـ ?load=خانة، فالحرب تنبني من الحفظ بدل البداية
+const ST = (() => { try { const t = '__t'; localStorage.setItem(t, 1); localStorage.removeItem(t); return localStorage; } catch (e) { return null; } })();
+let LOADED = null, LOADERR = null;
+if (Q.get('load') != null && ST) { try { const s0 = SAVE.read(ST, Q.get('load')); if (s0) LOADED = SAVE.restore(s0, C, { roads: window.ROADS }, SIM, AIR); else LOADERR = 'ما لكيت حفظ بهالخانة'; } catch (e) { LOADERR = e.message; LOADED = null; } }
+const SEED = LOADED ? LOADED.seed : +(Q.get('seed') || (Date.now() % 100000));
+const WD = LOADED ? LOADED.W : SIM.World(C, { seed: SEED, roads: window.ROADS }); if (!LOADED) SIM.scenario(WD);
+const AW = LOADED ? LOADED.A : AIR.create(WD); const AIRK = [0, 1, 1.5, 2.2];
 const cells = C.cells;
 // ===== الكاميرا =====
-const cam = { x: 815, y: 850, s: .58 };
+const cam = { x: 815, y: 850, s: .58, ...(LOADED?.ui?.cam || {}) };
 const TOPH = () => $('top').offsetHeight, BOTH = () => ($('card').hidden ? 0 : $('card').offsetHeight + 8) + $('tabs').offsetHeight;
 const w2s = (x, y) => [(x - cam.x) * cam.s + W / 2, (y - cam.y) * cam.s + H / 2];
 const s2w = (x, y) => [(x - W / 2) / cam.s + cam.x, (y - H / 2) / cam.s + cam.y];
@@ -605,6 +614,38 @@ function battleInfo(b) {
   toast(`⚔ ${c.city || 'معركة'}: ${mine ? 'إحنا نهاجم' : 'إيران تهاجم'} (${b.na} ضد ${b.nd}) · ${win > .55 ? 'إحنا غالبين' : win < .45 ? 'إيران غالبة' : 'متعادلة'} · ${why.join('، ')}`);
 }
 
+// ===== GW7: الحفظ =====
+const gameDate = t => { const d = new Date(START.getTime() + t * 3600e3); return `${d.getDate()} ${AR_M[d.getMonth()]} ${d.getFullYear()} ${String(d.getHours()).padStart(2, '0')}:00`; };
+const SLOTN = ['حفظ تلقائي', 'خانة 1', 'خانة 2'];
+function doSave(slot, quiet) {
+  if (!ST) { if (!quiet) toast('❌ المتصفح مانع الحفظ هنا (وضع خاص؟). استعمل «⬇ نسخة بملف»', 'bad'); return false; }
+  try { const sc = SIM.score(WD); const n = SAVE.write(ST, slot, SAVE.snapshot(WD, AW, SIM, { seed: SEED, ui: { cam: { x: cam.x, y: cam.y, s: cam.s }, vp: sc.vp, cells: sc.cells } })); if (!quiet) toast(`💾 انحفظت (${SLOTN[slot]}) · ${gameDate(WD.t)} · ${Math.round(n / 1024)} ك.ب`, 'good'); return true; }
+  catch (e) { toast('❌ الحفظ فشل: ' + (e.name === 'QuotaExceededError' ? 'الذاكرة مليانة' : e.message), 'bad'); return false; }
+}
+function savesPanel() {
+  const el = $('saves'); el.hidden = false;
+  const row = i => { const a = ST && SAVE.info(ST, i); return `<div class="slot"><b>${SLOTN[i]}</b> <span style="font-size:11.5px;opacity:.8">${a ? `${gameDate(a.t)} · مدننا ${a.ui?.vp?.[0] ?? '?'} نقطة · انحفظ ${new Date(a.saved).toLocaleString('ar-IQ', { hour: '2-digit', minute: '2-digit', day: 'numeric', month: 'numeric' })}` : 'فاضية'}</span>
+    <div class="acts">${i ? `<button class="go" data-sv="${i}">💾 احفظ هنا</button>` : ''}${a ? `<button data-ld="${i}">▶ حمّل</button><button data-rm="${i}">🗑</button>` : ''}</div></div>`; };
+  el.innerHTML = `<div class="ch"><span style="font-size:18px">💾</span><div><div class="t">الحفظ</div><div class="s">الحرب تنحفظ تلقائياً كل يوم لعبة ولما تطلع من الصفحة</div></div><span class="x" id="svX" style="font-size:16px">✕</span></div>
+    ${[0, 1, 2].map(row).join('')}
+    <div class="acts" style="margin-top:6px"><button id="svExp">⬇ نسخة بملف</button><button id="svImp">⬆ رجّع من ملف</button><button id="svNew">🆕 حرب جديدة</button></div>
+    <div class="s" style="font-size:10.5px;opacity:.65;margin-top:5px">الحفظ بذاكرة هالمتصفح بتلفونك. إذا مسحت بيانات المتصفح يروح، فخذ «نسخة بملف» للأمان.</div>`;
+  $('svX').onclick = () => { el.hidden = true; };
+  el.querySelectorAll('[data-sv]').forEach(b => b.onclick = () => { doSave(+b.dataset.sv); savesPanel(); });
+  el.querySelectorAll('[data-ld]').forEach(b => b.onclick = () => { doSave(0, true); location.search = '?load=' + b.dataset.ld; });
+  el.querySelectorAll('[data-rm]').forEach(b => b.onclick = () => { if (confirm(`أمسح «${SLOTN[+b.dataset.rm]}»؟`)) { SAVE.remove(ST, +b.dataset.rm); savesPanel(); } });
+  $('svNew').onclick = () => { if (confirm('تبدي حرب جديدة؟ حربك هسه تنحفظ بـ«الحفظ التلقائي»')) { doSave(0, true); location.search = '?new=1'; } };
+  $('svExp').onclick = () => { try { const txt = JSON.stringify(SAVE.snapshot(WD, AW, SIM, { seed: SEED, ui: { cam: { x: cam.x, y: cam.y, s: cam.s } } })); const a = document.createElement('a'); a.href = URL.createObjectURL(new Blob([txt], { type: 'application/json' })); a.download = `الحرب-الكبرى-${WD.t}.json`; document.body.appendChild(a); a.click(); a.remove(); toast('⬇ نزل ملف الحفظ', 'good'); } catch (e) { toast('❌ ما كدرت أنزّل الملف: ' + e.message, 'bad'); } };
+  $('svImp').onclick = () => $('imp').click();
+}
+$('imp').onchange = async e => { const f = e.target.files[0]; if (!f) return; try { const s0 = SAVE.migrate(JSON.parse(await f.text())); SAVE.write(ST, 2, s0); toast('⬆ رجع الحفظ لـ«خانة 2»، هسه نحمّله', 'good'); setTimeout(() => { location.search = '?load=2'; }, 600); } catch (err) { toast('❌ الملف مو حفظ صالح: ' + err.message, 'bad'); } };
+$('sv').onclick = () => { const was = SPEED; savesPanel(); };
+// حفظ تلقائي: كل يوم لعبة (منتصف الليل)، ولما التلفون يطلع من الصفحة
+let lastAutoDay = Math.floor(WD.t / 24);
+function autoSave() { const d = Math.floor(WD.t / 24); if (d !== lastAutoDay) { lastAutoDay = d; doSave(0, true); } }
+document.addEventListener('visibilitychange', () => { if (document.hidden && $('intro').hidden) doSave(0, true); });
+addEventListener('pagehide', () => { if ($('intro').hidden) doSave(0, true); });
+
 // ===== الحلقة =====
 let last = performance.now(), acc = 0, samT = 0;
 function frame(now) {
@@ -616,7 +657,7 @@ function frame(now) {
     // الجو ويا الساعة، ومن تقرّب يبطأ أكثر حتى تشوف الإطلاق والمطاردة بعينك
     const af = Math.min(1.6, Math.max(.3, .25 * RATE * 3600 / 38)); AIR.step(AW, WD, SIM, dt * (cam.s >= 1.7 ? Math.min(af, .45) : af));
     for (const e of AW.ev) VIEW.airEvent(e, toast, ME); AW.ev.length = 0;
-    events(); if (n) { hud(); if (SEL.size && WD.t % 3 === 0) card(); if (typeof SELB === 'number' && SELB >= 0 && WD.t % 2 === 0) baseCard(); }
+    events(); if (n) { autoSave(); hud(); if (SEL.size && WD.t % 3 === 0) card(); if (typeof SELB === 'number' && SELB >= 0 && WD.t % 2 === 0) baseCard(); }
     if (typeof SELB === 'string' && PICK !== 'samMove' && (samT = (samT || 0) + dt) > 1) { samT = 0; samCard(+SELB.slice(3)); }
   }
   if (!$('bv').hidden) { requestAnimationFrame(frame); return; }
@@ -644,7 +685,10 @@ Promise.all(['base_me', 'base_south', 'abrams', 'abrams_t', 't72', 't72_t', 'bmp
   for (const n of ['truck', 'grad']) { const im = IMG[n], c = document.createElement('canvas'); c.width = im.width; c.height = im.height; const x = c.getContext('2d'); x.filter = 'hue-rotate(170deg) saturate(1.3)'; x.drawImage(im, 0, 0); IMG[n + '_r'] = c; }
   FX.init({ g, cam, w2s, IMG }); BVIEW.init({ IMG, SND: VIEW.SND });
   hud(); requestAnimationFrame(frame); window.READY = 1;
-  $('go').onclick = () => { $('intro').hidden = true; VIEW.SND.init(); setSpeed(1); };
+  $('go').onclick = () => { if (LOADED) { $('intro').hidden = true; VIEW.SND.init(); setSpeed(1); toast(`💾 كمّلنا من ${gameDate(WD.t)}`, 'good'); return; } if (Q.get('load') != null) { location.search = ''; return; } $('intro').hidden = true; VIEW.SND.init(); setSpeed(1); };
+  if (LOADED) { $('go').textContent = `كمّل الحرب ▶ (${gameDate(WD.t)})`; logN = WD.log.length; }
+  else { const a = ST && SAVE.info(ST, 0); if (a) { $('cont').hidden = false; $('cont').textContent = `💾 كمّل حربك (${gameDate(a.t)})`; $('cont').onclick = () => { location.search = '?load=0'; }; $('go').textContent = 'حرب جديدة ▶'; } }
+  if (LOADERR) toast('❌ ما كدرت أحمّل الحفظ: ' + LOADERR, 'bad');
   if (Q.has('auto')) { $('intro').hidden = true; setSpeed(+Q.get('auto') || 3); }
 });
 </script></body></html>

@@ -18,7 +18,7 @@ button{font:inherit;color:inherit;background:none;border:0;cursor:pointer}
 .r1{display:flex;align-items:center;gap:8px}.flag{font-size:22px;line-height:1}.cn{font:700 16px "Reem Kufi",sans-serif;color:var(--gold)}
 .date{margin-inline-start:auto;display:flex;align-items:center;gap:6px;font-weight:600;font-variant-numeric:tabular-nums}
 .spd{display:flex;gap:3px}.spd button{width:30px;height:28px;border-radius:7px;background:var(--chip);border:1px solid var(--line);font-size:11px;font-weight:700}.spd button.on{background:var(--gold);color:var(--brass-ink)}
-.res{display:flex;gap:5px;margin-top:6px}.res span{flex:1;min-width:0;background:var(--chip);border:1px solid var(--line);border-radius:8px;padding:2px 3px;text-align:center;white-space:nowrap;font-size:12px;font-weight:600}.res i{font-style:normal;display:block;font-size:9.5px;opacity:.7;font-weight:500}
+.res{display:flex;gap:5px;margin-top:6px}.res button{flex:1;min-width:0;background:var(--chip);border:1px solid var(--line);border-radius:8px;padding:2px 3px;text-align:center;white-space:nowrap;font-size:12px;font-weight:600}.res i{font-style:normal;display:block;font-size:10.5px;color:var(--dim);font-weight:500}
 #vpbar{height:6px;border-radius:3px;margin-top:6px;background:var(--foe);overflow:hidden;position:relative}#vpbar u{position:absolute;right:0;top:0;bottom:0;background:var(--me);transition:width .5s}
 #card{position:fixed;left:8px;right:8px;bottom:calc(62px + env(safe-area-inset-bottom));background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:9px 11px;backdrop-filter:blur(6px);z-index:5}
 #card[hidden]{display:none}
@@ -79,13 +79,17 @@ button{font:inherit;color:inherit;background:none;border:0;cursor:pointer}
 button:focus-visible{outline:2px solid var(--gold);outline-offset:2px}
 .badge{position:relative}.badge[data-b]:not([data-b=""])::after{content:attr(data-b);position:absolute;top:0;inset-inline-end:calc(50% - 22px);min-width:16px;height:16px;padding:0 4px;border-radius:8px;background:var(--neg-s);color:var(--on-acc);font:700 10px/16px "IBM Plex Sans Arabic";font-style:normal}
 @media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+#ticker{display:flex;align-items:center;gap:6px;width:100%;margin-top:6px;padding:4px 8px;border-radius:9px;background:var(--chip);border:1px solid var(--line);font-size:12.5px;text-align:start;min-height:30px}#ticker span{flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}#ticker.bad{border-color:var(--neg-s)}#ticker.good{border-color:var(--me)}
+.res button{font-size:14px;font-weight:700;font-variant-numeric:tabular-nums;padding:3px 3px}
+.news{display:flex;gap:8px;padding:6px 0;border-top:1px solid var(--line);font-size:var(--fs)}.news small{color:var(--dim);white-space:nowrap;font-variant-numeric:tabular-nums}.news.bad span{color:var(--neg)}.news.good span{color:var(--pos)}
 </style></head><body>
 <canvas id="c"></canvas>
 <div id="top">
   <div class="r1"><span class="flag">🇮🇶</span><span class="cn">العراق</span><span style="font-size:11px;opacity:.7">ضد إيران 🇮🇷</span>
     <div class="date"><span><span id="dt"></span><small id="rate" style="display:block;font-size:10px;opacity:.75;font-weight:500"></small></span><div class="spd"><button data-s="0">⏸</button><button data-s="1" class="on">▶</button><button data-s="2">▶▶</button><button data-s="3">⏩</button></div></div></div>
-  <div class="res"><span id="rVp"></span><span id="rDiv"></span><span id="rTook"></span><span id="rLost"></span><span id="rCash"></span><span id="rMor"></span></div>
-  <div id="vpbar"><u></u></div>
+  <div class="res"><button id="rVp"></button><button id="rCash"></button><button id="rMor"></button><button id="rDiv"></button></div>
+  <div id="vpbar" title="نقاط المدن: أزرق إلنا، أحمر إلهم"><u></u></div>
+  <button id="ticker" aria-label="آخر الأخبار، اضغط تشوف السجل"><b>📡</b><span id="tickT">غرفة العمليات: الحرب بدت</span></button>
 </div>
 <div id="zoom"><button id="zin">＋</button><button id="zout">－</button><button id="zme" title="رجوع للجبهة">◎</button><button id="snd">🔊</button><button id="sv" title="حفظ">💾</button><button id="thm" title="الثيم: فاتح / غامق">🌓</button></div>
 <input type="file" id="imp" accept=".json,application/json" hidden>
@@ -93,7 +97,7 @@ button:focus-visible{outline:2px solid var(--gold);outline-offset:2px}
 <div id="hint" hidden></div>
 <div id="tac" hidden>⏱ بطيء: قريب من المعركة</div>
 <div id="card" hidden></div>
-<div id="tabs"><button class="on"><em>🗺️</em>الخريطة</button><button id="tabArmy"><em>🪖</em>الجيش</button><button id="tabProd"><em>🏭</em>الإنتاج</button><button id="tabEco"><em>💰</em>الاقتصاد</button><button id="tabDip"><em>🤝</em>السياسة</button><button data-soon="1"><em>🔬</em>البحث</button></div>
+<div id="tabs"><button class="on"><em>🗺️</em>الخريطة</button><button id="tabArmy" class="badge"><em>🪖</em>الجيش</button><button id="tabProd" class="badge"><em>🏭</em>الإنتاج</button><button id="tabEco" class="badge"><em>💰</em>الاقتصاد</button><button id="tabDip" class="badge"><em>🤝</em>السياسة</button><button id="tabRep" class="badge"><em>📜</em>التقرير</button></div>
 <div id="intro"><div class="box">
   <h1>الحرب الكبرى</h1>
   <p>14 آذار 2027. الحرب بدت بين العراق وإيران. انت قائد الجيش العراقي.</p>
@@ -430,12 +434,21 @@ function hud() {
   $('dt').textContent = `${d.getDate()} ${AR_M[d.getMonth()]} ${d.getFullYear()} · ${String(d.getHours()).padStart(2, '0')}:00 ${WD.night ? '🌙' : '☀️'}${WD.wx && WD.wx !== 'clear' ? { cloud: '☁️', rain: '🌧', dust: '🌫' }[WD.wx] : ''}${DIP.truce(WD) ? ' · 🕊 هدنة ' + Math.ceil((WD.dip.truce - WD.t) / 24) + 'ي' : ''}`;
   const sc = SIM.score(WD), tot = WD.vpTotal[0] + WD.vpTotal[1];
   $('rVp').innerHTML = `🏙 ${sc.vp[0]}<i>نقاط مدننا</i>`; $('rDiv').innerHTML = `🪖 ${sc.divs[0]}<i>فرقنا</i>`;
-  $('rTook').innerHTML = `✈ ${AW.bases.filter(b => b.side === ME && !AIR.PLANES[b.type].drone).reduce((n, b) => n + b.n0, 0)}<i>طياراتنا</i>`;
-  $('rLost').innerHTML = `🎯 ${AW.kills[ME]}<i>أسقطنا طيارة</i>`;
   const e = WD.eco[ME]; $('rCash').innerHTML = `<b class="${e.cash < 0 ? 'neg' : ''}">💰 ${e.cash.toFixed(1)}</b><i>مليار $</i>`; $('rMor').innerHTML = `${e.mor >= 60 ? '🙂' : e.mor >= 35 ? '😐' : '😟'} ${Math.round(e.mor)}<i>معنويات</i>`;
   $('vpbar').firstElementChild.style.width = (sc.vp[0] / tot * 100) + '%';
+  badges();
 }
-function toast(msg, cls = '') { const t = document.createElement('div'); t.className = 'toast ' + cls; t.textContent = msg; $('toasts').prepend(t); while ($('toasts').children.length > 3) $('toasts').lastChild.remove(); setTimeout(() => t.remove(), 4500); }
+// GW11 A3: شارات التبويبات (وين اكو شي ينتظرك)
+function badges() {
+  const e = WD.eco[ME], D = WD.dip, set = (id, v) => { const b = $(id); if (b && b.dataset.b !== String(v || '')) b.dataset.b = v || ''; };
+  set('tabDip', D && (D.offer || D.ev.length) ? '!' : '');
+  set('tabEco', e.cash < 0 ? '!' : '');
+  set('tabProd', !e.auto && e.q.length < e.lines ? e.lines - e.q.length : '');
+  set('tabRep', NEWS.unread > 9 ? '9+' : NEWS.unread || '');
+}
+const NEWS = []; NEWS.unread = 0;
+function toast(msg, cls = '') {
+  NEWS.unshift({ t: WD.t, msg, cls }); if (NEWS.length > 300) NEWS.pop(); NEWS.unread++; const tk = $('ticker'); if (tk) { $('tickT').textContent = msg; tk.className = cls; } const t = document.createElement('div'); t.className = 'toast ' + cls; t.textContent = msg; $('toasts').prepend(t); while ($('toasts').children.length > 3) $('toasts').lastChild.remove(); setTimeout(() => t.remove(), 4500); }
 let logN = 0;
 function events() {
   while (logN < WD.log.length) {
@@ -478,6 +491,19 @@ function armies() {
   el.querySelectorAll('[data-st]').forEach(b => b.onclick = () => { const a = WD.armies[+b.dataset.st]; a.stance = a.stance === 'defend' ? 'auto' : 'defend'; toast(a.stance === 'defend' ? `🛡 ${a.n}: يمسك الجبهة وما يهاجم` : `🤖 ${a.n}: القائد يهاجم لما يشوف فرصة`); armies(); });
 }
 $('tabArmy').onclick = () => openSheet(armies, 'tabArmy');
+$('rCash').onclick = () => { SUB.eco = 'cash'; openSheet(ecoPanel, 'tabEco'); };
+$('rMor').onclick = () => { SUB.eco = 'mor'; openSheet(ecoPanel, 'tabEco'); };
+$('rDiv').onclick = () => openSheet(armies, 'tabArmy');
+$('rVp').onclick = () => openSheet(repPanel, 'tabRep');
+$('ticker').onclick = () => openSheet(repPanel, 'tabRep');
+$('tabRep').onclick = () => openSheet(repPanel, 'tabRep');
+// 📜 التقرير (A3: سجل الأخبار؛ B1 يكمله بفلاتر وملخص ورسوم)
+function repPanel(refresh) {
+  const el = $('sheet'), top = el.scrollTop; NEWS.unread = 0; badges();
+  el.innerHTML = `${GRAB}<div class="eh"><b>📜 التقرير</b><span class="dim">${NEWS.length} خبر</span><button class="x" id="shX" aria-label="سكّر">✕</button></div>
+  ${NEWS.length ? NEWS.map(n => `<div class="news ${n.cls}"><small>${gameDate(n.t).replace(/ \d{4}/, '')}</small><span>${n.msg}</span></div>`).join('') : '<div class="dim" style="padding:12px 0">ما اكو أخبار بعد.</div>'}`;
+  if (refresh) el.scrollTop = top;
+}
 document.querySelectorAll('#tabs [data-soon]').forEach(b => b.onclick = () => toast('🔜 هذا القسم بعدين (عالم أوسع، GW10)'));
 const KN = SIM.KIND_N;
 function card() {

@@ -266,7 +266,7 @@
   // الباليستي: مساره المتوقع ونقطة سقوطه وعدّاد الوصول؛ الانفجارات صغيرة بمكانها.
   const PL = { f16: 'f16', su25: 'su25', f14: 'f14', su24: 'su25' };
   const COLA = (s, a) => s ? `rgba(214,70,50,${a})` : `rgba(70,140,240,${a})`;
-  const SHORT = { pac: 'PAC', pantsir: 'Pantsir', s300: 'S-300', bavar: 'Bavar', khordad: 'Kh-15', tor: 'Tor' };
+  const SHORT = { pac: 'باتريوت', pantsir: 'بانتسير', s300: 'إس-300', bavar: 'باور', khordad: 'خرداد', tor: 'تور' };   // GW11 A4: عربي
   const tracers = [];
   const KZ = () => Math.min(1.1, cam.s * .45);  // بكسل لكل كم ارتفاع (حتى الصاروخ العالي يبين فوق مساره)
   const mmss = as => { const s = Math.max(0, Math.round(as * 60)); if (s >= 3600) return `${Math.floor(s / 3600)}س ${Math.floor(s % 3600 / 60)}د`; return `${Math.floor(s / 60)}:${String(s % 60).padStart(2, '0')}`; }; // وقت حقيقي (ثانية الجو = دقيقة)
@@ -289,7 +289,7 @@
       g.save(); g.translate(x, y - 11 * k); g.beginPath(); g.arc(0, 0, 7.5 * k, 0, 7); g.fillStyle = COLA(b.side, .9); g.fill(); g.lineWidth = selB === i ? 2.6 : 1.1; g.strokeStyle = selB === i ? '#ffd65a' : '#fff'; g.stroke();
       text('✈', 0, 1, 9.5 * k, '#fff', null, 700); g.restore();
       if (b.down > 0) text('⚠ المدرج', x, y - 22 * k, 9, '#ffcf40');
-      if (cam.s > .75 || b.side === 0) text(`${b.n} · ${b.ready}/${b.n0}`, x, y + 10 * k, 10 * k, b.side ? '#5a1a10' : '#102a5a');
+      if (cam.s > .95 || selB === i) text(`${b.n} · ${b.ready}/${b.n0}`, x, y + 10 * k, 10 * k, b.side ? '#5a1a10' : '#102a5a');
     });
     A.sams.forEach((s, i) => {
       const [x, y] = w2s(...s.p); const S = AIR.SYS[s.sys]; const sel = selB === 'sam' + i;
@@ -315,15 +315,15 @@
       if (!s.down && s.emcon <= 0 && s.alert > 0) { g.save(); g.translate(x, y); g.rotate(s.radar || 0); g.strokeStyle = COLA(s.side, .9); g.lineWidth = 1.4; g.beginPath(); g.arc(0, 0, w * .95, -.35, .35); g.stroke(); g.restore(); }
       // الصواريخ الجاهزة: شريط تحت الرمز
       const mg = s.mags.find(m => !m.gun); if (mg) { const f = mg.ready / Math.max(1, mg.orig); g.fillStyle = 'rgba(0,0,0,.5)'; g.fillRect(x - w * .55, y + w * .5, w * 1.1, 3); g.fillStyle = f > .4 ? '#7ad07a' : f > .15 ? '#e6c450' : '#e0533f'; g.fillRect(x - w * .55, y + w * .5, w * 1.1 * f, 3); }
-      if (cam.s > .55) text(SHORT[s.sys], x, y - w * .72, 8.5, '#fff', 'rgba(0,0,0,.55)', 700);
-      if (cam.s > 1.1 || sel) text(`${s.n}${s.emcon > 0 ? ' · رادار مطفي' : ''}`, x, y + w * .5 + 11, 9.5, s.side ? '#5a1a10' : '#102a5a');
+      if (cam.s > .95 || sel) text(SHORT[s.sys], x, y - w * .72, 9, '#fff', 'rgba(0,0,0,.55)', 700);
+      if (cam.s > 1.4 || sel) text(`${s.n}${s.emcon > 0 ? ' · رادار مطفي' : ''}`, x, y + w * .5 + 11, 9.5, s.side ? '#5a1a10' : '#102a5a');
     });
     // مواقع الإطلاق الإيرانية: معيّن عدو بعلامة صاروخ أو مسيّرة
     A.mbases.forEach(m => {
       const [x, y] = w2s(...m.p); if (x < -40 || x > innerWidth + 40 || y < -40 || y > innerHeight + 40) return; const w = Math.min(18, Math.max(11, cam.s * 8.5));
       g.save(); g.translate(x, y); g.fillStyle = COLA(1, .85); g.strokeStyle = '#ffd9cf'; g.lineWidth = 1.4; g.beginPath(); g.moveTo(0, -w * .62); g.lineTo(w * .62, 0); g.lineTo(0, w * .62); g.lineTo(-w * .62, 0); g.closePath(); g.fill(); g.stroke(); g.restore();
       text(m.uav0 ? '◣' : '↑', x, y + 1, w * .7, '#fff', null, 700);
-      if (cam.s > .8) text(`${m.n} · ${m.uav0 ? m.uav + ' مسيّرة' : m.bm + ' باليستي، ' + m.cm + ' كروز'}`, x, y + w * .7 + 9, 9.5, '#5a1a10');
+      if (cam.s > 1.2) text(`${m.n} · ${m.uav0 ? m.uav + ' مسيّرة' : m.bm + ' باليستي، ' + m.cm + ' كروز'}`, x, y + w * .7 + 9, 9.5, '#5a1a10');
     });
     // الهدف المقصود بضربة جارية: علامة وعدّاد
     for (const id in A.raids) { const r = A.raids[id]; const [x, y] = w2s(...r.tg.p); const pl = (performance.now() / 600) % 1; ring(x, y, 9 + pl * 10, `rgba(255,80,60,${.9 - pl * .8})`, null, 2); text(`⚠ ${mmss(r.eta - A.t)}`, x, y - 22, 10.5, '#fff', 'rgba(150,20,10,.8)', 700); }

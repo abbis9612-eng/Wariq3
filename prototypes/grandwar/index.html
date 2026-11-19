@@ -82,6 +82,10 @@ button:focus-visible{outline:2px solid var(--gold);outline-offset:2px}
 #ticker{display:flex;align-items:center;gap:6px;width:100%;margin-top:6px;padding:4px 8px;border-radius:9px;background:var(--chip);border:1px solid var(--line);font-size:12.5px;text-align:start;min-height:30px}#ticker span{flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}#ticker.bad{border-color:var(--neg-s)}#ticker.good{border-color:var(--me)}
 .res button{font-size:14px;font-weight:700;font-variant-numeric:tabular-nums;padding:3px 3px}
 .news{display:flex;gap:8px;padding:6px 0;border-top:1px solid var(--line);font-size:var(--fs)}.news small{color:var(--dim);white-space:nowrap;font-variant-numeric:tabular-nums}.news.bad span{color:var(--neg)}.news.good span{color:var(--pos)}
+#zoom button{width:40px;height:40px}
+#mmenu{position:fixed;left:56px;z-index:8;background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:5px;display:flex;flex-direction:column;gap:3px;box-shadow:var(--shadow)}#mmenu[hidden]{display:none}#mmenu button{text-align:start;padding:9px 12px;border-radius:9px;font-weight:600;min-width:150px}#mmenu button:hover{background:var(--chip)}
+#toasts{left:56px;right:8px;top:auto!important;flex-direction:column-reverse;align-items:stretch}.toast{box-shadow:var(--shadow)}
+.leg{display:grid;grid-template-columns:34px 1fr;gap:6px 10px;align-items:center;font-size:var(--fs);margin-top:6px}.leg i{display:inline-block;justify-self:center}
 </style></head><body>
 <canvas id="c"></canvas>
 <div id="top">
@@ -91,7 +95,8 @@ button:focus-visible{outline:2px solid var(--gold);outline-offset:2px}
   <div id="vpbar" title="نقاط المدن: أزرق إلنا، أحمر إلهم"><u></u></div>
   <button id="ticker" aria-label="آخر الأخبار، اضغط تشوف السجل"><b>📡</b><span id="tickT">غرفة العمليات: الحرب بدت</span></button>
 </div>
-<div id="zoom"><button id="zin">＋</button><button id="zout">－</button><button id="zme" title="رجوع للجبهة">◎</button><button id="snd">🔊</button><button id="sv" title="حفظ">💾</button><button id="thm" title="الثيم: فاتح / غامق">🌓</button></div>
+<div id="zoom"><button id="zin" aria-label="قرّب">＋</button><button id="zout" aria-label="بعّد">－</button><button id="zme" title="رجوع للجبهة" aria-label="رجوع للجبهة">◎</button><button id="menu" aria-label="القائمة">☰</button></div>
+<div id="mmenu" hidden><button id="snd">🔊 الصوت</button><button id="sv">💾 الحفظ</button><button id="thm">🌓 الثيم</button><button id="leg">🗺 مفتاح الخريطة</button></div>
 <input type="file" id="imp" accept=".json,application/json" hidden>
 <div id="toasts"></div>
 <div id="hint" hidden></div>
@@ -396,7 +401,7 @@ function drawBridges() {
 }
 // GW8: حقول النفط والموانئ على الخريطة
 function drawOil() {
-  if (cam.s < .4 || !WD.oil) return; const k = Math.min(1.25, cam.s * .8);
+  if (cam.s < .7 || !WD.oil) return; const k = Math.min(1.25, cam.s * .8);   // A4: من بعيد ما تبين
   for (const f of WD.oil.sites) { if (!f.p) continue; const [x, y] = w2s(...f.p); if (x < -20 || x > W + 20 || y < 60 || y > H) continue;
     const st = ECON.siteState(WD, f).k, col = st === 'lost' ? '#777' : f.side === ME ? '#2f6fd0' : '#c8402f';
     g.beginPath(); g.arc(x, y, 7.5 * k, 0, 7); g.fillStyle = 'rgba(20,18,15,.85)'; g.fill(); g.lineWidth = 2; g.strokeStyle = col; g.stroke();
@@ -448,7 +453,9 @@ function badges() {
 }
 const NEWS = []; NEWS.unread = 0;
 function toast(msg, cls = '') {
-  NEWS.unshift({ t: WD.t, msg, cls }); if (NEWS.length > 300) NEWS.pop(); NEWS.unread++; const tk = $('ticker'); if (tk) { $('tickT').textContent = msg; tk.className = cls; } const t = document.createElement('div'); t.className = 'toast ' + cls; t.textContent = msg; $('toasts').prepend(t); while ($('toasts').children.length > 3) $('toasts').lastChild.remove(); setTimeout(() => t.remove(), 4500); }
+  NEWS.unshift({ t: WD.t, msg, cls }); if (NEWS.length > 300) NEWS.pop(); NEWS.unread++; const tk = $('ticker'); if (tk) { $('tickT').textContent = msg; tk.className = cls; }
+  if (!cls) return;   // A4: الخبر العادي بالشريط بس؛ المهم (زين/خطر) يطلع تنبيه تحت هم
+  const t = document.createElement('div'); t.className = 'toast ' + cls; t.textContent = msg; $('toasts').prepend(t); while ($('toasts').children.length > 2) $('toasts').lastChild.remove(); setTimeout(() => t.remove(), 3500); }
 let logN = 0;
 function events() {
   while (logN < WD.log.length) {
@@ -647,7 +654,25 @@ const up = e => { if (DRAW && e.pointerId === DRAW.id) { finishArrow(); return; 
 cv.addEventListener('pointerup', up); cv.addEventListener('pointercancel', e => { ptrs.delete(e.pointerId); pinch = null; downAt = null; });
 cv.addEventListener('wheel', e => { e.preventDefault(); const w = s2w(e.clientX, e.clientY); cam.s *= Math.exp(-e.deltaY * .0015); clampCam(); cam.x = w[0] - (e.clientX - W / 2) / cam.s; cam.y = w[1] - (e.clientY - H / 2) / cam.s; }, { passive: false });
 function zoomBy(f) { cam.s *= f; clampCam(); }
-$('snd').onclick = () => { VIEW.SND.init(); VIEW.SND.on = !VIEW.SND.on; $('snd').textContent = VIEW.SND.on ? '🔊' : '🔇'; };
+$('snd').onclick = () => { VIEW.SND.init(); VIEW.SND.on = !VIEW.SND.on; $('snd').textContent = VIEW.SND.on ? '🔊 الصوت' : '🔇 الصوت مطفي'; $('mmenu').hidden = true; };
+$('menu').onclick = () => { const m = $('mmenu'); m.hidden = !m.hidden; m.style.bottom = $('zoom').style.bottom; };
+document.addEventListener('pointerdown', ev => { if (!ev.target.closest('#mmenu,#menu')) $('mmenu').hidden = true; });
+$('leg').onclick = () => { $('mmenu').hidden = true; openSheet(legPanel); };
+// A4: مفتاح الخريطة
+function legPanel() {
+  const sq = (c, t) => `<i style="width:26px;height:18px;border-radius:4px;background:${c};color:var(--on-acc);font:700 11px/18px sans-serif;text-align:center">${t || ''}</i>`;
+  $('sheet').innerHTML = `${GRAB}<div class="eh"><b>🗺 مفتاح الخريطة</b><button class="x" id="shX" aria-label="سكّر">✕</button></div><div class="leg">
+  ${sq('#2f6fd0', '3')}<span><b>فرقنا</b>: الصورة نوعها (دبابة = مدرعة، مدرعة = آلية، خوذة = مشاة)، الرقم كم فرقة، والشريطين القوة والتنظيم</span>
+  ${sq('#c8402f', '2')}<span><b>فرق إيران</b> اللي نشوفها. الباهتة بـ«قبل N س» آخر معلومة عنها</span>
+  <i style="width:30px;height:4px;background:#b3161c"></i><span><b>الجبهة</b></span>
+  <i style="font-size:18px">⚔</i><span><b>معركة هسه</b>: الدائرة حولها مين غالب (أزرق إلنا)</span>
+  <i style="font-size:16px">✈</i><span><b>مطار</b>: الرقم جاهزة/كل الطيارات (يبين من تقرّب)</span>
+  <i style="font-size:16px">🛡</i><span><b>دفاع جوي</b>: الشريط تحته صواريخه الجاهزة، واسمه يبين من تقرّب</span>
+  <i style="font-size:16px">🛢</i><span><b>حقل نفط</b> (برج) أو <b>ميناء</b> (خزان)، بلون الدولة، ونار إذا مضروب</span>
+  <i style="width:22px;height:10px;border:1.5px solid var(--ink);border-radius:2px"></i><span><b>جسر</b> (من تقرّب): أحمر بإكس إذا مقطوع</span>
+  <i style="width:26px;height:16px;background:rgba(60,120,230,.5);border:2px solid rgba(30,80,190,.9)"></i><span><b>دولة حليفة</b> دخلت الحرب ويانا (الحمرة ويا إيران، والفاتحة صديقة)</span>
+  </div><div class="dim" style="margin-top:8px">قرّب بإصبعين حتى تشوف الأسماء والجسور والتفاصيل. من بعيد تبين الفرق والجبهة بس.</div>`;
+}
 $('zin').onclick = () => zoomBy(1.6); $('zout').onclick = () => zoomBy(1 / 1.6);
 $('zme').onclick = () => { const F = SIM.frontCells(WD, ME); if (!F.length) return; const sel = SIM.alive(WD).filter(d => SEL.has(d.id)); const p = sel.length ? cells[sel[0].cell].c : cells[F[Math.floor(F.length / 2)]].c; cam.x = p[0]; cam.y = p[1]; };
 function tap(x, y) {
@@ -924,8 +949,8 @@ function savesPanel() {
   $('svImp').onclick = () => $('imp').click();
 }
 $('imp').onchange = async e => { const f = e.target.files[0]; if (!f) return; try { const s0 = SAVE.migrate(JSON.parse(await f.text())); SAVE.write(ST, 2, s0); toast('⬆ رجع الحفظ لـ«خانة 2»، هسه نحمّله', 'good'); setTimeout(() => { location.search = '?load=2'; }, 600); } catch (err) { toast('❌ الملف مو حفظ صالح: ' + err.message, 'bad'); } };
-$('thm').onclick = () => { const cur = document.documentElement.dataset.theme || (matchMedia('(prefers-color-scheme: light)').matches ? 'light' : 'dark'); const v = cur === 'light' ? 'dark' : 'light'; applyTheme(v); THEME.set(v); toast(v === 'light' ? '☀️ ثيم فاتح (أوضح بالشمس)' : '🌙 ثيم غامق'); };
-$('sv').onclick = () => openSheet(savesPanel);
+$('thm').onclick = () => { $('mmenu').hidden = true; const cur = document.documentElement.dataset.theme || (matchMedia('(prefers-color-scheme: light)').matches ? 'light' : 'dark'); const v = cur === 'light' ? 'dark' : 'light'; applyTheme(v); THEME.set(v); toast(v === 'light' ? '☀️ ثيم فاتح (أوضح بالشمس)' : '🌙 ثيم غامق'); };
+$('sv').onclick = () => { $('mmenu').hidden = true; openSheet(savesPanel); };
 // حفظ تلقائي: كل يوم لعبة (منتصف الليل)، ولما التلفون يطلع من الصفحة
 let lastAutoDay = Math.floor(WD.t / 24);
 function autoSave() { const d = Math.floor(WD.t / 24); if (d !== lastAutoDay) { lastAutoDay = d; doSave(0, true); } }
@@ -960,7 +985,7 @@ function frame(now) {
     for (const cl of clusters) cl.r = Math.min(38, Math.max(14, cam.s * 9.5)) * 2;
   } else for (const cl of clusters) counter(cl);
   VIEW.drawFx(SPEED && !WD.over ? dt : 0); FX.draw(); drawBattles(dt); VIEW.drawAir(dt); VIEW.soundTick(dt, nb); lastNb = nb;
-  $('zoom').style.top = (TOPH() + 10) + 'px'; $('toasts').style.top = (TOPH() + 10) + 'px';
+  { const bh = BOTH() + 10 + ($('sheet').hidden ? 0 : 0); $('zoom').style.bottom = bh + 'px'; $('zoom').style.top = 'auto'; $('toasts').style.bottom = bh + 'px'; if (!$('mmenu').hidden) $('mmenu').style.bottom = bh + 'px'; }
   requestAnimationFrame(frame);
 }
 // للفحص الآلي

@@ -138,13 +138,14 @@
   }
   // العدو اللي يعرفه الطرف s: الطازج (شافه هالساعتين) حقيقي، والقديم لقطة بمكانها القديم
   function known(W, s) {
-    if (W.noFog || !W.seen) return alive(W).filter(d => d.side !== s);
+    if (W.noFog || ezIntel(W, s) || !W.seen) return alive(W).filter(d => d.side !== s);
     const out = [], fresh = new Set();
     for (const d of W.divs) if (!d.dead && d.side !== s && W.t - W.seen[s][d.cell] <= 2) { out.push(d); fresh.add(d.cell); }
     for (const [c, sn] of W.snap[s]) if (!fresh.has(c) && W.t - sn.t <= 96) for (const q of sn.divs) out.push({ ...q, cell: c, ghost: W.t - sn.t });
     return out;
   }
-  const isSeen = (W, s, cell, h = 2) => W.noFog || !W.seen || W.t - W.seen[s][cell] <= h;
+  const ezIntel = (W, s) => s === 0 && W.cfg && W.cfg.ez && W.cfg.ez.on && W.cfg.ez.intel;   // GW11 B4: الوضع الخاص «كشف كامل» للاعب
+  const isSeen = (W, s, cell, h = 2) => W.noFog || ezIntel(W, s) || !W.seen || W.t - W.seen[s][cell] <= h;
 
   // ساعة وحدة
   // GW10: هدنة = ما اكو هجوم (الحركة بأرضنا بس)
@@ -228,6 +229,8 @@
 
   // كل يوم: تعبئة (فرقة جديدة كل 8 أيام إذا الجيش أقل من حجمه الأصلي) وفحص الاستسلام
   function daily(W) {
+    // GW11 B4: الحرب بمدة: تخلص بنهاية المدة ويطلع التقييم
+    if (W.cfg && W.cfg.dur && !W.over && W.t >= W.cfg.dur * 24) { W.over = { t: W.t, end: 'dur', loser: -1 }; W.log.push({ t: W.t, k: 'warend' }); }
     for (const s of [0, 1]) {
       const n = alive(W).filter(d => d.side === s).length;
       W.mob = W.mob || [0, 0]; W.ob = W.ob || [n, n];
@@ -239,6 +242,7 @@
       const own = W.cells.reduce((v, c, i) => v + (c.s === s && W.ctrl[i] === s ? (c.vp || 0) : 0), 0);
       // GW8: الشعب المنهار (معنويات تحت 25) يستسلم أبكر، وإذا وصلت صفر الدولة تنهار
       const mor = W.eco ? W.eco[s].mor : 50;
+      if (s === 0 && W.cfg && W.cfg.ez && W.cfg.ez.on && W.cfg.ez.immune) continue;   // الوضع الخاص: حصانة من الاستسلام
       if (!W.over && (own <= W.vpTotal[s] * (mor < 25 ? .45 : .3) || mor <= 0)) { W.over = { t: W.t, loser: s, why: mor <= 0 ? 'mor' : 'vp' }; W.log.push({ t: W.t, side: s, k: 'capitulate', why: W.over.why }); }
     }
   }
@@ -277,7 +281,7 @@
   const power = d => (TEMPL[d.kind].soft + TEMPL[d.kind].def * .5) * d.str * (d.org / d.orgMax);
   function ai(W, s, opt = {}) {
     if (s === 0) runPlans(W);
-    const aggr = opt.aggr ?? 1.6;
+    const aggr = opt.aggr ?? (s === 1 && W.cfg ? DIFF[W.cfg.diff || 'mid'].aggr : 1.6);
     const D = alive(W); const mine = D.filter(d => d.side === s), theirs = known(W, s); // الذكاء يقرر بالمعلومات اللي عنده بس
     const enemyAt = new Map(); for (const e of theirs) enemyAt.set(e.cell, (enemyAt.get(e.cell) || 0) + power(e));
     const mineAt = new Map(); for (const d of mine) { if (!mineAt.has(d.cell)) mineAt.set(d.cell, []); mineAt.get(d.cell).push(d); }
@@ -341,6 +345,15 @@
     }
   }
 
+  // ===== GW11 B4: الصعوبة والإعدادات =====
+  // aggr: قد شنو الذكاء الإيراني يجرأ يهاجم (أقل = أجرأ)؛ atk/org: جودة الجيش الإيراني؛ cash/mor: إضافة لخزينة العراق ومعنوياته
+  const DIFF = { easy: { n: 'سهل', aggr: 1.9, atk: .9, org: .92, cash: 10, mor: 8 }, mid: { n: 'متوسط', aggr: 1.6, atk: 1, org: 1, cash: 0, mor: 0 }, hard: { n: 'صعب', aggr: 1.4, atk: 1.1, org: 1.06, cash: -5, mor: -5 } };
+  function applyCfg(W, cfg) {
+    W.cfg = { diff: 'mid', dur: 0, ez: {}, ...cfg }; const D = DIFF[W.cfg.diff] || DIFF.mid;
+    W.qual[1].atk *= D.atk; W.qual[1].org *= D.org; for (const d of W.divs) if (d.side === 1) { d.orgMax *= D.org; d.org = Math.min(d.org * D.org, d.orgMax); }
+    if (W.eco) { W.eco[0].cash += D.cash; W.eco[0].mor = Math.max(0, Math.min(100, W.eco[0].mor + D.mor)); }
+    return W;
+  }
   // ===== السيناريو: العراق ضد إيران، آذار 2027 =====
   function scenario(W, opt = {}) {
     const OB = opt.ob || [{ inf: 16, mec: 11, arm: 9 }, { inf: 26, mec: 10, arm: 6 }];
@@ -469,6 +482,6 @@
   // تلخيص الحرب
   function score(W) { const vp = [0, 0]; W.cells.forEach((c, i) => { if (c.vp) vp[W.ctrl[i]] += c.vp; }); return { vp, cells: [0, 1].map(s => W.ctrl.reduce((n, x) => n + (x === s ? 1 : 0), 0)), divs: [0, 1].map(s => alive(W).filter(d => d.side === s).length), lost: W.lost.slice() }; }
 
-  const API = { forecast, inTruce, getNID: () => NID, setNID: v => { NID = v; }, WX, weather, envAtk, envMv, hitBridge, edgeCost, SUP_BUDGET, intel, known, isSeen, initIntel, makePlan, cancelPlan, runPlans, cellChain, joinArmy, airHit, TEMPL, TERR, KIND_N, World, addDiv, step, ai, order, route, scenario, supply, score, alive, divsIn, frontCells, power };
+  const API = { DIFF, applyCfg, forecast, inTruce, getNID: () => NID, setNID: v => { NID = v; }, WX, weather, envAtk, envMv, hitBridge, edgeCost, SUP_BUDGET, intel, known, isSeen, initIntel, makePlan, cancelPlan, runPlans, cellChain, joinArmy, airHit, TEMPL, TERR, KIND_N, World, addDiv, step, ai, order, route, scenario, supply, score, alive, divsIn, frontCells, power };
   if (typeof module !== 'undefined') module.exports = API; else root.SIM = API;
 })(this);

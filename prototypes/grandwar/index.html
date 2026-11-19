@@ -40,7 +40,7 @@ button{font:inherit;color:inherit;background:none;border:0;cursor:pointer}
 #intro{position:fixed;inset:0;background:var(--scrim);display:grid;place-items:center;z-index:9;padding:18px}#intro[hidden]{display:none}
 #intro .box{background:var(--panel2);border:1px solid var(--line);border-radius:16px;padding:16px 16px 14px;max-width:420px}
 #intro h1{font:700 24px "Reem Kufi",sans-serif;color:var(--gold);text-align:center}#intro p{margin:8px 0;font-size:13.5px;line-height:1.6}#intro ul{margin:4px 0 10px;padding-inline-start:18px;font-size:13px;line-height:1.65}
-#intro button{width:100%;margin-top:6px;background:var(--gold);color:var(--brass-ink);border-radius:12px;padding:10px;font-weight:700;font-size:16px}
+#intro #go,#intro #cont{width:100%;margin-top:8px;background:var(--gold);color:var(--brass-ink);border-radius:12px;padding:11px;font-weight:700;font-size:16px}#intro .seg button{background:var(--chip);color:var(--ink);font-size:14px}#intro .seg button.on{background:var(--gold);color:var(--brass-ink)}
 #intro #cont{background:var(--me);color:var(--on-acc)}
 .slot{background:var(--chip);border:1px solid var(--line);border-radius:10px;padding:7px 9px;margin:6px 0}.slot b{font:700 14px 'Reem Kufi'}.slot .acts{margin-top:5px}
 .arm{background:var(--chip);border:1px solid var(--line);border-radius:12px;padding:8px 10px;margin:7px 0}.arm .h{display:flex;align-items:center;gap:8px}.arm b{font:700 15px 'Reem Kufi'}.arm .acts{margin-top:6px}
@@ -90,6 +90,15 @@ button:focus-visible{outline:2px solid var(--gold);outline-offset:2px}
 .adv{display:flex;align-items:center;gap:8px;padding:7px 9px;margin:5px 0;border-radius:11px;background:var(--chip);border:1px solid var(--line);font-size:var(--fs)}.adv.w{border-inline-start:4px solid var(--neg-s)}.adv span{flex:1;min-width:0}.adv button{flex:0 0 auto;min-height:36px;padding:4px 10px;border-radius:9px;background:var(--gold);color:var(--brass-ink);font-weight:700}
 .kv{display:grid;grid-template-columns:1fr 1fr;gap:4px 12px;margin:7px 0;font-size:var(--fs)}.kv b{float:inline-end;font-variant-numeric:tabular-nums}
 .fc{border:1px solid var(--line);border-radius:11px;padding:6px 9px;margin:6px 0;background:var(--chip)}.fc .big{font-size:26px}
+#intro .box{max-height:calc(100% - 20px);overflow:auto}
+#intro .stamp{display:inline-block;border:2px solid var(--act);color:var(--act);border-radius:6px;padding:1px 8px;font:700 13px 'Reem Kufi';transform:rotate(-3deg)}
+#intro h1{font-size:34px;text-align:start;margin-top:4px}#intro .sub{color:var(--dim)}#intro h2{font:700 15px 'Reem Kufi';margin:12px 0 5px;color:var(--gold)}
+#intro .scn{display:flex;align-items:center;justify-content:space-between;gap:8px;background:var(--chip);border:1px solid var(--line);border-radius:12px;padding:9px 12px;font:700 16px 'Reem Kufi';margin:8px 0}#intro .scn b{color:var(--dim);font-size:13px}
+#intro .seg button{min-height:40px}.ezt{display:flex;gap:8px;align-items:flex-start;margin:12px 0 4px;font-size:var(--fs);background:var(--chip);border:1px solid var(--line);border-radius:11px;padding:8px 10px}.ezt input{margin-top:3px;width:18px;height:18px;accent-color:var(--gold)}
+#intro .fine{font-size:11px;color:var(--dim);text-align:center;margin-top:8px}
+.tut{display:grid;gap:8px}.tut div{background:var(--chip);border:1px solid var(--line);border-radius:12px;padding:9px 11px}.tut b{display:block;font:700 15px 'Reem Kufi';color:var(--gold)}
+.ezr{display:flex;align-items:center;gap:8px;padding:7px 0;border-top:1px solid var(--line)}.ezr span{flex:1}.ezr button{min-width:74px;min-height:36px;border-radius:9px;background:var(--chip);border:1px solid var(--line);font-weight:700}.ezr button.on{background:var(--gold);color:var(--brass-ink)}
+.gb{display:grid;grid-template-columns:1fr 1fr;gap:6px;margin-top:6px}.gb button{min-height:42px;border-radius:10px;background:var(--chip);border:1px solid var(--line);font-weight:600}
 </style></head><body>
 <canvas id="c"></canvas>
 <div id="top">
@@ -101,7 +110,7 @@ button:focus-visible{outline:2px solid var(--gold);outline-offset:2px}
   <button id="ticker" aria-label="آخر الأخبار، اضغط تشوف السجل"><b>📡</b><span id="tickT">غرفة العمليات: الحرب بدت</span></button>
 </div>
 <div id="zoom"><button id="zin" aria-label="قرّب">＋</button><button id="zout" aria-label="بعّد">－</button><button id="zme" title="رجوع للجبهة" aria-label="رجوع للجبهة">◎</button><button id="menu" aria-label="القائمة">☰</button></div>
-<div id="mmenu" hidden><button id="snd">🔊 الصوت</button><button id="sv">💾 الحفظ</button><button id="thm">🌓 الثيم</button><button id="leg">🗺 مفتاح الخريطة</button></div>
+<div id="mmenu" hidden><button id="snd">🔊 الصوت</button><button id="sv">💾 الحفظ</button><button id="thm">🌓 الثيم</button><button id="leg">🗺 مفتاح الخريطة</button><button id="help">📖 الدليل</button><button id="ezb">🎁 الوضع الخاص</button></div>
 <input type="file" id="imp" accept=".json,application/json" hidden>
 <div id="toasts"></div>
 <div id="hint" hidden></div>
@@ -109,20 +118,20 @@ button:focus-visible{outline:2px solid var(--gold);outline-offset:2px}
 <div id="card" hidden></div>
 <div id="tabs"><button class="on"><em>🗺️</em>الخريطة</button><button id="tabArmy" class="badge"><em>🪖</em>الجيش</button><button id="tabProd" class="badge"><em>🏭</em>الإنتاج</button><button id="tabEco" class="badge"><em>💰</em>الاقتصاد</button><button id="tabDip" class="badge"><em>🤝</em>السياسة</button><button id="tabRep" class="badge"><em>📜</em>التقرير</button></div>
 <div id="intro"><div class="box">
+  <div class="stamp">14 آذار 2027</div>
   <h1>الحرب الكبرى</h1>
-  <p>14 آذار 2027. الحرب بدت بين العراق وإيران. انت قائد الجيش العراقي.</p>
-  <ul>
-    <li><b>المربعات الزرقاء</b> فرقك، والحمرة فرق إيران. الصورة نوعها: دبابة = مدرعة، مدرعة = آلية، خوذة = مشاة. الرقم كم فرقة، والشريط قوتها.</li>
-    <li><b>الخط الأحمر</b> هو الجبهة. <b>⚔</b> معركة هسه، والدائرة حولها تبين مين غالب (أزرق إلنا).</li>
-    <li><b>اضغط فرقة</b> وبعدين <b>«هجوم/تحرّك»</b> واضغط المنطقة اللي تريدها. أو خليها <b>«تلقائي»</b> والقائد يمسك الجبهة ويهاجم لما يشوف فرصة.</li>
-    <li><b>قرّب بإصبعين</b> وتشوف الدبابات والمدرعات نفسها، والوقت يبطأ لحاله لدقيقة بالثانية حتى تشوف القتال بإيقاعه الحقيقي.</li>
-    <li><b>الوقت:</b> ▶ عشر دقايق بالثانية، ▶▶ ساعة، ⏩ ست ساعات. التقدّم بأرض العدو بطيء مثل الحقيقة (دروع ~45 كم باليوم).</li>
-    <li><b>💰 الاقتصاد و🏭 الإنتاج</b> (تحت): فلوسك من النفط (حقول البصرة تتصدّر من الفاو)، والحرب تكلّف. الفرق والطيارات والصواريخ الجديدة تنشترى وتوصل بعد أيام. ضرب نفط العدو يقطع فلوسه.</li>
-    <li><b>🤝 السياسة:</b> الكويت والسعودية وتركيا وأمريكا وروسيا والصين وغيرهم. ابعث بعثات، اطلب مساعدة أو تحالف، واعرض هدنة أو سلام لما إيران تتعب.</li>
-    <li>المدن الكبيرة نقاط. اللي يخسر 70% من نقاط مدنه يستسلم، أو إذا معنويات الشعب انهارت.</li>
-  </ul>
+  <p class="sub">الحرب بدت بين العراق وإيران. انت قائد الجيش العراقي: الجبهة، والجو، والفلوس، والسياسة.</p>
+  <div class="scn"><span>🇮🇶 العراق</span><b>ضد</b><span>🇮🇷 إيران</span></div>
   <button id="cont" hidden></button>
+  <div id="newOpts">
+    <h2>الصعوبة</h2><div class="seg" id="optDiff"><button data-v="easy">سهل</button><button data-v="mid" class="on">متوسط</button><button data-v="hard">صعب</button></div>
+    <div class="dim" id="diffTxt"></div>
+    <h2>مدة الحرب</h2><div class="seg" id="optDur"><button data-v="90">3 أشهر</button><button data-v="180">6 أشهر</button><button data-v="365">سنة</button><button data-v="0" class="on">بلا حد</button></div>
+    <div class="dim">بنهاية المدة الحرب توقف ويطلع تقييمك (S لـ D). «بلا حد» تخلص بالسلام أو الاستسلام.</div>
+    <label class="ezt"><input type="checkbox" id="optEz"> <span>🎁 الوضع الخاص: حصانة من الاستسلام، كشف كامل، إنتاج أسرع، وهدايا (تقدر تغيّره بعدين من ☰)</span></label>
+  </div>
   <button id="go">ابدأ الحرب ▶</button>
+  <p class="fine">الأرقام تقريبية من مصادر عامة (2024–2026). الخريطة والطرق من Natural Earth.</p>
 </div></div>
 <div id="end" hidden></div>
 <div id="bv" hidden><canvas id="bvc"></canvas>
@@ -164,7 +173,7 @@ let LOADED = null, LOADERR = null;
 AIR.useEcon(ECON);
 if (Q.get('load') != null && ST) { try { const s0 = SAVE.read(ST, Q.get('load')); if (s0) LOADED = SAVE.restore(s0, C, { roads: window.ROADS }, SIM, AIR, ECON, DIP); else LOADERR = 'ما لكيت حفظ بهالخانة'; } catch (e) { LOADERR = e.message; LOADED = null; } }
 const SEED = LOADED ? LOADED.seed : +(Q.get('seed') || (Date.now() % 100000));
-const WD = LOADED ? LOADED.W : SIM.World(C, { seed: SEED, roads: window.ROADS }); if (!LOADED) { SIM.scenario(WD); ECON.init(WD); DIP.init(WD); }
+const WD = LOADED ? LOADED.W : SIM.World(C, { seed: SEED, roads: window.ROADS }); if (!LOADED) { SIM.scenario(WD); ECON.init(WD); DIP.init(WD); WD.cfg = { diff: 'mid', dur: 0, ez: {} }; }
 const AW = LOADED ? LOADED.A : AIR.create(WD); const AIRK = [0, 1, 1.5, 2.2];
 const cells = C.cells;
 // ===== الكاميرا =====
@@ -483,6 +492,7 @@ function events() {
     if (l.k === 'oilhit') toast(mine ? `🛢🔥 ضربنا ${l.n}: نفطهم ينقص ~${l.d} يوم` : `⚠️🛢 إيران ضربت ${l.n}: صادراتنا تنقص ~${l.d} يوم`, mine ? 'good' : 'bad');
     if (l.k === 'broke' && mine) toast('💸 الخزينة وصلت حد الدين: الرواتب تأخرت والشعب زعلان. خفّف الشراء أو اضرب نفطهم', 'bad');
     if (l.k === 'capitulate') endGame(l.side, l.why);
+    if (l.k === 'warend') endGame(-1, 'dur');
     if (l.k === 'dip' && l.a === 'peace') endPeace();
   }
 }
@@ -736,6 +746,26 @@ $('snd').onclick = () => { VIEW.SND.init(); VIEW.SND.on = !VIEW.SND.on; $('snd')
 $('menu').onclick = () => { const m = $('mmenu'); m.hidden = !m.hidden; m.style.bottom = $('zoom').style.bottom; };
 document.addEventListener('pointerdown', ev => { if (!ev.target.closest('#mmenu,#menu')) $('mmenu').hidden = true; });
 $('leg').onclick = () => { $('mmenu').hidden = true; openSheet(legPanel); };
+$('help').onclick = () => { $('mmenu').hidden = true; openSheet(helpPanel); };
+$('ezb').onclick = () => { $('mmenu').hidden = true; openSheet(ezPanel); };
+// GW11 B4: الدليل (اللي كان بشاشة البداية)
+function helpPanel() { $('sheet').innerHTML = `${GRAB}<div class="eh"><b>📖 الدليل</b><button class="x" id="shX" aria-label="سكّر">✕</button></div><div style="font-size:var(--fs-m);line-height:1.7">  <ul>     <li><b>المربعات الزرقاء</b> فرقك، والحمرة فرق إيران. الصورة نوعها: دبابة = مدرعة، مدرعة = آلية، خوذة = مشاة. الرقم كم فرقة، والشريط قوتها.</li>     <li><b>الخط الأحمر</b> هو الجبهة. <b>⚔</b> معركة هسه، والدائرة حولها تبين مين غالب (أزرق إلنا).</li>     <li><b>اضغط فرقة</b> وبعدين <b>«هجوم/تحرّك»</b> واضغط المنطقة اللي تريدها. أو خليها <b>«تلقائي»</b> والقائد يمسك الجبهة ويهاجم لما يشوف فرصة.</li>     <li><b>قرّب بإصبعين</b> وتشوف الدبابات والمدرعات نفسها، والوقت يبطأ لحاله لدقيقة بالثانية حتى تشوف القتال بإيقاعه الحقيقي.</li>     <li><b>الوقت:</b> ▶ عشر دقايق بالثانية، ▶▶ ساعة، ⏩ ست ساعات. التقدّم بأرض العدو بطيء مثل الحقيقة (دروع ~45 كم باليوم).</li>     <li><b>💰 الاقتصاد و🏭 الإنتاج</b> (تحت): فلوسك من النفط (حقول البصرة تتصدّر من الفاو)، والحرب تكلّف. الفرق والطيارات والصواريخ الجديدة تنشترى وتوصل بعد أيام. ضرب نفط العدو يقطع فلوسه.</li>     <li><b>🤝 السياسة:</b> الكويت والسعودية وتركيا وأمريكا وروسيا والصين وغيرهم. ابعث بعثات، اطلب مساعدة أو تحالف، واعرض هدنة أو سلام لما إيران تتعب.</li>     <li>المدن الكبيرة نقاط. اللي يخسر 70% من نقاط مدنه يستسلم، أو إذا معنويات الشعب انهارت.</li>   </ul></div>`; }
+// GW11 B4: 🎁 الوضع الخاص (من لعبتك الأصلية): تسهيلات تشغّلها وتطفيها، وهدايا
+const EZL = [['immune', '🛡 حصانة من الاستسلام', 'ما نستسلم مهما خسرنا مدن أو نزلت المعنويات'], ['intel', '👁 كشف كامل', 'تشوف كل فرق إيران بدون ضباب حرب'], ['fast', '🏭 إنتاج أسرع ×2', 'الطلبات توصل بنص الوقت']];
+function ezPanel() {
+  const z = WD.cfg.ez;
+  $('sheet').innerHTML = `${GRAB}<div class="eh"><b>🎁 الوضع الخاص</b><button class="x" id="shX" aria-label="سكّر">✕</button></div>
+  <div class="ezr"><span><b>تشغيل الوضع الخاص</b><br><small class="dim">المفتاح الرئيسي للتسهيلات. التقييم بالنهاية يكتب إنه بالوضع الخاص.</small></span><button data-ez="on" class="${z.on ? 'on' : ''}">${z.on ? 'شغّال ✓' : 'مطفي'}</button></div>
+  ${EZL.map(([k, t, d]) => `<div class="ezr" style="${z.on ? '' : 'opacity:.5'}"><span><b>${t}</b><br><small class="dim">${d}</small></span><button data-ez="${k}" class="${z[k] ? 'on' : ''}">${z[k] ? 'شغّال' : 'مطفي'}</button></div>`).join('')}
+  <h3>⚡ هدايا فورية</h3><div class="gb"><button data-g="cash">💰 +10 مليار</button><button data-g="mor">🙂 معنويات +20</button><button data-g="planes">✈ الطيارات ترجع كاملة</button><button data-g="div">🛡 فرقة مدرعة هدية</button></div>`;
+  $('sheet').querySelectorAll('[data-ez]').forEach(b => b.onclick = () => { const k = b.dataset.ez; z[k] = !z[k]; if (k !== 'on' && z[k]) z.on = true; if (z.on) z.used = 1; toast(`🎁 ${k === 'on' ? 'الوضع الخاص' : EZL.find(x => x[0] === k)[1]}: ${z[k] ? 'شغّال' : 'مطفي'}`); ezPanel(); hud(); });
+  $('sheet').querySelectorAll('[data-g]').forEach(b => b.onclick = () => { z.on = true; z.used = 1; const g = b.dataset.g, e = WD.eco[ME];
+    if (g === 'cash') { e.cash += 10; toast('🎁 وصلتك 10 مليار', 'good'); }
+    if (g === 'mor') { e.mor = Math.min(100, e.mor + 20); toast('🎁 معنويات الشعب +20', 'good'); }
+    if (g === 'planes') { AW.bases.filter(x => x.side === ME).forEach(x => { x.n0 = x.max; x.ready = x.max; }); toast('🎁 كل المطارات رجعت كاملة', 'good'); }
+    if (g === 'div') { ECON.deliver(WD, AW, ME, { k: 'arm', gift: 'ez' }, SIM); toast('🎁 فرقة مدرعة جديدة بأكبر مدينة', 'good'); }
+    hud(); ezPanel(); });
+}
 // A4: مفتاح الخريطة
 function legPanel() {
   const sq = (c, t) => `<i style="width:26px;height:18px;border-radius:4px;background:${c};color:var(--on-acc);font:700 11px/18px sans-serif;text-align:center">${t || ''}</i>`;
@@ -1075,8 +1105,19 @@ Promise.all(['base_me', 'base_south', 'abrams', 'abrams_t', 't72', 't72_t', 'bmp
   for (const n of ['truck', 'grad']) { const im = IMG[n], c = document.createElement('canvas'); c.width = im.width; c.height = im.height; const x = c.getContext('2d'); x.filter = 'hue-rotate(170deg) saturate(1.3)'; x.drawImage(im, 0, 0); IMG[n + '_r'] = c; }
   FX.init({ g, cam, w2s, IMG }); BVIEW.init({ IMG, SND: VIEW.SND });
   hud(); advRefresh(); requestAnimationFrame(frame); window.READY = 1;
-  $('go').onclick = () => { if (LOADED) { $('intro').hidden = true; VIEW.SND.init(); setSpeed(1); toast(`💾 كمّلنا من ${gameDate(WD.t)}`, 'good'); return; } if (Q.get('load') != null) { location.search = ''; return; } $('intro').hidden = true; VIEW.SND.init(); setSpeed(1); };
-  if (LOADED) { $('go').textContent = `كمّل الحرب ▶ (${gameDate(WD.t)})`; logN = WD.log.length; if (LOADED.ui?.news) { NEWS.push(...LOADED.ui.news); $('tickT').textContent = NEWS[0]?.msg || ''; } }
+  const CFG = { diff: 'mid', dur: 0, ez: {} };
+  const segPick = (id, k, f) => $(id).querySelectorAll('button').forEach(b => b.onclick = () => { $(id).querySelectorAll('button').forEach(x => x.classList.toggle('on', x === b)); CFG[k] = f(b.dataset.v); if (k === 'diff') diffTxt(); });
+  const diffTxt = () => { $('diffTxt').textContent = { easy: 'إيران أضعف وأجبن، وخزينتك +10 مليار ومعنوياتك أعلى', mid: 'مثل الواقع تقريباً', hard: 'إيران أقوى وأجرأ، وخزينتك أقل' }[CFG.diff]; };
+  segPick('optDiff', 'diff', v => v); segPick('optDur', 'dur', v => +v); diffTxt();
+  $('optEz').onchange = e => { CFG.ez = e.target.checked ? { on: true, immune: true, intel: true, fast: true, used: 1 } : {}; };
+  const tutorial = () => { let seen = false; try { seen = !!localStorage.getItem('gw.tut2'); localStorage.setItem('gw.tut2', 1); } catch (e) { } if (seen) return;
+    const m = $('modal'); m.innerHTML = `<div class="box"><h2>أهلاً يا قائد 👋</h2><div class="tut">
+    <div><b>1. الخريطة</b>الأزرق فرقنا والأحمر إيران، والرقم كم فرقة. الخط الأحمر الجبهة. قرّب بإصبعين، و☰ ← «🗺 مفتاح الخريطة» يشرح كل رمز.</div>
+    <div><b>2. الهجوم</b>اضغط فرقة ← «⚔ هجوم» ← منطقة العدو: يطلعلك <b>التوقّع</b> (الفرصة والخسائر) قبل ما تأكد. أو «🏹 سهم» وارسم الهجوم بإصبعك.</div>
+    <div><b>3. الدولة</b>تحت: 🏭 الإنتاج، 💰 الاقتصاد، 🤝 السياسة، و📜 التقرير بيه <b>🧭 المستشارين</b> يكولولك شنو المهم هسه.</div></div>
+    <div class="acts" style="margin-top:10px"><button class="go" id="tutOk">يلا نبدي 🚀</button></div></div>`; m.hidden = false; setSpeed(0); $('tutOk').onclick = () => { m.hidden = true; setSpeed(1); }; };
+  $('go').onclick = () => { if (LOADED) { $('intro').hidden = true; VIEW.SND.init(); setSpeed(1); toast(`💾 كمّلنا من ${gameDate(WD.t)}`, 'good'); return; } if (Q.get('load') != null) { location.search = ''; return; } $('intro').hidden = true; VIEW.SND.init(); SIM.applyCfg(WD, CFG); hud(); advRefresh(); setSpeed(1); tutorial(); };
+  if (LOADED) { $('newOpts').hidden = true; $('go').textContent = `كمّل الحرب ▶ (${gameDate(WD.t)})`; logN = WD.log.length; if (LOADED.ui?.news) { NEWS.push(...LOADED.ui.news); $('tickT').textContent = NEWS[0]?.msg || ''; } }
   else { const a = ST && SAVE.info(ST, 0); if (a) { $('cont').hidden = false; $('cont').textContent = `💾 كمّل حربك (${gameDate(a.t)})`; $('cont').onclick = () => { location.search = '?load=0'; }; $('go').textContent = 'حرب جديدة ▶'; } }
   if (LOADERR) toast('❌ ما كدرت أحمّل الحفظ: ' + LOADERR, 'bad');
   if (Q.has('auto')) { $('intro').hidden = true; setSpeed(+Q.get('auto') || 3); }

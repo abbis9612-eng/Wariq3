@@ -176,7 +176,7 @@
       const e = W.eco[s], P = PRIO[e.prio], L = LAND[s];
       const B = budget(W, A, s); e.cash += B.net; e.last = B;
       // الإنتاج: الخطوط تشتغل على أول الطلبات بالترتيب
-      const sp = P.prod * (e.mor < 30 ? .75 : 1);
+      const sp = P.prod * (e.mor < 30 ? .75 : 1) * (s === 0 && W.cfg && W.cfg.ez && W.cfg.ez.on && W.cfg.ez.fast ? 2 : 1);   // الوضع الخاص: إنتاج أسرع ×2
       for (let k = 0; k < Math.min(e.lines, e.q.length); k++) e.q[k].left -= sp * (ITEMS[e.q[k].k].cat === 'div' && e.mor < 30 ? .8 : 1);
       for (let k = e.q.length - 1; k >= 0; k--) if (e.q[k].left <= 0) { const o = e.q[k]; if (deliver(W, A, s, o, SIM)) e.q.splice(k, 1); }
       morale(W, s, B);

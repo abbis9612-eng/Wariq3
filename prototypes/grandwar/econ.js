@@ -89,6 +89,8 @@
   function oilOf(W, s) {
     const O = W.oil, routes = {};
     for (const f of O.sites) if (f.term && f.side === s) routes[f.term] = siteState(W, f).f;
+    // GW11 C1: هرمز مغلق ← صادرات الخليج: العراق الجنوب ~5٪، وإيران ~25٪ (ميناء جاسك)
+    if (W.dip && W.dip.hz && W.dip.hz.closed) { if (routes.south != null) routes.south *= .05; if (s === 1) routes.kharg = (routes.kharg ?? 1) * .25; }
     let prod = 0, exp = 0;
     for (const f of O.sites) if (!f.term && f.side === s) { const q = f.out * siteState(W, f).f; prod += q; exp += q * (routes[f.route] ?? 1); }
     return { prod, exp: exp * LAND[s].exp };

@@ -182,6 +182,7 @@
     }
     if (D.truce && D.truce <= W.t && D.truce > W.t - 24) say(W, { side: 0, a: 'truceend' });
     fireEvents(W);
+    hzDaily(W);
     if (!W.over) iranDip(W);
     D.hist.push([day(W), +weary(W, 0).toFixed(2), +weary(W, 1).toFixed(2)]); if (D.hist.length > 120) D.hist.shift();
   }
@@ -204,9 +205,49 @@
     else if (w1 > .6 && W.rnd() < .3) { D.offer = { k: 'truce', t: W.t }; say(W, { side: 1, a: 'offer', k: 'truce' }); }
     else if (w0 > 1 && vpOf(W).held[1] > 0 && W.rnd() < .4) { D.offer = { k: 'keep', t: W.t }; say(W, { side: 1, a: 'offer', k: 'keep' }); }
   }
+  // ===== GW11 C1: مضيق هرمز =====
+  // كل صادرات البصرة البحرية تعبر هرمز. إيران تقدر تغلقه (ألغام وزوارق وصواريخ ساحلية): صادرات الجنوب العراقية تقريباً توقف،
+  // وحتى صادرات إيران تنزل (تبقى بس من ميناء جاسك ~25٪). النفط يقفز، والخليج وأمريكا والصين يزعلون.
+  // يرجع ينفتح: أمريكا تفتحه بعملية بحرية (اللاعب يطلب)، أو بالهدنة/السلام، أو إيران تفتحه لحالها بعد فترة.
+  const HZ = { warn: 48, iraq: .05, iran: .25, jump: 25 };
+  function hz(W) { const D = W.dip; if (!D.hz) D.hz = { closed: 0, since: 0, warn: 0, op: 0 }; return D.hz; }
+  const hzClosed = W => !!(W.dip && W.dip.hz && W.dip.hz.closed);
+  function closeHz(W) {
+    const H = hz(W); if (H.closed) return; H.closed = 1; H.since = W.t; H.warn = 0;
+    if (W.oil) W.oil.price = Math.min(150, W.oil.price + HZ.jump);
+    for (const C of COUNTRIES) if (C.gulf) rel(W, C.id, 1, -20); rel(W, 'us', 1, -10); rel(W, 'cn', 1, -15);
+    if (W.eco) W.eco[0].mor = Math.max(0, W.eco[0].mor - 3);
+    say(W, { side: 1, a: 'hzclose' });
+  }
+  function openHz(W, how) { const H = hz(W); if (!H.closed) return; H.closed = 0; H.op = 0; if (W.oil) W.oil.price = Math.max(60, W.oil.price - HZ.jump * .6); say(W, { side: how === 'us' ? 0 : 1, a: 'hzopen', how }); }
+  // اللاعب يطلب من أمريكا عملية بحرية تفتحه
+  function askHz(W, s) {
+    const H = hz(W); if (!H.closed) return 'المضيق مفتوح'; if (H.op) return 'العملية الأمريكية شغالة (باقي ' + Math.ceil((H.op - W.t) / 24) + ' يوم)';
+    if (cdLeft(W, s, 'us', 'h')) return 'أمريكا رفضت قريب، انتظر ' + Math.ceil(cdLeft(W, s, 'us', 'h') / 24) + ' يوم';
+    setCd(W, s, 'us', 'h', 24 * 10);
+    const c = W.dip.c.us, p = Math.max(0, Math.min(.95, (c.rel[s] - 35) / 45 + (c.st === 'ally' + s ? .4 : 0)));
+    if (W.rnd() > p) { say(W, { side: s, a: 'hzno', id: 'us' }); return { ok: false, p }; }
+    H.op = W.t + 24 * (6 + Math.floor(W.rnd() * 8)); rel(W, 'us', s, -4); say(W, { side: s, a: 'hzop', d: Math.round((H.op - W.t) / 24) }); return { ok: true, p };
+  }
+  function hzDaily(W) {
+    const H = hz(W);
+    if (H.closed) {
+      for (const C of COUNTRIES) if (C.gulf) rel(W, C.id, 1, -.3);
+      if (H.op && W.t >= H.op) { openHz(W, 'us'); if (W.eco) { W.eco[0].mor = Math.min(100, W.eco[0].mor + 3); W.eco[1].mor = Math.max(0, W.eco[1].mor - 3); } return; }
+      if (W.dip.truce > W.t || W.over) { openHz(W, 'truce'); return; }
+      if (W.t - H.since > 24 * 30 && W.rnd() < .04) openHz(W, 'iran');   // إيران تخسر هم: تفتحه لحالها
+      return;
+    }
+    if (H.warn) { if (W.t >= H.warn) closeHz(W); return; }
+    // الذكاء الإيراني: يهدد ويغلق إذا تعبان أو العراق عنده حلفاء من الخليج/أمريكا
+    if (W.over || W.dip.truce > W.t || W.t < 24 * 7) return;
+    const allies = COUNTRIES.filter(C => (C.gulf || C.id === 'us') && W.dip.c[C.id].st === 'ally0').length;
+    const urge = (weary(W, 1) > .55 ? .025 : 0) + allies * .03;
+    if (urge && W.rnd() < urge) { H.warn = W.t + HZ.warn; say(W, { side: 1, a: 'hzwarn' }); }
+  }
   // للمحاكاة والجو: هدنة هسه؟
   const truce = W => !!(W.dip && W.dip.truce > W.t);
 
-  const API = { aidP, COUNTRIES, BY, TERMS, EVENTS, EV, C_MISSION, init, ensure, daily, weary, verdict, guess, mission, askAid, askJoin, askSanc, propose, accept, answerOffer, choose, truce, vpOf, cdLeft, join };
+  const API = { HZ, hz, hzClosed, closeHz, openHz, askHz, aidP, COUNTRIES, BY, TERMS, EVENTS, EV, C_MISSION, init, ensure, daily, weary, verdict, guess, mission, askAid, askJoin, askSanc, propose, accept, answerOffer, choose, truce, vpOf, cdLeft, join };
   if (typeof module !== 'undefined') module.exports = API; else root.DIP = API;
 })(this);

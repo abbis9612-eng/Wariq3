@@ -8,6 +8,9 @@
     // 1) عرض من إيران أو حدث ينتظر قرارك
     if (D && D.offer) add({ id: 'offer', w: 1, p: 100, t: `✉️ إيران عارضة «${DIP.TERMS[D.offer.k].n}». ردّ عليها`, a: 'dip:war', l: 'شوف العرض' });
     if (D && D.ev && D.ev.length) add({ id: 'ev', w: 1, p: 95, t: `📢 «${DIP.EV[D.ev[0].id].n}» ينتظر قرارك`, a: 'ev', l: 'قرّر' });
+    // هرمز
+    if (D && D.hz && D.hz.closed && !D.hz.op) add({ id: 'hz', w: 1, p: 92, t: `⚓ هرمز مغلق من ${Math.floor((W.t - D.hz.since) / 24)} يوم: فلوس النفط واقفة. اطلب من أمريكا عملية فتح، أو هدنة`, a: 'dip:war', l: 'السياسة' });
+    else if (D && D.hz && D.hz.warn) add({ id: 'hzw', w: 1, p: 88, t: '⚓ إيران تهدد تغلق هرمز: إذا تعبانة، هدنة ممكن توقف هذا', a: 'dip:war', l: 'السياسة' });
     // 2) فرق بلا إمداد (مطوّقة أو مقطوعة)
     const cut = my.filter(d => !W.sup[me][d.cell]);
     if (cut.length) add({ id: 'cut', w: 1, p: 90, t: `⛓ ${cut.length > 1 ? cut.length + ' فرق' : cut[0].n} بلا إمداد قرب ${city(cut[0].cell)}: تضعف كل ساعة. انسحب أو افتح طريق`, a: 'div:' + cut[0].id, l: 'روح إلها' });

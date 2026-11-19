@@ -916,7 +916,7 @@ function ecoPanel(refresh) {
   <div class="bar" style="height:6px"><u style="width:${e.mor}%;background:${e.mor >= 50 ? 'var(--pos-s)' : e.mor >= 25 ? 'var(--gold)' : 'var(--neg-s)'}"></u></div>
   ${e.morWhy.length ? `<div class="why">${e.morWhy.map(w => `<span class="${w[0] >= 0 ? 'pos' : 'neg'}">${w[0] >= 0 ? '+' : ''}${w[0].toFixed(1)} ${w[1]}</span>`).join('')}</div>` : ''}
   <div class="dim" style="margin-top:3px">تنزل بخسارة المدن والفرق، والدين، وطول الحرب. تصعد بالانتصارات. تحت 50 الفرق ترتاح أبطأ، تحت 30 الإنتاج أبطأ، تحت 25 نستسلم أبكر، وبالصفر الدولة تنهار.</div></section>
-  <section data-s="oil"><div class="dim" style="margin-top:6px">سعر النفط اليوم <b>$${Math.round(WD.oil.price)}</b> · صادراتنا ${B.exp.toFixed(2)} مليون برميل/يوم · إنتاجنا ${B.prod.toFixed(2)}</div>
+  <section data-s="oil">${DIP.hzClosed(WD) ? '<div class="adv w"><span>⚓⛔ مضيق هرمز مغلق: صادرات البصرة البحرية واقفة. شوف 🤝 السياسة</span></div>' : ''}<div class="dim" style="margin-top:6px">سعر النفط اليوم <b>$${Math.round(WD.oil.price)}</b> · صادراتنا ${B.exp.toFixed(2)} مليون برميل/يوم · إنتاجنا ${B.prod.toFixed(2)}</div>
   <h3>نفطنا</h3>
   ${mine.map(f => { const st = ECON.siteState(WD, f); return `<div class="oil" data-go="${WD.oil.sites.indexOf(f)}"><span>${f.term ? '⚓' : '🛢'}</span><span><b>${f.n}</b> <span class="dim">${OILST[st.k]}${f.dmg > 0 ? ' ' + Math.ceil(f.dmg / 24) + ' يوم' : ''}</span></span><span>${f.term ? (f.term === 'south' ? 'تصدير الجنوب' : '') : Math.round(f.out * st.f * 1000) + ' ألف ب/ي'}</span></div>`; }).join('')}
   <div class="dim">حقول البصرة وميسان تتصدّر من موانئ الفاو: إذا انضربت أو انحتلت، أغلب فلوسنا تنقطع. كركوك تطلع بأنبوب جيهان.</div>
@@ -978,6 +978,11 @@ function dipToast(l) {
   if (l.a === 'truce') toast('🕊 هدنة 7 أيام: القتال وقف', 'good');
   if (l.a === 'truceend') toast('⚔ الهدنة خلصت، والحرب رجعت', 'bad');
   if (l.a === 'offer') toast('✉️ إيران بعثت عرض: افتح 🤝 السياسة');
+  if (l.a === 'hzwarn') toast('⚓ إيران تهدد تغلق مضيق هرمز خلال يومين!', 'bad');
+  if (l.a === 'hzclose') toast('⚓⛔ إيران أغلقت مضيق هرمز: صادرات البصرة توقفت، والنفط قفز', 'bad');
+  if (l.a === 'hzopen') toast(l.how === 'us' ? '⚓✅ البحرية الأمريكية فتحت مضيق هرمز' : l.how === 'truce' ? '⚓ هرمز انفتح ويا الهدنة' : '⚓ إيران فتحت مضيق هرمز', 'good');
+  if (l.a === 'hzop') toast(`⚓ أمريكا وافقت: عملية بحرية تفتح هرمز بـ~${l.d} يوم`, 'good');
+  if (l.a === 'hzno') toast('⚓ أمريكا ما وافقت هسه تفتح هرمز', 'bad');
   if (l.a === 'event') { const E = DIP.EV[l.ev]; if (!E.choice) toast(`${E.n}: ${E.txt}`); }
 }
 // نافذة: حدث يحتاج قرارك، أو عرض من إيران
@@ -1014,6 +1019,9 @@ function dipPanel(refresh) {
   ${subBar('dip', SUBS)}<section data-s="war">
   ${D.offer ? `<div class="ctry" style="border-color:var(--gold)"><b>✉️ عرض من إيران:</b> ${DIP.TERMS[D.offer.k].n}<div class="acts"><button class="go" id="oY">✅ نقبل</button><button id="oN">❌ نرفض</button></div></div>` : ''}
   ${D.truce > WD.t ? `<div class="dim" style="color:var(--gold)">🕊 هدنة: باقي ${Math.ceil((D.truce - WD.t) / 24)} يوم. ما اكو هجوم ولا ضربات.</div>` : ''}
+  ${(() => { const H = DIP.hz(WD); return `<div class="ctry" style="${H.closed ? 'border-color:var(--neg-s)' : H.warn ? 'border-color:var(--warn-s)' : ''}"><div class="h"><span style="font-size:18px">⚓</span><b>مضيق هرمز</b><span class="st">${H.closed ? '⛔ مغلق من ' + Math.floor((WD.t - H.since) / 24) + ' يوم' : H.warn ? '⚠️ إيران تهدد' : '✅ مفتوح'}</span></div>
+  <div class="dim">${H.closed ? `صادرات البصرة البحرية تقريباً واقفة، بس كركوك–جيهان. ${H.op ? `🚢 عملية أمريكية تفتحه بـ~${Math.max(1, Math.ceil((H.op - WD.t) / 24))} يوم.` : 'اطلب من أمريكا عملية بحرية (تحتاج علاقة زينة)، أو هدنة.'}` : 'كل نفط البصرة يطلع من هنا. إيران ممكن تغلقه إذا تعبت أو إذا الخليج وأمريكا دخلوا ويانا.'}</div>
+  ${H.closed && !H.op ? `<div class="acts"><button class="go" id="hzAsk">🇺🇸 اطلب عملية فتح (${Math.round(Math.max(0, Math.min(.95, (WD.dip.c.us.rel[ME] - 35) / 45 + (WD.dip.c.us.st === 'ally0' ? .4 : 0))) * 100)}٪)</button></div>` : ''}</div>`; })()}
   <h3>ميزان الحرب: مين تعبان أكثر</h3>
   <div class="rel"><span>إحنا</span><span class="rb"><u style="left:0;width:${Math.min(100, w0 * 70)}%;background:var(--me-l)"></u></span><span>${Math.round(w0 * 100)}٪</span></div>
   <div class="rel"><span>إيران</span><span class="rb"><u style="left:0;width:${Math.min(100, w1 * 70)}%;background:var(--neg-s)"></u></span><span>${Math.round(w1 * 100)}٪</span></div>
@@ -1032,11 +1040,12 @@ function dipPanel(refresh) {
     ${st === 'ally1' ? '' : `<div class="acts"><button data-m="${C.id}">🤝 بعثة${cdTxt(C.id, 'm')}</button>${C.will !== 'none' && C.aid && C.aid[0].length ? `<button data-a="${C.id}">📦 مساعدة ${cdTxt(C.id, 'a') || Math.round(DIP.aidP(WD, ME, C.id) * 100) + '٪'}</button>` : ''}${C.join && st === 'neutral' ? `<button data-j="${C.id}">⚔ تحالف (${C.join}+)${cdTxt(C.id, 'j')}</button>` : ''}${C.sanc ? `<button data-s="${C.id}">🚫 عقوبات${D.sanc > WD.t ? ' ✓' : cdTxt(C.id, 's')}</button>` : ''}</div>`}</div>`; }).join('')}</section>`;
   subApply(el, 'dip', SUBS); if (refresh) el.scrollTop = top;
   const res = (r, ok, no) => { if (typeof r === 'string') toast('❌ ' + r, 'bad'); else toast(r.ok === false ? no(r) : ok(r), r.ok === false ? 'bad' : 'good'); events(); hud(); dipPanel(true); };
+  if ($('hzAsk')) $('hzAsk').onclick = () => res(DIP.askHz(WD, ME), () => '⚓ أمريكا وافقت على عملية فتح هرمز', r => `أمريكا ما وافقت (الفرصة ${Math.round(r.p * 100)}٪)`);
   if ($('oY')) { $('oY').onclick = () => { DIP.answerOffer(WD, true); events(); if (!WD.over) dipPanel(true); }; $('oN').onclick = () => { DIP.answerOffer(WD, false); toast('⚔ رفضنا العرض'); dipPanel(true); }; }
   el.querySelectorAll('[data-m]').forEach(b => b.onclick = () => res(DIP.mission(WD, ME, b.dataset.m), r => `🤝 ${CN(b.dataset.m)}: العلاقة +${r.dv}`));
   el.querySelectorAll('[data-a]').forEach(b => b.onclick = () => res(DIP.askAid(WD, ME, b.dataset.a), r => `📦 ${CN(b.dataset.a)} وافقت: ${PKG(r.pkg)} بالطريق`, r => `📦 ${CN(b.dataset.a)} اعتذرت (الفرصة كانت ${Math.round(r.p * 100)}٪)`));
   el.querySelectorAll('[data-j]').forEach(b => b.onclick = () => res(DIP.askJoin(WD, ME, b.dataset.j), () => `⚔ ${CN(b.dataset.j)} دخلت الحرب ويانا!`, () => `${CN(b.dataset.j)} رفضت: تحتاج علاقة ${DIP.BY[b.dataset.j].join}+`));
-  el.querySelectorAll('[data-s]').forEach(b => b.onclick = () => res(DIP.askSanc(WD, ME, b.dataset.s), () => '🚫 عقوبات على نفط إيران 60 يوم', r => `أمريكا ما وافقت هسه (الفرصة ${Math.round(r.p * 100)}٪)`));
+  el.querySelectorAll('button[data-s]').forEach(b => b.onclick = () => res(DIP.askSanc(WD, ME, b.dataset.s), () => '🚫 عقوبات على نفط إيران 60 يوم', r => `أمريكا ما وافقت هسه (الفرصة ${Math.round(r.p * 100)}٪)`));
   el.querySelectorAll('[data-pr]').forEach(b => b.onclick = () => res(DIP.propose(WD, ME, b.dataset.pr, med && med.id), () => b.dataset.pr === 'truce' ? '🕊 إيران وافقت على الهدنة' : '🕊 إيران وافقت!', () => `❌ إيران رفضت «${DIP.TERMS[b.dataset.pr].n}»`));
 }
 $('tabDip').onclick = () => openSheet(dipPanel, 'tabDip');

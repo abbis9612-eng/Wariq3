@@ -1,0 +1,921 @@
+{
+ "id": "IRQ",
+ "ar": "العراق",
+ "en": "Iraq",
+ "tier": "A",
+ "asOf": "2026-11",
+ "src": {
+  "wiki_air": {
+   "t": "Wikipedia: Iraqi Air Force",
+   "u": "https://en.wikipedia.org/wiki/Iraqi_Air_Force?oldid=1384998405",
+   "y": 2026,
+   "note": "نسخة الصفحة بتاريخ السحب؛ أرقام ويكيبيديا تنراجع ويا مصادر ثانية"
+  },
+  "wiki_army": {
+   "t": "Wikipedia: List of current equipment of the Iraqi Ground Forces",
+   "u": "https://en.wikipedia.org/wiki/List_of_current_equipment_of_the_Iraqi_Ground_Forces?oldid=1386410352",
+   "y": 2026,
+   "note": "نسخة الصفحة بتاريخ السحب؛ أرقام ويكيبيديا تنراجع ويا مصادر ثانية"
+  },
+  "wiki_navy": {
+   "t": "Wikipedia: Iraqi Navy",
+   "u": "https://en.wikipedia.org/wiki/Iraqi_Navy?oldid=1383761540",
+   "y": 2026,
+   "note": "نسخة الصفحة بتاريخ السحب؛ أرقام ويكيبيديا تنراجع ويا مصادر ثانية"
+  },
+  "ar25": {
+   "t": "ArmyRecognition 2025: Iraq could replace 140 U.S. Abrams tanks with 250 K2 (≈140 M1 بالخدمة، 135 مؤكدة)",
+   "u": "https://armyrecognition.com/news/army-news/2025/iraq-could-replace-140-u-s-abrams-tanks-with-250-south-korean-k2-black-panthers",
+   "y": 2025
+  },
+  "armytech11": {
+   "t": "Army Technology: US delivers 140 M1A1 Abrams to Iraqi Army (2011)",
+   "u": "https://www.army-technology.com/news/news129314-html",
+   "y": 2011
+  },
+  "t90": {
+   "t": "Defense Mirror / TWZ: Iraq ordered 73 T-90S, deliveries 2018–2019",
+   "u": "https://defensemirror.com/news/22008/Iraq_Receives_36_T_90S_Tanks_From_Russia",
+   "y": 2019
+  },
+  "janes16": {
+   "t": "Janes: Iraq receives final F-16s (36 procured, 2 lost, 34 fielded); US IG: 34 F-16IQ ~66% mission capable",
+   "u": "https://www.janes.com/defence-intelligence-insights/defence-news/iraq-receives-final-f-16s",
+   "y": 2025
+  },
+  "kmsam": {
+   "t": "Shafaq News / ArmyRecognition: Iraq $2.8bn deal (Sep 2024) for 8 Cheongung-II (KM-SAM II) batteries, entry into service 2026",
+   "u": "https://www.shafaq.com/en/Security/Iraq-bolsters-air-defense-Korean-missiles-and-French-radars-expected-soon",
+   "y": 2026
+  },
+  "rafale": {
+   "t": "ArmyRecognition 2026: Iraq to acquire 14 Rafale F4",
+   "u": "https://armyrecognition.com/news/aerospace-news/2026/iraq-to-acquire-14-french-rafale-f4s-after-years-flying-u-s-f-16-fighter-jets",
+   "y": 2026
+  },
+  "vang26": {
+   "t": "Vanguard (2026): Middle East militaries — Iraq ~193,000 active (رقم ثانوي بلا طبعة)",
+   "u": "https://www.vanguardngr.com/2026/03/10-middle-east-countries-with-most-powerful-militaries-in-2026/",
+   "y": 2026
+  },
+  "design": {
+   "t": "تقدير تصميمي للعبة (العلاقات والفئات) مبني على التحالفات والعلاقات المعروفة؛ يتراجع بـ W6",
+   "u": "docs/features/world-plan.md",
+   "y": 2026
+  },
+  "wb": {
+   "t": "World Bank WDI (SP.POP.TOTL, NY.GDP.MKTP.CD, NY.GDP.MKTP.KD.ZG, MS.MIL.XPND.CD/GD.ZS ← SIPRI, MS.MIL.TOTL.P1, FP.CPI.TOTL.ZG)",
+   "u": "https://api.worldbank.org/v2/",
+   "y": 2026
+  }
+ },
+ "gov": {
+  "type": "parl",
+  "head": "رئيس الوزراء",
+  "v": "جمهورية برلمانية اتحادية (إقليم كردستان شبه مستقل)",
+  "s": "design",
+  "c": "ح"
+ },
+ "pop": {
+  "v": 47020774,
+  "y": 2025,
+  "s": "wb",
+  "c": "ح"
+ },
+ "eco": {
+  "gdpBusd": {
+   "v": 254.4,
+   "y": 2025,
+   "s": "wb",
+   "c": "ح"
+  },
+  "growth": {
+   "v": -2.2,
+   "y": 2025,
+   "s": "wb",
+   "c": "ح"
+  },
+  "infl": {
+   "v": 0.3,
+   "y": 2025,
+   "s": "wb",
+   "c": "ح"
+  },
+  "oilRentPct": {
+   "v": 42.8,
+   "y": 2021,
+   "s": "wb",
+   "c": "ح"
+  }
+ },
+ "mil": {
+  "budgetBusd": {
+   "v": 6.45,
+   "y": 2025,
+   "s": "wb",
+   "c": "ح"
+  },
+  "budgetPctGdp": {
+   "v": 2.45,
+   "y": 2025,
+   "s": "wb",
+   "c": "ح"
+  },
+  "personnelWB": {
+   "v": 459000,
+   "y": 2020,
+   "s": "wb",
+   "c": "ح"
+  },
+  "active": {
+   "v": 193000,
+   "s": "vang26",
+   "c": "ت",
+   "note": "الجيش والجو والبحرية والدفاع الجوي؛ البنك الدولي 459,000 (2020) يشمل الشرطة الاتحادية والحشد"
+  },
+  "conscription": false,
+  "land": [
+   {
+    "m": "M1A1 Abrams",
+    "n": 140,
+    "orig": "USA",
+    "s": "armytech11,ar25",
+    "c": "ت",
+    "gen": 3,
+    "cat": "tank",
+    "note": "ويكيبيديا 487 (غير موثق). المسلّم 140 (2010–11)، وArmyRecognition 2025: ~140 بالخدمة و135 مؤكدة. بحث يكمل: صفقة 2014 الإضافية"
+   },
+   {
+    "m": "T-90S",
+    "n": 73,
+    "orig": "RUS",
+    "s": "t90",
+    "c": "ح",
+    "note": "ويكيبيديا 210؛ العقد 73 دبابة وتسلّمت 2018–2019",
+    "gen": 4,
+    "cat": "tank"
+   },
+   {
+    "m": "T-72MLion of Babylon",
+    "n": 478,
+    "orig": "SUN",
+    "s": "wiki_army",
+    "c": "ت",
+    "note": "ويكيبيديا 478+؛ أغلبها حالتها متفاوتة (ArmyRecognition 2025)",
+    "gen": 3,
+    "cat": "tank"
+   },
+   {
+    "m": "T-55",
+    "n": 150,
+    "orig": "SUN",
+    "s": "wiki_army",
+    "c": "ت",
+    "note": "T-55M/Al-Kafil-1",
+    "gen": 1,
+    "cat": "tank"
+   },
+   {
+    "m": "BMP-3",
+    "n": 300,
+    "orig": "RUS",
+    "s": "wiki_army",
+    "c": "ت",
+    "note": "BMP-3M Variant ordered in 2015 delivered in 2018-2019.",
+    "gen": 4,
+    "cat": "ifv"
+   },
+   {
+    "m": "BMP-1",
+    "n": 600,
+    "orig": "SUN",
+    "s": "wiki_army",
+    "c": "ت",
+    "gen": 2,
+    "cat": "ifv"
+   },
+   {
+    "m": "BTR-4",
+    "n": 270,
+    "orig": "UKR",
+    "s": "wiki_army",
+    "c": "ت",
+    "gen": 3,
+    "cat": "ifv"
+   },
+   {
+    "m": "VN22",
+    "n": 200,
+    "orig": "CHN",
+    "s": "wiki_army",
+    "c": "ت",
+    "note": "Localized version",
+    "gen": 3,
+    "cat": "ifv"
+   },
+   {
+    "m": "BTR-80",
+    "n": 100,
+    "orig": "SUN",
+    "s": "wiki_army",
+    "c": "ت",
+    "note": "BTR-80A",
+    "gen": 3,
+    "cat": "ifv"
+   },
+   {
+    "m": "M113",
+    "n": 500,
+    "orig": "USA",
+    "s": "wiki_army",
+    "c": "ت",
+    "note": "M113A2 variant",
+    "gen": 2,
+    "cat": "apc"
+   },
+   {
+    "m": "MT-LB / MT-LBu",
+    "n": 400,
+    "orig": "SUN",
+    "s": "wiki_army",
+    "c": "ت",
+    "gen": 2,
+    "cat": "apc"
+   },
+   {
+    "m": "APC Talha",
+    "n": 44,
+    "orig": "PAK",
+    "s": "wiki_army",
+    "c": "ت",
+    "note": "In November 2004, the Iraqi Ministry of Defence signed a deal with HIT worth US$31 million in which it ordered 44 Talha APCs, 60 Mohafiz sec",
+    "gen": 2,
+    "cat": "apc"
+   },
+   {
+    "m": "TM-170 Barracuda",
+    "n": 12,
+    "orig": "DEU",
+    "s": "wiki_army",
+    "c": "ت",
+    "gen": 2,
+    "cat": "apc"
+   },
+   {
+    "m": "Caiman",
+    "n": 250,
+    "orig": "USA",
+    "s": "wiki_army",
+    "c": "ت",
+    "gen": 2,
+    "cat": "mrap"
+   },
+   {
+    "m": "Cougar/ILAV",
+    "n": 1243,
+    "orig": "USA",
+    "s": "wiki_army",
+    "c": "ت",
+    "note": "In 2007 an order for 378 was placed,+ 865 ordered by 2011.",
+    "gen": 2,
+    "cat": "mrap"
+   },
+   {
+    "m": "International MaxxPro",
+    "n": 30,
+    "orig": "USA",
+    "s": "wiki_army",
+    "c": "ت",
+    "gen": 2,
+    "cat": "mrap"
+   },
+   {
+    "m": "BRDM-2",
+    "n": 18,
+    "orig": "SUN",
+    "s": "wiki_army",
+    "c": "ت",
+    "gen": 2,
+    "cat": "apc"
+   },
+   {
+    "m": "EE-9 Cascavel",
+    "n": 35,
+    "orig": "BRA",
+    "s": "wiki_army",
+    "c": "ت",
+    "gen": 2,
+    "cat": "apc"
+   },
+   {
+    "m": "Type-83",
+    "n": 38,
+    "orig": "CHN",
+    "s": "wiki_army",
+    "c": "ت",
+    "gen": 2,
+    "cat": "spg"
+   },
+   {
+    "m": "M109",
+    "n": 220,
+    "orig": "USA",
+    "s": "wiki_army",
+    "c": "ت",
+    "note": "M109A1/A2",
+    "gen": 2,
+    "cat": "spg"
+   },
+   {
+    "m": "AMX-GCT",
+    "n": 86,
+    "orig": "FRA",
+    "s": "wiki_army",
+    "c": "ت",
+    "gen": 2,
+    "cat": "spg"
+   },
+   {
+    "m": "2S1 Gvozdika",
+    "n": 90,
+    "orig": "SUN",
+    "s": "wiki_army",
+    "c": "ت",
+    "gen": 2,
+    "cat": "spg"
+   },
+   {
+    "m": "M-46/Type-59",
+    "n": 100,
+    "orig": "SUN",
+    "s": "wiki_army",
+    "c": "ت",
+    "gen": 2,
+    "cat": "towed"
+   },
+   {
+    "m": "D-20",
+    "n": 100,
+    "orig": "SUN",
+    "s": "wiki_army",
+    "c": "ت",
+    "gen": 2,
+    "cat": "towed"
+   },
+   {
+    "m": "Type-83",
+    "n": 50,
+    "orig": "CHN",
+    "s": "wiki_army",
+    "c": "ت",
+    "gen": 2,
+    "cat": "towed"
+   },
+   {
+    "m": "M198",
+    "n": 160,
+    "orig": "USA",
+    "s": "wiki_army",
+    "c": "ت",
+    "gen": 2,
+    "cat": "towed"
+   },
+   {
+    "m": "2A36 Giatsint-B",
+    "n": 200,
+    "orig": "SUN",
+    "s": "wiki_army",
+    "c": "ت",
+    "gen": 2,
+    "cat": "towed"
+   },
+   {
+    "m": "Astros II MLRS",
+    "n": 66,
+    "orig": "IRQ",
+    "s": "wiki_army",
+    "c": "ت",
+    "note": "Built under license as the Sajil-60",
+    "gen": 2,
+    "cat": "mlrs"
+   },
+   {
+    "m": "BM-21 Grad",
+    "n": 300,
+    "orig": "SUN",
+    "s": "wiki_army",
+    "c": "ت",
+    "gen": 2,
+    "cat": "mlrs"
+   },
+   {
+    "m": "TOS-1",
+    "n": 6,
+    "orig": "RUS",
+    "s": "wiki_army",
+    "c": "ت",
+    "gen": 2,
+    "cat": "mlrs"
+   },
+   {
+    "m": "Type 63",
+    "n": 200,
+    "orig": "CHN",
+    "s": "wiki_army",
+    "c": "ت",
+    "gen": 2,
+    "cat": "mlrs"
+   }
+  ],
+  "air": [
+   {
+    "m": "F-16 Fighting Falcon (F-16C/D/IQ)",
+    "n": 34,
+    "orig": "USA",
+    "s": "janes16",
+    "c": "ح",
+    "note": "36 انشرت و2 سقطت بالتدريب؛ ~66٪ جاهزة للمهام",
+    "gen": 3,
+    "cat": "fighter"
+   },
+   {
+    "m": "Aero L-159 (L-159A)",
+    "n": 14,
+    "orig": "CZE",
+    "s": "wiki_air",
+    "c": "ت",
+    "note": "One T1 variant used for conversion training",
+    "gen": 3,
+    "cat": "attack"
+   },
+   {
+    "m": "Sukhoi Su-25",
+    "n": 19,
+    "orig": "RUS",
+    "s": "wiki_air",
+    "c": "ت",
+    "note": "5 used for conversion training",
+    "gen": 3,
+    "cat": "attack"
+   },
+   {
+    "m": "KAI T-50 (T-50IQ)",
+    "n": 24,
+    "orig": "KOR",
+    "s": "wiki_air",
+    "c": "ت",
+    "gen": 3,
+    "cat": "attack",
+    "note": "مدرّبة نفاثة / هجوم خفيف"
+   },
+   {
+    "m": "Cessna 208 (AC-208)",
+    "n": 2,
+    "orig": "USA",
+    "s": "wiki_air",
+    "c": "ت",
+    "note": "Modified for ground attack",
+    "gen": 2,
+    "cat": "attack"
+   },
+   {
+    "m": "Cessna 208 (RC-208)",
+    "n": 6,
+    "orig": "USA",
+    "s": "wiki_air",
+    "c": "ت",
+    "note": "Four used for training",
+    "gen": 2,
+    "cat": "isr"
+   },
+   {
+    "m": "AMD Alarus (SAMA CH2000)",
+    "n": 7,
+    "orig": "USA",
+    "s": "wiki_air",
+    "c": "ت",
+    "gen": 2,
+    "cat": "isr"
+   },
+   {
+    "m": "Super King Air (350ER)",
+    "n": 6,
+    "orig": "USA",
+    "s": "wiki_air",
+    "c": "ت",
+    "gen": 2,
+    "cat": "isr"
+   },
+   {
+    "m": "DHC-6 Twin Otter",
+    "n": 2,
+    "orig": "CAN",
+    "s": "wiki_air",
+    "c": "ت",
+    "note": "STOL capable aircraft",
+    "gen": 2,
+    "cat": "isr"
+   },
+   {
+    "m": "Super King Air (350)",
+    "n": 1,
+    "orig": "USA",
+    "s": "wiki_air",
+    "c": "ت",
+    "gen": 2,
+    "cat": "transport"
+   },
+   {
+    "m": "C-130 Hercules (C-130E)",
+    "n": 3,
+    "orig": "USA",
+    "s": "wiki_air",
+    "c": "ت",
+    "note": "In store",
+    "gen": 2,
+    "cat": "transport"
+   },
+   {
+    "m": "C-130J Super Hercules",
+    "n": 6,
+    "orig": "USA",
+    "s": "wiki_air",
+    "c": "ت",
+    "gen": 2,
+    "cat": "transport"
+   },
+   {
+    "m": "Antonov An-32 (An-32B)",
+    "n": 6,
+    "orig": "UKR",
+    "s": "wiki_air",
+    "c": "ت",
+    "note": "Two are combat capable and one is damaged",
+    "gen": 2,
+    "cat": "transport"
+   },
+   {
+    "m": "Mil Mi-8",
+    "n": 2,
+    "orig": "RUS",
+    "s": "wiki_air",
+    "c": "ت",
+    "gen": 2,
+    "cat": "heli_util"
+   },
+   {
+    "m": "Aérospatiale Gazelle (SA342)",
+    "n": 6,
+    "orig": "FRA",
+    "s": "wiki_air",
+    "c": "ت",
+    "gen": 2,
+    "cat": "heli_attack"
+   },
+   {
+    "m": "H225M Caracal",
+    "n": 2,
+    "orig": "FRA",
+    "s": "wiki_air",
+    "c": "ت",
+    "note": "14 ordered in 2024; first two delivered May 2025",
+    "gen": 2,
+    "cat": "heli_util"
+   },
+   {
+    "m": "Bell 206",
+    "n": 9,
+    "orig": "USA",
+    "s": "wiki_air",
+    "c": "ت",
+    "gen": 2,
+    "cat": "heli_util"
+   },
+   {
+    "m": "Lasta 95",
+    "n": 19,
+    "orig": "SRB",
+    "s": "wiki_air",
+    "c": "ت",
+    "gen": 2,
+    "cat": "trainer"
+   },
+   {
+    "m": "T-6 Texan II (T-6A)",
+    "n": 15,
+    "orig": "USA",
+    "s": "wiki_air",
+    "c": "ت",
+    "gen": 2,
+    "cat": "trainer"
+   },
+   {
+    "m": "MFI-17 Mushshak (MFI-395)",
+    "n": 4,
+    "orig": "PAK",
+    "s": "wiki_air",
+    "c": "ت",
+    "note": "8 on order",
+    "gen": 2,
+    "cat": "trainer"
+   },
+   {
+    "m": "CH-5 Rainbow",
+    "n": 10,
+    "orig": "CHN",
+    "s": "wiki_air",
+    "c": "ت",
+    "note": "Armed attack/reconnaissance drone",
+    "gen": 4,
+    "cat": "uav_strike"
+   },
+   {
+    "m": "Eurocopter EC725",
+    "n": 2,
+    "orig": "FRA",
+    "s": "wiki_army",
+    "c": "ت",
+    "note": "12 ordered",
+    "gen": 2,
+    "cat": "heli_util"
+   },
+   {
+    "m": "Mil Mi-24 (Mi-35M)",
+    "n": 23,
+    "orig": "RUS",
+    "s": "wiki_army",
+    "c": "ت",
+    "note": "12 optional order",
+    "gen": 3,
+    "cat": "heli_attack"
+   },
+   {
+    "m": "Mil Mi-28 (Mi-28NE Mi-28UB)",
+    "n": 17,
+    "orig": "RUS",
+    "s": "wiki_army",
+    "c": "ت",
+    "note": "19 optional order",
+    "gen": 4,
+    "cat": "heli_attack"
+   },
+   {
+    "m": "Aerospatiale Gazelle (SA342)",
+    "n": 4,
+    "orig": "FRA",
+    "s": "wiki_army",
+    "c": "ت",
+    "gen": 2,
+    "cat": "heli_util"
+   },
+   {
+    "m": "Bell 407",
+    "n": 40,
+    "orig": "USA",
+    "s": "wiki_army",
+    "c": "ت",
+    "note": "5 optional order",
+    "gen": 2,
+    "cat": "heli_util"
+   },
+   {
+    "m": "Eurocopter EC635",
+    "n": 23,
+    "orig": "DEU",
+    "s": "wiki_army",
+    "c": "ت",
+    "gen": 2,
+    "cat": "heli_attack"
+   },
+   {
+    "m": "Mil Mi-8/Mil Mi-17",
+    "n": 41,
+    "orig": "RUS",
+    "s": "wiki_army",
+    "c": "ت",
+    "gen": 2,
+    "cat": "heli_util"
+   },
+   {
+    "m": "Bell UH-1 (UH-1H)",
+    "n": 16,
+    "orig": "USA",
+    "s": "wiki_army",
+    "c": "ت",
+    "gen": 2,
+    "cat": "heli_util"
+   },
+   {
+    "m": "Bell 206",
+    "n": 10,
+    "orig": "USA",
+    "s": "wiki_army",
+    "c": "ت",
+    "gen": 2,
+    "cat": "heli_util"
+   },
+   {
+    "m": "Bell OH-58 (OH-58C)",
+    "n": 10,
+    "orig": "USA",
+    "s": "wiki_army",
+    "c": "ت",
+    "gen": 2,
+    "cat": "heli_util"
+   },
+   {
+    "m": "CH-4",
+    "n": 12,
+    "orig": "CHN",
+    "s": "wiki_army",
+    "c": "ت",
+    "gen": 3,
+    "cat": "uav_strike"
+   },
+   {
+    "m": "RQ-11 Raven",
+    "n": 10,
+    "orig": "USA",
+    "s": "wiki_army",
+    "c": "ت",
+    "note": "Locally manufactured",
+    "gen": 2,
+    "cat": "uav_isr"
+   },
+   {
+    "m": "محلي (بلا اسم)",
+    "n": 24,
+    "orig": "IRQ",
+    "s": "wiki_army",
+    "c": "ت",
+    "note": "Locally manufactured",
+    "gen": 2,
+    "cat": "uav_isr"
+   },
+   {
+    "m": "Rafale F4 (طلبية)",
+    "cat": "fighter",
+    "n": 0,
+    "orig": "FRA",
+    "gen": 4,
+    "s": "rafale",
+    "c": "ت",
+    "note": "14 متوقعة"
+   }
+  ],
+  "ad": [
+   {
+    "m": "Pantsir-S1",
+    "n": 24,
+    "orig": "RUS",
+    "s": "wiki_army",
+    "c": "ت",
+    "gen": 3,
+    "cat": "short"
+   },
+   {
+    "m": "TWQ-1 Avenger",
+    "n": 100,
+    "orig": "USA",
+    "s": "wiki_army",
+    "c": "ت",
+    "gen": 2,
+    "cat": "short"
+   },
+   {
+    "m": "MIM-23 Hawk",
+    "n": 50,
+    "orig": "USA",
+    "s": "wiki_army",
+    "c": "ت",
+    "note": "XXI variant",
+    "gen": 2,
+    "cat": "medium"
+   },
+   {
+    "m": "Bofors 40 mm",
+    "n": 100,
+    "orig": "SWE",
+    "s": "wiki_army",
+    "c": "ت",
+    "note": "Recently refurbished and made operational",
+    "gen": 2,
+    "cat": "short"
+   },
+   {
+    "m": "Cheongung-II (KM-SAM II)",
+    "cat": "medium",
+    "n": 0,
+    "unit": "battery",
+    "orig": "KOR",
+    "gen": 4,
+    "s": "kmsam",
+    "c": "ح",
+    "note": "8 بطاريات متعاقد عليها (2024)، دخول الخدمة متوقع 2026؛ تنضاف تدريجياً"
+   }
+  ],
+  "msl": [],
+  "navy": [
+   {
+    "m": "Assad-class corvette",
+    "n": 1,
+    "orig": "INT",
+    "s": "wiki_navy",
+    "c": "ت",
+    "gen": 2,
+    "cat": "corvette"
+   },
+   {
+    "m": "Saettia Mk4/Fattah-class",
+    "n": 4,
+    "orig": "INT",
+    "s": "wiki_navy",
+    "c": "ت",
+    "gen": 2,
+    "cat": "patrol"
+   },
+   {
+    "m": "Swiftships Model 35PB1208 E-1455",
+    "n": 15,
+    "orig": "INT",
+    "s": "wiki_navy",
+    "c": "ت",
+    "gen": 2,
+    "cat": "missile_boat"
+   },
+   {
+    "m": "Predator class",
+    "n": 10,
+    "orig": "INT",
+    "s": "wiki_navy",
+    "c": "ت",
+    "gen": 3,
+    "cat": "missile_boat"
+   },
+   {
+    "m": "Fast Aluminum Boats",
+    "n": 24,
+    "orig": "INT",
+    "s": "wiki_navy",
+    "c": "ت",
+    "gen": 2,
+    "cat": "patrol"
+   }
+  ]
+ },
+ "ind": {
+  "tech": {
+   "arm": 1,
+   "uav": 1,
+   "msl": 0,
+   "ew": 0,
+   "ind": 1
+  },
+  "makes": [
+   "ذخيرة خفيفة",
+   "تجميع مركبات",
+   "مسيّرات صغيرة"
+  ],
+  "s": "design",
+  "c": "ت"
+ },
+ "pol": {
+  "factions": [
+   "army",
+   "street",
+   "tribe",
+   "mil",
+   "biz"
+  ],
+  "stab": {
+   "v": 55,
+   "s": "design",
+   "c": "ت"
+  }
+ },
+ "rel": {
+  "USA": 30,
+  "IRN": 40,
+  "TUR": 15,
+  "SAU": 25,
+  "KWT": 25,
+  "JOR": 35,
+  "SYR": 10,
+  "ARE": 20,
+  "QAT": 15,
+  "RUS": 10,
+  "CHN": 20,
+  "FRA": 25,
+  "KOR": 30,
+  "ISR": -80
+ },
+ "treaties": [
+  "ARABLEAGUE",
+  "OPEC",
+  "OIC",
+  "US_SFA"
+ ],
+ "sanctions": [],
+ "conflicts": [],
+ "notes": "مراجعة W1: الدبابات والطيارات والدفاع الجوي اتأكدت بمصادر ثانية؛ الباقي من ويكيبيديا (ت). الحشد الشعبي وقوات البيشمركة لسه تنضاف."
+}

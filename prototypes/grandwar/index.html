@@ -635,7 +635,13 @@ function savesPanel() {
   el.querySelectorAll('[data-ld]').forEach(b => b.onclick = () => { doSave(0, true); location.search = '?load=' + b.dataset.ld; });
   el.querySelectorAll('[data-rm]').forEach(b => b.onclick = () => { if (confirm(`أمسح «${SLOTN[+b.dataset.rm]}»؟`)) { SAVE.remove(ST, +b.dataset.rm); savesPanel(); } });
   $('svNew').onclick = () => { if (confirm('تبدي حرب جديدة؟ حربك هسه تنحفظ بـ«الحفظ التلقائي»')) { doSave(0, true); location.search = '?new=1'; } };
-  $('svExp').onclick = () => { try { const txt = JSON.stringify(SAVE.snapshot(WD, AW, SIM, { seed: SEED, ui: { cam: { x: cam.x, y: cam.y, s: cam.s } } })); const a = document.createElement('a'); a.href = URL.createObjectURL(new Blob([txt], { type: 'application/json' })); a.download = `الحرب-الكبرى-${WD.t}.json`; document.body.appendChild(a); a.click(); a.remove(); toast('⬇ نزل ملف الحفظ', 'good'); } catch (e) { toast('❌ ما كدرت أنزّل الملف: ' + e.message, 'bad'); } };
+  $('svExp').onclick = async () => {
+    const txt = JSON.stringify(SAVE.snapshot(WD, AW, SIM, { seed: SEED, ui: { cam: { x: cam.x, y: cam.y, s: cam.s } } })), fn = `grandwar-day${Math.floor(WD.t / 24) + 1}.json`;
+    // بصفحة Claude: التنزيل يمر من صلاحية «downloads» (تطلع لك موافقة)؛ برّاها (تطبيق/متصفح عادي) رابط تنزيل عادي
+    const dl = window.claude ? await window.claude.use('downloads').catch(() => null) : null;
+    if (dl) { try { await dl.save({ filename: fn, data: txt }); toast('⬇ انحفظ ملف الحرب بتلفونك', 'good'); } catch (e) { if (e.code !== 'declined') toast('❌ ما كدرت أنزّل الملف هنا (' + e.code + ')', 'bad'); } return; }
+    try { const a = document.createElement('a'); a.href = URL.createObjectURL(new Blob([txt], { type: 'application/json' })); a.download = fn; document.body.appendChild(a); a.click(); a.remove(); toast('⬇ نزل ملف الحفظ', 'good'); } catch (e) { toast('❌ ما كدرت أنزّل الملف: ' + e.message, 'bad'); }
+  };
   $('svImp').onclick = () => $('imp').click();
 }
 $('imp').onchange = async e => { const f = e.target.files[0]; if (!f) return; try { const s0 = SAVE.migrate(JSON.parse(await f.text())); SAVE.write(ST, 2, s0); toast('⬆ رجع الحفظ لـ«خانة 2»، هسه نحمّله', 'good'); setTimeout(() => { location.search = '?load=2'; }, 600); } catch (err) { toast('❌ الملف مو حفظ صالح: ' + err.message, 'bad'); } };

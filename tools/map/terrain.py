@@ -39,7 +39,8 @@ RT = STRtree(RIV)
 GT = STRtree([g for g, _, _ in GEO])
 ICE = [shape(f['geometry']).buffer(0) for f in gj('ne_10m_glaciated_areas')]; IT = STRtree(ICE)
 URB = [shape(f['geometry']).buffer(0).simplify(.002) for f in gj('ne_10m_urban_areas')]; UT = STRtree(URB)
-PP = [(Point(f['geometry']['coordinates']), f['properties']) for f in gj('ne_10m_populated_places_simple')]; PT = STRtree([p for p, _ in PP])
+PP = [(Point(f['geometry']['coordinates']), {k.lower(): v for k, v in f['properties'].items()}) for f in gj('ne_10m_populated_places')]   # النسخة الكاملة: بيها الأسماء العربية
+PT = STRtree([p for p, _ in PP])
 PO = [(Point(f['geometry']['coordinates']), f['properties']) for f in gj('ne_10m_ports')]; POT = STRtree([p for p, _ in PO])
 AP = [(Point(f['geometry']['coordinates']), f['properties']) for f in gj('ne_10m_airports')]; APT = STRtree([p for p, _ in AP])
 def sx(a, b):

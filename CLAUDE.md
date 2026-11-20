@@ -52,6 +52,7 @@ prototypes/intercept/         تجربة 3D: اعتراض الباتريوت (ر
 prototypes/topdown/           «الحرب من فوق» (D-032): خريطة مرسومة بثيمين، PixiJS، صور Blender — مجمّد عند WM10 (D-033)
 prototypes/world3d/            «العالم 3D» (WM11–WM15): خريطة العالم 3D، عملية شلامجة بأرض مجسمة وقتال دبابات وتحكم، و«الجبهة كاملة» بـ `?mode=front` — مجمّد عند cf886fd (D-037)
 prototypes/grandwar/          «الحرب الكبرى» (I-080، D-039): مثل Hearts of Iron — `index.html` تنلعب (702 منطقة، `sim.js`، فحص `node tests/sim.test.mjs`)، والصورة الأولى `mockup.html`
+prototypes/world/             «العالم» GW12 (I-097، D-046): خريطة العالم (3,803 منطقة، 345 بحر، 13 مضيق، سيطرة تشرين الثاني 2026). البيانات بـ `data/` وتنبني بـ `tools/data/build_all.sh` و`tools/map/build_map.sh`، والحزمة `python3 tools/map/bundle.py`. فحص `node tests/regions.test.mjs` و`node tests/world.test.mjs`
 prototypes/wardesigns/        «أربع نماذج حرب» 2D (WD، D-038): محافظات، لوحة جبهة، مدن وطرق، خطة القائد — للمقارنة واختيار المالك
 prototypes/oblique/           تجربة «2D مايل» (D-031): S-400 وباتريوت وباليستي بالحجم والسرعة الحقيقية على صور أقمار
 prototypes/warmap/            تجربة: شهر حرب حي على خريطة الدول (مطارات، دفاع جوي، باليستي، دروع، جبهة)

@@ -1,0 +1,214 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover">
+<title>العالم 2026</title>
+<style>
+/* «العالم» GW12 W2.5: خريطة العالم (3,803 منطقة، 345 بحر، 13 مضيق) — نفس ألوان «الحرب الكبرى» */
+:root{--bg:#1b2019;--sea:#1d2a33;--sea2:#22323d;--panel:rgba(32,38,30,.97);--panel2:#262d24;--chip:rgba(235,229,210,.07);--chip2:rgba(235,229,210,.12);--line:rgba(235,229,210,.16);--ink:#ece6d3;--dim:#a9ab94;--gold:#e0b558;--gold-l:rgba(224,181,88,.5);--me:#6fae5c;--neg:#d9654f;--front:#ff5a3c;--shadow:0 -6px 24px rgba(0,0,0,.35)}
+@media (prefers-color-scheme:light){:root:not([data-theme="dark"]){--bg:#e9e2cd;--sea:#b9cdd3;--sea2:#c6d7dc;--panel:rgba(247,242,228,.98);--panel2:#ede6d1;--chip:rgba(34,40,30,.05);--chip2:rgba(34,40,30,.1);--line:rgba(60,56,40,.2);--ink:#22281e;--dim:#62664f;--gold:#9a6a12;--gold-l:rgba(154,106,18,.5);--me:#3f7d2e;--neg:#b43a25;--front:#d0331a;--shadow:0 -6px 24px rgba(0,0,0,.15)}}
+:root[data-theme="light"]{--bg:#e9e2cd;--sea:#b9cdd3;--sea2:#c6d7dc;--panel:rgba(247,242,228,.98);--panel2:#ede6d1;--chip:rgba(34,40,30,.05);--chip2:rgba(34,40,30,.1);--line:rgba(60,56,40,.2);--ink:#22281e;--dim:#62664f;--gold:#9a6a12;--gold-l:rgba(154,106,18,.5);--me:#3f7d2e;--neg:#b43a25;--front:#d0331a;--shadow:0 -6px 24px rgba(0,0,0,.15)}
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{height:100%;background:var(--sea);overflow:hidden;font:500 13px/1.4 "IBM Plex Sans Arabic",Tahoma,sans-serif;color:var(--ink);-webkit-user-select:none;user-select:none;-webkit-tap-highlight-color:transparent}
+canvas{position:fixed;inset:0;width:100%;height:100%;touch-action:none;display:block}
+button{font:inherit;color:inherit;background:var(--chip);border:1px solid var(--line);border-radius:10px;padding:5px 10px;cursor:pointer}
+button.on{background:var(--chip2);border-color:var(--gold-l);color:var(--gold)}
+#top{position:fixed;top:0;left:0;right:0;background:var(--panel);border-bottom:1px solid var(--line);padding:calc(6px + env(safe-area-inset-top)) 12px 6px;z-index:5;display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+#top h1{font-size:15px;font-weight:700;margin-left:auto}#top small{color:var(--dim);font-size:11px}
+#modes{display:flex;gap:5px}
+#zoom{position:fixed;left:10px;top:calc(60px + env(safe-area-inset-top));display:flex;flex-direction:column;gap:6px;z-index:4}#zoom button{width:38px;height:38px;font-size:18px;padding:0;background:var(--panel)}
+#perf{position:fixed;left:10px;bottom:calc(10px + env(safe-area-inset-bottom));font:600 11px ui-monospace,monospace;color:var(--dim);background:var(--panel);border:1px solid var(--line);border-radius:8px;padding:2px 7px;z-index:4;direction:ltr}
+#card{position:fixed;left:8px;right:8px;bottom:calc(8px + env(safe-area-inset-bottom));max-height:58vh;overflow:auto;background:var(--panel);border:1px solid var(--line);border-radius:16px;padding:10px 12px 12px;z-index:6;box-shadow:var(--shadow)}
+#card[hidden]{display:none}
+#card h2{font-size:16px;font-weight:700;display:flex;align-items:center;gap:8px}#card h2 .x{margin-right:auto;width:30px;height:30px;padding:0;font-size:16px}
+#card .sub{color:var(--dim);font-size:12px;margin:2px 0 8px}
+#card .row{display:flex;flex-wrap:wrap;gap:6px;margin:6px 0}
+.pill{background:var(--chip);border:1px solid var(--line);border-radius:999px;padding:2px 9px;font-size:12px;white-space:nowrap}
+.pill b{font-weight:700}.pill.warn{border-color:var(--front);color:var(--front);white-space:normal;border-radius:10px}.pill.gold{border-color:var(--gold-l);color:var(--gold)}
+#card h3{font-size:13px;margin:10px 0 4px;color:var(--gold)}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(130px,1fr));gap:6px}
+.st{background:var(--chip);border-radius:10px;padding:5px 8px}.st i{display:block;font-style:normal;color:var(--dim);font-size:11px}.st b{font-size:14px}
+.note{font-size:12px;color:var(--dim);margin-top:6px}
+#legend{position:fixed;right:10px;top:calc(60px + env(safe-area-inset-top));background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:6px 9px;font-size:11px;z-index:4;max-width:44vw}
+#legend div{display:flex;align-items:center;gap:5px;margin:2px 0}#legend span{width:12px;height:12px;border-radius:3px;display:inline-block;flex:none}
+#load{position:fixed;inset:0;display:grid;place-items:center;background:var(--bg);z-index:20;font-size:15px}
+</style>
+</head>
+<body>
+<div id="load">جاي أحمّل العالم…</div>
+<canvas id="cv"></canvas>
+<div id="top"><h1>العالم <small>تشرين الثاني 2026</small></h1>
+  <div id="modes"><button data-m="pol" class="on">سياسية</button><button data-m="ter">الأرض</button><button data-m="rel">علاقات</button><button data-m="res">نفط وغاز</button></div>
+</div>
+<div id="zoom"><button id="zin" aria-label="كبّر">+</button><button id="zout" aria-label="صغّر">−</button><button id="zhome" aria-label="العالم كله">⌂</button></div>
+<div id="legend" hidden></div>
+<div id="perf">–</div>
+<div id="card" hidden></div>
+<script src="world-data.js"></script>
+<script>
+'use strict';
+const WD = window.WD, $ = s => document.querySelector(s), cv = $('#cv'), cx = cv.getContext('2d');
+const css = k => getComputedStyle(document.documentElement).getPropertyValue(k).trim();
+const fmt = n => n == null ? '–' : n >= 1e9 ? (n / 1e9).toFixed(1) + ' مليار' : n >= 1e6 ? (n / 1e6).toFixed(1) + ' مليون' : n >= 1e4 ? Math.round(n / 1e3) + ' ألف' : Math.round(n).toLocaleString('ar');
+const TAR = { plain: 'سهل', desert: 'صحرا', hills: 'تلال', mount: 'جبال', marsh: 'أهوار', forest: 'غابة', jungle: 'أدغال', tundra: 'تندرا', snow: 'ثلج', city: 'مدينة' };
+const TCOL = { plain: '#8fae6a', desert: '#d9c38f', hills: '#a8946a', mount: '#7d6a5c', marsh: '#5f9a8c', forest: '#4f7d4a', jungle: '#2f6a3a', tundra: '#a9b3a7', snow: '#e8ecee', city: '#b8574a' };
+
+// ===== الإسقاط (ميركاتور، مقصوص ±80) =====
+const MX = lon => lon * Math.PI / 180, MY = lat => { lat = Math.max(-80, Math.min(84, lat)); return -Math.log(Math.tan(Math.PI / 4 + lat * Math.PI / 360)); };
+function decode(rings) { // فرق ×100 ← مسار بإحداثيات ميركاتور
+  const out = [];
+  for (const f of rings) { const a = new Float32Array(f.length); let x = 0, y = 0; for (let i = 0; i < f.length; i += 2) { x += f[i]; y += f[i + 1]; a[i] = MX(x / 100); a[i + 1] = MY(y / 100); } out.push(a); }
+  return out;
+}
+const bbox = rings => { let a = 1e9, b = 1e9, c = -1e9, d = -1e9; for (const f of rings) for (let i = 0; i < f.length; i += 2) { if (f[i] < a) a = f[i]; if (f[i] > c) c = f[i]; if (f[i + 1] < b) b = f[i + 1]; if (f[i + 1] > d) d = f[i + 1]; } return [a, b, c, d]; };
+
+// ===== البيانات =====
+const R = WD.r.map(a => ({ id: a[0], c: a[1], ctl: a[2], n: a[3], t: WD.T[a[4]], a: a[5], ll: a[6], nb: a[7], sea: a[8], cities: a[9], oil: a[10], gas: a[11], cap: a[12], metro: a[13], why: a[14], el: a[15], port: a[16], fields: a[17], nt: a[18] }));
+const byId = new Map(R.map(r => [r.id, r]));
+for (const r of R) { r.p = decode(WD.g[r.id]); r.bb = bbox(r.p); }
+const S = WD.s.map(a => ({ id: a[0], n: a[1], ll: a[2], nb: a[3], k: a[4] }));
+for (const s of S) { s.p = decode(WD.sg[s.id]); s.bb = bbox(s.p); }
+const LOD = Object.entries(WD.lod).map(([k, v]) => { const p = decode(v); return { k, p, bb: bbox(p) }; });
+const CS = WD.cs, ENT = WD.ent;
+const ROLE = { 'President': 'الرئيس', 'Prime Minister': 'رئيس الوزراء', 'King': 'الملك', 'Queen': 'الملكة', 'Emir': 'الأمير', 'Sultan': 'السلطان', 'Supreme Leader': 'المرشد', 'Chancellor': 'المستشار', 'Premier': 'رئيس الوزراء', 'Acting President': 'الرئيسة بالوكالة', 'Caretaker Prime Minister': 'رئيس وزراء تصريف أعمال',
+  'Crown Prince': 'ولي العهد', 'General Secretary': 'الأمين العام', 'Chairman of the Presidential Council': 'رئيس المجلس الرئاسي', 'Emperor': 'الإمبراطور', 'Grand Duke': 'الدوق الأكبر', 'Vice President': 'نائب الرئيس', 'Chief Adviser': 'كبير المستشارين', 'Federal Chancellor': 'المستشار الاتحادي', 'Head of State': 'رئيس الدولة', 'Supreme Leader of Afghanistan': 'زعيم طالبان' };
+const role = r => !r ? '' : ROLE[r] || (/President/.test(r) ? 'الرئيس' : /Prime Minister|Premier/.test(r) ? 'رئيس الوزراء' : /King/.test(r) ? 'الملك' : /Chairman|Chair/.test(r) ? 'رئيس المجلس' : r);
+const trName = t => t.startsWith('PACT_') ? 'معاهدة دفاع ويا ' + nameOf(t.slice(5)) : (WD.trn[t] || t), cfName = k => WD.cfn[k] || k;
+const nameOf = k => !k ? 'أرض محايدة' : CS[k] ? CS[k].ar : ENT[k] ? ENT[k].ar : k;
+
+// ألوان الدول: تلوين جشع على جيرة الدول (ما تتشابه دولتين متجاورات)
+const PAL = ['#7f9c6b', '#b49a6a', '#8a7fa6', '#6f97a3', '#a9786a', '#9aa46a', '#7a8fb5', '#b08aa0', '#6fa38c', '#a59580'];
+const cAdj = {};
+for (const r of R) for (const n of r.nb) { const o = byId.get(n); if (o && o.ctl !== r.ctl) { (cAdj[r.ctl] ||= new Set()).add(o.ctl); } }
+const CCOL = {};
+for (const k of Object.keys(cAdj).sort((a, b) => cAdj[b].size - cAdj[a].size)) { const used = new Set([...cAdj[k]].map(o => CCOL[o])); CCOL[k] = PAL.find(p => !used.has(p)) || PAL[0]; }
+const colPol = k => !k ? '#6b6e66' : ENT[k] ? '#9b4f4f' : CCOL[k] || PAL[0];
+// مكان اسم الدولة: مركز أكبر كتلة (وزن المساحة)
+const LBL = {};
+for (const r of R) { const k = r.ctl; if (!k) continue; const L = LBL[k] ||= { x: 0, y: 0, a: 0 }; const w = r.a; L.x += MX(r.ll[0]) * w; L.y += MY(r.ll[1]) * w; L.a += w; }
+for (const k in LBL) { LBL[k].x /= LBL[k].a; LBL[k].y /= LBL[k].a; }
+// خطوط التماس: حدود بين منطقتين نفس صاحب الأرض بس مسيطر مختلف (أوكرانيا، غزة، الجولان، اليمن، السودان...)
+const FRONT = [];
+for (const r of R) for (const n of r.nb) { const o = byId.get(n); if (o && r.id < o.id && r.ctl !== o.ctl && (r.c === o.c || ENT[r.ctl] || ENT[o.ctl] || r.c !== r.ctl || o.c !== o.ctl)) FRONT.push([r, o]); }
+
+// ===== الكاميرا =====
+let W = 0, H = 0, DPR = 1, cam = { x: MX(30), y: MY(25), s: 1 }, mode = 'pol', sel = null, me = null;
+function resize() { DPR = Math.min(2, window.devicePixelRatio || 1); W = innerWidth; H = innerHeight; cv.width = W * DPR; cv.height = H * DPR; dirty = true; }
+const home = () => { cam.x = MX(20); cam.y = MY(28); cam.s = Math.min(W / (2 * Math.PI) * 1.05, H / 3.6); dirty = true; };
+const toS = (x, y) => [(x - cam.x) * cam.s + W / 2, (y - cam.y) * cam.s + H / 2], toW = (sx, sy) => [(sx - W / 2) / cam.s + cam.x, (sy - H / 2) / cam.s + cam.y];
+const vis = bb => { const [a, b] = toS(bb[0], bb[1]), [c, d] = toS(bb[2], bb[3]); return c >= 0 && a <= W && d >= 0 && b <= H; };
+function path(rings) {
+  cx.beginPath();
+  for (const f of rings) { // نقاط أقرب من بكسل ما تنرسم (تسريع)
+    let lx = -1e9, ly = -1e9;
+    for (let i = 0; i < f.length; i += 2) { const x = (f[i] - cam.x) * cam.s + W / 2, y = (f[i + 1] - cam.y) * cam.s + H / 2; if (i === 0) cx.moveTo(x, y); else if (Math.abs(x - lx) + Math.abs(y - ly) > .8 || i === f.length - 2) cx.lineTo(x, y); else continue; lx = x; ly = y; }
+    cx.closePath();
+  }
+}
+function relCol(k) { if (!me || !k) return '#6b6e66'; if (k === me) return css('--me'); const v = (WD.rel[me] || {})[k] || 0; if (ENT[k]) return '#7a5a5a';
+  const t = Math.max(-1, Math.min(1, v / 80)); return t >= 0 ? `hsl(${100 + 20 * t},${20 + 35 * t}%,${50 - 8 * t}%)` : `hsl(8,${25 + 45 * -t}%,${50 - 6 * -t}%)`; }
+function fillOf(r) {
+  if (mode === 'ter') return TCOL[r.t];
+  if (mode === 'rel') return relCol(r.ctl);
+  if (mode === 'res') return r.oil || r.gas ? `hsl(35,${40 + Math.min(50, (r.oil + r.gas * 6) / 40)}%,${55 - Math.min(25, (r.oil + r.gas * 6) / 120)}%)` : '#5f6259';
+  return colPol(r.ctl);
+}
+
+// ===== الرسم =====
+let dirty = true, lastMs = 0, frames = 0, fpsT = performance.now(), fps = 0;
+function draw() {
+  const t0 = performance.now();
+  cx.setTransform(DPR, 0, 0, DPR, 0, 0); cx.fillStyle = css('--sea'); cx.fillRect(0, 0, W, H);
+  const far = cam.s < 520, ink = css('--ink');
+  // البحر (حدود خفيفة لما نقرّب)
+  if (!far) { cx.strokeStyle = 'rgba(255,255,255,.05)'; cx.lineWidth = 1; for (const s of S) if (vis(s.bb)) { path(s.p); cx.stroke(); } }
+  if (far && mode === 'pol') { // بعيد: حدود الدول المبسطة بس (أسرع)
+    for (const L of LOD) if (vis(L.bb)) { path(L.p); cx.fillStyle = L.k[0] === '~' ? '#6b6e66' : colPol(L.k); cx.fill(); }
+    cx.strokeStyle = 'rgba(20,24,18,.75)'; cx.lineWidth = .8; for (const L of LOD) if (vis(L.bb)) { path(L.p); cx.stroke(); }
+  } else {
+    const lw = Math.min(1, cam.s / 1400);
+    for (const r of R) if (vis(r.bb)) { path(r.p); cx.fillStyle = fillOf(r); cx.fill(); if (!far) { cx.strokeStyle = 'rgba(20,24,18,' + (.25 + lw * .3) + ')'; cx.lineWidth = .6; cx.stroke(); } }
+    if (far) { cx.strokeStyle = 'rgba(20,24,18,.7)'; cx.lineWidth = .8; for (const L of LOD) if (vis(L.bb)) { path(L.p); cx.stroke(); } }
+    else { cx.strokeStyle = 'rgba(15,18,14,.9)'; cx.lineWidth = 1.6; for (const L of LOD) if (vis(L.bb)) { path(L.p); cx.stroke(); } }
+  }
+  // خطوط التماس
+  cx.strokeStyle = css('--front'); cx.lineWidth = far ? 1.5 : 2.5; cx.setLineDash([5, 3]);
+  for (const [a, b] of FRONT) if (vis(a.bb) || vis(b.bb)) { const [x1, y1] = toS(MX(a.ll[0]), MY(a.ll[1])), [x2, y2] = toS(MX(b.ll[0]), MY(b.ll[1])); const mx = (x1 + x2) / 2, my = (y1 + y2) / 2, dx = (y2 - y1) * .18, dy = (x1 - x2) * .18; cx.beginPath(); cx.moveTo(mx - dx, my - dy); cx.lineTo(mx + dx, my + dy); cx.stroke(); }
+  cx.setLineDash([]);
+  // المختارة
+  if (sel && sel.p) { path(sel.p); cx.strokeStyle = css('--gold'); cx.lineWidth = 2.5; cx.stroke(); }
+  // المضائق
+  for (const st of WD.st) { const [x, y] = toS(MX(st.ll[0]), MY(st.ll[1])); if (x < -20 || x > W + 20 || y < -20 || y > H + 20) continue; cx.beginPath(); cx.arc(x, y, far ? 3.5 : 5, 0, 7); cx.fillStyle = css('--gold'); cx.fill(); cx.strokeStyle = '#000'; cx.lineWidth = 1; cx.stroke();
+    if (cam.s > 300) { cx.font = '600 11px "IBM Plex Sans Arabic",Tahoma'; cx.fillStyle = ink; cx.textAlign = 'center'; cx.fillText(st.n, x, y - 8); } }
+  // العواصم والمدن
+  if (!far || cam.s > 380) {
+    cx.textAlign = 'center';
+    for (const r of R) { if (!r.cities.length || !vis(r.bb)) continue; const big = r.cities[0][1]; if (!r.cap && cam.s < 1400 && big < 2e6) continue; if (!r.cap && cam.s < 3000 && big < 5e5) continue;
+      const [x, y] = toS(MX(r.ll[0]), MY(r.ll[1])); cx.beginPath(); cx.arc(x, y, r.cap ? 3.5 : 2.4, 0, 7); cx.fillStyle = r.cap ? css('--gold') : ink; cx.fill();
+      if (cam.s > 900 || r.cap) { cx.font = (r.cap ? '700 ' : '500 ') + '11px "IBM Plex Sans Arabic",Tahoma'; cx.fillStyle = ink; cx.fillText(r.cities[0][0], x, y - 6); } }
+  }
+  // أسماء الدول
+  if (cam.s < 2600) {
+    cx.textAlign = 'center'; cx.lineJoin = 'round';
+    for (const k in LBL) { const L = LBL[k], c = CS[k]; if (!c && !ENT[k]) continue; const px = Math.sqrt(L.a) / 6371 * cam.s; if (px < 26) continue;
+      const [x, y] = toS(L.x, L.y); if (x < 0 || x > W || y < 0 || y > H) continue; const fs = Math.max(10, Math.min(22, px / 7));
+      cx.font = `700 ${fs}px "IBM Plex Sans Arabic",Tahoma`; cx.strokeStyle = 'rgba(0,0,0,.55)'; cx.lineWidth = 3; const tx = nameOf(k); cx.strokeText(tx, x, y); cx.fillStyle = '#f3eedd'; cx.fillText(tx, x, y); }
+  }
+  lastMs = performance.now() - t0;
+}
+function loop(t) { if (dirty) { dirty = false; draw(); frames++; } if (t - fpsT > 1000) { fps = frames; frames = 0; fpsT = t; $('#perf').textContent = `رسم ${lastMs.toFixed(1)}ms · ${fps}fps · ×${Math.round(cam.s)}`; } requestAnimationFrame(loop); }
+
+// ===== اللمس والفأرة =====
+const pts = new Map(); let drag = null, moved = 0, pinch = null;
+cv.addEventListener('pointerdown', e => { cv.setPointerCapture(e.pointerId); pts.set(e.pointerId, [e.clientX, e.clientY]); moved = 0; if (pts.size === 2) { const [a, b] = [...pts.values()]; pinch = { d: Math.hypot(a[0] - b[0], a[1] - b[1]), s: cam.s }; } });
+cv.addEventListener('pointermove', e => { if (!pts.has(e.pointerId)) return; const p = pts.get(e.pointerId), dx = e.clientX - p[0], dy = e.clientY - p[1]; pts.set(e.pointerId, [e.clientX, e.clientY]); moved += Math.abs(dx) + Math.abs(dy);
+  if (pts.size === 1) { cam.x -= dx / cam.s; cam.y -= dy / cam.s; dirty = true; }
+  else if (pts.size === 2 && pinch) { const [a, b] = [...pts.values()], d = Math.hypot(a[0] - b[0], a[1] - b[1]); zoomAt((a[0] + b[0]) / 2, (a[1] + b[1]) / 2, pinch.s * d / pinch.d / cam.s); } });
+const up = e => { if (pts.size === 1 && moved < 8) tap(e.clientX, e.clientY); pts.delete(e.pointerId); if (pts.size < 2) pinch = null; };
+cv.addEventListener('pointerup', up); cv.addEventListener('pointercancel', e => { pts.delete(e.pointerId); pinch = null; });
+cv.addEventListener('wheel', e => { e.preventDefault(); zoomAt(e.clientX, e.clientY, Math.exp(-e.deltaY * .0015)); }, { passive: false });
+function zoomAt(sx, sy, f) { const [wx, wy] = toW(sx, sy); cam.s = Math.max(W / 7, Math.min(60000, cam.s * f)); const [nx, ny] = toW(sx, sy); cam.x += wx - nx; cam.y += wy - ny; dirty = true; }
+$('#zin').onclick = () => zoomAt(W / 2, H / 2, 1.6); $('#zout').onclick = () => zoomAt(W / 2, H / 2, 1 / 1.6); $('#zhome').onclick = home;
+function inPoly(rings, x, y) { let c = false; for (const f of rings) for (let i = 0, j = f.length - 2; i < f.length; j = i, i += 2) { const yi = f[i + 1], yj = f[j + 1]; if ((yi > y) !== (yj > y) && x < (f[j] - f[i]) * (y - yi) / (yj - yi) + f[i]) c = !c; } return c; }
+function tap(sx, sy) { const [x, y] = toW(sx, sy); const r = R.find(r => x >= r.bb[0] && x <= r.bb[2] && y >= r.bb[1] && y <= r.bb[3] && inPoly(r.p, x, y)); sel = r || null; dirty = true; card(); }
+
+// ===== البطاقة =====
+function card() {
+  const el = $('#card'); if (!sel) { el.hidden = true; return; }
+  const r = sel, k = r.ctl, c = CS[k], own = r.c && r.c !== k ? CS[r.c] : null;
+  const pill = (t, cls = '') => `<span class="pill ${cls}">${t}</span>`;
+  let h = `<h2>${r.n}<button class="x" aria-label="سدّ">✕</button></h2><div class="sub">${nameOf(k)}${own ? ` · أرض ${own.ar}` : ''}${r.nt ? ' · دولة صغيرة مو باللعبة' : ''}</div>`;
+  h += `<div class="row">${pill(TAR[r.t])}${pill('<b>' + fmt(r.a) + '</b> كم²')}${pill('ارتفاع ' + r.el + ' م')}${r.cap ? pill('العاصمة', 'gold') : ''}${r.metro ? pill('مدينة كبيرة: قتال شوارع') : ''}${r.port ? pill('ميناء') : ''}${r.sea.length ? pill('ساحل') : ''}</div>`;
+  if (r.why) h += `<div class="row">${pill('⚠ ' + r.why, 'warn')}</div>`;
+  if (r.cities.length) h += `<div class="note">المدن: ${r.cities.map(c => c[0] + (c[1] ? ` (${fmt(c[1])})` : '')).join('، ')}</div>`;
+  if (r.oil || r.gas) h += `<div class="row">${r.oil ? pill('🛢 <b>' + fmt(r.oil * 1000) + '</b> برميل/يوم', 'gold') : ''}${r.gas ? pill('🔥 <b>' + r.gas + '</b> مليار م³ غاز/سنة', 'gold') : ''}</div><div class="note">${r.fields.join('، ')}</div>`;
+  if (c) {
+    h += `<h3>${c.ar}</h3><div class="note">${c.gov || ''}${c.hos ? ` · ${role(c.hosR)}: ${c.hos}` : ''}${c.hog ? ` · ${role(c.hogR)}: ${c.hog}` : ''}</div><div class="grid" style="margin-top:6px">`;
+    const st = (i, b) => `<div class="st"><i>${i}</i><b>${b}</b></div>`;
+    h += st('السكان', fmt(c.pop)) + st('الناتج', c.gdp ? Math.round(c.gdp) + ' مليار $' : '–') + st('ميزانية الجيش', c.mb ? c.mb.toFixed(1) + ' مليار $' : '–') + st('الجيش العامل', fmt(c.act)) + st('دبابات', fmt(c.tanks)) + st('طائرات قتال', fmt(c.air)) + (c.nuke ? st('رؤوس نووية', fmt(c.nuke)) : '') + st('الاستقرار', c.stab ?? '–') + '</div>';
+    if (c.tr && c.tr.length) h += `<div class="note">تحالفات واتفاقيات: ${c.tr.map(trName).join('، ')}</div>`;
+    if (c.conf && c.conf.length) h += `<div class="row">${c.conf.map(x => pill('⚔ ' + cfName(x), 'warn')).join('')}</div>`;
+    h += `<div class="row"><button id="asme">${me === k ? '✓ هاي دولتي (للعلاقات)' : 'شوف العالم من عيون ' + c.ar}</button></div>`;
+  } else if (ENT[k]) h += `<h3>${ENT[k].ar}</h3><div class="note">${ENT[k].note || 'كيان مو دولة: يمسك أرض بس ما ينلعب'}${ENT[k].ally ? ' · مدعوم من ' + nameOf(ENT[k].ally) : ''}</div>`;
+  el.innerHTML = h; el.hidden = false;
+  el.querySelector('.x').onclick = () => { sel = null; dirty = true; card(); };
+  const b = el.querySelector('#asme'); if (b) b.onclick = () => { me = k; setMode('rel'); card(); };
+}
+function legend() {
+  const L = $('#legend'); let h = '';
+  if (mode === 'ter') h = Object.entries(TAR).map(([k, v]) => `<div><span style="background:${TCOL[k]}"></span>${v}</div>`).join('');
+  else if (mode === 'rel') h = me ? `<div><b>من عيون ${CS[me].ar}</b></div><div><span style="background:${css('--me')}"></span>إنت</div><div><span style="background:hsl(120,55%,42%)"></span>حليف</div><div><span style="background:#6b6e66"></span>محايد</div><div><span style="background:hsl(8,70%,44%)"></span>عدو</div>` : '<div>اضغط دولة وبعدين «شوف العالم من عيونها»</div>';
+  else if (mode === 'res') h = '<div><span style="background:hsl(35,85%,32%)"></span>نفط وغاز كثير</div><div><span style="background:hsl(35,45%,53%)"></span>قليل</div>';
+  else h = `<div><span style="background:#9b4f4f"></span>كيان مسلح (مو دولة)</div><div><span style="background:transparent;border-top:2px dashed var(--front);border-radius:0;height:0"></span>خط تماس</div><div><span style="background:var(--gold);border-radius:50%"></span>مضيق / عاصمة</div>`;
+  L.innerHTML = h; L.hidden = false;
+}
+function setMode(m) { mode = m; document.querySelectorAll('#modes button').forEach(b => b.classList.toggle('on', b.dataset.m === m)); legend(); dirty = true; }
+document.querySelectorAll('#modes button').forEach(b => b.onclick = () => setMode(b.dataset.m));
+addEventListener('resize', resize);
+matchMedia('(prefers-color-scheme: light)').addEventListener?.('change', () => dirty = true);
+resize(); home(); cam.x = MX(44); cam.y = MY(31); cam.s = Math.max(cam.s * 2.2, Math.min(W, H) * 1.5); legend(); $('#load').remove(); requestAnimationFrame(loop);
+window.__W = { cam, R, draw: () => { draw(); return lastMs; }, zoomAt, setMode, tap, byId, home, get sel() { return sel; } };
+</script>
+</body>
+</html>

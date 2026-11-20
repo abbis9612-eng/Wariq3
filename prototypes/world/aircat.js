@@ -53,7 +53,20 @@
   sys('s200', { n: 'S-200 (SA-5)', full: 'S-200 «فيغا»', layer: 'بعيد', hm: 20, det: 300, ch: 1, mg: 2, reload: 120, uav: 'none', mags: [M('5V28', { air: 250 }, { air: .3 }, { ready: 6, perL: 1, v: 1200, zMax: 40, zMin: .3 })] });
   sys('crotale', { n: 'دفاع قصير', full: 'دفاع جوي قصير المدى (كروتال، HQ-7، أفنجر، ستريلا-10)', layer: 'قريب', hm: 4, det: 20, ch: 1, mg: 2, react: .1, gap: .05, reload: 20, uav: 'all',
     mags: [M('قصير', { air: 10, uav: 8, cm: 8 }, { air: .45, uav: .6, cm: .5 }, { ready: 8, perL: 4, v: 800, zMax: 5, zMin: .005 })] });
-  const SAM_RX = [[/s-400/i, 's400'], [/s-300/i, 's300'], [/hq-9|fd-2000/i, 'hq9'], [/patriot|pac-[23]/i, 'pac'], [/samp|aster 30|mamba/i, 'sampt'], [/thaad/i, 'thaad'], [/arrow/i, 'arrow'], [/david/i, 'dsling'],
+  // W11 (I-110): أنظمة جديدة بالخدمة 2025–26 (مدى وسرعة من مصادر مفتوحة؛ الاحتمالات [ASSUMPTION])
+  // تركيا «القبة الفولاذية» (أول تسليم 27 آب 2025): سيبر بعيد، حصار-O+ متوسط، حصار-A+ قريب، كوركوت مدفع 35 ملم بذخيرة متشظية
+  sys('siper', { n: 'سيبر', full: 'سيبر بلوك-1 (أسيلسان/روكيتسان)', layer: 'بعيد', hm: 20, det: 300, ch: 8, mg: 16, mags: [M('Siper', { air: 100, uav: 50, cm: 60, tbm: 25 }, { air: .72, uav: .8, cm: .7, tbm: .45 }, { ready: 24, perL: 6, v: 1500, zMax: 25 })] });
+  sys('hisarO', { n: 'حصار-O+', full: 'حصار-O+ (متوسط)', layer: 'متوسط', hm: 8, det: 150, ch: 6, mg: 12, uav: 'all', mags: [M('Hisar-O+', { air: 25, uav: 22, cm: 20 }, { air: .7, uav: .8, cm: .72 }, { ready: 24, perL: 6, v: 1200, zMax: 15 })] });
+  sys('hisarA', { n: 'حصار-A+', full: 'حصار-A+ (قريب)', layer: 'قريب', hm: 4, det: 60, ch: 2, mg: 4, react: .1, uav: 'all', mags: [M('Hisar-A+', { air: 15, uav: 12, cm: 12 }, { air: .62, uav: .75, cm: .65 }, { ready: 8, perL: 4, v: 1000, zMax: 10, zMin: .005 })] });
+  sys('korkut', { n: 'كوركوت', full: 'كوركوت (مدفع 35 ملم، ذخيرة ATOM)', layer: 'قريب', hm: 3, det: 70, ch: 1, mg: 1, react: .05, gap: .02, reload: 10, uav: 'all',
+    mags: [M('ATOM 35mm', { air: 4, uav: 4, cm: 4 }, { air: .35, uav: .55, cm: .4 }, { ready: 40, perL: 20, stock: 200, v: 1050, zMax: 3, zMin: .002, gun: 1, salvo: { air: 4, uav: 2, cm: 4 } })] });
+  // روسيا: S-500 «بروميثيوس» (أول فوج بالخدمة كانون الأول 2025، حول موسكو)؛ الصين: HQ-19 (مثل ثاد، عُرض أيلول 2025)؛ بريطانيا/بولندا/إيطاليا: CAMM (سكاي سيبر، نارو، بيليتسا+)
+  sys('s500', { n: 'S-500', full: 'S-500 «بروميثيوس» (77N6)', layer: 'باليستي', hm: 30, det: 800, ch: 10, mg: 16, cold: 1, reload: 60,
+    mags: [M('77N6', { air: 400, cm: 80, tbm: 200 }, { air: .75, cm: .6, tbm: .7 }, { ready: 16, perL: 2, stock: 8, v: 3000, zMax: 180, zMin: .1, salvo: { air: 2, cm: 2, tbm: 2 } })] });
+  sys('hq19', { n: 'HQ-19', full: 'HQ-19 (اعتراض باليستي عالي)', layer: 'باليستي', hm: 5, det: 900, ch: 6, mg: 12, reload: 60, uav: 'none',
+    mags: [M('HQ-19', { tbm: 200 }, { tbm: .75 }, { ready: 24, perL: 6, stock: 12, v: 2800, zMax: 150, zMin: 40, salvo: { tbm: 2 } })] });
+  sys('camm', { n: 'CAMM', full: 'CAMM / سكاي سيبر (MBDA)', layer: 'متوسط', hm: 8, det: 120, ch: 8, mg: 16, uav: 'all', mags: [M('CAMM', { air: 25, uav: 22, cm: 22 }, { air: .72, uav: .85, cm: .8 }, { ready: 24, perL: 8, v: 1000, zMax: 10 })] });
+  const SAM_RX = [[/s-500|prometey/i, 's500'], [/s-400/i, 's400'], [/siper/i, 'siper'], [/hisar-o|hisar o/i, 'hisarO'], [/hisar-a|hisar a|sungur/i, 'hisarA'], [/korkut/i, 'korkut'], [/hq-19/i, 'hq19'], [/camm|sky sabre|narew|pilica/i, 'camm'], [/s-300/i, 's300'], [/hq-9|fd-2000/i, 'hq9'], [/patriot|pac-[23]/i, 'pac'], [/samp|aster 30|mamba/i, 'sampt'], [/thaad/i, 'thaad'], [/arrow/i, 'arrow'], [/david/i, 'dsling'],
     [/iron dome/i, 'idome'], [/nasams/i, 'nasams'], [/iris-t/i, 'irist'], [/buk/i, 'buk'], [/hq-16|ly-80/i, 'hq16'], [/cheongung|km-sam/i, 'cheong'], [/akash/i, 'akash'], [/barak/i, 'barak8'],
     [/hawk/i, 'hawk'], [/kub|sa-6/i, 'kub'], [/s-125|pechora|sa-3/i, 's125'], [/s-75|sa-2/i, 's75'], [/s-200|sa-5/i, 's200'], [/bavar/i, 'bavar'], [/khordad|sayyad-3/i, 'khordad'], [/pantsir/i, 'pantsir'], [/tor\b|tor-m|9k330/i, 'tor']];
   const samType = m => (SAM_RX.find(([rx]) => rx.test(m)) || [0, 'crotale'])[1];
@@ -64,10 +77,11 @@
     brahmos: MU.brahmos || cm('براهموس', 800, 450), prithvi: MU.prithvi || bm('بريثفي', 350, 90), babur: MU.babur || cm('بابر', 250, 700), ghaznavi: MU.ghaznavi || bm('غزنوي/شاهين', 300, 80),
     df15: MU.df15 || bm('DF-15/16', 800, 160), cj10: MU.cj10 || cm('CJ-10', 250, 1500), hwasong: MU.hwasong || bm('KN-23', 700, 140), lora: MU.lora || bm('لورا/جريكو', 400, 100),
     harop: MU.harop || uv('هاروب', 50, 1000), tomahawk: MU.tomahawk || cm('توماهوك', 250, 1600), scalp: MU.scalp || cm('ستورم شادو/سكالب', 280, 550), tb_kamikaze: MU.tb_kamikaze || uv('مسيّرة انتحارية', 50, 1000),
+    tayfun: MU.tayfun || bm('تايفون/بورا', 500, 100), kargu: MU.kargu || uv('كارغو/ألباغو', 50, 300), som: MU.som || cm('SOM-J/كروز تركي', 250, 500),
     srbm: MU.srbm || bm('صاروخ باليستي قصير', 300, 80), cmgen: MU.cmgen || cm('صاروخ كروز', 250, 1000), bayraktar_k: MU.bayraktar_k || uv('مسيّرة انتحارية', 50, 1000) });
   const MUN_OF = { RUS: { bm: 'iskander', uav: 'geran', cm: 'kalibr' }, BLR: { bm: 'iskander', uav: 'geran', cm: 'kalibr' }, UKR: { bm: 'atacms', uav: 'lyuty', cm: 'neptune' }, IND: { bm: 'prithvi', uav: 'harop', cm: 'brahmos' },
     PAK: { bm: 'ghaznavi', uav: 'tb_kamikaze', cm: 'babur' }, CHN: { bm: 'df15', uav: 'tb_kamikaze', cm: 'cj10' }, PRK: { bm: 'hwasong', uav: 'tb_kamikaze', cm: 'cmgen' }, ISR: { bm: 'lora', uav: 'harop', cm: 'cmgen' },
-    USA: { bm: 'atacms', uav: 'tb_kamikaze', cm: 'tomahawk' }, GBR: { bm: 'srbm', uav: 'tb_kamikaze', cm: 'scalp' }, FRA: { bm: 'srbm', uav: 'tb_kamikaze', cm: 'scalp' }, IRN: null, YEM: null };
+    USA: { bm: 'atacms', uav: 'tb_kamikaze', cm: 'tomahawk' }, GBR: { bm: 'srbm', uav: 'tb_kamikaze', cm: 'scalp' }, FRA: { bm: 'srbm', uav: 'tb_kamikaze', cm: 'scalp' }, IRN: null, YEM: null, TUR: { bm: 'tayfun', uav: 'kargu', cm: 'som' } };
   const munOf = id => id in MUN_OF ? MUN_OF[id] : { bm: 'srbm', uav: 'tb_kamikaze', cm: 'cmgen' };
   const API = { planeType, munOf, samType, PL_RX, SAM_RX };
   if (typeof module !== 'undefined') module.exports = API; else root.AIRCAT = API;

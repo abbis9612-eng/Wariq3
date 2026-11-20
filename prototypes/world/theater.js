@@ -223,9 +223,9 @@
     let cap = WD.r.findIndex(a => G.ctl[WD.r.indexOf(a)] === me && a[12]); if (cap < 0) cap = G.ctl.findIndex(k => k === me); if (cap < 0) return null;
     const seen = new Map([[cap, 0]]), q = [cap];
     while (q.length) { const i = q.shift(); for (const n of WD.r[i][7]) { const j = idx.get(n); if (j != null && !seen.has(j) && G.ctl[j] === me) { seen.set(j, seen.get(i) + 1); q.push(j); } } }
-    const regs = [...seen.keys()].sort((a, b) => seen.get(a) - seen.get(b) || (WD.r[b][10] || 0) - (WD.r[a][10] || 0)).slice(0, MAXREG);
+    const regs = [...seen.keys()].sort((a, b) => seen.get(a) - seen.get(b) || (WD.r[b][10] || 0) - (WD.r[a][10] || 0)).slice(0, 320);   // بالسلم لحد 320 منطقة (الدول الكبيرة: أغلب أرضها)، والخلايا تكبر حتى يبقى العدد ~500
     const war = { ...HOME, a: [me] };
-    const T = build(G, WD, war, me, { regs, ctl0: Object.fromEntries(regs.map(r => [r, G.ctl[r]])), hsMax: 160, target: 500 }); if (!T) return null;
+    const T = build(G, WD, war, me, { regs, ctl0: Object.fromEntries(regs.map(r => [r, G.ctl[r]])), hsMax: 200, target: 500 }); if (!T) return null;
     homeArmy(T, G, WD); return T;
   }
   function homeArmy(T, G, WD) {

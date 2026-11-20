@@ -52,6 +52,8 @@
   const drillCost = G => Math.max(.05, G.C[G.me].gdp * .001);
   function drill(G) { const C = G.cmd; if (!C) return 'ماكو قائد'; if (G.t - C.drill < 60) return 'مناورات قريبة، انتظر ' + Math.ceil((60 - G.t + C.drill) / 30) + ' شهر'; const v = drillCost(G); if (G.nat && G.nat.eco[0].cash < v) return 'الخزينة ما تكفي';
     if (G.nat) G.nat.eco[0].cash -= v; C.drill = G.t; C.c.xp += 15; G.log.push({ t: G.t, k: 'cmd', a: 'drill', v: +v.toFixed(2) }); return { ok: true }; }
-  const API = { RANK, STARS, XPN, SK, SKD, quality, ensure, cands, mult, power, k, daily, change, drill, drillCost };
+  // قائد دولة ثانية (للعرض): اسم ورتبة ثابتين من جودتها
+  const AIC = {}; function ai(G, WD, id) { if (AIC[id]) return AIC[id]; const q = (G.cmdq || {})[id] || quality(WD, id), c = cand(WD, id, hash(id) * 13 + 5, q, (WD.cs[id] || {}).cont); c.rank = clamp(q - 2, 0, 3); return AIC[id] = c; }
+  const API = { ai, RANK, STARS, XPN, SK, SKD, quality, ensure, cands, mult, power, k, daily, change, drill, drillCost };
   if (typeof module !== 'undefined') module.exports = API; else root.WCMD = API;
 })(this);

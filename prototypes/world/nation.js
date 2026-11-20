@@ -37,6 +37,7 @@
     // الداخل: فئات نظام الحكم (العراق بفئاته الأصلية)، والبداية حول الاستقرار الحالي
     const fk = me === 'IRQ' ? HOME.FK : FACS[gt] || FACS.parl, base = Math.round(c.stab);
     HOME.init(NW, { fk, stab: base, fac: Object.fromEntries(fk.map((k, i) => [k, Math.max(15, Math.min(85, base + [6, -4, 2, -2, 0][i % 5]))])) });
+    NW.home.base = { ...NW.home.fac }; NW.home.revR = .01;   // سنين مو أشهر: الفئات ترجع لوضعها (نص الفرق بـ~70 يوم) [تقدير]
     // التصنيع والبحث: مستويات البداية من بيانات الدولة (W1/W4)، والطرف 1 من خصمها الرئيسي إذا بحرب
     IND.init(NW); const t0 = k => Math.max(0, Math.min(5, Math.round(k || 0)));
     NW.ind[0].tech = { arm: t0(tech.arm), uav: t0(tech.uav), msl: t0(tech.msl), ew: t0(tech.ew), ind: t0(tech.ind ?? 1) }; NW.ind[0].bud = 1; NW.ind[0].nat.name = '';
@@ -85,6 +86,7 @@
   // X = { S: wsim، SIM: محرك الحرب، T: المسرح أو null، before: طول سجل العالم قبل اليوم }
   function daily(G, WD, X) {
     const NW = G.nat; if (!NW) return; const S = X.S, T = X.T, me = G.me, c = G.C[me], e = NW.eco[0];
+    if (!NW.home.base) { NW.home.base = Object.fromEntries(Object.keys(NW.home.fac).map(k => [k, 55])); NW.home.revR = .01; }
     NW.t = G.t * 24; Object.defineProperty(NW, 'rnd', { value: G.rnd || Math.random, writable: true, enumerable: false, configurable: true });
     NW.lim = Math.max(2, c.gdp * .06); ECON.LAND[0].lim = NW.lim; dipShim(G, WD, S);
     // الواجهة بين المحاكاتين: الإنفاق المدني والأولوية من wsim

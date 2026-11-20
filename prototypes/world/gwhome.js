@@ -62,6 +62,7 @@
     if (e.civL === 'cut') { d('street', -.3, 'تقشف'); d('army', -.15, 'تقشف'); } else if (e.civL === 'more') d('street', .2, 'زيادة رواتب');
     if (e.fuel) d('street', .15, 'دعم الوقود'); if (e.mob) { d('army', .1, 'التعبئة'); d('biz', -.15, 'التعبئة'); }
     d('street', (e.mor - F.street) * .03, 'المعنويات');
+    if (H.base) for (const k of fks(W)) if (H.base[k] != null) F[k] = Math.max(0, Math.min(100, F[k] + (H.base[k] - F[k]) * (H.revR || .01)));   // «العالم» (سنين): الفئات ترجع ببطء لوضعها الطبيعي
     // أحداث آخر يوم
     for (let i = W.log.length - 1; i >= 0 && W.log[i].t > W.t - 24; i--) { const l = W.log[i];
       const tc = l.k === 'take' ? (l.vp != null ? { vp: l.vp, s: l.own ?? 0, city: l.city } : W.cells && W.cells[l.cell]) : null;   // «العالم»: الحدث يحمل vp ومالك المدينة

@@ -4,9 +4,10 @@
 (function (root) {
   'use strict';
   const START = Date.UTC(2026, 10, 20);   // 20 تشرين الثاني 2026: الوضع الحقيقي (D-048)
-  const V = 5;                              // إصدار حفظ «العالم» (2: الصواريخ والدفاع الجوي؛ 3: البحرية والمضائق؛ 4: طبقة الدولة؛ 5: التكتلات والتوتر والعروض والأمم المتحدة)
+  const V = 6;                              // إصدار حفظ «العالم» (2: الصواريخ والدفاع الجوي؛ 3: البحرية والمضائق؛ 4: طبقة الدولة؛ 5: التكتلات والتوتر والعروض والأمم المتحدة؛ 6: الانتخابات والانقلابات والاحتلال والأحداث)
   const mulberry = a => () => { a |= 0; a = a + 0x6D2B79F5 | 0; let t = Math.imul(a ^ a >>> 15, 1 | a); t = t + Math.imul(t ^ t >>> 7, 61 | t) ^ t; return ((t ^ t >>> 14) >>> 0) / 4294967296; };
   const clamp = (v, a, b) => v < a ? a : v > b ? b : v;
+  const POL = root.WPOL || (typeof require !== 'undefined' ? require('./wpol.js') : null);   // W7: السياسة والأحداث
   // ===== ثوابت [تقدير] =====
   const K = {
     oilBase: 65, oilDisrupt: 3.5,        // سعر النفط = 65$ × (1 + 3.5 × نسبة النفط المقطوع عالمياً)
@@ -49,7 +50,7 @@
       // نثبّت العجز الأولي على الحقيقي تقريباً (بيانات الإيرادات والمصاريف من سنين مختلفة، فنحصره بين فائض 3٪ وعجز 5٪)
       const dp = c.debt / c.gdp * 100, rev = c.core * c.revCore + oilGDP(c.oil, W.oilP) * K.oilTake, def = clamp(c.spend0 - c.rev0, -.03, .05) * c.gdp;
       c.civ0 = clamp((rev + def - c.gdp * c.milPct / 100 - c.debt * rate(c, dp)) / c.core, .03, .6); }
-    W.rnd = mulberry(W.rs); ix(W, WD); note(W, { k: 'start', me });
+    W.rnd = mulberry(W.rs); ix(W, WD); if (POL) POL.ensure(W, WD); note(W, { k: 'start', me });
     return W;
   }
   // الحروب الجارية بين دول (الحروب ويا الكيانات تبقى استنزاف داخلي): من data/world/conflicts.json
@@ -82,7 +83,7 @@
   function oilOf(W, WD, id) { let o = 0; for (let i = 0; i < WD.r.length; i++) if (W.ctl[i] === id) o += WD.r[i][10] || 0; return o * (1 - ((W.C && W.C[id] && W.C[id].oilDmg) || 0)) * (1 - .6 * ((W.C && W.C[id] && W.C[id].blk) || 0)); }
   function price(W, WD) { let disrupt = 0; const ST = (WD && WD.st) || [];
     for (const k in W.stx || {}) { const st = ST.find(x => x.id === k); disrupt += (st ? st.oilPct / 100 : .2) * W.stx[k]; }
-    W.hormuz = (W.stx || {}).hormuz || 0; W.oilP = K.oilBase * (1 + K.oilDisrupt * disrupt) + Math.max(0, (W.ten || 0) - 30) * .15; return W.oilP; }   // التوتر فوق 30 يزيد السعر [تقدير]
+    W.hormuz = (W.stx || {}).hormuz || 0; W.oilP = K.oilBase * (1 + K.oilDisrupt * disrupt) + Math.max(0, (W.ten || 0) - 30) * .15 + (W.oilShock && W.oilShock.until > W.t ? W.oilShock.v : 0); return W.oilP; }   // التوتر فوق 30 يزيد السعر [تقدير]
   // ===== أدوات =====
   const ix = (W, WD) => W.idx || (W.idx = new Map(WD.r.map((a, i) => [a[0], i])));
   const rel = (W, a, b) => (W.rel[a] && W.rel[a][b]) || 0;
@@ -180,6 +181,7 @@
     }
     for (const id of W.ids) if (id !== W.me) ai(W, WD, id);
     dipMonth(W, WD);
+    if (POL) POL.month(W, WD, API);
     // العلاقات ترجع ببطء للأساس (الذاكرة الدبلوماسية)
     for (const a in W.rel) for (const b in W.rel[a]) { const base = (W.base[a] && W.base[a][b]) || 0, v = W.rel[a][b]; if (v !== base && !atWar(W, a, b)) W.rel[a][b] = Math.round(v + (base - v) * .03); }
     W.ap = Math.min(K.apMax, W.ap + K.apMonth);
@@ -196,6 +198,8 @@
     const sl = sancOn(WD, W, id); if (sl) g += add(K.sancG[sl], 'العقوبات');
     if (c.prioG) g += add(c.prioG, 'أولوية الاقتصاد');
     if (c.blk) g += add(-2.5 * c.blk, 'الحصار البحري');
+    if (c.occG) g += add(c.occG, 'كلفة الاحتلال (' + c.occN + ' منطقة)');
+    if (W.gshock && W.gshock.until > W.t) g += add(W.gshock.v, W.gshock.n);
     const tr = W.trade.filter(p => p[0] === id || p[1] === id).length; if (tr) g += add(Math.min(K.tradeMax, tr * K.tradeG), 'اتفاقيات التجارة');
     const dp = c.debt / c.gdp * 100; if (dp > 110) g += add(-.01 * (dp - 110), 'الدين');
     g += add(clamp((c.stab - c.stab0) * .02, -1.5, .4), 'الاستقرار');
@@ -211,7 +215,8 @@
     c.bal = rev - mil - civ - intr;
     // W.nat (دولة اللاعب، nation.js): الفائض/العجز يروح للخزينة (منها يدفع البحث والإنتاج والقرارات)، والخزينة السالبة فائدتها أعلى
     // اللاعب: العجز/الفائض «الأساسي» (نسبته من الناتج أول شهر) يبقى على الدين مثل كل الدول، والفرق اللي تسببه قراراتك (ضرايب، إنفاق، حرب، نفط) + 0.25٪ من الناتج للمشتريات يروح للخزينة [تقدير]
-    if (id === W.me && W.nat) { const e = W.nat.eco[0]; if (c.balF == null) c.balF = c.bal / c.gdp; const b0 = c.balF * c.gdp;
+    // الأساس بسعر نفط طبيعي (65$): غلاء النفط المؤقت (هرمز) فائض للخزينة مو عادة
+    if (id === W.me && W.nat) { const e = W.nat.eco[0]; if (c.balF == null) c.balF = (c.bal - (og - oilGDP(c.oil, K.oilBase)) * K.oilTake / 12) / c.gdp; const b0 = c.balF * c.gdp;
       c.debt = Math.max(0, c.debt - b0); e.cash += (c.bal - b0) + c.gdp * .0025; if (e.cash < 0) e.cash -= -e.cash * rate(c, dp) * 1.5 / 12; }
     else c.debt = Math.max(0, c.debt - c.bal);
     c.budget = { rev, mil, civ, intr };
@@ -403,7 +408,7 @@
     if (a === 'trade') { const v = aiAccept(W, WD, t, 'trade'); if (!v.ok) { note(W, { k: 'dip', a: 'refuse', t, what: 'trade' }); return { ok: false, why: v.why, spent: true }; } W.trade.push([me, t]); addRel(W, me, t, 5); note(W, { k: 'dip', a, t }); return { ok: true }; }
     if (a === 'ally') { const v = aiAccept(W, WD, t, 'ally'); if (!v.ok) { note(W, { k: 'dip', a: 'refuse', t, what: 'ally' }); return { ok: false, why: v.why, spent: true }; } W.pacts.push([me, t]); addRel(W, me, t, 10); note(W, { k: 'dip', a, t }); return { ok: true }; }
     if (a === 'sanction') { W.sanc.push([me, t, W.C[me].gdp > 3000 ? 'heavy' : 'light']); addRel(W, me, t, -25); note(W, { k: 'dip', a, t }); return { ok: true }; }
-    if (a === 'war') { declare(W, WD, me, t, false); return { ok: true }; }
+    if (a === 'war') { const cb = POL ? POL.casus(W, WD, API, me, t) : 'x'; declare(W, WD, me, t, false); if (!cb && POL) { POL.noCause(W, WD, API, me); note(W, { k: 'nocause', a: me, b: t }); } return { ok: true, cb }; }
     if (a === 'nap') { const r = rel(W, t, me); if (r < 10 && W.C[t].pw > W.C[me].pw * 1.5) { note(W, { k: 'dip', a: 'refuse', t, what: 'nap' }); return { ok: false, why: 'رفضوا: يشوفون نفسهم أقوى', spent: true }; } W.naps.push([me, t]); addRel(W, me, t, 5); note(W, { k: 'dip', a, t }); return { ok: true }; }
     if (a === 'aid') { const v = aidAmt(W); if (W.nat) W.nat.eco[0].cash -= v; W.C[t].stab = clamp(W.C[t].stab + 2, 0, 100); addRel(W, me, t, 8); note(W, { k: 'dip', a, t, v: +v.toFixed(2) }); return { ok: true }; }
     if (a === 'mediate') { const w = W.wars.find(w => (w.a.includes(t) || w.b.includes(t)) && !w.a.includes(me) && !w.b.includes(me)), x = w.a[0], y = w.b[0], wr = Math.min(w.weary[x] || 0, w.weary[y] || 0);
@@ -471,8 +476,10 @@
     if (o.v < 4) o.v = 4;
     // 4 ← 5 (W6b): التكتلات الدفاعية، عدم الاعتداء، العروض، التوتر
     if (o.v < 5) { o.v = 5; }
-    o.base = WD.rel; o.rnd = mulberry(o.rs); dipInit(o, WD); return o;
+    // 5 ← 6 (W7): مواعيد الانتخابات، أحداث اللاعب، الاحتلال (POL.ensure يبنيها)
+    if (o.v < 6) o.v = 6;
+    o.base = WD.rel; o.rnd = mulberry(o.rs); dipInit(o, WD); if (POL) POL.ensure(o, WD); return o;
   }
-  const API = { V, K, START, init, addRel, answerOffer, unSummit, unVote, council, tenTarget, napOf, blocsOf, P5, navy, straits, step, month, act, can, offerPeace, declare, endWar, strike, playerStrike, rank, save, load, date, rel, atWar, allied, COST, TAX, CIV };
+  const API = { V, K, START, TENSION, POL, init, addRel, answerOffer, unSummit, unVote, council, tenTarget, napOf, blocsOf, P5, navy, straits, step, month, act, can, offerPeace, declare, endWar, strike, playerStrike, rank, save, load, date, rel, atWar, allied, COST, TAX, CIV };
   if (typeof module !== 'undefined') module.exports = API; else root.WSIM = API;
 })(this);

@@ -31,5 +31,5 @@ for (const me of ['IRQ', 'TUR', 'BRA']) {
   out.push(`تركيا: عدم اعتداء ويا اليونان ${nap.ok ? 'نعم' : nap.why} · مساعدة لسوريا ${aid.ok ? 'نعم' : aid.why} · وساطة بأوكرانيا ${med.ok ? 'نجحت' : med.why} · قرار ضد إسرائيل: ${v.yes.length}/15${v.veto.length ? ' فيتو ' + v.veto.join(',') : ''} ${res.ok ? 'انقبل' : res.why} · قمة ${sum.ok ? 'نعم' : sum.why} · توتر ${Math.round(G.ten)}`); }
 // 4) ترقية حفظ V=4
 { const G = S.init(WD, 'IRQ', { seed: 2 }); const o = JSON.parse(S.save(G)); o.v = 4; delete o.ten; delete o.naps; delete o.offers; delete o.unT; delete o.blocs;
-  const L = S.load(o, WD); S.step(L, WD, 40); if (L.v !== 5 || L.ten == null || !Array.isArray(L.offers) || !S.allied(L, 'RUS', 'BLR')) no('الترقية من V4 ما اشتغلت'); }
+  const L = S.load(o, WD); S.step(L, WD, 40); if (L.v !== S.V || L.ten == null || !Array.isArray(L.offers) || !S.allied(L, 'RUS', 'BLR')) no('الترقية من V4 ما اشتغلت'); }
 console.log(out.join('\n')); console.log(bad ? `\n❌ ${bad} مشكلة` : '\n✅ دبلوماسية العالم سليمة'); process.exit(bad ? 1 : 0);

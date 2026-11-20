@@ -8,7 +8,7 @@
   'use strict';
   const req = typeof require !== 'undefined' ? require : null;
   const HOME = root.HOME || req('./gwhome.js'), IND = root.IND || req('./gwind.js'), ECON = root.ECON || req('./gwecon.js'), AIR = root.AIR || req('./gwair.js');
-  const CAT = root.AIRCAT || req('./aircat.js'), ADV = root.ADV || req('./gwadvise.js'), GRADE = root.GRADE || req('./gwgrade.js');
+  const CAT = root.AIRCAT || req('./aircat.js'), ADV = root.ADV || req('./gwadvise.js'), GRADE = root.GRADE || req('./gwgrade.js'), MKT = root.WMKT || req('./wmkt.js');
   // الفئات حسب نظام الحكم (نفس data/world/SCHEMA.md و build_country.py)، والعراق بفئاته الأصلية
   const FACS = { theo: ['clergy', 'irgc', 'army', 'street', 'biz'], amon: ['royal', 'army', 'clergy', 'street', 'biz'], one: ['party', 'army', 'street', 'biz'], mil: ['army', 'militia', 'street', 'biz'],
     auth: ['army', 'security', 'street', 'biz'], trans: ['army', 'factions', 'street', 'biz'], cmon: ['army', 'parties', 'street', 'biz'], parl: ['army', 'parties', 'street', 'biz'], pres: ['army', 'parties', 'street', 'biz'], semi: ['army', 'parties', 'street', 'biz'] };
@@ -73,6 +73,7 @@
       IND.MEGA.fort.d = 'ضربات العدو على مدننا وقواتنا بالمدن أضعف 25٪، والمعنويات أثبت'; }
     ECON.LAND[0] = { ...ECON.LAND[0], lim: G.nat.lim, n: WD.cs[me].ar };
     for (const id of new Set(Object.values(ECON.SUPPLY[0]))) ECON.SUP_N[id] = WD.cs[id] ? WD.cs[id].ar : id;
+    MKT.relink(G, WD, { ECON, AIR });   // W8: السلاح اللي اشتريناه من السوق يرجع للكتالوج
   }
   // علاقة اللاعب بالمورّدين بشكل W.dip اللي يقراه econ.js (حليف = كامل، بحرب ويانا = صفر)
   function dipShim(G, WD, S) {
@@ -104,6 +105,7 @@
     const P = ECON.PRIO[e.prio], sp = P.prod * (NW.indF ? NW.indF[0].prod : 1) * (e.mor < 30 ? .75 : 1);
     for (let k = 0; k < Math.min(e.lines, e.q.length); k++) e.q[k].left -= sp * (ECON.ITEMS[e.q[k].k] && ECON.ITEMS[e.q[k].k].cat === 'div' && e.mor < 30 ? .8 : 1);
     for (let k = e.q.length - 1; k >= 0; k--) if (e.q[k].left <= 0) { const o = e.q[k]; deliver(G, WD, o, X); e.q.splice(k, 1); }
+    MKT.deliver(G, WD, { ECON, AIR });   // W8: عقود سوق السلاح اللي وصلت
     // المعنويات (نفس منطق econ.js morale بأحداث العالم)
     morale(G, NW, !!T || G.wars.some(w => w.a.includes(me) || w.b.includes(me)));
     // الداخل والتصنيع (الملفات نفسها)
@@ -136,7 +138,9 @@
     const it = ECON.ITEMS[o.k], c = G.C[G.me], NW = G.nat, T = X.T; if (!it) return;
     if (it.cat === 'line') { NW.eco[0].lines++; NW.log.push({ t: NW.t, side: 0, k: 'built', it: o.k }); return; }
     if (T && (it.cat === 'div' || it.cat === 'plane' || it.cat === 'sam')) { T.W.num = T.W.num || [100, 200]; ECON.deliver(T.W, T.A, 0, o, X.SIM); }
-    if (it.cat === 'div') c.pw += DIVPW[it.kind || o.k] || 30; else if (it.cat === 'plane') c.pw += (it.q || 1) * 3 * (AIR.PLANES[it.plane] && AIR.PLANES[it.plane].aa > .6 ? 1.5 : 1);
+    NW.arms = NW.arms || { jets: {}, sam: {}, tank: null };
+    if (it.cat === 'div') c.pw += (DIVPW[it.kind || o.k] || 30) * ((it.kind || o.k) === 'arm' && NW.arms.tank ? NW.arms.tank.gen / 3 : 1);
+    else if (it.cat === 'plane') { c.pw += (it.q || 1) * 3 * (AIR.PLANES[it.plane] && AIR.PLANES[it.plane].aa > .6 ? 1.5 : 1); if (!T) NW.arms.jets[it.plane] = (NW.arms.jets[it.plane] || 0) + (it.q || 1); }   // بالسلم: تنضاف للقواعد بالمسرح الجاي
     else if (it.cat === 'sam') { NW.samStock = NW.samStock || {}; NW.samStock[it.pool] = (NW.samStock[it.pool] || 0) + it.q; }
     NW.log.push({ t: NW.t, side: 0, k: 'built', it: o.k });
   }

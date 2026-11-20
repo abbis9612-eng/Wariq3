@@ -23,6 +23,8 @@
         // الطيارات: التركيبة المعروفة، وإلا من قائمة الموديلات، وإلا من الإجمالي بنوع حسب الجيل
         let jets = aw && aw.jets ? aw.jets.map(([t, n]) => [t, n]) : (cs.jets || []).map(([m, n]) => [CAT.planeType(m), n]);
         if (!jets.length && cs.air) jets = [[((cs.gen || {}).jet || 2) >= 3.5 ? 'f16' : ((cs.gen || {}).jet || 2) >= 2.5 ? 'light' : 'old', cs.air]];
+        const AR = k === G.me ? (T.arms || (G.nat && G.nat.arms)) : null;   // W8: اللي اشتريناه وأنتجناه بالسلم (نسخة ثابتة للمسرح)
+        if (AR) for (const [t, n] of Object.entries(AR.jets || {})) { const j = jets.find(x => x[0] === t); if (j) j[1] += n / cm; else jets.push([t, n / cm]); }
         // القواعد: المعروفة بإحداثياتها، وإلا مدن الطرف بالمسرح
         let bl = aw && aw.bases ? aw.bases.map(([n, lat, lon]) => ({ n, p: LL(lat, lon), ll: [lat, lon] })) : [];
         if (!bl.length) bl = T.cells.filter(c => c.own === k && c.vp >= 3).slice(0, 4).map(c => ({ n: 'مطار ' + (c.city || ''), p: c.c, ll: [c.ll[1], c.ll[0]] }));
@@ -35,6 +37,7 @@
         // الدفاع الجوي
         let sl = aw && aw.sam ? aw.sam.slice() : (cs.adL || []).map(([m, n, cat]) => [CAT.samType(m), Math.max(1, Math.round(n / (cat === 'long' ? 8 : 6)))]);
         if (!sl.length && cs.mb) sl = [['crotale', Math.max(1, Math.round(Math.sqrt(cs.mb)))]];
+        if (AR) for (const [sy, n] of Object.entries(AR.sam || {})) if (AIR.SYS[sy]) sl.push([sy, n / cm]);
         for (const [sy, n] of sl) { const m = Math.round(n * cm); for (let i = 0; i < m; i++) samList.push({ sy, k, bl }); }
         // مواقع الصواريخ والمسيّرات (من مخزون الدولة بالمحاكاة)
         const c = G.C[k];

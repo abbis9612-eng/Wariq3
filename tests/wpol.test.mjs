@@ -29,5 +29,5 @@ for (const [me, ch] of [['IRQ', 0], ['USA', 1], ['EGY', 0]]) {
   S.step(G, WD, 45); if (!(G.C.TUR.occG < 0) || !G.C.TUR.why.some(w => w[0].includes('الاحتلال'))) no('الاحتلال ما يكلّف'); out.push(`تركيا تحتل ${n} منطقة سورية: نمو ${G.C.TUR.occG}٪`); }
 // 4) ترقية V5
 { const G = S.init(WD, 'IRQ', { seed: 2 }); const o = JSON.parse(S.save(G)); o.v = 5; delete o.elec; delete o.pev; delete o.occT; delete o.coupT;
-  const L = S.load(o, WD); S.step(L, WD, 60); if (L.v !== 6 || !L.elec || !Array.isArray(L.pev)) no('الترقية من V5 ما اشتغلت'); }
+  const L = S.load(o, WD); S.step(L, WD, 60); if (L.v !== S.V || !L.elec || !Array.isArray(L.pev)) no('الترقية من V5 ما اشتغلت'); }
 console.log(out.join('\n')); console.log(bad ? `\n❌ ${bad} مشكلة` : '\n✅ السياسة والأحداث سليمة'); process.exit(bad ? 1 : 0);

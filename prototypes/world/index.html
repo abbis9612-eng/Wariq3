@@ -280,6 +280,7 @@ input[type=range]{width:100%;accent-color:var(--gold)}
   <div id="bvNote">مشهد حقيقي: المسافات بالمتر والوقت بالثانية الحقيقية. الآليات مكبّرة ×5 حتى تنشاف. 🎥 المخرج يقطع لأهم لحظة، واسحب بإصبعك حتى تتحكم.</div>
   <div id="bvRes" hidden></div></div>
 <script src="wpol.js"></script>
+<script src="wmkt.js"></script>
 <script src="wsim.js"></script>
 <script src="gwsim.js"></script>
 <script src="theater.js"></script>
@@ -343,7 +344,7 @@ input[type=range]{width:100%;accent-color:var(--gold)}
     $('#top h1').innerHTML = `${CS[me].ar} <small></small>`;
     if (!$('#bar')) { const b = document.createElement('div'); b.id = 'bar'; $('#top').append(b); }
     if (!G.nat) NT.init(G, WD); else NT.catalog(G, WD);   // D-050: الداخل والبحث والإنتاج من «الحرب الكبرى»
-    if (G.th) { const w = G.wars.find(x => x.id === G.th.war); T = w ? TH.restore(G.th, G, WD, w, me) : null; if (T) { w.detail = true; T.A = AWLD.restore(AWLD.build(T, G, WD), G.th.airR); WDP.setup(G, WD, S, T); viewInit(); } }
+    if (G.th) { const w = G.wars.find(x => x.id === G.th.war); T = w ? TH.restore(G.th, G, WD, w, me) : null; if (T) { w.detail = true; T.arms = G.th.arms || null; T.A = AWLD.restore(AWLD.build(T, G, WD), G.th.airR); WDP.setup(G, WD, S, T); viewInit(); } }
     theater(); syncMap(); setMode('pol'); bar(); sel = null; card();
     ADVL = NT.advice(G, WD, { SIM: SM, T }); meDot();
     const cap = R.find(r => r.ctl === me && r.cap) || R.find(r => r.ctl === me); if (cap) { cam.x = MX(cap.ll[0]); cam.y = MY(cap.ll[1]); cam.s = Math.max(cam.s, 900); }
@@ -364,14 +365,14 @@ input[type=range]{width:100%;accent-color:var(--gold)}
     requestAnimationFrame(tick);
   }
   // ===== W5: مسرح الحرب =====
-  function save() { G.th = T ? { ...TH.save(T), airR: T.A ? AWLD.save(T.A) : null } : null; return store.set(S.save(G)); }
+  function save() { G.th = T ? { ...TH.save(T), airR: T.A ? AWLD.save(T.A) : null, arms: T.arms || null } : null; return store.set(S.save(G)); }
   function myWar() { return G.wars.find(w => w.a.includes(me) || w.b.includes(me)); }
   function theater() {
     if (T && !G.wars.some(w => w.id === T.war)) { T = null; selD = null; }
     if (T) return;
     for (const w of G.wars) { if (!(w.a.includes(me) || w.b.includes(me)) || w.noLand) continue;
       const t = TH.build(G, WD, w, me); if (!t) { w.noLand = true; continue; }
-      T = t; w.detail = true; T.vp0 = TH.score(T).vp.slice(); T.aggr0 = 1.6; T.A = AWLD.build(T, G, WD); WDP.setup(G, WD, S, T); viewInit();
+      T = t; w.detail = true; T.vp0 = TH.score(T).vp.slice(); T.aggr0 = 1.6; T.arms = G.nat && G.nat.arms ? JSON.parse(JSON.stringify(G.nat.arms)) : null; T.A = AWLD.build(T, G, WD); WDP.setup(G, WD, S, T); viewInit();
       toast(`🗺 ${w.n}: الجبهة انقسمت لـ${T.cells.length} خلية، و${SM.alive(T.W).filter(d => d.side === 0).length} فرقة إلنا ضد ${SM.alive(T.W).filter(d => d.side === 1).length}`, 'bad');
       const c = T.cells[Math.floor(T.cells.length / 2)]; cam.x = MX(c.ll[0]); cam.y = MY(c.ll[1]); cam.s = Math.max(cam.s, 1400); speed = 0; bar(); break; }
   }
@@ -432,7 +433,7 @@ input[type=range]{width:100%;accent-color:var(--gold)}
     .map(n => new Promise(r => { const i = new Image(); i.onload = r; i.onerror = r; i.src = IMGB + n + '.webp'; IMG[n.replace('bv/', 'bv_')] = i; }))).then(() => window.BVIEW.init({ IMG, SND: null })));
   // نوع الدبابة بالمشهد حسب الدولة: غربية (أبرامز، ليوبارد، ميركافا...) أو سوفيتية/شرقية (T-72، T-90، Type...)
   const WEST = /abrams|leopard|challenger|merkava|leclerc|k2|k1|m60|m48|altay|ariete|type 10|type 90|stridsvagn|al-khalid|arjun|vickers|zulfiqar/i;
-  const tankOf = k => { const t = ((CS[k] && CS[k].kit && CS[k].kit.tank && CS[k].kit.tank[1]) || []).join(' '); return WEST.test(t) ? 'abrams' : 't72'; };
+  const tankOf = k => { if (k === me && G.nat && G.nat.arms && G.nat.arms.tank) return ['USA', 'DEU', 'KOR', 'FRA', 'GBR'].includes(G.nat.arms.tank.x) ? 'abrams' : 't72'; const t = ((CS[k] && CS[k].kit && CS[k].kit.tank && CS[k].kit.tank[1]) || []).join(' '); return WEST.test(t) ? 'abrams' : 't72'; };
   function battleCard(tg) {
     const W = T.W, b = W.battles.get(tg); if (!b) return false; const c = T.cells[tg], mine = b.side === 0;
     const A = SM.alive(W).filter(d => d.path[0] === tg && d.side === b.side), D = SM.alive(W).filter(d => d.cell === tg && d.side !== b.side), win = mine ? b.win : 1 - b.win;
@@ -590,7 +591,7 @@ input[type=range]{width:100%;accent-color:var(--gold)}
   function after(m0, t0) {
     const newLogs = G.log.filter(l => l.t > t0);
     let monthEnd = false;
-    for (const l of newLogs) { const m = msg(l); if (l.k === 'month') monthEnd = true; const big = l.id && G.C[l.id] && (G.C[l.id].gdp > 1500 || Math.abs(S.rel(G, me, l.id)) >= 50); if (m && ((!['take', 'strike', 'blockade', 'aipact', 'aisanc', 'bsanc', 'bloc', 'elect', 'disaster', 'terror', 'revolt'].includes(l.k)) || [l.by, l.from, l.t, l.on, l.a, l.b, l.id, l.to].includes(me) || (big && ['elect', 'disaster'].includes(l.k)))) toast(m[0], m[1]); if (l.k === 'elect' && l.me) { speed = 0; } if (l.k === 'offer') { speed = Math.min(speed, 1); } if (l.k === 'peaceOffer' || l.k === 'over' || (l.k === 'war' && (l.a === me || l.b === me || (l.join || []).includes(me)))) { speed = 0; bar(); } }
+    for (const l of newLogs) { const m = msg(l); if (l.k === 'month') monthEnd = true; const big = l.id && G.C[l.id] && (G.C[l.id].gdp > 1500 || Math.abs(S.rel(G, me, l.id)) >= 50); if (m && ((!['take', 'strike', 'blockade', 'aipact', 'aisanc', 'bsanc', 'bloc', 'elect', 'disaster', 'terror', 'revolt', 'atech'].includes(l.k)) || [l.by, l.from, l.t, l.on, l.a, l.b, l.id, l.to].includes(me) || (big && ['elect', 'disaster'].includes(l.k)))) toast(m[0], m[1]); if (l.k === 'elect' && l.me) { speed = 0; } if (l.k === 'offer') { speed = Math.min(speed, 1); } if (l.k === 'peaceOffer' || l.k === 'over' || (l.k === 'war' && (l.a === me || l.b === me || (l.join || []).includes(me)))) { speed = 0; bar(); } }
     if (monthEnd) { syncMap(); save(); if (panel) openPanel(panel, true); if (sel) card(); }
     bar();
     if (G.over) { speed = 0; openPanel('me'); }
@@ -634,6 +635,8 @@ input[type=range]{width:100%;accent-color:var(--gold)}
       case 'revolt': return [`✊ ${byId.get(l.r)?.n || l.r} ثارت على ${n(l.from)} ورجعت لـ${n(l.to)}`, l.to === me ? 'good' : l.from === me ? 'bad' : ''];
       case 'nocause': return ['⚠ أعلنا حرب بدون سبب: العالم زعل (−10 ويا الكل)، استقرارنا −8، والتوتر صعد', 'bad'];
       case 'pchose': return [`🏛 ${l.r}`, 'good'];
+      case 'arms': return l.a === 'buy' ? [`🛒 وقّعنا عقد ${l.n} ويا ${n(l.x)}: يوصل بعد ${Math.round(l.d / 30)} شهر`, 'good'] : l.a === 'got' ? [`✅ وصل ${l.n} من ${n(l.x)}`, 'good'] : l.a === 'ask' ? [`📦 ${n(l.x)} تريد تشتري سلاح منا (${l.v} مليار) — 🏛 دولتي ← سوق السلاح`, 'good'] : l.a === 'sold' ? [`📦 بعنا سلاح لـ${n(l.x)} بـ${l.v} مليار`, 'good'] : null;
+      case 'atech': return [`🔬 ${n(l.id)} طوّرت ${({ arm: 'الدروع', uav: 'المسيّرات', msl: 'الصواريخ', ew: 'الإلكترونيات' })[l.b]} لمستوى ${l.l}`, ''];
       case 'joinus': return [`🤝 ${n(l.who)} دخلت ${l.war} ويانا`, 'good'];
       case 'wpeace': return [`🕊 ${l.war} خلصت: ${DIP.TERMS[l.term] ? DIP.TERMS[l.term].n : 'سلام'}${l.res === 'win' ? ' (لصالحنا)' : l.res === 'loss' ? ' (لصالحهم)' : ''}`, l.res === 'loss' ? 'bad' : 'good'];
       case 'cap': return [`🏳 ${n(l.who)} استسلمت — انتهت ${l.war}`, l.who === me ? 'bad' : 'good'];
@@ -664,13 +667,13 @@ input[type=range]{width:100%;accent-color:var(--gold)}
     const c = G.C[me], bd = c.budget || { rev: 0, mil: 0, civ: 0, intr: 0 }, dp = c.debt / c.gdp * 100;
     let h = `<h2>🏛 ${CS[me].ar}</h2>`;
     if (G.over) h += `<div class="pill warn">💥 ${OVER[G.over.why] || OVER.collapse} (${ar(S.date(G.over.t))}). ابدأ لعبة جديدة من شاشة البداية.</div><div class="row"><button class="big" id="newg">لعبة جديدة</button></div>`;
-    const NW = G.nat, SUBS = [['eco', '💰 الاقتصاد'], ['home', '🏛 الداخل' + (NW && NW.home.iss.length ? ' (' + NW.home.iss.length + ')' : '')], ['prod', '🏭 الإنتاج' + (NW && NW.eco[0].q.length ? ' (' + NW.eco[0].q.length + ')' : '')], ['rd', '🔬 البحث والصناعة']];
+    const NW = G.nat, SUBS = [['eco', '💰 الاقتصاد'], ['home', '🏛 الداخل' + (NW && NW.home.iss.length ? ' (' + NW.home.iss.length + ')' : '')], ['prod', '🏭 الإنتاج' + (NW && NW.eco[0].q.length ? ' (' + NW.eco[0].q.length + ')' : '')], ['rd', '🔬 البحث والصناعة'], ['mkt', '🛒 سوق السلاح' + (G.mkt && G.mkt.offers.length ? ' (' + G.mkt.offers.length + ')' : '')]];
     if (NW) { h += `<div class="seg" id="mesub">${SUBS.map(([k, t]) => `<button data-sub="${k}" class="${meSub === k ? 'on' : ''}">${t}</button>`).join('')}</div>`;
       if (ADVL.length) h += `<div class="st" style="margin:6px 0"><b>🧭 المستشارين</b>${ADVL.map((o, i) => `<div class="line"><span class="${o.w ? 'neg' : ''}">${o.t}</span><button data-adv="${i}">${o.l}</button></div>`).join('')}</div>`;
       h += G.pev.map((q, i) => { const E = WPOL.PEV[q.id], k = Math.max(.3, Math.min(20, G.C[me].gdp / 250)); return `<div class="st" style="margin:6px 0;border-color:var(--neg)"><b>${E.n}</b><div class="note">${E.x}</div><div class="seg">${E.o.map((o, j) => `<button data-pev="${i}:${j}">${o[0](k)}</button>`).join('')}</div></div>`; }).join('');
       if (G.elec && G.elec[me] != null) h += `<div class="note">🗳 الانتخابات الجاية: ${ar(S.date(G.elec[me]))} — تعتمد على الشارع والأحزاب ومعنويات الناس والنمو. إذا خسرت تخلص اللعبة.</div>`;
       if (G.C[me].occN) h += `<div class="note">✊ نحتل ${G.C[me].occN} منطقة: تكلّف نمو واستقرار، وبعد سنة ممكن تثور.</div>`;
-      if (meSub === 'home') return h + pHome(); if (meSub === 'prod') return h + pProd(); if (meSub === 'rd') return h + pRd(); }
+      if (meSub === 'home') return h + pHome(); if (meSub === 'prod') return h + pProd(); if (meSub === 'rd') return h + pRd(); if (meSub === 'mkt') return h + pMkt(); }
     if (NW) { const e = NW.eco[0]; h += `<div class="grid"><div class="st"><i>الخزينة</i><b class="${e.cash < 0 ? 'neg' : ''}">${money(e.cash)}</b></div><div class="st"><i>معنويات الشعب</i><b class="${e.mor < 30 ? 'neg' : ''}">${Math.round(e.mor)}</b></div></div>
       <div class="note">${e.cash < -NW.lim ? '💸 تجاوزنا حد الدين: الرواتب متأخرة والمعنويات تنزل بسرعة' : e.cash < 0 ? `🏦 الخزينة بالسالب (الحد ${money(NW.lim)}): عليها فائدة وتنقص المعنويات` : `الخزينة تمول الطلبات والبحث والمشاريع. تصعد وتنزل حسب قراراتك (الضرايب، الإنفاق، الحرب، النفط)، والعجز القديم للبلد يبقى على الدين العام.`}</div>
       <h3>أولوية الاقتصاد</h3><div class="seg">${Object.entries(ECON.PRIO).map(([k, p]) => `<button data-prio="${k}" class="${e.prio === k ? 'on' : ''}">${p.n}</button>`).join('')}</div><div class="note">${ECON.PRIO[e.prio].d}</div>
@@ -720,6 +723,19 @@ input[type=range]{width:100%;accent-color:var(--gold)}
     <h3>🏗 مشاريع كبرى</h3>${Object.entries(IND.MEGA).map(([k, M]) => { const done = I.mega && I.mega[k], run = I.megaRun && I.megaRun.k === k; return `<div class="st" style="margin:6px 0"><div class="line"><b>${M.n}</b><span>${done ? 'مكتمل ✓' : run ? 'باقي ' + I.megaRun.left + ' يوم' : M.cost + ' مليار · ' + M.days + ' يوم'}</span></div><div class="note">${M.d}</div>${done || run ? '' : `<button data-mega="${k}" ${I.megaRun ? 'disabled' : ''}>ابدأ المشروع</button>`}</div>`; }).join('')}
     <h3>🏗 القطاعات</h3>${Object.entries(IND.SEC).map(([k, Sc]) => `<div class="st" style="margin:6px 0"><div class="line"><span>${Sc.ic} <b>${Sc.n}</b></span><b>${I.sec[k]}/5</b></div><div class="note">${Sc.d}</div>
       ${I.secRun && I.secRun.k === k ? `<div class="note">⏳ يتطوّر: باقي ${I.secRun.left} يوم</div>` : I.sec[k] < 5 ? `<button data-sec="${k}" ${I.secRun ? 'disabled' : ''}>طوّر (${IND.secCost(I.sec[k])} مليار، ${IND.SEC_DAYS} يوم)</button>` : ''}</div>`).join('')}`;
+  }
+  function pMkt() {
+    const M = WMKT, NW = G.nat, cash = NW.eco[0].cash, live = G.mkt.deals.filter(d => !d.done), A = NW.arms || {};
+    let h = `<div class="note">الخزينة ${B$(cash)}. العقد يدفع الدفعة الأولى (الطيارات أو البطاريات ويا التدريب والدعم) ويوصل بعد أشهر، ويفتح المنتج بـ🏭 الإنتاج حتى تطلب أكثر. قطع الغيار بعدين تعتمد على علاقتك ويا البايع. السلاح الروسي والصيني يزعّل أمريكا.</div>`;
+    if (live.length) h += `<h3>⏳ عقود بالطريق (${live.length})</h3>` + live.map(d => { const p = M.SELL[d.x].find(o => o.k === d.k); return `<div class="line"><span>${p.n} — ${nameOf(d.x)}</span><b>${Math.ceil((d.at - G.t) / 30)} شهر</b></div>`; }).join('');
+    const got = [...Object.entries(A.jets || {}).map(([t, n]) => `${n} ${(AIR.PLANES[t] || {}).n || t}`), ...Object.entries(A.sam || {}).map(([t, n]) => `${n} ${(AIR.SYS[t] || {}).n || t}`), A.tank ? A.tank.n : ''].filter(Boolean);
+    if (got.length) h += `<div class="note">✅ وصلنا (ينضاف للجبهة بالحرب الجاية): ${got.join('، ')}</div>`;
+    const ex = M.canExport(G);
+    h += `<h3>📦 التصدير</h3><div class="note">${ex.length ? 'نقدر نبيع: ' + ex.map(k => k === 'nat' ? 'سلاحنا الوطني' : M.EXP[k]).join('، ') + '. الدول اللي علاقتها ويانا 25+ تطلب تشتري (فلوس وعلاقة، بس أعداء المشتري يزعلون).' : 'نحتاج مستوى 3 بفرع بحث (🔬) أو سلاح وطني حتى الدول تشتري منا.'}</div>`;
+    h += G.mkt.offers.map((o, i) => `<div class="st" style="margin:6px 0"><b>${nameOf(o.from)}</b> تريد تشتري ${o.kind === 'nat' ? 'سلاحنا الوطني' : M.EXP[o.kind]} بـ${o.v} مليار${G.wars.some(w => w.a.includes(o.from) || w.b.includes(o.from)) ? ' <span class="neg">(بحرب: أعداءها يزعلون)</span>' : ''}<div class="seg"><button data-exp="${i}:1">✔ نبيع</button><button data-exp="${i}:0">✕ نرفض</button></div></div>`).join('');
+    for (const x of M.sellers(G)) { if (x === me) continue; const L = M.SELL[x];
+      h += `<h3>${nameOf(x)} <small class="note">علاقتنا ${M.eff(G, S, x)}${S.allied(G, x, me) ? ' (حلفاء +35)' : ''}</small></h3><div class="acts">${L.map(p => { const no = M.can(G, S, x, p); return `<button data-buyx="${x}:${p.k}" ${no ? 'disabled' : ''}>${p.n}<small>${p.price} مليار · ${Math.round(p.days / 30)} شهر${p.ally ? ' · للحلفاء' : ''}${p.rival ? ' · ' + nameOf(p.rival) + ' تزعل' : ''}${no ? ' · ❌ ' + no : ''}</small></button>`; }).join('')}</div>`; }
+    return h;
   }
   function relList() { const m = G.rel[me] || {}; return Object.keys(m).filter(k => CS[k]).sort((a, b) => m[b] - m[a]); }
   function pDip() {
@@ -794,7 +810,7 @@ input[type=range]{width:100%;accent-color:var(--gold)}
     const myR = k => S.rank(G, k).indexOf(me) + 1;
     return `<h2>🌍 العالم</h2>${line('سعر النفط', Math.round(G.oilP) + ' $ للبرميل')}${Object.keys(G.stx || {}).length ? Object.entries(G.stx).map(([k, f]) => line('مضيق ' + ((WD.st.find(x => x.id === k) || {}).n || k).replace('مضيق ', ''), `مقطوع ${Math.round(f * 100)}٪`)).join('') : line('المضائق', 'كلها مفتوحة')}${G.ids.filter(i => G.C[i].blk > .05).map(i => line('⚓ حصار على ' + nameOf(i), Math.round(G.C[i].blk * 100) + '٪')).join('')}
       ${line('ترتيبنا بالاقتصاد', myR('gdp') + ' من ' + G.ids.length)}${line('ترتيبنا بالقوة العسكرية', myR('pw'))}
-      <h3>أكبر اقتصادات</h3>${top('gdp', c => money(c.gdp))}<h3>أقوى جيوش (تقدير)</h3>${top('pw', c => Math.round(c.pw))}`;
+      <h3>أكبر اقتصادات</h3>${top('gdp', c => money(c.gdp))}<h3>🔬 أعلى تقنية عسكرية (دروع، مسيّرات، صواريخ، إلكترونيات)</h3>${G.tech ? G.ids.filter(x => G.C[x]).sort((a, b) => WMKT.BR.reduce((t, k) => t + G.tech[b][k], 0) - WMKT.BR.reduce((t, k) => t + G.tech[a][k], 0)).slice(0, 10).map((x, i) => line((i + 1) + '. ' + nameOf(x), WMKT.BR.map(k => G.tech[x][k]).join(' · '))).join('') : ''}<h3>أقوى جيوش (تقدير)</h3>${top('pw', c => Math.round(c.pw))}`;
   }
   function pNews() {
     const L = G.log.filter(l => l.k !== 'month' && l.k !== 'start').slice(-60).reverse();
@@ -818,6 +834,8 @@ input[type=range]{width:100%;accent-color:var(--gold)}
     root.querySelectorAll('[data-off]').forEach(b => b.onclick = () => { const [i, y] = b.dataset.off.split(':').map(Number); S.answerOffer(G, WD, i, !!y); { const m = msg(G.log[G.log.length - 1]); if (m) toast(m[0], m[1]); } openPanel('dip', true); save(); });
     const us = root.querySelector('#unsum'); if (us) us.onclick = () => { const r = S.unSummit(G); r.ok ? toast(msg(G.log[G.log.length - 1])[0], 'good') : toast(r.why, 'bad'); bar(); openPanel('dip', true); save(); };
     root.querySelectorAll('[data-pev]').forEach(b => b.onclick = () => { const [i, j] = b.dataset.pev.split(':').map(Number); const r = WPOL.choose(G, i, j); if (r) toast('🏛 ' + r, 'good'); bar(); openPanel('me', true); save(); });
+    root.querySelectorAll('[data-buyx]').forEach(b => b.onclick = () => { const [x, k] = b.dataset.buyx.split(':'), r = WMKT.buy(G, WD, S, x, k); if (typeof r === 'string') toast('❌ ' + r, 'bad'); else toast(msg(G.log[G.log.length - 1])[0], 'good'); bar(); openPanel('me', true); save(); });
+    root.querySelectorAll('[data-exp]').forEach(b => b.onclick = () => { const [i, y] = b.dataset.exp.split(':').map(Number), r = WMKT.answer(G, WD, S, i, !!y); if (r) toast('📦 ' + r, y ? 'good' : ''); bar(); openPanel('me', true); save(); });
     root.querySelectorAll('[data-adv]').forEach(b => b.onclick = () => { const a = (ADVL[+b.dataset.adv] || {}).a || '';
       if (a === 'prod') { meSub = 'prod'; openPanel('me'); } else if (a === 'eco:home') { meSub = 'home'; openPanel('me'); } else if (a.startsWith('eco')) { meSub = 'eco'; openPanel('me'); }
       else if (a === 'dip:ctry') openPanel('dip'); else if (a.startsWith('dip') || a === 'ev') openPanel('war');

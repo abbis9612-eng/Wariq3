@@ -15,6 +15,16 @@ for (const r of R) {
 const MIN = { A: 8, B: 4, C: 2 }, cnt = {};
 for (const r of R) if (r.c) cnt[r.c] = (cnt[r.c] || 0) + 1;
 for (const c of C) if (!cnt[c.id]) no(`${c.id}: بلا مناطق`); else if (cnt[c.id] < MIN[c.tier] && R.filter(r => r.c === c.id).reduce((t, r) => t + r.a, 0) > 3000 * MIN[c.tier]) no(`${c.id}: ${cnt[c.id]} مناطق بس`);
+// البحر (W2.4)
+const SJ = J('seas.json'), SG = J('seas_geo.json'), sById = new Map(SJ.s.map(s => [s.id, s]));
+for (const z of SJ.s) {
+  if (!SG[z.id]) no(`${z.id}: بحر بلا شكل`);
+  for (const n of z.nb) if (!sById.get(n)?.nb.includes(z.id)) no(`${z.id}↔${n}: جيرة بحرية مو متبادلة`);
+  for (const c of z.coast) if (!byId.get(c)?.sea?.includes(z.id)) no(`${z.id}: الساحل ${c} ما يعرف البحر`);
+}
+for (const t of SJ.straits) if (t.seas.some(s => !sById.has(s))) no(`مضيق ${t.id}: بحر مو موجود`);
+const isl = R.filter(r => !r.nb.length && !r.sea).length; if (isl) no(`${isl} منطقة لا جار بري ولا بحر`);
+console.log(`بحار ${SJ.s.length} · مضائق ${SJ.straits.length} · مناطق ساحلية ${R.filter(r => r.sea).length}`);
 const land = R.filter(r => r.c).length, iso = R.filter(r => !r.nb.length).length;
 console.log(`مناطق ${R.length} (دول ${land}، محايدة ${R.length - land}) · جزر بلا جار بري ${iso} · العراق ${cnt.IRQ} · إيران ${cnt.IRN}`);
 console.log(bad ? `\n❌ ${bad} مشكلة` : '\n✅ المناطق سليمة'); process.exit(bad ? 1 : 0);

@@ -137,7 +137,10 @@ function draw() {
     const lw = Math.min(1, cam.s / 1400);
     for (const r of R) if (vis(r.bb)) { path(r.p); cx.fillStyle = fillOf(r); cx.fill(); if (!far) { cx.strokeStyle = 'rgba(20,24,18,' + (.1 + lw * .14) + ')'; cx.lineWidth = .5; cx.stroke(); } }
     if (far) { cx.strokeStyle = 'rgba(20,24,18,.7)'; cx.lineWidth = .8; for (const L of LOD) if (vis(L.bb)) { path(L.p); cx.stroke(); } }
-    else { const B = CB.length ? CB : LOD; cx.lineJoin = 'round'; cx.strokeStyle = 'rgba(255,250,235,.22)'; cx.lineWidth = 3.4; for (const L of B) if (vis(L.bb)) { path(L.p); cx.stroke(); } cx.strokeStyle = 'rgba(15,18,14,.85)'; cx.lineWidth = 1.4; for (const L of B) if (vis(L.bb)) { path(L.p); cx.stroke(); } }
+    else { // I-107: قريب = الحدود الدقيقة (نفس حواف المناطق)، متوسط = المبسطة؛ مسار واحد لكل الدول (أسرع)
+      const B = cam.s >= 1600 && CB.length ? CB : LOD; cx.lineJoin = 'round'; cx.beginPath();
+      for (const L of B) if (vis(L.bb)) for (const f of L.p) { let lx = -1e9, ly = -1e9; for (let i = 0; i < f.length; i += 2) { const x = (f[i] - cam.x) * cam.s + W / 2, y = (f[i + 1] - cam.y) * cam.s + H / 2; if (i === 0) cx.moveTo(x, y); else if (Math.abs(x - lx) + Math.abs(y - ly) > 1.5 || i === f.length - 2) cx.lineTo(x, y); else continue; lx = x; ly = y; } cx.closePath(); }
+      cx.strokeStyle = 'rgba(15,18,14,.85)'; cx.lineWidth = B === CB ? 1.7 : 1.4; cx.stroke(); }
   }
   // خطوط التماس
   cx.strokeStyle = css('--front'); cx.lineWidth = far ? 1.5 : 2.5; cx.setLineDash([5, 3]);

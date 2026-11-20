@@ -11,10 +11,17 @@ def add(a, b, v, r):
     for x, y in ((a, b), (b, a)): M[(x, y)] = M.get((x, y), 0) + v; why.setdefault((x, y), []).append(r)
 W = {'defense': 40, 'political': 10, 'economic': 15}
 for k, bl in B['blocs'].items():
-    w = 25 if k == 'EU' else W[bl['kind']]
+    w = 25 if k == 'EU' else bl.get('w', W[bl['kind']])   # التكتلات الكبيرة (الاتحاد الأفريقي، الأمريكتين، التعاون الإسلامي) وزنها أخف
     for i, a in enumerate(bl['m']):
         for b in bl['m'][i + 1:]: add(a, b, w, k)
 for p in B['pacts']: add(p['a'], p['b'], 25 if p.get('kind') == 'partnership' else 50, 'معاهدة')
+# الجيران (دول بينها حدود برية بالمناطق) +5: تجارة وتواصل عادي [تقدير]
+RJ = json.load(open(f'{R}/world/regions.json')); own = {r['id']: r.get('c') or r.get('ctl') for r in RJ['r']}; NB = set()
+for r in RJ['r']:
+    for n in r.get('nb', []):
+        a_, b_ = own.get(r['id']), own.get(n)
+        if a_ and b_ and a_ != b_ and a_ < b_: NB.add((a_, b_))
+for a_, b_ in NB: add(a_, b_, 5, 'جيران')
 CW = {'active': -90, 'ceasefire_fragile': -80, 'tension': -50}
 for c in C['conflicts']:
     for a in c.get('a', []):

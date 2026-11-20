@@ -57,7 +57,7 @@
     // للعراق: كتالوج «الحرب الكبرى» الأصلي (F-16IQ، باتريوت...) يبقى ويا مورّديه، والإضافات بس للأنواع اللي ما بيه
     if (me === 'IRQ') Object.assign(ECON.SUPPLY[0], SUP0());
     const have = new Set(Object.values(I).filter(x => x.side === 0).map(x => x.plane || x.pool).filter(Boolean));
-    const models = (cs.jets || []).map(([m]) => m), modelOf = t => models.find(m => CAT.planeType(m) === t);
+    const models = [...(cs.jets || []).map(([m]) => m), ...(((cs.kit || {}).jet || [0, []])[1] || [])], modelOf = t => (aw && aw.nm && aw.nm[t]) || models.find(m => CAT.planeType(m) === t);   // aw.nm: أسماء منسّقة (السعودية: تايفون وتورنادو)
     const jets = aw && aw.jets ? aw.jets.map(([t]) => t) : models.map(CAT.planeType);
     for (const t of jets) { if (I['pl_' + t] || have.has(t) || !AIR.PLANES[t]) continue; const P = AIR.PLANES[t], m = modelOf(t), nm = m ? m.replace(/\s*\(.*$/, '').replace(/ Fighting Falcon| Typhoon/, '') : P.n.split(/[،/]/)[0].trim();
       I['pl_' + t] = { n: `${nm} ×2`, ic: '✈', cat: 'plane', plane: t, q: 2, side: 0, cost: PCOST[t] ?? .1, days: Math.round(25 + (PCOST[t] ?? .1) * 150), d: 'تعويض وتوسيع القوة الجوية' };

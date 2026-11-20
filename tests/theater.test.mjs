@@ -3,6 +3,7 @@
 import fs from 'fs'; import { createRequire } from 'module';
 const require = createRequire(import.meta.url);
 const window = {}; new Function('window', fs.readFileSync(new URL('../prototypes/world/world-data.js', import.meta.url), 'utf8'))(window);
+new Function('window', fs.readFileSync(new URL('../prototypes/world/world-roads.js', import.meta.url), 'utf8'))(window); window.WD.WR = window.WR;
 const WD = window.WD, S = require('../prototypes/world/wsim.js'), TH = require('../prototypes/world/theater.js'), SIM = require('../prototypes/world/gwsim.js');
 let bad = 0; const no = m => { console.log('❌ ' + m); bad++; };
 const out = [];
@@ -20,6 +21,6 @@ for (const [me, war] of [['UKR', 'ukraine'], ['RUS', 'ukraine'], ['IRQ', null], 
   const o = JSON.parse(JSON.stringify(TH.save(T))), T2 = TH.restore(o, G, WD, w, me);
   TH.step(T, 48); TH.step(T2, 48);
   if (Array.from(T.W.ctrl).join() !== Array.from(T2.W.ctrl).join()) no(`${me}: الحفظ/التحميل غيّر المسرح`);
-  out.push(`${me} (${w.n}): ${T.cells.length} خلية ${Math.round(T.hs)} كم من ${T.regs.length} منطقة · فرق ${T.ob[0].inf + T.ob[0].mec + T.ob[0].arm} ضد ${T.ob[1].inf + T.ob[1].mec + T.ob[1].arm} · بناء ${bt}ms · شهر ${run}ms · خلايا ${sc.cells.join('/')} · مناطق تغيرت ${ch.length} · استسلام ${sc.lost.join('/')} ${sc.over ? '· نهاية ' + JSON.stringify(sc.over) : ''}`);
+  out.push(`${me} (${w.n}): طرق ${T.nRoads} حد، أنهار ${T.nRiv}، جسور ${T.nBr} · ${T.cells.length} خلية ${Math.round(T.hs)} كم من ${T.regs.length} منطقة · فرق ${T.ob[0].inf + T.ob[0].mec + T.ob[0].arm} ضد ${T.ob[1].inf + T.ob[1].mec + T.ob[1].arm} · بناء ${bt}ms · شهر ${run}ms · خلايا ${sc.cells.join('/')} · مناطق تغيرت ${ch.length} · استسلام ${sc.lost.join('/')} ${sc.over ? '· نهاية ' + JSON.stringify(sc.over) : ''}`);
 }
 console.log(out.join('\n')); console.log(bad ? `\n❌ ${bad} مشكلة` : '\n✅ المسرح سليم'); process.exit(bad ? 1 : 0);

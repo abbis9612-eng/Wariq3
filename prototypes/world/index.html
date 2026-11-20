@@ -46,6 +46,7 @@ button.on{background:var(--chip2);border-color:var(--gold-l);color:var(--gold)}
 <div id="perf">–</div>
 <div id="card" hidden></div>
 <script src="world-data.js"></script>
+<script src="world-roads.js"></script>
 <script>
 'use strict';
 const WD = window.WD, $ = s => document.querySelector(s), cv = $('#cv'), cx = cv.getContext('2d');
@@ -404,6 +405,18 @@ input[type=range]{width:100%;accent-color:var(--gold)}
         if (T.cells[i].t === 'fort' && r > 6) { cx.fillStyle = 'rgba(0,0,0,.35)'; cx.fillText('⩚', x, y + 3); } } }
     // المعارك
     for (const b of W.battles.values()) { const c = T.cells[b.tg], [x, y] = toS(MX(c.ll[0]), MY(c.ll[1])); cx.beginPath(); cx.arc(x, y, Math.max(4, r * .7), 0, 7); cx.strokeStyle = '#ff3b1f'; cx.lineWidth = 2; cx.stroke(); }
+    // ===== الطرق والأنهار والجسور بالمسرح (لما نقرّب) =====
+    if (cam.s > 900 && window.WR) {
+      if (!T.lines) { const b = [T.lon0 - .5, T.lat1 - (T.cells.reduce((m, c) => Math.max(m, c.c[1]), 0) / T.KY) - .5, T.lon0 + T.cells.reduce((m, c) => Math.max(m, c.c[0]), 0) / T.KX + .5, T.lat1 + .5];
+        const dec = f => { const a = []; let x = 0, y = 0; for (let i = 0; i < f.length; i += 2) { x += f[i]; y += f[i + 1]; a.push(MX(x / 100), MY(y / 100)); } return a; };
+        const inB = f => { let x = 0, y = 0; for (let i = 0; i < f.length; i += 2) { x += f[i]; y += f[i + 1]; if (x / 100 > b[0] && x / 100 < b[2] && y / 100 > b[1] && y / 100 < b[3]) return true; } return false; };
+        T.lines = { r: WR.r.filter(r => inB(r.slice(1))).map(r => [r[0], dec(r.slice(1))]), v: WR.v.filter(v => inB(v.slice(1))).map(v => dec(v.slice(1))) }; }
+      const pl = a => { cx.beginPath(); for (let i = 0; i < a.length; i += 2) { const x = (a[i] - cam.x) * cam.s + W0() / 2, y = (a[i + 1] - cam.y) * cam.s + H0() / 2; i ? cx.lineTo(x, y) : cx.moveTo(x, y); } cx.stroke(); };
+      cx.strokeStyle = 'rgba(60,120,190,.75)'; cx.lineWidth = 1.6; for (const v of T.lines.v) pl(v);
+      for (const [c, a] of T.lines.r) { cx.strokeStyle = c === 2 ? 'rgba(120,60,30,.75)' : 'rgba(120,90,60,.45)'; cx.lineWidth = c === 2 ? 1.8 : 1; pl(a); }
+      cx.font = '700 11px sans-serif'; cx.textAlign = 'center';
+      for (const br of W.bridges || []) { const [x, y] = toS(MX(T.lon0 + br.p[0] / T.KX), MY(T.lat1 - br.p[1] / T.KY)); cx.fillStyle = br.down > 0 ? '#d0331a' : '#3b3b3b'; cx.fillText(br.down > 0 ? '✖' : '═', x, y + 4); }
+    }
     // ===== الجو الحقيقي (air.js): القواعد، البطاريات بمداها، الطيارات، الصواريخ، الانفجارات =====
     if (T.A) { const A = T.A, K = (x, y) => toS(MX(T.lon0 + x / T.KX), MY(T.lat1 - y / T.KY)), kmPx = Math.abs(toS(MX(T.lon0 + 100 / T.KX), 0)[0] - toS(MX(T.lon0), 0)[0]) / 100;
       cx.textAlign = 'center';

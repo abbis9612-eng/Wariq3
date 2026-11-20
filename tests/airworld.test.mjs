@@ -3,6 +3,7 @@
 import fs from 'fs'; import { createRequire } from 'module';
 const require = createRequire(import.meta.url);
 const window = {}; new Function('window', fs.readFileSync(new URL('../prototypes/world/world-data.js', import.meta.url), 'utf8'))(window);
+new Function('window', fs.readFileSync(new URL('../prototypes/world/world-roads.js', import.meta.url), 'utf8'))(window); window.WD.WR = window.WR;
 const WD = window.WD, S = require('../prototypes/world/wsim.js'), TH = require('../prototypes/world/theater.js'), SIM = require('../prototypes/world/gwsim.js');
 const AIR = require('../prototypes/world/gwair.js'), AW = require('../prototypes/world/airworld.js');
 let bad = 0; const no = m => { console.log('❌ ' + m); bad++; };

@@ -61,8 +61,28 @@
     if (war.fort0) { const F = new Set(); cells.forEach((c, i) => { if (c.nb.some(j => cells[j].s !== c.s)) F.add(i); });
       for (let k = 0; k < 2; k++) for (const i of [...F]) for (const j of cells[i].nb) if (cells[j].s === cells[i].s) F.add(j);
       for (const i of F) if (cells[i].t !== 'city' && cells[i].t !== 'mount') cells[i].t = 'fort'; }
+    // الطرق والأنهار والجسور (مثل «الحرب الكبرى» tools/roads.py بس وقت البناء): كل طريق/نهر يعبر حد بين خليتين جارتين
+    const WR = (typeof window !== 'undefined' && window.WR) || WD.WR, edges = [], roads = { e: [], br: [] };
+    if (WR) {
+      const hexAt = (X, Y) => { const r0 = Math.round(Y / (hs * .866)); let best = null, bd = 1e9;
+        for (let r = r0 - 1; r <= r0 + 1; r++) { const c0 = Math.round((X - (r & 1 ? hs / 2 : 0)) / hs); for (let c = c0 - 1; c <= c0 + 1; c++) { const j = at.get(r + ',' + c); if (j == null) continue; const d = (cells[j].c[0] - X) ** 2 + (cells[j].c[1] - Y) ** 2; if (d < bd) { bd = d; best = j; } } }
+        return bd < (hs * .75) ** 2 ? best : null; };
+      const walk = (f, cb) => { let x = 0, y = 0, px = null, py = null, prev = null;
+        for (let i = 0; i < f.length; i += 2) { x += f[i]; y += f[i + 1]; const lon = x / 100, lat = y / 100;
+          if (lon < x0 - 1 || lon > x1 + 1 || lat < y0 - 1 || lat > y1 + 1) { px = null; prev = null; continue; }
+          const X = (lon - x0) * KX, Y = (y1 - lat) * KY;
+          if (px != null) { const n = Math.max(1, Math.ceil(Math.hypot(X - px, Y - py) / (hs / 3))); for (let k = 1; k <= n; k++) { const h = hexAt(px + (X - px) * k / n, py + (Y - py) * k / n); if (h != null && prev != null && h !== prev) cb(prev, h, (px + X) / 2, (py + Y) / 2); if (h != null) prev = h; } }
+          else prev = hexAt(X, Y);
+          px = X; py = Y; } };
+      const key = (a, b) => a < b ? a + ',' + b : b + ',' + a, RC = new Map(), RV = new Map();
+      for (const r of WR.r) walk(r.slice(1), (a, b) => { if (!cells[a].nb.includes(b)) return; const k = key(a, b); RC.set(k, Math.max(RC.get(k) || 0, r[0])); });
+      for (const v of WR.v) walk(v.slice(1), (a, b, x, y) => { if (!cells[a].nb.includes(b)) return; const k = key(a, b); if (!RV.has(k)) RV.set(k, [v[0], x, y]); });
+      for (const [k, c] of RC) { const [a, b] = k.split(',').map(Number); roads.e.push([a, b, c]); }
+      for (const [k, [n, x, y]] of RV) { const [a, b] = k.split(',').map(Number); edges.push([a, b, 1, null]); if (RC.has(k)) roads.br.push([a, b, x, y, 'جسر ' + n]); }
+    }
     const T = { v: 1, war: war.id, me, side: [side0, side1], hs, lon0: x0, lat1: y1, KX, KY, regs, ctl0: fix ? fix.ctl0 : Object.fromEntries(regs.map(r => [r, G.ctl[r]])), cells, t: 0 };
-    T.W = SIM.World({ cells: cells.map(c => ({ c: c.c, s: c.s, t: c.t, nb: c.nb, vp: c.vp || 0, city: c.city })), edges: [] }, { seed: (G.seed || 1) + G.t });
+    T.W = SIM.World({ cells: cells.map(c => ({ c: c.c, s: c.s, t: c.t, nb: c.nb, vp: c.vp || 0, city: c.city })), edges }, { seed: (G.seed || 1) + G.t, roads: WR ? roads : null });
+    T.nRoads = roads.e.length; T.nBr = roads.br.length; T.nRiv = edges.length;
     T.W.cells.forEach((c, i) => { T.W.ctrl[i] = cells[i].s; });
     T.W.plans = []; T.W.planId = 1;   // خطط الهجوم بالأسهم (من «الحرب الكبرى»)
     SIM.initIntel(T.W);              // الضباب والاستخبارات: كل طرف يعرف بس اللي يشوفه (من «الحرب الكبرى»)
@@ -185,10 +205,10 @@
   }
   function score(T) { const s = SIM.score(T.W); return { vp: s.vp, divs: s.divs, lost: s.lost, cells: s.cells, over: T.W.over }; }
   // الحفظ: الخلايا تنبني من جديد بنفس الطريقة؛ نحفظ بس الفرق والسيطرة والوقت
-  function save(T) { const W = T.W; return { regs: T.regs, ctl0: T.ctl0, war: T.war, t: T.t, wt: W.t, ctrl: Array.from(W.ctrl), divs: W.divs.filter(d => !d.dead).map(d => ({ ...d, path: d.path.slice() })), lost: W.lost, took: W.took, ob: W.ob, over: W.over, rng: W.rnd.get(), nid: SIM.getNID(), mob: W.mob, num: W.num, cool: W.cool ? [...W.cool] : null, stalls: W.stalls, wx: W.wx, wxT: W.wxT, qual: W.qual, tob: T.ob, aggr0: T.aggr0, auto0: T.auto0, vp0: T.vp0, hour: W.hour, night: W.night, air: T.air, plans: W.plans, planId: W.planId, seen: W.seen ? W.seen.map(a => Array.from(a, v => v < -1e8 ? null : v)) : null, snap: W.snap ? W.snap.map(m => [...m]) : null }; }
+  function save(T) { const W = T.W; return { regs: T.regs, ctl0: T.ctl0, war: T.war, t: T.t, wt: W.t, ctrl: Array.from(W.ctrl), divs: W.divs.filter(d => !d.dead).map(d => ({ ...d, path: d.path.slice() })), lost: W.lost, took: W.took, ob: W.ob, over: W.over, rng: W.rnd.get(), nid: SIM.getNID(), mob: W.mob, num: W.num, cool: W.cool ? [...W.cool] : null, stalls: W.stalls, wx: W.wx, wxT: W.wxT, qual: W.qual, tob: T.ob, aggr0: T.aggr0, auto0: T.auto0, vp0: T.vp0, hour: W.hour, night: W.night, air: T.air, plans: W.plans, planId: W.planId, bridges: (W.bridges || []).map(b => b.down), seen: W.seen ? W.seen.map(a => Array.from(a, v => v < -1e8 ? null : v)) : null, snap: W.snap ? W.snap.map(m => [...m]) : null }; }
   function restore(o, G, WD, war, me) {
     const T = build(G, WD, war, me, { regs: o.regs, ctl0: o.ctl0 }); if (!T) return null; const W = T.W;
-    W.divs = o.divs.map(d => ({ ...d })); o.ctrl.forEach((s, i) => { if (i < W.N) W.ctrl[i] = s; }); W.t = o.wt; T.t = o.t; W.lost = o.lost; W.took = o.took; W.ob = o.ob; W.over = o.over; W.rnd.set(o.rng); SIM.setNID(Math.max(SIM.getNID(), o.nid)); W.mob = o.mob; W.num = o.num; if (o.cool) W.cool = new Map(o.cool); W.stalls = o.stalls; W.wx = o.wx; W.wxT = o.wxT; if (o.qual) W.qual = o.qual; T.ob = o.tob; T.aggr0 = o.aggr0; T.auto0 = o.auto0; T.vp0 = o.vp0; W.hour = o.hour; W.night = o.night; T.air = o.air; W.plans = o.plans || []; W.planId = o.planId || 1;
+    W.divs = o.divs.map(d => ({ ...d })); o.ctrl.forEach((s, i) => { if (i < W.N) W.ctrl[i] = s; }); W.t = o.wt; T.t = o.t; W.lost = o.lost; W.took = o.took; W.ob = o.ob; W.over = o.over; W.rnd.set(o.rng); SIM.setNID(Math.max(SIM.getNID(), o.nid)); W.mob = o.mob; W.num = o.num; if (o.cool) W.cool = new Map(o.cool); W.stalls = o.stalls; W.wx = o.wx; W.wxT = o.wxT; if (o.qual) W.qual = o.qual; T.ob = o.tob; T.aggr0 = o.aggr0; T.auto0 = o.auto0; T.vp0 = o.vp0; W.hour = o.hour; W.night = o.night; T.air = o.air; W.plans = o.plans || []; W.planId = o.planId || 1; if (o.bridges) o.bridges.forEach((d, i) => { if (W.bridges[i]) W.bridges[i].down = d; });
     if (o.seen) { W.seen = o.seen.map(a => Float64Array.from(a, v => v == null ? -1e9 : v)); W.snap = o.snap.map(e => new Map(e)); W.spots = [[], []]; } else SIM.intel(W);
     SIM.supply(W); return T;
   }

@@ -44,7 +44,8 @@
         // مواقع الصواريخ والمسيّرات (من مخزون الدولة بالمحاكاة)
         const c = G.C[k];
         if (lead && c && (c.msl + c.drn) > 5) {
-          const rear = T.cells.filter(x => x.own === k && W.ctrl[T.cells.indexOf(x)] === s).map(x => ({ x, d: dFront(s, x.c) })).filter(o => o.d > 80 && o.d < (T.kind === 'air' ? 2500 : 700)).sort((a, b) => (b.x.vp || 0) - (a.x.vp || 0) || a.d - b.d).slice(0, 2);
+          // المسرح الجوي: مواقع الصواريخ بأرضنا أو أرض الصديق المضيف
+          const rear = T.cells.filter(x => (x.own === k || T.kind === 'air') && W.ctrl[T.cells.indexOf(x)] === s).map(x => ({ x, d: dFront(s, x.c) })).filter(o => o.d > 80 && o.d < (T.kind === 'air' ? 2500 : 700)).sort((a, b) => (b.x.vp || 0) - (a.x.vp || 0) || a.d - b.d).slice(0, 2);
           const mun = CAT.munOf(k);
           rear.forEach((o, i) => mbases.push({ n: (i ? 'موقع مسيّرات' : 'قاعدة صواريخ') + ' — ' + (o.x.city || 'المؤخرة'), ll: [o.x.ll[1], o.x.ll[0]], side: s,
             bm: Math.min(80, Math.round(c.msl * .08 / rear.length)), cm: Math.min(16, Math.round(c.msl * .02 / rear.length)), uav: Math.min(200, Math.round(c.drn * .08 / rear.length)), ...(mun ? { mun } : {}) }));
@@ -52,7 +53,8 @@
       }
       // حد التلفون للطيارات (بنفس النسبة)
       const tot = orders.reduce((t, o) => t + o.n, 0), f = tot > CAP_PL ? CAP_PL / tot : 1; info[s].scale = 1 / f;
-      for (const o of orders) { const n = Math.max(1, Math.round(o.n * f)); bases.push({ n: o.b.n + (orders.filter(x => x.b === o.b).length > 1 ? ` (${AIR.PLANES[o.t].n.split(/[ ،/]/)[0]})` : ''), rw: 0, ll: o.b.ll, side: s, type: o.t, planes: n, cc: o.k }); info[s].planes += n; }
+      for (const o of orders) { const n = Math.max(1, Math.round(o.n * f)), nm = (((WD.aw || {})[o.k] || {}).nm || {})[o.t];   // nm = اسم الطراز الحقيقي لهاي الدولة (B-1B بدل «سوخوي-24»)
+        bases.push({ n: o.b.n + (orders.filter(x => x.b === o.b).length > 1 ? ` (${(nm || AIR.PLANES[o.t].n).split(/[ ،/(]/)[0]})` : ''), rw: 0, ll: o.b.ll, side: s, type: o.t, planes: n, cc: o.k, ...(nm ? { nm: nm.replace(/ \([^)]*\)$/, '') } : {}) }); info[s].planes += n; }
       // البطاريات: الأبعد مدى أول؛ مواقعها: قرب القواعد والمدن الكبيرة اللي قريبة من الجبهة
       const rng = sy => Math.max(...AIR.SYS[sy].mags.map(m => Math.max(...Object.values(m.r))));
       samList.sort((a, b) => rng(b.sy) - rng(a.sy)); samList = samList.slice(0, CAP_SAM);

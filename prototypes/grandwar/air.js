@@ -163,9 +163,9 @@
       const mine = bt.side === side; const cell = mine ? bt.tg : [...bt.from][0];
       const p = W.cells[cell].c; return { cell, p, w: (bt.na + bt.nd) * (mine ? 1.2 : 1.4), dist: d2(p, b.p) };
     }).filter(x => x.dist < 900).sort((a, c) => c.w / (1 + c.dist / 400) - a.w / (1 + a.dist / 400));
-    if (T.aa >= .5 && (A.rnd() < .45 || !bats.length)) {
+    if (T.aa >= .5 && (A.rnd() < .45 || !bats.length && !(W.airOnly && T.ag > .9 && A.rnd() < .6))) {   // «العالم»: بالمسرح الجوي المقاتلات متعددة المهام تضرب أهداف أرضية مو بس دوريات
       // دورية الحماية فوق المعركة، بس برّا مظلة الدفاع الجوي للعدو (الطيارين يتجنبونها): نرجّع النقطة لجهة مطارنا لحد ما تطلع
-      let tgt = bats[0] ? bats[0].p : nearestFront(W, side, b.p); if (!tgt) return null;
+      let tgt = bats[0] ? bats[0].p : nearestFront(W, side, b.p) || (W.airOnly ? airFront(W, side, b.p) : null); if (!tgt) return null;   // «العالم»: بالمسرح الجوي الدورية بين قاعدتنا وأقرب أرض للعدو
       for (let k = 0; k < 12 && A.sams.some(s => s.side !== side && covers(s, tgt, T.cruise, 'air', T.rcs) && d2(s.p, tgt) < Math.min(...s.mags.map(m => m.r.air || 0)) * .9 + 15); k++) tgt = [tgt[0] + (b.p[0] - tgt[0]) * .2, tgt[1] + (b.p[1] - tgt[1]) * .2];
       if (A.realDoc && A.sams.some(s => s.side !== side && covers(s, tgt, T.cruise, 'air', T.rcs))) return null;   // «العالم»: الدورية ما تطير تحت مظلة العدو
       return { kind: 'cap', p: tgt };
@@ -177,15 +177,27 @@
     if (T.ag > .9 && W.oil && ECONM && A.rnd() < .1) { const o = ECONM.oilTarget(W, side, b.p, 550, p => A.sams.some(s => s.side !== side && covers(s, p, T.hi ? 5.5 : T.low, 'air', T.rcs))); if (o) return { kind: 'oil', p: o.f.p, oil: o.i }; }
     const zAtk = T.hi ? 5.5 : T.low;
     const cover = p => A.sams.filter(s => s.side !== side && covers(s, p, zAtk, 'air', T.rcs));
+    // «العالم» (المسرح الجوي، ماكو معارك أرض): قصف مطارات العدو ومواقع صواريخه اللي برّا مظلته أو تحت بطارية وحدة [تقدير]
+    if (W.airOnly && T.ag > .9 && A.rnd() < .6) { const g = groundTarget(A, b, cover); if (g) return g; }
     for (const bt of bats) {
       const cv = cover(bt.p);
       if (!cv.length) return { kind: 'cas', p: bt.p, cell: bt.cell };
       if (cv.length === 1 && T.ag > .9 && !(A.realDoc && !T.harm)) return A.rnd() < .55 ? { kind: 'strike', p: cv[0].p, sam: A.sams.indexOf(cv[0]) } : { kind: 'cas', p: bt.p, cell: bt.cell };
     }
     // ما نهاجم بطارية تحميها بطاريتين ثانيات أو أكثر (مظلة متداخلة = انتحار): الطيار يرجع (مهم بالمسارح الكبيرة مثل روسيا)
-    const sam = A.sams.filter(s => s.side !== side && !s.down && d2(s.p, b.p) < 700 && cover(s.p).length <= 2).sort((a, c) => d2(a.p, b.p) - d2(c.p, b.p))[0];
-    if (sam && T.ag > .9 && !(A.realDoc && !T.harm)) return { kind: 'strike', p: sam.p, sam: A.sams.indexOf(sam) };   // «العالم»: بس اللي عنده HARM يهاجم الدفاع الجوي
+    const sam = A.sams.filter(s => s.side !== side && !s.down && d2(s.p, b.p) < (W.airOnly ? 2200 : 700) && cover(s.p).length <= 2).sort((a, c) => d2(a.p, b.p) - d2(c.p, b.p))[0];
+    if (sam && T.ag > .9 && !(A.realDoc && !T.harm) && !(W.airOnly && T.rcs >= .2 && (cover(sam.p).length > 1 || Math.max(...sam.mags.map(m => m.r.air || 0)) > 60))) return { kind: 'strike', p: sam.p, sam: A.sams.indexOf(sam) };   // «العالم»: بس اللي عنده HARM يهاجم الدفاع الجوي
     return null;
+  }
+  function groundTarget(A, b, cover) {
+    const side = b.side, R = 2200, L = [];   // بالتزود جواً (مثل ضربات إسرائيل على إيران 2024–2025)
+    for (const e of A.bases) if (e.side !== side && d2(e.p, b.p) < R) L.push({ kind: 'abase', p: e.p, ab: A.bases.indexOf(e), w: 1.2 });
+    for (const m of A.mbases) if (m.side !== side && d2(m.p, b.p) < R && (m.bm + m.cm + m.uav) > 0) L.push({ kind: 'abase', p: m.p, mb: A.mbases.indexOf(m), w: 1 });
+    const T = PLANES[b.type], maxC = T.rcs < .2 ? 1 : 0;   // بس الشبحية تدخل تحت بطارية وحدة؛ الباقي برّا المظلة (مثل حرب حزيران 2025: الشبحية فتحت الطريق أول)
+    // الطريق كمان (ربع، نص، ثلاث أرباع المسافة) لازم يكون برّا المظلة للي ما عنده شبحية
+    const way = q => [.25, .5, .75].reduce((t, f) => t + A.sams.filter(z => z.side !== side && !z.down && covers(z, [b.p[0] + (q[0] - b.p[0]) * f, b.p[1] + (q[1] - b.p[1]) * f], T.cruise, 'air', T.rcs)).length, 0);
+    const ok = L.map(o => ({ o, c: cover(o.p).length + (maxC ? 0 : way(o.p)) })).filter(x => x.c <= maxC).sort((x, y) => x.c - y.c || d2(x.o.p, b.p) / x.o.w - d2(y.o.p, b.p) / y.o.w);
+    if (!ok.length) return null; const { o } = ok[Math.floor(A.rnd() * Math.min(3, ok.length))]; return { kind: o.kind, p: o.p, ...(o.ab != null ? { ab: o.ab } : { mb: o.mb }) };
   }
   function bridgeTarget(A, W, b) {
     const side = b.side; const F = []; for (let i = 0; i < W.N; i++) if (W.ctrl[i] !== side && W.cells[i].nb.some(j => W.ctrl[j] === side)) F.push(W.cells[i].c);
@@ -205,6 +217,8 @@
     }
     return best && { kind: 'recon', p: best };
   }
+  // المسرح الجوي («العالم»): ماكو جبهة؛ نقطة الدورية 40٪ من الطريق لأقرب أرض للعدو (لحد 300 كم من القاعدة)
+  function airFront(W, side, p) { let best = null, bd = 1e9; for (let i = 0; i < W.N; i++) if (W.ctrl[i] !== side) { const dd = d2(W.cells[i].c, p); if (dd < bd) { bd = dd; best = W.cells[i].c; } } if (!best) return null; const f = Math.min(.4, 300 / Math.max(1, bd)); return [p[0] + (best[0] - p[0]) * f, p[1] + (best[1] - p[1]) * f]; }
   function nearestFront(W, side, p) {
     let best = null, bd = 1e9;
     for (let i = 0; i < W.N; i++) if (W.ctrl[i] === side && W.cells[i].nb.some(j => W.ctrl[j] !== side)) { const dd = d2(W.cells[i].c, p); if (dd < bd) { bd = dd; best = W.cells[i].c; } }
@@ -331,7 +345,7 @@
     if (tac[p.st] && p.stT > 3) { if (p.st === 'final') { land(A, p, base); return; } p.st = 'back'; }
     if (p.st === 'back' && p.stT > 120) { land(A, p, base); return; }
     // وقود: طلعة أقصاها ~ساعة ونص
-    if ((p.t > (T.endur || 95) || W.wx === 'dust' || (W.night && !T.night)) && (p.st === 'out' || p.st === 'orbit')) p.st = 'back';   // الوقود، أو الغبار، أو الليل لطيارة بلا رؤية ليلية ← رجوع
+    if ((p.t > (T.endur || 95) * (W.airOnly && !T.drone ? 3 : 1) || W.wx === 'dust' || (W.night && !T.night)) && (p.st === 'out' || p.st === 'orbit')) p.st = 'back';   // الوقود، أو الغبار، أو الليل لطيارة بلا رؤية ليلية ← رجوع   // «العالم»: بالمسرح الجوي التزود بالوقود جواً ×3
     // عيون الجو: كل طيارة تشوف شوية تحتها، ومسيّرة الاستطلاع ~40 كم (تنقرى ساعة بساعة بـ sim.intel)
     if (W.spots && p.st !== 'roll' && p.st !== 'final' && (p.eyeT = (p.eyeT || 0) - dt) <= 0) { p.eyeT = .5; const sp = W.spots[p.side]; if (sp.length < 400) sp.push([p.x, p.y, (T.eye || 12) * (W.indF ? W.indF[p.side].eye : 1)]); }   // C4: بحث المسيّرات
     let tx = M.p[0], ty = M.p[1], spd = T.v, turn = 6; const d = Math.hypot(tx - p.x, ty - p.y);
@@ -345,9 +359,9 @@
     else if (p.st === 'roll') { tx = p.x + Math.cos(base.rw) * 20; ty = p.y + Math.sin(base.rw) * 20; spd = Math.min(T.v, (p.v || 0) + dt * 9.6); turn = 0; p.zT = p.v > Math.min(KMS(75), T.v * .8) ? 1.5 : 0; if (p.z > .15) p.st = 'out'; if (p.stT > 2) p.st = 'out'; }  // المسيّرة تطير بسرعة أقل من الطيارة
     else if (p.st === 'out') {
       // تنقّل عالي بأرضنا، وينزل واطي ~100 كم قبل الهدف إذا مهمته إسناد بطيارة هجوم (تحت أفق الرادار)
-      p.zT = M.kind === 'cap' || M.kind === 'recon' ? T.cruise : M.kind === 'cas' || M.kind === 'bridge' || M.kind === 'oil' ? (T.hi ? 5.5 : d > 110 ? T.cruise * .6 : T.low) : M.kind === 'strike' ? (p.harm ? T.cruise : d > 110 ? T.cruise * .6 : T.low) : T.cruise;
-      if ((M.kind === 'cas' || M.kind === 'bridge' || M.kind === 'oil') && T.hi && d < 7) { attack(A, W, SIM, p); p.bombs--; p.st = p.bombs > 0 ? 'pull' : 'back'; p.ph = 0; }
-      else if ((M.kind === 'cas' || M.kind === 'bridge' || M.kind === 'oil' || (M.kind === 'strike' && !p.harm)) && !T.hi && d < 12) { p.st = 'popup'; p.ph = 0; }
+      p.zT = M.kind === 'cap' || M.kind === 'recon' ? T.cruise : M.kind === 'cas' || M.kind === 'bridge' || M.kind === 'oil' || M.kind === 'abase' ? (T.hi ? 5.5 : d > 110 ? T.cruise * .6 : T.low) : M.kind === 'strike' ? (p.harm ? T.cruise : d > 110 ? T.cruise * .6 : T.low) : T.cruise;
+      if ((M.kind === 'cas' || M.kind === 'bridge' || M.kind === 'oil' || M.kind === 'abase') && T.hi && d < 7) { attack(A, W, SIM, p); p.bombs--; p.st = p.bombs > 0 ? 'pull' : 'back'; p.ph = 0; }
+      else if ((M.kind === 'cas' || M.kind === 'bridge' || M.kind === 'oil' || M.kind === 'abase' || (M.kind === 'strike' && !p.harm)) && !T.hi && d < 12) { p.st = 'popup'; p.ph = 0; }
       else if (M.kind === 'strike' && !p.harm && T.hi && d < 7) { attack(A, W, SIM, p); p.bombs--; p.st = 'back'; }
       if (M.kind === 'strike' && p.harm && d < 85) { p.st = 'harm'; p.ph = 0; }
       if ((M.kind === 'cap' || M.kind === 'recon') && d < 18) { p.st = 'orbit'; p.ph = 0; }
@@ -536,7 +550,7 @@
     }
     T.st = 'fall'; T.t = 0; if (A.rnd() < .7) emit(A, { k: 'eject', x: T.x, y: T.y, side: T.side });
     A.kills[side]++; A.lostPlanes[T.side]++; A.bases[T.base].n0 = Math.max(0, A.bases[T.base].n0 - 1);
-    emit(A, { k: 'kill', x: T.x, y: T.y, z: T.z, side, victim: PLANES[T.type].n, vside: T.side, by: how === 'aam' ? 'aam' : by });
+    emit(A, { k: 'kill', x: T.x, y: T.y, z: T.z, side, victim: A.bases[T.base].nm || PLANES[T.type].n, mk: T.m && T.m.kind, vside: T.side, by: how === 'aam' ? 'aam' : by });
   }
   function attack(A, W, SIM, p) {
     const T = PLANES[p.type];
@@ -547,6 +561,12 @@
     if (p.m.kind === 'oil') { // GW8: قنابل على حقل نفط أو ميناء
       const f = W.oil && W.oil.sites[p.m.oil]; if (!f || !ECONM) return; const ok = d2(f.p, [p.x, p.y]) < 12 && ECONM.hitOil(W, p.m.oil, p.side, T.hi ? .7 : .55);
       emit(A, { k: 'bomb', x: f.p[0], y: f.p[1], side: p.side, oil: 1, ok }); return;   // التنبيه من سجل الحرب (oilhit)
+    }
+    if (p.m.kind === 'abase') { // «العالم»: قنابل على مطار (طيارات بالأرض + المدرج) أو موقع صواريخ (منصات ومخزون) [تقدير]
+      const e = p.m.ab != null ? A.bases[p.m.ab] : A.mbases[p.m.mb]; if (!e || d2(e.p, [p.x, p.y]) > 12) return; const k = T.hi ? 1 : .8;
+      if (p.m.ab != null) { if (e.ready > 0 && A.rnd() < .35 * k) { e.ready--; e.n0 = Math.max(0, e.n0 - 1); A.lostPlanes[e.side]++; } e.down = Math.max(e.down || 0, 3 * k); }
+      else for (const q of ['bm', 'cm', 'uav']) if (e[q] > 0) e[q] = Math.max(0, e[q] - Math.ceil(e[q] * .08 * k));
+      emit(A, { k: 'bomb', x: e.p[0], y: e.p[1], side: p.side, what: e.n }); return;
     }
     if (p.m.kind === 'strike' && p.m.sam != null) {
       const s = A.sams[p.m.sam]; if (d2(s.p, [p.x, p.y]) < 12) siteHit(A, s, 1.2, p.side, 'bomb');

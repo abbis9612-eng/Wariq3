@@ -25,4 +25,14 @@ for (const [me, tgt] of [['UKR', null], ['IRQ', 'IRN'], ['IND', 'PAK'], ['ISR', 
   const o = JSON.parse(JSON.stringify(AW.save(A))), A2 = AW.restore(AW.build(T, G, WD), o);
   if (A2.bases.map(b => b.ready).join() !== A.bases.map(b => b.ready).join()) no(me + ': حفظ الجو ما رجع نفس الحالة');
 }
+// المسرح الجوي (حرب بلا حدود برية، مثل أمريكا ← إيران): أسبوع لازم بيه قصف أهداف أرضية، والخسائر معقولة، وأسماء الطرازات حقيقية
+{ const G = S.init(WD, 'USA', { seed: 2 }), w = G.wars.find(x => x.id === 'iran_war');
+  const T = w && TH.air(G, WD, w, 'USA'); if (!T) no('USA: ما انبنى مسرح جوي'); else {
+    const A = AW.build(T, G, WD); let bomb = 0;
+    for (let h = 0; h < 168; h++) { TH.step(T, 1); AIR.step(A, T.W, SIM, 1.6); for (const e of A.ev) if (e.k === 'bomb' && e.side === 0) bomb++; A.ev.length = 0; }
+    if (!A.mbases.some(m => m.side === 0)) no('المسرح الجوي: أمريكا بلا مواقع صواريخ');
+    if (bomb < 5) no('المسرح الجوي: أمريكا ما قصفت أهداف أرضية (' + bomb + ')');
+    if (A.lostPlanes[0] > 25) no('المسرح الجوي: خسائر أمريكا كثيرة ' + A.lostPlanes[0]);
+    if (!A.bases.some(b => b.nm && /B-1B/.test(b.nm))) no('المسرح الجوي: اسم B-1B ما طلع');
+    out.push(`مسرح جوي USA ← إيران (أسبوع): قنابل ${bomb}، خسائر ${A.lostPlanes.join('/')}، مواقع صواريخ ${A.mbases.map(m => m.side).join('')}`); } }
 console.log(out.join('\n')); console.log(bad ? `\n❌ ${bad} مشكلة` : '\n✅ الجو الحقيقي سليم'); process.exit(bad ? 1 : 0);

@@ -41,6 +41,7 @@ for k, ps in by.items():
     for p in (g.geoms if hasattr(g, 'geoms') else [g]):
         if p.geom_type == 'Polygon' and p.area > .002: rings.append([[int(round(x * 100)), int(round(y * 100))] for x, y in p.exterior.coords])
     if rings: cb[k] = delta(rings)
+FIX = json.load(open(f'{R}/curation/models_fix.json'))['c'] if os.path.exists(f'{R}/curation/models_fix.json') else {}   # تصحيح أسماء الموديلات الغلط
 cs = {}
 for f in glob.glob(f'{R}/countries/*.json'):
     d = json.load(open(f)); m = d.get('mil', {}); s = m.get('sum') or {}; v = lambda o: (o or {}).get('v')
@@ -50,10 +51,13 @@ for f in glob.glob(f'{R}/countries/*.json'):
       'g': v((d.get('eco') or {}).get('growth')), 'debt': v((d.get('eco') or {}).get('debtPct')), 'rev': v((d.get('eco') or {}).get('revPct')), 'spend': v((d.get('eco') or {}).get('spendPct')),
       'milPct': v(m.get('budgetPctGdp')), 'gt': g.get('type'), 'res': v(s.get('reserve')), 'heli': v(s.get('attackHeli')),
       'ships': sum(v(s.get(k)) or 0 for k in ('carriers', 'cruisers', 'destroyers', 'frigates', 'corvettes', 'subNuc', 'subs', 'amphib')), 'carriers': v(s.get('carriers')), 'subs': (v(s.get('subs')) or 0) + (v(s.get('subNuc')) or 0),
-      'tech': ((d.get('ind') or {}).get('tech') or {}), 'gen': {k: v.get('gen') for k, v in (m.get('grp') or {}).items() if v.get('gen')}, 'kit': {k: [v.get('n'), [t[0] for t in (v.get('top') or [])[:2]], 1 if v.get('tpl') else 0] for k, v in (m.get('grp') or {}).items() if k in ('tank', 'afv', 'art', 'jet', 'heli', 'ad', 'navy')},
+      'tech': ((d.get('ind') or {}).get('tech') or {}), 'gen': {k: v.get('gen') for k, v in (m.get('grp') or {}).items() if v.get('gen')}, 'kit': {k: [v.get('n'), (FIX.get(d['id'], {}).get(k) or [t[0] for t in (v.get('top') or [])])[:2], 1 if v.get('tpl') else 0] for k, v in (m.get('grp') or {}).items() if k in ('tank', 'afv', 'art', 'jet', 'heli', 'ad', 'navy')},
       'adL': [[x['m'][:30], x['n'], x['cat']] for x in sorted((m.get('ad') or []), key=lambda x: -x['n']) if x['cat'] in ('long', 'medium') and x['n'] > 0][:5],
       'jets': [[x['m'][:30], x['n']] for x in sorted((m.get('air') or []), key=lambda x: -x['n']) if x['cat'] in ('fighter', 'attack', 'bomber') and x['n'] > 0][:6],
       'nuke': None, 'stab': v((d.get('pol') or {}).get('stab')), 'tr': d.get('treaties', []), 'war': (d.get('pol') or {}).get('warHome', []), 'conf': d.get('conflicts', [])}
+for cid, fx in FIX.items():   # فئات ناقصة بالمصدر (مثل دفاع بريطانيا الجوي): نضيف الأسماء بلا عدد
+    if cid in cs:
+        for g, names in fx.items(): cs[cid]['kit'].setdefault(g, [None, names[:2], 0])
 SN = json.load(open(f'{R}/world/sanctions.json'))
 for x in SN['list']:
     if x['on'] in cs: cs[x['on']]['sanc'] = x['level']

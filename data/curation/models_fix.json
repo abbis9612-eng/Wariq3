@@ -1,0 +1,194 @@
+{
+ "src": {
+  "fix": {
+   "t": "تصحيح أسماء أهم الموديلات اللي طلعت غلط من جداول ويكيبيديا (مثلاً «Jet/Propeller» لبريطانيا، هاون 120 ملم بالدفاع الجوي لفرنسا) — معرفة عامة بالجيوش 2025–26؛ الأعداد تبقى من المصدر",
+   "u": "https://en.wikipedia.org/wiki/List_of_equipment_of_the_British_Armed_Forces",
+   "y": 2026
+  }
+ },
+ "c": {
+  "USA": {
+   "ad": [
+    "MIM-104 Patriot",
+    "THAAD",
+    "NASAMS"
+   ]
+  },
+  "CHN": {
+   "ad": [
+    "HQ-9",
+    "HQ-16",
+    "HQ-22"
+   ]
+  },
+  "RUS": {
+   "ad": [
+    "S-400",
+    "S-300",
+    "Buk-M3",
+    "Pantsir-S1"
+   ]
+  },
+  "DEU": {
+   "ad": [
+    "MIM-104 Patriot",
+    "IRIS-T SLM"
+   ]
+  },
+  "IND": {
+   "ad": [
+    "S-400",
+    "Akash",
+    "Barak-8 (MRSAM)"
+   ]
+  },
+  "GBR": {
+   "jet": [
+    "Eurofighter Typhoon",
+    "F-35B Lightning II"
+   ],
+   "ad": [
+    "Sky Sabre (CAMM)",
+    "Starstreak"
+   ]
+  },
+  "UKR": {
+   "ad": [
+    "S-300PS",
+    "MIM-104 Patriot",
+    "NASAMS",
+    "IRIS-T SLM"
+   ]
+  },
+  "SAU": {
+   "ad": [
+    "MIM-104 Patriot (PAC-3)",
+    "THAAD",
+    "MIM-23 Hawk"
+   ]
+  },
+  "FRA": {
+   "jet": [
+    "Dassault Rafale",
+    "Dassault Mirage 2000"
+   ],
+   "ad": [
+    "SAMP/T (Aster 30)",
+    "Crotale NG",
+    "Mistral"
+   ]
+  },
+  "JPN": {
+   "tank": [
+    "Type 10",
+    "Type 90"
+   ],
+   "ad": [
+    "MIM-104 Patriot (PAC-3)",
+    "Type 03 Chū-SAM"
+   ]
+  },
+  "KOR": {
+   "jet": [
+    "F-15K Slam Eagle",
+    "KF-16",
+    "F-35A Lightning II"
+   ],
+   "ad": [
+    "Cheongung (KM-SAM)",
+    "MIM-104 Patriot"
+   ]
+  },
+  "ESP": {
+   "ad": [
+    "MIM-104 Patriot",
+    "NASAMS",
+    "Mistral"
+   ]
+  },
+  "TUR": {
+   "tank": [
+    "M60T Sabra",
+    "Leopard 2A4",
+    "M48A5T2"
+   ],
+   "ad": [
+    "S-400",
+    "Hisar-A/O",
+    "Korkut"
+   ]
+  },
+  "BRA": {
+   "ad": [
+    "RBS 70",
+    "Gepard 1A2"
+   ]
+  },
+  "QAT": {
+   "ad": [
+    "MIM-104 Patriot (PAC-3)",
+    "NASAMS"
+   ]
+  },
+  "PAK": {
+   "ad": [
+    "HQ-9/P",
+    "HQ-16FE (LY-80)",
+    "Crotale"
+   ]
+  },
+  "IRN": {
+   "jet": [
+    "F-14A Tomcat",
+    "MiG-29",
+    "F-4E Phantom",
+    "Su-24MK"
+   ],
+   "ad": [
+    "Bavar-373",
+    "S-300PMU2",
+    "Khordad-15",
+    "Tor-M1"
+   ]
+  },
+  "JOR": {
+   "ad": [
+    "MIM-104 Patriot",
+    "MIM-23 Hawk"
+   ]
+  },
+  "EGY": {
+   "ad": [
+    "S-300VM",
+    "Buk-M2",
+    "MIM-23 Hawk"
+   ]
+  },
+  "PRK": {
+   "jet": [
+    "MiG-29",
+    "MiG-23",
+    "MiG-21",
+    "Shenyang J-6"
+   ]
+  },
+  "TWN": {
+   "ad": [
+    "Tien Kung III",
+    "MIM-104 Patriot (PAC-3)",
+    "NASAMS"
+   ],
+   "navy": [
+    "Kang Ding class",
+    "Hai Kun class",
+    "Kuang Hua VI class"
+   ]
+  },
+  "POL": {
+   "navy": [
+    "Kormoran II class",
+    "Orzeł (Kilo) class"
+   ]
+  }
+ }
+}

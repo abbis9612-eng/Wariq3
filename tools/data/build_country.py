@@ -159,6 +159,9 @@ if ms:
     for k, v in cur.get('sum', {}).items(): sumo[k] = v   # تصحيح بمصدر أحدث
 else: sumo = cur.get('sum', {})
 
+# ===== المالية العامة =====
+FI = json.load(open(f'{R}/curation/fiscal.json')); src['imf25'] = FI['src']['imf25']
+
 # ===== البنك الدولي =====
 src['wb'] = {'t': 'World Bank WDI (SP.POP.TOTL, NY.GDP.MKTP.CD, NY.GDP.MKTP.KD.ZG, MS.MIL.XPND.CD/GD.ZS ← SIPRI, MS.MIL.TOTL.P1, FP.CPI.TOTL.ZG)', 'u': 'https://api.worldbank.org/v2/', 'y': 2026}
 # ===== الحكم والقادة والعلاقات والصناعة والاستقرار (لكل الدول) =====
@@ -189,7 +192,9 @@ confl = [c['id'] for c in CF['conflicts'] if ID in c.get('a', []) + c.get('b', [
 W = lambda k, f=1, nd=None: ({'v': round(WB[k]['v'] * f, nd) if nd is not None else WB[k]['v'] * f, 'y': WB[k]['y'], 's': 'wb', 'c': 'ح'} if k in WB else None)
 out = {'id': ID, 'ar': CL[ID]['ar'], 'en': CL[ID]['en'], 'tier': CL[ID]['tier'], 'asOf': '2026-11', 'src': src,
   'gov': gov, 'pop': cur.get('pop') or W('pop', 1, 0),
-  'eco': {k: v for k, v in {'gdpBusd': W('gdp', 1e-9, 1), 'growth': W('growth', 1, 1), 'infl': W('infl', 1, 1), 'oilRentPct': W('oilrent', 1, 1), **cur.get('eco', {})}.items() if v},
+  'eco': {k: v for k, v in {'gdpBusd': W('gdp', 1e-9, 1), 'growth': W('growth', 1, 1), 'infl': W('infl', 1, 1), 'oilRentPct': W('oilrent', 1, 1),
+     'debtPct': ({'v': FI['debt'][ID], 'y': 2025, 's': 'imf25', 'c': 'ت'} if ID in FI['debt'] else W('debt', 1, 1) or {'v': 55, 's': 'imf25', 'c': 'ق', 'note': 'افتراض'}),
+     'revPct': W('rev', 1, 1), 'spendPct': W('spend', 1, 1), 'expPct': W('exp', 1, 1), **cur.get('eco', {})}.items() if v},
   'mil': {k: v for k, v in {'budgetBusd': W('milx', 1e-9, 2), 'budgetPctGdp': W('milpct', 1, 2), 'personnelWB': W('troops', 1, 0), 'sum': sumo or None, **cur.get('mil', {}), 'land': land, 'air': air, 'ad': ad, 'msl': msl, 'navy': navy}.items() if v is not None},
   'ind': ind, 'pol': pol, 'rel': rel, 'treaties': treaties, 'sanctions': sanct, 'conflicts': confl, 'notes': cur.get('notes', '')}
 json.dump(out, open(f'{R}/countries/{ID}.json', 'w'), ensure_ascii=False, indent=1)

@@ -15,6 +15,11 @@
    "u": "https://en.wikipedia.org/wiki/List_of_countries_by_number_of_military_and_paramilitary_personnel?oldid=1380910017",
    "y": 2025
   },
+  "imf25": {
+   "t": "IMF World Economic Outlook / Fiscal Monitor (Oct 2025): الدين الحكومي العام % من الناتج 2025 — أرقام مدوّرة من الذاكرة (ت)؛ الباقي من البنك الدولي (حكومة مركزية) أو افتراض 55٪ (ق)",
+   "u": "https://www.imf.org/external/datamapper/GG_DEBT_GDP@WEO",
+   "y": 2025
+  },
   "wb": {
    "t": "World Bank WDI (SP.POP.TOTL, NY.GDP.MKTP.CD, NY.GDP.MKTP.KD.ZG, MS.MIL.XPND.CD/GD.ZS ← SIPRI, MS.MIL.TOTL.P1, FP.CPI.TOTL.ZG)",
    "u": "https://api.worldbank.org/v2/",
@@ -90,6 +95,30 @@
   "oilRentPct": {
    "v": 0.1,
    "y": 2021,
+   "s": "wb",
+   "c": "ح"
+  },
+  "debtPct": {
+   "v": 55,
+   "s": "imf25",
+   "c": "ق",
+   "note": "افتراض"
+  },
+  "revPct": {
+   "v": 33.9,
+   "y": 2024,
+   "s": "wb",
+   "c": "ح"
+  },
+  "spendPct": {
+   "v": 34.2,
+   "y": 2023,
+   "s": "wb",
+   "c": "ح"
+  },
+  "expPct": {
+   "v": 62.6,
+   "y": 2025,
    "s": "wb",
    "c": "ح"
   }

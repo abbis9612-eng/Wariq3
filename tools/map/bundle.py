@@ -39,7 +39,14 @@ for f in glob.glob(f'{R}/countries/*.json'):
     g = d.get('gov') or {}; nm = lambda h: (h or {}).get('name')
     cs[d['id']] = {'ar': d['ar'], 'en': d['en'], 'tier': d['tier'], 'gov': g.get('ar'), 'free': g.get('free'), 'hos': nm(g.get('hos')), 'hosR': (g.get('hos') or {}).get('role'), 'hog': nm(g.get('hog')), 'hogR': (g.get('hog') or {}).get('role'),
       'pop': v(d.get('pop')), 'gdp': v((d.get('eco') or {}).get('gdpBusd')), 'mb': v(m.get('budgetBusd')), 'act': v(s.get('active')), 'tanks': v(s.get('tanksActive')) or v(s.get('tanks')), 'air': v(s.get('combatAir')),
+      'g': v((d.get('eco') or {}).get('growth')), 'debt': v((d.get('eco') or {}).get('debtPct')), 'rev': v((d.get('eco') or {}).get('revPct')), 'spend': v((d.get('eco') or {}).get('spendPct')),
+      'milPct': v(m.get('budgetPctGdp')), 'gt': g.get('type'), 'res': v(s.get('reserve')), 'heli': v(s.get('attackHeli')),
+      'ships': sum(v(s.get(k)) or 0 for k in ('carriers', 'cruisers', 'destroyers', 'frigates', 'corvettes', 'subNuc', 'subs', 'amphib')), 'carriers': v(s.get('carriers')), 'subs': (v(s.get('subs')) or 0) + (v(s.get('subNuc')) or 0),
+      'tech': ((d.get('ind') or {}).get('tech') or {}),
       'nuke': None, 'stab': v((d.get('pol') or {}).get('stab')), 'tr': d.get('treaties', []), 'war': (d.get('pol') or {}).get('warHome', []), 'conf': d.get('conflicts', [])}
+SN = json.load(open(f'{R}/world/sanctions.json'))
+for x in SN['list']:
+    if x['on'] in cs: cs[x['on']]['sanc'] = x['level']
 NUC = json.load(open(f'{R}/world/nuclear.json'))
 for n in NUC['states']:
     if n['id'] in cs: cs[n['id']]['nuke'] = n['stockpile']['v']

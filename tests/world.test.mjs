@@ -20,6 +20,14 @@ const sel = await p.evaluate(() => __W.sel && [__W.sel.id, __W.sel.ctl]);
 if (!sel || sel[1] !== 'IRQ') no('الضغط على بغداد ما اختار منطقة عراقية: ' + sel);
 if (!(await p.isVisible('#card'))) no('البطاقة ما طلعت');
 if (OUT) await p.screenshot({ path: `${OUT}/world_card.png` });
+// W3: لعبة كاملة — تختار العراق، تبدي، سنة تمشي، وكل الألواح تنفتح، وأفعال الدبلوماسية تشتغل
+await p.evaluate(() => { document.querySelector('#card').hidden = true; });
+await p.fill('#q', 'العراق'); await p.click('#clist button[data-c=IRQ]'); await p.click('#go');
+await p.evaluate(() => __G.step(400));
+for (const t of ['me', 'dip', 'war', 'world', 'news']) { await p.click(`#tabs button[data-p=${t}]`); if (!(await p.isVisible('#sheet'))) no('اللوح ما انفتح: ' + t); if (OUT) await p.screenshot({ path: `${OUT}/play_${t}.png` }); }
+await p.click('#tabs button[data-p=me]'); await p.click('#sheet .seg[data-k=tax] button[data-v=high]');
+const st = await p.evaluate(() => ({ t: __G.G.t, tax: __G.G.C.IRQ.tax, saved: (() => { try { return !!localStorage.getItem('wariq.world.v1'); } catch (e) { return 'ممنوع'; } })() }));
+if (st.t < 400 || st.tax !== 'high') no('اللعب ما مشى: ' + JSON.stringify(st));
 if (errs.length) no('أخطاء بالصفحة: ' + errs.join(' | '));
 console.log(`تحميل ${load}ms · معالج ×4: ${res.join(' · ')} · الضغط: ${sel}`);
 console.log(bad ? `\n❌ ${bad} مشكلة` : '\n✅ الخريطة سليمة'); await b.close(); process.exit(bad ? 1 : 0);

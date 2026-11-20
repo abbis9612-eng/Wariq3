@@ -91,7 +91,7 @@ const LBL = {};
 for (const r of R) { const k = r.ctl; if (!k) continue; const L = LBL[k] ||= { x: 0, y: 0, a: 0 }; const w = r.a; L.x += MX(r.ll[0]) * w; L.y += MY(r.ll[1]) * w; L.a += w; }
 for (const k in LBL) { LBL[k].x /= LBL[k].a; LBL[k].y /= LBL[k].a; }
 // خطوط التماس: حدود بين منطقتين نفس صاحب الأرض بس مسيطر مختلف (أوكرانيا، غزة، الجولان، اليمن، السودان...)
-const FRONT = [];
+let FRONT = [];
 for (const r of R) for (const n of r.nb) { const o = byId.get(n); if (o && r.id < o.id && r.ctl !== o.ctl && (r.c === o.c || ENT[r.ctl] || ENT[o.ctl] || r.c !== r.ctl || o.c !== o.ctl)) FRONT.push([r, o]); }
 
 // ===== الكاميرا =====
@@ -108,7 +108,7 @@ function path(rings) {
     cx.closePath();
   }
 }
-function relCol(k) { if (!me || !k) return '#6b6e66'; if (k === me) return css('--me'); const v = (WD.rel[me] || {})[k] || 0; if (ENT[k]) return '#7a5a5a';
+function relCol(k) { if (!me || !k) return '#6b6e66'; if (k === me) return css('--me'); const v = ((window.__G && window.__G.G ? window.__G.G.rel : WD.rel)[me] || {})[k] || 0; if (ENT[k]) return '#7a5a5a';
   const t = Math.max(-1, Math.min(1, v / 80)); return t >= 0 ? `hsl(${100 + 20 * t},${20 + 35 * t}%,${50 - 8 * t}%)` : `hsl(8,${25 + 45 * -t}%,${50 - 6 * -t}%)`; }
 function fillOf(r) {
   if (mode === 'ter') return TCOL[r.t];
@@ -125,7 +125,7 @@ function draw() {
   const far = cam.s < 520, ink = css('--ink');
   // البحر (حدود خفيفة لما نقرّب)
   if (!far) { cx.strokeStyle = 'rgba(255,255,255,.05)'; cx.lineWidth = 1; for (const s of S) if (vis(s.bb)) { path(s.p); cx.stroke(); } }
-  if (far && mode === 'pol') { // بعيد: حدود الدول المبسطة بس (أسرع)
+  if (far && mode === 'pol' && !window.MAPCHANGED) { // بعيد: حدود الدول المبسطة بس (أسرع)؛ إذا الحرب غيّرت الحدود نرسم المناطق
     for (const L of LOD) if (vis(L.bb)) { path(L.p); cx.fillStyle = L.k[0] === '~' ? '#6b6e66' : colPol(L.k); cx.fill(); }
     cx.strokeStyle = 'rgba(20,24,18,.75)'; cx.lineWidth = .8; for (const L of LOD) if (vis(L.bb)) { path(L.p); cx.stroke(); }
   } else {
@@ -191,9 +191,10 @@ function card() {
     h += st('السكان', fmt(c.pop)) + st('الناتج', c.gdp ? Math.round(c.gdp) + ' مليار $' : '–') + st('ميزانية الجيش', c.mb ? c.mb.toFixed(1) + ' مليار $' : '–') + st('الجيش العامل', fmt(c.act)) + st('دبابات', fmt(c.tanks)) + st('طائرات قتال', fmt(c.air)) + (c.nuke ? st('رؤوس نووية', fmt(c.nuke)) : '') + st('الاستقرار', c.stab ?? '–') + '</div>';
     if (c.tr && c.tr.length) h += `<div class="note">تحالفات واتفاقيات: ${c.tr.map(trName).join('، ')}</div>`;
     if (c.conf && c.conf.length) h += `<div class="row">${c.conf.map(x => pill('⚔ ' + cfName(x), 'warn')).join('')}</div>`;
-    h += `<div class="row"><button id="asme">${me === k ? '✓ هاي دولتي (للعلاقات)' : 'شوف العالم من عيون ' + c.ar}</button></div>`;
+    if (!window.GAME) h += `<div class="row"><button id="asme">${me === k ? '✓ هاي دولتي (للعلاقات)' : 'شوف العالم من عيون ' + c.ar}</button></div>`;
+    else h += window.GAME.cardHtml(k);
   } else if (ENT[k]) h += `<h3>${ENT[k].ar}</h3><div class="note">${ENT[k].note || 'كيان مو دولة: يمسك أرض بس ما ينلعب'}${ENT[k].ally ? ' · مدعوم من ' + nameOf(ENT[k].ally) : ''}</div>`;
-  el.innerHTML = h; el.hidden = false;
+  el.innerHTML = h; el.hidden = false; if (window.GAME) window.GAME.cardWire(el, k);
   el.querySelector('.x').onclick = () => { sel = null; dirty = true; card(); };
   const b = el.querySelector('#asme'); if (b) b.onclick = () => { me = k; setMode('rel'); card(); };
 }
@@ -212,5 +213,230 @@ matchMedia('(prefers-color-scheme: light)').addEventListener?.('change', () => d
 resize(); home(); cam.x = MX(44); cam.y = MY(31); cam.s = Math.max(cam.s * 2.2, Math.min(W, H) * 1.5); legend(); $('#load').remove(); requestAnimationFrame(loop);
 window.__W = { cam, R, draw: () => { draw(); return lastMs; }, zoomAt, setMode, tap, byId, home, get sel() { return sel; } };
 </script>
+<style>
+/* W3: طبقة اللعب — اختيار الدولة، الوقت، دولتي، الدبلوماسية، العالم، الأخبار */
+#bar{display:flex;align-items:center;gap:6px;width:100%}#bar[hidden]{display:none}
+#bar .date{font-weight:700;font-variant-numeric:tabular-nums;margin-left:auto}#bar .ap{color:var(--gold);font-weight:700}
+#bar button{padding:3px 8px;min-width:34px}
+#tabs{position:fixed;left:0;right:0;bottom:0;display:flex;background:var(--panel);border-top:1px solid var(--line);padding:5px max(6px,env(safe-area-inset-left)) calc(5px + env(safe-area-inset-bottom)) max(6px,env(safe-area-inset-right));z-index:7;gap:4px}
+#tabs[hidden]{display:none}#tabs button{flex:1;border:0;background:none;padding:6px 2px;font-size:12px;border-radius:10px;position:relative}#tabs button.on{background:var(--chip2);color:var(--gold)}
+#tabs button i{display:block;font-style:normal;font-size:17px;line-height:1.1}
+#tabs .dot{position:absolute;top:3px;left:calc(50% - 16px);min-width:16px;height:16px;border-radius:8px;background:var(--neg);color:#fff;font-size:10px;line-height:16px;padding:0 4px}
+body.play #card{bottom:calc(64px + env(safe-area-inset-bottom))}body.play #perf{display:none}
+#sheet{position:fixed;left:0;right:0;bottom:calc(58px + env(safe-area-inset-bottom));max-height:64vh;overflow:auto;overscroll-behavior:contain;background:var(--panel);border-top:1px solid var(--line);border-radius:18px 18px 0 0;padding:10px max(14px,env(safe-area-inset-right)) 14px max(14px,env(safe-area-inset-left));z-index:6;box-shadow:var(--shadow)}
+#sheet[hidden]{display:none}#sheet h2{font-size:16px;margin-bottom:6px;display:flex;align-items:center;gap:6px}#sheet h2 .x{margin-right:auto;width:30px;height:30px;padding:0}
+#sheet h3{font-size:13px;color:var(--gold);margin:12px 0 5px}
+.seg{display:flex;gap:4px;flex-wrap:wrap;margin:4px 0}.seg button{flex:1;min-width:70px}
+.line{display:flex;justify-content:space-between;gap:8px;padding:4px 0;border-bottom:1px solid var(--line);font-size:12.5px}.line:last-child{border:0}.line b{font-variant-numeric:tabular-nums}
+.pos{color:var(--me)}.neg{color:var(--neg)}
+input[type=range]{width:100%;accent-color:var(--gold)}
+.log div{padding:4px 0;border-bottom:1px solid var(--line);font-size:12.5px}.log time{color:var(--dim);font-size:11px;margin-left:6px;font-variant-numeric:tabular-nums}
+.acts{display:grid;grid-template-columns:1fr 1fr;gap:6px;margin-top:6px}.acts button{text-align:right;padding:7px 9px}.acts button small{display:block;color:var(--dim);font-size:11px}
+.acts button:disabled{opacity:.45}
+#toast{position:fixed;left:50%;transform:translateX(-50%);top:calc(96px + env(safe-area-inset-top));z-index:9;display:flex;flex-direction:column;gap:4px;align-items:center;pointer-events:none;width:92%}
+#toast div{background:var(--panel);border:1px solid var(--line);border-radius:10px;padding:5px 11px;font-size:12.5px;box-shadow:var(--shadow)}#toast div.bad{border-color:var(--neg)}#toast div.good{border-color:var(--me)}
+#start{position:fixed;inset:0;background:var(--bg);z-index:15;overflow:auto;padding:calc(14px + env(safe-area-inset-top)) max(16px,env(safe-area-inset-right)) calc(16px + env(safe-area-inset-bottom)) max(16px,env(safe-area-inset-left))}
+#start[hidden]{display:none}#start h1{font-size:22px}#start p{color:var(--dim);margin:4px 0 10px;max-width:60ch}
+#start input{width:100%;font:inherit;color:var(--ink);background:var(--chip);border:1px solid var(--line);border-radius:10px;padding:8px 10px;margin:6px 0}
+#clist{display:grid;grid-template-columns:repeat(auto-fill,minmax(160px,1fr));gap:6px;margin-top:6px}
+#clist button{text-align:right;padding:8px 10px}#clist button b{display:block;font-size:14px}#clist button small{color:var(--dim);font-size:11px}
+#clist button.sel{border-color:var(--gold);background:var(--chip2)}
+#pick{position:sticky;bottom:0;background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:10px 12px;margin-top:10px}#pick[hidden]{display:none}
+.big{background:var(--gold);color:#1b2019;border:0;font-weight:700;padding:9px 16px;border-radius:12px}
+</style>
+<div id="start">
+  <h1>العالم · تشرين الثاني 2026</h1>
+  <p>اختار أي دولة. العالم يبدي من وضعه الحقيقي هسه: الحروب الجارية، والتحالفات، والعقوبات. إنت تقرر: تبني اقتصادك، تكسب حلفاء، أو تدخل حرب.</p>
+  <div id="cont" hidden><button class="big" id="contBtn">كمّل اللعبة المحفوظة</button> <small id="contInfo"></small></div>
+  <input id="q" type="search" placeholder="ابحث عن دولة…" autocomplete="off">
+  <div class="seg" id="tiers"><button data-t="" class="on">الكل</button><button data-t="A">الكبار</button><button data-t="B">المتوسطة</button><button data-t="C">الصغيرة</button></div>
+  <div id="clist"></div>
+  <div id="pick" hidden></div>
+</div>
+<div id="tabs" hidden><button data-p="me"><i>🏛</i>دولتي</button><button data-p="dip"><i>🤝</i>الدبلوماسية</button><button data-p="war"><i>⚔</i>الحروب</button><button data-p="world"><i>🌍</i>العالم</button><button data-p="news"><i>📜</i>الأخبار</button></div>
+<div id="sheet" hidden></div>
+<div id="toast"></div>
+<script src="wsim.js"></script>
+<script>
+'use strict';
+// ===== اللعبة (W3) =====
+(function () {
+  const S = window.WSIM, KEY = 'wariq.world.v1';
+  let G = null, speed = 0, acc = 0, lastT = 0, panel = null, sp = null, tier = '';
+  const SPD = [0, 1, 4, 12];   // أيام بالثانية
+  const store = { get() { try { return localStorage.getItem(KEY); } catch (e) { return null; } }, set(v) { try { localStorage.setItem(KEY, v); return true; } catch (e) { return false; } } };
+  const toast = (m, cls = '') => { const d = document.createElement('div'); d.textContent = m; d.className = cls; $('#toast').prepend(d); while ($('#toast').children.length > 3) $('#toast').lastChild.remove(); setTimeout(() => d.remove(), 3200); };
+  const ar = d => d.toLocaleDateString('ar-IQ-u-nu-latn', { day: 'numeric', month: 'long', year: 'numeric', timeZone: 'UTC' });
+  const money = b => b == null ? '–' : Math.abs(b) >= 1000 ? (b / 1000).toFixed(2) + ' ترليون $' : Math.abs(b) >= 10 ? Math.round(b) + ' مليار $' : b.toFixed(1) + ' مليار $';
+  const sgn = (v, d = 1) => (v > 0 ? '+' : '') + v.toFixed(d);
+  // ===== شاشة البداية =====
+  const ids = Object.keys(CS).sort((a, b) => (CS[b].gdp || 0) - (CS[a].gdp || 0));
+  function list() {
+    const q = $('#q').value.trim();
+    $('#clist').innerHTML = ids.filter(id => (!tier || CS[id].tier === tier) && (!q || CS[id].ar.includes(q) || CS[id].en.toLowerCase().includes(q.toLowerCase())))
+      .map(id => `<button data-c="${id}" class="${sp === id ? 'sel' : ''}"><b>${CS[id].ar}</b><small>${money(CS[id].gdp)} · جيش ${fmt(CS[id].act)}${CS[id].war && CS[id].war.length ? ' · ⚔ بحرب' : ''}</small></button>`).join('');
+    $('#clist').querySelectorAll('button').forEach(b => b.onclick = () => choose(b.dataset.c));
+  }
+  function choose(id) {
+    sp = id; list(); const c = CS[id], diff = c.tier === 'A' ? 'سهلة: دولة كبيرة' : c.tier === 'B' ? 'متوسطة' : 'صعبة: دولة صغيرة';
+    const wars = (c.conf || []).map(cfName).join('، ');
+    $('#pick').innerHTML = `<h3 style="color:var(--gold)">${c.ar}</h3><div class="note">${c.gov || ''}${c.hos ? ' · ' + role(c.hosR) + ': ' + c.hos : ''} · ${diff}</div>
+      <div class="grid" style="margin:8px 0"><div class="st"><i>الناتج</i><b>${money(c.gdp)}</b></div><div class="st"><i>السكان</i><b>${fmt(c.pop)}</b></div><div class="st"><i>الجيش العامل</i><b>${fmt(c.act)}</b></div><div class="st"><i>الاستقرار</i><b>${c.stab ?? '–'}</b></div></div>
+      ${wars ? `<div class="note">⚔ ${wars}</div>` : ''}<div class="row" style="margin-top:8px"><button class="big" id="go">ابدأ بـ${c.ar}</button></div>`;
+    $('#pick').hidden = false; $('#go').onclick = () => begin(S.init(WD, id, { seed: (Date.now() & 0xffff) + 1 }));
+    sel = R.find(r => r.ctl === id && r.cap) || R.find(r => r.ctl === id); if (sel) { cam.x = MX(sel.ll[0]); cam.y = MY(sel.ll[1]); dirty = true; }
+  }
+  $('#q').oninput = list;
+  $('#tiers').querySelectorAll('button').forEach(b => b.onclick = () => { tier = b.dataset.t; $('#tiers').querySelectorAll('button').forEach(x => x.classList.toggle('on', x === b)); list(); });
+  const saved = store.get();
+  if (saved) { try { const o = JSON.parse(saved); $('#cont').hidden = false; $('#contInfo').textContent = `${CS[o.me].ar} · ${ar(S.date(o.t))}`; $('#contBtn').onclick = () => { const w = S.load(o, WD); if (w) begin(w); }; } catch (e) { } }
+  list();
+  // ===== بداية اللعب =====
+  function begin(w) {
+    G = w; me = G.me; window.GAME = API; document.body.classList.add('play');
+    $('#start').hidden = true; $('#tabs').hidden = false;
+    $('#top h1').innerHTML = `${CS[me].ar} <small></small>`;
+    if (!$('#bar')) { const b = document.createElement('div'); b.id = 'bar'; $('#top').append(b); }
+    syncMap(); setMode('pol'); bar(); sel = null; card();
+    const cap = R.find(r => r.ctl === me && r.cap) || R.find(r => r.ctl === me); if (cap) { cam.x = MX(cap.ll[0]); cam.y = MY(cap.ll[1]); cam.s = Math.max(cam.s, 900); }
+    lastT = performance.now(); requestAnimationFrame(tick);
+    toast(`بدينا: ${CS[me].ar}، ${ar(S.date(G.t))}`, 'good');
+  }
+  function syncMap() {
+    let ch = false; G.ctl.forEach((k, i) => { if (R[i].ctl !== k) { R[i].ctl = k; ch = true; } if (k !== WD.r[i][2]) window.MAPCHANGED = true; });
+    // خطوط التماس = حدود بين مناطق دولتين بحرب، أو بين مسيطر وصاحب أرض مختلفين
+    const war = (a, b) => G.wars.some(w => (w.a.includes(a) && w.b.includes(b)) || (w.b.includes(a) && w.a.includes(b)));
+    FRONT = []; for (const r of R) for (const n of r.nb) { const o = byId.get(n); if (o && r.id < o.id && r.ctl !== o.ctl && (war(r.ctl, o.ctl) || ENT[r.ctl] || ENT[o.ctl] || (r.c === o.c))) FRONT.push([r, o]); }
+    dirty = true; return ch;
+  }
+  // ===== الوقت =====
+  function tick(t) {
+    if (!G) return; const dt = Math.min(.25, (t - lastT) / 1000); lastT = t;
+    if (speed && !G.over) { acc += dt * SPD[speed]; let n = Math.floor(acc); if (n) { acc -= n; const m0 = G.log.length; const t0 = G.t; S.step(G, WD, n); after(m0, t0); } }
+    requestAnimationFrame(tick);
+  }
+  let shown = 0;
+  function after(m0, t0) {
+    const newLogs = G.log.filter(l => l.t > t0);
+    let monthEnd = false;
+    for (const l of newLogs) { const m = msg(l); if (l.k === 'month') monthEnd = true; if (m && (l.k !== 'take' || [l.by, l.from].includes(me))) toast(m[0], m[1]); if (l.k === 'peaceOffer' || l.k === 'over' || (l.k === 'war' && (l.a === me || l.b === me || (l.join || []).includes(me)))) { speed = 0; bar(); } }
+    if (monthEnd) { syncMap(); store.set(S.save(G)); if (panel) openPanel(panel, true); if (sel) card(); }
+    bar();
+    if (G.over) { speed = 0; openPanel('me'); }
+  }
+  // سطر خبر لكل حدث (للتوست والأخبار)
+  function msg(l) {
+    const n = k => nameOf(k);
+    switch (l.k) {
+      case 'war': return [`⚔ ${n(l.a)} أعلنت الحرب على ${n(l.b)}${l.join && l.join.length ? ' — ودخلت وياها ' + l.join.map(n).join('، ') : ''}`, 'bad'];
+      case 'peace': return [`🕊 انتهت ${l.n}${l.kept ? ` (تغيرت السيطرة على ${l.kept} منطقة)` : ''}`, 'good'];
+      case 'take': return [`🚩 ${n(l.by)} سيطرت على ${byId.get(l.r)?.n || l.r} من ${n(l.from)}`, l.by === me ? 'good' : l.from === me ? 'bad' : ''];
+      case 'peaceOffer': return [`📨 ${n(l.from)} تعرض السلام — شوف تبويب الحروب`, 'good'];
+      case 'dip': if (l.a === 'refuse') return [`✋ ${n(l.t)} رفضت ${({ trade: 'اتفاقية التجارة', ally: 'التحالف', peace: 'السلام' })[l.what] || ''}`, 'bad'];
+        return [({ improve: '🤝 حسّنا العلاقة ويا ', trade: '📦 اتفاقية تجارة ويا ', ally: '🛡 تحالف دفاعي ويا ', sanction: '⛔ فرضنا عقوبات على ' })[l.a] + n(l.t), 'good'];
+      case 'warn': return [l.w === 'collapse' ? `⚠ الاستقرار ينهار! باقي ${l.left} أشهر قبل سقوط الحكومة` : '⚠ أزمة دين: الفوائد تاكل ربع الإيرادات', 'bad'];
+      case 'over': return ['💥 سقطت الحكومة: الاستقرار انهار', 'bad'];
+    }
+    return null;
+  }
+  function bar() {
+    const b = $('#bar'); if (!b) return; const c = G.C[me];
+    b.innerHTML = `<span class="date">${ar(S.date(G.t))}</span><span class="ap" title="نقاط القرار">⭐ ${G.ap}</span>
+      ${['⏸', '▶', '▶▶', '▶▶▶'].map((x, i) => `<button data-s="${i}" class="${speed === i ? 'on' : ''}" aria-label="سرعة ${i}">${x}</button>`).join('')}`;
+    b.querySelectorAll('button').forEach(x => x.onclick = () => { speed = +x.dataset.s; bar(); });
+    $('#top h1 small').textContent = `${money(c.gdp)} · استقرار ${Math.round(c.stab)}`;
+    const wd = G.wars.some(w => w.offer && (w.a.includes(me) || w.b.includes(me)));
+    const t = $('#tabs button[data-p=war]'); let d = t.querySelector('.dot'); if (wd && !d) { d = document.createElement('span'); d.className = 'dot'; d.textContent = '!'; t.append(d); } else if (!wd && d) d.remove();
+  }
+  // ===== الألواح =====
+  $('#tabs').querySelectorAll('button').forEach(b => b.onclick = () => panel === b.dataset.p ? closePanel() : openPanel(b.dataset.p));
+  function closePanel() { panel = null; $('#sheet').hidden = true; $('#tabs').querySelectorAll('button').forEach(x => x.classList.remove('on')); }
+  function openPanel(p, refresh) {
+    const sh = $('#sheet'), keep = refresh ? sh.scrollTop : 0; panel = p; sel = null; $('#card').hidden = true;
+    $('#tabs').querySelectorAll('button').forEach(x => x.classList.toggle('on', x.dataset.p === p));
+    sh.innerHTML = ({ me: pMe, dip: pDip, war: pWar, world: pWorld, news: pNews })[p]() ; sh.hidden = false; sh.scrollTop = keep;
+    const x = document.createElement('button'); x.className = 'x'; x.textContent = '✕'; x.setAttribute('aria-label', 'سدّ'); x.onclick = closePanel; sh.querySelector('h2').append(x);
+    wire(sh);
+  }
+  const line = (a, b, cls = '') => `<div class="line"><span>${a}</span><b class="${cls}">${b}</b></div>`;
+  function pMe() {
+    const c = G.C[me], bd = c.budget || { rev: 0, mil: 0, civ: 0, intr: 0 }, dp = c.debt / c.gdp * 100;
+    let h = `<h2>🏛 ${CS[me].ar}</h2>`;
+    if (G.over) h += `<div class="pill warn">💥 سقطت الحكومة (${ar(S.date(G.over.t))}). ابدأ لعبة جديدة من شاشة البداية.</div><div class="row"><button class="big" id="newg">لعبة جديدة</button></div>`;
+    h += `<div class="grid"><div class="st"><i>الناتج</i><b>${money(c.gdp)}</b></div><div class="st"><i>النمو السنوي</i><b class="${c.g >= 0 ? 'pos' : 'neg'}">${sgn(c.g)}٪</b></div><div class="st"><i>الدين</i><b class="${dp > 100 ? 'neg' : ''}">${Math.round(dp)}٪ من الناتج</b></div><div class="st"><i>الاستقرار</i><b class="${c.stab < 30 ? 'neg' : ''}">${Math.round(c.stab)}</b></div><div class="st"><i>قوة الجيش</i><b>${Math.round(c.pw)}</b></div><div class="st"><i>النفط</i><b>${fmt(c.oil * 1000)} ب/ي</b></div></div>`;
+    h += `<h3>ليش النمو ${sgn(c.g)}٪؟</h3>` + line('الأساس (اقتصاد البلد)', sgn(c.g0) + '٪') + (c.why || []).map(([r, v]) => line(r, sgn(v, 2) + '٪', v >= 0 ? 'pos' : 'neg')).join('');
+    h += `<h3>الميزانية الشهرية</h3>` + line('الإيرادات (ضرايب + نفط)', money(bd.rev)) + line('الجيش', '−' + money(bd.mil)) + line('الإنفاق المدني (رواتب، خدمات)', '−' + money(bd.civ)) + line('فوائد الدين', '−' + money(bd.intr)) + line('الصافي', (c.bal >= 0 ? '+' : '−') + money(Math.abs(c.bal)), c.bal >= 0 ? 'pos' : 'neg');
+    h += `<h3>الضرايب</h3><div class="seg" data-k="tax">${[['low', 'قليلة (نمو +، إيراد −)'], ['mid', 'عادية'], ['high', 'عالية (إيراد +، الناس تزعل)']].map(([k, t]) => `<button data-v="${k}" class="${c.tax === k ? 'on' : ''}">${t}</button>`).join('')}</div>`;
+    h += `<h3>الإنفاق المدني</h3><div class="seg" data-k="civ">${[['cut', 'تقشف (−15٪)'], ['mid', 'عادي'], ['more', 'سخي (+12٪)']].map(([k, t]) => `<button data-v="${k}" class="${c.civ === k ? 'on' : ''}">${t}</button>`).join('')}</div>`;
+    h += `<h3>ميزانية الجيش: <span id="milv">${c.milPct.toFixed(1)}</span>٪ من الناتج</h3><input id="mil" type="range" min="0.5" max="15" step="0.1" value="${c.milPct.toFixed(1)}" aria-label="ميزانية الجيش"><div class="note">أكثر من 3٪ يبطّئ النمو. الجيش يكبر أو يصغر ببطء (سنين) حسب الميزانية.</div>`;
+    return h;
+  }
+  function relList() { const m = G.rel[me] || {}; return Object.keys(m).filter(k => CS[k]).sort((a, b) => m[b] - m[a]); }
+  function pDip() {
+    const m = G.rel[me] || {}, L = relList(), tr = G.trade.filter(p => p.includes(me)).map(p => p[0] === me ? p[1] : p[0]), al = G.ids.filter(x => x !== me && S.allied(G, me, x));
+    let h = `<h2>🤝 الدبلوماسية <small class="note">⭐ ${G.ap} نقاط قرار (+2 كل شهر)</small></h2>`;
+    h += `<div class="note">اضغط أي دولة بالخريطة حتى تتعامل وياها. العلاقات ترجع ببطء لأساسها إذا ما اشتغلت عليها.</div>`;
+    h += `<h3>حلفاء دفاعيين (${al.length})</h3><div class="row">${al.map(x => `<button data-go="${x}" class="pill">${nameOf(x)}</button>`).join('') || '<span class="note">ما عدنا</span>'}</div>`;
+    h += `<h3>اتفاقيات تجارة (${tr.length})</h3><div class="row">${tr.map(x => `<button data-go="${x}" class="pill">${nameOf(x)}</button>`).join('') || '<span class="note">ما عدنا</span>'}</div>`;
+    h += `<h3>أقرب الأصدقاء</h3>` + L.slice(0, 8).filter(k => m[k] > 0).map(k => `<div class="line"><button data-go="${k}" class="pill">${nameOf(k)}</button><b class="pos">${m[k]}</b></div>`).join('');
+    h += `<h3>أشد الأعداء</h3>` + L.slice(-8).reverse().filter(k => m[k] < 0).map(k => `<div class="line"><button data-go="${k}" class="pill">${nameOf(k)}</button><b class="neg">${m[k]}</b></div>`).join('');
+    return h;
+  }
+  function pWar() {
+    let h = `<h2>⚔ الحروب</h2>`; const mine = G.wars.filter(w => w.a.includes(me) || w.b.includes(me)), oth = G.wars.filter(w => !mine.includes(w));
+    const row = w => { const A = w.a.includes(me), sc = A ? w.score : -w.score, enemy = (A ? w.b : w.a);
+      return `<div class="st" style="margin:6px 0"><b>${w.n}</b><div class="note">${w.a.map(nameOf).join('، ')} ⟷ ${w.b.map(nameOf).join('، ')} · ${w.months} شهر</div>
+        ${line('ميزان القوة على الجبهة', (w.r || 1).toFixed(2) + ' : 1 لـ' + nameOf(w.a[0]))}${line('سير الحرب' + (mine.includes(w) ? ' (لصالحنا +)' : ''), sgn(mine.includes(w) ? sc : w.score, 0), (mine.includes(w) ? sc : 0) >= 0 ? 'pos' : 'neg')}
+        ${Object.entries(w.weary).slice(0, 4).map(([k, v]) => line('تعب ' + nameOf(k), Math.round(v))).join('')}
+        ${mine.includes(w) ? `<div class="row"><button data-peace="${w.id}" class="${w.offer ? 'big' : ''}">${w.offer ? '🕊 اقبل السلام اللي عرضوه' : '🕊 اعرض السلام (⭐1)'}</button></div>` : ''}</div>`; };
+    h += mine.length ? mine.map(row).join('') : '<div class="note">إحنا بسلام. الحرب قرار: تضغط دولة بالخريطة وتختار «أعلن الحرب».</div>';
+    if (oth.length) h += `<h3>حروب بالعالم</h3>` + oth.map(row).join('');
+    return h;
+  }
+  function pWorld() {
+    const top = (k, f, n = 10) => S.rank(G, k).slice(0, n).map((x, i) => `<div class="line"><span>${i + 1}. ${x === me ? '<b style="color:var(--gold)">' + nameOf(x) + '</b>' : nameOf(x)}</span><b>${f(G.C[x])}</b></div>`).join('');
+    const myR = k => S.rank(G, k).indexOf(me) + 1;
+    return `<h2>🌍 العالم</h2>${line('سعر النفط', Math.round(G.oilP) + ' $ للبرميل')}${line('مضيق هرمز', G.hormuz > .05 ? `مقطوع ${Math.round(G.hormuz * 100)}٪` : 'مفتوح')}
+      ${line('ترتيبنا بالاقتصاد', myR('gdp') + ' من ' + G.ids.length)}${line('ترتيبنا بالقوة العسكرية', myR('pw'))}
+      <h3>أكبر اقتصادات</h3>${top('gdp', c => money(c.gdp))}<h3>أقوى جيوش (تقدير)</h3>${top('pw', c => Math.round(c.pw))}`;
+  }
+  function pNews() {
+    const L = G.log.filter(l => l.k !== 'month' && l.k !== 'start').slice(-60).reverse();
+    return `<h2>📜 الأخبار</h2><div class="log">${L.map(l => { const m = msg(l); return m ? `<div><time>${ar(S.date(l.t))}</time>${m[0]}</div>` : ''; }).join('') || '<div class="note">لسه ماكو أخبار. شغّل الوقت ▶</div>'}</div>`;
+  }
+  function wire(root) {
+    root.querySelectorAll('.seg[data-k] button').forEach(b => b.onclick = () => { G.C[me][b.parentNode.dataset.k] = b.dataset.v; openPanel(panel, true); store.set(S.save(G)); });
+    const mil = root.querySelector('#mil'); if (mil) mil.oninput = () => { G.C[me].milPct = +mil.value; root.querySelector('#milv').textContent = (+mil.value).toFixed(1); };
+    root.querySelectorAll('[data-go]').forEach(b => b.onclick = () => { const r = R.find(x => x.ctl === b.dataset.go && x.cap) || R.find(x => x.ctl === b.dataset.go); if (r) { closePanel(); sel = r; cam.x = MX(r.ll[0]); cam.y = MY(r.ll[1]); dirty = true; card(); } });
+    root.querySelectorAll('[data-peace]').forEach(b => b.onclick = () => { const r = S.offerPeace(G, WD, b.dataset.peace); r.ok ? toast('🕊 انتهت الحرب', 'good') : toast(r.why, 'bad'); syncMap(); openPanel('war', true); bar(); store.set(S.save(G)); });
+    const ng = root.querySelector('#newg'); if (ng) ng.onclick = () => location.reload();
+  }
+  // ===== بطاقة دولة ثانية: الأفعال =====
+  let armed = null;
+  const API = {
+    cardHtml(k) {
+      if (k === me) return `<div class="row"><button data-open="me">🏛 لوحة دولتي</button></div>`;
+      const r = S.rel(G, me, k), w = S.atWar(G, me, k), al = S.allied(G, me, k);
+      const A = [['improve', '🤝 حسّن العلاقة', '+10 علاقة'], ['trade', '📦 اتفاقية تجارة', '+0.15٪ نمو للطرفين'], ['ally', '🛡 تحالف دفاعي', 'يدافعون عنا ونحمي'], ['sanction', '⛔ عقوبات', 'تضرهم، والعلاقة −25'], ['war', armed === k ? '⚠ أكّد إعلان الحرب' : '⚔ أعلن الحرب', 'العالم يزعل، وحلفاؤهم يدخلون']];
+      let h = `<h3>علاقتنا: <span class="${r >= 0 ? 'pos' : 'neg'}">${r}</span>${w ? ' · ⚔ بحرب' : ''}${al ? ' · 🛡 حلفاء' : ''}</h3><div class="acts">`;
+      for (const [a, t, d] of A) { const no = S.can(G, WD, a, k); h += `<button data-act="${a}" ${no ? 'disabled' : ''}>${t} <small>${no || d} · ⭐${S.COST[a]}</small></button>`; }
+      if (k && armed === k) { const prot = G.ids.filter(x => x !== k && S.allied(G, k, x)).map(nameOf); h += `<div class="note" style="grid-column:1/-1">قبل ما تأكد: ${prot.length ? 'يدخلون ويا ' + nameOf(k) + ': ' + prot.slice(0, 6).join('، ') + (prot.length > 6 ? '…' : '') : 'ما عندها حلفاء دفاعيين'} · قوتهم ${Math.round(G.C[k].pw)} مقابل قوتنا ${Math.round(G.C[me].pw)}${G.C[k].nuke ? ' · ☢ عندها سلاح نووي' : ''}</div>`; }
+      return h + '</div>';
+    },
+    cardWire(el, k) {
+      el.querySelectorAll('[data-open]').forEach(b => b.onclick = () => openPanel(b.dataset.open));
+      el.querySelectorAll('[data-act]').forEach(b => b.onclick = () => {
+        const a = b.dataset.act; if (a === 'war' && armed !== k) { armed = k; card(); return; }
+        armed = null; const res = S.act(G, WD, a, k);
+        if (res.ok) toast(msg(G.log[G.log.length - 1])?.[0] || 'تم', a === 'war' ? 'bad' : 'good'); else toast(res.why, 'bad');
+        if (a === 'war') { syncMap(); speed = 0; }
+        bar(); card(); store.set(S.save(G));
+      });
+    },
+  };
+  window.__G = { get G() { return G; }, begin, step: n => { const m0 = G.log.length, t0 = G.t; S.step(G, WD, n); after(m0, t0); }, openPanel };
+})();
+</script>
+
 </body>
 </html>

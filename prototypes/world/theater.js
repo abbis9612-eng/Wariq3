@@ -32,7 +32,7 @@
     let x0 = 1e9, x1 = -1e9, y0 = 1e9, y1 = -1e9; for (const P of polys) for (const r of P) for (const [x, y] of r) { x0 = Math.min(x0, x); x1 = Math.max(x1, x); y0 = Math.min(y0, y); y1 = Math.max(y1, y); }
     const lat0 = (y0 + y1) / 2, KX = 111.32 * Math.cos(lat0 * Math.PI / 180), KY = 110.57;
     const area = regs.reduce((t, i) => t + WD.r[i][5], 0);
-    const hs = Math.max(28, Math.min(80, Math.sqrt(area / TARGET / .866)));   // المسافة بين مراكز الخلايا (كم)
+    const hs = Math.max(28, Math.min((fix && fix.hsMax) || 80, Math.sqrt(area / ((fix && fix.target) || TARGET) / .866)));   // المسافة بين مراكز الخلايا (كم)؛ أرض الدولة بالسلم (home) خلاياها أكبر
     const bb = polys.map(P => { let a = 1e9, b = 1e9, c = -1e9, d = -1e9; for (const r of P) for (const [x, y] of r) { a = Math.min(a, x); c = Math.max(c, x); b = Math.min(b, y); d = Math.max(d, y); } return [a, b, c, d]; });
     // 3) شبكة سداسية: كل خلية تاخذ منطقتها (اللي مركزها بيها)
     const W0 = (x1 - x0) * KX, H0 = (y1 - y0) * KY, rows = Math.ceil(H0 / (hs * .866)) + 1, cols = Math.ceil(W0 / hs) + 1;
@@ -80,7 +80,7 @@
       for (const [k, c] of RC) { const [a, b] = k.split(',').map(Number); roads.e.push([a, b, c]); }
       for (const [k, [n, x, y]] of RV) { const [a, b] = k.split(',').map(Number); edges.push([a, b, 1, null]); if (RC.has(k)) roads.br.push([a, b, x, y, 'جسر ' + n]); }
     }
-    const T = { v: 1, war: war.id, me, side: [side0, side1], hs, lon0: x0, lat1: y1, KX, KY, regs, ctl0: fix ? fix.ctl0 : Object.fromEntries(regs.map(r => [r, G.ctl[r]])), cells, t: 0 };
+    const T = { v: 1, war: war.id, me, side: [side0, side1], hs, hsMax: fix && fix.hsMax, target: fix && fix.target, lon0: x0, lat1: y1, KX, KY, regs, ctl0: fix ? fix.ctl0 : Object.fromEntries(regs.map(r => [r, G.ctl[r]])), cells, t: 0 };
     T.W = SIM.World({ cells: cells.map(c => ({ c: c.c, s: c.s, t: c.t, nb: c.nb, vp: c.vp || 0, city: c.city })), edges }, { seed: (G.seed || 1) + G.t, roads: WR ? roads : null });
     T.nRoads = roads.e.length; T.nBr = roads.br.length; T.nRiv = edges.length;
     T.W.cells.forEach((c, i) => { T.W.ctrl[i] = cells[i].s; });
@@ -205,14 +205,52 @@
   }
   function score(T) { const s = SIM.score(T.W); return { vp: s.vp, divs: s.divs, lost: s.lost, cells: s.cells, over: T.W.over }; }
   // الحفظ: الخلايا تنبني من جديد بنفس الطريقة؛ نحفظ بس الفرق والسيطرة والوقت
-  function save(T) { const W = T.W; return { regs: T.regs, ctl0: T.ctl0, war: T.war, t: T.t, wt: W.t, ctrl: Array.from(W.ctrl), divs: W.divs.filter(d => !d.dead).map(d => ({ ...d, path: d.path.slice() })), lost: W.lost, took: W.took, ob: W.ob, over: W.over, rng: W.rnd.get(), nid: SIM.getNID(), mob: W.mob, num: W.num, cool: W.cool ? [...W.cool] : null, stalls: W.stalls, wx: W.wx, wxT: W.wxT, qual: W.qual, tob: T.ob, aggr0: T.aggr0, auto0: T.auto0, vp0: T.vp0, hour: W.hour, night: W.night, air: T.air, plans: W.plans, planId: W.planId, bridges: (W.bridges || []).map(b => b.down), seen: W.seen ? W.seen.map(a => Array.from(a, v => v < -1e8 ? null : v)) : null, snap: W.snap ? W.snap.map(m => [...m]) : null, dip: W.dip || null }; }
+  function save(T) { const W = T.W; return { regs: T.regs, ctl0: T.ctl0, war: T.war, t: T.t, wt: W.t, ctrl: Array.from(W.ctrl), divs: W.divs.filter(d => !d.dead).map(d => ({ ...d, path: d.path.slice() })), lost: W.lost, took: W.took, ob: W.ob, over: W.over, rng: W.rnd.get(), nid: SIM.getNID(), mob: W.mob, num: W.num, cool: W.cool ? [...W.cool] : null, stalls: W.stalls, wx: W.wx, wxT: W.wxT, qual: W.qual, tob: T.ob, aggr0: T.aggr0, auto0: T.auto0, vp0: T.vp0, hour: W.hour, night: W.night, air: T.air, plans: W.plans, planId: W.planId, bridges: (W.bridges || []).map(b => b.down), seen: W.seen ? W.seen.map(a => Array.from(a, v => v < -1e8 ? null : v)) : null, snap: W.snap ? W.snap.map(m => [...m]) : null, dip: W.dip || null, hsMax: T.hsMax, target: T.target }; }
   function restore(o, G, WD, war, me) {
-    const T = build(G, WD, war, me, { regs: o.regs, ctl0: o.ctl0 }); if (!T) return null; const W = T.W;
+    const T = build(G, WD, war, me, { regs: o.regs, ctl0: o.ctl0, hsMax: o.hsMax, target: o.target }); if (!T) return null; const W = T.W;
     W.divs = o.divs.map(d => ({ ...d })); o.ctrl.forEach((s, i) => { if (i < W.N) W.ctrl[i] = s; }); W.t = o.wt; T.t = o.t; W.lost = o.lost; W.took = o.took; W.ob = o.ob; W.over = o.over; W.rnd.set(o.rng); SIM.setNID(Math.max(SIM.getNID(), o.nid)); W.mob = o.mob; W.num = o.num; if (o.cool) W.cool = new Map(o.cool); W.stalls = o.stalls; W.wx = o.wx; W.wxT = o.wxT; if (o.qual) W.qual = o.qual; T.ob = o.tob; T.aggr0 = o.aggr0; T.auto0 = o.auto0; T.vp0 = o.vp0; W.hour = o.hour; W.night = o.night; T.air = o.air; W.plans = o.plans || []; W.planId = o.planId || 1; if (o.bridges) o.bridges.forEach((d, i) => { if (W.bridges[i]) W.bridges[i].down = d; });
     if (o.seen) { W.seen = o.seen.map(a => Float64Array.from(a, v => v == null ? -1e9 : v)); W.snap = o.snap.map(e => new Map(e)); W.spots = [[], []]; } else SIM.intel(W);
     if (o.dip) W.dip = o.dip;   // W6: دبلوماسية الحرب (dip.js)
     SIM.supply(W); return T;
   }
-  const API = { build, step, sync, score, save, restore, HOPS, airDay };
+  // ===== I-106: أرض الدولة وجيشها بالسلم («جيشك من أول يوم») =====
+  // نفس الشبكة السداسية ونفس محرك «الحرب الكبرى»، بس بطرف واحد: كل مناطقنا المتصلة بالعاصمة (لحد 160)، وخلايا ~500 (أكبر للدول الكبيرة)،
+  // والفرق من جيشنا الحقيقي كامل (أفراد عاملين، دبابات، مدرعات — نفس حساب army) بحد 70 للتلفون، موزعة: مشاة بالمدن، دروع وآليات حول العاصمة والحدود.
+  const HOME = { id: 'home', n: 'جيشنا', a: [], b: [] };
+  function home(G, WD, me) {
+    const idx = new Map(WD.r.map((a, i) => [a[0], i]));
+    let cap = WD.r.findIndex(a => G.ctl[WD.r.indexOf(a)] === me && a[12]); if (cap < 0) cap = G.ctl.findIndex(k => k === me); if (cap < 0) return null;
+    const seen = new Map([[cap, 0]]), q = [cap];
+    while (q.length) { const i = q.shift(); for (const n of WD.r[i][7]) { const j = idx.get(n); if (j != null && !seen.has(j) && G.ctl[j] === me) { seen.set(j, seen.get(i) + 1); q.push(j); } } }
+    const regs = [...seen.keys()].sort((a, b) => seen.get(a) - seen.get(b) || (WD.r[b][10] || 0) - (WD.r[a][10] || 0)).slice(0, MAXREG);
+    const war = { ...HOME, a: [me] };
+    const T = build(G, WD, war, me, { regs, ctl0: Object.fromEntries(regs.map(r => [r, G.ctl[r]])), hsMax: 160, target: 500 }); if (!T) return null;
+    homeArmy(T, G, WD); return T;
+  }
+  function homeArmy(T, G, WD) {
+    const W = T.W, me = T.me, cs = WD.cs[me] || {}, live = G.C[me] ? Math.min(1.5, G.C[me].pw / G.C[me].pw0) : 1, g = cs.gen || {}, uav = (cs.tech || {}).uav || 1;
+    W.qual[0] = { hard: .8 + (g.tank || 2) * .1, org: .9 + ((g.tank || 2) - 2) * .05 + uav * .02, atk: .85 + (g.jet || 2) * .06 + uav * .03 };
+    const tanks = (cs.tanks || 0) * live, afv = ((cs.kit && cs.kit.afv && cs.kit.afv[0]) || (cs.tanks || 0) * 2.5) * live, men = (cs.act || 0) * live;
+    const a = Math.floor(tanks / 240), m = Math.floor(Math.max(0, afv - a * 110) / 220), i = Math.max(1, Math.round((men - (a + m) * 9000) / 12000));
+    const tot = a + m + i, f = tot > 70 ? 70 / tot : 1;
+    T.raw = [{ inf: i, mec: m, arm: a }, { inf: 0, mec: 0, arm: 0 }];
+    T.ob = [{ inf: Math.max(1, Math.round(i * f)), mec: Math.round(m * f), arm: Math.round(a * f), scale: 1 / f }, { inf: 0, mec: 0, arm: 0, scale: 1 }];
+    // الأماكن: المدن (أكبر أول) للمشاة، والعاصمة والحدود للدروع والآليات؛ بحد 3 فرق بالخلية
+    const N = T.cells.length, border = new Set(), idx = new Map(WD.r.map((r, j) => [r[0], j]));
+    T.cells.forEach((c, k) => { if (WD.r[c.reg][7].some(n => G.ctl[idx.get(n)] !== me)) border.add(k); });   // خلايا مناطق الحدود
+    const cities = T.cells.map((c, k) => k).filter(k => T.cells[k].vp).sort((x, y) => (T.cells[y].vp || 0) - (T.cells[x].vp || 0));
+    const capK = cities[0] ?? 0, cnt = new Uint8Array(N);
+    const near = (k, list) => list.filter(j => cnt[j] < 3).sort((x, y) => W.dist(k, x) - W.dist(k, y))[0];
+    const put = (kind, k, num) => { const d = SIM.addDiv(W, 0, kind, k, num); d.ent = 1; cnt[k]++; return d; };
+    let num = 1; const B = [...border], all = T.cells.map((c, k) => k);
+    for (let n = 0; n < T.ob[0].inf; n++) { const k = cities.length ? cities[n % cities.length] : all[n % N]; put('inf', cnt[k] < 3 ? k : near(k, all) ?? k, num++); }
+    // الدروع والآليات: بالتناوب على المدن (أكبر أول) ونقاط الحدود الموزعة (كل خامس خلية حدود)، فرقتين بالمكان بالأكثر
+    const spots = []; const Bs = B.filter((k, j) => j % 5 === 0); for (let j = 0; j < Math.max(cities.length, Bs.length); j++) { if (cities[j] != null) spots.push(cities[j]); if (Bs[j] != null) spots.push(Bs[j]); }
+    if (!spots.length) spots.push(capK); let sp = 0;
+    for (const kind of ['arm', 'mec']) for (let n = 0; n < T.ob[0][kind]; n++) { let k = spots[sp++ % spots.length]; if (cnt[k] >= 2) k = near(k, all) ?? k; put(kind, k, num++); }
+    SIM.supply(W); W.ob = [SIM.alive(W).length, 0]; SIM.intel(W);
+    T.vp0 = [0, 0]; T.aggr0 = 99; T.auto0 = false;
+  }
+  const API = { build, step, sync, score, save, restore, HOPS, airDay, home, HOME };
   if (typeof module !== 'undefined') module.exports = API; else root.THEATER = API;
 })(this);

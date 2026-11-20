@@ -10,7 +10,8 @@
   function build(T, G, WD) {
     const W = T.W, LL = (lat, lon) => [(lon - T.lon0) * T.KX, (T.lat1 - lat) * T.KY];
     const front = [0, 1].map(s => T.cells.map((c, i) => i).filter(i => W.ctrl[i] === s && W.cells[i].nb.some(j => W.ctrl[j] !== s)).map(i => W.cells[i].c));
-    const dFront = (s, p) => front[1 - s].reduce((m, f) => Math.min(m, d2(f, p)), 1e9);
+    const HOME = !front[0].length && !front[1].length;   // I-106: أرض دولتنا بالسلم (ماكو جبهة): كل القواعد والبطاريات بأماكنها
+    const dFront = (s, p) => HOME ? 100 : front[1 - s].reduce((m, f) => Math.min(m, d2(f, p)), 1e9);
     const bases = [], sams = [], mbases = [], pool = [{}, {}], info = [{ planes: 0, sams: 0, scale: 1 }, { planes: 0, sams: 0, scale: 1 }];
     for (const s of [0, 1]) {
       const orders = [];   // [base pos, name, type, n]
@@ -27,7 +28,8 @@
         if (AR) for (const [t, n] of Object.entries(AR.jets || {})) { const j = jets.find(x => x[0] === t); if (j) j[1] += n / cm; else jets.push([t, n / cm]); }
         // القواعد: المعروفة بإحداثياتها، وإلا مدن الطرف بالمسرح
         let bl = aw && aw.bases ? aw.bases.map(([n, lat, lon]) => ({ n, p: LL(lat, lon), ll: [lat, lon] })) : [];
-        if (!bl.length) bl = T.cells.filter(c => c.own === k && c.vp >= 3).slice(0, 4).map(c => ({ n: 'مطار ' + (c.city || ''), p: c.c, ll: [c.ll[1], c.ll[0]] }));
+        if (HOME) bl = bl.filter(b => T.cells.some(c => c.own === k && d2(c.c, b.p) < T.hs * 2));   // بالسلم: بس القواعد اللي بأرضنا (قواعد أمريكا بالخليج مو هنا)
+        if (!bl.length) bl = T.cells.filter(c => c.own === k && c.vp >= 3).sort((a, b) => b.vp - a.vp).slice(0, 4).map(c => ({ n: 'مطار ' + (c.city || ''), p: c.c, ll: [c.ll[1], c.ll[0]] }));
         bl = bl.filter(b => dFront(s, b.p) < REACH).sort((a, b) => dFront(s, a.p) - dFront(s, b.p)).slice(0, 6);
         if (!bl.length) continue;
         let bi = 0;

@@ -23,4 +23,14 @@ for (const [me, war] of [['UKR', 'ukraine'], ['RUS', 'ukraine'], ['IRQ', null], 
   if (Array.from(T.W.ctrl).join() !== Array.from(T2.W.ctrl).join()) no(`${me}: الحفظ/التحميل غيّر المسرح`);
   out.push(`${me} (${w.n}): طرق ${T.nRoads} حد، أنهار ${T.nRiv}، جسور ${T.nBr} · ${T.cells.length} خلية ${Math.round(T.hs)} كم من ${T.regs.length} منطقة · فرق ${T.ob[0].inf + T.ob[0].mec + T.ob[0].arm} ضد ${T.ob[1].inf + T.ob[1].mec + T.ob[1].arm} · بناء ${bt}ms · شهر ${run}ms · خلايا ${sc.cells.join('/')} · مناطق تغيرت ${ch.length} · استسلام ${sc.lost.join('/')} ${sc.over ? '· نهاية ' + JSON.stringify(sc.over) : ''}`);
 }
+// I-106: أرض الدولة وجيشها بالسلم (TH.home): تنبني لكل حجم، الفرق موجودة، والحفظ يرجع نفس الأماكن
+for (const me of ['IRQ', 'USA', 'LBN', 'DEU', 'BRA']) {
+  const G = S.init(WD, me, { seed: 3 }), T = TH.home(G, WD, me); if (!T) { no(me + ': أرض السلم ما انبنت'); continue; }
+  const A = SIM.alive(T.W); if (!A.length || A.some(d => d.side !== 0)) no(me + ': فرق السلم غلط');
+  if (T.cells.length > 700) no(me + ': خلايا كثيرة ' + T.cells.length);
+  const d = A[0], to = T.cells.findIndex((c, i) => i !== d.cell && T.W.dist(i, d.cell) > 100); SIM.order(T.W, d, to, 'manual'); TH.step(T, 48);
+  const o = JSON.parse(JSON.stringify(TH.save(T))), T2 = TH.restore(o, G, WD, { ...TH.HOME, a: [me] }, me);
+  if (!T2 || SIM.alive(T2.W).map(x => x.cell).join() !== SIM.alive(T.W).map(x => x.cell).join()) no(me + ': حفظ السلم ما رجّع الأماكن');
+  out.push(`${me} بالسلم: ${T.cells.length} خلية ${Math.round(T.hs)} كم · ${A.length} فرقة (${JSON.stringify(T.ob[0])})`);
+}
 console.log(out.join('\n')); console.log(bad ? `\n❌ ${bad} مشكلة` : '\n✅ المسرح سليم'); process.exit(bad ? 1 : 0);

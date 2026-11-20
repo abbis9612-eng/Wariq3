@@ -271,7 +271,7 @@ input[type=range]{width:100%;accent-color:var(--gold)}
   <div id="clist"></div>
   <div id="pick" hidden></div>
 </div>
-<div id="tabs" hidden><button data-p="me"><i>🏛</i>دولتي</button><button data-p="dip"><i>🤝</i>الدبلوماسية</button><button data-p="war"><i>⚔</i>الحروب</button><button data-p="world"><i>🌍</i>العالم</button><button data-p="news"><i>📜</i>الأخبار</button></div>
+<div id="tabs" hidden><button data-p="me"><i>🏛</i>دولتي</button><button data-p="army"><i>🪖</i>الجيش</button><button data-p="dip"><i>🤝</i>الدبلوماسية</button><button data-p="war"><i>⚔</i>الحروب</button><button data-p="world"><i>🌍</i>العالم</button><button data-p="news"><i>📜</i>الأخبار</button></div>
 <div id="sheet" hidden></div>
 <div id="toast"></div>
 <div id="bv" hidden><canvas id="bvc"></canvas>
@@ -307,7 +307,8 @@ input[type=range]{width:100%;accent-color:var(--gold)}
 (function () {
   const S = window.WSIM, KEY = 'wariq.world.v1';
   let PLAN = null;
-  let G = null, speed = 0, acc = 0, lastT = 0, panel = null, sp = null, tier = '', T = null, selD = null;
+  let G = null, speed = 0, acc = 0, lastT = 0, panel = null, sp = null, tier = '', T = null, selD = null, HT = null;
+  const VT = () => T || HT;   // I-106: المسرح المعروض = جبهة الحرب، وإلا أرضنا وجيشنا بالسلم
   const TH = window.THEATER, SM = window.SIM, AWLD = window.AIRWORLD, NT = window.NATION, WDP = window.WARDIP;
   let MED = null;
   let meSub = 'eco';
@@ -369,6 +370,7 @@ input[type=range]{width:100%;accent-color:var(--gold)}
     if (!$('#bar')) { const b = document.createElement('div'); b.id = 'bar'; $('#top').append(b); }
     if (!G.nat) NT.init(G, WD); else NT.catalog(G, WD);   // D-050: الداخل والبحث والإنتاج من «الحرب الكبرى»
     if (G.th) { const w = G.wars.find(x => x.id === G.th.war); T = w ? TH.restore(G.th, G, WD, w, me) : null; if (T) { w.detail = true; T.arms = G.th.arms || null; T.A = AWLD.restore(AWLD.build(T, G, WD), G.th.airR); WDP.setup(G, WD, S, T); viewInit(); } }
+    if (!T && G.home) homeBuild(G.home);
     theater(); syncMap(); setMode('pol'); bar(); sel = null; card();
     ADVL = NT.advice(G, WD, { SIM: SM, T }); meDot();
     const cap = R.find(r => r.ctl === me && r.cap) || R.find(r => r.ctl === me); if (cap) { cam.x = MX(cap.ll[0]); cam.y = MY(cap.ll[1]); cam.s = Math.max(cam.s, 900); }
@@ -389,17 +391,27 @@ input[type=range]{width:100%;accent-color:var(--gold)}
     requestAnimationFrame(tick);
   }
   // ===== W5: مسرح الحرب =====
-  function save() { G.th = T ? { ...TH.save(T), airR: T.A ? AWLD.save(T.A) : null, arms: T.arms || null } : null; return store.set(S.save(G)); }
+  function save() { G.th = T ? { ...TH.save(T), airR: T.A ? AWLD.save(T.A) : null, arms: T.arms || null } : null; G.home = HT ? TH.save(HT) : null; return store.set(S.save(G)); }
   function myWar() { return G.wars.find(w => w.a.includes(me) || w.b.includes(me)); }
   function theater() {
     if (T && !G.wars.some(w => w.id === T.war)) { T = null; selD = null; }
     if (T) return;
     for (const w of G.wars) { if (!(w.a.includes(me) || w.b.includes(me)) || w.noLand) continue;
       const t = TH.build(G, WD, w, me); if (!t) { w.noLand = true; continue; }
-      T = t; w.detail = true; T.vp0 = TH.score(T).vp.slice(); T.aggr0 = 1.6; T.arms = G.nat && G.nat.arms ? JSON.parse(JSON.stringify(G.nat.arms)) : null; T.A = AWLD.build(T, G, WD); WDP.setup(G, WD, S, T); viewInit();
+      T = t; HT = null; w.detail = true; T.vp0 = TH.score(T).vp.slice(); T.aggr0 = 1.6; T.arms = G.nat && G.nat.arms ? JSON.parse(JSON.stringify(G.nat.arms)) : null; T.A = AWLD.build(T, G, WD); WDP.setup(G, WD, S, T); viewInit();
       toast(`🗺 ${w.n}: الجبهة انقسمت لـ${T.cells.length} خلية، و${SM.alive(T.W).filter(d => d.side === 0).length} فرقة إلنا ضد ${SM.alive(T.W).filter(d => d.side === 1).length}`, 'bad');
       const c = T.cells[Math.floor(T.cells.length / 2)]; cam.x = MX(c.ll[0]); cam.y = MY(c.ll[1]); cam.s = Math.max(cam.s, 1400); speed = 0; bar(); break; }
+    if (!T && !HT) homeBuild();
   }
+  // I-106: «جيشك من أول يوم» — أرض دولتنا بخلايا «الحرب الكبرى» وفرقنا وقواعدنا وبطارياتنا بالسلم (theater.js home)
+  function homeBuild(saved) {
+    const war = { ...TH.HOME, a: [me] };
+    if (saved && saved.regs && saved.regs.every(r => G.ctl[r] === me)) HT = TH.restore(saved, G, WD, war, me);
+    if (!HT) HT = TH.home(G, WD, me); if (!HT) return;
+    HT.arms = G.nat && G.nat.arms ? JSON.parse(JSON.stringify(G.nat.arms)) : null; HT.A = AWLD.build(HT, G, WD); viewInit();
+  }
+  // فرقة جديدة من 🏭 الإنتاج بالسلم: تطلع بالعاصمة (أكبر مدينة)
+  function homeAddDiv(kind) { if (!HT) return; const W = HT.W, k = HT.cells.reduce((b, c, i) => (c.vp || 0) > (HT.cells[b].vp || 0) ? i : b, 0), num = 1 + SM.alive(W).reduce((m, d) => Math.max(m, d.num || 0), 0); const d = SM.addDiv(W, 0, kind, k, num); d.org = d.orgMax * .6; }
   // نهاية يوم بالمسرح: السيطرة ترجع للخريطة، سير الحرب، والاستسلام
   function theaterDay() {
     const ch = TH.sync(T, G, WD), w = G.wars.find(x => x.id === T.war);
@@ -416,6 +428,7 @@ input[type=range]{width:100%;accent-color:var(--gold)}
   function advance(n) {
     for (let d = 0; d < n && !G.over; d++) {
       if (T) { TH.step(T, 24); theaterDay(); }
+      else if (HT && SM.alive(HT.W).some(d => d.path.length)) TH.step(HT, 24);   // بالسلم الفرق تتحرك بس إذا أمرتها
       const b = G.log.length; S.step(G, WD, 1); natDay(b);
       theater();
     }
@@ -427,7 +440,7 @@ input[type=range]{width:100%;accent-color:var(--gold)}
     for (const l of NW.log.slice(NW.log.indexOf(last) + 1)) { if (l.side === 1) continue;
       if (l.k === 'home' && l.a === 'issue') { toast(`🏛 قضية: ${HOME.ISS[l.i].t}`, 'bad'); if (speed > 1) { speed = 1; bar(); } }
       else if (l.k === 'home' && l.a === 'auto') toast(`🏛 المستشارين حلّوا «${HOME.ISS[l.i].t}» لحالهم`);
-      else if (l.k === 'built' && ECON.ITEMS[l.it]) toast(`🏭 وصل: ${ECON.ITEMS[l.it].n}`, 'good');
+      else if (l.k === 'built' && ECON.ITEMS[l.it]) { toast(`🏭 وصل: ${ECON.ITEMS[l.it].n}`, 'good'); const it = ECON.ITEMS[l.it]; if (!T && it.cat === 'div') homeAddDiv(it.kind || l.it); }
       else if (l.k === 'tech') toast(`🔬 البحث: ${IND.BR[l.b].n} وصل مستوى ${l.l}`, 'good');
       else if (l.k === 'mega') toast(`🏗 خلص المشروع: ${IND.MEGA[l.m].n}`, 'good');
       else if (l.k === 'sec') toast(`🏗 قطاع ${IND.SEC[l.sec].n} وصل مستوى ${l.l}`, 'good');
@@ -512,11 +525,12 @@ input[type=range]{width:100%;accent-color:var(--gold)}
   const BOOMS = [];   // انفجارات قصيرة للرسم
   // ربط رسم «الحرب الكبرى» بخريطة العالم: كاميرا بالكيلومتر (بكسل لكل كم، ومركز الشاشة بإحداثيات المسرح)
   function viewInit() {
+    const T = VT();
     if (!T || !T.A || !window.VIEW) return; loadImgs();
     const K = (x, y) => toS(MX(T.lon0 + x / T.KX), MY(T.lat1 - y / T.KY));
     const CAMK = { get s() { return Math.abs(K(100, 0)[0] - K(0, 0)[0]) / 100; }, get x() { return (cam.x * 180 / Math.PI - T.lon0) * T.KX; }, get y() { return (T.lat1 - (2 * Math.atan(Math.exp(-cam.y)) - Math.PI / 2) * 180 / Math.PI) * T.KY; } };
     VIEW.init({ g: cx, cam: CAMK, w2s: K, IMG, WD: T.W, cells: T.W.cells, A: T.A, text: ctext }); FX.init({ g: cx, cam: CAMK, w2s: K, IMG });
-    VIEW.foe = nameOf(T.side[1][0]); VIEW.foeAdj = 'المعادية'; VIEW.foeAdj2 = 'معادية'; VIEW.harmBy = 'طيارتنا'; VIEW.sndBase = location.protocol === 'file:' ? '../grandwar/sounds/' : 'sounds/';
+    VIEW.foe = T.side[1][0] ? nameOf(T.side[1][0]) : 'العدو'; VIEW.foeAdj = 'المعادية'; VIEW.foeAdj2 = 'معادية'; VIEW.harmBy = 'طيارتنا'; VIEW.sndBase = location.protocol === 'file:' ? '../grandwar/sounds/' : 'sounds/';
     T.vInit = 1;
   }
   function ctext(str, x, y, size, col = '#2a2118', halo = 'rgba(255,250,235,.85)', weight = 600) {
@@ -535,6 +549,7 @@ input[type=range]{width:100%;accent-color:var(--gold)}
   // الرسم فوك الخريطة: الخلايا (لما نقرّب)، والفرق، والمعارك
   const KS = { inf: '✕', mec: '⊗', arm: '⬭' };
   function overlay(cx, far) {
+    const T = VT();
     if (!T || cam.s < 600) return; const W = T.W, me0 = css('--me'), en = css('--neg');
     const r = Math.abs(toS(MX(T.lon0 + T.hs / T.KX), 0)[0] - toS(MX(T.lon0), 0)[0]) / 2;
     if (r > 3) { cx.lineWidth = .6;
@@ -583,9 +598,10 @@ input[type=range]{width:100%;accent-color:var(--gold)}
       if (s === 0) for (const d of L) if (d.path.length) { const tc = T.cells[d.path[d.path.length - 1]], [tx, ty] = toS(MX(tc.ll[0]), MY(tc.ll[1])); cx.beginPath(); cx.moveTo(x, y); cx.lineTo(tx, ty); cx.strokeStyle = 'rgba(255,209,102,.7)'; cx.lineWidth = 1.5; cx.stroke(); } }
   }
   const W0 = () => innerWidth, H0 = () => innerHeight;
-  function cellAt(sx, sy) { if (!T) return -1; let best = -1, bd = 1e9; const r = Math.abs(toS(MX(T.lon0 + T.hs / T.KX), 0)[0] - toS(MX(T.lon0), 0)[0]) / 2;
+  function cellAt(sx, sy) { const T = VT(); if (!T) return -1; let best = -1, bd = 1e9; const r = Math.abs(toS(MX(T.lon0 + T.hs / T.KX), 0)[0] - toS(MX(T.lon0), 0)[0]) / 2;
     T.cells.forEach((c, i) => { const [x, y] = toS(MX(c.ll[0]), MY(c.ll[1])), d = (x - sx) ** 2 + (y - sy) ** 2; if (d < bd) { bd = d; best = i; } }); return bd < Math.max(14, r * 1.2) ** 2 ? best : -1; }
   function tapTheater(sx, sy) {
+    const T = VT();
     if (!T || cam.s < 600) return false; const i = cellAt(sx, sy); if (i < 0) return false; const W = T.W;
     const mine = W.divs.filter(d => !d.dead && d.side === 0 && d.cell === i);
     if (PLAN) { if (PLAN[PLAN.length - 1] !== i) PLAN.push(i); divBar(); return true; }   // نرسم السهم خلية خلية
@@ -597,6 +613,7 @@ input[type=range]{width:100%;accent-color:var(--gold)}
     selD = null; divBar(); return false;
   }
   function divBar() {
+    const T = VT();
     let el = $('#divbar'); if (!el) { el = document.createElement('div'); el.id = 'divbar'; document.body.append(el); }
     if (!selD || !selD.length) { el.hidden = true; return; }
     const L = selD.filter(d => !d.dead);
@@ -682,7 +699,7 @@ input[type=range]{width:100%;accent-color:var(--gold)}
   function openPanel(p, refresh) {
     const sh = $('#sheet'), keep = refresh ? sh.scrollTop : 0; panel = p; sel = null; $('#card').hidden = true;
     $('#tabs').querySelectorAll('button').forEach(x => x.classList.toggle('on', x.dataset.p === p));
-    sh.innerHTML = ({ me: pMe, dip: pDip, war: pWar, world: pWorld, news: pNews })[p]() ; sh.hidden = false; sh.scrollTop = keep;
+    sh.innerHTML = ({ me: pMe, army: pArmy, dip: pDip, war: pWar, world: pWorld, news: pNews })[p]() ; sh.hidden = false; sh.scrollTop = keep;
     const x = document.createElement('button'); x.className = 'x'; x.textContent = '✕'; x.setAttribute('aria-label', 'سدّ'); x.onclick = closePanel; sh.querySelector('h2').append(x);
     wire(sh);
   }
@@ -761,6 +778,34 @@ input[type=range]{width:100%;accent-color:var(--gold)}
     h += G.mkt.offers.map((o, i) => `<div class="st" style="margin:6px 0"><b>${nameOf(o.from)}</b> تريد تشتري ${o.kind === 'nat' ? 'سلاحنا الوطني' : M.EXP[o.kind]} بـ${o.v} مليار${G.wars.some(w => w.a.includes(o.from) || w.b.includes(o.from)) ? ' <span class="neg">(بحرب: أعداءها يزعلون)</span>' : ''}<div class="seg"><button data-exp="${i}:1">✔ نبيع</button><button data-exp="${i}:0">✕ نرفض</button></div></div>`).join('');
     for (const x of M.sellers(G)) { if (x === me) continue; const L = M.SELL[x];
       h += `<h3>${nameOf(x)} <small class="note">علاقتنا ${M.eff(G, S, x)}${S.allied(G, x, me) ? ' (حلفاء +35)' : ''}</small></h3><div class="acts">${L.map(p => { const no = M.can(G, S, x, p); return `<button data-buyx="${x}:${p.k}" ${no ? 'disabled' : ''}>${p.n}<small>${p.price} مليار · ${Math.round(p.days / 30)} شهر${p.ally ? ' · للحلفاء' : ''}${p.rival ? ' · ' + nameOf(p.rival) + ' تزعل' : ''}${no ? ' · ❌ ' + no : ''}</small></button>`; }).join('')}</div>`; }
+    return h;
+  }
+  // ===== I-106: 🪖 الجيش — كل جيشنا بالصور (نفس صور «الحرب الكبرى»)، والفرق والقواعد والبطاريات اللي على الخريطة =====
+  const WESTSAM = /^(pac|nasams|thaad|sampt|irist|hawk|idome|arrow|dsling|barak8|cheong|crotale|akash)$/;
+  const imgOf = n => `<img src="${IMGB}${n}.webp" alt="" style="width:46px;height:34px;object-fit:contain;flex:none" onerror="this.style.visibility='hidden'">`;
+  const planeImg = t => imgOf((AIR.PLANES[t] && AIR.PLANES[t].spr) || (['f16', 'su25', 'f14'].includes(t) ? t : 'f16'));
+  function pArmy() {
+    const V = VT(), cs = CS[me] || {}, c = G.C[me], kit = cs.kit || {}, K = k => (kit[k] || [0, []]);
+    let h = `<h2>🪖 جيش ${CS[me].ar}</h2>`;
+    const st = (i, v) => `<div class="st"><i>${i}</i><b>${v}</b></div>`;
+    h += `<div class="grid">${st('أفراد عاملين', fmt(cs.act || 0))}${st('احتياط', fmt(cs.res || 0))}${st('دبابات', fmt(cs.tanks || K('tank')[0]))}${st('مدرعات', fmt(K('afv')[0]))}${st('مدفعية', fmt(K('art')[0]))}${st('طائرات قتال', fmt(cs.air || K('jet')[0]))}${st('مروحيات', fmt(cs.heli || K('heli')[0]))}${st('سفن / غواصات', fmt(cs.ships || 0) + ' / ' + fmt(cs.subs || 0))}${st('صواريخ بعيدة', fmt(Math.floor(c.msl || 0)))}${st('مسيّرات هجومية', fmt(Math.floor(c.drn || 0)))}${st('قوة الجيش (تقدير)', Math.round(c.pw))}${st('ميزانية الجيش', c.milPct.toFixed(1) + '٪ من الناتج')}</div>`;
+    if (!V) return h + '<div class="note">أرضنا ما انقسمت خلايا (ماكو عاصمة؟)</div>';
+    const war = !!T, A = V.A, W = V.W, my = SM.alive(W).filter(d => d.side === 0), kinds = { arm: my.filter(d => d.kind === 'arm'), mec: my.filter(d => d.kind === 'mec'), inf: my.filter(d => d.kind === 'inf') };
+    h += `<div class="row" style="margin:8px 0"><button class="big" id="armyMap">🗺 شوف الجيش على الخريطة</button></div><div class="note">${war ? '⚔ بالحرب: هذا جيشنا بالجبهة.' : 'بالسلم: أرضنا مقسومة خلايا مثل «الحرب الكبرى». قرّب الخريطة: ⬭ مدرعة، ⊗ آلية، ✕ مشاة؛ ✈ مطاراتنا بطياراتها، ◆ بطاريات الدفاع الجوي ودائرة مداها. اضغط فرقة وبعدين خلية حتى تتحرك. لما تصير حرب، الجبهة تنبني من نفس الجيش.'}</div>`;
+    const sc = (V.ob && V.ob[0] && V.ob[0].scale) || 1;
+    h += `<h3>القوات البرية: ${my.length} فرقة${sc > 1.05 ? ` <small class="note">(كل فرقة بالخريطة ≈ ${sc.toFixed(1)} فرقة حقيقية)</small>` : ''}</h3>`;
+    const row = (img, t, n, d) => `<div style="display:flex;gap:8px;align-items:center;margin:5px 0">${img}<div style="flex:1"><b>${t}</b> <span class="note">${d || ''}</span></div><b>${n}</b></div>`;
+    h += row(imgOf(tankOf(me)), 'فرق مدرعة', kinds.arm.length, (K('tank')[1] || []).slice(0, 2).join('، '));
+    h += row(imgOf('bmp'), 'فرق آلية', kinds.mec.length, (K('afv')[1] || []).slice(0, 2).join('، '));
+    h += row(imgOf('truck'), 'فرق مشاة', kinds.inf.length, '');
+    h += row(imgOf('grad'), 'مدفعية', fmt(K('art')[0]), (K('art')[1] || []).slice(0, 2).join('، '));
+    h += `<div class="note" style="margin-top:4px">${my.slice(0, 40).map(d => { const cl = V.cells[d.cell]; return `<button class="pill" data-div="${d.id}">${KS[d.kind]} ${d.n.replace('الفرقة ', '')} · ${cl.city || byId.get(WD.r[cl.reg][0])?.n || ''} · ${Math.round(d.str * 100)}٪</button>`; }).join(' ')}${my.length > 40 ? ' …' : ''}</div>`;
+    if (A) { const bs = A.bases.filter(b => b.side === 0), sm = A.sams.filter(x => x.side === 0);
+      h += `<h3>✈ القوة الجوية: ${bs.reduce((t, b) => t + b.n0, 0)} طيارة بـ${new Set(bs.map(b => b.ll.join())).size} مطار</h3>` + bs.map(b => row(planeImg(b.type), (AIR.PLANES[b.type] || {}).n || b.type, b.n0, b.n)).join('');
+      const g = {}; for (const x of sm) g[x.sys] = (g[x.sys] || 0) + 1;
+      h += `<h3>🚀 الدفاع الجوي: ${sm.length} بطارية</h3>` + Object.entries(g).map(([k, n]) => row(imgOf(WESTSAM.test(k) ? 'patriot' : 's400'), (AIR.SYS[k] || {}).full || (AIR.SYS[k] || {}).n || k, n, [...new Set(sm.filter(x => x.sys === k).map(x => x.n.split('—')[1] || ''))].slice(0, 3).join('، '))).join('');
+      if ((cs.ships || 0) + (cs.subs || 0)) h += `<h3>⚓ البحرية</h3>` + row('<span style="font-size:28px;width:46px;text-align:center">🚢</span>', 'سفن', fmt(cs.ships || 0), (K('navy')[1] || []).slice(0, 2).join('، ')) + row('<span style="font-size:28px;width:46px;text-align:center">🛥</span>', 'غواصات', fmt(cs.subs || 0), '') + `<div class="note">قوة البحرية ${Math.round(c.nav)} (بالحرب: حصار سواحل العدو أو حماية سواحلنا من ⚔ الحروب)</div>`; }
+    h += `<div class="note" style="margin-top:6px">تشتري فرق وطيارات وصواريخ من 🏛 دولتي ← 🏭 الإنتاج، وسلاح جديد من 🛒 سوق السلاح.</div>`;
     return h;
   }
   function relList() { const m = G.rel[me] || {}; return Object.keys(m).filter(k => CS[k]).sort((a, b) => m[b] - m[a]); }
@@ -863,6 +908,8 @@ input[type=range]{width:100%;accent-color:var(--gold)}
     root.querySelectorAll('[data-buyx]').forEach(b => b.onclick = () => { const [x, k] = b.dataset.buyx.split(':'), r = WMKT.buy(G, WD, S, x, k); if (typeof r === 'string') toast('❌ ' + r, 'bad'); else toast(msg(G.log[G.log.length - 1])[0], 'good'); bar(); openPanel('me', true); save(); });
     root.querySelectorAll('[data-exp]').forEach(b => b.onclick = () => { const [i, y] = b.dataset.exp.split(':').map(Number), r = WMKT.answer(G, WD, S, i, !!y); if (r) toast('📦 ' + r, y ? 'good' : ''); bar(); openPanel('me', true); save(); });
     const eg = root.querySelector('#expG'); if (eg) eg.onclick = exportSave; const ig = root.querySelector('#impG'); if (ig) ig.onclick = () => $('#impF').click();
+    const am = root.querySelector('#armyMap'); if (am) am.onclick = () => { const V = VT(); if (!V) return; closePanel(); const k = V.cells.reduce((b, c, i) => (c.vp || 0) > (V.cells[b].vp || 0) ? i : b, 0), c = V.cells[k]; cam.x = MX(c.ll[0]); cam.y = MY(c.ll[1]); cam.s = Math.max(cam.s, 1600); dirty = true; };
+    root.querySelectorAll('[data-div]').forEach(b => b.onclick = () => { const V = VT(), d = V && V.W.divs.find(x => x.id === +b.dataset.div); if (!d) return; closePanel(); const c = V.cells[d.cell]; cam.x = MX(c.ll[0]); cam.y = MY(c.ll[1]); cam.s = Math.max(cam.s, 2200); selD = [d]; divBar(); dirty = true; });
     root.querySelectorAll('[data-adv]').forEach(b => b.onclick = () => { const a = (ADVL[+b.dataset.adv] || {}).a || '';
       if (a === 'prod') { meSub = 'prod'; openPanel('me'); } else if (a === 'eco:home') { meSub = 'home'; openPanel('me'); } else if (a.startsWith('eco')) { meSub = 'eco'; openPanel('me'); }
       else if (a === 'dip:ctry') openPanel('dip'); else if (a.startsWith('dip') || a === 'ev') openPanel('war');
@@ -923,7 +970,7 @@ input[type=range]{width:100%;accent-color:var(--gold)}
     if (PLAN) { PLAN = null; divBar(); } else if (selD) { selD = null; divBar(); } else if (panel) closePanel(); else if (!$('#card').hidden) { $('#card').hidden = true; sel = null; dirty = true; } else used = false;
     if (used || Date.now() - backT > 2000) { if (!used) { backT = Date.now(); toast('اضغط رجوع مرة ثانية حتى تطلع (اللعبة محفوظة)'); save(); } backTrap(); } else { save(); history.back(); }
   });
-  window.__G = { get G() { return G; }, get T() { return T; }, begin, step: n => { const m0 = G.log.length, t0 = G.t; advance(n); after(m0, t0); }, openPanel, tapTheater };
+  window.__G = { get G() { return G; }, get T() { return T; }, get HT() { return HT; }, begin, step: n => { const m0 = G.log.length, t0 = G.t; advance(n); after(m0, t0); }, openPanel, tapTheater };
   // ===== GW9: تطبيق بدون نت (service worker من tools/app/build.mjs) =====
   if ('serviceWorker' in navigator && /^https?:$/.test(location.protocol) && document.querySelector('link[rel=manifest]')) {
     fetch('version.txt', { cache: 'no-store' }).catch(() => caches.match('version.txt')).then(r => { if (!r || !r.ok) return;   // version.txt موجود بس بنسخة التطبيق (app/)

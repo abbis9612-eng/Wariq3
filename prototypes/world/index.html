@@ -101,6 +101,7 @@ for (const r of R) for (const n of r.nb) { const o = byId.get(n); if (o && r.id 
 let W = 0, H = 0, DPR = 1, cam = { x: MX(30), y: MY(25), s: 1 }, mode = 'pol', sel = null, me = null;
 function resize() { DPR = Math.min(2, window.devicePixelRatio || 1); W = innerWidth; H = innerHeight; cv.width = W * DPR; cv.height = H * DPR; dirty = true; }
 const home = () => { cam.x = MX(20); cam.y = MY(28); cam.s = Math.min(W / (2 * Math.PI) * 1.05, H / 3.6); dirty = true; };
+window.EL = n => (n || '').replace(/^ال/, '').replace(/^جمهورية |^مملكة |^دولة /, '').trim().charAt(0);   // I-107: حرف الشعار (بدون «ال»)
 window.__cam = (ll, s) => { cam.x = MX(ll[0]); cam.y = MY(ll[1]); cam.s = s; dirty = true; };   // للفحص والأزرار
 const toS = (x, y) => [(x - cam.x) * cam.s + W / 2, (y - cam.y) * cam.s + H / 2], toW = (sx, sy) => [(sx - W / 2) / cam.s + cam.x, (sy - H / 2) / cam.s + cam.y];
 const vis = bb => { const [a, b] = toS(bb[0], bb[1]), [c, d] = toS(bb[2], bb[3]); return c >= 0 && a <= W && d >= 0 && b <= H; };
@@ -276,6 +277,19 @@ body.play #modes{display:none}body.play.layers #modes{display:flex;flex-directio
 #toast div{animation:tin .3s cubic-bezier(.2,.8,.2,1);border-inline-start:4px solid var(--gold);font-weight:600;box-shadow:0 6px 18px rgba(0,0,0,.2)}#toast div.bad{border-inline-start-color:var(--neg)}#toast div.good{border-inline-start-color:var(--me)}
 @keyframes tin{from{transform:translateY(-14px);opacity:0}}
 @media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+.vs{background:linear-gradient(135deg,rgba(63,122,56,.14),rgba(163,56,42,.14));border:1px solid var(--line);border-radius:14px;padding:10px;margin:6px 0}
+.vsh{display:flex;align-items:center;gap:7px;justify-content:center;font-size:15px;margin-bottom:6px}.vsh i{font-style:normal;color:var(--dim);font-size:12px;padding:0 6px}
+.vsb{margin:7px 0}.vsl{display:flex;justify-content:space-between;font-size:12px;align-items:baseline}.vsl span{color:var(--dim)}
+.vsr{height:9px;border-radius:5px;background:linear-gradient(90deg,#b8442f,#7a2a20);overflow:hidden;margin-top:3px;box-shadow:inset 0 1px 2px rgba(0,0,0,.3);direction:rtl}.vsr u{display:block;height:100%;background:linear-gradient(90deg,#3f7a38,#6fb35f);transition:width .5s}
+#start{background:radial-gradient(120% 60% at 50% 0%,rgba(224,181,88,.18),transparent 60%),var(--bg)}
+.hero{display:flex;align-items:center;gap:12px;margin-bottom:6px}.hero img{width:64px;height:64px;border-radius:16px;box-shadow:0 6px 18px rgba(0,0,0,.3);animation:pop .5s}.hero h1{font-size:22px}.hero b{color:var(--gold);font-size:13px}
+.sth{font-size:14px;color:var(--gold);margin:12px 0 4px}
+#feat{display:grid;grid-template-columns:1fr 1fr;gap:8px}.fc{display:flex;flex-direction:column;gap:2px}.fc small{color:var(--dim);font-size:11px;padding:0 4px}
+#feat>div,.cc{min-width:0}.cc{overflow:hidden;width:100%;display:flex;align-items:center;gap:8px;text-align:right;padding:8px;border-radius:12px;position:relative;background:linear-gradient(180deg,var(--chip2),var(--chip))}.cc.sel{border-color:var(--gold);box-shadow:0 0 0 2px var(--gold-l)}
+.cc .ct{display:flex;flex-direction:column;min-width:0}.cc small{color:var(--dim);font-size:11px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.cc.big2 .emb{width:36px;height:36px;font-size:17px}.cc.big2 b{font-size:15px}
+.wb,.nb{position:absolute;top:4px;left:6px;font-style:normal;font-size:12px}.wb{color:var(--neg)}.nb{left:24px}
+#clist button{text-align:right}
 /* مشهد المعركة 1:1 (نفس «الحرب الكبرى») */
 #bv{position:fixed;inset:0;z-index:20;background:#6d6050}#bv[hidden]{display:none}#bvc{position:absolute;inset:0;width:100%;height:100%;touch-action:none}
 #bvTop{position:absolute;top:0;left:0;right:0;background:linear-gradient(rgba(20,18,15,.88),rgba(20,18,15,.7));padding:calc(6px + env(safe-area-inset-top)) 10px 7px;font-size:12px}
@@ -297,11 +311,13 @@ body.play #modes{display:none}body.play.layers #modes{display:flex;flex-directio
 .big{background:var(--gold);color:#1b2019;border:0;font-weight:700;padding:9px 16px;border-radius:12px}
 </style>
 <div id="start">
-  <h1>العالم · تشرين الثاني 2026</h1>
+  <div class="hero"><img src="icons/icon-192.png" alt="" onerror="this.remove()"><div><h1>الحرب العالمية الثالثة</h1><b>العالم · تشرين الثاني 2026</b></div></div>
   <p>اختار أي دولة. العالم يبدي من وضعه الحقيقي هسه: الحروب الجارية، والتحالفات، والعقوبات. إنت تقرر: تبني اقتصادك، تكسب حلفاء، أو تدخل حرب.</p>
   <div id="cont" hidden><button class="big" id="contBtn">كمّل اللعبة المحفوظة</button> <small id="contInfo"></small></div>
   <div class="row" style="margin:6px 0"><button id="exp0" hidden>📤 صدّر الحفظ لملف</button><button id="imp0">📥 افتح حفظ من ملف</button><input id="impF" type="file" accept=".json,application/json" hidden></div>
-  <input id="q" type="search" placeholder="ابحث عن دولة…" autocomplete="off">
+  <h3 class="sth">⚡ ابدأ بسرعة</h3><div id="feat"></div>
+  <h3 class="sth">🌍 كل الدول (157)</h3>
+  <input id="q" type="search" placeholder="🔍 ابحث عن دولة…" autocomplete="off">
   <div class="seg" id="tiers"><button data-t="" class="on">الكل</button><button data-t="A">الكبار</button><button data-t="B">المتوسطة</button><button data-t="C">الصغيرة</button></div>
   <div id="clist"></div>
   <div id="pick" hidden></div>
@@ -375,10 +391,14 @@ body.play #modes{display:none}body.play.layers #modes{display:flex;flex-directio
   const sgn = (v, d = 1) => (v > 0 ? '+' : '') + v.toFixed(d);
   // ===== شاشة البداية =====
   const ids = Object.keys(CS).sort((a, b) => (CS[b].gdp || 0) - (CS[a].gdp || 0));
+  // I-107: بطاقة دولة بشعار لونها، والحرب بشارة حمرا، والحجم
+  const ccard = (id, big) => { const c = CS[id], war = (c.war && c.war.length) || (c.conf && c.conf.length); return `<button data-c="${id}" class="cc ${sp === id ? 'sel' : ''} ${big ? 'big2' : ''}"><span class="emb" style="background:${colPol(id)}">${EL(c.ar)}</span><span class="ct"><b>${c.ar}</b><small>💰 ${money(c.gdp)} · 🪖 ${fmt(c.act)}</small></span>${war ? '<i class="wb">⚔</i>' : ''}${c.nuke ? '<i class="nb">☢</i>' : ''}</button>`; };
+  const FEAT = [['IRQ', 'بلدنا: نفط، فصائل، وجيران أقوياء'], ['UKR', 'بحرب: الجبهة جاهزة من أول يوم'], ['IRN', 'بحرب ويا أمريكا وإسرائيل'], ['USA', 'أقوى جيش واقتصاد'], ['TUR', 'بين أوروبا والشرق الأوسط'], ['SAU', 'نفط ومجلس التعاون']];
+  function feat() { $('#feat').innerHTML = FEAT.filter(([id]) => CS[id]).map(([id, d]) => `<div class="fc">${ccard(id, 1)}<small>${d}</small></div>`).join(''); $('#feat').querySelectorAll('button').forEach(b => b.onclick = () => choose(b.dataset.c)); }
   function list() {
     const q = $('#q').value.trim();
     $('#clist').innerHTML = ids.filter(id => (!tier || CS[id].tier === tier) && (!q || CS[id].ar.includes(q) || CS[id].en.toLowerCase().includes(q.toLowerCase())))
-      .map(id => `<button data-c="${id}" class="${sp === id ? 'sel' : ''}"><b>${CS[id].ar}</b><small>${money(CS[id].gdp)} · جيش ${fmt(CS[id].act)}${CS[id].war && CS[id].war.length ? ' · ⚔ بحرب' : ''}</small></button>`).join('');
+      .map(id => ccard(id)).join('');
     $('#clist').querySelectorAll('button').forEach(b => b.onclick = () => choose(b.dataset.c));
   }
   function choose(id) {
@@ -396,7 +416,7 @@ body.play #modes{display:none}body.play.layers #modes{display:flex;flex-directio
   $('#imp0').onclick = () => $('#impF').click(); $('#impF').onchange = e => { if (e.target.files[0]) importSave(e.target.files[0]); e.target.value = ''; };
   $('#exp0').onclick = exportSave;
   if (saved) { try { const o = JSON.parse(saved); $('#cont').hidden = false; $('#exp0').hidden = false; $('#contInfo').textContent = `${CS[o.me].ar} · ${ar(S.date(o.t))}`; $('#contBtn').onclick = () => { const w = S.load(o, WD); if (w) begin(w); }; } catch (e) { } }
-  list();
+  list(); feat();
   // ===== بداية اللعب =====
   function begin(w) {
     G = w; me = G.me; window.GAME = API; document.body.classList.add('play');
@@ -650,6 +670,21 @@ body.play #modes{display:none}body.play.layers #modes{display:flex;flex-directio
       cx.fillStyle = 'rgba(0,0,0,.55)'; cx.fillRect(x - TW / 2 + 3, y + TH / 2 + 1, TW - 6, 3.2 * sz); cx.fillStyle = org > .6 ? '#7ddc6a' : org > .3 ? '#f2c14e' : '#ff5a3c'; cx.fillRect(x - TW / 2 + 3, y + TH / 2 + 1, (TW - 6) * org, 3.2 * sz);
       cx.restore();
     };
+    // I-107: المطارات والدفاع الجوي واضحة لما الخريطة مصغّرة (رسم «الحرب الكبرى» يتفصّل لما تقرّب): شارة بصورة الطيارة وعددها، وبطارية بصورة القاذف ودائرة مداها
+    const pxkm = r * 2 / T.hs; if (T.A && pxkm < 1.1 && !(r * 1.75 < 9)) {
+      const SAMW = /^(pac|nasams|thaad|sampt|irist|hawk|idome|arrow|dsling|barak8|cheong|crotale|akash)$/, rng = sy => Math.max(...AIR.SYS[sy].mags.map(m => Math.max(...Object.values(m.r))));
+      const sams = new Map(); for (const x of T.A.sams) { if (x.side !== 0 || !AIR.SYS[x.sys]) continue; const k = x.ll.map(v => Math.round(v / .6)).join() + (SAMW.test(x.sys) ? 'w' : 'e'); if (!sams.has(k)) sams.set(k, []); sams.get(k).push(x); }
+      for (const L of sams.values()) { const x0 = L[0], [x, y] = toS(MX(x0.ll[1]), MY(x0.ll[0])); if (x < -80 || x > W0() + 80 || y < -80 || y > H0() + 80) continue; const R0 = Math.max(...L.map(z => rng(z.sys))) * pxkm, dn = L.every(z => z.down);
+        if (R0 > 100 * pxkm) { cx.beginPath(); cx.arc(x, y, R0, 0, 7); cx.fillStyle = 'rgba(70,130,220,.06)'; cx.fill(); } cx.beginPath(); cx.arc(x, y, Math.min(R0, 60 * pxkm), 0, 7); cx.setLineDash([4, 5]); cx.strokeStyle = 'rgba(70,130,220,.45)'; cx.lineWidth = 1; cx.stroke(); cx.setLineDash([]);
+        cx.save(); cx.translate(x, y); cx.beginPath(); for (let k = 0; k < 6; k++) { const a = Math.PI / 6 + k * Math.PI / 3; cx.lineTo(10 * Math.cos(a), 10 * Math.sin(a)); } cx.closePath(); cx.fillStyle = dn ? '#5c5c5c' : '#20406e'; cx.fill(); cx.strokeStyle = '#cfe0ff'; cx.lineWidth = 1.4; cx.stroke();
+        const im = IMG[SAMW.test(x0.sys) ? 'patriot' : 's400']; if (im && im.naturalWidth) cx.drawImage(im, -9, -9, 18, 18); cx.restore();
+        if (L.length > 1) { cx.beginPath(); cx.arc(x + 9, y - 8, 6, 0, 7); cx.fillStyle = '#cfe0ff'; cx.fill(); cx.fillStyle = '#102a5a'; cx.font = '700 9px sans-serif'; cx.textAlign = 'center'; cx.fillText(L.length, x + 9, y - 5); } }
+      const bases = new Map(); for (const b of T.A.bases) { if (b.side !== 0) continue; const k = b.ll.map(v => v.toFixed(2)).join(); if (!bases.has(k)) bases.set(k, []); bases.get(k).push(b); }
+      for (const L of bases.values()) { const b0 = L[0], [x, y] = toS(MX(b0.ll[1]), MY(b0.ll[0])); if (x < -40 || x > W0() + 40 || y < -40 || y > H0() + 40) continue; const n = L.reduce((t, b) => t + b.ready, 0), n0 = L.reduce((t, b) => t + b.n0, 0);
+        cx.save(); cx.shadowColor = 'rgba(0,0,0,.4)'; cx.shadowBlur = 5; cx.beginPath(); cx.arc(x, y, 15, 0, 7); cx.fillStyle = '#f4efe0'; cx.fill(); cx.shadowColor = 'transparent'; cx.lineWidth = 2.2; cx.strokeStyle = '#1f4f9a'; cx.stroke();
+        const t = L.sort((a, c) => c.n0 - a.n0)[0].type, im = IMG[(AIR.PLANES[t] && AIR.PLANES[t].spr) || (['f16', 'su25', 'f14'].includes(t) ? t : 'f16')]; cx.translate(x, y); cx.rotate(-Math.PI / 4); if (im && im.naturalWidth) cx.drawImage(im, -12, -12, 24, 24); cx.restore();
+        cx.font = '700 10px "IBM Plex Sans Arabic",Tahoma'; cx.textAlign = 'center'; const lb = n + '/' + n0 + ' ✈'; cx.lineWidth = 3; cx.strokeStyle = 'rgba(255,255,255,.85)'; cx.strokeText(lb, x, y + 26); cx.fillStyle = '#1f4f9a'; cx.fillText(lb, x, y + 26); }
+    }
     // المكدسة بخلية (واقفة) قطعة وحدة؛ اللي تتحرك كل وحدة لحالها بمكانها بين الخليتين
     const still = new Map(), moving = [];
     for (const d of vis) { if (d.side === 0 && d.path.length && d.prog > 0) moving.push(d); else { const k = d.cell * 2 + d.side; if (!still.has(k)) still.set(k, []); still.get(k).push(d); } }
@@ -758,7 +793,7 @@ body.play #modes{display:none}body.play.layers #modes{display:flex;flex-directio
     const NW = G.nat, cash = NW ? NW.eco[0].cash : null, st = Math.round(c.stab), stc = st >= 60 ? 'var(--me)' : st >= 35 ? 'var(--gold)' : 'var(--neg)';
     b.innerHTML = `<span class="chip date">📅 ${ar(S.date(G.t))}${speed ? ' <i class="live"></i>' : ''}</span><span class="chip ap" title="نقاط القرار">⭐ ${G.ap}</span>
       <div class="spd">${[['⏸', 'وقف'], ['▶', 'عادي'], ['⏩', 'سريع'], ['⏭', 'أسرع']].map(([x, n], i) => `<button data-s="${i}" class="${speed === i ? 'on' : ''}" aria-label="${n}">${x}</button>`).join('')}</div>`;
-    $('#top h1').innerHTML = `<span class="emb" style="background:${colPol(me)}">${CS[me].ar[0]}</span>${CS[me].ar}<span class="stats"><span class="chip">💰 ${money(c.gdp)}</span>${cash != null ? `<span class="chip ${cash < 0 ? 'neg' : ''}">🏦 ${money(cash)}</span>` : ''}<span class="chip">🏛 ${st}<u style="--v:${st}%;--c:${stc}"></u></span></span>`;
+    $('#top h1').innerHTML = `<span class="emb" style="background:${colPol(me)}">${EL(CS[me].ar)}</span>${CS[me].ar}<span class="stats"><span class="chip">💰 ${money(c.gdp)}</span>${cash != null ? `<span class="chip ${cash < 0 ? 'neg' : ''}">🏦 ${money(cash)}</span>` : ''}<span class="chip">🏛 ${st}<u style="--v:${st}%;--c:${stc}"></u></span></span>`;
     b.querySelectorAll('button').forEach(x => x.onclick = () => { speed = +x.dataset.s; if (window.VIEW && T) VIEW.SND.init(); bar(); });
     placeLegend();
     const wd = G.wars.some(w => w.offer && (w.a.includes(me) || w.b.includes(me)));
@@ -910,7 +945,7 @@ body.play #modes{display:none}body.play.layers #modes{display:flex;flex-directio
           <div class="seg">${[['block', '⚓ حصار سواحلهم'], ['def', '🛡 حماية سواحلنا']].map(([k, t]) => `<button data-nav="${k}" class="${(c.navMode || 'block') === k ? 'on' : ''}">${t}</button>`).join('')}</div>`; })() : ''}
         ${mine.includes(w) ? `<div class="row"><button data-peace="${w.id}" class="${w.offer ? 'big' : ''}">${w.offer ? '🕊 اقبل السلام اللي عرضوه' : '🕊 اعرض السلام (⭐1)'}</button></div>` : ''}</div>`; };
     if (T) { const sc = TH.score(T), A = SM.alive(T.W), my = A.filter(d => d.side === 0), en = A.filter(d => d.side === 1), mode = T.auto0 === false ? 'manual' : T.aggr0 <= 1.3 ? 'atk' : T.aggr0 > 50 ? 'def' : 'bal';
-      h += `<div class="st" style="margin:6px 0"><b>🗺 مسرح الحرب</b>${line('الفرق', my.length + ' إلنا · ' + en.length + ' إلهم')}${line('الخلايا', sc.cells[0] + ' إلنا · ' + sc.cells[1] + ' إلهم')}${line('مدن (نقاط نصر)', sc.vp[0] + ' · ' + sc.vp[1])}${line('استسلموا', sc.lost[0] + ' منا · ' + sc.lost[1] + ' منهم')}
+      h += `<div class="vs"><div class="vsh"><span class="emb" style="background:${colPol(me)}">${EL(CS[me].ar)}</span><b>${CS[me].ar}</b><i>ضد</i><b>${nameOf(T.side[1][0])}</b><span class="emb" style="background:${colPol(T.side[1][0])}">${EL(nameOf(T.side[1][0]))}</span></div>${vsBar('🪖 الفرق', my.length, en.length)}${vsBar('🗺 الأرض (خلايا)', sc.cells[0], sc.cells[1])}${vsBar('🏙 المدن (نقاط نصر)', sc.vp[0], sc.vp[1])}${vsBar('🏳 استسلموا', sc.lost[1], sc.lost[0], 'منهم', 'منا')}</div><div class="st" style="margin:6px 0">
         <h3>جيشنا بالمسرح</h3><div class="seg" id="tmode">${[['atk', 'هجوم'], ['bal', 'متوازن'], ['def', 'دفاع بس'], ['manual', 'يدوي (أنا أأمر)']].map(([k, t]) => `<button data-tm="${k}" class="${mode === k ? 'on' : ''}">${t}</button>`).join('')}</div>
         <div class="note">قرّب الخريطة على الجبهة: اضغط فرقتك (المربع الأخضر) وبعدين الخلية اللي تريدها تروح لها. ⩚ = خطوط محصنة.</div>
         ${T.A ? airPanel() : T.air ? `<h3>✈ الجو</h3>${line('طيارات قتال', Math.round(T.air.A[0]) + ' إلنا · ' + Math.round(T.air.A[1]) + ' إلهم')}${line('السيطرة الجوية', Math.round(T.air.sup[0] * 100) + '٪ إلنا · ' + Math.round(T.air.sup[1] * 100) + '٪ إلهم')}${line('دفاع جوي (مؤشر)', Math.round(T.air.AD[0]) + ' · ' + Math.round(T.air.AD[1]))}${line('طيارات انخسرت', Math.round(T.air.lost[0]) + ' منا · ' + Math.round(T.air.lost[1]) + ' منهم')}
@@ -936,6 +971,8 @@ body.play #modes{display:none}body.play.layers #modes{display:flex;flex-directio
     h += `<h3>🕵 عمليات سرية</h3><div class="acts">${Object.entries(DIP.OPS).filter(([k]) => k !== 'oil').map(([k, O]) => `<button data-dspy="${k}" ${(D.opCd || 0) > W.t ? 'disabled' : ''}>${O.n}<small>${O.c} مليار · نجاح ${Math.round(WDP.withNat(G, T, W => DIP.opP(W, 0, k)) * 100)}٪ · ${O.d}</small></button>`).join('')}</div>${(D.opCd || 0) > W.t ? `<div class="note">المخابرات مشغولة: باقي ${Math.ceil((D.opCd - W.t) / 24)} يوم</div>` : ''}`;
     return h;
   }
+  // شريط «إحنا ضد هم»: الأخضر إلنا من اليمين، الأحمر إلهم
+  const vsBar = (n, a, b, la = '', lb = '') => { const t = a + b, p = t ? Math.round(a / t * 100) : 50; return `<div class="vsb"><div class="vsl"><b class="pos">${a} ${la}</b><span>${n}</span><b class="neg">${b} ${lb}</b></div><div class="vsr"><u style="width:${p}%"></u></div></div>`; };
   function airPanel() {
     const A = T.A, side = s => A.bases.filter(b => b.side === s), ready = s => side(s).reduce((t, b) => t + b.ready, 0), tot = s => side(s).reduce((t, b) => t + b.n0, 0), sm = s => A.sams.filter(x => x.side === s), ok = s => sm(s).filter(x => !x.down).length;
     const grounded = side(0).every(b => b.mission && b.mission.kind === 'idle'), raidsOn = A.raidSides.includes(0), myMB = A.mbases.filter(m => m.side === 0);

@@ -4,7 +4,7 @@
 (function (root) {
   'use strict';
   const START = Date.UTC(2026, 10, 20);   // 20 تشرين الثاني 2026: الوضع الحقيقي (D-048)
-  const V = 3;                              // إصدار حفظ «العالم» (2: الصواريخ والدفاع الجوي؛ 3: البحرية والمضائق)
+  const V = 4;                              // إصدار حفظ «العالم» (2: الصواريخ والدفاع الجوي؛ 3: البحرية والمضائق)
   const mulberry = a => () => { a |= 0; a = a + 0x6D2B79F5 | 0; let t = Math.imul(a ^ a >>> 15, 1 | a); t = t + Math.imul(t ^ t >>> 7, 61 | t) ^ t; return ((t ^ t >>> 14) >>> 0) / 4294967296; };
   const clamp = (v, a, b) => v < a ? a : v > b ? b : v;
   // ===== ثوابت [تقدير] =====
@@ -132,6 +132,7 @@
     const ws = W.wars.filter(w => w.a.includes(id) || w.b.includes(id));
     for (const w of ws) { const home = homeFront(W, WD, w, id); g += add(home ? K.warHomeG : K.warAwayG, w.n); }
     const sl = sancOn(WD, W, id); if (sl) g += add(K.sancG[sl], 'العقوبات');
+    if (c.prioG) g += add(c.prioG, 'أولوية الاقتصاد');
     if (c.blk) g += add(-2.5 * c.blk, 'الحصار البحري');
     const tr = W.trade.filter(p => p[0] === id || p[1] === id).length; if (tr) g += add(Math.min(K.tradeMax, tr * K.tradeG), 'اتفاقيات التجارة');
     const dp = c.debt / c.gdp * 100; if (dp > 110) g += add(-.01 * (dp - 110), 'الدين');
@@ -145,7 +146,12 @@
     const mil = c.gdp * c.milPct / 100 / 12, civ = c.core * c.civ0 * cv.k / 12;
     // الفائدة ما تتجاوز ربع الإيرادات: فوكها = جدولة/تعثّر (أزمة دين تضرب الاستقرار)
     let intr = c.debt * rate(c, dp) / 12; c.crisis = intr > rev * .25; if (c.crisis) intr = rev * .25;
-    c.bal = rev - mil - civ - intr; c.debt = Math.max(0, c.debt - c.bal);
+    c.bal = rev - mil - civ - intr;
+    // W.nat (دولة اللاعب، nation.js): الفائض/العجز يروح للخزينة (منها يدفع البحث والإنتاج والقرارات)، والخزينة السالبة فائدتها أعلى
+    // اللاعب: العجز/الفائض «الأساسي» (نسبته من الناتج أول شهر) يبقى على الدين مثل كل الدول، والفرق اللي تسببه قراراتك (ضرايب، إنفاق، حرب، نفط) + 0.25٪ من الناتج للمشتريات يروح للخزينة [تقدير]
+    if (id === W.me && W.nat) { const e = W.nat.eco[0]; if (c.balF == null) c.balF = c.bal / c.gdp; const b0 = c.balF * c.gdp;
+      c.debt = Math.max(0, c.debt - b0); e.cash += (c.bal - b0) + c.gdp * .0025; if (e.cash < 0) e.cash -= -e.cash * rate(c, dp) * 1.5 / 12; }
+    else c.debt = Math.max(0, c.debt - c.bal);
     c.budget = { rev, mil, civ, intr };
     // الجيش: الميزانية تبني، والصيانة تآكل (التوازن = القوة الحالية إذا الميزانية ما تتغير)
     const eff = c.pw0 * K.upkeep * 12 / Math.max(.01, (WD.cs[id].gdp || c.gdp) * (c.milPct0 ??= c.milPct) / 100);
@@ -155,6 +161,7 @@
     for (const w of ws) { const home = homeFront(W, WD, w, id); tgt += home ? K.warHomeStab : -2; tgt -= Math.max(0, (w.weary[id] || 0) - 50) / 5; }
     if (sl === 'heavy') tgt -= 5; if (c.crisis) tgt -= 8; if (c.blk > .3) tgt -= 4;
     c.stab = clamp(c.stab + (tgt - c.stab) * K.stabMove, 0, 100);
+    if (id === W.me && W.nat && W.nat.home) c.stab = W.nat.home.stab;   // الاستقرار للاعب = استقرار الداخل (الفئات، home.js)
     c.why = why;
     if (id === W.me) {
       if (c.stab < K.collapse.stab) { c.low++; note(W, { k: 'warn', w: 'collapse', left: K.collapse.months - c.low }); if (c.low >= K.collapse.months && W.cfg.diff !== 'ez') { W.over = { t: W.t, why: 'collapse' }; note(W, { k: 'over', why: 'collapse' }); } }
@@ -379,6 +386,8 @@
     // ترقيات: 1 ← 2 (W5c): نضيف المخزون والدفاع الجوي لكل دولة من بياناتها
     if (o.v < 2) { for (const id of o.ids) { const f = initCountry(WD, id), c = o.C[id]; for (const k of ['msl', 'drn', 'mslP', 'drnP', 'adI', 'oilDmg']) if (c[k] == null) c[k] = f[k]; } o.v = 2; }
     if (o.v < 3) { for (const id of o.ids) { const f = initCountry(WD, id), c = o.C[id]; for (const k of ['nav', 'navMode', 'blk']) if (c[k] == null) c[k] = f[k]; } o.stx = { hormuz: o.hormuz ?? 0 }; o.v = 3; }
+    // 3 ← 4 (D-050): طبقة الدولة (G.nat) تنبني بـ nation.js أول ما اللعبة تفتح إذا ما موجودة
+    if (o.v < 4) o.v = 4;
     o.base = WD.rel; o.rnd = mulberry(o.rs); return o;
   }
   const API = { V, K, START, init, navy, straits, step, month, act, can, offerPeace, declare, endWar, strike, playerStrike, rank, save, load, date, rel, atWar, allied, COST, TAX, CIV };

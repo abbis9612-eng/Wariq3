@@ -234,7 +234,7 @@ document.querySelectorAll('#modes button').forEach(b => b.onclick = () => setMod
 addEventListener('resize', resize);
 matchMedia('(prefers-color-scheme: light)').addEventListener?.('change', () => dirty = true);
 resize(); home(); cam.x = MX(44); cam.y = MY(31); cam.s = Math.max(cam.s * 2.2, Math.min(W, H) * 1.5); legend(); $('#load').remove(); requestAnimationFrame(loop);
-window.__W = { cam, R, draw: () => { draw(); return lastMs; }, zoomAt, setMode, tap, byId, home, get sel() { return sel; } };
+window.__W = { cam, R, draw: () => { mKey = ''; draw(); return lastMs; }, drawCached: () => { draw(); return lastMs; }, zoomAt, setMode, tap, byId, home, get sel() { return sel; } };
 </script>
 <style>
 /* W3: طبقة اللعب — اختيار الدولة، الوقت، دولتي، الدبلوماسية، العالم، الأخبار */

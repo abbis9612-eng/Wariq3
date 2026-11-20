@@ -13,6 +13,9 @@
 *{box-sizing:border-box;margin:0;padding:0}
 html,body{height:100%;background:var(--sea);overflow:hidden;font:500 13px/1.4 "IBM Plex Sans Arabic",Tahoma,sans-serif;color:var(--ink);-webkit-user-select:none;user-select:none;-webkit-tap-highlight-color:transparent}
 canvas{position:fixed;inset:0;width:100%;height:100%;touch-action:none;display:block}
+#vig{position:fixed;inset:0;pointer-events:none;z-index:1;background:radial-gradient(ellipse at center,rgba(0,0,0,0) 46%,rgba(4,8,10,.36) 100%)}
+:root[data-theme="light"] #vig{background:radial-gradient(ellipse at center,rgba(0,0,0,0) 46%,rgba(35,30,20,.13) 100%)}
+@media (prefers-color-scheme:light){:root:not([data-theme="dark"]) #vig{background:radial-gradient(ellipse at center,rgba(0,0,0,0) 46%,rgba(35,30,20,.13) 100%)}}
 button{font:inherit;color:inherit;background:var(--chip);border:1px solid var(--line);border-radius:10px;padding:5px 10px;cursor:pointer}
 button.on{background:var(--chip2);border-color:var(--gold-l);color:var(--gold)}
 #top{position:fixed;top:0;left:0;right:0;background:var(--panel);border-bottom:1px solid var(--line);padding:calc(6px + env(safe-area-inset-top)) 12px 6px;z-index:5;display:flex;align-items:center;gap:8px;flex-wrap:wrap}
@@ -39,15 +42,17 @@ button.on{background:var(--chip2);border-color:var(--gold-l);color:var(--gold)}
 <body>
 <div id="load">جاي أحمّل العالم…</div>
 <canvas id="cv"></canvas>
+<div id="vig"></div>
 <div id="top"><h1>العالم <small>تشرين الثاني 2026</small></h1>
   <div id="modes"><button data-m="pol" class="on">سياسية</button><button data-m="ter">الأرض</button><button data-m="rel">علاقات</button><button data-m="res">نفط وغاز</button></div>
 </div>
-<div id="zoom"><button id="zin" aria-label="كبّر">+</button><button id="zout" aria-label="صغّر">−</button><button id="zhome" aria-label="العالم كله">⌂</button><button id="zlay" aria-label="طبقات الخريطة">🗺</button></div>
+<div id="zoom"><button id="zin" aria-label="كبّر">+</button><button id="zout" aria-label="صغّر">−</button><button id="zhome" aria-label="العالم كله">⌂</button><button id="ztheme" aria-label="تبديل الإضاءة (ليلي/أطلس)">☀️</button><button id="zlay" aria-label="طبقات الخريطة">🗺</button></div>
 <div id="legend" hidden></div>
 <div id="perf">–</div>
 <div id="card" hidden></div>
 <script src="world-data.js"></script>
 <script src="world-roads.js"></script>
+<script src="mapfx.js"></script>
 <script>
 'use strict';
 const WD = window.WD, $ = s => document.querySelector(s), cv = $('#cv'), cx = cv.getContext('2d');
@@ -86,20 +91,40 @@ const nameOf = k => !k ? 'أرض محايدة' : CS[k] ? CS[k].ar : ENT[k] ? ENT
 const PAL = ['#7f9c6b', '#b49a6a', '#8a7fa6', '#6f97a3', '#a9786a', '#9aa46a', '#7a8fb5', '#b08aa0', '#6fa38c', '#a59580'];
 const cAdj = {};
 for (const r of R) for (const n of r.nb) { const o = byId.get(n); if (o && o.ctl !== r.ctl) { (cAdj[r.ctl] ||= new Set()).add(o.ctl); } }
-const CCOL = {};
-for (const k of Object.keys(cAdj).sort((a, b) => cAdj[b].size - cAdj[a].size)) { const used = new Set([...cAdj[k]].map(o => CCOL[o])); CCOL[k] = PAL.find(p => !used.has(p)) || PAL[0]; }
+const CCOL = {}, colIdx = {};
+for (const k of Object.keys(cAdj).sort((a, b) => cAdj[b].size - cAdj[a].size)) {
+  const used = new Set([...cAdj[k]].map(o => colIdx[o]));
+  let idx = 0; while (used.has(idx) && idx < PAL.length) idx++;
+  colIdx[k] = idx % PAL.length; CCOL[k] = PAL[colIdx[k]];
+}
+for (const k in CS) if (colIdx[k] == null) { colIdx[k] = 0; CCOL[k] = PAL[0]; }
 const colPol = k => !k ? '#6b6e66' : ENT[k] ? '#9b4f4f' : CCOL[k] || PAL[0];
-// مكان اسم الدولة: مركز أكبر كتلة (وزن المساحة)
-const LBL = {};
-for (const r of R) { const k = r.ctl; if (!k) continue; const L = LBL[k] ||= { x: 0, y: 0, a: 0 }; const w = r.a; L.x += MX(r.ll[0]) * w; L.y += MY(r.ll[1]) * w; L.a += w; }
-for (const k in LBL) { LBL[k].x /= LBL[k].a; LBL[k].y /= LBL[k].a; }
-// خطوط التماس: حدود بين منطقتين نفس صاحب الأرض بس مسيطر مختلف (أوكرانيا، غزة، الجولان، اليمن، السودان...)
-let FRONT = [];
+// مكان اسم الدولة: مركز الكتلة الرئيسية (تفضّل كتلة العاصمة حتى أمريكا/فرنسا/إندونيسيا تبقى على البر)
+const LBL = MAPFX.buildLabels(R, MX, MY);
+// خطوط التماس: حدود حقيقية بين منطقتين متجاورتين
+let FRONT = [], frontSegs = null, mapRev = 0;
 for (const r of R) for (const n of r.nb) { const o = byId.get(n); if (o && r.id < o.id && r.ctl !== o.ctl && (r.c === o.c || ENT[r.ctl] || ENT[o.ctl] || r.c !== r.ctl || o.c !== o.ctl)) FRONT.push([r, o]); }
+frontSegs = MAPFX.buildFrontSegs(FRONT, MX, MY);
+MAPFX.initGeo(window.WR, MX, MY, R, LOD, S);
+MAPFX.loadTextures(() => { MAPFX.invalidate(); dirty = true; });
+
+// ===== الثيم (🌙 غرفة عمليات غامقة / ☀️ أطلس استراتيجي فاتح) =====
+let themePref = (() => { try { return localStorage.getItem('wariq.theme') || ''; } catch (e) { return ''; } })();
+const isLight = () => themePref ? themePref === 'light' : matchMedia('(prefers-color-scheme: light)').matches;
+function applyTheme(t) {
+  themePref = t || '';
+  try { if (themePref) localStorage.setItem('wariq.theme', themePref); } catch (e) { }
+  if (themePref) document.documentElement.setAttribute('data-theme', themePref);
+  else document.documentElement.removeAttribute('data-theme');
+  const lt = isLight();
+  const zb = $('#ztheme'); if (zb) zb.textContent = lt ? '🌙' : '☀️';
+  const mc = document.querySelector('meta[name=theme-color]'); if (mc) mc.content = lt ? '#e9e2cd' : '#1b2019';
+  MAPFX.invalidate(); dirty = true;
+}
 
 // ===== الكاميرا =====
 let W = 0, H = 0, DPR = 1, cam = { x: MX(30), y: MY(25), s: 1 }, mode = 'pol', sel = null, me = null;
-function resize() { DPR = Math.min(2, window.devicePixelRatio || 1); W = innerWidth; H = innerHeight; cv.width = W * DPR; cv.height = H * DPR; dirty = true; }
+function resize() { DPR = Math.min(2, window.devicePixelRatio || 1); W = innerWidth; H = innerHeight; cv.width = W * DPR; cv.height = H * DPR; MAPFX.invalidate(); dirty = true; }
 const home = () => { cam.x = MX(20); cam.y = MY(28); cam.s = Math.min(W / (2 * Math.PI) * 1.05, H / 3.6); dirty = true; };
 window.EL = n => (n || '').replace(/^ال/, '').replace(/^جمهورية |^مملكة |^دولة /, '').trim().charAt(0);   // I-107: حرف الشعار (بدون «ال»)
 window.__cam = (ll, s) => { cam.x = MX(ll[0]); cam.y = MY(ll[1]); cam.s = s; dirty = true; };   // للفحص والأزرار
@@ -115,57 +140,21 @@ function path(rings, add) {   // add: نضيف للمسار الحالي (نجم
 }
 function relCol(k) { if (!me || !k) return '#6b6e66'; if (k === me) return css('--me'); const v = ((window.__G && window.__G.G ? window.__G.G.rel : WD.rel)[me] || {})[k] || 0; if (ENT[k]) return '#7a5a5a';
   const t = Math.max(-1, Math.min(1, v / 80)); return t >= 0 ? `hsl(${100 + 20 * t},${20 + 35 * t}%,${50 - 8 * t}%)` : `hsl(8,${25 + 45 * -t}%,${50 - 6 * -t}%)`; }
-function fillOf(r) {
-  if (mode === 'ter') return TCOL[r.t];
-  if (mode === 'rel') return relCol(r.ctl);
-  if (mode === 'res') return r.oil || r.gas ? `hsl(35,${40 + Math.min(50, (r.oil + r.gas * 6) / 40)}%,${55 - Math.min(25, (r.oil + r.gas * 6) / 120)}%)` : '#5f6259';
-  return colPol(r.ctl);
-}
+function fillRes(r, light) { return r.oil || r.gas ? `hsl(36,${52 + Math.min(44, (r.oil + r.gas * 6) / 35)}%,${54 - Math.min(24, (r.oil + r.gas * 6) / 110)}%)` : (light ? '#8f9288' : '#4a504b'); }
 
-// ===== الرسم =====
+// ===== الرسم (محرك mapfx.js الهجين: تضاريس 4K + حدود متدرجة + كاش سريع + طبقة اللعب) =====
 let dirty = true, lastMs = 0, frames = 0, fpsT = performance.now(), fps = 0;
 function draw() {
   const t0 = performance.now();
-  cx.setTransform(DPR, 0, 0, DPR, 0, 0); cx.fillStyle = css('--sea'); cx.fillRect(0, 0, W, H);
-  const far = cam.s < 520, ink = css('--ink');
-  // البحر (حدود خفيفة لما نقرّب)
-  if (!far) { cx.strokeStyle = 'rgba(255,255,255,.05)'; cx.lineWidth = 1; for (const s of S) if (vis(s.bb)) { path(s.p); cx.stroke(); } }
-  if (far && mode === 'pol' && !window.MAPCHANGED) { // بعيد: حدود الدول المبسطة بس (أسرع)؛ إذا الحرب غيّرت الحدود نرسم المناطق
-    for (const L of LOD) if (vis(L.bb)) { path(L.p); cx.fillStyle = L.k[0] === '~' ? '#6b6e66' : colPol(L.k); cx.fill(); }
-    cx.strokeStyle = 'rgba(20,24,18,.75)'; cx.lineWidth = .8; for (const L of LOD) if (vis(L.bb)) { path(L.p); cx.stroke(); }
-  } else {
-    const lw = Math.min(1, cam.s / 1400);
-    for (const r of R) if (vis(r.bb)) { path(r.p); cx.fillStyle = fillOf(r); cx.fill(); if (!far) { cx.strokeStyle = 'rgba(20,24,18,' + (.1 + lw * .14) + ')'; cx.lineWidth = .5; cx.stroke(); } }
-    if (far) { cx.strokeStyle = 'rgba(20,24,18,.7)'; cx.lineWidth = .8; for (const L of LOD) if (vis(L.bb)) { path(L.p); cx.stroke(); } }
-    else { // I-107: قريب = الحدود الدقيقة (نفس حواف المناطق)، متوسط = المبسطة؛ مسار واحد لكل الدول (أسرع)
-      const B = cam.s >= 1600 && CB.length ? CB : LOD; cx.lineJoin = 'round'; cx.beginPath();
-      for (const L of B) if (vis(L.bb)) for (const f of L.p) { let lx = -1e9, ly = -1e9; for (let i = 0; i < f.length; i += 2) { const x = (f[i] - cam.x) * cam.s + W / 2, y = (f[i + 1] - cam.y) * cam.s + H / 2; if (i === 0) cx.moveTo(x, y); else if (Math.abs(x - lx) + Math.abs(y - ly) > 1.5 || i === f.length - 2) cx.lineTo(x, y); else continue; lx = x; ly = y; } cx.closePath(); }
-      cx.strokeStyle = 'rgba(15,18,14,.85)'; cx.lineWidth = B === CB ? 1.7 : 1.4; cx.stroke(); }
-  }
-  // خطوط التماس
-  cx.strokeStyle = css('--front'); cx.lineWidth = far ? 1.5 : 2.5; cx.setLineDash([5, 3]);
-  for (const [a, b] of FRONT) if (vis(a.bb) || vis(b.bb)) { const [x1, y1] = toS(MX(a.ll[0]), MY(a.ll[1])), [x2, y2] = toS(MX(b.ll[0]), MY(b.ll[1])); const mx = (x1 + x2) / 2, my = (y1 + y2) / 2, dx = (y2 - y1) * .18, dy = (x1 - x2) * .18; cx.beginPath(); cx.moveTo(mx - dx, my - dy); cx.lineTo(mx + dx, my + dy); cx.stroke(); }
-  cx.setLineDash([]);
+  const far = cam.s < 520, lt = isLight();
+  const G0 = window.__G && window.__G.G;
+  const stxKey = G0 && G0.stx ? Object.keys(G0.stx).sort().join(',') : '';
+  MAPFX.drawMap({
+    cx, W, H, DPR, cam, mode, light: lt, R, S, LOD, WD, CS, ENT, LBL, frontSegs, sel, me, G: G0,
+    colIdx, relCol, fillRes, TCOL, MX, MY, nameOf, mapRev, stxKey, css
+  });
   if (window.GAME && window.GAME.overlay) window.GAME.overlay(cx, far);
-  // المختارة
-  if (sel && sel.p) { path(sel.p); cx.strokeStyle = css('--gold'); cx.lineWidth = 2.5; cx.stroke(); }
-  // المضائق
-  for (const st of WD.st) { const [x, y] = toS(MX(st.ll[0]), MY(st.ll[1])); if (x < -20 || x > W + 20 || y < -20 || y > H + 20) continue; cx.beginPath(); cx.arc(x, y, far ? 3.5 : 5, 0, 7); cx.fillStyle = css('--gold'); cx.fill(); cx.strokeStyle = '#000'; cx.lineWidth = 1; cx.stroke();
-    if (cam.s > 300) { cx.font = '600 11px "IBM Plex Sans Arabic",Tahoma'; cx.fillStyle = ink; cx.textAlign = 'center'; cx.fillText(st.n, x, y - 8); } }
-  // العواصم والمدن
-  if (!far || cam.s > 380) {
-    cx.textAlign = 'center';
-    for (const r of R) { if (!r.cities.length || !vis(r.bb)) continue; const big = r.cities[0][1]; if (!r.cap && cam.s < 1400 && big < 2e6) continue; if (!r.cap && cam.s < 3000 && big < 5e5) continue;
-      const [x, y] = toS(MX(r.ll[0]), MY(r.ll[1])); cx.beginPath(); cx.arc(x, y, r.cap ? 3.5 : 2.4, 0, 7); cx.fillStyle = r.cap ? css('--gold') : ink; cx.fill();
-      if (cam.s > 900 || r.cap) { cx.font = (r.cap ? '700 ' : '500 ') + '11px "IBM Plex Sans Arabic",Tahoma'; cx.lineJoin = 'round'; cx.lineWidth = 3; cx.strokeStyle = 'rgba(245,240,225,.75)'; cx.strokeText(r.cities[0][0], x, y - 6); cx.fillStyle = '#20241c'; cx.fillText(r.cities[0][0], x, y - 6); } }
-  }
-  // أسماء الدول
-  if (cam.s < 2600) {
-    cx.textAlign = 'center'; cx.lineJoin = 'round';
-    for (const k in LBL) { const L = LBL[k], c = CS[k]; if (!c && !ENT[k]) continue; const px = Math.sqrt(L.a) / 6371 * cam.s; if (px < 26) continue;
-      const [x, y] = toS(L.x, L.y); if (x < 0 || x > W || y < 0 || y > H) continue; const fs = Math.max(10, Math.min(22, px / 7));
-      cx.font = `700 ${fs}px "IBM Plex Sans Arabic",Tahoma`; cx.strokeStyle = 'rgba(0,0,0,.55)'; cx.lineWidth = 3; const tx = nameOf(k); cx.strokeText(tx, x, y); cx.fillStyle = '#f3eedd'; cx.fillText(tx, x, y); }
-  }
+  MAPFX.drawScaleAndCompass(cx, cam, W, H, lt, document.body.classList.contains('play') ? 64 : 36);
   lastMs = performance.now() - t0;
 }
 function loop(t) { if (dirty) { dirty = false; draw(); frames++; } if (t - fpsT > 1000) { fps = frames; frames = 0; fpsT = t; $('#perf').textContent = `رسم ${lastMs.toFixed(1)}ms · ${fps}fps · ×${Math.round(cam.s)}`; } requestAnimationFrame(loop); }
@@ -181,7 +170,7 @@ cv.addEventListener('pointerup', up); cv.addEventListener('pointercancel', e => 
 cv.addEventListener('wheel', e => { e.preventDefault(); zoomAt(e.clientX, e.clientY, Math.exp(-e.deltaY * .0015)); }, { passive: false });
 function zoomAt(sx, sy, f) { const [wx, wy] = toW(sx, sy); cam.s = Math.max(W / 7, Math.min(60000, cam.s * f)); const [nx, ny] = toW(sx, sy); cam.x += wx - nx; cam.y += wy - ny; dirty = true; }
 $('#zlay').onclick = () => { document.body.classList.toggle('layers'); legend(); }; document.querySelectorAll('#modes button').forEach(b => b.addEventListener('click', () => document.body.classList.remove('layers')));
-$('#zin').onclick = () => zoomAt(W / 2, H / 2, 1.6); $('#zout').onclick = () => zoomAt(W / 2, H / 2, 1 / 1.6); $('#zhome').onclick = home;
+$('#zin').onclick = () => zoomAt(W / 2, H / 2, 1.6); $('#zout').onclick = () => zoomAt(W / 2, H / 2, 1 / 1.6); $('#zhome').onclick = home; $('#ztheme').onclick = () => applyTheme(isLight() ? 'dark' : 'light');
 function inPoly(rings, x, y) { let c = false; for (const f of rings) for (let i = 0, j = f.length - 2; i < f.length; j = i, i += 2) { const yi = f[i + 1], yj = f[j + 1]; if ((yi > y) !== (yj > y) && x < (f[j] - f[i]) * (y - yi) / (yj - yi) + f[i]) c = !c; } return c; }
 function tap(sx, sy) { if (window.GAME && window.GAME.tapTheater && window.GAME.tapTheater(sx, sy)) { dirty = true; return; } const [x, y] = toW(sx, sy); const r = R.find(r => x >= r.bb[0] && x <= r.bb[2] && y >= r.bb[1] && y <= r.bb[3] && inPoly(r.p, x, y)); sel = r || null; dirty = true; card(); }
 
@@ -224,9 +213,9 @@ addEventListener('resize', () => setTimeout(placeLegend, 50));
 function setMode(m) { mode = m; document.querySelectorAll('#modes button').forEach(b => b.classList.toggle('on', b.dataset.m === m)); legend(); dirty = true; }
 document.querySelectorAll('#modes button').forEach(b => b.onclick = () => setMode(b.dataset.m));
 addEventListener('resize', resize);
-matchMedia('(prefers-color-scheme: light)').addEventListener?.('change', () => dirty = true);
-resize(); home(); cam.x = MX(44); cam.y = MY(31); cam.s = Math.max(cam.s * 2.2, Math.min(W, H) * 1.5); legend(); $('#load').remove(); requestAnimationFrame(loop);
-window.__W = { cam, R, draw: () => { draw(); return lastMs; }, zoomAt, setMode, tap, byId, home, get sel() { return sel; } };
+matchMedia('(prefers-color-scheme: light)').addEventListener?.('change', () => { if (!themePref) applyTheme(''); });
+applyTheme(themePref); resize(); home(); cam.x = MX(44); cam.y = MY(31); cam.s = Math.max(cam.s * 2.2, Math.min(W, H) * 1.5); legend(); $('#load').remove(); requestAnimationFrame(loop);
+window.__W = { cam, R, draw: () => { draw(); return lastMs; }, zoomAt, setMode, setTheme: applyTheme, tap, byId, home, get sel() { return sel; } };
 </script>
 <style>
 /* W3: طبقة اللعب — اختيار الدولة، الوقت، دولتي، الدبلوماسية، العالم، الأخبار */
@@ -452,6 +441,7 @@ body.play #modes{display:none}body.play.layers #modes{display:flex;flex-directio
     // خطوط التماس = حدود بين مناطق دولتين بحرب، أو بين مسيطر وصاحب أرض مختلفين
     const war = (a, b) => G.wars.some(w => (w.a.includes(a) && w.b.includes(b)) || (w.b.includes(a) && w.a.includes(b)));
     FRONT = []; for (const r of R) for (const n of r.nb) { const o = byId.get(n); if (o && r.id < o.id && r.ctl !== o.ctl && (war(r.ctl, o.ctl) || ENT[r.ctl] || ENT[o.ctl] || (r.c === o.c))) FRONT.push([r, o]); }
+    frontSegs = MAPFX.buildFrontSegs(FRONT, MX, MY); mapRev++; MAPFX.invalidate();
     dirty = true; return ch;
   }
   // ===== الوقت =====
@@ -592,7 +582,7 @@ body.play #modes{display:none}body.play.layers #modes{display:flex;flex-directio
   const TKK = ['abrams', 'merkava', 'leopard', 'k2', 'altay', 'type99', 't90', 't72', 'bradley', 'bmp3'];
   const loadImgs = () => imgP || (imgP = Promise.all(['abrams', 'abrams_t', 't72', 't72_t', 'bmp', 'grad', 'truck', 'f16', 'su25', 'f14', 'fx_explo1', 'fx_explo2', 'fx_fire', 'fx_cloud', 'f16_sheet', 'su25_sheet', 'f14_sheet', 'base_me', 'base_south', 'patriot', 's400', ...SAMI.map(k => 'u_' + k + '_v'), ...TKK.map(k => 'u_' + k + '_v'), ...PLK.map(k => 'u_' + k + '_t'), ...['carrier', 'ddg', 't055', 'kirov', 'frigate', 'sub', 'fac'].map(k => 'u_' + k + '_v'), ...['carrier', 'cv-china', 'ddg', 't055', 'kirov', 'frigate', 'moudge', 'fac', 'sub', 'amphib', 'c802', 'harpoon', 'sm2', 'tomahawk', 'explosion', 'ship-fire', 'smoke-trail', 'splash', 'wake', 'oil-slick', 'ocean'].map(k => 'nv_' + k), 'zolf',
     ...['aerial_sand', 'dirt_aerial_02', 'rocky_terrain_02', 'aerial_mud_1', 'aerial_asphalt_01', 'aerial_grass_rock', 'palm', 'tree', 'acacia', 'h1', 'h2', 'h3', 'h4'].map(n => 'bv/' + n)]
-    .map(n => new Promise(r => { const i = new Image(); i.onload = r; i.onerror = r; i.src = IMGB + n + '.webp'; IMG[n.replace('bv/', 'bv_')] = i; }))).then(() => window.BVIEW.init({ IMG, SND: null }), window.NAVVIEW && NAVVIEW.init({ IMG, SND: () => window.VIEW && VIEW.SND })));
+    .map(n => new Promise(r => { const i = new Image(); i.onload = r; i.onerror = r; i.src = IMGB + n + '.webp'; IMG[n.replace('bv/', 'bv_')] = i; }))).then(() => (window.BVIEW.init({ IMG, SND: window.VIEW ? VIEW.SND : null }), window.NAVVIEW && NAVVIEW.init({ IMG, SND: () => window.VIEW && VIEW.SND }))));
   // نوع الدبابة بالمشهد حسب الدولة: غربية (أبرامز، ليوبارد، ميركافا...) أو سوفيتية/شرقية (T-72، T-90، Type...)
   const WEST = /abrams|leopard|challenger|merkava|leclerc|k2|k1|m60|m48|altay|ariete|type 10|type 90|stridsvagn|al-khalid|arjun|vickers|zulfiqar/i;
   const tankOf = k => { if (k === me && G.nat && G.nat.arms && G.nat.arms.tank) return ['USA', 'DEU', 'KOR', 'FRA', 'GBR'].includes(G.nat.arms.tank.x) ? 'abrams' : 't72'; const t = ((CS[k] && CS[k].kit && CS[k].kit.tank && CS[k].kit.tank[1]) || []).join(' '); return WEST.test(t) ? 'abrams' : 't72'; };
@@ -604,7 +594,7 @@ body.play #modes{display:none}body.play.layers #modes{display:flex;flex-directio
     el.hidden = false; el.querySelector('.x').onclick = () => { el.hidden = true; }; $('#bIn').onclick = () => enterBattle(tg, b, A, D); return true;
   }
   async function enterBattle(tg, b, A, D) {
-    const prev = speed; speed = 0; bar(); $('#card').hidden = true; await loadImgs();
+    const prev = speed; speed = 0; bar(); $('#card').hidden = true; if (window.VIEW && VIEW.SND) VIEW.SND.init(); await loadImgs();
     const W = T.W, c = T.cells[tg], terr = { fort: 'hills' }[c.t] || c.t, fill = ds => ds.slice(0, 3).map(d => ({ kind: d.kind, str: d.str, n: d.n }));
     const ready = s => T.A ? T.A.bases.filter(x => x.side === s).reduce((n, x) => n + x.ready, 0) : 0;
     const tank = [tankOf(T.side[0][0]), tankOf(T.side[1][0])];

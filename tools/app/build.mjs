@@ -11,6 +11,7 @@ const scripts = [...html.matchAll(/<script src="([^"]+)"/g)].map(m => m[1]).filt
 for (const s of scripts) cp(path.join(W, s), s);
 cp(path.join(W, 'index.html'), 'index.html'); cp(path.join(W, 'manifest.webmanifest'), 'manifest.webmanifest');
 for (const f of fs.readdirSync(path.join(W, 'icons'))) cp(path.join(W, 'icons', f), 'icons/' + f);
+if (fs.existsSync(path.join(W, 'map'))) for (const f of fs.readdirSync(path.join(W, 'map'))) if (/\.(webp|png|jpg)$/i.test(f)) cp(path.join(W, 'map', f), 'map/' + f);
 // 2) الصور والأصوات (مشهد المعركة والجو): كل webp بـ img/ (و img/bv/) وكل الأصوات
 const walk = (d, base) => { for (const f of fs.readdirSync(d)) { const p = path.join(d, f); if (fs.statSync(p).isDirectory()) walk(p, base + f + '/'); else if (/\.(webp|mp3|ogg|wav|m4a)$/i.test(f)) cp(p, base + f); } };
 walk(path.join(GW, 'img'), 'img/'); if (fs.existsSync(path.join(GW, 'sounds'))) walk(path.join(GW, 'sounds'), 'sounds/');

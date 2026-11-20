@@ -63,7 +63,9 @@
       for (const i of F) if (cells[i].t !== 'city' && cells[i].t !== 'mount') cells[i].t = 'fort'; }
     const T = { v: 1, war: war.id, me, side: [side0, side1], hs, lon0: x0, lat1: y1, KX, KY, regs, ctl0: fix ? fix.ctl0 : Object.fromEntries(regs.map(r => [r, G.ctl[r]])), cells, t: 0 };
     T.W = SIM.World({ cells: cells.map(c => ({ c: c.c, s: c.s, t: c.t, nb: c.nb, vp: c.vp || 0, city: c.city })), edges: [] }, { seed: (G.seed || 1) + G.t });
-    T.W.noFog = true; T.W.cells.forEach((c, i) => { T.W.ctrl[i] = cells[i].s; });
+    T.W.cells.forEach((c, i) => { T.W.ctrl[i] = cells[i].s; });
+    T.W.plans = []; T.W.planId = 1;   // خطط الهجوم بالأسهم (من «الحرب الكبرى»)
+    SIM.initIntel(T.W);              // الضباب والاستخبارات: كل طرف يعرف بس اللي يشوفه (من «الحرب الكبرى»)
     Object.defineProperty(T, '_G', { value: G, writable: true }); Object.defineProperty(T, '_WD', { value: WD });
     if (!fix) army(T, G, WD);
     return T;
@@ -105,7 +107,7 @@
     for (let h = 0; h < hours && !W.over; h++) {
       SIM.step(W); T.t++;
       if (W.t % 24 === 12 && T.air && !T.A) airDay(T, T._G, T._WD);   // الجو البسيط بس إذا الجو الحقيقي ما موجود (حفظ قديم)
-      if (W.t % 6 === 0) { SIM.ai(W, 1); if (T.auto0 !== false) SIM.ai(W, 0, { aggr: T.aggr0 || 1.6 }); fill(T, 1); if (T.auto0 !== false) fill(T, 0); }
+      if (W.t % 6 === 0) { SIM.ai(W, 1); if (T.auto0 !== false) SIM.ai(W, 0, { aggr: T.aggr0 || 1.6 }); else SIM.runPlans(W); fill(T, 1); if (T.auto0 !== false) fill(T, 0); }
     }
     return T;
   }
@@ -183,10 +185,11 @@
   }
   function score(T) { const s = SIM.score(T.W); return { vp: s.vp, divs: s.divs, lost: s.lost, cells: s.cells, over: T.W.over }; }
   // الحفظ: الخلايا تنبني من جديد بنفس الطريقة؛ نحفظ بس الفرق والسيطرة والوقت
-  function save(T) { const W = T.W; return { regs: T.regs, ctl0: T.ctl0, war: T.war, t: T.t, wt: W.t, ctrl: Array.from(W.ctrl), divs: W.divs.filter(d => !d.dead).map(d => ({ ...d, path: d.path.slice() })), lost: W.lost, took: W.took, ob: W.ob, over: W.over, rng: W.rnd.get(), nid: SIM.getNID(), mob: W.mob, num: W.num, cool: W.cool ? [...W.cool] : null, stalls: W.stalls, wx: W.wx, wxT: W.wxT, qual: W.qual, tob: T.ob, aggr0: T.aggr0, auto0: T.auto0, vp0: T.vp0, hour: W.hour, night: W.night, air: T.air }; }
+  function save(T) { const W = T.W; return { regs: T.regs, ctl0: T.ctl0, war: T.war, t: T.t, wt: W.t, ctrl: Array.from(W.ctrl), divs: W.divs.filter(d => !d.dead).map(d => ({ ...d, path: d.path.slice() })), lost: W.lost, took: W.took, ob: W.ob, over: W.over, rng: W.rnd.get(), nid: SIM.getNID(), mob: W.mob, num: W.num, cool: W.cool ? [...W.cool] : null, stalls: W.stalls, wx: W.wx, wxT: W.wxT, qual: W.qual, tob: T.ob, aggr0: T.aggr0, auto0: T.auto0, vp0: T.vp0, hour: W.hour, night: W.night, air: T.air, plans: W.plans, planId: W.planId, seen: W.seen ? W.seen.map(a => Array.from(a, v => v < -1e8 ? null : v)) : null, snap: W.snap ? W.snap.map(m => [...m]) : null }; }
   function restore(o, G, WD, war, me) {
     const T = build(G, WD, war, me, { regs: o.regs, ctl0: o.ctl0 }); if (!T) return null; const W = T.W;
-    W.divs = o.divs.map(d => ({ ...d })); o.ctrl.forEach((s, i) => { if (i < W.N) W.ctrl[i] = s; }); W.t = o.wt; T.t = o.t; W.lost = o.lost; W.took = o.took; W.ob = o.ob; W.over = o.over; W.rnd.set(o.rng); SIM.setNID(Math.max(SIM.getNID(), o.nid)); W.mob = o.mob; W.num = o.num; if (o.cool) W.cool = new Map(o.cool); W.stalls = o.stalls; W.wx = o.wx; W.wxT = o.wxT; if (o.qual) W.qual = o.qual; T.ob = o.tob; T.aggr0 = o.aggr0; T.auto0 = o.auto0; T.vp0 = o.vp0; W.hour = o.hour; W.night = o.night; T.air = o.air;
+    W.divs = o.divs.map(d => ({ ...d })); o.ctrl.forEach((s, i) => { if (i < W.N) W.ctrl[i] = s; }); W.t = o.wt; T.t = o.t; W.lost = o.lost; W.took = o.took; W.ob = o.ob; W.over = o.over; W.rnd.set(o.rng); SIM.setNID(Math.max(SIM.getNID(), o.nid)); W.mob = o.mob; W.num = o.num; if (o.cool) W.cool = new Map(o.cool); W.stalls = o.stalls; W.wx = o.wx; W.wxT = o.wxT; if (o.qual) W.qual = o.qual; T.ob = o.tob; T.aggr0 = o.aggr0; T.auto0 = o.auto0; T.vp0 = o.vp0; W.hour = o.hour; W.night = o.night; T.air = o.air; W.plans = o.plans || []; W.planId = o.planId || 1;
+    if (o.seen) { W.seen = o.seen.map(a => Float64Array.from(a, v => v == null ? -1e9 : v)); W.snap = o.snap.map(e => new Map(e)); W.spots = [[], []]; } else SIM.intel(W);
     SIM.supply(W); return T;
   }
   const API = { build, step, sync, score, save, restore, HOPS, airDay };

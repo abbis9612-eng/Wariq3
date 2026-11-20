@@ -272,6 +272,7 @@ input[type=range]{width:100%;accent-color:var(--gold)}
 // ===== اللعبة (W3) =====
 (function () {
   const S = window.WSIM, KEY = 'wariq.world.v1';
+  let PLAN = null;
   let G = null, speed = 0, acc = 0, lastT = 0, panel = null, sp = null, tier = '', T = null, selD = null;
   const TH = window.THEATER, SM = window.SIM, AWLD = window.AIRWORLD;
   const SPD = [0, 1, 4, 12];   // أيام بالثانية
@@ -363,9 +364,23 @@ input[type=range]{width:100%;accent-color:var(--gold)}
     const rate = HPS[speed]; accH += dt * rate; let n = 0; const m0 = G.log.length, t0 = G.t;
     while (accH >= 1 && n < 40 && T && !G.over) { TH.step(T, 1); accH -= 1; n++;
       if (T.W.t % 24 === 0) { theaterDay(); S.step(G, WD, 1); theater(); save(); } }   // بالحرب نحفظ كل يوم (مثل «الحرب الكبرى»)
+    if (T) frontNews();
     if (T && T.A) { const af = Math.min(1.6, Math.max(.3, .25 * rate * 3600 / 38)); AIR.step(T.A, T.W, SM, dt * af); airEvents(); }
     if (G.t > t0) after(m0, t0);
     if (n) { dirty = true; if (selD) divBar(); }
+  }
+  // أخبار الجبهة من سجل «الحرب الكبرى» (theater W.log)
+  const WXN = { clear: 'صحو', cloud: 'غيوم', rain: 'مطر وطين', dust: 'عاصفة غبار' };
+  function frontNews() {
+    const L = T.W.log; T.logN = Math.min(T.logN ?? L.length, L.length);
+    for (let i = T.logN; i < L.length; i++) { const l = L[i], c = T.cells[l.cell], cn = c ? (c.city || byId.get(WD.r[c.reg][0])?.n || '') : '';
+      if (l.k === 'plango' && l.side === 0) toast('➹ الخطة: التحضير خلص، رأس الحربة يهاجم', 'good');
+      else if (l.k === 'plandone' && l.side === 0) toast('🎯 الخطة وصلت هدفها', 'good');
+      else if ((l.k === 'planfail' || l.k === 'planstall') && l.side === 0) toast('⛔ الخطة توقفت: رأس الحربة تعب أو انقتل', 'bad');
+      else if (l.k === 'surrender') toast(`🏳 ${l.side === 0 ? 'فرقة منا استسلمت' : 'فرقة عدو استسلمت'}${cn ? ' — ' + cn : ''} (مطوّقة)`, l.side === 0 ? 'bad' : 'good');
+      else if (l.k === 'take' && c && c.vp >= 3) toast(`🚩 ${l.side === 0 ? 'أخذنا' : 'العدو أخذ'} ${cn}`, l.side === 0 ? 'good' : 'bad');
+      else if (l.k === 'wx' && l.wx !== 'clear') toast(`🌦 ${WXN[l.wx]} على الجبهة ${l.h ? l.h + ' ساعة' : ''}`, ''); }
+    T.logN = L.length;
   }
   const BOOMS = [];   // انفجارات قصيرة للرسم
   function airEvents() {
@@ -404,13 +419,22 @@ input[type=range]{width:100%;accent-color:var(--gold)}
     // الضربات الجوية البسيطة (حفظ قديم بلا جو حقيقي): ✈ صغيرة بلون الطرف اللي ضرب
     if (T.air) { cx.font = '700 12px sans-serif'; cx.textAlign = 'center'; for (const [c, s] of T.air.hits) { const cl = T.cells[c], [x, y] = toS(MX(cl.ll[0]), MY(cl.ll[1])); cx.fillStyle = s === 0 ? '#2f7d2a' : '#b3261e'; cx.fillText('✈', x + 10, y - 9); } }
     // الفرق: مربع لكل خلية بيها فرق (العدد ونوع الأقوى)
-    const by = new Map(); for (const d of W.divs) if (!d.dead) { const k = d.cell * 2 + d.side; if (!by.has(k)) by.set(k, []); by.get(k).push(d); }
+    // الضباب: فرقنا كلها، وفرق العدو بس اللي نعرفها (الطازجة حقيقية، والقديمة «شبح» بمكانها القديم بنسبة شفافية)
+    const vis = [...W.divs.filter(d => !d.dead && d.side === 0), ...SM.known(W, 0)];
+    const by = new Map(); for (const d of vis) { const k = d.cell * 2 + d.side; if (!by.has(k)) by.set(k, []); by.get(k).push(d); }
+    // خطط الهجوم بالأسهم: الخطة الفعّالة (أصفر)، واللي جاي ترسمها (متقطع)
+    const arrow = (path, col, dash) => { if (path.length < 2) return; cx.beginPath(); path.forEach((c, i) => { const cl = T.cells[c], [x, y] = toS(MX(cl.ll[0]), MY(cl.ll[1])); i ? cx.lineTo(x, y) : cx.moveTo(x, y); }); cx.strokeStyle = col; cx.lineWidth = 4; cx.lineJoin = 'round'; cx.setLineDash(dash ? [8, 6] : []); cx.stroke(); cx.setLineDash([]);
+      const a = T.cells[path[path.length - 2]], b = T.cells[path[path.length - 1]], [ax, ay] = toS(MX(a.ll[0]), MY(a.ll[1])), [bx, by2] = toS(MX(b.ll[0]), MY(b.ll[1])), h = Math.atan2(by2 - ay, bx - ax);
+      cx.beginPath(); cx.moveTo(bx, by2); cx.lineTo(bx - 14 * Math.cos(h - .45), by2 - 14 * Math.sin(h - .45)); cx.lineTo(bx - 14 * Math.cos(h + .45), by2 - 14 * Math.sin(h + .45)); cx.closePath(); cx.fillStyle = col; cx.fill(); };
+    for (const P of W.plans || []) if (P.side === 0 && (P.st === 'prep' || P.st === 'go')) arrow(P.path, P.st === 'go' ? 'rgba(255,190,40,.85)' : 'rgba(255,190,40,.5)');
+    if (PLAN) arrow(PLAN, 'rgba(255,230,120,.9)', true);
     cx.textAlign = 'center'; cx.font = '700 10px "IBM Plex Sans Arabic",Tahoma';
     for (const [k, L] of by) { const i = k >> 1, s = k & 1, c = T.cells[i]; let [x, y] = toS(MX(c.ll[0]), MY(c.ll[1])); if (x < -20 || x > W0() + 20 || y < -20 || y > H0() + 20) continue;
       if (by.has(i * 2 + (1 - s))) x += s ? 9 : -9;
       const w = 20, h = 13, top = L.sort((a, b) => ({ arm: 0, mec: 1, inf: 2 })[a.kind] - ({ arm: 0, mec: 1, inf: 2 })[b.kind])[0], org = L.reduce((t, d) => t + d.org / d.orgMax, 0) / L.length;
+      if (L.some(d => d.ghost)) cx.globalAlpha = Math.max(.3, .62 - (L[0].ghost || 0) / 200);
       cx.fillStyle = s === 0 ? '#2f5f2a' : '#7a2a20'; cx.fillRect(x - w / 2, y - h / 2, w, h); cx.strokeStyle = selD && L.some(d => selD.includes(d)) ? '#ffd166' : '#000'; cx.lineWidth = selD && L.some(d => selD.includes(d)) ? 2 : 1; cx.strokeRect(x - w / 2, y - h / 2, w, h);
-      cx.fillStyle = '#fff'; cx.fillText(KS[top.kind] + (L.length > 1 ? L.length : ''), x, y + 4);
+      cx.fillStyle = '#fff'; cx.fillText(KS[top.kind] + (L.length > 1 ? L.length : '') + (L[0].ghost ? '?' : ''), x, y + 4); cx.globalAlpha = 1;
       cx.fillStyle = org > .6 ? '#7ddc6a' : org > .3 ? '#f2c14e' : '#ff5a3c'; cx.fillRect(x - w / 2, y + h / 2, w * org, 2);
       if (s === 0) for (const d of L) if (d.path.length) { const tc = T.cells[d.path[d.path.length - 1]], [tx, ty] = toS(MX(tc.ll[0]), MY(tc.ll[1])); cx.beginPath(); cx.moveTo(x, y); cx.lineTo(tx, ty); cx.strokeStyle = 'rgba(255,209,102,.7)'; cx.lineWidth = 1.5; cx.stroke(); } }
   }
@@ -420,6 +444,7 @@ input[type=range]{width:100%;accent-color:var(--gold)}
   function tapTheater(sx, sy) {
     if (!T || cam.s < 600) return false; const i = cellAt(sx, sy); if (i < 0) return false; const W = T.W;
     const mine = W.divs.filter(d => !d.dead && d.side === 0 && d.cell === i);
+    if (PLAN) { if (PLAN[PLAN.length - 1] !== i) PLAN.push(i); divBar(); return true; }   // نرسم السهم خلية خلية
     if (selD && selD.length && !mine.some(d => selD.includes(d))) {   // أمر: روحوا لهاي الخلية
       let ok = 0; for (const d of selD) if (!d.dead && SM.order(W, d, i, 'manual')) ok++;
       toast(ok ? `➡ ${ok} فرقة تتحرك${W.ctrl[i] !== 0 ? ' وتهاجم' : ''}` : 'ما اكو طريق', ok ? 'good' : 'bad'); selD = null; divBar(); return true; }
@@ -431,7 +456,15 @@ input[type=range]{width:100%;accent-color:var(--gold)}
     if (!selD || !selD.length) { el.hidden = true; return; }
     const L = selD.filter(d => !d.dead);
     el.innerHTML = `<b>${L.length} فرقة</b> · ${L.map(d => d.n + ' ' + Math.round(d.org / d.orgMax * 100) + '٪').join('، ')}<div class="row"><span class="note">اضغط خلية حتى يروحون لها</span><button id="dauto">🤖 رجّعهم للذكاء</button><button id="dx">✕</button></div>`;
-    el.hidden = false; $('#dauto').onclick = () => { for (const d of L) { d.mode = 'auto'; d.path = []; } selD = null; divBar(); }; $('#dx').onclick = () => { selD = null; divBar(); };
+    if (PLAN) el.innerHTML = `<b>➹ خطة هجوم: ${L.length} فرقة</b> · ${PLAN.length - 1} نقطة<div class="row"><span class="note">اضغط الخلايا على طريق الهجوم لحد الهدف</span><button id="pgo" class="big">✔ نفّذ</button><button id="px">✕</button></div><div class="note">رأس الحربة (الدروع والآليات) يتجمّع أول، وبعدين يهاجم خلية خلية على السهم، ويوقف إذا تعب.</div>`;
+    else el.querySelector('.row').insertAdjacentHTML('afterbegin', '<button id="dplan">➹ خطة بسهم</button>');
+    el.hidden = false;
+    const q = id => el.querySelector('#' + id);
+    if (q('dauto')) q('dauto').onclick = () => { for (const d of L) { d.mode = 'auto'; d.path = []; } selD = null; divBar(); };
+    if (q('dx')) q('dx').onclick = () => { selD = null; divBar(); };
+    if (q('dplan')) q('dplan').onclick = () => { PLAN = [L[0].cell]; divBar(); };
+    if (q('px')) q('px').onclick = () => { PLAN = null; divBar(); };
+    if (q('pgo')) q('pgo').onclick = () => { const P = PLAN.length > 1 ? SM.makePlan(T.W, 0, L, PLAN) : null; PLAN = null; selD = null; divBar(); toast(P ? `➹ الخطة بدت: تحضير ${P.prep} ساعات وبعدين هجوم` : 'السهم قصير', P ? 'good' : 'bad'); save(); };
   }
   let shown = 0;
   function after(m0, t0) {
@@ -457,6 +490,7 @@ input[type=range]{width:100%;accent-color:var(--gold)}
       case 'strike': return [`🚀 ${n(l.by)} ضربت ${({ mil: 'جيش', oil: 'نفط', city: 'مدن' })[l.kind]} ${n(l.t)}: ${l.nm ? l.nm + ' صاروخ (اعترضوا ' + l.im + ')' : ''}${l.nm && l.nd ? ' و' : ''}${l.nd ? l.nd + ' مسيّرة (اعترضوا ' + l.id + ')' : ''}`, l.t === me ? 'bad' : l.by === me ? 'good' : ''];
       case 'blockade': return [`⚓ ${n(l.by)} تحاصر سواحل ${n(l.on)} (${l.f}٪)`, l.on === me ? 'bad' : l.by === me ? 'good' : ''];
       case 'strait': return [`🚢 ${l.n} انقطع ${l.f}٪ — النفط يغلى`, ''];
+      case 'plan': return null;
       case 'cap': return [`🏳 ${n(l.who)} استسلمت — انتهت ${l.war}`, l.who === me ? 'bad' : 'good'];
     }
     return null;
@@ -583,7 +617,7 @@ input[type=range]{width:100%;accent-color:var(--gold)}
         const a = b.dataset.act; if (a === 'war' && armed !== k) { armed = k; card(); return; }
         armed = null; const res = S.act(G, WD, a, k);
         if (res.ok) toast(msg(G.log[G.log.length - 1])?.[0] || 'تم', a === 'war' ? 'bad' : 'good'); else toast(res.why, 'bad');
-        if (a === 'war') { syncMap(); speed = 0; theater(); }
+        if (a === 'war') { syncMap(); speed = 0; theater(); if (T) { sel = null; } }
         theater(); bar(); card(); save();
       });
     },

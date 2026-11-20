@@ -15,7 +15,7 @@
   function build(G, WD, war, me, fix) {
     const idx = new Map(WD.r.map((a, i) => [a[0], i]));
     const mineA = war.a.includes(me), side0 = mineA ? war.a : war.b, side1 = mineA ? war.b : war.a;
-    const sideOf = k => side0.includes(k) ? 0 : side1.includes(k) ? 1 : -1, CTL = fix ? fix.ctl0 : G.ctl;
+    const sideOf = fix && fix.side ? fix.side : k => side0.includes(k) ? 0 : side1.includes(k) ? 1 : -1, CTL = fix ? fix.ctl0 : G.ctl;
     // 1) مناطق الجبهة وعمقها (لحد 3 جيران)، بس أراضي الطرفين
     let regs;
     if (fix) regs = fix.regs; else {
@@ -205,9 +205,9 @@
   }
   function score(T) { const s = SIM.score(T.W); return { vp: s.vp, divs: s.divs, lost: s.lost, cells: s.cells, over: T.W.over }; }
   // الحفظ: الخلايا تنبني من جديد بنفس الطريقة؛ نحفظ بس الفرق والسيطرة والوقت
-  function save(T) { const W = T.W; return { regs: T.regs, ctl0: T.ctl0, war: T.war, t: T.t, wt: W.t, ctrl: Array.from(W.ctrl), divs: W.divs.filter(d => !d.dead).map(d => ({ ...d, path: d.path.slice() })), lost: W.lost, took: W.took, ob: W.ob, over: W.over, rng: W.rnd.get(), nid: SIM.getNID(), mob: W.mob, num: W.num, cool: W.cool ? [...W.cool] : null, stalls: W.stalls, wx: W.wx, wxT: W.wxT, qual: W.qual, tob: T.ob, aggr0: T.aggr0, auto0: T.auto0, vp0: T.vp0, hour: W.hour, night: W.night, air: T.air, plans: W.plans, planId: W.planId, bridges: (W.bridges || []).map(b => b.down), seen: W.seen ? W.seen.map(a => Array.from(a, v => v < -1e8 ? null : v)) : null, snap: W.snap ? W.snap.map(m => [...m]) : null, dip: W.dip || null, hsMax: T.hsMax, target: T.target, qual0: T.qual0 || null, arrive: T.arrive || null }; }
+  function save(T) { const W = T.W; return { regs: T.regs, ctl0: T.ctl0, war: T.war, t: T.t, wt: W.t, ctrl: Array.from(W.ctrl), divs: W.divs.filter(d => !d.dead).map(d => ({ ...d, path: d.path.slice() })), lost: W.lost, took: W.took, ob: W.ob, over: W.over, rng: W.rnd.get(), nid: SIM.getNID(), mob: W.mob, num: W.num, cool: W.cool ? [...W.cool] : null, stalls: W.stalls, wx: W.wx, wxT: W.wxT, qual: W.qual, tob: T.ob, aggr0: T.aggr0, auto0: T.auto0, vp0: T.vp0, hour: W.hour, night: W.night, air: T.air, plans: W.plans, planId: W.planId, bridges: (W.bridges || []).map(b => b.down), seen: W.seen ? W.seen.map(a => Array.from(a, v => v < -1e8 ? null : v)) : null, snap: W.snap ? W.snap.map(m => [...m]) : null, dip: W.dip || null, hsMax: T.hsMax, target: T.target, qual0: T.qual0 || null, arrive: T.arrive || null, kind: T.kind || null }; }
   function restore(o, G, WD, war, me) {
-    const T = build(G, WD, war, me, { regs: o.regs, ctl0: o.ctl0, hsMax: o.hsMax, target: o.target }); if (!T) return null; const W = T.W;
+    const T = build(G, WD, war, me, { regs: o.regs, ctl0: o.ctl0, hsMax: o.hsMax, target: o.target, side: o.kind === 'air' ? airSide(war, me) : null }); if (!T) return null; const W = T.W; if (o.kind) T.kind = o.kind;
     W.divs = o.divs.map(d => ({ ...d })); o.ctrl.forEach((s, i) => { if (i < W.N) W.ctrl[i] = s; }); W.t = o.wt; T.t = o.t; W.lost = o.lost; W.took = o.took; W.ob = o.ob; W.over = o.over; W.rnd.set(o.rng); SIM.setNID(Math.max(SIM.getNID(), o.nid)); W.mob = o.mob; W.num = o.num; if (o.cool) W.cool = new Map(o.cool); W.stalls = o.stalls; W.wx = o.wx; W.wxT = o.wxT; if (o.qual) W.qual = o.qual; T.ob = o.tob; T.aggr0 = o.aggr0; T.auto0 = o.auto0; T.vp0 = o.vp0; W.hour = o.hour; W.night = o.night; T.air = o.air; W.plans = o.plans || []; W.planId = o.planId || 1; if (o.bridges) o.bridges.forEach((d, i) => { if (W.bridges[i]) W.bridges[i].down = d; });
     if (o.seen) { W.seen = o.seen.map(a => Float64Array.from(a, v => v == null ? -1e9 : v)); W.snap = o.snap.map(e => new Map(e)); W.spots = [[], []]; } else SIM.intel(W);
     if (o.dip) W.dip = o.dip;   // W6: دبلوماسية الحرب (dip.js)
@@ -252,6 +252,22 @@
     SIM.supply(W); W.ob = [SIM.alive(W).length, 0]; SIM.intel(W);
     T.vp0 = [0, 0]; T.aggr0 = 99; T.auto0 = false;
   }
-  const API = { build, step, sync, score, save, restore, HOPS, airDay, home, HOME };
+  // ===== حرب بلا حدود برية (مثل أمريكا وإيران): مسرح جوي =====
+  // أرض العدو القريبة من قواعدنا (لحد 1200 كم) + المناطق اللي بيها قواعدنا (ولو بدولة صديقة مثل قطر): بدون فرق برية، بس الجو والصواريخ بمحرك «الحرب الكبرى»
+  const airSide = (war, me) => { const en = war.a.includes(me) ? war.b : war.a; return k => en.includes(k) ? 1 : 0; };
+  function air(G, WD, war, me) {
+    const en = war.a.includes(me) ? war.b : war.a, aw = (WD.aw || {})[me], idx = new Map(WD.r.map((a, i) => [a[0], i]));
+    const km = (a, b) => { const dl = (b[1] - a[1]) * 111, dx = (b[0] - a[0]) * 111 * Math.cos((a[1] + b[1]) / 2 * Math.PI / 180); return Math.hypot(dl, dx); };
+    let sites = aw && aw.bases ? aw.bases.map(([n, lat, lon]) => [lon, lat]) : [];
+    if (!sites.length) { const cap = WD.r.find((a, i) => G.ctl[i] === me && a[12]); if (cap) sites = [cap[6]]; }
+    if (!sites.length) return null;
+    const host = new Set(); for (const s of sites) { let b = -1, bd = 1e9; WD.r.forEach((a, i) => { const d = km(a[6], s); if (d < bd) { bd = d; b = i; } }); if (b >= 0 && bd < 200 && !en.includes(G.ctl[b])) host.add(b); }
+    const enemy = []; WD.r.forEach((a, i) => { if (!en.includes(G.ctl[i])) return; const d = Math.min(...sites.map(s => km(a[6], s))); if (d < 1200) enemy.push([i, d]); });
+    if (!enemy.length || !host.size) return null;
+    const regs = [...enemy.sort((a, b) => a[1] - b[1]).slice(0, MAXREG - host.size).map(x => x[0]), ...host];
+    const T = build(G, WD, war, me, { regs, ctl0: Object.fromEntries(regs.map(r => [r, G.ctl[r]])), hsMax: 120, target: 600, side: airSide(war, me) }); if (!T) return null;
+    T.kind = 'air'; T.vp0 = [0, 0]; T.aggr0 = 99; T.side[0] = [me, ...T.side[0].filter(x => x !== me)]; return T;   // دولتنا أول (حتى قواعدها هي اللي تطلع، مو قواعد الحليف)
+  }
+  const API = { build, step, sync, score, save, restore, HOPS, airDay, home, HOME, air };
   if (typeof module !== 'undefined') module.exports = API; else root.THEATER = API;
 })(this);

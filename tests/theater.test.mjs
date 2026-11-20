@@ -23,6 +23,13 @@ for (const [me, war] of [['UKR', 'ukraine'], ['RUS', 'ukraine'], ['IRQ', null], 
   if (Array.from(T.W.ctrl).join() !== Array.from(T2.W.ctrl).join()) no(`${me}: الحفظ/التحميل غيّر المسرح`);
   out.push(`${me} (${w.n}): طرق ${T.nRoads} حد، أنهار ${T.nRiv}، جسور ${T.nBr} · ${T.cells.length} خلية ${Math.round(T.hs)} كم من ${T.regs.length} منطقة · فرق ${T.ob[0].inf + T.ob[0].mec + T.ob[0].arm} ضد ${T.ob[1].inf + T.ob[1].mec + T.ob[1].arm} · بناء ${bt}ms · شهر ${run}ms · خلايا ${sc.cells.join('/')} · مناطق تغيرت ${ch.length} · استسلام ${sc.lost.join('/')} ${sc.over ? '· نهاية ' + JSON.stringify(sc.over) : ''}`);
 }
+// حرب بلا حدود برية (أمريكا/إسرائيل ضد إيران): مسرح جوي بقواعد الطرفين وبطارياتهم، بدون فرق، والحفظ يرجّعه
+{ const AWm = require('../prototypes/world/airworld.js');
+  for (const me of ['USA', 'IRN', 'ISR']) { const G = S.init(WD, me, { seed: 2 }), w = G.wars.find(x => x.id === 'iran_war'), T = TH.air(G, WD, w, me);
+    if (!T) { no(me + ': المسرح الجوي ما انبنى'); continue; } const A = AWm.build(T, G, WD), b0 = A.bases.filter(b => b.side === 0).length, b1 = A.bases.filter(b => b.side === 1).length;
+    if (!b0 || !b1) no(`${me}: قواعد ناقصة بالمسرح الجوي (${b0}/${b1})`); if (SIM.alive(T.W).length) no(me + ': فرق برية بالمسرح الجوي');
+    const T2 = TH.restore(JSON.parse(JSON.stringify(TH.save(T))), G, WD, w, me); if (!T2 || T2.kind !== 'air' || T2.cells.length !== T.cells.length) no(me + ': حفظ المسرح الجوي');
+    out.push(`${me} (حرب جوية ضد ${me === 'IRN' ? 'أمريكا وإسرائيل' : 'إيران'}): ${T.cells.length} خلية · قواعد ${b0} ضد ${b1} · بطاريات ${A.sams.filter(x => x.side === 0).length} ضد ${A.sams.filter(x => x.side === 1).length}`); } }
 // I-106: أرض الدولة وجيشها بالسلم (TH.home): تنبني لكل حجم، الفرق موجودة، والحفظ يرجع نفس الأماكن
 for (const me of ['IRQ', 'USA', 'LBN', 'DEU', 'BRA']) {
   const G = S.init(WD, me, { seed: 3 }), T = TH.home(G, WD, me); if (!T) { no(me + ': أرض السلم ما انبنت'); continue; }

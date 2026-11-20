@@ -433,7 +433,7 @@ body.play #modes{display:none}body.play.layers #modes{display:flex;flex-directio
     $('#top h1').innerHTML = `${CS[me].ar} <small></small>`;
     if (!$('#bar')) { const b = document.createElement('div'); b.id = 'bar'; $('#top').append(b); }
     if (!G.nat) NT.init(G, WD); else NT.catalog(G, WD);   // D-050: الداخل والبحث والإنتاج من «الحرب الكبرى»
-    if (G.th) { const w = G.wars.find(x => x.id === G.th.war); T = w ? TH.restore(G.th, G, WD, w, me) : null; if (T) { w.detail = true; T.arms = G.th.arms || null; T.A = AWLD.restore(AWLD.build(T, G, WD), G.th.airR); WDP.setup(G, WD, S, T); applyCmd(T); viewInit(); } }
+    if (G.th) { const w = G.wars.find(x => x.id === G.th.war); T = w ? TH.restore(G.th, G, WD, w, me) : null; if (T) { w.detail = T.kind !== 'air'; T.arms = G.th.arms || null; T.A = AWLD.restore(AWLD.build(T, G, WD), G.th.airR); WDP.setup(G, WD, S, T); applyCmd(T); viewInit(); } }
     if (!T && G.home) homeBuild(G.home);
     theater(); syncMap(); setMode('pol'); bar(); sel = null; card();
     ADVL = NT.advice(G, WD, { SIM: SM, T }); meDot();
@@ -457,13 +457,20 @@ body.play #modes{display:none}body.play.layers #modes{display:flex;flex-directio
   }
   // ===== W5: مسرح الحرب =====
   function save() { G.th = T ? { ...TH.save(T), airR: T.A ? AWLD.save(T.A) : null, arms: T.arms || null } : null; G.home = HT ? TH.save(HT) : null; return store.set(S.save(G)); }
+  // المسرح الجوي: خسائر الطيارات والضربات ترجع لسير الحرب المختصرة وقوة الطرفين [تقدير]
+  function airWarDay() { const w = G.wars.find(x => x.id === T.war); if (!w || !T.A) return; const A = T.A, P = T.airPrev || (T.airPrev = { l: [0, 0] }), dl = [A.lostPlanes[0] - P.l[0], A.lostPlanes[1] - P.l[1]]; P.l = A.lostPlanes.slice();
+    const en = T.side[1][0], mine = w.a.includes(me) ? 1 : -1, d = (dl[1] - dl[0]) * 1.5; if (d) w.score = Math.max(-100, Math.min(100, w.score + d * mine));
+    if (dl[0]) G.C[me].pw *= 1 - .002 * dl[0]; if (dl[1] && G.C[en]) G.C[en].pw *= 1 - .002 * dl[1];
+    const sd = A.sams.filter(x => x.side === 1 && x.down).length; if (G.C[en] && sd > (P.sd || 0)) { G.C[en].adI = Math.max(0, G.C[en].adI - (sd - (P.sd || 0)) * 2); P.sd = sd; } }
   function myWar() { return G.wars.find(w => w.a.includes(me) || w.b.includes(me)); }
   function theater() {
     if (T && !G.wars.some(w => w.id === T.war)) { T = null; selD = null; }
     if (T) return;
     for (const w of G.wars) { if (!(w.a.includes(me) || w.b.includes(me)) || w.noLand) continue;
-      const t = TH.build(G, WD, w, me); if (!t) { w.noLand = true; continue; }
-      const prevHT = HT; T = t; HT = null; w.detail = true; T.vp0 = TH.score(T).vp.slice(); T.aggr0 = 1.6; T.arms = G.nat && G.nat.arms ? JSON.parse(JSON.stringify(G.nat.arms)) : null; T.A = AWLD.build(T, G, WD); WDP.setup(G, WD, S, T); applyCmd(T); deploy(T, prevHT); viewInit();
+      let t = TH.build(G, WD, w, me), isAir = false;
+      if (!t) { t = w.noAir ? null : TH.air(G, WD, w, me); if (!t) { w.noLand = true; w.noAir = true; continue; } isAir = true; }   // بلا حدود برية: مسرح جوي
+      const prevHT = HT; T = t; HT = null; w.detail = !isAir; T.vp0 = TH.score(T).vp.slice(); T.aggr0 = 1.6; T.arms = G.nat && G.nat.arms ? JSON.parse(JSON.stringify(G.nat.arms)) : null; T.A = AWLD.build(T, G, WD); WDP.setup(G, WD, S, T); applyCmd(T); if (!isAir) deploy(T, prevHT); viewInit();
+      if (isAir) { T.airPrev = { l: [0, 0] }; toast(`✈ ${w.n}: ماكو حدود برية — الحرب جوية: قواعدنا ${T.A.bases.filter(b => b.side === 0).length} وقواعدهم ${T.A.bases.filter(b => b.side === 1).length}، بطاريات ${T.A.sams.filter(x => x.side === 0).length} ضد ${T.A.sams.filter(x => x.side === 1).length}`, 'bad'); const c = T.cells[0]; cam.x = MX(c.ll[0]); cam.y = MY(c.ll[1]); cam.s = Math.max(cam.s, 700); speed = 0; bar(); break; }
       toast(`🗺 ${w.n}: الجبهة انقسمت لـ${T.cells.length} خلية، و${SM.alive(T.W).filter(d => d.side === 0).length} فرقة إلنا ضد ${SM.alive(T.W).filter(d => d.side === 1).length}`, 'bad');
       const c = T.cells[Math.floor(T.cells.length / 2)]; cam.x = MX(c.ll[0]); cam.y = MY(c.ll[1]); cam.s = Math.max(cam.s, 1400); speed = 0; bar(); break; }
     if (!T && !HT) homeBuild();
@@ -504,6 +511,7 @@ body.play #modes{display:none}body.play.layers #modes{display:flex;flex-directio
   function homeAddDiv(kind) { if (!HT) return; const W = HT.W, k = HT.cells.reduce((b, c, i) => (c.vp || 0) > (HT.cells[b].vp || 0) ? i : b, 0), num = 1 + SM.alive(W).reduce((m, d) => Math.max(m, d.num || 0), 0); const d = SM.addDiv(W, 0, kind, k, num); d.org = d.orgMax * .6; }
   // نهاية يوم بالمسرح: السيطرة ترجع للخريطة، سير الحرب، والاستسلام
   function theaterDay() {
+    if (T.kind === 'air') { airWarDay(); return; }
     const ch = TH.sync(T, G, WD), w = G.wars.find(x => x.id === T.war);
     for (const [r, by, from] of ch) G.log.push({ t: G.t, k: 'take', war: T.war, r, by, from });
     if (ch.length) syncMap();
@@ -1011,7 +1019,8 @@ body.play #modes{display:none}body.play.layers #modes{display:flex;flex-directio
           <div class="note" style="margin-top:6px">⚓ بحريتنا ${Math.round(c.nav)} · بحريتهم ${Math.round(G.C[en].nav)}${c.blk > .05 ? ` · <b class="neg">محاصرين ${Math.round(c.blk * 100)}٪</b>` : ''}${G.C[en].blk > .05 ? ` · <b class="pos">نحاصرهم ${Math.round(G.C[en].blk * 100)}٪</b>` : ''}</div>
           <div class="seg">${[['block', '⚓ حصار سواحلهم'], ['def', '🛡 حماية سواحلنا']].map(([k, t]) => `<button data-nav="${k}" class="${(c.navMode || 'block') === k ? 'on' : ''}">${t}</button>`).join('')}</div>`; })() : ''}
         ${mine.includes(w) ? `<div class="row"><button data-peace="${w.id}" class="${w.offer ? 'big' : ''}">${w.offer ? '🕊 اقبل السلام اللي عرضوه' : '🕊 اعرض السلام (⭐1)'}</button></div>` : ''}</div>`; };
-    if (T) { const sc = TH.score(T), A = SM.alive(T.W), my = A.filter(d => d.side === 0), en = A.filter(d => d.side === 1), mode = T.auto0 === false ? 'manual' : T.aggr0 <= 1.3 ? 'atk' : T.aggr0 > 50 ? 'def' : 'bal';
+    if (T && T.kind === 'air') h += `<div class="vs"><div class="vsh"><span class="emb" style="background:${colPol(me)}">${EL(CS[me].ar)}</span><b>${CS[me].ar}</b><i>ضد</i><b>${nameOf(T.side[1][0])}</b><span class="emb" style="background:${colPol(T.side[1][0])}">${EL(nameOf(T.side[1][0]))}</span></div><div class="note">✈ ماكو حدود برية بيناتنا: الحرب جوية وصواريخ (محرك «الحرب الكبرى»). خسائر الطيارات وإسقاط البطاريات تغيّر سير الحرب.</div>${vsBar('✈ طيارات انخسرت (منهم/منا)', T.A.lostPlanes[1], T.A.lostPlanes[0])}${vsBar('🚀 بطاريات شغالة', T.A.sams.filter(x => x.side === 0 && !x.down).length, T.A.sams.filter(x => x.side === 1 && !x.down).length)}${airPanel()}</div>`;
+    if (T && T.kind !== 'air') { const sc = TH.score(T), A = SM.alive(T.W), my = A.filter(d => d.side === 0), en = A.filter(d => d.side === 1), mode = T.auto0 === false ? 'manual' : T.aggr0 <= 1.3 ? 'atk' : T.aggr0 > 50 ? 'def' : 'bal';
       h += `<div class="vs"><div class="vsh"><span class="emb" style="background:${colPol(me)}">${EL(CS[me].ar)}</span><b>${CS[me].ar}</b><i>ضد</i><b>${nameOf(T.side[1][0])}</b><span class="emb" style="background:${colPol(T.side[1][0])}">${EL(nameOf(T.side[1][0]))}</span></div>${G.cmd ? `<div class="vsl" style="margin:2px 0 6px"><b>🎖 ${WCMD.STARS[G.cmd.c.rank]} ${G.cmd.c.n}</b><span>القادة</span><b>${'★'.repeat(Math.max(1, Math.min(4, ((G.cmdq || {})[T.side[1][0]] || 3) - 1)))} جودة ${((G.cmdq || {})[T.side[1][0]] || 3)}/5</b></div>` : ''}${T.arrive && T.arrive.length ? `<div class="note">🚚 ${T.arrive.length} فرقة بالطريق للجبهة (أقرب وحدة بعد ${Math.max(1, Math.ceil((Math.min(...T.arrive.map(a => a.at)) - T.W.t) / 24))} يوم)</div>` : ''}${vsBar('🪖 الفرق', my.length, en.length)}${vsBar('🗺 الأرض (خلايا)', sc.cells[0], sc.cells[1])}${vsBar('🏙 المدن (نقاط نصر)', sc.vp[0], sc.vp[1])}${vsBar('🏳 استسلموا', sc.lost[1], sc.lost[0], 'منهم', 'منا')}</div><div class="st" style="margin:6px 0">
         <h3>جيشنا بالمسرح</h3><div class="seg" id="tmode">${[['atk', 'هجوم'], ['bal', 'متوازن'], ['def', 'دفاع بس'], ['manual', 'يدوي (أنا أأمر)']].map(([k, t]) => `<button data-tm="${k}" class="${mode === k ? 'on' : ''}">${t}</button>`).join('')}</div>
         <div class="note">قرّب الخريطة على الجبهة: اضغط فرقتك (المربع الأخضر) وبعدين الخلية اللي تريدها تروح لها. ⩚ = خطوط محصنة.</div>

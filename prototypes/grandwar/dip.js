@@ -26,6 +26,15 @@
     { id: 'cn', n: 'الصين', f: '🇨🇳', rel: [20, 40], will: 'aid', power: 1, aid: [['ch4', 'cash:.5-2'], ['m6', 'cash:1-3', 's3']] },
   ];
   const BY = Object.fromEntries(COUNTRIES.map(c => [c.id, c]));
+  // «العالم» (D-050): configure يبدّل الدول والأحداث وأسماء الخصم لأي حرب. بدونه = العراق ضد إيران مثل ما هو
+  const CFG = { foe: 'إيران', foeCities: 'مدن إيرانية', hz: true, LL: null, sancMsg: 'بس أمريكا تقدر تفرض عقوبات' };
+  function configure(o) {
+    Object.assign(CFG, o.names || {}); if (o.hz != null) CFG.hz = o.hz; if (o.LL) CFG.LL = o.LL;
+    if (o.countries) { COUNTRIES.length = 0; COUNTRIES.push(...o.countries); for (const k of Object.keys(BY)) delete BY[k]; for (const C of COUNTRIES) BY[C.id] = C; }
+    if (o.events) { EVENTS.length = 0; EVENTS.push(...o.events); for (const k of Object.keys(EV)) delete EV[k]; for (const E of EVENTS) EV[E.id] = E; }
+    for (const [k, v] of Object.entries(o.terms || {})) Object.assign(TERMS[k], v);
+    for (const [k, v] of Object.entries(o.ops || {})) Object.assign(OPS[k], v);
+  }
   const C_MISSION = .2;   // كلفة البعثة الدبلوماسية (مليار)
   const TERMS = {
     truce: { n: 'هدنة 7 أيام', need: .5, d: 'القتال يوقف أسبوع (الهجمات والطلعات الهجومية والضربات)، وبعدها الحرب ترجع إذا ما صار سلام' },
@@ -43,7 +52,7 @@
   const clamp = v => Math.max(-100, Math.min(100, v));
   const day = W => Math.floor(W.t / 24);
   const say = (W, o) => { const { k, ...r } = o; W.log.push({ t: W.t, ...r, k: 'dip', term: k }); };   // term = نوع الهدنة/السلام
-  function rel(W, id, s, dv) { const c = W.dip.c[id]; c.rel[s] = clamp(c.rel[s] + dv); return c.rel[s]; }
+  function rel(W, id, s, dv) { const c = W.dip.c[id]; if (!c) return 0; c.rel[s] = clamp(c.rel[s] + dv); return c.rel[s]; }
 
   // ===== تعب الحرب: شكد الطرف يريد يخلّص (0 مرتاح، فوق 1 منهار) =====
   function vpOf(W) { const own = [0, 0], held = [0, 0]; W.cells.forEach((c, i) => { if (!c.vp) return; if (W.ctrl[i] === c.s) own[c.s] += c.vp; else held[W.ctrl[i]] += c.vp; }); return { own, held }; }
@@ -57,7 +66,7 @@
     return w;
   }
   // جواب الطرف على شروط (مع وسيط يزيد القبول)
-  function verdict(W, s, k, med) { const w = weary(W, s) + (med ? .12 : 0), need = TERMS[k].need; if (k === 'keep' && vpOf(W).held[1 - s] <= 0) return { ok: false, m: -1, why: 'ما بيدنا مدن إيرانية' }; return { ok: w >= need, m: w - need }; }
+  function verdict(W, s, k, med) { const w = weary(W, s) + (med ? .12 : 0), need = TERMS[k].need; if (k === 'keep' && vpOf(W).held[1 - s] <= 0) return { ok: false, m: -1, why: 'ما بيدنا ' + CFG.foeCities }; return { ok: w >= need, m: w - need }; }
   const guess = v => v.why ? v.why : v.m >= .1 ? 'تقبل أكيد' : v.m >= 0 ? 'تقبل على الأغلب' : v.m > -.12 ? 'مترددة' : 'ترفض';
 
   // ===== أفعال (اللاعب = side 0، والذكاء يستعملها لإيران) =====
@@ -84,7 +93,7 @@
   }
   function askJoin(W, s, id) {
     const C = BY[id], c = W.dip.c[id]; if (!C.join || s !== 0) return 'هالدولة ما تدخل الحرب';
-    if (c.st !== 'neutral') return 'هي أصلاً ' + (c.st === 'ally0' ? 'ويانا' : 'ويا إيران');
+    if (c.st !== 'neutral') return 'هي أصلاً ' + (c.st === 'ally0' ? 'ويانا' : 'ويا ' + CFG.foe);
     if (cdLeft(W, s, id, 'j')) return 'رفضت قريب، انتظر ' + Math.ceil(cdLeft(W, s, id, 'j') / 24) + ' يوم';
     setCd(W, s, id, 'j', 24 * 20);
     if (c.rel[s] < C.join) { rel(W, id, s, -3); say(W, { side: s, a: 'joinno', id, need: C.join }); return { ok: false }; }
@@ -93,12 +102,12 @@
   function join(W, id, s) {
     const C = BY[id], c = W.dip.c[id]; c.st = 'ally' + s; c.rel[1 - s] = -100;
     if (C.force) for (const [k, n] of C.force) for (let i = 0; i < n; i++) W.dip.inbound.push({ s, id, pkg: 'div:' + k, at: W.t + 24 * (8 + i * 2) });
-    if (C.will === 'air') { W.dip.inbound.push({ s, id, pkg: 'f16', at: W.t + 24 * 5 }, { s, id, pkg: 'f16', at: W.t + 24 * 9 }, { s, id, pkg: 'pac3', at: W.t + 24 * 6 }); }
+    if (C.will === 'air') (C.airPkg || ['f16', 'pac3', 'f16']).forEach((pkg, i) => W.dip.inbound.push({ s, id, pkg, at: W.t + 24 * (5 + i * 2) }));
     if (W.eco) { W.eco[s].mor = Math.min(100, W.eco[s].mor + 6); W.eco[1 - s].mor = Math.max(0, W.eco[1 - s].mor - 5); }
     say(W, { side: s, a: 'join', id });
   }
   function askSanc(W, s, id) {
-    const C = BY[id], c = W.dip.c[id]; if (!C.sanc || s !== 0) return 'بس أمريكا تقدر تفرض عقوبات';
+    const C = BY[id], c = W.dip.c[id]; if (!C.sanc || s !== 0) return CFG.sancMsg;
     if (W.dip.sanc > W.t) return 'العقوبات شغالة';
     if (cdLeft(W, s, id, 's')) return 'انتظر ' + Math.ceil(cdLeft(W, s, id, 's') / 24) + ' يوم';
     setCd(W, s, id, 's', 24 * 20);
@@ -182,13 +191,13 @@
     }
     if (D.truce && D.truce <= W.t && D.truce > W.t - 24) say(W, { side: 0, a: 'truceend' });
     fireEvents(W);
-    hzDaily(W);
+    if (CFG.hz) hzDaily(W);
     if (!W.over) iranDip(W);
     D.hist.push([day(W), +weary(W, 0).toFixed(2), +weary(W, 1).toFixed(2)]); if (D.hist.length > 120) D.hist.shift();
   }
   // نقطة وصول القوات الحليفة: أقرب منطقة إلنا مزودة لحدود الدولة الحليفة
   function arrival(W, s, C) {
-    const p = C.to ? LL(...C.to) : null; let best = -1, bd = 1e9;
+    const p = C.to ? (CFG.LL || LL)(...C.to) : null; let best = -1, bd = 1e9;
     W.cells.forEach((c, i) => { if (W.ctrl[i] !== s || c.s !== s || !W.sup[s][i]) return; const d = p ? Math.hypot(c.c[0] - p[0], c.c[1] - p[1]) : -(c.vp || 0); if (d < bd) { bd = d; best = i; } });
     return best;
   }
@@ -219,7 +228,7 @@
     const e = W.eco && W.eco[s]; if (e && e.cash - O.c < -8) return 'الفلوس ما تكفي'; if (e) e.cash -= O.c; D.opCd = W.t + 24 * 7;
     const p = opP(W, s, k); if (W.rnd() > p) { if (W.eco) W.eco[s].mor = Math.max(0, W.eco[s].mor - 1); rel(W, 'ru', s, -3); rel(W, 'cn', s, -3); say(W, { side: s, a: 'spyno', op: k }); return { ok: false, p }; }
     if (k === 'recon') D.reveal = W.t + 48;
-    if (k === 'oil' && ECON) { const t = W.oil.sites.map((f, i) => ({ f, i })).filter(x => x.f.side !== s && !x.f.off && !(x.f.dmg > 0)); if (t.length) { const x = t[Math.floor(W.rnd() * t.length)]; ECON.hitOil(W, x.i, s, 1); } }
+    if (k === 'oil' && ECON && W.oil) { const t = W.oil.sites.map((f, i) => ({ f, i })).filter(x => x.f.side !== s && !x.f.off && !(x.f.dmg > 0)); if (t.length) { const x = t[Math.floor(W.rnd() * t.length)]; ECON.hitOil(W, x.i, s, 1); } }
     if (k === 'riot' && W.eco) W.eco[1 - s].mor = Math.max(0, W.eco[1 - s].mor - 6);
     if (k === 'comm' && W.armies) { const cnt = {}; for (const d of W.divs) if (!d.dead && d.side !== s) cnt[d.army] = (cnt[d.army] || 0) + 1; const a = +Object.keys(cnt).sort((x, y) => cnt[y] - cnt[x])[0]; for (const d of W.divs) if (!d.dead && d.army === a) d.org *= .7; }
     say(W, { side: s, a: 'spyok', op: k }); return { ok: true, p };
@@ -267,6 +276,6 @@
   // للمحاكاة والجو: هدنة هسه؟
   const truce = W => !!(W.dip && W.dip.truce > W.t);
 
-  const API = { OPS, opP, spy, HZ, hz, hzClosed, closeHz, openHz, askHz, aidP, COUNTRIES, BY, TERMS, EVENTS, EV, C_MISSION, init, ensure, daily, weary, verdict, guess, mission, askAid, askJoin, askSanc, propose, accept, answerOffer, choose, truce, vpOf, cdLeft, join };
+  const API = { configure, CFG, OPS, opP, spy, HZ, hz, hzClosed, closeHz, openHz, askHz, aidP, COUNTRIES, BY, TERMS, EVENTS, EV, C_MISSION, init, ensure, daily, weary, verdict, guess, mission, askAid, askJoin, askSanc, propose, accept, answerOffer, choose, truce, vpOf, cdLeft, join };
   if (typeof module !== 'undefined') module.exports = API; else root.DIP = API;
 })(this);

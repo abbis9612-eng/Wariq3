@@ -295,6 +295,8 @@ input[type=range]{width:100%;accent-color:var(--gold)}
 <script src="gwadvise.js"></script>
 <script src="gwgrade.js"></script>
 <script src="nation.js"></script>
+<script src="gwdip.js"></script>
+<script src="wardip.js"></script>
 <script>
 'use strict';
 // ===== اللعبة (W3) =====
@@ -302,7 +304,8 @@ input[type=range]{width:100%;accent-color:var(--gold)}
   const S = window.WSIM, KEY = 'wariq.world.v1';
   let PLAN = null;
   let G = null, speed = 0, acc = 0, lastT = 0, panel = null, sp = null, tier = '', T = null, selD = null;
-  const TH = window.THEATER, SM = window.SIM, AWLD = window.AIRWORLD, NT = window.NATION;
+  const TH = window.THEATER, SM = window.SIM, AWLD = window.AIRWORLD, NT = window.NATION, WDP = window.WARDIP;
+  let MED = null;
   let meSub = 'eco';
   const SPD = [0, 1, 4, 12];   // أيام بالثانية
   const store = { get() { try { return localStorage.getItem(KEY); } catch (e) { return null; } }, set(v) { try { localStorage.setItem(KEY, v); return true; } catch (e) { return false; } } };
@@ -339,7 +342,7 @@ input[type=range]{width:100%;accent-color:var(--gold)}
     $('#top h1').innerHTML = `${CS[me].ar} <small></small>`;
     if (!$('#bar')) { const b = document.createElement('div'); b.id = 'bar'; $('#top').append(b); }
     if (!G.nat) NT.init(G, WD); else NT.catalog(G, WD);   // D-050: الداخل والبحث والإنتاج من «الحرب الكبرى»
-    if (G.th) { const w = G.wars.find(x => x.id === G.th.war); T = w ? TH.restore(G.th, G, WD, w, me) : null; if (T) { w.detail = true; T.A = AWLD.restore(AWLD.build(T, G, WD), G.th.airR); viewInit(); } }
+    if (G.th) { const w = G.wars.find(x => x.id === G.th.war); T = w ? TH.restore(G.th, G, WD, w, me) : null; if (T) { w.detail = true; T.A = AWLD.restore(AWLD.build(T, G, WD), G.th.airR); WDP.setup(G, WD, S, T); viewInit(); } }
     theater(); syncMap(); setMode('pol'); bar(); sel = null; card();
     ADVL = NT.advice(G, WD, { SIM: SM, T }); meDot();
     const cap = R.find(r => r.ctl === me && r.cap) || R.find(r => r.ctl === me); if (cap) { cam.x = MX(cap.ll[0]); cam.y = MY(cap.ll[1]); cam.s = Math.max(cam.s, 900); }
@@ -367,7 +370,7 @@ input[type=range]{width:100%;accent-color:var(--gold)}
     if (T) return;
     for (const w of G.wars) { if (!(w.a.includes(me) || w.b.includes(me)) || w.noLand) continue;
       const t = TH.build(G, WD, w, me); if (!t) { w.noLand = true; continue; }
-      T = t; w.detail = true; T.vp0 = TH.score(T).vp.slice(); T.aggr0 = 1.6; T.A = AWLD.build(T, G, WD); viewInit();
+      T = t; w.detail = true; T.vp0 = TH.score(T).vp.slice(); T.aggr0 = 1.6; T.A = AWLD.build(T, G, WD); WDP.setup(G, WD, S, T); viewInit();
       toast(`🗺 ${w.n}: الجبهة انقسمت لـ${T.cells.length} خلية، و${SM.alive(T.W).filter(d => d.side === 0).length} فرقة إلنا ضد ${SM.alive(T.W).filter(d => d.side === 1).length}`, 'bad');
       const c = T.cells[Math.floor(T.cells.length / 2)]; cam.x = MX(c.ll[0]); cam.y = MY(c.ll[1]); cam.s = Math.max(cam.s, 1400); speed = 0; bar(); break; }
   }
@@ -378,6 +381,9 @@ input[type=range]{width:100%;accent-color:var(--gold)}
     if (ch.length) syncMap();
     if (w) { const v = TH.score(T).vp, tot = v[0] + v[1] || 1, mine = (v[0] - T.vp0[0]) / tot * 300; w.score = Math.max(-100, Math.min(100, w.a.includes(me) ? mine : -mine)); }
     const ov = T.W.over;
+    if (ov && w && ov.peace) {   // W6: سلام بشروط dip.js — حدود قبل الحرب (sq، تعويضات) أو كلمن يحتفظ باللي بيده (keep)
+      if (ov.peace !== 'keep') { for (const r of T.regs) { const k = T.ctl0[r]; if (k && G.ctl[r] !== k) G.ctl[r] = k; } w.taken = {}; }
+      S.endWar(G, WD, w, 'peace'); G.log.push({ t: G.t, k: 'wpeace', war: w.n, term: ov.peace, res: ov.res }); T = null; selD = null; syncMap(); return; }
     if (ov && w) { const iLost = ov.loser === 0; S.endWar(G, WD, w, 'capitulate'); if (iLost) { G.C[me].stab = Math.max(0, G.C[me].stab - 20); } G.log.push({ t: G.t, k: 'cap', who: iLost ? me : (T.side[1][0]), war: w.n }); T = null; selD = null; syncMap(); }
   }
   // بلا حرب: أيام كاملة. بالحرب: نفس سرعات «الحرب الكبرى» (ساعات) والجو مربوط بالساعة مثلها بالضبط
@@ -391,7 +397,7 @@ input[type=range]{width:100%;accent-color:var(--gold)}
   }
   // يوم الدولة: نفس econ/home/ind اليومية من «الحرب الكبرى»، وأخبارها توستات
   function natDay(before) {
-    const NW = G.nat; if (!NW) return; const last = NW.log[NW.log.length - 1]; NT.daily(G, WD, { S, SIM: SM, T, before });
+    const NW = G.nat; if (!NW) return; const last = NW.log[NW.log.length - 1]; NT.daily(G, WD, { S, SIM: SM, T, before }); if (T) WDP.daily(G, WD, { S, SIM: SM, T });
     for (const l of NW.log.slice(NW.log.indexOf(last) + 1)) { if (l.side === 1) continue;
       if (l.k === 'home' && l.a === 'issue') { toast(`🏛 قضية: ${HOME.ISS[l.i].t}`, 'bad'); if (speed > 1) { speed = 1; bar(); } }
       else if (l.k === 'home' && l.a === 'auto') toast(`🏛 المستشارين حلّوا «${HOME.ISS[l.i].t}» لحالهم`);
@@ -462,8 +468,19 @@ input[type=range]{width:100%;accent-color:var(--gold)}
       else if ((l.k === 'planfail' || l.k === 'planstall') && l.side === 0) toast('⛔ الخطة توقفت: رأس الحربة تعب أو انقتل', 'bad');
       else if (l.k === 'surrender') toast(`🏳 ${l.side === 0 ? 'فرقة منا استسلمت' : 'فرقة عدو استسلمت'}${cn ? ' — ' + cn : ''} (مطوّقة)`, l.side === 0 ? 'bad' : 'good');
       else if (l.k === 'take' && c && c.vp >= 3) toast(`🚩 ${l.side === 0 ? 'أخذنا' : 'العدو أخذ'} ${cn}`, l.side === 0 ? 'good' : 'bad');
+      else if (l.k === 'dip') dipNews(l);
       else if (l.k === 'wx' && l.wx !== 'clear') toast(`🌦 ${WXN[l.wx]} على الجبهة ${l.h ? l.h + ' ساعة' : ''}`, ''); }
     T.logN = L.length;
+  }
+  // أخبار dip.js (نفس كلام «الحرب الكبرى» بأسماء هالحرب)
+  function dipNews(l) {
+    const C = DIP.BY[l.id], cn = C ? C.n : '', FN = DIP.CFG.foe, it = k => (ECON.ITEMS[k] || {}).n || k;
+    const M = { offer: [`✉️ ${FN} تعرض «${(DIP.TERMS[l.term] || {}).n}» — شوف ⚔ الحروب`, 'good'], event: [`📢 ${(DIP.EV[l.ev] || {}).n || ''}${DIP.EV[l.ev] && DIP.EV[l.ev].choice ? ' — ينتظر قرارك' : ': ' + (DIP.EV[l.ev] || {}).txt}`, ''],
+      join: l.side === 0 ? [`🤝 ${cn} دخلت الحرب ويانا! قواتها بالطريق`, 'good'] : null, aidyes: l.side === 0 ? [`📦 ${cn} وافقت تساعد: توصل بعد ${l.d} يوم`, 'good'] : null, aidno: l.side === 0 ? [`✋ ${cn} رفضت تساعد`, 'bad'] : null,
+      got: l.side === 0 ? [`📦 وصلت من ${cn}: ${l.cash ? l.cash + ' مليار' : it(l.it)}`, 'good'] : null, arrive: l.side === 0 ? [`🪖 وصلت ${l.div}`, 'good'] : null, joinno: [`✋ ${cn} ما تدخل: تحتاج علاقة ${l.need}`, 'bad'],
+      truce: [`🤝 هدنة 7 أيام${l.med ? ' بوساطة ' + DIP.BY[l.med].n : ''}`, 'good'], truceend: ['⚔ خلصت الهدنة: الحرب رجعت', 'bad'], refuse: l.side === 0 ? [`✋ ${FN} رفضت «${(DIP.TERMS[l.term] || {}).n}»`, 'bad'] : null,
+      spyok: [`🕵 نجحت العملية: ${(DIP.OPS[l.op] || {}).n}`, 'good'], spyno: [`🕵 فشلت العملية وانكشفت: ${(DIP.OPS[l.op] || {}).n}`, 'bad'], sanc: [`⛔ ${cn} فرضت عقوبات على ${FN} (60 يوم)`, 'good'], sancno: [`✋ ${cn} رفضت العقوبات`, 'bad'] }[l.a];
+    if (M) toast(M[0], M[1]); if (l.a === 'offer' || (l.a === 'event' && DIP.EV[l.ev] && DIP.EV[l.ev].choice)) { speed = 0; bar(); }
   }
   const BOOMS = [];   // انفجارات قصيرة للرسم
   // ربط رسم «الحرب الكبرى» بخريطة العالم: كاميرا بالكيلومتر (بكسل لكل كم، ومركز الشاشة بإحداثيات المسرح)
@@ -592,6 +609,8 @@ input[type=range]{width:100%;accent-color:var(--gold)}
       case 'blockade': return [`⚓ ${n(l.by)} تحاصر سواحل ${n(l.on)} (${l.f}٪)`, l.on === me ? 'bad' : l.by === me ? 'good' : ''];
       case 'strait': return [`🚢 ${l.n} انقطع ${l.f}٪ — النفط يغلى`, ''];
       case 'plan': return null;
+      case 'joinus': return [`🤝 ${n(l.who)} دخلت ${l.war} ويانا`, 'good'];
+      case 'wpeace': return [`🕊 ${l.war} خلصت: ${DIP.TERMS[l.term] ? DIP.TERMS[l.term].n : 'سلام'}${l.res === 'win' ? ' (لصالحنا)' : l.res === 'loss' ? ' (لصالحهم)' : ''}`, l.res === 'loss' ? 'bad' : 'good'];
       case 'cap': return [`🏳 ${n(l.who)} استسلمت — انتهت ${l.war}`, l.who === me ? 'bad' : 'good'];
     }
     return null;
@@ -701,9 +720,25 @@ input[type=range]{width:100%;accent-color:var(--gold)}
         <div class="note">قرّب الخريطة على الجبهة: اضغط فرقتك (المربع الأخضر) وبعدين الخلية اللي تريدها تروح لها. ⩚ = خطوط محصنة.</div>
         ${T.A ? airPanel() : T.air ? `<h3>✈ الجو</h3>${line('طيارات قتال', Math.round(T.air.A[0]) + ' إلنا · ' + Math.round(T.air.A[1]) + ' إلهم')}${line('السيطرة الجوية', Math.round(T.air.sup[0] * 100) + '٪ إلنا · ' + Math.round(T.air.sup[1] * 100) + '٪ إلهم')}${line('دفاع جوي (مؤشر)', Math.round(T.air.AD[0]) + ' · ' + Math.round(T.air.AD[1]))}${line('طيارات انخسرت', Math.round(T.air.lost[0]) + ' منا · ' + Math.round(T.air.lost[1]) + ' منهم')}
         <div class="seg" id="amode">${[['cas', 'دعم الجبهة'], ['deep', 'ضرب العمق'], ['cap', 'حماية الأجواء']].map(([k, t]) => `<button data-am="${k}" class="${T.air.mode[0] === k ? 'on' : ''}">${t}</button>`).join('')}</div>
-        <div class="note">دعم الجبهة: يضرب فرق العدو بالمعارك. ضرب العمق: الاحتياط والتعزيزات والاقتصاد والدفاع الجوي. حماية الأجواء: خسائر أقل وسيطرة أكثر، وضربات أقل.</div>` : ''}</div>`; }
+        <div class="note">دعم الجبهة: يضرب فرق العدو بالمعارك. ضرب العمق: الاحتياط والتعزيزات والاقتصاد والدفاع الجوي. حماية الأجواء: خسائر أقل وسيطرة أكثر، وضربات أقل.</div>` : ''}${T.W.dip ? dipPanel() : ''}</div>`; }
     h += mine.length ? mine.map(row).join('') : '<div class="note">إحنا بسلام. الحرب قرار: تضغط دولة بالخريطة وتختار «أعلن الحرب».</div>';
     if (oth.length) h += `<h3>حروب بالعالم</h3>` + oth.map(row).join('');
+    return h;
+  }
+  function dipPanel() {
+    const W = T.W, D = W.dip, FN = DIP.CFG.foe, wk = WDP.withNat(G, T, W => [DIP.weary(W, 0), DIP.weary(W, 1)]), tr = DIP.truce(W);
+    const meds = DIP.COUNTRIES.filter(C => C.med && D.c[C.id].st === 'neutral' && D.c[C.id].rel[0] >= 30 && D.c[C.id].rel[1] >= 30);
+    if (MED && !meds.some(C => C.id === MED)) MED = null;
+    const pct = v => Math.round(Math.min(1.5, v) / 1.5 * 100), stN = st => st === 'ally0' ? '🤝 ويانا' : st === 'ally1' ? '⚔ ويا ' + FN : '';
+    let h = `<h3>🤝 دبلوماسية الحرب (نفس «الحرب الكبرى»)</h3>${line('تعب الحرب', 'إحنا ' + wk[0].toFixed(2) + ' · ' + FN + ' ' + wk[1].toFixed(2))}${barV(pct(wk[1]), 'var(--gold)')}
+      <div class="note">${FN} تقبل الشروط حسب تعبها: معنوياتها، المدن اللي خسرتها، طول الحرب، الحلفاء والعقوبات. الوسيط يزيد القبول.${tr ? ` <b class="pos">🤝 هدنة: باقي ${Math.ceil((D.truce - W.t) / 24)} يوم</b>` : ''}</div>`;
+    if (D.offer) h += `<div class="st" style="margin:6px 0;border-color:var(--gold)"><b>✉️ ${FN} تعرض: ${DIP.TERMS[D.offer.k].n}</b><div class="note">${DIP.TERMS[D.offer.k].d}</div><div class="seg"><button data-doff="1">✔ نقبل</button><button data-doff="0">✕ نرفض</button></div></div>`;
+    h += D.ev.map((q, i) => { const E = DIP.EV[q.id]; return `<div class="st" style="margin:6px 0;border-color:var(--neg)"><b>${E.n}</b><div class="seg">${E.choice.map((o, j) => `<button data-dev="${i}:${j}">${o.n}</button>`).join('')}</div></div>`; }).join('');
+    h += `<div class="note" style="margin-top:6px">الوسيط: ${meds.length ? '' : 'ماكو دولة علاقتها 30+ ويا الطرفين'}</div>${meds.length ? `<div class="seg"><button data-dmed="" class="${MED ? '' : 'on'}">بدون</button>${meds.slice(0, 4).map(C => `<button data-dmed="${C.id}" class="${MED === C.id ? 'on' : ''}">${C.n}</button>`).join('')}</div>` : ''}
+      <div class="acts">${Object.entries(DIP.TERMS).map(([k, X]) => { const v = WDP.withNat(G, T, W => DIP.verdict(W, 1, k, !!MED)); return `<button data-dpro="${k}">${X.n}<small>${DIP.guess(v)} · ${X.d}</small></button>`; }).join('')}</div>`;
+    h += `<h3>🌍 الدول (علاقتها ويانا / ويا ${FN})</h3>` + DIP.COUNTRIES.map(C => { const c = D.c[C.id], acts = [['m', '🤝 بعثة (0.2 مليار)'], C.will !== 'none' && (C.aid || [[]])[0].length ? ['a', '📦 اطلب مساعدة ' + Math.round(DIP.aidP(W, 0, C.id) * 100) + '٪'] : null, C.join && c.st === 'neutral' ? ['j', `🪖 اطلب تدخل (يحتاج ${C.join})`] : null, C.sanc ? ['s', '⛔ عقوبات'] : null].filter(Boolean);
+      return `<div style="margin:6px 0"><div class="line"><span><b>${C.n}</b> ${stN(c.st)}</span><b><span class="${c.rel[0] >= 0 ? 'pos' : 'neg'}">${Math.round(c.rel[0])}</span> / <span class="${c.rel[1] >= 0 ? 'pos' : 'neg'}">${Math.round(c.rel[1])}</span></b></div>${c.st === 'ally1' ? '' : `<div class="seg">${acts.map(([a, t]) => `<button data-dact="${a}:${C.id}" ${DIP.cdLeft(W, 0, C.id, a) ? 'disabled' : ''}>${t}</button>`).join('')}</div>`}</div>`; }).join('');
+    h += `<h3>🕵 عمليات سرية</h3><div class="acts">${Object.entries(DIP.OPS).filter(([k]) => k !== 'oil').map(([k, O]) => `<button data-dspy="${k}" ${(D.opCd || 0) > W.t ? 'disabled' : ''}>${O.n}<small>${O.c} مليار · نجاح ${Math.round(WDP.withNat(G, T, W => DIP.opP(W, 0, k)) * 100)}٪ · ${O.d}</small></button>`).join('')}</div>${(D.opCd || 0) > W.t ? `<div class="note">المخابرات مشغولة: باقي ${Math.ceil((D.opCd - W.t) / 24)} يوم</div>` : ''}`;
     return h;
   }
   function airPanel() {
@@ -734,6 +769,15 @@ input[type=range]{width:100%;accent-color:var(--gold)}
     root.querySelectorAll('[data-go]').forEach(b => b.onclick = () => { const r = R.find(x => x.ctl === b.dataset.go && x.cap) || R.find(x => x.ctl === b.dataset.go); if (r) { closePanel(); sel = r; cam.x = MX(r.ll[0]); cam.y = MY(r.ll[1]); dirty = true; card(); } });
     root.querySelectorAll('[data-peace]').forEach(b => b.onclick = () => { const r = S.offerPeace(G, WD, b.dataset.peace); r.ok ? toast('🕊 انتهت الحرب', 'good') : toast(r.why, 'bad'); syncMap(); openPanel('war', true); bar(); save(); });
     const NW = G.nat, re = (r, ok) => { if (typeof r === 'string') toast('❌ ' + r, 'bad'); else if (ok) toast(ok, 'good'); openPanel('me', true); save(); };
+    const dr = (r, ok) => { if (typeof r === 'string') toast('❌ ' + r, 'bad'); else if (ok) toast(ok, 'good'); frontNews(); if (T && T.W.over) theaterDay(); bar(); openPanel('war', true); save(); };
+    const DA = f => WDP.act(G, WD, S, T, f);
+    root.querySelectorAll('[data-doff]').forEach(b => b.onclick = () => dr(DA(W => DIP.answerOffer(W, b.dataset.doff === '1'))));
+    root.querySelectorAll('[data-dev]').forEach(b => b.onclick = () => { const [i, j] = b.dataset.dev.split(':').map(Number); const r = DA(W => DIP.choose(W, i, j)); dr(0, r ? '📢 ' + r : null); });
+    root.querySelectorAll('[data-dmed]').forEach(b => b.onclick = () => { MED = b.dataset.dmed || null; openPanel('war', true); });
+    root.querySelectorAll('[data-dpro]').forEach(b => b.onclick = () => { const r = DA(W => DIP.propose(W, 0, b.dataset.dpro, MED || undefined)); dr(r); });
+    root.querySelectorAll('[data-dact]').forEach(b => b.onclick = () => { const [a, id] = b.dataset.dact.split(':'), f = { m: DIP.mission, a: DIP.askAid, j: DIP.askJoin, s: DIP.askSanc }[a]; const r = DA(W => f(W, 0, id));
+      dr(r, a === 'm' && r && r.dv ? `🤝 البعثة رفعت العلاقة ويا ${DIP.BY[id].n} +${r.dv}` : null); });
+    root.querySelectorAll('[data-dspy]').forEach(b => b.onclick = () => dr(DA(W => DIP.spy(W, 0, b.dataset.dspy, ECON))));
     root.querySelectorAll('[data-adv]').forEach(b => b.onclick = () => { const a = (ADVL[+b.dataset.adv] || {}).a || '';
       if (a === 'prod') { meSub = 'prod'; openPanel('me'); } else if (a === 'eco:home') { meSub = 'home'; openPanel('me'); } else if (a.startsWith('eco')) { meSub = 'eco'; openPanel('me'); }
       else if (a === 'dip:ctry') openPanel('dip'); else if (a.startsWith('dip') || a === 'ev') openPanel('war');

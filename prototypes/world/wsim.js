@@ -390,6 +390,6 @@
     if (o.v < 4) o.v = 4;
     o.base = WD.rel; o.rnd = mulberry(o.rs); return o;
   }
-  const API = { V, K, START, init, navy, straits, step, month, act, can, offerPeace, declare, endWar, strike, playerStrike, rank, save, load, date, rel, atWar, allied, COST, TAX, CIV };
+  const API = { V, K, START, init, addRel, navy, straits, step, month, act, can, offerPeace, declare, endWar, strike, playerStrike, rank, save, load, date, rel, atWar, allied, COST, TAX, CIV };
   if (typeof module !== 'undefined') module.exports = API; else root.WSIM = API;
 })(this);

@@ -4,7 +4,7 @@
 (function (root) {
   'use strict';
   const START = Date.UTC(2026, 10, 20);   // 20 تشرين الثاني 2026: الوضع الحقيقي (D-048)
-  const V = 1;                              // إصدار حفظ «العالم»
+  const V = 2;                              // إصدار حفظ «العالم» (2: مخزون الصواريخ والمسيّرات والدفاع الجوي)
   const mulberry = a => () => { a |= 0; a = a + 0x6D2B79F5 | 0; let t = Math.imul(a ^ a >>> 15, 1 | a); t = t + Math.imul(t ^ t >>> 7, 61 | t) ^ t; return ((t ^ t >>> 14) >>> 0) / 4294967296; };
   const clamp = (v, a, b) => v < a ? a : v > b ? b : v;
   // ===== ثوابت [تقدير] =====
@@ -66,13 +66,17 @@
     const g0 = clamp(.3 * (s.g ?? conv) + .7 * conv, -1, 6.5);
     return { id, gdp, g0, g: g0, pop: s.pop || 1e6, debt: gdp * (s.debt ?? 55) / 100, rev0: clamp((s.rev ?? 22) / 100, .08, .5),
       spend0: clamp((s.spend ?? (s.rev ?? 22) + 2) / 100, .08, .6), milPct: clamp(mil, .3, 30), tax: 'mid', civ: 'mid',
-      stab0: s.stab ?? 55, stab: s.stab ?? 55, landK: pw > 0 ? land / pw : 1, pw: Math.max(1, pw), pw0: Math.max(1, pw), nuke: s.nuke || 0, low: 0, cash: 0, bal: 0, why: [] };
+      stab0: s.stab ?? 55, stab: s.stab ?? 55, landK: pw > 0 ? land / pw : 1, pw: Math.max(1, pw), pw0: Math.max(1, pw), nuke: s.nuke || 0, low: 0, cash: 0, bal: 0, why: [],
+      // W5c: الصواريخ والمسيّرات بعيدة المدى والدفاع الجوي [تقدير]: المخزون حسب مستوى صناعة الصواريخ/المسيّرات، والإنتاج الشهري كذلك
+      msl: [0, 20, 80, 300, 1000, 2500][t.msl || 0], drn: [0, 30, 150, 600, 2000, 4000][t.uav || 0],
+      mslP: [0, 1, 3, 10, 35, 80][t.msl || 0], drnP: [0, 5, 25, 100, 300, 600][t.uav || 0],
+      adI: Math.round((Math.sqrt(((s.kit && s.kit.ad && s.kit.ad[0]) || 0)) * 4 + Math.sqrt(s.mb || 0) * 5) * (.6 + .2 * ((s.gen || {}).ad || 3))), oilDmg: 0 };
   }
   // الفائدة: الدول الغنية تقترض أرخص؛ والدين فوك 90٪ يرفعها [تقدير]
   const rate = (c, dp) => (c.gdp / c.pop * 1e9 > 30000 ? .012 : .035) + .0002 * Math.max(0, dp - 90);
   // ===== النفط =====
   const oilGDP = (kbd, P) => kbd * 1000 * 365 * P / 1e9;   // مليار $ بالسنة
-  function oilOf(W, WD, id) { let o = 0; for (let i = 0; i < WD.r.length; i++) if (W.ctl[i] === id) o += WD.r[i][10] || 0; return o * (id === 'IRN' && W.wars.some(w => w.id === 'iran_war') ? .45 : 1); }
+  function oilOf(W, WD, id) { let o = 0; for (let i = 0; i < WD.r.length; i++) if (W.ctl[i] === id) o += WD.r[i][10] || 0; return o * (id === 'IRN' && W.wars.some(w => w.id === 'iran_war') ? .45 : 1) * (1 - ((W.C && W.C[id] && W.C[id].oilDmg) || 0)); }
   function price(W) { const disrupt = .2 * W.hormuz; W.oilP = K.oilBase * (1 + K.oilDisrupt * disrupt); return W.oilP; }
   // ===== أدوات =====
   const ix = (W, WD) => W.idx || (W.idx = new Map(WD.r.map((a, i) => [a[0], i])));
@@ -100,6 +104,15 @@
     price(W, WD);
     for (const id of W.ids) econ(W, WD, id);
     for (const w of W.wars.slice()) war(W, WD, w);
+    // الصواريخ: إنتاج شهري، تصليح النفط المضروب، والذكاء بالحرب يرمي 15٪ من مخزونه على الخصم
+    for (const id of W.ids) { const c = W.C[id]; if (c.msl == null) continue; c.msl += c.mslP; c.drn += c.drnP; c.oilDmg = Math.max(0, (c.oilDmg || 0) * .9 - .01); }
+    for (const w of W.wars) for (const [mine, oth] of [[w.a, w.b], [w.b, w.a]]) for (const id of mine.slice(0, 2)) {
+      if (id === W.me || !W.C[id] || !(W.C[id].msl + W.C[id].drn)) continue;
+      const tgt = oth.find(o => W.C[o]); if (!tgt) continue;
+      // الديمقراطيات ما تضرب المدن؛ الباقي أحياناً
+      const kind = W.C[tgt].oil > 200 && W.rnd() < .35 ? 'oil' : (WD.cs[id].free === 2 || W.rnd() < .6) ? 'mil' : 'city';
+      strike(W, WD, id, tgt, kind, Math.round(W.C[id].msl * .15), Math.round(W.C[id].drn * .15));
+    }
     for (const id of W.ids) if (id !== W.me) ai(W, WD, id);
     // العلاقات ترجع ببطء للأساس (الذاكرة الدبلوماسية)
     for (const a in W.rel) for (const b in W.rel[a]) { const base = (W.base[a] && W.base[a][b]) || 0, v = W.rel[a][b]; if (v !== base && !atWar(W, a, b)) W.rel[a][b] = Math.round(v + (base - v) * .03); }
@@ -231,6 +244,25 @@
     return false;
   }
   // ===== أفعال (اللاعب، ونفسها للذكاء) =====
+  // ===== الضربات بعيدة المدى (W5c) =====
+  // الاعتراض: الدفاع الجوي يعترض أكثر لما الرشقة صغيرة (يتشبّع بالكثرة)؛ المسيّرات تنعترض أسهل من الباليستي.
+  // الأثر لكل إصابة [تقدير]: «جيش» −0.04٪ قوة، «مدن» −0.05 استقرار و−0.005٪ اقتصاد (والعالم يزعل شوية)، «نفط» −0.2٪ من الإنتاج (يتصلح 10٪ بالشهر).
+  function strike(W, WD, by, t, kind, nm, nd) {
+    const a = W.C[by], c = W.C[t]; if (!a || !c) return null;
+    nm = Math.max(0, Math.min(nm, Math.floor(a.msl))); nd = Math.max(0, Math.min(nd, Math.floor(a.drn))); if (!nm && !nd) return null;
+    a.msl -= nm; a.drn -= nd;
+    const sat = x => c.adI / (c.adI + x * .3 + 1);   // التشبّع
+    const im = Math.round(nm * Math.min(.9, sat(nm) * 1.1)), id = Math.round(nd * Math.min(.97, sat(nd) * 1.5)), hits = (nm - im) + (nd - id) * .25;
+    if (kind === 'mil') c.pw *= 1 - Math.min(.15, hits * .0004);
+    else if (kind === 'city') { c.stab = clamp(c.stab - hits * .05, 0, 100); c.core *= 1 - Math.min(.05, hits * .00005); for (const x of W.ids) if (x !== by && x !== t && rel(W, x, t) > 20) addRel(W, by, x, -Math.min(5, hits / 50)); }
+    else if (kind === 'oil') c.oilDmg = Math.min(.7, (c.oilDmg || 0) + hits * .002);
+    const r = { by, t, kind, nm, nd, im, id, hits: Math.round(hits) }; note(W, { k: 'strike', ...r }); return r;
+  }
+  function playerStrike(W, WD, t, kind, share = .25) {
+    if (W.ap < 1) return { ok: false, why: 'نقاط القرار ما تكفي' }; if (!atWar(W, W.me, t)) return { ok: false, why: 'مو بحرب وياها' };
+    const a = W.C[W.me]; if (!(a.msl + a.drn >= 1)) return { ok: false, why: 'ما عدنا صواريخ ولا مسيّرات' };
+    W.ap -= 1; const r = strike(W, WD, W.me, t, kind, Math.ceil(a.msl * share), Math.ceil(a.drn * share)); return { ok: true, r };
+  }
   const COST = { improve: 1, trade: 1, ally: 2, sanction: 1, war: 3, peace: 1 };
   function can(W, WD, act, t) {
     const me = W.me, r = rel(W, me, t);
@@ -297,9 +329,10 @@
   function load(s, WD) {
     const o = typeof s === 'string' ? JSON.parse(s) : s;
     if (!o || !o.v) return null;
-    // ترقيات مستقبلية: if (o.v < 2) {...}
+    // ترقيات: 1 ← 2 (W5c): نضيف المخزون والدفاع الجوي لكل دولة من بياناتها
+    if (o.v < 2) { for (const id of o.ids) { const f = initCountry(WD, id), c = o.C[id]; for (const k of ['msl', 'drn', 'mslP', 'drnP', 'adI', 'oilDmg']) if (c[k] == null) c[k] = f[k]; } o.v = 2; }
     o.base = WD.rel; o.rnd = mulberry(o.rs); return o;
   }
-  const API = { V, K, START, init, step, month, act, can, offerPeace, declare, endWar, rank, save, load, date, rel, atWar, allied, COST, TAX, CIV };
+  const API = { V, K, START, init, step, month, act, can, offerPeace, declare, endWar, strike, playerStrike, rank, save, load, date, rel, atWar, allied, COST, TAX, CIV };
   if (typeof module !== 'undefined') module.exports = API; else root.WSIM = API;
 })(this);

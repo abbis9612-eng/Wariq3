@@ -400,7 +400,7 @@ input[type=range]{width:100%;accent-color:var(--gold)}
   function after(m0, t0) {
     const newLogs = G.log.filter(l => l.t > t0);
     let monthEnd = false;
-    for (const l of newLogs) { const m = msg(l); if (l.k === 'month') monthEnd = true; if (m && (l.k !== 'take' || [l.by, l.from].includes(me))) toast(m[0], m[1]); if (l.k === 'peaceOffer' || l.k === 'over' || (l.k === 'war' && (l.a === me || l.b === me || (l.join || []).includes(me)))) { speed = 0; bar(); } }
+    for (const l of newLogs) { const m = msg(l); if (l.k === 'month') monthEnd = true; if (m && ((l.k !== 'take' && l.k !== 'strike') || [l.by, l.from, l.t].includes(me))) toast(m[0], m[1]); if (l.k === 'peaceOffer' || l.k === 'over' || (l.k === 'war' && (l.a === me || l.b === me || (l.join || []).includes(me)))) { speed = 0; bar(); } }
     if (monthEnd) { syncMap(); save(); if (panel) openPanel(panel, true); if (sel) card(); }
     bar();
     if (G.over) { speed = 0; openPanel('me'); }
@@ -417,6 +417,7 @@ input[type=range]{width:100%;accent-color:var(--gold)}
         return [({ improve: '🤝 حسّنا العلاقة ويا ', trade: '📦 اتفاقية تجارة ويا ', ally: '🛡 تحالف دفاعي ويا ', sanction: '⛔ فرضنا عقوبات على ' })[l.a] + n(l.t), 'good'];
       case 'warn': return [l.w === 'collapse' ? `⚠ الاستقرار ينهار! باقي ${l.left} أشهر قبل سقوط الحكومة` : '⚠ أزمة دين: الفوائد تاكل ربع الإيرادات', 'bad'];
       case 'over': return ['💥 سقطت الحكومة: الاستقرار انهار', 'bad'];
+      case 'strike': return [`🚀 ${n(l.by)} ضربت ${({ mil: 'جيش', oil: 'نفط', city: 'مدن' })[l.kind]} ${n(l.t)}: ${l.nm ? l.nm + ' صاروخ (اعترضوا ' + l.im + ')' : ''}${l.nm && l.nd ? ' و' : ''}${l.nd ? l.nd + ' مسيّرة (اعترضوا ' + l.id + ')' : ''}`, l.t === me ? 'bad' : l.by === me ? 'good' : ''];
       case 'cap': return [`🏳 ${n(l.who)} استسلمت — انتهت ${l.war}`, l.who === me ? 'bad' : 'good'];
     }
     return null;
@@ -470,6 +471,7 @@ input[type=range]{width:100%;accent-color:var(--gold)}
       return `<div class="st" style="margin:6px 0"><b>${w.n}</b><div class="note">${w.a.map(nameOf).join('، ')} ⟷ ${w.b.map(nameOf).join('، ')} · ${w.months} شهر</div>
         ${w.detail ? '' : line('ميزان القوة على الجبهة', (w.r || 1).toFixed(2) + ' : 1 لـ' + nameOf(w.a[0]))}${line('سير الحرب' + (mine.includes(w) ? ' (لصالحنا +)' : ''), sgn(mine.includes(w) ? sc : w.score, 0), (mine.includes(w) ? sc : 0) >= 0 ? 'pos' : 'neg')}
         ${Object.entries(w.weary).slice(0, 4).map(([k, v]) => line('تعب ' + nameOf(k), Math.round(v))).join('')}
+        ${mine.includes(w) ? (() => { const A = w.a.includes(me), en = (A ? w.b : w.a)[0], c = G.C[me]; return `<div class="note" style="margin-top:6px">🚀 عدنا ${fmt(Math.floor(c.msl))} صاروخ و${fmt(Math.floor(c.drn))} مسيّرة · دفاعهم الجوي ${G.C[en].adI}</div><div class="seg">${[['mil', '🎯 جيشهم'], ['oil', '🛢 نفطهم'], ['city', '🏙 مدنهم']].map(([k, t]) => `<button data-strike="${en}:${k}" ${c.msl + c.drn < 1 ? 'disabled' : ''}>${t} ⭐1</button>`).join('')}</div><div class="note">كل ضربة = ربع المخزون. ضرب المدن يزعّل العالم.</div>`; })() : ''}
         ${mine.includes(w) ? `<div class="row"><button data-peace="${w.id}" class="${w.offer ? 'big' : ''}">${w.offer ? '🕊 اقبل السلام اللي عرضوه' : '🕊 اعرض السلام (⭐1)'}</button></div>` : ''}</div>`; };
     if (T) { const sc = TH.score(T), A = SM.alive(T.W), my = A.filter(d => d.side === 0), en = A.filter(d => d.side === 1), mode = T.auto0 === false ? 'manual' : T.aggr0 <= 1.3 ? 'atk' : T.aggr0 > 50 ? 'def' : 'bal';
       h += `<div class="st" style="margin:6px 0"><b>🗺 مسرح الحرب</b>${line('الفرق', my.length + ' إلنا · ' + en.length + ' إلهم')}${line('الخلايا', sc.cells[0] + ' إلنا · ' + sc.cells[1] + ' إلهم')}${line('مدن (نقاط نصر)', sc.vp[0] + ' · ' + sc.vp[1])}${line('استسلموا', sc.lost[0] + ' منا · ' + sc.lost[1] + ' منهم')}
@@ -499,6 +501,10 @@ input[type=range]{width:100%;accent-color:var(--gold)}
     root.querySelectorAll('[data-go]').forEach(b => b.onclick = () => { const r = R.find(x => x.ctl === b.dataset.go && x.cap) || R.find(x => x.ctl === b.dataset.go); if (r) { closePanel(); sel = r; cam.x = MX(r.ll[0]); cam.y = MY(r.ll[1]); dirty = true; card(); } });
     root.querySelectorAll('[data-peace]').forEach(b => b.onclick = () => { const r = S.offerPeace(G, WD, b.dataset.peace); r.ok ? toast('🕊 انتهت الحرب', 'good') : toast(r.why, 'bad'); syncMap(); openPanel('war', true); bar(); save(); });
     const ng = root.querySelector('#newg'); if (ng) ng.onclick = () => location.reload();
+    root.querySelectorAll('[data-strike]').forEach(b => b.onclick = () => { const [t, k] = b.dataset.strike.split(':'); const r = S.playerStrike(G, WD, t, k);
+      if (!r.ok) { toast(r.why, 'bad'); return; }
+      if (k === 'mil' && T && r.r) { const W = T.W, en = W.divs.filter(d => !d.dead && d.side === 1); const cells = [...new Set(en.filter(d => W.cells[d.cell].nb.some(j => W.ctrl[j] === 0)).map(d => d.cell))].slice(0, 6); for (const c of cells) { SM.airHit(W, 0, c, r.r.hits * .05 / cells.length + .5); T.air && T.air.hits.push([c, 0, W.t]); } }
+      toast(msg(G.log[G.log.length - 1])[0], 'good'); bar(); openPanel('war', true); save(); dirty = true; });
     root.querySelectorAll('[data-am]').forEach(b => b.onclick = () => { T.air.mode[0] = b.dataset.am; openPanel('war', true); save(); });
     root.querySelectorAll('[data-tm]').forEach(b => b.onclick = () => { const m = b.dataset.tm; T.auto0 = m !== 'manual'; T.aggr0 = m === 'atk' ? 1.3 : m === 'def' ? 99 : 1.6; openPanel('war', true); save(); });
   }

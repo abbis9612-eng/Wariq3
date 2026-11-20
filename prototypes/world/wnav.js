@@ -116,7 +116,7 @@
       while (g.path.length) { const nx = g.path[0], d = KM(N.c[g.z], N.c[nx]); if (g.prog < d) break; g.prog -= d; g.z = g.path.shift(); }
       if (!g.path.length) g.prog = 0; }
     // تصليح وتعويض بالميناء (كل 30 يوم) من الاحتياط
-    if (G.t % 30 === 0) for (const g of NV.g) if (g.z === g.home && !g.path.length) { g.dmg = 0; const R = NV.res[g.cc] || {}; for (const k of T) { const need = (g.s0[k] || 0) - (g.s[k] || 0); if (need > 0 && R[k] > 0) { const m = Math.min(need, R[k]); R[k] -= m; g.s[k] = (g.s[k] || 0) + m; } } }
+    if (G.t % 30 === 0) for (const g of NV.g) if (g.z === g.home && !g.path.length) { g.dmg = 0; g.fired = 0; const R = NV.res[g.cc] || {}; for (const k of T) { const need = (g.s0[k] || 0) - (g.s[k] || 0); if (need > 0 && R[k] > 0) { const m = Math.min(need, R[k]); R[k] -= m; g.s[k] = (g.s[k] || 0) + m; } } }
     if (!(G.wars || []).length) return log;
     const byZ = new Map(); for (const g of NV.g) { if (!byZ.has(g.z)) byZ.set(g.z, []); byZ.get(g.z).push(g); }
     const hit = (g, dmg, by, why) => { g.dmg += dmg; while (count(g) && g.dmg >= PW[SINK.find(k => g.s[k] > 0)] * 1.6) { const k = SINK.find(q => g.s[q] > 0); g.dmg -= PW[k] * 1.6; g.s[k]--; log.push({ t: G.t, k: 'navsink', cc: g.cc, ty: k, by, z: g.z, why }); } };
@@ -133,10 +133,12 @@
     for (const [z, L] of byZ) for (const g of L) { if (!count(g) || sub(g) || !inWar.has(g.cc)) continue;
       for (const i of N.coast[z]) { const cc = ctlOf(G, WD, i), C = (G.C || {})[cc]; if (!C || !atWar(G, g.cc, cc)) continue;
         // صواريخ ضد السفن: مخزون منفصل (NV.asm) مو الباليستي، حتى ما يستنزف اقتصاد الدولة
-        const A = asmOf(G, NV, cc); if (A < 4 || rnd() > .5) continue; const salvo = Math.min(5, Math.round(A * .01) + 1); NV.asm[cc] = A - salvo;
-        // الاعتراض: المدمرة (أيجس) توقف صاروخين، الفرقاطة وحدة تقريباً، والحاملة (جناحها) وحدة [تقدير]
-        const stop = (g.s.dd || 0) * 2 + (g.s.ff || 0) * .8 + (g.s.cv ? 1 : 0), hits = Math.max(0, salvo - stop) * (.25 + rnd() * .25);
-        if (hits > 0) hit(g, hits * 1.5, cc, 'coast'); if (salvo > 2) log.push({ t: G.t, k: 'navsalvo', cc, on: g.cc, z, n: salvo, h: Math.round(hits) }); break; } }
+        const A = asmOf(G, NV, cc); NV.cd = NV.cd || {}; if (A < 4 || (NV.cd[cc] || 0) > G.t || rnd() > .35) continue; NV.cd[cc] = G.t + 4; const salvo = Math.min(16, Math.round(A * .05) + 4); NV.asm[cc] = A - salvo;   // رشقة كل ~4 أيام بالأكثر لكل دولة
+        // W13: الرشقة تنحسب صاروخ صاروخ (wnavb.js: أفق الرادار، SM-2/ESSM، فالانكس، تشويش)، والبذرة تنحفظ حتى مشهد المعركة يعيدها بالضبط
+        battle(G, WD, NV, g, cc, { from: [45, (rnd() - .5) * 30], n: salvo, kind: mslOf(cc), gap: 1.5, spread: 10 }, 'coast', log); break; } }
+    // 2ب) زوارق الصواريخ تهاجم سفن العدو بنفس البحر (كل زورق صاروخين، مرة وحدة لحد ما يرجع للميناء)
+    for (const [z, L] of byZ) for (const f of L) { if (!f.s.fac || f.fired || !inWar.has(f.cc)) continue; const tg = L.find(g => g !== f && atWar(G, f.cc, g.cc) && count(g) && !sub(g)); if (!tg) continue;
+      f.fired = 1; battle(G, WD, NV, tg, f.cc, { from: [25, (rnd() - .5) * 10], n: Math.min(30, f.s.fac * 2), kind: mslOf(f.cc), gap: .6, spread: 8 }, 'fac', log); }
     // 3) ضربات الحاملات على ساحل العدو (البحر نفسه أو جاره)
     for (const g of NV.g) { if (!g.s.cv || !inWar.has(g.cc)) continue; const near = [g.z, ...N.adj[g.z]];
       for (const w of G.wars) { const side = w.a.includes(g.cc) ? 'a' : w.b.includes(g.cc) ? 'b' : null; if (!side) continue; const foes = side === 'a' ? w.b : w.a;
@@ -162,6 +164,18 @@
       const def = (G.C[x].navMode === 'def' ? .6 : 1) / (1 + (G.C[x].drn || 0) / 4000), b = Math.min(1, cov / tot) * def;
       if (b > G.C[x].blk) { const was = G.C[x].blk; G.C[x].blk = +b.toFixed(3); if (b > .2 && was <= .2 && !w['_blk' + x]) { w['_blk' + x] = 1; G.log.push({ t: G.t, k: 'blockade', on: x, by: M[0], f: Math.round(b * 100) }); } }
     }
+  }
+  // نوع صاروخ ضد السفن لكل دولة [تقدير]
+  const mslOf = cc => ({ IRN: 'c802', CHN: 'yj18', RUS: 'kalibr', USA: 'harpoon', PRK: 'c802', YEM: 'c802' })[cc] || 'harpoon';
+  // معركة وحدة: النتيجة من wnavb (أو تقدير بسيط إذا ما محمّل)، والغرق ينخصم من الأسطول، وآخر معركة تنحفظ للمشهد
+  function battle(G, WD, NV, g, by, att, why, log) {
+    const B = root.WNAVB || (typeof require !== 'undefined' ? require('./wnavb.js') : null); if (!B) return;
+    const seed = ((G.rs || 1) * 131 + (G.t || 0) * 977 + g.id * 31) | 0, r = B.resolve({ s: { ...g.s } }, att, seed, 1);   // بدون رسم: خطوة ثانية (فحصت: الإصابات ضمن ~10٪ من خطوة ربع ثانية)
+    for (const k in r.sunk) { const n = Math.min(g.s[k] || 0, r.sunk[k]); g.s[k] -= n; for (let i = 0; i < n; i++) log.push({ t: G.t, k: 'navsink', cc: g.cc, ty: k, by, z: g.z, why }); }
+    g.dmg += r.dmg * .5; NV.last = { t: G.t, z: g.z, def: g.cc, gid: g.id, s0: { ...g.s }, att, by, seed, res: r.stat, sunk: r.sunk };
+    for (const k of Object.keys(g.s)) if (g.s[k] <= 0) delete g.s[k];
+    NV.last.s0 = Object.fromEntries(Object.entries(NV.last.s0).map(([k, v]) => [k, v + (r.sunk[k] || 0)]));
+    log.push({ t: G.t, k: 'navbattle', cc: by, on: g.cc, z: g.z, n: att.n, kill: r.stat.kill, hit: r.stat.hit, why });
   }
   // مخزون صواريخ ضد السفن لكل دولة: 30٪ من صواريخها (أقصى 400)، ويتعوّض 5٪ بالشهر [تقدير]
   function asmOf(G, NV, cc) { NV.asm = NV.asm || {}; if (NV.asm[cc] == null) { const C = G.C[cc] || {}; NV.asm[cc] = Math.min(400, Math.round((C.msl || 0) * .3)); } return NV.asm[cc]; }

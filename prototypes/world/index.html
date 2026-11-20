@@ -323,6 +323,8 @@ input[type=range]{width:100%;accent-color:var(--gold)}
   // تصدير/استيراد الحفظ كملف (الحفظ الوحيد اللي يبقى إذا انمسح التطبيق أو تبدّل التلفون)
   async function exportSave() {
     if (G) save(); const t = store.get(); if (!t) { toast('ماكو حفظ', 'bad'); return; } const o = JSON.parse(t), nm = `wariq-${o.me}-${S.date(o.t).toISOString().slice(0, 10)}.json`;
+    // داخل عارض claude.ai: الحفظ يمر بقدرة downloads (العارض يسأل اللاعب ويحفظ)
+    if (window.claude && window.claude.use) { try { const dl = await window.claude.use('downloads'); if (dl) { try { await dl.save({ filename: nm, data: t }); toast('📤 الحفظ نزل كملف: ' + nm, 'good'); } catch (e) { if (e && e.code !== 'declined') toast('⚠ ما گدرت أنزّل الملف هنا (' + (e.code || '?') + ')', 'bad'); } return; } } catch (e) { } }
     const f = new File([t], nm, { type: 'application/json' });
     try { if (navigator.canShare && navigator.canShare({ files: [f] })) { await navigator.share({ files: [f], title: 'حفظ «العالم»' }); return; } } catch (e) { if (e && e.name === 'AbortError') return; }
     const a = document.createElement('a'); a.href = URL.createObjectURL(f); a.download = nm; document.body.append(a); a.click(); setTimeout(() => { URL.revokeObjectURL(a.href); a.remove(); }, 1000); toast('📤 الحفظ نزل كملف: ' + nm, 'good');

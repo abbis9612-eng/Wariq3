@@ -50,7 +50,8 @@ button.on{background:var(--chip2);border-color:var(--gold-l);color:var(--gold)}
 <script src="world-roads.js"></script>
 <script>
 'use strict';
-const WD = window.WD, $ = s => document.querySelector(s), cv = $('#cv'), cx = cv.getContext('2d');
+const WD = window.WD, $ = s => document.querySelector(s), cv = $('#cv');
+let cx = cv.getContext('2d');   // I-107/W9: «let» حتى نرسم الخريطة الثابتة بطبقة مخزّنة
 const css = k => getComputedStyle(document.documentElement).getPropertyValue(k).trim();
 const fmt = n => n == null ? '–' : n >= 1e9 ? (n / 1e9).toFixed(1) + ' مليار' : n >= 1e6 ? (n / 1e6).toFixed(1) + ' مليون' : n >= 1e4 ? Math.round(n / 1e3) + ' ألف' : Math.round(n).toLocaleString('ar');
 const TAR = { plain: 'سهل', desert: 'صحرا', hills: 'تلال', mount: 'جبال', marsh: 'أهوار', forest: 'غابة', jungle: 'أدغال', tundra: 'تندرا', snow: 'ثلج', city: 'مدينة' };
@@ -124,8 +125,16 @@ function fillOf(r) {
 
 // ===== الرسم =====
 let dirty = true, lastMs = 0, frames = 0, fpsT = performance.now(), fps = 0;
+const mc = document.createElement('canvas'); let mKey = '';
 function draw() {
-  const t0 = performance.now();
+  const t0 = performance.now(), G0 = window.__G && window.__G.G;
+  const key = [cam.x, cam.y, cam.s, mode, W, H, DPR, window.MAPV || 0, sel && sel.id, mode === 'rel' && G0 ? G0.t : 0, matchMedia('(prefers-color-scheme: dark)').matches, window.GAME && window.GAME.underKey ? window.GAME.underKey() : ''].join('|');
+  if (key !== mKey) { if (mc.width !== cv.width || mc.height !== cv.height) { mc.width = cv.width; mc.height = cv.height; } const real = cx; cx = mc.getContext('2d'); try { drawStatic(); } finally { cx = real; } mKey = key; }
+  cx.setTransform(1, 0, 0, 1, 0, 0); cx.drawImage(mc, 0, 0); cx.setTransform(DPR, 0, 0, DPR, 0, 0);
+  if (window.GAME && window.GAME.overlay) window.GAME.overlay(cx, cam.s < 520);
+  lastMs = performance.now() - t0;
+}
+function drawStatic() {
   cx.setTransform(DPR, 0, 0, DPR, 0, 0); cx.fillStyle = css('--sea'); cx.fillRect(0, 0, W, H);
   const far = cam.s < 520, ink = css('--ink');
   // البحر (حدود خفيفة لما نقرّب)
@@ -146,7 +155,7 @@ function draw() {
   cx.strokeStyle = css('--front'); cx.lineWidth = far ? 1.5 : 2.5; cx.setLineDash([5, 3]);
   for (const [a, b] of FRONT) if (vis(a.bb) || vis(b.bb)) { const [x1, y1] = toS(MX(a.ll[0]), MY(a.ll[1])), [x2, y2] = toS(MX(b.ll[0]), MY(b.ll[1])); const mx = (x1 + x2) / 2, my = (y1 + y2) / 2, dx = (y2 - y1) * .18, dy = (x1 - x2) * .18; cx.beginPath(); cx.moveTo(mx - dx, my - dy); cx.lineTo(mx + dx, my + dy); cx.stroke(); }
   cx.setLineDash([]);
-  if (window.GAME && window.GAME.overlay) window.GAME.overlay(cx, far);
+  if (window.GAME && window.GAME.under) window.GAME.under(cx, far);
   // المختارة
   if (sel && sel.p) { path(sel.p); cx.strokeStyle = css('--gold'); cx.lineWidth = 2.5; cx.stroke(); }
   // المضائق
@@ -166,7 +175,6 @@ function draw() {
       const [x, y] = toS(L.x, L.y); if (x < 0 || x > W || y < 0 || y > H) continue; const fs = Math.max(10, Math.min(22, px / 7));
       cx.font = `700 ${fs}px "IBM Plex Sans Arabic",Tahoma`; cx.strokeStyle = 'rgba(0,0,0,.55)'; cx.lineWidth = 3; const tx = nameOf(k); cx.strokeText(tx, x, y); cx.fillStyle = '#f3eedd'; cx.fillText(tx, x, y); }
   }
-  lastMs = performance.now() - t0;
 }
 function loop(t) { if (dirty) { dirty = false; draw(); frames++; } if (t - fpsT > 1000) { fps = frames; frames = 0; fpsT = t; $('#perf').textContent = `رسم ${lastMs.toFixed(1)}ms · ${fps}fps · ×${Math.round(cam.s)}`; } requestAnimationFrame(loop); }
 
@@ -447,7 +455,7 @@ body.play #modes{display:none}body.play.layers #modes{display:flex;flex-directio
     // خطوط التماس = حدود بين مناطق دولتين بحرب، أو بين مسيطر وصاحب أرض مختلفين
     const war = (a, b) => G.wars.some(w => (w.a.includes(a) && w.b.includes(b)) || (w.b.includes(a) && w.a.includes(b)));
     FRONT = []; for (const r of R) for (const n of r.nb) { const o = byId.get(n); if (o && r.id < o.id && r.ctl !== o.ctl && (war(r.ctl, o.ctl) || ENT[r.ctl] || ENT[o.ctl] || (r.c === o.c))) FRONT.push([r, o]); }
-    dirty = true; return ch;
+    window.MAPV = (window.MAPV || 0) + 1; dirty = true; return ch;
   }
   // ===== الوقت =====
   function tick(t) {
@@ -660,18 +668,14 @@ body.play #modes{display:none}body.play.layers #modes{display:flex;flex-directio
     for (const d of G.mkt.deals) { if (d.done || d.at <= G.t) continue; const sc = capOf(d.x); if (!sc) continue; const [ax, ay] = toS(MX(sc.ll[0]), MY(sc.ll[1])), [bx, by] = toS(MX(mc.ll[0]), MY(mc.ll[1])), f = Math.max(0, Math.min(1, (G.t - d.t) / Math.max(1, d.at - d.t)));
       cx.save(); cx.setLineDash([2, 7]); cx.lineDashOffset = -(now / 60) % 9; cx.strokeStyle = 'rgba(224,181,88,.75)'; cx.lineWidth = 1.8; cx.beginPath(); cx.moveTo(ax, ay); cx.lineTo(bx, by); cx.stroke(); cx.restore();
       const x = ax + (bx - ax) * f, y = ay + (by - ay) * f; cx.beginPath(); cx.arc(x, y, 11, 0, 7); cx.fillStyle = 'rgba(32,38,30,.85)'; cx.fill(); cx.font = '14px sans-serif'; cx.textAlign = 'center'; cx.textBaseline = 'middle'; cx.fillText(({ sea: '🚢', land: '🚚', air: '✈' })[(d.route || {}).by] || '📦', x, y + 1); cx.textBaseline = 'alphabetic'; dirty = true; } }
-  function overlay(cx, far) {
-    foreignArmies(cx); shipments(cx);
-    const T = VT();
-    if (!T || cam.s < 600) return; const W = T.W, me0 = css('--me'), en = css('--neg');
+  // I-107/W9: الطبقة الثابتة للمسرح (خلايا وطرق وأنهار وجسور): تنرسم ويا الخريطة المخزّنة، ما ترجع كل إطار
+  function under(cx, far) { const T = VT(); if (!T || cam.s < 600) return; const W = T.W, me0 = css('--me'), en = css('--neg');
     const r = Math.abs(toS(MX(T.lon0 + T.hs / T.KX), 0)[0] - toS(MX(T.lon0), 0)[0]) / 2;
     if (r > 3) { cx.lineWidth = .6;
       for (let i = 0; i < T.cells.length; i++) { const c = T.cells[i], [x, y] = toS(MX(c.ll[0]), MY(c.ll[1])); if (x < -r || x > W0() + r || y < -r || y > H0() + r) continue;
         cx.beginPath(); for (let k = 0; k < 6; k++) { const a = Math.PI / 6 + k * Math.PI / 3; cx.lineTo(x + r * 1.12 * Math.cos(a), y + r * 1.12 * Math.sin(a)); } cx.closePath();
         cx.fillStyle = (W.ctrl[i] === 0 ? me0 : en) + (W.ctrl[i] !== T.cells[i].s ? '55' : '22'); cx.fill(); cx.strokeStyle = 'rgba(0,0,0,.18)'; cx.stroke();
         if (T.cells[i].t === 'fort' && r > 6) { cx.fillStyle = 'rgba(0,0,0,.35)'; cx.fillText('⩚', x, y + 3); } } }
-    // المعارك
-    for (const b of W.battles.values()) { const c = T.cells[b.tg], [x, y] = toS(MX(c.ll[0]), MY(c.ll[1])); cx.beginPath(); cx.arc(x, y, Math.max(4, r * .7), 0, 7); cx.strokeStyle = '#ff3b1f'; cx.lineWidth = 2; cx.stroke(); }
     // ===== الطرق والأنهار والجسور بالمسرح (لما نقرّب) =====
     if (cam.s > 900 && window.WR) {
       if (!T.lines) { const b = [T.lon0 - .5, T.lat1 - (T.cells.reduce((m, c) => Math.max(m, c.c[1]), 0) / T.KY) - .5, T.lon0 + T.cells.reduce((m, c) => Math.max(m, c.c[0]), 0) / T.KX + .5, T.lat1 + .5];
@@ -684,6 +688,16 @@ body.play #modes{display:none}body.play.layers #modes{display:flex;flex-directio
       cx.font = '700 11px sans-serif'; cx.textAlign = 'center';
       for (const br of W.bridges || []) { const [x, y] = toS(MX(T.lon0 + br.p[0] / T.KX), MY(T.lat1 - br.p[1] / T.KY)); cx.fillStyle = br.down > 0 ? '#d0331a' : '#3b3b3b'; cx.fillText(br.down > 0 ? '✖' : '═', x, y + 4); }
     }
+  }
+  // مفتاح الطبقة الثابتة: يتغير لما تتغير سيطرة الخلايا أو الجسور
+  function underKey() { const T = VT(); if (!T) return ''; const W = T.W; let h = T.cells.length; for (let i = 0; i < W.N; i++) h = (h * 31 + W.ctrl[i] + 2) | 0; for (const b of W.bridges || []) h = (h * 7 + (b.down > 0 ? 1 : 0)) | 0; return T.war + ':' + h; }
+  function overlay(cx, far) {
+    foreignArmies(cx); shipments(cx);
+    const T = VT();
+    if (!T || cam.s < 600) return; const W = T.W, me0 = css('--me'), en = css('--neg');
+    const r = Math.abs(toS(MX(T.lon0 + T.hs / T.KX), 0)[0] - toS(MX(T.lon0), 0)[0]) / 2;
+    // المعارك
+    for (const b of W.battles.values()) { const c = T.cells[b.tg], [x, y] = toS(MX(c.ll[0]), MY(c.ll[1])); cx.beginPath(); cx.arc(x, y, Math.max(4, r * .7), 0, 7); cx.strokeStyle = '#ff3b1f'; cx.lineWidth = 2; cx.stroke(); }
     // ===== الجو الحقيقي: رسم «الحرب الكبرى» نفسه (view.js وfx.js): مطارات بمدرجها، بطاريات بمداها، طيارات بصورها وظلها، صواريخ بدخان، انفجارات =====
     if (T.A && window.VIEW && T.vInit) { const now = performance.now(), fdt = Math.min(.1, (now - (T.lastF || now)) / 1000); T.lastF = now;
       VIEW.gs = HPS[speed] * 3600; VIEW.drawBases(-1); FX.update(speed ? fdt : 0); FX.drawGround(); VIEW.drawFx(speed ? fdt : 0); FX.draw(); VIEW.drawAir(fdt); VIEW.soundTick(fdt, T.W.battles.size);
@@ -1117,7 +1131,7 @@ body.play #modes{display:none}body.play.layers #modes{display:flex;flex-directio
   // ===== بطاقة دولة ثانية: الأفعال =====
   let armed = null;
   const API = {
-    overlay, tapTheater,
+    overlay, under, underKey, tapTheater,
     cardHtml(k) {
       if (k === me) return `<div class="row"><button data-open="me">🏛 لوحة دولتي</button></div>`;
       const r = S.rel(G, me, k), w = S.atWar(G, me, k), al = S.allied(G, me, k);

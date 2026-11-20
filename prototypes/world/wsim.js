@@ -4,12 +4,13 @@
 (function (root) {
   'use strict';
   const START = Date.UTC(2026, 10, 20);   // 20 تشرين الثاني 2026: الوضع الحقيقي (D-048)
-  const V = 8;                              // إصدار حفظ «العالم» (2: الصواريخ والدفاع الجوي؛ 3: البحرية والمضائق؛ 4: طبقة الدولة؛ 5: التكتلات والتوتر والعروض والأمم المتحدة؛ 6: الانتخابات والانقلابات والاحتلال والأحداث؛ 7: البحث لكل الدول وسوق السلاح؛ 8: قائد القوات المسلحة)
+  const V = 9;                              // إصدار حفظ «العالم» (9: البحرية الحقيقية W12؛ 2: الصواريخ والدفاع الجوي؛ 3: البحرية والمضائق؛ 4: طبقة الدولة؛ 5: التكتلات والتوتر والعروض والأمم المتحدة؛ 6: الانتخابات والانقلابات والاحتلال والأحداث؛ 7: البحث لكل الدول وسوق السلاح؛ 8: قائد القوات المسلحة)
   const mulberry = a => () => { a |= 0; a = a + 0x6D2B79F5 | 0; let t = Math.imul(a ^ a >>> 15, 1 | a); t = t + Math.imul(t ^ t >>> 7, 61 | t) ^ t; return ((t ^ t >>> 14) >>> 0) / 4294967296; };
   const clamp = (v, a, b) => v < a ? a : v > b ? b : v;
   const POL = root.WPOL || (typeof require !== 'undefined' ? require('./wpol.js') : null);   // W7: السياسة والأحداث
   const MKT = root.WMKT || (typeof require !== 'undefined' ? require('./wmkt.js') : null);   // W8: البحث وسوق السلاح
   const CMD = root.WCMD || (typeof require !== 'undefined' ? require('./wcmd.js') : null);   // I-108: قائد القوات المسلحة
+  const NAV = root.WNAV || (typeof require !== 'undefined' ? require('./wnav.js') : null);   // W12 (D-053): البحرية الحقيقية
   // ===== ثوابت [تقدير] =====
   const K = {
     oilBase: 65, oilDisrupt: 3.5,        // سعر النفط = 65$ × (1 + 3.5 × نسبة النفط المقطوع عالمياً)
@@ -53,7 +54,7 @@
       // نثبّت العجز الأولي على الحقيقي تقريباً (بيانات الإيرادات والمصاريف من سنين مختلفة، فنحصره بين فائض 3٪ وعجز 5٪)
       const dp = c.debt / c.gdp * 100, rev = c.core * c.revCore + oilGDP(c.oil, W.oilP) * K.oilTake, def = clamp(c.spend0 - c.rev0, -.03, .05) * c.gdp;
       c.civ0 = clamp((rev + def - c.gdp * c.milPct / 100 - c.debt * rate(c, dp)) / c.core, .03, .6); }
-    W.rnd = mulberry(W.rs); ix(W, WD); if (POL) POL.ensure(W, WD); if (MKT) MKT.ensure(W, WD); if (CMD) CMD.ensure(W, WD); note(W, { k: 'start', me });
+    W.rnd = mulberry(W.rs); ix(W, WD); if (POL) POL.ensure(W, WD); if (MKT) MKT.ensure(W, WD); if (CMD) CMD.ensure(W, WD); if (NAV) NAV.ensure(W, WD); note(W, { k: 'start', me });
     return W;
   }
   // الحروب الجارية بين دول (الحروب ويا الكيانات تبقى استنزاف داخلي): من data/world/conflicts.json
@@ -163,6 +164,7 @@
     for (let d = 0; d < days && !W.over; d++) {
       W.t++;
       if (CMD && W.cmd) CMD.daily(W);
+      if (NAV) NAV.daily(W, WD);
       if (date(W.t).getUTCDate() === 1) month(W, WD);
     }
     return W;
@@ -170,7 +172,8 @@
   // ===== شهر =====
   function month(W, WD) {
     W.rnd = mulberry(W.rs = (W.rs + 7919 * W.t) | 0);
-    navy(W, WD); straits(W, WD);
+    if (NAV) NAV.month(W, WD); else navy(W, WD);
+    straits(W, WD);
     price(W, WD);
     for (const id of W.ids) econ(W, WD, id);
     for (const w of W.wars.slice()) war(W, WD, w);
@@ -488,8 +491,10 @@
     if (o.v < 7) o.v = 7;
     // 7 ← 8 (I-108): قائد القوات المسلحة وجودة القيادة لكل دولة (CMD.ensure يبنيها)
     if (o.v < 8) o.v = 8;
-    o.base = WD.rel; o.rnd = mulberry(o.rs); dipInit(o, WD); if (POL) POL.ensure(o, WD); if (MKT) MKT.ensure(o, WD); if (CMD) CMD.ensure(o, WD); return o;
+    // 8 ← 9 (W12، D-053): البحرية الحقيقية — الأساطيل تنبني من بيانات كل دولة (NAV.ensure)
+    if (o.v < 9) o.v = 9;
+    o.base = WD.rel; o.rnd = mulberry(o.rs); dipInit(o, WD); if (POL) POL.ensure(o, WD); if (MKT) MKT.ensure(o, WD); if (CMD) CMD.ensure(o, WD); if (NAV) NAV.ensure(o, WD); return o;
   }
-  const API = { V, K, START, TENSION, POL, MKT, CMD, init, addRel, answerOffer, unSummit, unVote, council, tenTarget, napOf, blocsOf, P5, navy, straits, step, month, act, can, offerPeace, declare, endWar, strike, playerStrike, rank, save, load, date, rel, atWar, allied, COST, TAX, CIV };
+  const API = { V, K, START, TENSION, POL, MKT, CMD, NAV, init, addRel, answerOffer, unSummit, unVote, council, tenTarget, napOf, blocsOf, P5, navy, straits, step, month, act, can, offerPeace, declare, endWar, strike, playerStrike, rank, save, load, date, rel, atWar, allied, COST, TAX, CIV };
   if (typeof module !== 'undefined') module.exports = API; else root.WSIM = API;
 })(this);

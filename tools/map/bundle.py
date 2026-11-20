@@ -42,6 +42,8 @@ for k, ps in by.items():
         if p.geom_type == 'Polygon' and p.area > .002: rings.append([[int(round(x * 100)), int(round(y * 100))] for x, y in p.exterior.coords])
     if rings: cb[k] = delta(rings)
 FIX = json.load(open(f'{R}/curation/models_fix.json'))['c'] if os.path.exists(f'{R}/curation/models_fix.json') else {}   # تصحيح أسماء الموديلات الغلط
+# W12 البحرية (D-053): زوارق الصواريخ السريعة مو بأعداد IISS الموحّدة [تقدير]: الحرس الإيراني (زوارق صواريخ)، كوريا الشمالية، الصين (Type 022 هوبي ~83)، تايوان
+FAC = {'IRN': 90, 'PRK': 40, 'CHN': 83, 'TWN': 31}
 cs = {}
 for f in glob.glob(f'{R}/countries/*.json'):
     d = json.load(open(f)); m = d.get('mil', {}); s = m.get('sum') or {}; v = lambda o: (o or {}).get('v')
@@ -50,7 +52,7 @@ for f in glob.glob(f'{R}/countries/*.json'):
       'pop': v(d.get('pop')), 'gdp': v((d.get('eco') or {}).get('gdpBusd')), 'mb': v(m.get('budgetBusd')), 'act': v(s.get('active')), 'tanks': v(s.get('tanksActive')) or v(s.get('tanks')), 'air': v(s.get('combatAir')),
       'g': v((d.get('eco') or {}).get('growth')), 'debt': v((d.get('eco') or {}).get('debtPct')), 'rev': v((d.get('eco') or {}).get('revPct')), 'spend': v((d.get('eco') or {}).get('spendPct')),
       'milPct': v(m.get('budgetPctGdp')), 'gt': g.get('type'), 'res': v(s.get('reserve')), 'heli': v(s.get('attackHeli')),
-      'ships': sum(v(s.get(k)) or 0 for k in ('carriers', 'cruisers', 'destroyers', 'frigates', 'corvettes', 'subNuc', 'subs', 'amphib')), 'carriers': v(s.get('carriers')), 'subs': (v(s.get('subs')) or 0) + (v(s.get('subNuc')) or 0),
+      'ships': sum(v(s.get(k)) or 0 for k in ('carriers', 'cruisers', 'destroyers', 'frigates', 'corvettes', 'subNuc', 'subs', 'amphib')), 'carriers': v(s.get('carriers')), 'nv': [v(s.get(k)) or 0 for k in ('carriers',)] + [(v(s.get('cruisers')) or 0) + (v(s.get('destroyers')) or 0), (v(s.get('frigates')) or 0) + (v(s.get('corvettes')) or 0), v(s.get('subNuc')) or 0, v(s.get('subs')) or 0, v(s.get('amphib')) or 0, FAC.get(d['id'], 0)], 'subs': (v(s.get('subs')) or 0) + (v(s.get('subNuc')) or 0),
       'tech': ((d.get('ind') or {}).get('tech') or {}), 'gen': {k: v.get('gen') for k, v in (m.get('grp') or {}).items() if v.get('gen')}, 'kit': {k: [v.get('n'), (FIX.get(d['id'], {}).get(k) or [t[0] for t in (v.get('top') or [])])[:2], 1 if v.get('tpl') else 0] for k, v in (m.get('grp') or {}).items() if k in ('tank', 'afv', 'art', 'jet', 'heli', 'ad', 'navy')},
       'adL': [[x['m'][:30], x['n'], x['cat']] for x in sorted((m.get('ad') or []), key=lambda x: -x['n']) if x['cat'] in ('long', 'medium') and x['n'] > 0][:5],
       'jets': [[x['m'][:30], x['n']] for x in sorted((m.get('air') or []), key=lambda x: -x['n']) if x['cat'] in ('fighter', 'attack', 'bomber') and x['n'] > 0][:6],

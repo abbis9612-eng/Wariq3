@@ -34,7 +34,7 @@
       const F = att ? o.att : o.def; let plt = side * 100;
       F.divs.forEach((dv, di) => {
         const st = clamp(dv.str ?? 1, .1, 1); const cx = (di - (F.divs.length - 1) / 2) * 750; // قطاع من المعركة (~2 كم جبهة)
-        const add = (type0, n, row) => { const type = type0 === 'tank' ? (side ? 't72' : 'abrams') : type0; const n2 = Math.max(1, Math.round(n * st)); plt++; for (let i = 0; i < n2; i++) { const x = cx + (i - (n2 - 1) / 2) * (type === 'truck' ? 70 : 105) + (r() - .5) * 30; const y = att ? 3300 + row * 200 + (r() - .5) * 50 : -1300 - row * 170 + (r() - .5) * 50;
+        const add = (type0, n, row) => { const type = type0 === 'tank' ? ((o.tank && o.tank[side]) || (side ? 't72' : 'abrams')) : type0; const n2 = Math.max(1, Math.round(n * st)); plt++; for (let i = 0; i < n2; i++) { const x = cx + (i - (n2 - 1) / 2) * (type === 'truck' ? 70 : 105) + (r() - .5) * 30; const y = att ? 3300 + row * 200 + (r() - .5) * 50 : -1300 - row * 170 + (r() - .5) * 50;   // «العالم»: نوع الدبابة حسب الدولة (o.tank)
           const u = { id: B.nid++, side, att, type, div: dv.n, plt, p: { x, y }, hd: att ? -Math.PI / 2 : Math.PI / 2, tur: att ? -Math.PI / 2 : Math.PI / 2, spd: 0, hp: 1, st: 'ok', reload: 2 + r() * 5, dug: !att, man: '', manP: null, manT: 0, troops: T[type].troops ? T[type].troops : 0, atgm: type === 'bmp' ? 2 : 0, burn: 0, home: { x, y }, spr: type === 'truck' ? 'truck' : type === 'bmp' ? 'bmp' : side ? 't72' : 'abrams' };
           B.units.push(u); } };
         if (dv.kind === 'arm') { add('tank', 8, 0); add('tank', 6, 1); add('bmp', 3, 2); }

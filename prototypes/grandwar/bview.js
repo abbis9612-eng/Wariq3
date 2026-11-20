@@ -204,7 +204,7 @@
   function hud() {
     const cnt = (s, k) => B.units.filter(u => u.side === s && u.st !== 'dead' && BV.T[u.type].k === k).length, all = (s, k) => B.units.filter(u => u.side === s && BV.T[u.type].k === k).length;
     const me = info.me, foe = 1 - me; const t = Math.floor(B.t);
-    document.getElementById('bvC').innerHTML = `⏱ ${Math.floor(t / 60)}:${String(t % 60).padStart(2, '0')} · ${B.phase === 'prep' ? 'تمهيد مدفعية' : 'قتال'}<br>🇮🇶 دبابات ${cnt(0, 'tank')}/${all(0, 'tank')} · مدرعات ${cnt(0, 'ifv')}/${all(0, 'ifv')} &nbsp;|&nbsp; 🇮🇷 دبابات ${cnt(1, 'tank')}/${all(1, 'tank')} · مدرعات ${cnt(1, 'ifv')}/${all(1, 'ifv')}`;
+    document.getElementById('bvC').innerHTML = `⏱ ${Math.floor(t / 60)}:${String(t % 60).padStart(2, '0')} · ${B.phase === 'prep' ? 'تمهيد مدفعية' : 'قتال'}<br>${(info && info.names && info.names[0]) || '🇮🇶'} دبابات ${cnt(0, 'tank')}/${all(0, 'tank')} · مدرعات ${cnt(0, 'ifv')}/${all(0, 'ifv')} &nbsp;|&nbsp; ${(info && info.names && info.names[1]) || '🇮🇷'} دبابات ${cnt(1, 'tank')}/${all(1, 'tank')} · مدرعات ${cnt(1, 'ifv')}/${all(1, 'ifv')}`;
   }
   function showRes() {
     const r = document.getElementById('bvRes'), o = B.over, attMe = B.side.att === info.me; const weWon = (o.win === 'att') === attMe && o.win !== 'none';

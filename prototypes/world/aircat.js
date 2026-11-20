@@ -17,6 +17,8 @@
   add(P, 'old', { n: 'ميغ-21، F-5، F-7، F-4', night: 0, v: KMS(230), aa: .3, ag: .55, ecm: 1, rcs: 4, cruise: 6, low: .2, aam: { n: 'R-60 / AIM-9', r: 8, v: KMS(800), pk: .3 } });
   add(P, 'jet_tr', { n: 'طائرات تدريب مسلحة (T-50، L-159، هوك، K-8)', night: 0, v: KMS(220), aa: .2, ag: .6, ecm: 1, rcs: 3, cruise: 5, low: .15 });
   add(P, 'tb2', { n: 'مسيّرة استطلاع (TB2، هيرون، وينغ لونغ)', night: 1, v: KMS(55), aa: 0, ag: 0, ecm: 1, rcs: .3, cruise: 5, low: 5, isr: 1, drone: 1, endur: 350, eye: 40 });
+  // صورة الطيارة على الخريطة (view.js): أحادية المحرك ← F-16، مزدوجة ثقيلة ← F-14، هجوم ← سو-25
+  for (const [k, spr] of [['f35', 'f16'], ['f15', 'f14'], ['f18', 'f16'], ['euro', 'f16'], ['flanker', 'f14'], ['su34', 'f14'], ['j20', 'f14'], ['light', 'f16'], ['old', 'f16'], ['jet_tr', 'su25']]) if (P[k] && !P[k].spr) P[k].spr = spr;
   // من اسم موديل (بالبيانات) ← نوع طيارة بالمحرك
   const PL_RX = [[/f-35/i, 'f35'], [/f-22|j-20|su-57|j-35/i, 'j20'], [/f-15/i, 'f15'], [/f\/a-18|f-18|hornet/i, 'f18'], [/rafale|typhoon|eurofighter|gripen/i, 'euro'],
     [/su-30|su-35|su-27|j-11|j-15|j-16|flanker/i, 'flanker'], [/su-34/i, 'su34'], [/su-24|tornado|jaguar|q-5/i, 'su24'], [/su-25|a-10|su-22|a-29|super tucano/i, 'su25'], [/f-14/i, 'f14'],
@@ -49,7 +51,7 @@
   sys('s125', { n: 'S-125 (SA-3)', full: 'S-125 «بتشورا»', layer: 'متوسط', hm: 6, det: 110, ch: 1, mg: 2, reload: 60, mags: [M('V-601', { air: 25, uav: 15, cm: 10 }, { air: .4, uav: .35, cm: .25 }, { ready: 8, perL: 2, v: 900, zMax: 18 })] });
   sys('s75', { n: 'S-75 (SA-2)', full: 'S-75 «دفينا»', layer: 'بعيد', hm: 8, det: 150, ch: 1, mg: 3, reload: 90, mags: [M('V-750', { air: 45, cm: 10 }, { air: .3, cm: .15 }, { ready: 6, perL: 1, v: 1000, zMax: 27, zMin: .3 })] });
   sys('s200', { n: 'S-200 (SA-5)', full: 'S-200 «فيغا»', layer: 'بعيد', hm: 20, det: 300, ch: 1, mg: 2, reload: 120, uav: 'none', mags: [M('5V28', { air: 250 }, { air: .3 }, { ready: 6, perL: 1, v: 1200, zMax: 40, zMin: .3 })] });
-  sys('crotale', { n: 'قصير المدى (كروتال، HQ-7، أفنجر، ستريلا-10)', full: 'دفاع جوي قصير', layer: 'قريب', hm: 4, det: 20, ch: 1, mg: 2, react: .1, gap: .05, reload: 20, uav: 'all',
+  sys('crotale', { n: 'دفاع قصير', full: 'دفاع جوي قصير المدى (كروتال، HQ-7، أفنجر، ستريلا-10)', layer: 'قريب', hm: 4, det: 20, ch: 1, mg: 2, react: .1, gap: .05, reload: 20, uav: 'all',
     mags: [M('قصير', { air: 10, uav: 8, cm: 8 }, { air: .45, uav: .6, cm: .5 }, { ready: 8, perL: 4, v: 800, zMax: 5, zMin: .005 })] });
   const SAM_RX = [[/s-400/i, 's400'], [/s-300/i, 's300'], [/hq-9|fd-2000/i, 'hq9'], [/patriot|pac-[23]/i, 'pac'], [/samp|aster 30|mamba/i, 'sampt'], [/thaad/i, 'thaad'], [/arrow/i, 'arrow'], [/david/i, 'dsling'],
     [/iron dome/i, 'idome'], [/nasams/i, 'nasams'], [/iris-t/i, 'irist'], [/buk/i, 'buk'], [/hq-16|ly-80/i, 'hq16'], [/cheongung|km-sam/i, 'cheong'], [/akash/i, 'akash'], [/barak/i, 'barak8'],

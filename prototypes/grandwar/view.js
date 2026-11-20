@@ -17,7 +17,7 @@
   SND.init = () => {
     if (SND.ctx) return; try { SND.ctx = new (window.AudioContext || window.webkitAudioContext)(); } catch (e) { return; }
     SND.master = SND.ctx.createGain(); SND.master.gain.value = .8; SND.master.connect(SND.ctx.destination);
-    for (const n of NAMES) fetch(`sounds/${n}.mp3`).then(r => r.arrayBuffer()).then(b => SND.ctx.decodeAudioData(b)).then(d => { SND.buf[n] = d; if (n === 'battle_amb') ambient(); }).catch(() => { });
+    for (const n of NAMES) fetch(`${V.sndBase || 'sounds/'}${n}.mp3`).then(r => r.arrayBuffer()).then(b => SND.ctx.decodeAudioData(b)).then(d => { SND.buf[n] = d; if (n === 'battle_amb') ambient(); }).catch(() => { });
   };
   function ambient() { const s = SND.ctx.createBufferSource(); s.buffer = SND.buf.battle_amb; s.loop = true; SND.amb = SND.ctx.createGain(); SND.amb.gain.value = 0; s.connect(SND.amb).connect(SND.master); s.start(); }
   // صوت بمكان (كم): يعلى ويا التقريب ويخفت ويا البعد عن نص الشاشة
@@ -315,13 +315,13 @@
       if (!s.down && s.emcon <= 0 && s.alert > 0) { g.save(); g.translate(x, y); g.rotate(s.radar || 0); g.strokeStyle = COLA(s.side, .9); g.lineWidth = 1.4; g.beginPath(); g.arc(0, 0, w * .95, -.35, .35); g.stroke(); g.restore(); }
       // الصواريخ الجاهزة: شريط تحت الرمز
       const mg = s.mags.find(m => !m.gun); if (mg) { const f = mg.ready / Math.max(1, mg.orig); g.fillStyle = 'rgba(0,0,0,.5)'; g.fillRect(x - w * .55, y + w * .5, w * 1.1, 3); g.fillStyle = f > .4 ? '#7ad07a' : f > .15 ? '#e6c450' : '#e0533f'; g.fillRect(x - w * .55, y + w * .5, w * 1.1 * f, 3); }
-      if (cam.s > .95 || sel) text(SHORT[s.sys], x, y - w * .72, 9, '#fff', 'rgba(0,0,0,.55)', 700);
+      if (cam.s > .95 || sel) text(SHORT[s.sys] || S.n, x, y - w * .72, 9, '#fff', 'rgba(0,0,0,.55)', 700);
       if (cam.s > 1.4 || sel) text(`${s.n}${s.emcon > 0 ? ' · رادار مطفي' : ''}`, x, y + w * .5 + 11, 9.5, s.side ? '#5a1a10' : '#102a5a');
     });
     // مواقع الإطلاق الإيرانية: معيّن عدو بعلامة صاروخ أو مسيّرة
     A.mbases.forEach(m => {
       const [x, y] = w2s(...m.p); if (x < -40 || x > innerWidth + 40 || y < -40 || y > innerHeight + 40) return; const w = Math.min(18, Math.max(11, cam.s * 8.5));
-      g.save(); g.translate(x, y); g.fillStyle = COLA(1, .85); g.strokeStyle = '#ffd9cf'; g.lineWidth = 1.4; g.beginPath(); g.moveTo(0, -w * .62); g.lineTo(w * .62, 0); g.lineTo(0, w * .62); g.lineTo(-w * .62, 0); g.closePath(); g.fill(); g.stroke(); g.restore();
+      g.save(); g.translate(x, y); g.fillStyle = COLA(m.side ?? 1, .85); g.strokeStyle = m.side === 0 ? '#dbe8ff' : '#ffd9cf'; g.lineWidth = 1.4; g.beginPath(); g.moveTo(0, -w * .62); g.lineTo(w * .62, 0); g.lineTo(0, w * .62); g.lineTo(-w * .62, 0); g.closePath(); g.fill(); g.stroke(); g.restore();
       text(m.uav0 ? '◣' : '↑', x, y + 1, w * .7, '#fff', null, 700);
       if (cam.s > 1.2) text(`${m.n} · ${m.uav0 ? m.uav + ' مسيّرة' : m.bm + ' باليستي، ' + m.cm + ' كروز'}`, x, y + w * .7 + 9, 9.5, '#5a1a10');
     });
@@ -366,7 +366,7 @@
       const [x, y] = w2s(p.x, p.y); if (x < -80 || x > innerWidth + 80 || y < -80 || y > innerHeight + 80) continue;
       if (p.trk.length > 1 && p.st !== 'roll') { g.strokeStyle = COLA(p.side, .45); g.lineWidth = 1; g.beginPath(); p.trk.forEach((q, i) => { const [a, b] = w2s(q[0], q[1]); i ? g.lineTo(a, b) : g.moveTo(a, b); }); g.lineTo(x, y); g.stroke(); }
       if (p.st === 'out' && cam.s > .45 && p.m && p.m.p) { const [tx, ty] = w2s(...p.m.p); g.strokeStyle = COLA(p.side, .3); g.setLineDash([3, 5]); g.lineWidth = 1; g.beginPath(); g.moveTo(x, y); g.lineTo(tx, ty); g.stroke(); g.setLineDash([]); if (p.slot === 0 && cam.s > .8) text(`${mmss(Math.hypot(p.m.p[0] - p.x, p.m.p[1] - p.y) / AIR.PLANES[p.type].v)}`, x + 14, y - 10, 9, '#fff', COLA(p.side, .7), 700); }
-      const nm = PL[p.type], sh = IMG[nm + '_sheet']; const flip = nm === 'su25';
+      const nm = PL[p.type] || (AIR.PLANES[p.type] && AIR.PLANES[p.type].spr) || 'f16', sh = IMG[nm + '_sheet']; const flip = nm === 'su25';
       const bank = flip ? -p.bank : p.bank; const ri = (((Math.round((-bank * 180 / Math.PI + 180) / 20)) % 18) + 18) % 18, pi = p.gam < -.3 ? 0 : p.gam > .3 ? 2 : 1; const fr = pi * 18 + ri;
       const sz = Math.min(30, Math.max(15, cam.s * 10)); const H = p.h + (flip ? Math.PI : 0), sx = (fr % 8) * 256, sy = Math.floor(fr / 8) * 256; const so = Math.min(7, p.z * .9);
       if (!sh) { const s2 = Math.max(9, sz * .6); g.save(); g.translate(x, y); g.rotate(p.h); g.strokeStyle = '#2b2b2b'; g.lineWidth = 2.2; g.beginPath(); g.moveTo(-s2 * .1, -s2 * .7); g.lineTo(-s2 * .1, s2 * .7); g.moveTo(s2 * .45, 0); g.lineTo(-s2 * .55, 0); g.moveTo(-s2 * .55, -s2 * .25); g.lineTo(-s2 * .55, s2 * .25); g.stroke(); g.strokeStyle = '#e9ecef'; g.lineWidth = 1.1; g.stroke(); g.restore();
@@ -388,23 +388,23 @@
     if (e.k === 'reentry') SND.at('sonic', e.x, e.y, .8, 1);
     if (e.k === 'aam') SND.at('woosh', e.x, e.y, .45, .2);
     if (e.k === 'gun') { tracers.push({ x: e.x, y: e.y, tx: e.tx, ty: e.ty, l: .25 }); SND.at('can30', e.x, e.y, .5, .1); }
-    if (e.k === 'kill') { FX.explode(e.x, e.y - up(e.z), 'air', .55); FX.debris(e.x, e.y - up(e.z), 6, 30, '#444'); SND.at('boom_big', e.x, e.y, .8, .1); toast(e.vside === ME ? `💥 انضربت طيارتنا ${e.victim} (${e.by === 'aam' ? 'صاروخ جو-جو' : e.by})` : `🎯 أسقطنا ${e.victim} إيرانية (${e.by === 'aam' ? 'صاروخ جو-جو' : e.by})`, e.vside === ME ? 'bad' : 'good'); }
+    if (e.k === 'kill') { FX.explode(e.x, e.y - up(e.z), 'air', .55); FX.debris(e.x, e.y - up(e.z), 6, 30, '#444'); SND.at('boom_big', e.x, e.y, .8, .1); toast(e.vside === ME ? `💥 انضربت طيارتنا ${e.victim} (${e.by === 'aam' ? 'صاروخ جو-جو' : e.by})` : `🎯 أسقطنا ${e.victim} ${V.foeAdj2 || 'إيرانية'} (${e.by === 'aam' ? 'صاروخ جو-جو' : e.by})`, e.vside === ME ? 'bad' : 'good'); }
     if (e.k === 'miss') FX.puff(e.x, e.y - up(e.z), 2.5, 1.4, 'grey', .5, 0, 0, 1.4);
     if (e.k === 'selfd') FX.puff(e.x, e.y - up(e.z), 2, 1, 'grey', .35, 0, 0, 1.3);
     if (e.k === 'intercept') { FX.explode(e.x, e.y - up(e.z), 'air', e.what === 'tbm' ? .7 : .4); SND.at(e.what === 'tbm' ? 'boom_mid' : 'boom_far', e.x, e.y, .7, .1); if (e.what === 'tbm' && e.side === ME) toast(`✅ ${e.by} اعترض صاروخ باليستي`, 'good'); }
-    if (e.k === 'bomb') { const k = e.small ? .5 : .8; FX.bomb(e.x - 6 / cam.s, e.y - 10 / cam.s, e.x, e.y, () => { FX.explode(e.x, e.y, 'bomb', k * .6); SND.at('boom_bomb', e.x, e.y, .9, .08); }); if (e.what) toast(e.side === ME ? `💥 ضربنا ${e.what}` : `⚠️ إيران ضربت ${e.what}`, e.side === ME ? 'good' : 'bad'); }
+    if (e.k === 'bomb') { const k = e.small ? .5 : .8; FX.bomb(e.x - 6 / cam.s, e.y - 10 / cam.s, e.x, e.y, () => { FX.explode(e.x, e.y, 'bomb', k * .6); SND.at('boom_bomb', e.x, e.y, .9, .08); }); if (e.what) toast(e.side === ME ? `💥 ضربنا ${e.what}` : `⚠️ ${V.foe || 'إيران'} ضربت ${e.what}`, e.side === ME ? 'good' : 'bad'); }
     if (e.k === 'takeoff') SND.at('jet_roar', e.x, e.y, .6, 1);
     if (e.k === 'bmerect') SND.at('woosh', e.x, e.y, .3, 1);
     if (e.k === 'bmlaunch') { FX.muzzle(e.x, e.y, -Math.PI / 2, .9); for (let i = 0; i < 4; i++) FX.puff(e.x + rr(-1, 1) / cam.s, e.y + rr(-1, 1) / cam.s, 5, rr(3, 5), i < 2 ? 'dust' : 'grey', .55, rr(-10, 10), rr(-10, 10), 2); SND.at('launch', e.x, e.y, 1, .3); }
     if (e.k === 'uavlaunch' || e.k === 'cmlaunch') { FX.puff(e.x, e.y, 2.5, 1.4, 'dust', .4, 0, 0, 1.5); SND.at('woosh', e.x, e.y, .3, .3); }
-    if (e.k === 'raid') { const n = e.n, parts = [n.uav && `${n.uav} مسيّرة`, n.cm && `${n.cm} كروز`, n.bm && `${n.bm} باليستي`].filter(Boolean).join(' + '); toast(`🚨 إيران: ضربة مركّبة على ${e.tgt} (${parts}) · توصل كلها سوا بعد ~${Math.round(e.eta)} دقيقة`, 'bad'); }
+    if (e.k === 'raid') { const n = e.n, parts = [n.uav && `${n.uav} مسيّرة`, n.cm && `${n.cm} كروز`, n.bm && `${n.bm} باليستي`].filter(Boolean).join(' + '); toast(`🚨 ${V.foe || 'إيران'}: ضربة مركّبة على ${e.tgt} (${parts}) · توصل كلها سوا بعد ~${Math.round(e.eta)} دقيقة`, 'bad'); }
     if (e.k === 'raidEnd') toast(`🛡 نتيجة الضربة على ${e.tgt}: انعترض ${e.down} من ${e.total}، ووصل ${e.hit}`, e.hit > e.down ? 'bad' : 'good');
     if (e.k === 'bmimpact' || e.k === 'munhit') { const k = e.kind === 'bm' ? .75 : e.kind === 'cm' ? .55 : .35; FX.explode(e.x, e.y, e.kind === 'bm' ? 'bm' : 'big', k * .55); FX.burn(e.x, e.y, k * .5, 40); SND.at(e.kind === 'uav' ? 'boom_mid' : 'boom_big', e.x, e.y, .9, .1); }
     if (e.k === 'crash') { FX.explode(e.x, e.y, 'big', .4); FX.burn(e.x, e.y, .35, 35); }
     if (e.k === 'eject') chutes.push({ x: e.x, y: e.y, t: 0, side: e.side });
     if (e.k === 'samready' && e.side === ME) toast(`✅ ${e.n} نصبت بمكانها الجديد وجاهزة`, 'good');
-    if (e.k === 'emcon') toast(e.side === ME ? `📴 ${e.n} طفّى الرادار: صاروخ مضاد رادار جاي (يسلم بس يسكت شوية)` : `📴 ${e.n} الإيرانية طفّت رادارها خوفاً من صاروخنا`, e.side === ME ? 'bad' : 'good');
-    if (e.k === 'harmlaunch') { SND.at('woosh', e.x, e.y, .6, .2); toast(e.side === ME ? `🚀 F-16 أطلقت HARM على رادار ${e.n}` : `⚠️ صاروخ مضاد رادار على ${e.n}`, e.side === ME ? 'good' : 'bad'); }
+    if (e.k === 'emcon') toast(e.side === ME ? `📴 ${e.n} طفّى الرادار: صاروخ مضاد رادار جاي (يسلم بس يسكت شوية)` : `📴 ${e.n} ${V.foeAdj || 'الإيرانية'} طفّت رادارها خوفاً من صاروخنا`, e.side === ME ? 'bad' : 'good');
+    if (e.k === 'harmlaunch') { SND.at('woosh', e.x, e.y, .6, .2); toast(e.side === ME ? `🚀 ${V.harmBy || 'F-16'} أطلقت HARM على رادار ${e.n}` : `⚠️ صاروخ مضاد رادار على ${e.n}`, e.side === ME ? 'good' : 'bad'); }
     if (e.k === 'harmhit') { FX.explode(e.x, e.y, 'big', .45); FX.burn(e.x, e.y, .4, 50); SND.at('boom_big', e.x, e.y, .8, .1); toast(e.side === ME ? `💥 دمّرنا رادار ${e.n} (معطّل ~يوم ونص)` : `⚠️ رادار ${e.n} انضرب`, e.side === ME ? 'good' : 'bad'); }
     if (e.k === 'harmmiss') toast(e.side === ME ? `HARM خطأ ${e.n}${e.off ? ' (طفّوا الرادار)' : ''}` : `صاروخ مضاد الرادار خطأ ${e.n}`, '');
   };

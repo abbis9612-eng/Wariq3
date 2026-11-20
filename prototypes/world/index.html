@@ -240,6 +240,16 @@ input[type=range]{width:100%;accent-color:var(--gold)}
 .acts button:disabled{opacity:.45}
 #toast{position:fixed;left:50%;transform:translateX(-50%);top:calc(96px + env(safe-area-inset-top));z-index:9;display:flex;flex-direction:column;gap:4px;align-items:center;pointer-events:none;width:92%}
 #toast div{background:var(--panel);border:1px solid var(--line);border-radius:10px;padding:5px 11px;font-size:12.5px;box-shadow:var(--shadow)}#toast div.bad{border-color:var(--neg)}#toast div.good{border-color:var(--me)}
+/* مشهد المعركة 1:1 (نفس «الحرب الكبرى») */
+#bv{position:fixed;inset:0;z-index:20;background:#6d6050}#bv[hidden]{display:none}#bvc{position:absolute;inset:0;width:100%;height:100%;touch-action:none}
+#bvTop{position:absolute;top:0;left:0;right:0;background:linear-gradient(rgba(20,18,15,.88),rgba(20,18,15,.7));padding:calc(6px + env(safe-area-inset-top)) 10px 7px;font-size:12px}
+#bvTop b{font:700 15px "IBM Plex Sans Arabic",Tahoma;color:#e2b552}#bvX{margin-inline-start:auto;background:#b8442f;border-radius:9px;padding:4px 10px;font-weight:700}
+#bvC{margin-top:3px;line-height:1.5;font-variant-numeric:tabular-nums}#bvSpd{display:flex;gap:3px}#bvSpd button,#bvFol{background:rgba(255,255,255,.1);border:1px solid rgba(255,235,190,.2);border-radius:7px;padding:2px 9px;font-weight:700}#bvSpd button.on{background:#e2b552;color:#221b0e}
+#bvOrd{position:absolute;bottom:calc(10px + env(safe-area-inset-bottom));left:130px;right:8px;display:flex;flex-wrap:nowrap;overflow-x:auto;gap:4px;scrollbar-width:none}#bvOrd::-webkit-scrollbar{display:none}#bvOrd button{flex:0 0 auto}#bvOrd button{background:rgba(24,22,19,.85);border:1px solid rgba(255,235,190,.25);border-radius:9px;padding:5px 8px;font-weight:700;font-size:12px}#bvOrd button.on{background:#e2b552;color:#221b0e}
+#bvHint{position:absolute;top:calc(118px + env(safe-area-inset-top));left:50%;transform:translateX(-50%);background:rgba(184,68,47,.95);border-radius:12px;padding:5px 12px;font-weight:700;font-size:12.5px;white-space:nowrap}#bvHint[hidden]{display:none}
+#bvNote{position:absolute;top:calc(112px + env(safe-area-inset-top));left:10px;right:10px;transition:opacity 1s;text-align:center;font-size:11px;opacity:.8;background:rgba(20,18,15,.6);border-radius:8px;padding:3px 6px;pointer-events:none}
+#bvRes{position:absolute;left:12%;right:12%;top:38%;background:rgba(24,22,19,.94);border:1px solid rgba(255,235,190,.2);border-radius:16px;padding:14px;text-align:center;display:flex;flex-direction:column;gap:6px}#bvRes[hidden]{display:none}#bvRes button{background:#e2b552;color:#221b0e;border-radius:10px;padding:8px;font-weight:700;margin-top:4px}
+#bv,#bv button{color:#f4ecd8;font:inherit}
 #divbar{position:fixed;left:8px;right:8px;top:calc(100px + env(safe-area-inset-top));z-index:8;background:var(--panel);border:1px solid var(--gold-l);border-radius:12px;padding:6px 10px;font-size:12px}#divbar[hidden]{display:none}#divbar .row{display:flex;gap:6px;align-items:center;margin-top:4px}
 #start{position:fixed;inset:0;background:var(--bg);z-index:15;overflow:auto;padding:calc(14px + env(safe-area-inset-top)) max(16px,env(safe-area-inset-right)) calc(16px + env(safe-area-inset-bottom)) max(16px,env(safe-area-inset-left))}
 #start[hidden]{display:none}#start h1{font-size:22px}#start p{color:var(--dim);margin:4px 0 10px;max-width:60ch}
@@ -262,12 +272,23 @@ input[type=range]{width:100%;accent-color:var(--gold)}
 <div id="tabs" hidden><button data-p="me"><i>🏛</i>دولتي</button><button data-p="dip"><i>🤝</i>الدبلوماسية</button><button data-p="war"><i>⚔</i>الحروب</button><button data-p="world"><i>🌍</i>العالم</button><button data-p="news"><i>📜</i>الأخبار</button></div>
 <div id="sheet" hidden></div>
 <div id="toast"></div>
+<div id="bv" hidden><canvas id="bvc"></canvas>
+  <div id="bvTop"><div style="display:flex;align-items:center;gap:6px"><b id="bvT"></b><button id="bvX">↩ الخريطة</button></div><div id="bvC"></div>
+  <div style="display:flex;gap:4px;margin-top:4px"><div id="bvSpd"><button data-k="0">⏸</button><button data-k="1" class="on">×1</button><button data-k="2">×2</button><button data-k="4">×4</button><button data-k="8">×8</button></div><button id="bvFol">🎥 تابع</button></div></div>
+  <div id="bvOrd"><button data-m="move">🎯 حرّك فصيل</button><button data-m="hold">🛡 اثبتوا</button><button data-m="back">↩ انسحاب</button><button data-m="arty">💥 مدفعية</button><button data-m="air">✈ طيارات</button></div>
+  <div id="bvHint" hidden></div>
+  <div id="bvNote">مشهد حقيقي: المسافات بالمتر والوقت بالثانية الحقيقية. الآليات مكبّرة ×5 حتى تنشاف. 🎥 المخرج يقطع لأهم لحظة، واسحب بإصبعك حتى تتحكم.</div>
+  <div id="bvRes" hidden></div></div>
 <script src="wsim.js"></script>
 <script src="gwsim.js"></script>
 <script src="theater.js"></script>
 <script src="gwair.js"></script>
 <script src="aircat.js"></script>
 <script src="airworld.js"></script>
+<script src="gwfx.js"></script>
+<script src="gwview.js"></script>
+<script src="gwbv.js"></script>
+<script src="gwbview.js"></script>
 <script>
 'use strict';
 // ===== اللعبة (W3) =====
@@ -310,7 +331,7 @@ input[type=range]{width:100%;accent-color:var(--gold)}
     $('#start').hidden = true; $('#tabs').hidden = false;
     $('#top h1').innerHTML = `${CS[me].ar} <small></small>`;
     if (!$('#bar')) { const b = document.createElement('div'); b.id = 'bar'; $('#top').append(b); }
-    if (G.th) { const w = G.wars.find(x => x.id === G.th.war); T = w ? TH.restore(G.th, G, WD, w, me) : null; if (T) { w.detail = true; T.A = AWLD.restore(AWLD.build(T, G, WD), G.th.airR); } }
+    if (G.th) { const w = G.wars.find(x => x.id === G.th.war); T = w ? TH.restore(G.th, G, WD, w, me) : null; if (T) { w.detail = true; T.A = AWLD.restore(AWLD.build(T, G, WD), G.th.airR); viewInit(); } }
     theater(); syncMap(); setMode('pol'); bar(); sel = null; card();
     const cap = R.find(r => r.ctl === me && r.cap) || R.find(r => r.ctl === me); if (cap) { cam.x = MX(cap.ll[0]); cam.y = MY(cap.ll[1]); cam.s = Math.max(cam.s, 900); }
     lastT = performance.now(); requestAnimationFrame(tick);
@@ -337,7 +358,7 @@ input[type=range]{width:100%;accent-color:var(--gold)}
     if (T) return;
     for (const w of G.wars) { if (!(w.a.includes(me) || w.b.includes(me)) || w.noLand) continue;
       const t = TH.build(G, WD, w, me); if (!t) { w.noLand = true; continue; }
-      T = t; w.detail = true; T.vp0 = TH.score(T).vp.slice(); T.aggr0 = 1.6; T.A = AWLD.build(T, G, WD);
+      T = t; w.detail = true; T.vp0 = TH.score(T).vp.slice(); T.aggr0 = 1.6; T.A = AWLD.build(T, G, WD); viewInit();
       toast(`🗺 ${w.n}: الجبهة انقسمت لـ${T.cells.length} خلية، و${SM.alive(T.W).filter(d => d.side === 0).length} فرقة إلنا ضد ${SM.alive(T.W).filter(d => d.side === 1).length}`, 'bad');
       const c = T.cells[Math.floor(T.cells.length / 2)]; cam.x = MX(c.ll[0]); cam.y = MY(c.ll[1]); cam.s = Math.max(cam.s, 1400); speed = 0; bar(); break; }
   }
@@ -370,6 +391,42 @@ input[type=range]{width:100%;accent-color:var(--gold)}
     if (G.t > t0) after(m0, t0);
     if (n) { dirty = true; if (selD) divBar(); }
   }
+  // ===== مشهد المعركة 1:1 (bv.js وbview.js من «الحرب الكبرى») =====
+  const IMG = {}, IMGB = location.protocol === 'file:' ? '../grandwar/img/' : 'img/';
+  let imgP = null;
+  const loadImgs = () => imgP || (imgP = Promise.all(['abrams', 'abrams_t', 't72', 't72_t', 'bmp', 'grad', 'truck', 'f16', 'su25', 'f14', 'fx_explo1', 'fx_explo2', 'fx_fire', 'fx_cloud', 'f16_sheet', 'su25_sheet', 'f14_sheet', 'base_me', 'base_south', 'patriot', 's400', 'zolf',
+    ...['aerial_sand', 'dirt_aerial_02', 'rocky_terrain_02', 'aerial_mud_1', 'aerial_asphalt_01', 'aerial_grass_rock', 'palm', 'tree', 'acacia', 'h1', 'h2', 'h3', 'h4'].map(n => 'bv/' + n)]
+    .map(n => new Promise(r => { const i = new Image(); i.onload = r; i.onerror = r; i.src = IMGB + n + '.webp'; IMG[n.replace('bv/', 'bv_')] = i; }))).then(() => window.BVIEW.init({ IMG, SND: null })));
+  // نوع الدبابة بالمشهد حسب الدولة: غربية (أبرامز، ليوبارد، ميركافا...) أو سوفيتية/شرقية (T-72، T-90، Type...)
+  const WEST = /abrams|leopard|challenger|merkava|leclerc|k2|k1|m60|m48|altay|ariete|type 10|type 90|stridsvagn|al-khalid|arjun|vickers|zulfiqar/i;
+  const tankOf = k => { const t = ((CS[k] && CS[k].kit && CS[k].kit.tank && CS[k].kit.tank[1]) || []).join(' '); return WEST.test(t) ? 'abrams' : 't72'; };
+  function battleCard(tg) {
+    const W = T.W, b = W.battles.get(tg); if (!b) return false; const c = T.cells[tg], mine = b.side === 0;
+    const A = SM.alive(W).filter(d => d.path[0] === tg && d.side === b.side), D = SM.alive(W).filter(d => d.cell === tg && d.side !== b.side), win = mine ? b.win : 1 - b.win;
+    const el = $('#card'); sel = null; el.innerHTML = `<h2>⚔ معركة ${c.city || byId.get(WD.r[c.reg][0])?.n || SM.TERR[c.t].n}<button class="x" aria-label="سدّ">✕</button></h2><div class="sub">${mine ? 'إحنا نهاجم' : 'العدو يهاجم'} · ${A.length} فرق ضد ${D.length} · ${win > .55 ? 'إحنا غالبين' : win < .45 ? 'العدو غالب' : 'متعادلة'} · ${SM.TERR[c.t].n}</div>
+      <div class="note">ادخل وشوف المعركة نفسها: بالمتر والثانية الحقيقية، الدبابات والمدرعات والمشاة والمدفعية والطيارات. الخريطة توقف وانت داخل.</div><div class="row"><button class="big" id="bIn">⚔ ادخل المعركة</button></div>`;
+    el.hidden = false; el.querySelector('.x').onclick = () => { el.hidden = true; }; $('#bIn').onclick = () => enterBattle(tg, b, A, D); return true;
+  }
+  async function enterBattle(tg, b, A, D) {
+    const prev = speed; speed = 0; bar(); $('#card').hidden = true; await loadImgs();
+    const W = T.W, c = T.cells[tg], terr = { fort: 'hills' }[c.t] || c.t, fill = ds => ds.slice(0, 3).map(d => ({ kind: d.kind, str: d.str, n: d.n }));
+    const ready = s => T.A ? T.A.bases.filter(x => x.side === s).reduce((n, x) => n + x.ready, 0) : 0;
+    const tank = [tankOf(T.side[0][0]), tankOf(T.side[1][0])];
+    const battle = window.BV.create({ seed: (W.t * 7 + tg) | 0, terr, me: 0, myAir: Math.min(3, Math.floor(ready(0) / 3)), tank, att: { side: b.side, divs: fill(A) }, def: { side: 1 - b.side, divs: fill(D) }, air: { att: ready(b.side) > 2 ? 2 : 0, def: ready(1 - b.side) > 2 ? 1 : 0 } });
+    const place = c.city || byId.get(WD.r[c.reg][0])?.n || ''; window.BVIEW.open(battle, { title: `⚔ معركة ${place} · ${SM.TERR[c.t].n}`, me: 0, names: [nameOf(T.side[0][0]), nameOf(T.side[1][0])], onExit: Bt => { applyBattle(Bt, b, A, D, c); speed = prev; bar(); dirty = true; } });
+  }
+  // نتيجة المشهد ترجع للمسرح (نفس «الحرب الكبرى» BV4): الخسائر تنقص قوة الفرق، والمهزوم ينسحب أو يتوقف
+  function applyBattle(Bt, b, A, D, c) {
+    if (!Bt || Bt.t < 20) return;
+    const att = Bt.side.att, def = Bt.side.def, fa = Math.min(.8, Bt.lost[att] / Math.max(1, Bt.init[att])), fd = Math.min(.8, Bt.lost[def] / Math.max(1, Bt.init[def]));
+    for (const d of A) if (!d.dead) { d.str = Math.max(.08, d.str * (1 - fa * .5)); d.org = Math.max(1, d.org * (1 - fa)); }
+    for (const d of D) if (!d.dead) { d.str = Math.max(.08, d.str * (1 - fd * .5)); d.org = Math.max(1, d.org * (1 - fd)); }
+    const w = Bt.over?.win, mine = att === 0;
+    if (w === 'att') { for (const d of D) if (!d.dead) d.org = 0; toast(mine ? `🎖 كسرنا دفاعهم بـ${c.city || 'المنطقة'}: ينسحبون` : `⚠️ كسروا دفاعنا بـ${c.city || 'المنطقة'}: ننسحب`, mine ? 'good' : 'bad'); }
+    else if (w === 'def') { for (const d of A) if (!d.dead) { d.org = .5; d.path = []; d.prog = 0; if (d.mode === 'manual') d.mode = 'hold'; } toast(mine ? '✋ هجومنا انكسر ورجع' : '🛡 صدّينا هجومهم', mine ? 'bad' : 'good'); }
+    else toast(`⚔ المعركة ما انحسمت: خسائرنا ${Math.round(Bt.lost[0])} وخسائرهم ${Math.round(Bt.lost[1])}`);
+    save();
+  }
   // أخبار الجبهة من سجل «الحرب الكبرى» (theater W.log)
   const WXN = { clear: 'صحو', cloud: 'غيوم', rain: 'مطر وطين', dust: 'عاصفة غبار' };
   function frontNews() {
@@ -384,8 +441,21 @@ input[type=range]{width:100%;accent-color:var(--gold)}
     T.logN = L.length;
   }
   const BOOMS = [];   // انفجارات قصيرة للرسم
+  // ربط رسم «الحرب الكبرى» بخريطة العالم: كاميرا بالكيلومتر (بكسل لكل كم، ومركز الشاشة بإحداثيات المسرح)
+  function viewInit() {
+    if (!T || !T.A || !window.VIEW) return; loadImgs();
+    const K = (x, y) => toS(MX(T.lon0 + x / T.KX), MY(T.lat1 - y / T.KY));
+    const CAMK = { get s() { return Math.abs(K(100, 0)[0] - K(0, 0)[0]) / 100; }, get x() { return (cam.x * 180 / Math.PI - T.lon0) * T.KX; }, get y() { return (T.lat1 - (2 * Math.atan(Math.exp(-cam.y)) - Math.PI / 2) * 180 / Math.PI) * T.KY; } };
+    VIEW.init({ g: cx, cam: CAMK, w2s: K, IMG, WD: T.W, cells: T.W.cells, A: T.A, text: ctext }); FX.init({ g: cx, cam: CAMK, w2s: K, IMG });
+    VIEW.foe = nameOf(T.side[1][0]); VIEW.foeAdj = 'المعادية'; VIEW.foeAdj2 = 'معادية'; VIEW.harmBy = 'طيارتنا'; VIEW.sndBase = location.protocol === 'file:' ? '../grandwar/sounds/' : 'sounds/';
+    T.vInit = 1;
+  }
+  function ctext(str, x, y, size, col = '#2a2118', halo = 'rgba(255,250,235,.85)', weight = 600) {
+    cx.font = `${weight} ${size}px "IBM Plex Sans Arabic",Tahoma`; cx.textAlign = 'center'; cx.textBaseline = 'middle';
+    if (halo) { cx.strokeStyle = halo; cx.lineWidth = 3; cx.lineJoin = 'round'; cx.strokeText(str, x, y); } cx.fillStyle = col; cx.fillText(str, x, y); cx.textBaseline = 'alphabetic'; }
   function airEvents() {
     const A = T.A;
+    if (window.VIEW && T.vInit) { for (const e of A.ev) VIEW.airEvent(e, toast, 0); A.ev.length = 0; return; }
     for (const e of A.ev) {
       if (e.k === 'bomb' || e.k === 'intercept') BOOMS.push([e.x, e.y, performance.now(), e.k === 'intercept' ? 1 : 0]);
       if (e.k === 'raid' && e.side === 1) toast(`🚀 ضربة مركّبة جاية على ${e.tgt}: ${e.n.uav} مسيّرة، ${e.n.cm} كروز، ${e.n.bm} باليستي`, 'bad');
@@ -417,18 +487,10 @@ input[type=range]{width:100%;accent-color:var(--gold)}
       cx.font = '700 11px sans-serif'; cx.textAlign = 'center';
       for (const br of W.bridges || []) { const [x, y] = toS(MX(T.lon0 + br.p[0] / T.KX), MY(T.lat1 - br.p[1] / T.KY)); cx.fillStyle = br.down > 0 ? '#d0331a' : '#3b3b3b'; cx.fillText(br.down > 0 ? '✖' : '═', x, y + 4); }
     }
-    // ===== الجو الحقيقي (air.js): القواعد، البطاريات بمداها، الطيارات، الصواريخ، الانفجارات =====
-    if (T.A) { const A = T.A, K = (x, y) => toS(MX(T.lon0 + x / T.KX), MY(T.lat1 - y / T.KY)), kmPx = Math.abs(toS(MX(T.lon0 + 100 / T.KX), 0)[0] - toS(MX(T.lon0), 0)[0]) / 100;
-      cx.textAlign = 'center';
-      for (const s of A.sams) { const [x, y] = K(s.p[0], s.p[1]); const col = s.side === 0 ? '#2f7d2a' : '#b3261e';
-        if (cam.s > 1200 && !s.down) { const r = Math.max(...s.mags.map(m => m.r.air || 0)) * kmPx; cx.beginPath(); cx.arc(x, y, r, 0, 7); cx.strokeStyle = col + '55'; cx.lineWidth = 1; cx.setLineDash([3, 4]); cx.stroke(); cx.setLineDash([]); }
-        cx.fillStyle = s.down ? '#777' : col; cx.beginPath(); cx.moveTo(x, y - 6); cx.lineTo(x + 5, y); cx.lineTo(x, y + 6); cx.lineTo(x - 5, y); cx.fill(); }
-      cx.font = '700 13px sans-serif';
-      for (const b of A.bases) { const [x, y] = K(b.p[0], b.p[1]); cx.fillStyle = b.side === 0 ? '#2f7d2a' : '#b3261e'; cx.fillText(b.down > 0 ? '✖' : '✈', x, y + 4); }
-      for (const p of A.planes) { if (p.t < 0) continue; const [x, y] = K(p.x, p.y), h = p.h || 0; cx.save(); cx.translate(x, y); cx.rotate(h); cx.beginPath(); cx.moveTo(6, 0); cx.lineTo(-4, -3.5); cx.lineTo(-2, 0); cx.lineTo(-4, 3.5); cx.closePath(); cx.fillStyle = p.st === 'fall' ? '#ff9d00' : p.side === 0 ? '#1f5c1a' : '#8a1b14'; cx.fill(); cx.restore(); }
-      for (const m of A.msls) { if (m.done || m.t < 0) continue; const [x, y] = K(m.x, m.y); cx.beginPath(); cx.arc(x, y, m.kind === 'sam' ? 1.6 : 2.4, 0, 7); cx.fillStyle = m.kind === 'sam' ? '#fff' : m.kind === 'bm' ? '#ff2d1a' : m.kind === 'uav' ? '#ff9d00' : m.kind === 'cm' ? '#ffd166' : '#ddd'; cx.fill(); }
-      const now = performance.now(); for (const [bx, by, t0, ic] of BOOMS) { const a = (now - t0) / 900; if (a > 1) continue; const [x, y] = K(bx, by); cx.beginPath(); cx.arc(x, y, 3 + a * 10, 0, 7); cx.fillStyle = ic ? `rgba(255,255,255,${.6 - a * .6})` : `rgba(255,120,30,${.75 - a * .75})`; cx.fill(); }
-      if (A.planes.length || A.msls.length || BOOMS.length) dirty = true; }
+    // ===== الجو الحقيقي: رسم «الحرب الكبرى» نفسه (view.js وfx.js): مطارات بمدرجها، بطاريات بمداها، طيارات بصورها وظلها، صواريخ بدخان، انفجارات =====
+    if (T.A && window.VIEW && T.vInit) { const now = performance.now(), fdt = Math.min(.1, (now - (T.lastF || now)) / 1000); T.lastF = now;
+      VIEW.gs = HPS[speed] * 3600; VIEW.drawBases(-1); FX.update(speed ? fdt : 0); FX.drawGround(); VIEW.drawFx(speed ? fdt : 0); FX.draw(); VIEW.drawAir(fdt); VIEW.soundTick(fdt, T.W.battles.size);
+      dirty = true; }
     // الضربات الجوية البسيطة (حفظ قديم بلا جو حقيقي): ✈ صغيرة بلون الطرف اللي ضرب
     if (T.air) { cx.font = '700 12px sans-serif'; cx.textAlign = 'center'; for (const [c, s] of T.air.hits) { const cl = T.cells[c], [x, y] = toS(MX(cl.ll[0]), MY(cl.ll[1])); cx.fillStyle = s === 0 ? '#2f7d2a' : '#b3261e'; cx.fillText('✈', x + 10, y - 9); } }
     // الفرق: مربع لكل خلية بيها فرق (العدد ونوع الأقوى)
@@ -458,6 +520,7 @@ input[type=range]{width:100%;accent-color:var(--gold)}
     if (!T || cam.s < 600) return false; const i = cellAt(sx, sy); if (i < 0) return false; const W = T.W;
     const mine = W.divs.filter(d => !d.dead && d.side === 0 && d.cell === i);
     if (PLAN) { if (PLAN[PLAN.length - 1] !== i) PLAN.push(i); divBar(); return true; }   // نرسم السهم خلية خلية
+    if (!selD && W.battles.has(i) && battleCard(i)) return true;
     if (selD && selD.length && !mine.some(d => selD.includes(d))) {   // أمر: روحوا لهاي الخلية
       let ok = 0; for (const d of selD) if (!d.dead && SM.order(W, d, i, 'manual')) ok++;
       toast(ok ? `➡ ${ok} فرقة تتحرك${W.ctrl[i] !== 0 ? ' وتهاجم' : ''}` : 'ما اكو طريق', ok ? 'good' : 'bad'); selD = null; divBar(); return true; }
@@ -512,7 +575,7 @@ input[type=range]{width:100%;accent-color:var(--gold)}
     const b = $('#bar'); if (!b) return; const c = G.C[me];
     b.innerHTML = `<span class="date">${ar(S.date(G.t))}</span><span class="ap" title="نقاط القرار">⭐ ${G.ap}</span>
       ${['⏸', '▶', '▶▶', '▶▶▶'].map((x, i) => `<button data-s="${i}" class="${speed === i ? 'on' : ''}" aria-label="سرعة ${i}">${x}</button>`).join('')}`;
-    b.querySelectorAll('button').forEach(x => x.onclick = () => { speed = +x.dataset.s; bar(); });
+    b.querySelectorAll('button').forEach(x => x.onclick = () => { speed = +x.dataset.s; if (window.VIEW && T) VIEW.SND.init(); bar(); });
     $('#top h1 small').textContent = `${money(c.gdp)} · استقرار ${Math.round(c.stab)}`;
     const wd = G.wars.some(w => w.offer && (w.a.includes(me) || w.b.includes(me)));
     const t = $('#tabs button[data-p=war]'); let d = t.querySelector('.dot'); if (wd && !d) { d = document.createElement('span'); d.className = 'dot'; d.textContent = '!'; t.append(d); } else if (!wd && d) d.remove();

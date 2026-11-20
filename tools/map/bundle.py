@@ -43,6 +43,8 @@ for f in glob.glob(f'{R}/countries/*.json'):
       'milPct': v(m.get('budgetPctGdp')), 'gt': g.get('type'), 'res': v(s.get('reserve')), 'heli': v(s.get('attackHeli')),
       'ships': sum(v(s.get(k)) or 0 for k in ('carriers', 'cruisers', 'destroyers', 'frigates', 'corvettes', 'subNuc', 'subs', 'amphib')), 'carriers': v(s.get('carriers')), 'subs': (v(s.get('subs')) or 0) + (v(s.get('subNuc')) or 0),
       'tech': ((d.get('ind') or {}).get('tech') or {}), 'gen': {k: v.get('gen') for k, v in (m.get('grp') or {}).items() if v.get('gen')}, 'kit': {k: [v.get('n'), [t[0] for t in (v.get('top') or [])[:2]], 1 if v.get('tpl') else 0] for k, v in (m.get('grp') or {}).items() if k in ('tank', 'afv', 'art', 'jet', 'heli', 'ad', 'navy')},
+      'adL': [[x['m'][:30], x['n'], x['cat']] for x in sorted((m.get('ad') or []), key=lambda x: -x['n']) if x['cat'] in ('long', 'medium') and x['n'] > 0][:5],
+      'jets': [[x['m'][:30], x['n']] for x in sorted((m.get('air') or []), key=lambda x: -x['n']) if x['cat'] in ('fighter', 'attack', 'bomber') and x['n'] > 0][:6],
       'nuke': None, 'stab': v((d.get('pol') or {}).get('stab')), 'tr': d.get('treaties', []), 'war': (d.get('pol') or {}).get('warHome', []), 'conf': d.get('conflicts', [])}
 SN = json.load(open(f'{R}/world/sanctions.json'))
 for x in SN['list']:
@@ -57,8 +59,9 @@ for c in cs.values():
         if c.get(k) and LAR.get(c[k]): c[k] = LAR[c[k]]
 TRN = {k: b['ar'] for k, b in BL['blocs'].items()}; TRN.update({'OIC': 'منظمة التعاون الإسلامي', 'US_SFA': 'اتفاقية الإطار الاستراتيجي ويا أمريكا', 'ARABLEAGUE': 'الجامعة العربية'})
 CFN = {c['id']: c['ar'] for c in CF['conflicts']}
+AW = json.load(open(f'{R}/curation/airwar.json'))
 W = {'asOf': '2026-11', 'T': T, 'r': regs, 'g': {r['id']: delta(RG[r['id']]) for r in RJ['r']}, 's': [[z['id'], z['n'], z['ll'], z['nb'], z['k']] for z in SJ['s']], 'sg': {k: delta(v) for k, v in SG.items()},
-  'st': SJ['straits'], 'lod': lod, 'cs': cs, 'ent': RJ['entities'], 'trn': TRN, 'cfn': CFN, 'rel': {a: {b: v[0] for b, v in m.items()} for a, m in REL.items()}}
+  'st': SJ['straits'], 'lod': lod, 'cs': cs, 'ent': RJ['entities'], 'trn': TRN, 'cfn': CFN, 'aw': AW['c'], 'rel': {a: {b: v[0] for b, v in m.items()} for a, m in REL.items()}}
 s = json.dumps(W, ensure_ascii=False, separators=(',', ':'))
 open(OUT, 'w').write('// مولّد بـ tools/map/bundle.py من data/world — لا تعدّله باليد\nwindow.WD=' + s + ';\n')
 print('حجم', round(len(s.encode()) / 1e6, 2), 'ميغا · مناطق', len(regs), '· دول بالحدود المبسطة', len(lod), '· نقاط المبسطة', sum(len(f) // 2 for v in lod.values() for f in v))

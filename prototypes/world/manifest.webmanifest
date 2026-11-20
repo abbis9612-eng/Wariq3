@@ -1,0 +1,19 @@
+{
+ "name": "الحرب العالمية الثالثة — العالم",
+ "short_name": "العالم",
+ "description": "لعبة استراتيجية كبرى: اختار أي دولة من 157 وابدي من الوضع الحقيقي، تشرين الثاني 2026",
+ "lang": "ar",
+ "dir": "rtl",
+ "start_url": "./index.html",
+ "scope": "./",
+ "display": "standalone",
+ "orientation": "portrait",
+ "background_color": "#1b2019",
+ "theme_color": "#1b2019",
+ "categories": ["games"],
+ "icons": [
+  { "src": "icons/icon-192.png", "sizes": "192x192", "type": "image/png", "purpose": "any" },
+  { "src": "icons/icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any" },
+  { "src": "icons/icon-mask-512.png", "sizes": "512x512", "type": "image/png", "purpose": "maskable" }
+ ]
+}

@@ -4,6 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover">
 <title>العالم 2026</title>
+<link rel="manifest" href="manifest.webmanifest"><meta name="theme-color" content="#1b2019"><link rel="apple-touch-icon" href="icons/icon-192.png"><meta name="apple-mobile-web-app-capable" content="yes"><meta name="mobile-web-app-capable" content="yes">
 <style>
 /* «العالم» GW12 W2.5: خريطة العالم (3,803 منطقة، 345 بحر، 13 مضيق) — نفس ألوان «الحرب الكبرى» */
 :root{--bg:#1b2019;--sea:#1d2a33;--sea2:#22323d;--panel:rgba(32,38,30,.97);--panel2:#262d24;--chip:rgba(235,229,210,.07);--chip2:rgba(235,229,210,.12);--line:rgba(235,229,210,.16);--ink:#ece6d3;--dim:#a9ab94;--gold:#e0b558;--gold-l:rgba(224,181,88,.5);--me:#6fae5c;--neg:#d9654f;--front:#ff5a3c;--shadow:0 -6px 24px rgba(0,0,0,.35)}
@@ -264,6 +265,7 @@ input[type=range]{width:100%;accent-color:var(--gold)}
   <h1>العالم · تشرين الثاني 2026</h1>
   <p>اختار أي دولة. العالم يبدي من وضعه الحقيقي هسه: الحروب الجارية، والتحالفات، والعقوبات. إنت تقرر: تبني اقتصادك، تكسب حلفاء، أو تدخل حرب.</p>
   <div id="cont" hidden><button class="big" id="contBtn">كمّل اللعبة المحفوظة</button> <small id="contInfo"></small></div>
+  <div class="row" style="margin:6px 0"><button id="exp0" hidden>📤 صدّر الحفظ لملف</button><button id="imp0">📥 افتح حفظ من ملف</button><input id="impF" type="file" accept=".json,application/json" hidden></div>
   <input id="q" type="search" placeholder="ابحث عن دولة…" autocomplete="off">
   <div class="seg" id="tiers"><button data-t="" class="on">الكل</button><button data-t="A">الكبار</button><button data-t="B">المتوسطة</button><button data-t="C">الصغيرة</button></div>
   <div id="clist"></div>
@@ -310,7 +312,25 @@ input[type=range]{width:100%;accent-color:var(--gold)}
   let MED = null;
   let meSub = 'eco';
   const SPD = [0, 1, 4, 12];   // أيام بالثانية
-  const store = { get() { try { return localStorage.getItem(KEY); } catch (e) { return null; } }, set(v) { try { localStorage.setItem(KEY, v); return true; } catch (e) { return false; } } };
+  // GW9: الحفظ الآمن — نسخة احتياطية (.bak) قبل كل كتابة، ونتأكد إن اللي انكتب يتقرا، والقراءة ترجع للاحتياط إذا الأصل خربان.
+  // وأول حفظ نطلب من المتصفح «تخزين دائم» (أندرويد يحترمه). الأضمن: تصدير الحفظ لملف (آيفون ممكن يمسح التخزين).
+  const okSave = t => { try { const o = JSON.parse(t); return !!(o && o.v && o.me && o.C); } catch (e) { return false; } };
+  let persisted = false;
+  const store = {
+    get() { try { const a = localStorage.getItem(KEY); if (a && okSave(a)) return a; const b = localStorage.getItem(KEY + '.bak'); return b && okSave(b) ? b : a; } catch (e) { return null; } },
+    set(v) { try { const old = localStorage.getItem(KEY); if (old && okSave(old)) localStorage.setItem(KEY + '.bak', old); localStorage.setItem(KEY, v); if (localStorage.getItem(KEY) !== v) return false;
+      if (!persisted && navigator.storage && navigator.storage.persist) { persisted = true; navigator.storage.persist().catch(() => {}); } return true; } catch (e) { toast('⚠ الحفظ ما نجح: الذاكرة مليانة؟ صدّر الحفظ لملف', 'bad'); return false; } } };
+  // تصدير/استيراد الحفظ كملف (الحفظ الوحيد اللي يبقى إذا انمسح التطبيق أو تبدّل التلفون)
+  async function exportSave() {
+    if (G) save(); const t = store.get(); if (!t) { toast('ماكو حفظ', 'bad'); return; } const o = JSON.parse(t), nm = `wariq-${o.me}-${S.date(o.t).toISOString().slice(0, 10)}.json`;
+    const f = new File([t], nm, { type: 'application/json' });
+    try { if (navigator.canShare && navigator.canShare({ files: [f] })) { await navigator.share({ files: [f], title: 'حفظ «العالم»' }); return; } } catch (e) { if (e && e.name === 'AbortError') return; }
+    const a = document.createElement('a'); a.href = URL.createObjectURL(f); a.download = nm; document.body.append(a); a.click(); setTimeout(() => { URL.revokeObjectURL(a.href); a.remove(); }, 1000); toast('📤 الحفظ نزل كملف: ' + nm, 'good');
+  }
+  function importSave(file) {
+    const r = new FileReader(); r.onload = () => { const t = String(r.result); if (!okSave(t)) { toast('❌ هذا مو ملف حفظ «العالم»', 'bad'); return; }
+      const w = S.load(JSON.parse(t), WD); if (!w) { toast('❌ الملف خربان', 'bad'); return; } if (G && !confirm('تبدّل اللعبة الحالية بالملف؟')) return; store.set(t); toast('📥 انفتح الحفظ', 'good'); if (G) location.reload(); else begin(w); }; r.readAsText(file);
+  }
   const toast = (m, cls = '') => { const d = document.createElement('div'); d.textContent = m; d.className = cls; $('#toast').prepend(d); while ($('#toast').children.length > 3) $('#toast').lastChild.remove(); setTimeout(() => d.remove(), 3200); };
   const ar = d => d.toLocaleDateString('ar-IQ-u-nu-latn', { day: 'numeric', month: 'long', year: 'numeric', timeZone: 'UTC' });
   const money = b => b == null ? '–' : Math.abs(b) >= 1000 ? (b / 1000).toFixed(2) + ' ترليون $' : Math.abs(b) >= 10 ? Math.round(b) + ' مليار $' : b.toFixed(1) + ' مليار $';
@@ -335,7 +355,9 @@ input[type=range]{width:100%;accent-color:var(--gold)}
   $('#q').oninput = list;
   $('#tiers').querySelectorAll('button').forEach(b => b.onclick = () => { tier = b.dataset.t; $('#tiers').querySelectorAll('button').forEach(x => x.classList.toggle('on', x === b)); list(); });
   const saved = store.get();
-  if (saved) { try { const o = JSON.parse(saved); $('#cont').hidden = false; $('#contInfo').textContent = `${CS[o.me].ar} · ${ar(S.date(o.t))}`; $('#contBtn').onclick = () => { const w = S.load(o, WD); if (w) begin(w); }; } catch (e) { } }
+  $('#imp0').onclick = () => $('#impF').click(); $('#impF').onchange = e => { if (e.target.files[0]) importSave(e.target.files[0]); e.target.value = ''; };
+  $('#exp0').onclick = exportSave;
+  if (saved) { try { const o = JSON.parse(saved); $('#cont').hidden = false; $('#exp0').hidden = false; $('#contInfo').textContent = `${CS[o.me].ar} · ${ar(S.date(o.t))}`; $('#contBtn').onclick = () => { const w = S.load(o, WD); if (w) begin(w); }; } catch (e) { } }
   list();
   // ===== بداية اللعب =====
   function begin(w) {
@@ -348,7 +370,7 @@ input[type=range]{width:100%;accent-color:var(--gold)}
     theater(); syncMap(); setMode('pol'); bar(); sel = null; card();
     ADVL = NT.advice(G, WD, { SIM: SM, T }); meDot();
     const cap = R.find(r => r.ctl === me && r.cap) || R.find(r => r.ctl === me); if (cap) { cam.x = MX(cap.ll[0]); cam.y = MY(cap.ll[1]); cam.s = Math.max(cam.s, 900); }
-    lastT = performance.now(); requestAnimationFrame(tick);
+    lastT = performance.now(); requestAnimationFrame(tick); backTrap();
     toast(`بدينا: ${CS[me].ar}، ${ar(S.date(G.t))}`, 'good');
   }
   function syncMap() {
@@ -682,6 +704,7 @@ input[type=range]{width:100%;accent-color:var(--gold)}
     h += `<div class="grid"><div class="st"><i>الناتج</i><b>${money(c.gdp)}</b></div><div class="st"><i>النمو السنوي</i><b class="${c.g >= 0 ? 'pos' : 'neg'}">${sgn(c.g)}٪</b></div><div class="st"><i>الدين</i><b class="${dp > 100 ? 'neg' : ''}">${Math.round(dp)}٪ من الناتج</b></div><div class="st"><i>الاستقرار</i><b class="${c.stab < 30 ? 'neg' : ''}">${Math.round(c.stab)}</b></div><div class="st"><i>قوة الجيش</i><b>${Math.round(c.pw)}</b></div><div class="st"><i>النفط</i><b>${fmt(c.oil * 1000)} ب/ي</b></div></div>`;
     h += `<h3>ليش النمو ${sgn(c.g)}٪؟</h3>` + line('الأساس (اقتصاد البلد)', sgn(c.g0) + '٪') + (c.why || []).map(([r, v]) => line(r, sgn(v, 2) + '٪', v >= 0 ? 'pos' : 'neg')).join('');
     h += `<h3>الميزانية الشهرية</h3>` + line('الإيرادات (ضرايب + نفط)', money(bd.rev)) + line('الجيش', '−' + money(bd.mil)) + line('الإنفاق المدني (رواتب، خدمات)', '−' + money(bd.civ)) + line('فوائد الدين', '−' + money(bd.intr)) + line('الصافي', (c.bal >= 0 ? '+' : '−') + money(Math.abs(c.bal)), c.bal >= 0 ? 'pos' : 'neg');
+    h += `<div class="row" style="margin-top:8px"><button id="expG">📤 صدّر الحفظ لملف</button><button id="impG">📥 افتح حفظ</button></div><div class="note">اللعبة تنحفظ لحالها كل شهر (وكل يوم بالحرب). صدّرها لملف من وقت لوقت: هذا الحفظ يبقى حتى لو انمسح التطبيق أو بدّلت التلفون.</div>`;
     h += `<h3>الضرايب</h3><div class="seg" data-k="tax">${[['low', 'قليلة (نمو +، إيراد −)'], ['mid', 'عادية'], ['high', 'عالية (إيراد +، الناس تزعل)']].map(([k, t]) => `<button data-v="${k}" class="${c.tax === k ? 'on' : ''}">${t}</button>`).join('')}</div>`;
     h += `<h3>الإنفاق المدني</h3><div class="seg" data-k="civ">${[['cut', 'تقشف (−15٪)'], ['mid', 'عادي'], ['more', 'سخي (+12٪)']].map(([k, t]) => `<button data-v="${k}" class="${c.civ === k ? 'on' : ''}">${t}</button>`).join('')}</div>`;
     h += `<h3>ميزانية الجيش: <span id="milv">${c.milPct.toFixed(1)}</span>٪ من الناتج</h3><input id="mil" type="range" min="0.5" max="15" step="0.1" value="${c.milPct.toFixed(1)}" aria-label="ميزانية الجيش"><div class="note">أكثر من 3٪ يبطّئ النمو. الجيش يكبر أو يصغر ببطء (سنين) حسب الميزانية.</div>`;
@@ -837,6 +860,7 @@ input[type=range]{width:100%;accent-color:var(--gold)}
     root.querySelectorAll('[data-pev]').forEach(b => b.onclick = () => { const [i, j] = b.dataset.pev.split(':').map(Number); const r = WPOL.choose(G, i, j); if (r) toast('🏛 ' + r, 'good'); bar(); openPanel('me', true); save(); });
     root.querySelectorAll('[data-buyx]').forEach(b => b.onclick = () => { const [x, k] = b.dataset.buyx.split(':'), r = WMKT.buy(G, WD, S, x, k); if (typeof r === 'string') toast('❌ ' + r, 'bad'); else toast(msg(G.log[G.log.length - 1])[0], 'good'); bar(); openPanel('me', true); save(); });
     root.querySelectorAll('[data-exp]').forEach(b => b.onclick = () => { const [i, y] = b.dataset.exp.split(':').map(Number), r = WMKT.answer(G, WD, S, i, !!y); if (r) toast('📦 ' + r, y ? 'good' : ''); bar(); openPanel('me', true); save(); });
+    const eg = root.querySelector('#expG'); if (eg) eg.onclick = exportSave; const ig = root.querySelector('#impG'); if (ig) ig.onclick = () => $('#impF').click();
     root.querySelectorAll('[data-adv]').forEach(b => b.onclick = () => { const a = (ADVL[+b.dataset.adv] || {}).a || '';
       if (a === 'prod') { meSub = 'prod'; openPanel('me'); } else if (a === 'eco:home') { meSub = 'home'; openPanel('me'); } else if (a.startsWith('eco')) { meSub = 'eco'; openPanel('me'); }
       else if (a === 'dip:ctry') openPanel('dip'); else if (a.startsWith('dip') || a === 'ev') openPanel('war');
@@ -889,7 +913,26 @@ input[type=range]{width:100%;accent-color:var(--gold)}
       });
     },
   };
+  // ===== GW9: زر الرجوع (أندرويد/المتصفح): يسكّر اللي فوك (لوح، بطاقة، تحديد فرق، خطة)، وبالخريطة يحتاج ضغطتين للخروج =====
+  let backT = 0;
+  function backTrap() { try { history.pushState({ g: 1 }, ''); } catch (e) { } }
+  window.addEventListener('popstate', () => {
+    if (!G) return; let used = true;
+    if (PLAN) { PLAN = null; divBar(); } else if (selD) { selD = null; divBar(); } else if (panel) closePanel(); else if (!$('#card').hidden) { $('#card').hidden = true; sel = null; dirty = true; } else used = false;
+    if (used || Date.now() - backT > 2000) { if (!used) { backT = Date.now(); toast('اضغط رجوع مرة ثانية حتى تطلع (اللعبة محفوظة)'); save(); } backTrap(); } else { save(); history.back(); }
+  });
   window.__G = { get G() { return G; }, get T() { return T; }, begin, step: n => { const m0 = G.log.length, t0 = G.t; advance(n); after(m0, t0); }, openPanel, tapTheater };
+  // ===== GW9: تطبيق بدون نت (service worker من tools/app/build.mjs) =====
+  if ('serviceWorker' in navigator && /^https?:$/.test(location.protocol) && document.querySelector('link[rel=manifest]')) {
+    fetch('version.txt', { cache: 'no-store' }).catch(() => caches.match('version.txt')).then(r => { if (!r || !r.ok) return;   // version.txt موجود بس بنسخة التطبيق (app/)
+      navigator.serviceWorker.register('sw.js').then(reg => {
+        const ask = w => { const d = document.createElement('div'); d.id = 'upd'; d.innerHTML = '🆕 أكو تحديث للعبة <button>حدّث هسه</button>'; d.style.cssText = 'position:fixed;left:50%;transform:translateX(-50%);bottom:calc(70px + env(safe-area-inset-bottom));z-index:12;background:var(--panel);border:1px solid var(--gold);border-radius:12px;padding:8px 12px;display:flex;gap:8px;align-items:center;box-shadow:var(--shadow)';
+          d.querySelector('button').onclick = () => { if (G) save(); w.postMessage('skip'); }; if (!$('#upd')) document.body.append(d); };
+        if (reg.waiting && navigator.serviceWorker.controller) ask(reg.waiting);
+        reg.addEventListener('updatefound', () => { const w = reg.installing; w && w.addEventListener('statechange', () => { if (w.state === 'installed' && navigator.serviceWorker.controller) ask(w); }); });
+        let done = false; navigator.serviceWorker.addEventListener('controllerchange', () => { if (!done) { done = true; location.reload(); } });
+      }).catch(() => {}); }).catch(() => {});
+  }
 })();
 </script>
 

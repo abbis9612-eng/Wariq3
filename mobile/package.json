@@ -1,0 +1,17 @@
+{
+  "name": "wariq-world-mobile",
+  "private": true,
+  "version": "0.1.0",
+  "description": "تطبيق أندرويد للعبة «العالم» (Capacitor): الملفات من ../app (tools/app/build.mjs)",
+  "scripts": {
+    "sync": "node ../tools/app/build.mjs && npx cap sync android",
+    "apk": "npm run sync && cd android && ./gradlew assembleDebug"
+  },
+  "dependencies": {
+    "@capacitor/android": "^8.0.0",
+    "@capacitor/core": "^8.0.0"
+  },
+  "devDependencies": {
+    "@capacitor/cli": "^8.0.0"
+  }
+}

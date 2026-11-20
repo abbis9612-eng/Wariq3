@@ -1,0 +1,7 @@
+{
+  "appId": "com.wariq.world",
+  "appName": "العالم",
+  "webDir": "../app",
+  "android": { "backgroundColor": "#1b2019" },
+  "server": { "androidScheme": "https" }
+}

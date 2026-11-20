@@ -8,7 +8,7 @@
   'use strict';
   const req = typeof require !== 'undefined' ? require : null;
   const HOME = root.HOME || req('./gwhome.js'), IND = root.IND || req('./gwind.js'), ECON = root.ECON || req('./gwecon.js'), AIR = root.AIR || req('./gwair.js');
-  const CAT = root.AIRCAT || req('./aircat.js');
+  const CAT = root.AIRCAT || req('./aircat.js'), ADV = root.ADV || req('./gwadvise.js'), GRADE = root.GRADE || req('./gwgrade.js');
   // الفئات حسب نظام الحكم (نفس data/world/SCHEMA.md و build_country.py)، والعراق بفئاته الأصلية
   const FACS = { theo: ['clergy', 'irgc', 'army', 'street', 'biz'], amon: ['royal', 'army', 'clergy', 'street', 'biz'], one: ['party', 'army', 'street', 'biz'], mil: ['army', 'militia', 'street', 'biz'],
     auth: ['army', 'security', 'street', 'biz'], trans: ['army', 'factions', 'street', 'biz'], cmon: ['army', 'parties', 'street', 'biz'], parl: ['army', 'parties', 'street', 'biz'], pres: ['army', 'parties', 'street', 'biz'], semi: ['army', 'parties', 'street', 'biz'] };
@@ -143,6 +143,34 @@
   const canBuy = (G, k) => ECON.canBuy(G.nat, 0, k);
   const cancel = (G, id) => ECON.cancel(G.nat, 0, id);
   const items = () => ECON.itemsFor(0);
-  const API = { init, catalog, daily, buy, canBuy, cancel, items, FACS, NI, supOf };
+  // ===== المستشارين (advise.js نفسه): العالم يعطيه المسرح (إذا بحرب) + اقتصاد الدولة وداخلها =====
+  const EMPTY = { divs: [], battles: new Map(), sup: [[], []], cells: [], plans: [], bridges: [] };
+  function view(G, T) { const NW = G.nat, Wx = Object.create(T ? T.W : EMPTY); Wx.eco = NW.eco; Wx.home = NW.home; Wx.dip = NW.dip; Wx.over = G.over ? { loser: 0 } : null; if (!T) Wx.t = 24 * 99; return Wx; }
+  function advice(G, WD, X) {
+    const NW = G.nat; if (!NW) return []; const T = X.T, en = T ? T.side[1][0] : null;
+    return ADV.list(view(G, T), T ? T.A : null, { SIM: X.SIM, ECON, DIP: null, HOME, foe: en ? WD.cs[en].ar : 'العدو', sups: [...new Set(Object.values(ECON.SUPPLY[0]))],
+      arrowTip: '➹ جرّب: اضغط فرقتك بالجبهة ← «➹ خطة بسهم» ← ارسم الطريق خلية خلية ← نفّذ. الدروع تصير رأس الحربة' }, 0);
+  }
+  // ===== التقييم (grade.js نفسه، بنفس الأوزان والدرجات S–D) — طرق الفوز من العالم [تقدير] =====
+  //  ⚔ عسكري: أرضنا الأصلية اللي باقية + أرض أخذناها + سير حروبنا
+  //  💰 اقتصادي: الخزينة فوق حد الدين + النمو + ماكو دين بالخزينة
+  //  🤝 سياسي: حلفاء دفاعيين + اتفاقيات تجارة + معدل علاقاتنا
+  //  🙂 الشعب: المعنويات + الاستقرار + أرضنا الباقية
+  const cl = v => Math.max(0, Math.min(100, v));
+  function paths(G, WD, S) {
+    const me = G.me, c = G.C[me], NW = G.nat, e = NW.eco[0]; let own = 0, kept = 0, held = 0;
+    WD.r.forEach((a, i) => { if (a[1] === me) { own++; if (G.ctl[i] === me) kept++; } else if (G.ctl[i] === me) held++; });
+    const k = own ? kept / own : 1, wars = G.wars.filter(w => w.a.includes(me) || w.b.includes(me));
+    const ws = wars.length ? wars.reduce((t, w) => t + (w.a.includes(me) ? w.score : -w.score), 0) / wars.length : 0;
+    const mil = cl(k * 45 + Math.min(1, held / Math.max(1, own) / .15) * 25 + (wars.length ? 15 + ws * .15 : 30) - (1 - k) * 40);
+    const eco = cl(Math.max(0, Math.min(1, (e.cash + NW.lim) / (NW.lim * 2))) * 50 + Math.max(0, Math.min(1, .5 + (c.g || 0) / 6)) * 30 + (e.cash >= 0 ? 20 : 0));
+    const rel = G.rel[me] || {}, rv = Object.values(rel), avg = rv.length ? rv.reduce((t, v) => t + v, 0) / rv.length : 0;
+    const allies = G.ids.filter(x => x !== me && S.allied(G, me, x)).length, trade = G.trade.filter(p => p.includes(me)).length;
+    const dip = cl(Math.min(3, allies) * 15 + Math.min(3, trade) * 5 + Math.max(0, Math.min(1, (avg + 30) / 80)) * 40);
+    const pop = cl(e.mor * .5 + NW.home.stab * .3 + k * 20);
+    return { mil: Math.round(mil), eco: Math.round(eco), dip: Math.round(dip), pop: Math.round(pop) };
+  }
+  function grade(G, WD, S) { const p = paths(G, WD, S); return GRADE.grade(view(G, null), null, { paths: () => p }, 0); }
+  const API = { init, catalog, daily, buy, canBuy, cancel, items, advice, paths, grade, GR: GRADE.GR, FACS, NI, supOf };
   if (typeof module !== 'undefined') module.exports = API; else root.NATION = API;
 })(this);

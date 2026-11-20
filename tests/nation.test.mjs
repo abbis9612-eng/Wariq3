@@ -23,6 +23,10 @@ for (const me of ['IRQ', 'IRN', 'USA', 'LBN', 'TUR']) {
   if (NW.home.iss.length) { const q = NW.home.iss[0], f0 = NW.home.fac[q.k]; require('../prototypes/world/gwhome.js').choose(NW, 0, 0); if (NW.home.fac[q.k] === f0) no(`${me}: القرار ما غيّر الفئة`); }
   const sv = JSON.parse(S.save(G)), L = S.load(sv, WD); N.catalog(L, WD); const b = L.log.length; S.step(L, WD, 1); N.daily(L, WD, { S, SIM, T: null, before: b });
   if (!L.nat || !Number.isFinite(L.nat.eco[0].cash)) no(`${me}: الحفظ/التحميل خرّب طبقة الدولة`);
+  const gr = N.grade(G, WD, S), adv = N.advice(G, WD, { SIM, T: null });
+  if (!'SABCD'.includes(gr.g) || Object.values(gr.p).some(v => !(v >= 0 && v <= 100))) no(me + ': التقييم غلط ' + JSON.stringify(gr));
+  if (!Array.isArray(adv) || adv.length > 3 || adv.some(a => !a.t || !a.a)) no(me + ': المستشارين غلط');
+  out.push(`${me}: تقييم ${gr.g} (${gr.score}) · مستشارين ${adv.length}`);
   out.push(`${me}: فئات ${NW.home.fk.join('/')} · خزينة ${c0.toFixed(1)} ← ${e.cash.toFixed(1)} مليار · معنويات ${Math.round(e.mor)} · استقرار ${Math.round(NW.home.stab)} · توصّل ${built} · قضايا ${iss} · بحث +${tech} · قوة ${Math.round(pw0)} ← ${Math.round(G.C[me].pw)} · طلبات: ${N.items().length}${G.over ? ' · نهاية ' + G.over.why : ''}`);
 }
 console.log(out.join('\n')); console.log(bad ? `\n❌ ${bad} مشكلة` : '\n✅ طبقة الدولة سليمة'); process.exit(bad ? 1 : 0);

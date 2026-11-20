@@ -21,7 +21,7 @@
   }
   const GR = [[85, 'S', 'قائد أسطوري'], [70, 'A', 'نصر واضح'], [55, 'B', 'قيادة ناجحة'], [40, 'C', 'صمود'], [-1, 'D', 'قيادة متعثرة']];
   function grade(W, A, X, me = 0) {
-    const p = paths(W, A, X, me); let sc = p.mil * .4 + p.eco * .2 + p.dip * .2 + p.pop * .2; const ov = W.over;
+    const p = (X.paths || paths)(W, A, X, me); let sc = p.mil * .4 + p.eco * .2 + p.dip * .2 + p.pop * .2; const ov = W.over;   // X.paths: طرق الفوز من العالم
     if (ov) { if (ov.peace) sc += ov.res === 'win' ? 15 : ov.res === 'loss' ? -25 : 0; else if (ov.loser === 1 - me) sc = 100; else if (ov.loser === me) sc = Math.min(sc, 20); }
     sc = Math.round(cl(sc)); const g = GR.find(r => sc >= r[0]);
     return { score: sc, g: g[1], t: g[2], p, ez: !!(W.cfg && W.cfg.ez && W.cfg.ez.used) };

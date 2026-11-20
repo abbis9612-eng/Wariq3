@@ -1,9 +1,10 @@
 // «الحرب الكبرى» GW11 B2: المستشارين — 3 نصائح حسب وضعك، كل وحدة بزر يوديك للمكان. بدون رسم؛ فحص tests/advise.test.mjs.
 // كل نصيحة: { id, w (تحذير؟), p (أهمية)، t (النص)، a (الفعل: prod | eco:cash | eco:mor | dip:war | dip:ctry | ev | div:ID | cell:N | sam:N | base:N | arrow)، l (اسم الزر) }
 (function (root) {
+  const armedK = H => ['army', 'irgc', 'royal', 'security', 'party'].filter(k => H.fac[k] != null).sort((a, b) => H.fac[a] - H.fac[b])[0] || 'army';
   function list(W, A, X, me = 0) {
-    const { SIM, ECON, DIP } = X, out = [], add = o => out.push(o);
-    const e = W.eco && W.eco[me], D = W.dip, my = SIM.alive(W).filter(d => d.side === me);
+    const { SIM, ECON, DIP } = X, out = [], add = o => out.push(o), FOE = X.foe || 'إيران';   // X.foe: اسم الخصم (العالم)
+    const e = W.eco && W.eco[me], D = DIP ? W.dip : null, my = SIM.alive(W).filter(d => d.side === me);
     const city = c => W.cells[c].city || 'منطقة';
     // 1) عرض من إيران أو حدث ينتظر قرارك
     if (D && D.offer) add({ id: 'offer', w: 1, p: 100, t: `✉️ إيران عارضة «${DIP.TERMS[D.offer.k].n}». ردّ عليها`, a: 'dip:war', l: 'شوف العرض' });
@@ -16,7 +17,7 @@
     if (cut.length) add({ id: 'cut', w: 1, p: 90, t: `⛓ ${cut.length > 1 ? cut.length + ' فرق' : cut[0].n} بلا إمداد قرب ${city(cut[0].cell)}: تضعف كل ساعة. انسحب أو افتح طريق`, a: 'div:' + cut[0].id, l: 'روح إلها' });
     // 3) معركة دفاع خسرانة
     let worst = null; for (const b of W.battles.values()) if (b.side !== me && b.win > .62 && (!worst || b.win > worst.win)) worst = b;
-    if (worst) add({ id: 'battle', w: 1, p: 85, t: `⚔ دفاعنا بـ${city(worst.tg)} ينكسر (إيران غالبة ${Math.round(worst.win * 100)}٪): دز احتياط أو طيارات إسناد`, a: 'cell:' + worst.tg, l: 'روح للمعركة' });
+    if (worst) add({ id: 'battle', w: 1, p: 85, t: `⚔ دفاعنا بـ${city(worst.tg)} ينكسر (${FOE} غالبة ${Math.round(worst.win * 100)}٪): دز احتياط أو طيارات إسناد`, a: 'cell:' + worst.tg, l: 'روح للمعركة' });
     // 4) الفلوس
     if (e && e.cash < 0) add({ id: 'debt', w: 1, p: 80, t: `💸 الخزينة بالدين (${e.cash.toFixed(1)} مليار): المعنويات تنزل. خفّف الشراء، أو أولوية «اقتصاد حرب»، أو اطلب مساعدة من الخليج`, a: 'eco:cash', l: 'الاقتصاد' });
     else if (e && e.last && e.last.net < 0 && e.cash < 4) add({ id: 'cash', w: 1, p: 70, t: `💰 الخزينة تخلص (${e.cash.toFixed(1)} مليار و${Math.round(e.last.net * 1000)} مليون باليوم)`, a: 'eco:cash', l: 'الاقتصاد' });
@@ -24,10 +25,10 @@
     if (A) A.sams.forEach((s, i) => { if (s.side !== me || out.some(o => o.id === 'sam')) return; const m = s.mags.find(q => !q.gun); if (!m) return;
       if (m.ready + m.stock <= m.orig * .25 && !(A.pool[me][m.n] > 0)) add({ id: 'sam', w: 1, p: 75, t: `🚀 ${s.n}: باقي ${m.ready + m.stock} صاروخ ${m.n} ومخزن البلد فاضي. اشتري`, a: 'prod', l: 'اشتري' }); });
     // C6: الداخل
-    if (W.home) { const H = W.home; if (H.warn.coup || H.warn.rev || H.warn.bank) add({ id: 'homew', w: 1, p: 97, t: H.warn.coup ? `⚠️ الجيش زعلان (${Math.round(H.fac.army)}): انقلاب بعد ${14 - H.warn.coup} يوم. ادفع للجيش أو حقق انتصار` : H.warn.rev ? `⚠️ الاستقرار ${Math.round(H.stab)}: ثورة بعد ${14 - H.warn.rev} يوم` : `⚠️ إفلاس بعد ${30 - H.warn.bank} يوم: خفّف الصرف واطلب مساعدة`, a: 'eco:home', l: 'الداخل' });
+    if (W.home) { const H = W.home; if (H.warn.coup || H.warn.rev || H.warn.bank) add({ id: 'homew', w: 1, p: 97, t: H.warn.coup ? `⚠️ ${X.HOME && H.fk ? X.HOME.FAC[armedK(H)].n : 'الجيش'} زعلان (${Math.round(H.fac[armedK(H)])}): انقلاب بعد ${14 - H.warn.coup} يوم. ادفع للجيش أو حقق انتصار` : H.warn.rev ? `⚠️ الاستقرار ${Math.round(H.stab)}: ثورة بعد ${14 - H.warn.rev} يوم` : `⚠️ إفلاس بعد ${30 - H.warn.bank} يوم: خفّف الصرف واطلب مساعدة`, a: 'eco:home', l: 'الداخل' });
       if (H.iss.length) add({ id: 'iss', w: 1, p: 72, t: `🏛 قضية تنتظرك: ${X.HOME ? X.HOME.ISS[H.iss[0].k].t : ''}`, a: 'eco:home', l: 'قرّر' }); }
     // C2: مورّد قاطع أو مقصّر بقطع الغيار
-    if (W.dip) for (const x of ['us', 'ru', 'cn']) { const ks = Object.keys(ECON.SUPPLY[me]).filter(k => ECON.SUPPLY[me][k] === x); if (!ks.length) continue; const pf = ECON.parts(W, me, ks[0]); if (pf < 1) { add({ id: 'parts', w: 1, p: 68, t: `🔧 قطع غيار ${ECON.SUP_N[x]} ${Math.round(pf * 100)}٪: ${ks.includes('f16') ? 'طيارات F-16 محبوسة، ' : ''}الشراء أغلى. حسّن العلاقة`, a: 'dip:ctry', l: 'السياسة' }); break; } }
+    if (W.dip) for (const x of X.sups || ['us', 'ru', 'cn']) { const ks = Object.keys(ECON.SUPPLY[me]).filter(k => ECON.SUPPLY[me][k] === x); if (!ks.length) continue; const pf = ECON.parts(W, me, ks[0]); if (pf < 1) { add({ id: 'parts', w: 1, p: 68, t: `🔧 قطع غيار ${ECON.SUP_N[x]} ${Math.round(pf * 100)}٪: ${ks.some(k => ECON.ITEMS[k] && ECON.ITEMS[k].cat === 'plane') ? 'طيارات محبوسة، ' : ''}الشراء أغلى. حسّن العلاقة`, a: 'dip:ctry', l: 'السياسة' }); break; } }
     // 6) المعنويات
     if (e && e.mor < 40) add({ id: 'mor', w: 1, p: 65, t: `😟 معنويات الشعب ${Math.round(e.mor)}: تحت 30 الإنتاج يبطأ، وتحت 25 نستسلم أبكر. جرّب أولوية «مدني»، أو انتصار على مدينة`, a: 'eco:mor', l: 'الشعب' });
     // 7) إيران تعبانة: فرصة سلام
@@ -41,9 +42,9 @@
     if (D) for (const C of DIP.COUNTRIES) { const c = D.c[C.id]; if (C.join && c.st === 'neutral' && c.rel[me] >= C.join - 12 && c.rel[me] < C.join) { add({ id: 'ally', w: 0, p: 40, t: `🤝 ${C.f} ${C.n} علاقتها ${Math.round(c.rel[me])}: باقي ${Math.ceil(C.join - c.rel[me])} وتدخل الحرب ويانا`, a: 'dip:ctry', l: 'السياسة' }); break; } }
     // 11) جسر مقطوع ورا جبهتنا
     const br = (W.bridges || []).find(b => b.down > 0 && b.by !== me && (W.ctrl[b.i] === me || W.ctrl[b.j] === me));
-    if (br) add({ id: 'bridge', w: 0, p: 35, t: `🌉 إيران قطعت جسر ${br.n}: الإمداد يدوّر، والمهندسين يصلحونه بـ${Math.ceil(br.down / 24)} يوم`, a: 'cell:' + br.i, l: 'وين؟' });
+    if (br) add({ id: 'bridge', w: 0, p: 35, t: `🌉 ${FOE} قطعت جسر ${br.n}: الإمداد يدوّر، والمهندسين يصلحونه بـ${Math.ceil(br.down / 24)} يوم`, a: 'cell:' + br.i, l: 'وين؟' });
     // 12) نصيحة للبداية: ارسم سهم بالدروع
-    if (W.t < 24 * 10 && !(W.plans || []).some(p => p.side === me)) add({ id: 'arrow', w: 0, p: 20, t: '🏹 جرّب: 🪖 الجيش ← «اختر الجيش» ← «🏹 سهم» وارسم الهجوم بإصبعك. الدروع تصير رأس الحربة', a: 'arrow', l: 'الجيوش' });
+    if (W.t < 24 * 10 && !(W.plans || []).some(p => p.side === me)) add({ id: 'arrow', w: 0, p: 20, t: X.arrowTip || '🏹 جرّب: 🪖 الجيش ← «اختر الجيش» ← «🏹 سهم» وارسم الهجوم بإصبعك. الدروع تصير رأس الحربة', a: 'arrow', l: 'الجيوش' });
     return out.sort((a, b) => b.p - a.p).slice(0, 3);
   }
   const API = { list };

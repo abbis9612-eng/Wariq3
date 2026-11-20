@@ -13,12 +13,15 @@
   const FACS = { theo: ['clergy', 'irgc', 'army', 'street', 'biz'], amon: ['royal', 'army', 'clergy', 'street', 'biz'], one: ['party', 'army', 'street', 'biz'], mil: ['army', 'militia', 'street', 'biz'],
     auth: ['army', 'security', 'street', 'biz'], trans: ['army', 'factions', 'street', 'biz'], cmon: ['army', 'parties', 'street', 'biz'], parl: ['army', 'parties', 'street', 'biz'], pres: ['army', 'parties', 'street', 'biz'], semi: ['army', 'parties', 'street', 'biz'] };
   // المورّد من اسم الموديل [تقدير]
-  const SUPRX = [[/abrams|m1a|f-16|f-15|f-35|f\/a-18|hornet|patriot|pac-|nasams|thaad|m109|m113|bradley|himars|apache|black hawk|uh-60|ah-64|stryker|m60|m48/i, 'USA'], [/leopard|iris-t|pzh|puma|boxer|marder/i, 'DEU'],
-    [/rafale|leclerc|samp|aster|caesar|mirage|vab|vbci|crotale/i, 'FRA'], [/typhoon|eurofighter|challenger|warrior|storm shadow/i, 'GBR'], [/gripen|cv90|archer|stridsvagn/i, 'SWE'],
-    [/t-72|t-90|t-80|t-62|t-55|t-54|bmp|btr|su-|mig-|s-300|s-400|buk|pantsir|tor|kub|s-125|osa|tunguska|mi-8|mi-17|mi-24|mi-35|ka-52|2s|bm-21|grad|smerch|iskander|lion of babylon/i, 'RUS'],
+  const SUPRX = [[/abrams|m1a|f-16|f-15|f-35|f\/a-18|hornet|patriot|pac-|nasams|hawk|mim-|thaad|m109|m113|bradley|himars|apache|black hawk|uh-60|ah-64|stryker|m60|m48/i, 'USA'], [/leopard|iris-t|pzh|puma|boxer|marder/i, 'DEU'],
+    [/rafale|leclerc|samp|aster|caesar|mirage|vab|vbci|crotale/i, 'FRA'], [/typhoon|eurofighter|tornado/i, 'EUR'], [/challenger|warrior|storm shadow/i, 'GBR'], [/gripen|cv90|archer|stridsvagn/i, 'SWE'],
+    [/t-72|t-90|t-80|t-62|t-55|t-54|bmp|btr|su-|mig-|s-300|s-400|buk|pantsir|\btor\b|kub|9m\d|48n6|5v\d|v-60|3m9|57e6|s-125|osa|tunguska|mi-8|mi-17|mi-24|mi-35|ka-52|2s|bm-21|grad|smerch|iskander|lion of babylon/i, 'RUS'],
     [/type \d|j-10|j-11|j-16|j-20|jf-17|hq-|vt-4|ch-4|ch-5|wing loong|pl-|z-10|z-9|plz/i, 'CHN'], [/k2|k9|k21|fa-50|t-50|kf-21|cheongung|km-sam/i, 'KOR'], [/merkava|arrow|iron dome|barak|spyder|david|namer|heron|hermes/i, 'ISR'],
     [/altay|bayraktar|tb2|akinci|t129|kirpi|ejder|cobra|fnss|otokar/i, 'TUR']];
-  const supOf = m => (SUPRX.find(([rx]) => rx.test(m || '')) || [0, null])[1];
+  let SUP0c = null; const SUPID = { us: 'USA', ru: 'RUS', cn: 'CHN' };
+  const SUP0 = () => SUP0c || (SUP0c = Object.fromEntries(Object.entries(ECON.SUPPLY[0] || {}).map(([k, v]) => [k, SUPID[v] || v])));
+  const EUR = ['DEU', 'GBR', 'ITA', 'ESP'];   // اليوروفايتر والتورنادو: شراكة
+  const supOf = (m, me) => { const r = (SUPRX.find(([rx]) => rx.test(m || '')) || [0, null])[1]; return r === 'EUR' ? (EUR.includes(me) ? null : 'GBR') : r; };
   const PCOST = { f35: .22, j20: .25, f15: .2, euro: .2, f18: .14, f16: .14, flanker: .1, su34: .1, light: .08, su24: .05, su25: .05, jet_tr: .05, old: .03, f14: .06, tb2: .02 };
   const MCOST = { long: .004, medium: .0015, short: .0003 };   // مليار للصاروخ الواحد [تقدير]
   const NI = { arm: 'دروع', uav: 'مسيّرات', msl: 'صواريخ', ew: 'إلكترونيات', ind: 'صناعة' };
@@ -42,23 +45,27 @@
   }
   // كتالوج الطلبات لهالدولة (فوك كتالوج econ.js): الفرق والخطوط نفسها، والطيارات من أنواع قوتها الجوية، والصواريخ لبطارياتها
   function catalog(G, WD) {
-    const me = G.me, cs = WD.cs[me], I = ECON.ITEMS, aw = (WD.aw || {})[me];
+    const me = G.me, cs = WD.cs[me], I = ECON.ITEMS, aw = (WD.aw || {})[me]; IND.register(ECON);
     if (me !== 'IRQ') for (const k of Object.keys(I)) if (I[k].side === 0 && !I[k].req) delete I[k];
     for (const k of Object.keys(I)) if (I[k].side === 1) delete I[k];
     for (const k of Object.keys(I)) if (/^(pl_|sm_)/.test(k)) delete I[k];
-    ECON.SUPPLY[0] = {};
-    const tsup = supOf(((cs.kit || {}).tank || [0, []])[1].join(' ')), asup = supOf(((cs.kit || {}).afv || [0, []])[1].join(' '));
+    SUP0(); ECON.SUPPLY[0] = {};
+    const tsup = supOf(((cs.kit || {}).tank || [0, []])[1].join(' '), me), asup = supOf(((cs.kit || {}).afv || [0, []])[1].join(' '), me);
     if (tsup && tsup !== me) ECON.SUPPLY[0].arm = tsup; if (asup && asup !== me) ECON.SUPPLY[0].mec = asup;
-    const jets = aw && aw.jets ? aw.jets.map(([t]) => [t, (cs.jets || []).map(j => j[0]).join(' ')]) : (cs.jets || []).map(([m]) => [CAT.planeType(m), m]);
-    for (const [t, m] of jets) { if (I['pl_' + t] || !AIR.PLANES[t]) continue; const P = AIR.PLANES[t];
-      I['pl_' + t] = { n: `${P.n} ×2`, ic: '✈', cat: 'plane', plane: t, q: 2, side: 0, cost: PCOST[t] ?? .1, days: Math.round(25 + (PCOST[t] ?? .1) * 150), d: 'تعويض وتوسيع القوة الجوية' };
-      const sp = supOf(m) || supOf(P.n); if (sp && sp !== me) ECON.SUPPLY[0]['pl_' + t] = sp; }
-    if ((cs.tech || {}).uav >= 1 && !I.pl_tb2) I.pl_tb2 = { n: 'مسيّرة استطلاع ×2', ic: '📡', cat: 'plane', plane: 'tb2', q: 2, side: 0, cost: .02, days: 10, d: 'تشوف ورا الجبهة' };
+    // للعراق: كتالوج «الحرب الكبرى» الأصلي (F-16IQ، باتريوت...) يبقى ويا مورّديه، والإضافات بس للأنواع اللي ما بيه
+    if (me === 'IRQ') Object.assign(ECON.SUPPLY[0], SUP0());
+    const have = new Set(Object.values(I).filter(x => x.side === 0).map(x => x.plane || x.pool).filter(Boolean));
+    const models = (cs.jets || []).map(([m]) => m), modelOf = t => models.find(m => CAT.planeType(m) === t);
+    const jets = aw && aw.jets ? aw.jets.map(([t]) => t) : models.map(CAT.planeType);
+    for (const t of jets) { if (I['pl_' + t] || have.has(t) || !AIR.PLANES[t]) continue; const P = AIR.PLANES[t], m = modelOf(t), nm = m ? m.replace(/\s*\(.*$/, '').replace(/ Fighting Falcon| Typhoon/, '') : P.n.split(/[،/]/)[0].trim();
+      I['pl_' + t] = { n: `${nm} ×2`, ic: '✈', cat: 'plane', plane: t, q: 2, side: 0, cost: PCOST[t] ?? .1, days: Math.round(25 + (PCOST[t] ?? .1) * 150), d: 'تعويض وتوسيع القوة الجوية' };
+      const sp = m ? supOf(m, me) : null; if (sp && sp !== me) ECON.SUPPLY[0]['pl_' + t] = sp; }
+    if ((cs.tech || {}).uav >= 1 && !I.pl_tb2 && !have.has('tb2')) I.pl_tb2 = { n: 'مسيّرة استطلاع ×2', ic: '📡', cat: 'plane', plane: 'tb2', q: 2, side: 0, cost: .02, days: 10, d: 'تشوف ورا الجبهة' };
     const sams = aw && aw.sam ? aw.sam.map(([sy]) => sy) : (cs.adL || []).map(([m]) => CAT.samType(m));
-    for (const sy of new Set(sams)) { const S = AIR.SYS[sy]; if (!S) continue; for (const mg of S.mags) { if (mg.gun || I['sm_' + mg.n]) continue;
+    for (const sy of new Set(sams)) { const S = AIR.SYS[sy]; if (!S) continue; for (const mg of S.mags) { if (mg.gun || I['sm_' + mg.n] || have.has(mg.n)) continue;
       const lay = Math.max(...Object.values(mg.r)) > 100 ? 'long' : Math.max(...Object.values(mg.r)) > 30 ? 'medium' : 'short', q = lay === 'short' ? 24 : 8;
-      I['sm_' + mg.n] = { n: `${mg.n} ×${q}`, ic: '🚀', cat: 'sam', pool: mg.n, q, side: 0, cost: +(MCOST[lay] * q).toFixed(3), days: lay === 'long' ? 40 : 20, d: 'ل' + S.n };
-      const sp = supOf(S.full || S.n); if (sp && sp !== me) ECON.SUPPLY[0]['sm_' + mg.n] = sp; } }
+      I['sm_' + mg.n] = { n: `${/[a-z0-9]/i.test(mg.n) ? mg.n : 'صواريخ ' + S.n} ×${q}`, ic: '🚀', cat: 'sam', pool: mg.n, q, side: 0, cost: +(MCOST[lay] * q).toFixed(3), days: lay === 'long' ? 40 : 20, d: 'ل' + S.n };
+      const sp = sy === 'crotale' ? null : supOf((S.full || S.n) + ' ' + mg.n, me); if (sp && sp !== me) ECON.SUPPLY[0]['sm_' + mg.n] = sp; } }
     // أسماء المنتجات المحلية والسلاح الوطني عامة (للعراق تبقى «بابل» و«صقر»)
     if (me !== 'IRQ') { IND.LOCAL.larm.n = 'مدرعة محلية (تطوير دبابة)'; IND.LOCAL.larm.d = 'تحديث دبابات محلي'; IND.LOCAL.luav.n = 'مسيّرة استطلاع محلية ×2'; IND.LOCAL.luav.plane = 'tb2'; IND.LOCAL.luav.d = 'بدل المستوردة';
       IND.LOCAL.lmec.d = 'مدرعات خفيفة تتجمّع محلياً'; IND.MEGA.pipe.d = 'أنابيب وموانئ بديلة: إذا مضيق انغلق أو انحاصرنا يطلع 40٪ من النفط';

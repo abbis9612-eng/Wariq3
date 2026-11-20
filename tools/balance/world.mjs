@@ -20,6 +20,8 @@ const BOTS = {
       e.prio = c.stab < 40 ? 'civ' : 'bal';
       while (G.offers.length) S.answerOffer(G, WD, 0, true); while (G.mkt.offers.length) M.answer(G, WD, S, 0, true);
       if (G.ap >= 2 && G.t - G.unT >= 180) S.unSummit(G);
+      // v3 E: يبني مشروع إذا الخزينة تتحمّل (كهرباء أول إذا ناقصة، بعدين نفط، بعدين مصانع)
+      { const EC = S.ECO, run = G.eco3 ? G.eco3.proj.filter(q => q.id === G.me && !q.done).length : 9; if (EC && run < 2 && !process.env.NOBUILD) { const k = EC.elecDef(G, G.me) > .1 ? 'power' : c.oil > 0 ? 'oil' : 'fact', cd = EC.card(G, WD, G.me, k); if (e.cash > cd.cost * 1.5 && !EC.can(G, WD, G.me, k)) EC.start(G, WD, G.me, k); } }
       for (const w of G.wars.filter(w => w.offer && (w.a.includes(G.me) || w.b.includes(G.me)))) { if (G.ap >= 1) S.offerPeace(G, WD, w.id); }
       if (CUR !== 'warmonger') for (const w of G.wars.filter(w => (w.a.includes(G.me) || w.b.includes(G.me)) && (w.a.includes(G.me) ? w.score : -w.score) < 0)) if (G.ap >= 1) S.offerPeace(G, WD, w.id); }
     while (H.iss.length) { const q = H.iss[0], I = HOME.ISS[q.k]; const j = e.cash > G.nat.lim * .2 ? 0 : I.o.length - 1; HOME.choose(G.nat, 0, Math.min(j, I.o.length - 1)); }

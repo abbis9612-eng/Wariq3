@@ -4,12 +4,13 @@
 (function (root) {
   'use strict';
   const START = Date.UTC(2026, 10, 20);   // 20 تشرين الثاني 2026: الوضع الحقيقي (D-048)
-  const V = 10;                              // إصدار حفظ «العالم» (9: البحرية الحقيقية W12؛ 2: الصواريخ والدفاع الجوي؛ 3: البحرية والمضائق؛ 4: طبقة الدولة؛ 5: التكتلات والتوتر والعروض والأمم المتحدة؛ 6: الانتخابات والانقلابات والاحتلال والأحداث؛ 7: البحث لكل الدول وسوق السلاح؛ 8: قائد القوات المسلحة)
+  const V = 11;                              // إصدار حفظ «العالم» (9: البحرية الحقيقية W12؛ 2: الصواريخ والدفاع الجوي؛ 3: البحرية والمضائق؛ 4: طبقة الدولة؛ 5: التكتلات والتوتر والعروض والأمم المتحدة؛ 6: الانتخابات والانقلابات والاحتلال والأحداث؛ 7: البحث لكل الدول وسوق السلاح؛ 8: قائد القوات المسلحة)
   const mulberry = a => () => { a |= 0; a = a + 0x6D2B79F5 | 0; let t = Math.imul(a ^ a >>> 15, 1 | a); t = t + Math.imul(t ^ t >>> 7, 61 | t) ^ t; return ((t ^ t >>> 14) >>> 0) / 4294967296; };
   const clamp = (v, a, b) => v < a ? a : v > b ? b : v;
   const POL = root.WPOL || (typeof require !== 'undefined' ? require('./wpol.js') : null);   // W7: السياسة والأحداث
   const MKT = root.WMKT || (typeof require !== 'undefined' ? require('./wmkt.js') : null);   // W8: البحث وسوق السلاح
   const CMD = root.WCMD || (typeof require !== 'undefined' ? require('./wcmd.js') : null);   // I-108: قائد القوات المسلحة
+  const ECO = root.WECO || (typeof require !== 'undefined' ? require('./weco.js') : null);   // v3 E: المشاريع والكهرباء
   const NAV = root.WNAV || (typeof require !== 'undefined' ? require('./wnav.js') : null);   // W12 (D-053): البحرية الحقيقية
   // ===== ثوابت [تقدير] =====
   const K = {
@@ -54,7 +55,7 @@
       // نثبّت العجز الأولي على الحقيقي تقريباً (بيانات الإيرادات والمصاريف من سنين مختلفة، فنحصره بين فائض 3٪ وعجز 5٪)
       const dp = c.debt / c.gdp * 100, rev = c.core * c.revCore + oilGDP(c.oil, W.oilP) * K.oilTake, def = clamp(c.spend0 - c.rev0, -.03, .05) * c.gdp;
       c.civ0 = clamp((rev + def - c.gdp * c.milPct / 100 - c.debt * rate(c, dp)) / c.core, .03, .6); }
-    W.rnd = mulberry(W.rs); ix(W, WD); if (POL) POL.ensure(W, WD); if (MKT) MKT.ensure(W, WD); if (CMD) CMD.ensure(W, WD); if (NAV) NAV.ensure(W, WD); note(W, { k: 'start', me });
+    W.rnd = mulberry(W.rs); ix(W, WD); if (POL) POL.ensure(W, WD); if (MKT) MKT.ensure(W, WD); if (CMD) CMD.ensure(W, WD); if (ECO) ECO.ensure(W, WD); if (NAV) NAV.ensure(W, WD); note(W, { k: 'start', me });
     return W;
   }
   // الحروب الجارية بين دول (الحروب ويا الكيانات تبقى استنزاف داخلي): من data/world/conflicts.json
@@ -84,7 +85,7 @@
   const rate = (c, dp) => (c.gdp / c.pop * 1e9 > 30000 ? .012 : .035) + .0002 * Math.max(0, dp - 90);
   // ===== النفط =====
   const oilGDP = (kbd, P) => kbd * 1000 * 365 * P / 1e9;   // مليار $ بالسنة
-  function oilOf(W, WD, id) { let o = 0; for (let i = 0; i < WD.r.length; i++) if (W.ctl[i] === id) o += WD.r[i][10] || 0; return o * (1 - ((W.C && W.C[id] && W.C[id].oilDmg) || 0)) * (1 - .6 * ((W.C && W.C[id] && W.C[id].blk) || 0)); }
+  function oilOf(W, WD, id) { let o = 0; const add = (W.eco3 && W.eco3.oilAdd) || {}; for (let i = 0; i < WD.r.length; i++) if (W.ctl[i] === id) o += (WD.r[i][10] || 0) + (add[i] || 0); return o * (1 - ((W.C && W.C[id] && W.C[id].oilDmg) || 0)) * (1 - .6 * ((W.C && W.C[id] && W.C[id].blk) || 0)); }
   function price(W, WD) { let disrupt = 0; const ST = (WD && WD.st) || [];
     for (const k in W.stx || {}) { const st = ST.find(x => x.id === k); disrupt += (st ? st.oilPct / 100 : .2) * W.stx[k]; }
     W.hormuz = (W.stx || {}).hormuz || 0; W.oilP = K.oilBase * (1 + K.oilDisrupt * disrupt) + Math.max(0, (W.ten || 0) - 30) * .15 + (W.oilShock && W.oilShock.until > W.t ? W.oilShock.v : 0); return W.oilP; }   // التوتر فوق 30 يزيد السعر [تقدير]
@@ -174,6 +175,7 @@
   function month(W, WD) {
     W.rnd = mulberry(W.rs = (W.rs + 7919 * W.t) | 0);
     if (NAV) NAV.month(W, WD); else navy(W, WD);
+    if (ECO) { ECO.month(W, WD); ECO.ai(W, WD); }
     straits(W, WD);
     price(W, WD);
     for (const id of W.ids) econ(W, WD, id);
@@ -207,6 +209,7 @@
     const sl = sancOn(WD, W, id); if (sl) g += add(K.sancG[sl], 'العقوبات');
     if (c.prioG) g += add(c.prioG, 'أولوية الاقتصاد');
     if (c.blk) g += add(-2.5 * c.blk, 'الحصار البحري');
+    if (ECO && W.eco3) g += add(ECO.elecG(W, id), 'الكهرباء');
     if (c.occG) g += add(c.occG, 'كلفة الاحتلال (' + c.occN + ' منطقة)');
     if (W.gshock && W.gshock.until > W.t) g += add(W.gshock.v, W.gshock.n);
     const tr = W.trade.filter(p => p[0] === id || p[1] === id).length; if (tr) g += add(Math.min(K.tradeMax, tr * K.tradeG), 'اتفاقيات التجارة');
@@ -228,7 +231,9 @@
     if (id === W.me && W.nat) { const e = W.nat.eco[0]; if (c.balF == null) c.balF = (c.bal - (og - oilGDP(c.oil, K.oilBase)) * K.oilTake / 12) / c.gdp; const b0 = c.balF * c.gdp;
       c.debt = Math.max(0, c.debt - b0); e.cash += (c.bal - b0) + c.gdp * .0025; if (e.cash < 0) e.cash -= -e.cash * rate(c, dp) * 1.5 / 12; }
     else c.debt = Math.max(0, c.debt - c.bal);
-    c.budget = { rev, mil, civ, intr };
+    c.budget = { rev, mil, civ, intr, oilR: og * K.oilTake / 12 };
+    // E3 (I-119): للاعب — شكد من العجز يروح للدين العام (الأساس) وشكد للخزينة (قراراتك)
+    if (id === W.me && W.nat) { c.budget.b0 = c.balF * c.gdp; c.budget.cash = c.bal - c.budget.b0 + c.gdp * .0025; }
     // الجيش: الميزانية تبني، والصيانة تآكل (التوازن = القوة الحالية إذا الميزانية ما تتغير)
     const eff = c.pw0 * K.upkeep * 12 / Math.max(.01, (WD.cs[id].gdp || c.gdp) * (c.milPct0 ??= c.milPct) / 100);
     c.pw = Math.max(1, c.pw + mil * 12 * eff / 12 * (MKT ? MKT.techK(W, id) : 1) - c.pw * K.upkeep);   // W8: التقنية الجديدة تبني جيش أقوى بنفس الفلوس
@@ -496,8 +501,10 @@
     if (o.v < 9) o.v = 9;
     // 9 ← 10 (v3 V2): تاريخ شهري لخطوط لوحة القيادة (يبدي فاضي)
     if (o.v < 10) { o.kh = o.kh || []; o.v = 10; }
-    o.base = WD.rel; o.rnd = mulberry(o.rs); dipInit(o, WD); if (POL) POL.ensure(o, WD); if (MKT) MKT.ensure(o, WD); if (CMD) CMD.ensure(o, WD); if (NAV) NAV.ensure(o, WD); return o;
+    // 10 ← 11 (v3 E): المشاريع والكهرباء (ECO.ensure يبنيها من البيانات)
+    if (o.v < 11) o.v = 11;
+    o.base = WD.rel; o.rnd = mulberry(o.rs); dipInit(o, WD); if (POL) POL.ensure(o, WD); if (MKT) MKT.ensure(o, WD); if (CMD) CMD.ensure(o, WD); if (ECO) ECO.ensure(o, WD); if (NAV) NAV.ensure(o, WD); return o;
   }
-  const API = { V, K, START, TENSION, POL, MKT, CMD, NAV, init, addRel, answerOffer, unSummit, unVote, council, tenTarget, napOf, blocsOf, P5, navy, straits, step, month, act, can, offerPeace, declare, endWar, strike, playerStrike, rank, save, load, date, rel, atWar, allied, COST, TAX, CIV };
+  const API = { V, K, START, TENSION, POL, MKT, CMD, NAV, ECO, init, addRel, answerOffer, unSummit, unVote, council, tenTarget, napOf, blocsOf, P5, navy, straits, step, month, act, can, offerPeace, declare, endWar, strike, playerStrike, rank, save, load, date, rel, atWar, allied, COST, TAX, CIV };
   if (typeof module !== 'undefined') module.exports = API; else root.WSIM = API;
 })(this);

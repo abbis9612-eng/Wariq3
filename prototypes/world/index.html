@@ -231,6 +231,7 @@ body.play #card{bottom:calc(64px + env(safe-area-inset-bottom))}body.play #perf{
 #sheet[hidden]{display:none}#sheet h2{font-size:16px;margin-bottom:6px;display:flex;align-items:center;gap:6px}#sheet h2 .x{margin-right:auto;width:30px;height:30px;padding:0}
 #sheet h3{font-size:13px;color:var(--gold);margin:12px 0 5px}
 .seg{display:flex;gap:4px;flex-wrap:wrap;margin:4px 0}.seg button{flex:1;min-width:70px}
+.pj{border:1px solid var(--line);border-radius:10px;padding:6px 8px;margin:6px 0;background:var(--chip)}.pj button{margin-top:4px}
 .line{display:flex;justify-content:space-between;gap:8px;padding:4px 0;border-bottom:1px solid var(--line);font-size:12.5px}.line:last-child{border:0}.line b{font-variant-numeric:tabular-nums}
 .pos{color:var(--me)}.neg{color:var(--neg)}
 input[type=range]{width:100%;accent-color:var(--gold)}
@@ -340,6 +341,7 @@ body.sheeton #toast{top:calc(var(--toph, 100px) + 4px) !important;bottom:auto !i
 <script src="wnavb.js"></script>
 <script src="wnav.js"></script>
 <script src="livefx.js"></script>
+<script src="weco.js"></script>
 <script src="wsim.js"></script>
 <script src="gwsim.js"></script>
 <script src="theater.js"></script>
@@ -923,6 +925,7 @@ body.sheeton #toast{top:calc(var(--toph, 100px) + 4px) !important;bottom:auto !i
   function msg(l) {
     const n = k => nameOf(k);
     switch (l.k) {
+      case 'proj': { const P = WECO.P[l.pk] || {}, w = byId.get(l.r)?.n || ''; return l.a === 'done' ? [`${P.ic || '🏗'} كمل مشروع «${P.n}»${l.id === me ? '' : ' عند ' + n(l.id)}${w ? ' بـ' + w : ''}`, l.id === me ? 'good' : ''] : [`${P.ic || '🏗'} ${l.id === me ? 'بدينا' : n(l.id) + ' بدت'} مشروع «${P.n}»${w ? ' بـ' + w : ''} (${(l.cost.toFixed(1))} مليار، ${(l.mo)} شهر)`, l.id === me ? 'good' : '']; }
       case 'war': return [`⚔ ${n(l.a)} أعلنت الحرب على ${n(l.b)}${l.join && l.join.length ? ' — ودخلت وياها ' + l.join.map(n).join('، ') : ''}`, 'bad'];
       case 'peace': return [`🕊 انتهت ${l.n}${l.kept ? ` (تغيرت السيطرة على ${l.kept} منطقة)` : ''}`, 'good'];
       case 'take': return [`🚩 ${n(l.by)} سيطرت على ${byId.get(l.r)?.n || l.r} من ${n(l.from)}`, l.by === me ? 'good' : l.from === me ? 'bad' : ''];
@@ -983,13 +986,13 @@ body.sheeton #toast{top:calc(var(--toph, 100px) + 4px) !important;bottom:auto !i
   // ===== الألواح =====
   $('#tabs').querySelectorAll('button').forEach(b => b.onclick = () => TABOF[panel] === b.dataset.p ? closePanel() : openPanel(b.dataset.p));
   function closePanel() { document.body.classList.remove('sheeton'); panel = null; $('#sheet').hidden = true; $('#tabs').querySelectorAll('button').forEach(x => x.classList.remove('on')); }
-  const TABOF = { cmd: 'cmd', me: 'me', homep: 'me', army: 'army', prod: 'army', mkt: 'army', rd: 'rd', dip: 'dip', war: 'dip', world: 'dip', news: 'dip' };
-  const GROUPS = { me: [['me', '💰 الاقتصاد'], ['homep', '🏛 الداخل']], army: [['army', '🪖 الجيش'], ['prod', '🏭 الإنتاج'], ['mkt', '🛒 السوق']], dip: [['dip', '🤝 العلاقات'], ['war', '⚔ الحروب'], ['world', '🌍 الترتيب'], ['news', '📜 الأخبار']] };
+  const TABOF = { cmd: 'cmd', me: 'me', flow: 'me', build: 'me', homep: 'me', army: 'army', prod: 'army', mkt: 'army', rd: 'rd', dip: 'dip', war: 'dip', world: 'dip', news: 'dip' };
+  const GROUPS = { me: [['me', '💰 الاقتصاد'], ['flow', '💸 الفلوس'], ['build', '🏗 المشاريع'], ['homep', '🏛 الداخل']], army: [['army', '🪖 الجيش'], ['prod', '🏭 الإنتاج'], ['mkt', '🛒 السوق']], dip: [['dip', '🤝 العلاقات'], ['war', '⚔ الحروب'], ['world', '🌍 الترتيب'], ['news', '📜 الأخبار']] };
   function openPanel(p, refresh) {
     const sh = $('#sheet'), keep = refresh ? sh.scrollTop : 0; panel = p; sel = null; $('#card').hidden = true;
     $('#tabs').querySelectorAll('button').forEach(x => x.classList.toggle('on', x.dataset.p === TABOF[p]));
     // V1 (I-117): 5 تبويبات؛ كل تبويب إله أقسام بشريط فوق (الاقتصاد/الداخل، الجيش/الإنتاج/السوق، الدبلوماسية/الحروب/الترتيب/الأخبار)
-    const PN = { cmd: pCmd, me: pMe, homep: () => '<h2>🏛 الداخل والشعب</h2>' + pHome(), army: pArmy, prod: () => '<h2>🏭 الإنتاج الحربي</h2>' + pProd(), mkt: () => '<h2>🛒 سوق السلاح</h2>' + pMkt(), rd: () => '<h2>🔬 البحث والصناعة</h2>' + pRd(), dip: pDip, war: pWar, world: pWorld, news: pNews };
+    const PN = { cmd: pCmd, me: pMe, flow: pFlow, build: pBuild, homep: () => '<h2>🏛 الداخل والشعب</h2>' + pHome(), army: pArmy, prod: () => '<h2>🏭 الإنتاج الحربي</h2>' + pProd(), mkt: () => '<h2>🛒 سوق السلاح</h2>' + pMkt(), rd: () => '<h2>🔬 البحث والصناعة</h2>' + pRd(), dip: pDip, war: pWar, world: pWorld, news: pNews };
     let html = (PN[p] || pCmd)(); const grp = GROUPS[TABOF[p]];
     if (grp) html = html.replace(/(<\/h2>)/, `$1<div class="seg gnav">${grp.map(([k, t]) => `<button data-gp="${k}" class="${k === p ? 'on' : ''}">${t}</button>`).join('')}</div>`);
     sh.innerHTML = html; sh.hidden = false; sh.scrollTop = keep;
@@ -1025,6 +1028,36 @@ body.sheeton #toast{top:calc(var(--toph, 100px) + 4px) !important;bottom:auto !i
     return h;
   }
   const line = (a, b, cls = '') => `<div class="line"><span>${a}</span><b class="${cls}">${b}</b></div>`;
+  // ===== E (I-119): 💸 تدفق الفلوس — منين تجي ووين تروح، بالشهر =====
+  function pFlow() {
+    const c = G.C[me], b = c.budget || {}, E = G.eco3 || {}, sp = (E.spend || {})[me] || 0, NW = G.nat, row = (t, v, cl, d) => `<div class="line"><span>${t}${d ? `<br><small class="note">${d}</small>` : ''}</span><b class="${cl || ''}">${v >= 0 ? '+' : '−'}${money(Math.abs(v))}</b></div>`;
+    let h = `<h2>💸 تدفق الفلوس</h2><div class="note">كل الأرقام <b>بالشهر</b>. الدولة عدها جيبين: <b>الدين العام</b> (عجز البلد القديم يتمول بالاستدانة مثل كل الدول) و<b>الخزينة</b> (بيدك: منها الطلبات والبحث والمشاريع).</div>`;
+    h += `<h3>⬇ الإيرادات</h3>${row('🛢 حصة الدولة من النفط', b.oilR || 0, 'pos', `${(Math.round(c.oil || 0))} ألف برميل باليوم × ${(Math.round(G.oilP))}$`)}${row('🧾 الضرايب والرسوم', (b.rev || 0) - (b.oilR || 0), 'pos', 'من باقي الاقتصاد (تتغير ويا الضرايب بتبويب الداخل)')}`;
+    h += `<h3>⬆ المصاريف</h3>${row('🪖 الجيش', -(b.mil || 0), 'neg', `${((c.milPct || 0).toFixed(1))}٪ من الناتج`)}${row('🏥 الرواتب والخدمات', -(b.civ || 0), 'neg')}${row('🏦 فوائد الدين', -(b.intr || 0), 'neg', c.crisis ? '⚠ أزمة دين: الفوائد واصلة ربع الإيرادات' : `الدين ${(Math.round(c.debt / c.gdp * 100))}٪ من الناتج`)}`;
+    const bal = (b.rev || 0) - (b.mil || 0) - (b.civ || 0) - (b.intr || 0);
+    h += `<h3>= الصافي</h3>${row(bal >= 0 ? 'فائض' : 'عجز', bal, bal >= 0 ? 'pos' : 'neg')}`;
+    if (b.b0 != null) h += `${row('↪ عجز البلد الأساسي (يروح للدين العام)', -b.b0, b.b0 >= 0 ? 'pos' : 'neg', 'هذا كان قبل ما تستلم: ما يمس خزينتك، بس يكبّر الدين')}${row('↩ الفرق اللي سببته قراراتك + المشتريات (للخزينة)', b.cash || 0, (b.cash || 0) >= 0 ? 'pos' : 'neg', 'الضرايب، الإنفاق، الحرب، سعر النفط، و٠٫٢٥٪ من الناتج للمشتريات')}`;
+    if (sp) h += row('🏗 أقساط المشاريع (من الخزينة)', -sp, 'neg', 'تنتهي لما يكمل المشروع');
+    if (NW) h += `<div class="pill">🏦 الخزينة هسه: <b>${money(NW.eco[0].cash)}</b></div>`;
+    h += `<h3>📊 قطاعات الاقتصاد</h3><div class="note">الناتج ${money(c.gdp)} بالسنة، والنمو ${(c.g.toFixed(1))}٪</div>`;
+    const sec = WECO.sectors(G, WD, me), tot = sec.reduce((t, x) => t + x[1], 0) || 1;
+    h += sec.map(([n, v]) => `<div class="line"><span>${n}</span><b>${(Math.round(v / tot * 100))}٪ · ${money(v)}</b></div>${barV(v / tot * 100, 'var(--gold)')}`).join('');
+    const d = WECO.elecDef(G, me); h += `<h3>⚡ الكهرباء</h3><div class="line"><span>النقص (الطلب اللي ما ينغطى)</span><b class="${d > .1 ? 'neg' : ''}">${(Math.round(d * 100))}٪</b></div>${barV(100 - d * 100, d > .2 ? 'var(--neg)' : 'var(--me)')}<div class="note">${d > .05 ? 'الطلب يكبر 4٪ بالسنة. ابني محطات من «المشاريع» حتى النقص ما يزيد ويضرب النمو.' : 'الكهرباء كافية.'}</div>`;
+    return h;
+  }
+  // ===== E (I-119): 🏗 المشاريع — بطاقة ربح لكل مشروع: الكلفة، المدة، الدخل، ومتى يرجع فلوسه =====
+  function pBuild() {
+    const E = WECO.ensure(G, WD), NW = G.nat, cash = NW ? NW.eco[0].cash : 0, run = E.proj.filter(q => q.id === me);
+    let h = `<h2>🏗 المشاريع والبناء</h2><div class="note">المشروع يندفع <b>أقساط شهرية</b> من الخزينة لحد ما يكمل، وبعدها يشتغل للأبد. إذا العدو احتل المنطقة يوقف. الخزينة هسه <b>${money(cash)}</b>.</div>`;
+    const live = run.filter(q => !q.done);
+    if (live.length) h += `<h3>⏳ تنبني هسه (${(live.length)}/٦)</h3>` + live.map(q => { const P = WECO.P[q.k], f = Math.min(1, (G.t - q.t0) / (q.mo * 30.4)); return `<div class="line"><span>${P.ic} ${P.n} <small class="note">${byId.get(q.r)?.n || ''}</small></span><b>${(Math.round(f * 100))}٪ · باقي ${(Math.max(0, Math.ceil(q.mo - (G.t - q.t0) / 30.4)))} شهر</b></div>${barV(f * 100, 'var(--gold)')}`; }).join('');
+    const done = run.filter(q => q.done); if (done.length) h += `<div class="note">✅ كملت: ${done.map(q => WECO.P[q.k].ic + ' ' + WECO.P[q.k].n).join('، ')}</div>`;
+    h += '<h3>➕ مشروع جديد</h3>';
+    for (const k in WECO.P) { const P = WECO.P[k], cd = WECO.card(G, WD, me, k), err = WECO.can(G, WD, me, k);
+      h += `<div class="pj"><div class="line"><span style="font-size:15px">${P.ic} <b>${P.n}</b></span><b>${money(cd.cost)}</b></div><div class="note">${P.d}</div><div class="note">⏱ ${(cd.mo)} شهر · قسط ${money(cd.cost / cd.mo)}/شهر${cd.gdp ? ` · الناتج +${money(cd.gdp)}/سنة` : ''}${cd.back ? ` · <b>الاقتصاد يرجع الكلفة بـ${cd.back} سنة</b>` : ''}${cd.tback ? ` · الخزينة (الضرايب) بـ${cd.tback} سنة` : ''}</div>${err ? `<div class="note">⛔ ${err}</div>` : `<button data-proj="${k}">ابدأ البناء</button>`}</div>`; }
+    h += '<div class="note">الأرقام تقدير: الدول الأفقر تكلّف وتتأخر أكثر (فساد وبيروقراطية)، والمشروع يكبر ويصغر حسب حجم الاقتصاد.</div>';
+    return h;
+  }
   function pMe() {
     const c = G.C[me], bd = c.budget || { rev: 0, mil: 0, civ: 0, intr: 0 }, dp = c.debt / c.gdp * 100;
     let h = `<h2>🏛 ${CS[me].ar}</h2>`;
@@ -1247,6 +1280,7 @@ body.sheeton #toast{top:calc(var(--toph, 100px) + 4px) !important;bottom:auto !i
       else if (T && (a.startsWith('cell:') || a.startsWith('div:'))) { const i = a.startsWith('cell:') ? +a.slice(5) : (T.W.divs.find(d => d.id === +a.slice(4)) || {}).cell; const c = T.cells[i]; if (c) { closePanel(); cam.x = MX(c.ll[0]); cam.y = MY(c.ll[1]); cam.s = Math.max(cam.s, 1400); dirty = true; } }
       else if (a === 'arrow') { closePanel(); toast(ADVL[+b.dataset.adv].t); } });
     root.querySelectorAll('[data-sub]').forEach(b => b.onclick = () => { meSub = b.dataset.sub; openPanel('me'); });
+    root.querySelectorAll('[data-proj]').forEach(b => b.onclick = () => { const k = b.dataset.proj; re(WECO.start(G, WD, me, k), `🏗 بدينا: ${WECO.P[k].n}`); });
     root.querySelectorAll('[data-prio]').forEach(b => b.onclick = () => { NW.eco[0].prio = b.dataset.prio; re(0, `⚙️ أولوية الاقتصاد: ${ECON.PRIO[b.dataset.prio].n}`); });
     root.querySelectorAll('[data-iss]').forEach(b => b.onclick = () => { const [i, j] = b.dataset.iss.split(':').map(Number); const r = HOME.choose(NW, i, j); G.C[me].stab = NW.home.stab; re(0, `🏛 قررنا: ${kLab(r)}`); bar(); });
     root.querySelectorAll('[data-buy]').forEach(b => b.onclick = () => { const k = b.dataset.buy, r = NT.buy(G, k); re(r, `🏭 طلبنا ${ECON.ITEMS[k].n}`); });

@@ -4,11 +4,12 @@
 (function (root) {
   'use strict';
   const START = Date.UTC(2026, 10, 20);   // 20 تشرين الثاني 2026: الوضع الحقيقي (D-048)
-  const V = 7;                              // إصدار حفظ «العالم» (2: الصواريخ والدفاع الجوي؛ 3: البحرية والمضائق؛ 4: طبقة الدولة؛ 5: التكتلات والتوتر والعروض والأمم المتحدة؛ 6: الانتخابات والانقلابات والاحتلال والأحداث؛ 7: البحث لكل الدول وسوق السلاح)
+  const V = 8;                              // إصدار حفظ «العالم» (2: الصواريخ والدفاع الجوي؛ 3: البحرية والمضائق؛ 4: طبقة الدولة؛ 5: التكتلات والتوتر والعروض والأمم المتحدة؛ 6: الانتخابات والانقلابات والاحتلال والأحداث؛ 7: البحث لكل الدول وسوق السلاح؛ 8: قائد القوات المسلحة)
   const mulberry = a => () => { a |= 0; a = a + 0x6D2B79F5 | 0; let t = Math.imul(a ^ a >>> 15, 1 | a); t = t + Math.imul(t ^ t >>> 7, 61 | t) ^ t; return ((t ^ t >>> 14) >>> 0) / 4294967296; };
   const clamp = (v, a, b) => v < a ? a : v > b ? b : v;
   const POL = root.WPOL || (typeof require !== 'undefined' ? require('./wpol.js') : null);   // W7: السياسة والأحداث
   const MKT = root.WMKT || (typeof require !== 'undefined' ? require('./wmkt.js') : null);   // W8: البحث وسوق السلاح
+  const CMD = root.WCMD || (typeof require !== 'undefined' ? require('./wcmd.js') : null);   // I-108: قائد القوات المسلحة
   // ===== ثوابت [تقدير] =====
   const K = {
     oilBase: 65, oilDisrupt: 3.5,        // سعر النفط = 65$ × (1 + 3.5 × نسبة النفط المقطوع عالمياً)
@@ -52,7 +53,7 @@
       // نثبّت العجز الأولي على الحقيقي تقريباً (بيانات الإيرادات والمصاريف من سنين مختلفة، فنحصره بين فائض 3٪ وعجز 5٪)
       const dp = c.debt / c.gdp * 100, rev = c.core * c.revCore + oilGDP(c.oil, W.oilP) * K.oilTake, def = clamp(c.spend0 - c.rev0, -.03, .05) * c.gdp;
       c.civ0 = clamp((rev + def - c.gdp * c.milPct / 100 - c.debt * rate(c, dp)) / c.core, .03, .6); }
-    W.rnd = mulberry(W.rs); ix(W, WD); if (POL) POL.ensure(W, WD); if (MKT) MKT.ensure(W, WD); note(W, { k: 'start', me });
+    W.rnd = mulberry(W.rs); ix(W, WD); if (POL) POL.ensure(W, WD); if (MKT) MKT.ensure(W, WD); if (CMD) CMD.ensure(W, WD); note(W, { k: 'start', me });
     return W;
   }
   // الحروب الجارية بين دول (الحروب ويا الكيانات تبقى استنزاف داخلي): من data/world/conflicts.json
@@ -161,6 +162,7 @@
     ix(W, WD);
     for (let d = 0; d < days && !W.over; d++) {
       W.t++;
+      if (CMD && W.cmd) CMD.daily(W);
       if (date(W.t).getUTCDate() === 1) month(W, WD);
     }
     return W;
@@ -248,7 +250,7 @@
   }
   function homeFront(W, WD, w, id) { return !!(w._front && (w._front[0].some(i => W.ctl[i] === id) || w._front[1].some(i => W.ctl[i] === id))) || (w.id === 'iran_war' && id === 'IRN'); }
   function sidePower(W, WD, side, front) {
-    let p = 0; for (const id of side) { const c = W.C[id]; if (!c) continue; const touches = front.some(i => W.ctl[i] === id); p += c.pw * (touches ? (c.landK ?? 1) : .25); } return Math.max(1, p);
+    let p = 0; for (const id of side) { const c = W.C[id]; if (!c) continue; const touches = front.some(i => W.ctl[i] === id); p += c.pw * (touches ? (c.landK ?? 1) : .25) * (CMD ? CMD.k(W, id) : 1); } return Math.max(1, p);   // القائد: جودة القيادة
   }
   function war(W, WD, w) {
     ix(W, WD); w.months++; const [fa, fb] = w._front = frontRegions(W, WD, w);
@@ -484,8 +486,10 @@
     if (o.v < 6) o.v = 6;
     // 6 ← 7 (W8): مستويات البحث لكل دولة وسوق السلاح (MKT.ensure يبنيها من البيانات)
     if (o.v < 7) o.v = 7;
-    o.base = WD.rel; o.rnd = mulberry(o.rs); dipInit(o, WD); if (POL) POL.ensure(o, WD); if (MKT) MKT.ensure(o, WD); return o;
+    // 7 ← 8 (I-108): قائد القوات المسلحة وجودة القيادة لكل دولة (CMD.ensure يبنيها)
+    if (o.v < 8) o.v = 8;
+    o.base = WD.rel; o.rnd = mulberry(o.rs); dipInit(o, WD); if (POL) POL.ensure(o, WD); if (MKT) MKT.ensure(o, WD); if (CMD) CMD.ensure(o, WD); return o;
   }
-  const API = { V, K, START, TENSION, POL, MKT, init, addRel, answerOffer, unSummit, unVote, council, tenTarget, napOf, blocsOf, P5, navy, straits, step, month, act, can, offerPeace, declare, endWar, strike, playerStrike, rank, save, load, date, rel, atWar, allied, COST, TAX, CIV };
+  const API = { V, K, START, TENSION, POL, MKT, CMD, init, addRel, answerOffer, unSummit, unVote, council, tenTarget, napOf, blocsOf, P5, navy, straits, step, month, act, can, offerPeace, declare, endWar, strike, playerStrike, rank, save, load, date, rel, atWar, allied, COST, TAX, CIV };
   if (typeof module !== 'undefined') module.exports = API; else root.WSIM = API;
 })(this);

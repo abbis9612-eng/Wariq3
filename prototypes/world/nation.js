@@ -8,7 +8,7 @@
   'use strict';
   const req = typeof require !== 'undefined' ? require : null;
   const HOME = root.HOME || req('./gwhome.js'), IND = root.IND || req('./gwind.js'), ECON = root.ECON || req('./gwecon.js'), AIR = root.AIR || req('./gwair.js');
-  const CAT = root.AIRCAT || req('./aircat.js'), ADV = root.ADV || req('./gwadvise.js'), GRADE = root.GRADE || req('./gwgrade.js'), MKT = root.WMKT || req('./wmkt.js');
+  const CAT = root.AIRCAT || req('./aircat.js'), ADV = root.ADV || req('./gwadvise.js'), GRADE = root.GRADE || req('./gwgrade.js'), MKT = root.WMKT || req('./wmkt.js'), CMD = root.WCMD || req('./wcmd.js');
   // الفئات حسب نظام الحكم (نفس data/world/SCHEMA.md و build_country.py)، والعراق بفئاته الأصلية
   const FACS = { theo: ['clergy', 'irgc', 'army', 'street', 'biz'], amon: ['royal', 'army', 'clergy', 'street', 'biz'], one: ['party', 'army', 'street', 'biz'], mil: ['army', 'militia', 'street', 'biz'],
     auth: ['army', 'security', 'street', 'biz'], trans: ['army', 'factions', 'street', 'biz'], cmon: ['army', 'parties', 'street', 'biz'], parl: ['army', 'parties', 'street', 'biz'], pres: ['army', 'parties', 'street', 'biz'], semi: ['army', 'parties', 'street', 'biz'] };
@@ -105,7 +105,7 @@
     if (T) for (const l of T.W.log.slice(T.natN ?? T.W.log.length)) if (l.k === 'surrender') NW.log.push({ t: NW.t, k: 'surrender', side: l.side });
     if (T) T.natN = T.W.log.length;
     // الإنتاج (نفس econ.js daily): الخطوط تشتغل على أول الطلبات، والسرعة حسب الأولوية والصناعة والمعنويات
-    const P = ECON.PRIO[e.prio], sp = P.prod * (NW.indF ? NW.indF[0].prod : 1) * (e.mor < 30 ? .75 : 1);
+    const P = ECON.PRIO[e.prio], sp = P.prod * (NW.indF ? NW.indF[0].prod : 1) * (e.mor < 30 ? .75 : 1) * (G.cmd ? CMD.mult(G.cmd.c).prod : 1);   // القائد: اللوجستيك يسرّع الإنتاج
     for (let k = 0; k < Math.min(e.lines, e.q.length); k++) e.q[k].left -= sp * (ECON.ITEMS[e.q[k].k] && ECON.ITEMS[e.q[k].k].cat === 'div' && e.mor < 30 ? .8 : 1);
     for (let k = e.q.length - 1; k >= 0; k--) if (e.q[k].left <= 0) { const o = e.q[k]; deliver(G, WD, o, X); e.q.splice(k, 1); }
     MKT.deliver(G, WD, { ECON, AIR });   // W8: عقود سوق السلاح اللي وصلت

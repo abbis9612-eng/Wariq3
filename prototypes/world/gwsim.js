@@ -219,7 +219,7 @@
       // أما التقدّم بأرض العدو فبطيء: استطلاع، ألغام، تطهير، وقفات (دروع ~45 كم/يوم، مشاة ~20)
       const adv = W.ctrl[tg] !== d.side ? (d.kind === 'inf' ? .2 : .22) : 1;
       const rd = W.road.get(d.cell + ',' + tg), v = T.spd * tr.spd * adv * (W.edgeOf.get(d.cell + ',' + tg)?.r && !bridgeOK(W, d.cell, tg) ? RIVER_SPD : 1) * (rd === 2 ? 1.5 : rd === 1 ? 1.25 : 1) * (W.sup[d.side][d.cell] ? 1 : .5) * envMv(W); // الطريق أسرع، والجسر السالم ما يأخّر؛ الليل والطقس أبطأ
-      d.prog += v; d.v = v;
+      d.prog += v * (W.mvK ? W.mvK[d.side] || 1 : 1); d.v = v;   // «العالم» I-108: لوجستيك القائد يسرّع المسير
       if (d.prog >= W.dist(d.cell, tg)) {
         d.prog = 0; byCell.get(d.cell)?.splice(byCell.get(d.cell).indexOf(d), 1);
         d.cell = tg; d.path.shift(); d.arrT = W.t; if (!byCell.has(tg)) byCell.set(tg, []); byCell.get(tg).push(d);

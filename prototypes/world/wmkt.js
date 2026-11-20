@@ -58,6 +58,11 @@
   };
   // العلاقة الفعلية للبيع = العلاقة + 35 إذا حلفاء (بيانات العلاقات ناقصة لأزواج كثيرة، مثل بولندا وكوريا)
   const eff = (W, S, x) => S.rel(W, x, W.me) + (S.allied(W, x, W.me) ? 35 : 0);
+  // الطريق («يعرف المعدات من وين تجي»): برّاً إذا جار، وإلا بحراً لأكبر ميناء عندنا، وإلا جواً
+  function route(W, WD, S, x) { const me = W.me; let land = false; for (let i = 0; i < WD.r.length && !land; i++) if (W.ctl[i] === me) for (const n of WD.r[i][7]) { const j = WD.r.findIndex(a => a[0] === n); if (j >= 0 && W.ctl[j] === x) { land = true; break; } }
+    if (land) return { by: 'land', n: 'برّاً عبر الحدود' };
+    const ports = WD.r.map((a, i) => [a, i]).filter(([a, i]) => W.ctl[i] === me && a[8] && a[8].length && a[9] && a[9].length).sort((p, q) => (q[0][9][0][1] || 0) - (p[0][9][0][1] || 0));
+    return ports.length ? { by: 'sea', n: 'بحراً لميناء ' + ports[0][0][9][0][0], r: ports[0][0][0] } : { by: 'air', n: 'جواً (ماكو بحر)' }; }
   const sellers = W => Object.keys(SELL).filter(x => W.C[x]);
   // هل نقدر نشتري؟ (نص السبب أو null)
   function can(W, S, x, p) {
@@ -74,9 +79,10 @@
   }
   function buy(W, WD, S, x, k) {
     ensure(W, WD); const p = (SELL[x] || []).find(o => o.k === k); if (!p) return 'غلط'; const no = can(W, S, x, p); if (no) return no;
-    W.nat.eco[0].cash -= p.price; const d = { x, k, at: W.t + p.days, t: W.t }; W.mkt.deals.push(d);
+    const CM = root.WCMD || (typeof require !== 'undefined' ? require('./wcmd.js') : null), days = Math.round(p.days * (W.cmd && CM ? CM.mult(W.cmd.c).deal : 1));   // القائد: اللوجستيك يقصّر التوصيل
+    W.nat.eco[0].cash -= p.price; const d = { x, k, at: W.t + days, t: W.t, route: route(W, WD, S, x) }; W.mkt.deals.push(d);
     S.addRel(W, W.me, x, 5); if (p.rival && W.C[p.rival] && S.rel(W, p.rival, W.me) > -50) S.addRel(W, W.me, p.rival, -12);
-    W.log.push({ t: W.t, k: 'arms', a: 'buy', x, n: p.n, d: p.days }); return d;
+    W.log.push({ t: W.t, k: 'arms', a: 'buy', x, n: p.n, d: days, route: d.route }); return d;
   }
   // التوصيل (يومي من nation.daily): يفتح المنتج بالكتالوج، والطيارات/البطاريات تنضاف لقوتنا (G.nat.arms تدخل بالمسرح الجاي)
   function deliver(W, WD, X) {
@@ -115,6 +121,6 @@
     W.ten = clamp((W.ten || 0) + (en.length ? 1 : 0), 0, 100);
     W.log.push({ t: W.t, k: 'arms', a: 'sold', x, kind: o.kind, v: o.v }); return `بعنا ${o.kind === 'nat' ? 'سلاحنا الوطني' : EXP[o.kind]} لـ${WD.cs[x].ar} بـ${o.v} مليار${en.length ? '، وأعداءهم زعلوا' : ''}`;
   }
-  const API = { eff, ensure, month, techK, need, SELL, sellers, can, buy, deliver, relink, canExport, answer, EXP, BR };
+  const API = { route, eff, ensure, month, techK, need, SELL, sellers, can, buy, deliver, relink, canExport, answer, EXP, BR };
   if (typeof module !== 'undefined') module.exports = API; else root.WMKT = API;
 })(this);

@@ -588,7 +588,7 @@ input[type=range]{width:100%;accent-color:var(--gold)}
   function after(m0, t0) {
     const newLogs = G.log.filter(l => l.t > t0);
     let monthEnd = false;
-    for (const l of newLogs) { const m = msg(l); if (l.k === 'month') monthEnd = true; if (m && ((l.k !== 'take' && l.k !== 'strike' && l.k !== 'blockade') || [l.by, l.from, l.t, l.on].includes(me))) toast(m[0], m[1]); if (l.k === 'peaceOffer' || l.k === 'over' || (l.k === 'war' && (l.a === me || l.b === me || (l.join || []).includes(me)))) { speed = 0; bar(); } }
+    for (const l of newLogs) { const m = msg(l); if (l.k === 'month') monthEnd = true; if (m && ((!['take', 'strike', 'blockade', 'aipact', 'aisanc', 'bsanc', 'bloc'].includes(l.k)) || [l.by, l.from, l.t, l.on, l.a, l.b].includes(me))) toast(m[0], m[1]); if (l.k === 'offer') { speed = Math.min(speed, 1); } if (l.k === 'peaceOffer' || l.k === 'over' || (l.k === 'war' && (l.a === me || l.b === me || (l.join || []).includes(me)))) { speed = 0; bar(); } }
     if (monthEnd) { syncMap(); save(); if (panel) openPanel(panel, true); if (sel) card(); }
     bar();
     if (G.over) { speed = 0; openPanel('me'); }
@@ -601,14 +601,26 @@ input[type=range]{width:100%;accent-color:var(--gold)}
       case 'peace': return [`🕊 انتهت ${l.n}${l.kept ? ` (تغيرت السيطرة على ${l.kept} منطقة)` : ''}`, 'good'];
       case 'take': return [`🚩 ${n(l.by)} سيطرت على ${byId.get(l.r)?.n || l.r} من ${n(l.from)}`, l.by === me ? 'good' : l.from === me ? 'bad' : ''];
       case 'peaceOffer': return [`📨 ${n(l.from)} تعرض السلام — شوف تبويب الحروب`, 'good'];
-      case 'dip': if (l.a === 'refuse') return [`✋ ${n(l.t)} رفضت ${({ trade: 'اتفاقية التجارة', ally: 'التحالف', peace: 'السلام' })[l.what] || ''}`, 'bad'];
-        return [({ improve: '🤝 حسّنا العلاقة ويا ', trade: '📦 اتفاقية تجارة ويا ', ally: '🛡 تحالف دفاعي ويا ', sanction: '⛔ فرضنا عقوبات على ' })[l.a] + n(l.t), 'good'];
+      case 'dip': if (l.a === 'refuse') return [`✋ ${n(l.t)} رفضت ${({ trade: 'اتفاقية التجارة', ally: 'التحالف', peace: 'السلام', nap: 'عدم الاعتداء', mediate: 'الوساطة' })[l.what] || ''}`, 'bad'];
+        if (l.a === 'rejoff') return [`✋ رفضنا عرض ${n(l.t)}`, ''];
+        if (l.a === 'summit') return ['🇺🇳 قمة أممية: التوتر نزل والعلاقات تحسنت', 'good'];
+        if (l.a === 'mediated') return [`🕊 وساطتنا نجحت: خلصت ${l.n}`, 'good'];
+        if (l.a === 'aid') return [`💵 بعثنا مساعدة ${l.v} مليار لـ${n(l.t)}`, 'good'];
+        return [({ improve: '🤝 حسّنا العلاقة ويا ', trade: '📦 اتفاقية تجارة ويا ', ally: '🛡 تحالف دفاعي ويا ', sanction: '⛔ فرضنا عقوبات على ', nap: '🤝 عدم اعتداء ويا ' })[l.a] + n(l.t), 'good'];
       case 'warn': return [l.w === 'collapse' ? `⚠ الاستقرار ينهار! باقي ${l.left} أشهر قبل سقوط الحكومة` : '⚠ أزمة دين: الفوائد تاكل ربع الإيرادات', 'bad'];
       case 'over': return ['💥 سقطت الحكومة: الاستقرار انهار', 'bad'];
       case 'strike': return [`🚀 ${n(l.by)} ضربت ${({ mil: 'جيش', oil: 'نفط', city: 'مدن' })[l.kind]} ${n(l.t)}: ${l.nm ? l.nm + ' صاروخ (اعترضوا ' + l.im + ')' : ''}${l.nm && l.nd ? ' و' : ''}${l.nd ? l.nd + ' مسيّرة (اعترضوا ' + l.id + ')' : ''}`, l.t === me ? 'bad' : l.by === me ? 'good' : ''];
       case 'blockade': return [`⚓ ${n(l.by)} تحاصر سواحل ${n(l.on)} (${l.f}٪)`, l.on === me ? 'bad' : l.by === me ? 'good' : ''];
       case 'strait': return [`🚢 ${l.n} انقطع ${l.f}٪ — النفط يغلى`, ''];
       case 'plan': return null;
+      case 'offer': return [`📨 ${n(l.from)} تعرض ${({ trade: 'اتفاقية تجارة', ally: 'تحالف دفاعي', nap: 'اتفاقية عدم اعتداء' })[l.what]} — شوف 🤝 الدبلوماسية`, 'good'];
+      case 'ten': return [`🌡 التوتر العالمي ${l.v > 0 ? 'صعد' : 'نزل'} لـ${l.ten}${l.why ? ': ' + l.why : ''}`, l.v > 0 ? 'bad' : 'good'];
+      case 'bsanc': return [`⛔ ${n(l.by)} فرضت عقوبات على ${n(l.on)} (اعتداء)`, l.on === me ? 'bad' : ''];
+      case 'bloc': return [`🏛 ${(WD.bl[l.bl] || {}).ar || l.bl} تدين ${n(l.on)}: علاقات أعضائها −20`, l.on === me ? 'bad' : ''];
+      case 'aipact': return [`🛡 ${n(l.a)} و${n(l.b)} وقّعوا تحالف دفاعي`, ''];
+      case 'aisanc': return [`⛔ ${n(l.a)} فرضت عقوبات على ${n(l.b)}`, l.b === me ? 'bad' : ''];
+      case 'napbreak': return [`💔 ${n(l.a)} كسرت اتفاقية عدم الاعتداء ويا ${n(l.b)}: العالم كله زعل`, 'bad'];
+      case 'un': return [`🇺🇳 مجلس الأمن: قرار إدانة ${n(l.t)} ${l.pass ? 'انقبل (' + l.yes + ' من 15) — عقوبات' : l.veto && l.veto.length ? 'سقط بفيتو ' + l.veto.map(n).join('، ') : 'سقط (' + l.yes + ' من 15)'}`, l.pass ? 'good' : 'bad'];
       case 'joinus': return [`🤝 ${n(l.who)} دخلت ${l.war} ويانا`, 'good'];
       case 'wpeace': return [`🕊 ${l.war} خلصت: ${DIP.TERMS[l.term] ? DIP.TERMS[l.term].n : 'سلام'}${l.res === 'win' ? ' (لصالحنا)' : l.res === 'loss' ? ' (لصالحهم)' : ''}`, l.res === 'loss' ? 'bad' : 'good'];
       case 'cap': return [`🏳 ${n(l.who)} استسلمت — انتهت ${l.war}`, l.who === me ? 'bad' : 'good'];
@@ -698,6 +710,15 @@ input[type=range]{width:100%;accent-color:var(--gold)}
     const m = G.rel[me] || {}, L = relList(), tr = G.trade.filter(p => p.includes(me)).map(p => p[0] === me ? p[1] : p[0]), al = G.ids.filter(x => x !== me && S.allied(G, me, x));
     let h = `<h2>🤝 الدبلوماسية <small class="note">⭐ ${G.ap} نقاط قرار (+2 كل شهر)</small></h2>`;
     h += `<div class="note">اضغط أي دولة بالخريطة حتى تتعامل وياها. العلاقات ترجع ببطء لأساسها إذا ما اشتغلت عليها.</div>`;
+    const tn = Math.round(G.ten || 0);
+    h += `<h3>🌡 التوتر العالمي: ${tn} ${tn >= 70 ? '(خطير)' : tn >= 45 ? '(عالي)' : tn >= 25 ? '(متوسط)' : '(هادئ)'}</h3>${barV(tn, tn >= 70 ? 'var(--neg)' : tn >= 45 ? 'var(--gold)' : '#5fae6e')}<div class="note">يصعد بالحروب (أكثر إذا بيها دولة نووية) وضرب المدن والمضائق المقطوعة، وينزل بالسلام والقمم. التوتر العالي يرفع احتمال الحروب وسعر النفط.</div>`;
+    if (G.offers.length) h += `<h3>📨 عروض عليك (${G.offers.length})</h3>` + G.offers.map((o, i) => `<div class="st" style="margin:6px 0"><b>${nameOf(o.from)}</b> تعرض ${({ trade: '📦 اتفاقية تجارة (نمو للطرفين)', ally: '🛡 تحالف دفاعي (يدافعون عنا وندافع عنهم)', nap: '🤝 اتفاقية عدم اعتداء (ما يهاجمون بعض)' })[o.what]}<div class="seg"><button data-off="${i}:1">✔ نقبل</button><button data-off="${i}:0">✕ نرفض</button></div></div>`).join('');
+    const naps = G.naps.filter(p => p.includes(me)).map(p => p[0] === me ? p[1] : p[0]);
+    if (naps.length) h += `<h3>عدم اعتداء (${naps.length})</h3><div class="row">${naps.map(x => `<button data-go="${x}" class="pill">${nameOf(x)}</button>`).join('')}</div>`;
+    const myB = S.blocsOf(WD, me); h += `<h3>تكتلاتنا</h3><div class="note">${myB.length ? myB.map(k => WD.bl[k].ar + (WD.bl[k].art5 ? ' 🛡 (دفاع مشترك)' : '')).join('، ') : 'ماكو'}</div>`;
+    const C = S.council(G), sumL = Math.max(0, 180 - (G.t - G.unT));
+    h += `<h3>🇺🇳 الأمم المتحدة</h3><div class="note">مجلس الأمن هسه: ${C.map(x => (S.P5.includes(x) ? '<b>' + nameOf(x) + '</b>' : nameOf(x))).join('، ')} (الغامق = فيتو)</div>
+      <div class="row"><button id="unsum" ${sumL || G.ap < S.COST.unsum ? 'disabled' : ''}>🇺🇳 قمة أممية ⭐${S.COST.unsum}${sumL ? ' (باقي ' + Math.ceil(sumL / 30) + ' شهر)' : ''}</button></div><div class="note">القمة: التوتر −8، والعلاقات +3 ويا الكل. قرار الإدانة تختاره من بطاقة الدولة (يحتاج 9 أصوات من 15 وبدون فيتو).</div>`;
     h += `<h3>حلفاء دفاعيين (${al.length})</h3><div class="row">${al.map(x => `<button data-go="${x}" class="pill">${nameOf(x)}</button>`).join('') || '<span class="note">ما عدنا</span>'}</div>`;
     h += `<h3>اتفاقيات تجارة (${tr.length})</h3><div class="row">${tr.map(x => `<button data-go="${x}" class="pill">${nameOf(x)}</button>`).join('') || '<span class="note">ما عدنا</span>'}</div>`;
     h += `<h3>أقرب الأصدقاء</h3>` + L.slice(0, 8).filter(k => m[k] > 0).map(k => `<div class="line"><button data-go="${k}" class="pill">${nameOf(k)}</button><b class="pos">${m[k]}</b></div>`).join('');
@@ -778,6 +799,8 @@ input[type=range]{width:100%;accent-color:var(--gold)}
     root.querySelectorAll('[data-dact]').forEach(b => b.onclick = () => { const [a, id] = b.dataset.dact.split(':'), f = { m: DIP.mission, a: DIP.askAid, j: DIP.askJoin, s: DIP.askSanc }[a]; const r = DA(W => f(W, 0, id));
       dr(r, a === 'm' && r && r.dv ? `🤝 البعثة رفعت العلاقة ويا ${DIP.BY[id].n} +${r.dv}` : null); });
     root.querySelectorAll('[data-dspy]').forEach(b => b.onclick = () => dr(DA(W => DIP.spy(W, 0, b.dataset.dspy, ECON))));
+    root.querySelectorAll('[data-off]').forEach(b => b.onclick = () => { const [i, y] = b.dataset.off.split(':').map(Number); S.answerOffer(G, WD, i, !!y); { const m = msg(G.log[G.log.length - 1]); if (m) toast(m[0], m[1]); } openPanel('dip', true); save(); });
+    const us = root.querySelector('#unsum'); if (us) us.onclick = () => { const r = S.unSummit(G); r.ok ? toast(msg(G.log[G.log.length - 1])[0], 'good') : toast(r.why, 'bad'); bar(); openPanel('dip', true); save(); };
     root.querySelectorAll('[data-adv]').forEach(b => b.onclick = () => { const a = (ADVL[+b.dataset.adv] || {}).a || '';
       if (a === 'prod') { meSub = 'prod'; openPanel('me'); } else if (a === 'eco:home') { meSub = 'home'; openPanel('me'); } else if (a.startsWith('eco')) { meSub = 'eco'; openPanel('me'); }
       else if (a === 'dip:ctry') openPanel('dip'); else if (a.startsWith('dip') || a === 'ev') openPanel('war');
@@ -812,7 +835,7 @@ input[type=range]{width:100%;accent-color:var(--gold)}
     cardHtml(k) {
       if (k === me) return `<div class="row"><button data-open="me">🏛 لوحة دولتي</button></div>`;
       const r = S.rel(G, me, k), w = S.atWar(G, me, k), al = S.allied(G, me, k);
-      const A = [['improve', '🤝 حسّن العلاقة', '+10 علاقة'], ['trade', '📦 اتفاقية تجارة', '+0.15٪ نمو للطرفين'], ['ally', '🛡 تحالف دفاعي', 'يدافعون عنا ونحمي'], ['sanction', '⛔ عقوبات', 'تضرهم، والعلاقة −25'], ['war', armed === k ? '⚠ أكّد إعلان الحرب' : '⚔ أعلن الحرب', 'العالم يزعل، وحلفاؤهم يدخلون']];
+      const A = [['improve', '🤝 حسّن العلاقة', '+10 علاقة'], ['trade', '📦 اتفاقية تجارة', '+0.15٪ نمو للطرفين'], ['ally', '🛡 تحالف دفاعي', 'يدافعون عنا ونحمي'], ['sanction', '⛔ عقوبات', 'تضرهم، والعلاقة −25'], ['nap', '🤝 عدم اعتداء', 'ما يهاجمون بعض'], ['aid', '💵 مساعدة اقتصادية', '+8 علاقة، من الخزينة'], ['mediate', '🕊 وساطة بحربهم', 'إذا تعبانين: سلام'], ['unres', '🇺🇳 قرار إدانة', 'إذا انقبل: عقوبات عليهم'], ['war', armed === k ? '⚠ أكّد إعلان الحرب' : '⚔ أعلن الحرب', 'العالم يزعل، وحلفاؤهم يدخلون']];
       let h = `<h3>علاقتنا: <span class="${r >= 0 ? 'pos' : 'neg'}">${r}</span>${w ? ' · ⚔ بحرب' : ''}${al ? ' · 🛡 حلفاء' : ''}</h3><div class="acts">`;
       for (const [a, t, d] of A) { const no = S.can(G, WD, a, k); h += `<button data-act="${a}" ${no ? 'disabled' : ''}>${t} <small>${no || d} · ⭐${S.COST[a]}</small></button>`; }
       if (k && armed === k) { const prot = G.ids.filter(x => x !== k && S.allied(G, k, x)).map(nameOf); h += `<div class="note" style="grid-column:1/-1">قبل ما تأكد: ${prot.length ? 'يدخلون ويا ' + nameOf(k) + ': ' + prot.slice(0, 6).join('، ') + (prot.length > 6 ? '…' : '') : 'ما عندها حلفاء دفاعيين'} · قوتهم ${Math.round(G.C[k].pw)} مقابل قوتنا ${Math.round(G.C[me].pw)}${G.C[k].nuke ? ' · ☢ عندها سلاح نووي' : ''}</div>`; }

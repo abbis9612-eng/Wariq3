@@ -4,7 +4,7 @@
 (function (root) {
   'use strict';
   const START = Date.UTC(2026, 10, 20);   // 20 تشرين الثاني 2026: الوضع الحقيقي (D-048)
-  const V = 4;                              // إصدار حفظ «العالم» (2: الصواريخ والدفاع الجوي؛ 3: البحرية والمضائق)
+  const V = 5;                              // إصدار حفظ «العالم» (2: الصواريخ والدفاع الجوي؛ 3: البحرية والمضائق؛ 4: طبقة الدولة؛ 5: التكتلات والتوتر والعروض والأمم المتحدة)
   const mulberry = a => () => { a |= 0; a = a + 0x6D2B79F5 | 0; let t = Math.imul(a ^ a >>> 15, 1 | a); t = t + Math.imul(t ^ t >>> 7, 61 | t) ^ t; return ((t ^ t >>> 14) >>> 0) / 4294967296; };
   const clamp = (v, a, b) => v < a ? a : v > b ? b : v;
   // ===== ثوابت [تقدير] =====
@@ -43,6 +43,7 @@
     for (const w of opt.wars || START_WARS) W.wars.push({ ...w, since: 0, months: 0, weary: Object.fromEntries([...w.a, ...w.b].map(x => [x, w.weary0 || 30])), score: w.score0 || 0, taken: {} });
     W.stx = { hormuz: .65 };   // W5d: نسبة القطع بكل مضيق (هرمز حقيقي: يشتغل ~35٪ من الطبيعي)
     W.hormuz = .65;
+    dipInit(W, WD);
     price(W, WD);
     for (const id of W.ids) { const c = W.C[id]; c.oil = oilOf(W, WD, id); c.oil0 = c.oil; c.core = Math.max(c.gdp * .2, c.gdp - oilGDP(c.oil, W.oilP)); c.revCore = clamp((c.rev0 * c.gdp - K.oilTake * oilGDP(c.oil, W.oilP)) / c.core, .06, .45);
       // نثبّت العجز الأولي على الحقيقي تقريباً (بيانات الإيرادات والمصاريف من سنين مختلفة، فنحصره بين فائض 3٪ وعجز 5٪)
@@ -81,13 +82,73 @@
   function oilOf(W, WD, id) { let o = 0; for (let i = 0; i < WD.r.length; i++) if (W.ctl[i] === id) o += WD.r[i][10] || 0; return o * (1 - ((W.C && W.C[id] && W.C[id].oilDmg) || 0)) * (1 - .6 * ((W.C && W.C[id] && W.C[id].blk) || 0)); }
   function price(W, WD) { let disrupt = 0; const ST = (WD && WD.st) || [];
     for (const k in W.stx || {}) { const st = ST.find(x => x.id === k); disrupt += (st ? st.oilPct / 100 : .2) * W.stx[k]; }
-    W.hormuz = (W.stx || {}).hormuz || 0; W.oilP = K.oilBase * (1 + K.oilDisrupt * disrupt); return W.oilP; }
+    W.hormuz = (W.stx || {}).hormuz || 0; W.oilP = K.oilBase * (1 + K.oilDisrupt * disrupt) + Math.max(0, (W.ten || 0) - 30) * .15; return W.oilP; }   // التوتر فوق 30 يزيد السعر [تقدير]
   // ===== أدوات =====
   const ix = (W, WD) => W.idx || (W.idx = new Map(WD.r.map((a, i) => [a[0], i])));
   const rel = (W, a, b) => (W.rel[a] && W.rel[a][b]) || 0;
   function addRel(W, a, b, v) { if (a === b) return; for (const [x, y] of [[a, b], [b, a]]) { const m = W.rel[x] ||= {}; m[y] = clamp(Math.round((m[y] || 0) + v), -100, 100); } }
   const atWar = (W, a, b) => W.wars.find(w => (w.a.includes(a) && w.b.includes(b)) || (w.b.includes(a) && w.a.includes(b)));
-  const allied = (W, a, b) => W.pacts.some(p => (p[0] === a && p[1] === b) || (p[0] === b && p[1] === a)) || (W.natoL.includes(a) && W.natoL.includes(b));
+  const allied = (W, a, b) => W.pacts.some(p => (p[0] === a && p[1] === b) || (p[0] === b && p[1] === a)) || (W.natoL.includes(a) && W.natoL.includes(b)) || (W.blocs || []).some(m => m.includes(a) && m.includes(b));
+  const napOf = (W, a, b) => (W.naps || []).some(p => (p[0] === a && p[1] === b) || (p[0] === b && p[1] === a));
+  const blocsOf = (WD, id) => Object.keys(WD.bl || {}).filter(k => WD.bl[k].m.includes(id));
+  // ===== W6b: التكتلات، التوتر العالمي، العروض، الأمم المتحدة [تقدير] =====
+  // التكتلات الدفاعية (المادة 5) من data/world/blocs.json: الناتو، منظمة الأمن الجماعي، مجلس التعاون — عضو ينضرب = كلهم يدخلون
+  function dipInit(W, WD) {
+    W.blocs = Object.values(WD.bl || {}).filter(b => b.art5).map(b => b.m.filter(x => WD.cs[x]));
+    W.naps = W.naps || []; W.offers = W.offers || []; W.unT = W.unT || -999;
+    if (W.ten == null) W.ten = tenTarget(W);
+  }
+  const P5 = ['USA', 'RUS', 'CHN', 'GBR', 'FRA'];
+  // التوتر العالمي 0–100 (مثل DEFCON بلعبة المالك الأصلية): الحروب، حروب الدول النووية، المضائق المقطوعة، والعقوبات الجديدة
+  function tenTarget(W) {
+    const nukeW = W.wars.filter(w => [...w.a, ...w.b].some(x => W.C[x] && W.C[x].nuke)).length, st = Object.values(W.stx || {}).reduce((t, v) => t + v, 0);
+    return clamp(15 + Math.min(5, W.wars.length) * 9 + nukeW * 10 + st * 8, 0, 100);
+  }
+  const tenUp = (W, v, why) => { W.ten = clamp((W.ten || 0) + v, 0, 100); if (why && Math.abs(v) >= 3) note(W, { k: 'ten', v, why, ten: Math.round(W.ten) }); };
+  // ردود التكتلات على إعلان حرب: الغرب يعاقب المعتدي على حليف/صديق، والجامعة العربية والاتحاد الأوروبي يزعلون إذا عضو انضرب
+  function blocReact(W, WD, a, b) {
+    const ba = blocsOf(WD, a), bb = blocsOf(WD, b), west = ['USA', 'GBR', 'FRA', 'DEU'].filter(x => W.C[x] && x !== a && x !== b);
+    if (!allied(W, a, 'USA') && !ba.includes('EU') && (rel(W, 'USA', b) > 20 || allied(W, 'USA', b) || bb.some(k => ['EU', 'NATO', 'GCC'].includes(k)))) for (const x of west) if (!W.sanc.some(s => s[0] === x && s[1] === a)) { W.sanc.push([x, a, 'medium']); note(W, { k: 'bsanc', by: x, on: a }); }
+    for (const k of ['ARAB', 'EU', 'ASEAN', 'GCC']) if (bb.includes(k) && !ba.includes(k)) { for (const x of WD.bl[k].m) if (W.C[x] && x !== b) addRel(W, x, a, -20); note(W, { k: 'bloc', bl: k, on: a }); }
+  }
+  // كل شهر: التوتر يقرب لهدفه، الدول تعرض على اللاعب، والذكاء يسوي اتفاقيات بيناته
+  function dipMonth(W, WD) {
+    W.ten = clamp(W.ten + (tenTarget(W) - W.ten) * .25, 0, 100);
+    W.offers = W.offers.filter(o => W.t - o.t < 60);
+    const me = W.me, mb = blocsOf(WD, me);
+    // «التقارب» = العلاقة + 12 لكل تكتل مشترك + 15 للجيران (بيانات العلاقات ناقصة لدول كثيرة) [تقدير]
+    const aff = x => rel(W, x, me) + Math.min(36, blocsOf(WD, x).filter(k => mb.includes(k)).length * 12) + (neighbors(W, WD, x, me) ? 15 : 0);
+    if (W.offers.length < 3 && !W.over) for (const x of W.ids) { if (x === me || atWar(W, x, me) || rel(W, x, me) < -20) continue; const r = aff(x), hasT = W.trade.some(p => p.includes(x) && p.includes(me));
+      if (W.offers.some(o => o.from === x)) continue;
+      const myEn = W.wars.filter(w => w.a.includes(me) || w.b.includes(me)).flatMap(w => w.a.includes(me) ? w.b : w.a);
+      let what = null;
+      if (r >= 75 && !allied(W, x, me) && (myEn.some(e => rel(W, x, e) < -40) || W.C[me].pw > W.C[x].pw * .5) && W.rnd() < .04) what = 'ally';
+      else if (r >= 30 && !hasT && W.rnd() < .03) what = 'trade';
+      else if (r >= 10 && r < 40 && neighbors(W, WD, x, me) && !napOf(W, x, me) && !allied(W, x, me) && W.rnd() < .02) what = 'nap';
+      if (what) { W.offers.push({ from: x, what, t: W.t }); note(W, { k: 'offer', from: x, what }); if (W.offers.length >= 3) break; } }
+    // الذكاء بيناته: 25 زوج عشوائي كل شهر
+    for (let n = 0; n < 25; n++) { const a = W.ids[Math.floor(W.rnd() * W.ids.length)], b = W.ids[Math.floor(W.rnd() * W.ids.length)]; if (a === b || a === me || b === me || atWar(W, a, b)) continue; const r = rel(W, a, b);
+      if (r >= 40 && !W.trade.some(p => p.includes(a) && p.includes(b)) && W.rnd() < .3) { W.trade.push([a, b]); }
+      else if (r >= 85 && !allied(W, a, b) && W.rnd() < .05) { W.pacts.push([a, b]); note(W, { k: 'aipact', a, b }); }
+      else if (r <= -60 && W.C[a].gdp > 1500 && !W.sanc.some(s => s[0] === a && s[1] === b) && W.rnd() < .05) { W.sanc.push([a, b, 'light']); note(W, { k: 'aisanc', a, b }); } }
+  }
+  function answerOffer(W, WD, i, yes) {
+    const o = W.offers[i]; if (!o) return { ok: false, why: 'العرض انتهى' }; W.offers.splice(i, 1); const me = W.me;
+    if (!yes) { addRel(W, me, o.from, -3); note(W, { k: 'dip', a: 'rejoff', t: o.from, what: o.what }); return { ok: true }; }
+    if (o.what === 'trade') W.trade.push([me, o.from]); else if (o.what === 'ally') W.pacts.push([me, o.from]); else if (o.what === 'nap') W.naps.push([me, o.from]);
+    addRel(W, me, o.from, 5); note(W, { k: 'dip', a: o.what, t: o.from }); return { ok: true };
+  }
+  // ===== الأمم المتحدة =====
+  // مجلس الأمن 15: الخمسة الدائمين + 10 من أكبر الاقتصادات الثانية (تتبدل كل سنتين). نعم إذا علاقته بينا أحسن من علاقته بالهدف بـ10؛ الفيتو إذا دائم وعلاقته بالهدف 30+
+  function council(W) { const y = Math.floor(date(W.t).getUTCFullYear() / 2), o = W.ids.filter(x => !P5.includes(x) && W.C[x]).sort((a, b) => W.C[b].gdp - W.C[a].gdp).slice(0, 40);
+    const r = mulberry(y * 97 + 13), pick = []; while (pick.length < 10 && o.length) pick.push(o.splice(Math.floor(r() * o.length), 1)[0]); return [...P5.filter(x => W.C[x]), ...pick]; }
+  function unVote(W, t) {
+    const me = W.me, M = council(W), yes = [], no = [], veto = [];
+    for (const x of M) { if (x === t) { no.push(x); if (P5.includes(x)) veto.push(x); continue; } if (x === me) { yes.push(x); continue; }
+      const v = rel(W, x, me) - rel(W, x, t); if (P5.includes(x) && rel(W, x, t) >= 30) { veto.push(x); no.push(x); } else (v > 10 ? yes : no).push(x); }
+    return { M, yes, no, veto, pass: yes.length >= 9 && !veto.length };
+  }
+
   function note(W, o) { W.log.push({ t: W.t, ...o }); if (W.log.length > 400) W.log.splice(0, W.log.length - 400); }
   const date = t => new Date(START + t * 864e5);
   const sancOn = (WD, W, id) => { let lv = (WD.cs[id].sanc || null); for (const s of W.sanc) if (s[1] === id) lv = lv === 'heavy' || s[2] === 'heavy' ? 'heavy' : 'medium'; return lv; };
@@ -118,6 +179,7 @@
       strike(W, WD, id, tgt, kind, Math.round(W.C[id].msl * .15), Math.round(W.C[id].drn * .15));
     }
     for (const id of W.ids) if (id !== W.me) ai(W, WD, id);
+    dipMonth(W, WD);
     // العلاقات ترجع ببطء للأساس (الذاكرة الدبلوماسية)
     for (const a in W.rel) for (const b in W.rel[a]) { const base = (W.base[a] && W.base[a][b]) || 0, v = W.rel[a][b]; if (v !== base && !atWar(W, a, b)) W.rel[a][b] = Math.round(v + (base - v) * .03); }
     W.ap = Math.min(K.apMax, W.ap + K.apMonth);
@@ -223,7 +285,7 @@
     W.wars = W.wars.filter(x => x !== w);
     if (w.id === 'iran_war' && W.stx) W.stx.hormuz = Math.min(W.stx.hormuz || 0, .3);
     for (const a of w.a) for (const b of w.b) addRel(W, a, b, 20);
-    note(W, { k: 'peace', war: w.id, n: w.n, how, kept: Object.keys(w.taken).length });
+    note(W, { k: 'peace', war: w.id, n: w.n, how, kept: Object.keys(w.taken).length }); tenUp(W, -6);
   }
   // ===== الذكاء (بالسلام) =====
   function ai(W, WD, id) {
@@ -239,9 +301,9 @@
     c.civ = dp > 130 && c.bal < 0 ? 'cut' : c.stab < 35 && dp < 90 ? 'more' : 'mid';
     c.tax = dp > 110 && c.bal < 0 ? 'high' : 'mid';
     // حرب جديدة؟ نادر كلش: عداء شديد + قوة ×2.5 + جار + ما محمي بتحالف أو نووي
-    if (W.rnd() < .0015 * (WD.cs[id].free === 2 ? .25 : 1)) {
+    if (W.rnd() < .0015 * (WD.cs[id].free === 2 ? .25 : 1) * (.5 + (W.ten || 40) / 50)) {   // التوتر العالمي يرفع احتمال الحرب
       for (const o in W.rel[id] || {}) {
-        const t = W.C[o]; if (!t || W.rel[id][o] > -70 || atWar(W, id, o) || t.nuke || allied(W, id, o)) continue;
+        const t = W.C[o]; if (!t || W.rel[id][o] > -70 || atWar(W, id, o) || t.nuke || allied(W, id, o) || napOf(W, id, o)) continue;
         if (W.rel[id][o] > -85 && !TENSION.some(p => p.includes(id) && p.includes(o))) continue;   // يحتاج عداء شديد كلش أو نزاع حدودي معروف
         if (!neighbors(W, WD, id, o)) continue;
         const prot = W.ids.filter(x => allied(W, o, x)).reduce((s, x) => s + W.C[x].pw, 0);
@@ -302,6 +364,7 @@
   // الاعتراض: الدفاع الجوي يعترض أكثر لما الرشقة صغيرة (يتشبّع بالكثرة)؛ المسيّرات تنعترض أسهل من الباليستي.
   // الأثر لكل إصابة [تقدير]: «جيش» −0.04٪ قوة، «مدن» −0.05 استقرار و−0.005٪ اقتصاد (والعالم يزعل شوية)، «نفط» −0.2٪ من الإنتاج (يتصلح 10٪ بالشهر).
   function strike(W, WD, by, t, kind, nm, nd) {
+    if (kind === 'city') tenUp(W, 2);
     const a = W.C[by], c = W.C[t]; if (!a || !c) return null;
     nm = Math.max(0, Math.min(nm, Math.floor(a.msl))); nd = Math.max(0, Math.min(nd, Math.floor(a.drn))); if (!nm && !nd) return null;
     a.msl -= nm; a.drn -= nd;
@@ -317,7 +380,7 @@
     const a = W.C[W.me]; if (!(a.msl + a.drn >= 1)) return { ok: false, why: 'ما عدنا صواريخ ولا مسيّرات' };
     W.ap -= 1; const r = strike(W, WD, W.me, t, kind, Math.ceil(a.msl * share), Math.ceil(a.drn * share)); return { ok: true, r };
   }
-  const COST = { improve: 1, trade: 1, ally: 2, sanction: 1, war: 3, peace: 1 };
+  const COST = { improve: 1, trade: 1, ally: 2, sanction: 1, war: 3, peace: 1, nap: 1, aid: 1, mediate: 2, unres: 2, unsum: 2 };
   function can(W, WD, act, t) {
     const me = W.me, r = rel(W, me, t);
     if (!W.C[t] || t === me) return 'مو دولة';
@@ -327,6 +390,10 @@
     if (act === 'sanction' && W.sanc.some(s => s[0] === me && s[1] === t)) return 'معاقبينها أصلاً';
     if (act === 'war') { if (atWar(W, me, t)) return 'بحرب أصلاً'; if (allied(W, me, t)) return 'حليفتنا'; }
     if (act === 'improve' && r >= 90) return 'العلاقة بأعلى شي';
+    if (act === 'nap') { if (napOf(W, me, t) || allied(W, me, t)) return 'عدنا اتفاقية أقوى أو نفسها'; if (atWar(W, me, t)) return 'بحرب'; if (r < 0) return 'العلاقة لازم 0 وفوك'; }
+    if (act === 'aid') { if (atWar(W, me, t)) return 'بحرب'; if (W.nat && W.nat.eco[0].cash < aidAmt(W)) return 'الخزينة ما تكفي'; }
+    if (act === 'mediate') { const w = W.wars.find(w => (w.a.includes(t) || w.b.includes(t)) && !w.a.includes(me) && !w.b.includes(me)); if (!w) return 'مو بحرب ويا غيرنا'; }
+    if (act === 'unres') { if (atWar(W, me, t) === undefined && rel(W, me, t) > -20) return 'لازم علاقتنا −20 أو أقل (أو بحرب)'; if (W.t - (W.unR || -999) < 90) return 'قرار قريب، انتظر ' + Math.ceil((90 - W.t + W.unR) / 30) + ' شهر'; }
     return null;
   }
   function act(W, WD, a, t) {
@@ -337,8 +404,20 @@
     if (a === 'ally') { const v = aiAccept(W, WD, t, 'ally'); if (!v.ok) { note(W, { k: 'dip', a: 'refuse', t, what: 'ally' }); return { ok: false, why: v.why, spent: true }; } W.pacts.push([me, t]); addRel(W, me, t, 10); note(W, { k: 'dip', a, t }); return { ok: true }; }
     if (a === 'sanction') { W.sanc.push([me, t, W.C[me].gdp > 3000 ? 'heavy' : 'light']); addRel(W, me, t, -25); note(W, { k: 'dip', a, t }); return { ok: true }; }
     if (a === 'war') { declare(W, WD, me, t, false); return { ok: true }; }
+    if (a === 'nap') { const r = rel(W, t, me); if (r < 10 && W.C[t].pw > W.C[me].pw * 1.5) { note(W, { k: 'dip', a: 'refuse', t, what: 'nap' }); return { ok: false, why: 'رفضوا: يشوفون نفسهم أقوى', spent: true }; } W.naps.push([me, t]); addRel(W, me, t, 5); note(W, { k: 'dip', a, t }); return { ok: true }; }
+    if (a === 'aid') { const v = aidAmt(W); if (W.nat) W.nat.eco[0].cash -= v; W.C[t].stab = clamp(W.C[t].stab + 2, 0, 100); addRel(W, me, t, 8); note(W, { k: 'dip', a, t, v: +v.toFixed(2) }); return { ok: true }; }
+    if (a === 'mediate') { const w = W.wars.find(w => (w.a.includes(t) || w.b.includes(t)) && !w.a.includes(me) && !w.b.includes(me)), x = w.a[0], y = w.b[0], wr = Math.min(w.weary[x] || 0, w.weary[y] || 0);
+      if (wr > 35 || Math.abs(w.score) < 20 && wr > 20) { endWar(W, WD, w, 'mediate'); addRel(W, me, x, 12); addRel(W, me, y, 12); tenUp(W, -3); W.C[me].stab = clamp(W.C[me].stab + 2, 0, 100); note(W, { k: 'dip', a: 'mediated', t, n: w.n }); return { ok: true }; }
+      addRel(W, me, x, 3); addRel(W, me, y, 3); note(W, { k: 'dip', a: 'refuse', t, what: 'mediate' }); return { ok: false, why: `الطرفين مو تعبانين كفاية (${Math.round(wr)} من 35)`, spent: true }; }
+    if (a === 'unres') { W.unR = W.t; const v = unVote(W, t); note(W, { k: 'un', t, yes: v.yes.length, veto: v.veto, pass: v.pass });
+      if (v.pass) { for (const x of W.ids) if (x !== t && rel(W, x, t) < 20 && W.C[x].gdp > 300 && !W.sanc.some(s => s[0] === x && s[1] === t)) W.sanc.push([x, t, 'light']); for (const x of W.ids) if (x !== t) addRel(W, x, t, -8); tenUp(W, 3); return { ok: true, v }; }
+      for (const x of v.veto) addRel(W, me, x, -5); return { ok: false, why: v.veto.length ? 'فيتو من ' + v.veto.map(x => WD.cs[x].ar).join('، ') : `صوّتوا ${v.yes.length} من 15 (يحتاج 9)`, spent: true, v }; }
     return { ok: false, why: '؟' };
   }
+  const aidAmt = W => Math.max(.2, W.C[W.me].gdp * .001);   // المساعدة الاقتصادية: 0.1٪ من ناتجنا [تقدير]
+  // قمة أممية (مرة كل 6 أشهر): التوتر −8، وكل اللي علاقتهم ويانا فوك −30 تتحسن +3
+  function unSummit(W) { if (W.ap < COST.unsum) return { ok: false, why: 'نقاط القرار ما تكفي' }; if (W.t - W.unT < 180) return { ok: false, why: 'قمة قريبة، انتظر ' + Math.ceil((180 - W.t + W.unT) / 30) + ' شهر' };
+    W.ap -= COST.unsum; W.unT = W.t; tenUp(W, -8); for (const x of W.ids) if (x !== W.me && rel(W, x, W.me) > -30) addRel(W, W.me, x, 3); note(W, { k: 'dip', a: 'summit' }); return { ok: true }; }
   function aiAccept(W, WD, t, what) {
     const r = rel(W, t, W.me), c = W.C[t], m = W.C[W.me];
     if (what === 'trade') return r >= 20 ? { ok: true } : { ok: false, why: 'رفضوا: العلاقة ضعيفة' };
@@ -360,7 +439,9 @@
     addRel(W, a, b, -100);
     for (const x of W.ids) if (x !== a && x !== b) addRel(W, a, x, B.includes(x) ? -60 : rel(W, x, b) > 30 ? -25 : -8);   // العالم ما يحب المعتدي
     W.C[a].stab = clamp(W.C[a].stab + (rel(W, a, b) <= -60 ? 4 : -6), 0, 100);
+    if (napOf(W, a, b)) { W.naps = W.naps.filter(p => !(p.includes(a) && p.includes(b))); for (const x of W.ids) if (x !== a && x !== b) addRel(W, a, x, -10); note(W, { k: 'napbreak', a, b }); }
     note(W, { k: 'war', id: w.id, a, b, join: B.slice(1), byAI });
+    tenUp(W, 10 + (W.C[a].nuke || W.C[b].nuke ? 8 : 0)); blocReact(W, WD, a, b);
     return w;
   }
   function offerPeace(W, WD, wid) {
@@ -388,8 +469,10 @@
     if (o.v < 3) { for (const id of o.ids) { const f = initCountry(WD, id), c = o.C[id]; for (const k of ['nav', 'navMode', 'blk']) if (c[k] == null) c[k] = f[k]; } o.stx = { hormuz: o.hormuz ?? 0 }; o.v = 3; }
     // 3 ← 4 (D-050): طبقة الدولة (G.nat) تنبني بـ nation.js أول ما اللعبة تفتح إذا ما موجودة
     if (o.v < 4) o.v = 4;
-    o.base = WD.rel; o.rnd = mulberry(o.rs); return o;
+    // 4 ← 5 (W6b): التكتلات الدفاعية، عدم الاعتداء، العروض، التوتر
+    if (o.v < 5) { o.v = 5; }
+    o.base = WD.rel; o.rnd = mulberry(o.rs); dipInit(o, WD); return o;
   }
-  const API = { V, K, START, init, addRel, navy, straits, step, month, act, can, offerPeace, declare, endWar, strike, playerStrike, rank, save, load, date, rel, atWar, allied, COST, TAX, CIV };
+  const API = { V, K, START, init, addRel, answerOffer, unSummit, unVote, council, tenTarget, napOf, blocsOf, P5, navy, straits, step, month, act, can, offerPeace, declare, endWar, strike, playerStrike, rank, save, load, date, rel, atWar, allied, COST, TAX, CIV };
   if (typeof module !== 'undefined') module.exports = API; else root.WSIM = API;
 })(this);

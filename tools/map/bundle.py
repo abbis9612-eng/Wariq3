@@ -61,7 +61,7 @@ TRN = {k: b['ar'] for k, b in BL['blocs'].items()}; TRN.update({'OIC': 'منظم
 CFN = {c['id']: c['ar'] for c in CF['conflicts']}
 AW = json.load(open(f'{R}/curation/airwar.json'))
 W = {'asOf': '2026-11', 'T': T, 'r': regs, 'g': {r['id']: delta(RG[r['id']]) for r in RJ['r']}, 's': [[z['id'], z['n'], z['ll'], z['nb'], z['k']] for z in SJ['s']], 'sg': {k: delta(v) for k, v in SG.items()},
-  'st': SJ['straits'], 'lod': lod, 'cs': cs, 'ent': RJ['entities'], 'trn': TRN, 'cfn': CFN, 'aw': AW['c'], 'rel': {a: {b: v[0] for b, v in m.items()} for a, m in REL.items()}}
+  'st': SJ['straits'], 'lod': lod, 'cs': cs, 'ent': RJ['entities'], 'trn': TRN, 'cfn': CFN, 'aw': AW['c'], 'bl': {k: {'ar': v['ar'], 'kind': v['kind'], 'art5': 1 if v.get('art5') else 0, 'm': v['m']} for k, v in BL['blocs'].items()}, 'rel': {a: {b: v[0] for b, v in m.items()} for a, m in REL.items()}}
 s = json.dumps(W, ensure_ascii=False, separators=(',', ':'))
 open(OUT, 'w').write('// مولّد بـ tools/map/bundle.py من data/world — لا تعدّله باليد\nwindow.WD=' + s + ';\n')
 print('حجم', round(len(s.encode()) / 1e6, 2), 'ميغا · مناطق', len(regs), '· دول بالحدود المبسطة', len(lod), '· نقاط المبسطة', sum(len(f) // 2 for v in lod.values() for f in v))

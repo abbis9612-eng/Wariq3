@@ -29,7 +29,7 @@ def cut(path, shadow=True, lo=120):
 n = 0; kb = 0
 for f in sorted(glob.glob(os.path.join(SRC, '*.jpg'))):
     m = re.match(r'(\d\d)([ab])-(.+)\.jpg$', os.path.basename(f))
-    if not m: continue   # 01a-siper-v2.jpg وغيرها: نسخ قديمة
+    if not m or '-v2' in f: continue   # 01a-siper-v2.jpg وغيرها: نسخ قديمة
     num, v, key = int(m[1]), m[2], m[3]
     if v == 'a':
         grey_obj = 21 <= num <= 44   # طيارات وسفن: رمادي فاتح وبلا ظل أرض

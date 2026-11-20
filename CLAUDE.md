@@ -18,7 +18,7 @@
 - أي خروج عن الخطة ← تعديل `docs/PLAN.md` + سطر بـ «سجل تغييرات الخطة» + قرار بـ `docs/DECISIONS.md` إذا مهم.
 - كل تغيير بحالة اللعبة (state) ← رفع إصدار الحفظ + ترقية (migration). **حفظ المالك ما ينكسر أبداً.**
 - تغيير واحد = commit واحد بصيغة `type(scope): وصف` + `Refs: I-NNN`، ثم push للفرع.
-- لا تقول «خلص» قبل التحقق: `node tests/smoke.mjs index.html 36 IQ` لازم يطلع بدون أخطاء. قل بصراحة شنو انفحص وشنو يحتاج تلفون المالك.
+- لا تقول «خلص» قبل التحقق: `node tests/smoke-world.mjs 36 IRQ` («العالم»، اللعبة الأساسية، D-052) و`node tests/smoke.mjs index.html 36 IQ` (اللعبة القديمة) لازم يطلعون بدون أخطاء. قل بصراحة شنو انفحص وشنو يحتاج تلفون المالك.
 
 ## المهارات المتوفرة (`.claude/skills/`)
 
@@ -37,7 +37,7 @@
 ## خريطة الملفات
 
 ```
-index.html                    اللعبة الحالية (اللي تنلعب)
+index.html                    اللعبة القديمة (تبقى بدون تعديل، D-052) — اللعبة الأساسية هسه «العالم» بـ prototypes/world/
 archive/v0.1.0-original.html  النسخة الأصلية المجمدة
 archive/topdown-wm10.html     «الحرب من فوق» WM10 بملف واحد يشتغل بدون نت (مجمّدة، D-033)
 docs/PLAN.md                  الخطة الرئيسية (البوصلة)
@@ -64,7 +64,7 @@ prototypes/theater/           تجربة 3D: مسرح العمليات (راجع
 
 ## أوامر
 
-- اختبار الدخان: `node tests/smoke.mjs index.html 36 IQ` (الوسائط: الملف، عدد الأشهر، الدولة)
+- اختبار الدخان: `node tests/smoke-world.mjs 36 IRQ` («العالم»: الأشهر، الدولة) و`node tests/smoke.mjs index.html 36 IQ` (القديمة)
 - Playwright وChromium مثبتين مسبقاً بالبيئة السحابية؛ لا تثبتهم من جديد.
 - رسم 3D بدون شاشة: `chromium.launch({ args: ['--use-angle=swiftshader','--enable-unsafe-swiftshader'] })` (الإطارات هنا بطيئة لأنها بالمعالج، مو مقياس للتلفون).
 - النشر كصفحة: ملفات `.glb` مرفوضة؛ حوّلها لـ glTF نصي `.json` (`tools/glb2json.mjs`).

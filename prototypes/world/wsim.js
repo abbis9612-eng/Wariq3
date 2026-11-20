@@ -154,7 +154,8 @@
     return { M, yes, no, veto, pass: yes.length >= 9 && !veto.length };
   }
 
-  function note(W, o) { W.log.push({ t: W.t, ...o }); if (W.log.length > 400) W.log.splice(0, W.log.length - 400); }
+  // day: اليوم دايماً (بعض السجلات تستعمل t لشي ثاني، مثل الضربة: t = الدولة المضروبة)
+  function note(W, o) { W.log.push({ t: W.t, ...o, day: W.t }); if (W.log.length > 400) W.log.splice(0, W.log.length - 400); }
   const date = t => new Date(START + t * 864e5);
   const sancOn = (WD, W, id) => { let lv = (WD.cs[id].sanc || null); for (const s of W.sanc) if (s[1] === id) lv = lv === 'heavy' || s[2] === 'heavy' ? 'heavy' : 'medium'; return lv; };
 

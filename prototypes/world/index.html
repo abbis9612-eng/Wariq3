@@ -219,7 +219,7 @@ function legend() {
   else h = `<div><span style="background:#9b4f4f"></span>كيان مسلح (مو دولة)</div><div><span style="background:transparent;border-top:2px dashed var(--front);border-radius:0;height:0"></span>خط تماس</div><div><span style="background:var(--gold);border-radius:50%"></span>مضيق / عاصمة</div>`;
   L.innerHTML = h; L.hidden = document.body.classList.contains('play') && !document.body.classList.contains('layers'); placeLegend();
 }
-function placeLegend() { const t = $('#top'); if (!t) return; const h = t.offsetHeight + 8; $('#legend').style.top = h + 'px'; $('#zoom').style.top = h + 'px'; const tt = $('#toast'); if (tt) tt.style.top = h + 'px'; const db = $('#divbar'); if (db) db.style.top = h + 'px'; const m = $('#modes'); if (document.body.classList.contains('play')) m.style.top = h + 'px'; else m.style.top = ''; }   // I-107: تحت الشريط (كانت مقطوعة)
+function placeLegend() { const t = $('#top'); if (!t) return; const h = t.offsetHeight + 8; $('#legend').style.top = h + 'px'; $('#zoom').style.top = h + 'px'; document.documentElement.style.setProperty('--toph', h + 'px'); const db = $('#divbar'); if (db) db.style.top = h + 'px'; const m = $('#modes'); if (document.body.classList.contains('play')) m.style.top = h + 'px'; else m.style.top = ''; }   // I-107: تحت الشريط (كانت مقطوعة)
 addEventListener('resize', () => setTimeout(placeLegend, 50));
 function setMode(m) { mode = m; document.querySelectorAll('#modes button').forEach(b => b.classList.toggle('on', b.dataset.m === m)); legend(); dirty = true; }
 document.querySelectorAll('#modes button').forEach(b => b.onclick = () => setMode(b.dataset.m));
@@ -248,7 +248,8 @@ input[type=range]{width:100%;accent-color:var(--gold)}
 .log div{padding:4px 0;border-bottom:1px solid var(--line);font-size:12.5px}.log time{color:var(--dim);font-size:11px;margin-left:6px;font-variant-numeric:tabular-nums}
 .acts{display:grid;grid-template-columns:1fr 1fr;gap:6px;margin-top:6px}.acts button{text-align:right;padding:7px 9px}.acts button small{display:block;color:var(--dim);font-size:11px}
 .acts button:disabled{opacity:.45}
-#toast{position:fixed;left:50%;transform:translateX(-50%);top:calc(96px + env(safe-area-inset-top));z-index:9;display:flex;flex-direction:column;gap:4px;align-items:center;pointer-events:none;width:92%}
+#bell{position:fixed;right:10px;top:calc(var(--toph, 100px) + 6px);z-index:9;background:var(--panel);border:1px solid var(--gold-l);border-radius:16px;padding:4px 10px;font-size:13px}#bell[hidden]{display:none}
+#toast{position:fixed;left:50%;transform:translateX(-50%);bottom:calc(84px + env(safe-area-inset-bottom));top:auto !important;flex-direction:column-reverse !important;z-index:9;display:flex;flex-direction:column;gap:4px;align-items:center;pointer-events:none;width:92%}
 #toast div{background:var(--panel);border:1px solid var(--line);border-radius:10px;padding:5px 11px;font-size:12.5px;box-shadow:var(--shadow)}#toast div.bad{border-color:var(--neg)}#toast div.good{border-color:var(--me)}
 /* ===== I-107: هوية «غرفة العمليات» — شريط علوي واضح، أزرار بحركة، ألواح تطلع من تحت، أخبار تنزلق ===== */
 button{transition:transform .12s ease,background .2s,border-color .2s,box-shadow .2s}button:active{transform:scale(.95)}
@@ -399,7 +400,12 @@ body.play #modes{display:none}body.play.layers #modes{display:flex;flex-directio
     const r = new FileReader(); r.onload = () => { const t = String(r.result); if (!okSave(t)) { toast('❌ هذا مو ملف حفظ «العالم»', 'bad'); return; }
       const w = S.load(JSON.parse(t), WD); if (!w) { toast('❌ الملف خربان', 'bad'); return; } if (G && !confirm('تبدّل اللعبة الحالية بالملف؟')) return; store.set(t); toast('📥 انفتح الحفظ', 'good'); if (G) location.reload(); else begin(w); }; r.readAsText(file);
   }
-  const toast = (m, cls = '') => { const d = document.createElement('div'); d.textContent = m; d.className = cls; $('#toast').prepend(d); while ($('#toast').children.length > 3) $('#toast').lastChild.remove(); setTimeout(() => d.remove(), 3200); };
+  // V0 (I-117): التنبيهات — اثنين بالأكثر بالشاشة، نفس النوع ينضم («×3»)، والزايد يروح للجرس 🔔 (يفتح الأخبار)
+  let bellN = 0; const bell = () => { let b = $('#bell'); if (!b) { b = document.createElement('button'); b.id = 'bell'; b.onclick = () => { bellN = 0; bell(); openPanel('news'); }; document.body.append(b); } b.hidden = !bellN; b.textContent = '🔔 ' + bellN; };
+  const toast = (m, cls = '') => { const box = $('#toast'), key = String(m).replace(/[0-9٠-٩.,٪%]+/g, '#').slice(0, 26);
+    const same = [...box.children].find(d => d.dataset.k === key); if (same) { same.dataset.n = +(same.dataset.n || 1) + 1; same.textContent = m + '  ×' + same.dataset.n; clearTimeout(same._t); same._t = setTimeout(() => same.remove(), 3800); return; }
+    if (box.children.length >= 2) { bellN++; bell(); if (cls !== 'bad') return; box.lastChild.remove(); }
+    const d = document.createElement('div'); d.textContent = m; d.className = cls; d.dataset.k = key; box.prepend(d); d._t = setTimeout(() => d.remove(), 3800); };
   const ar = d => d.toLocaleDateString('ar-IQ-u-nu-latn', { day: 'numeric', month: 'long', year: 'numeric', timeZone: 'UTC' });
   const money = b => b == null ? '–' : Math.abs(b) >= 1000 ? (b / 1000).toFixed(2) + ' ترليون $' : Math.abs(b) >= 10 ? Math.round(b) + ' مليار $' : b.toFixed(1) + ' مليار $';
   const sgn = (v, d = 1) => (v > 0 ? '+' : '') + v.toFixed(d);
@@ -1160,7 +1166,7 @@ body.play #modes{display:none}body.play.layers #modes{display:flex;flex-directio
   }
   function pNews() {
     const L = G.log.filter(l => l.k !== 'month' && l.k !== 'start').slice(-60).reverse();
-    return `<h2>📜 الأخبار</h2><div class="log">${L.map(l => { const m = msg(l); return m ? `<div><time>${ar(S.date(l.t))}</time>${m[0]}</div>` : ''; }).join('') || '<div class="note">لسه ماكو أخبار. شغّل الوقت ▶</div>'}</div>`;
+    return `<h2>📜 الأخبار</h2><div class="log">${L.map(l => { const m = msg(l); return m ? `<div><time>${ar(S.date(typeof l.day === 'number' ? l.day : typeof l.t === 'number' ? l.t : G.t))}</time>${m[0]}</div>` : ''; }).join('') || '<div class="note">لسه ماكو أخبار. شغّل الوقت ▶</div>'}</div>`;
   }
   function wire(root) {
     root.querySelectorAll('.seg[data-k] button').forEach(b => b.onclick = () => { G.C[me][b.parentNode.dataset.k] = b.dataset.v; openPanel(panel, true); save(); });

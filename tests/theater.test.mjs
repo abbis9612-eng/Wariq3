@@ -28,7 +28,7 @@ for (const me of ['IRQ', 'USA', 'LBN', 'DEU', 'BRA']) {
   const G = S.init(WD, me, { seed: 3 }), T = TH.home(G, WD, me); if (!T) { no(me + ': أرض السلم ما انبنت'); continue; }
   const A = SIM.alive(T.W); if (!A.length || A.some(d => d.side !== 0)) no(me + ': فرق السلم غلط');
   if (T.cells.length > 700) no(me + ': خلايا كثيرة ' + T.cells.length);
-  const d = A[0], to = T.cells.findIndex((c, i) => i !== d.cell && T.W.dist(i, d.cell) > 100); SIM.order(T.W, d, to, 'manual'); TH.step(T, 48);
+  const d = A[0], to = T.cells.reduce((b, c, i) => T.W.dist(i, d.cell) > T.W.dist(b, d.cell) ? i : b, d.cell); SIM.order(T.W, d, to, 'manual'); TH.step(T, 48);   // أبعد خلية (لبنان صغير: ماكو خلية أبعد من 100 كم)
   const o = JSON.parse(JSON.stringify(TH.save(T))), T2 = TH.restore(o, G, WD, { ...TH.HOME, a: [me] }, me);
   if (!T2 || SIM.alive(T2.W).map(x => x.cell).join() !== SIM.alive(T.W).map(x => x.cell).join()) no(me + ': حفظ السلم ما رجّع الأماكن');
   out.push(`${me} بالسلم: ${T.cells.length} خلية ${Math.round(T.hs)} كم · ${A.length} فرقة (${JSON.stringify(T.ob[0])})`);

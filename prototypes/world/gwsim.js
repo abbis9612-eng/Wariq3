@@ -276,7 +276,7 @@
     if (best[goal] === Infinity) return null;
     const p = []; for (let i = goal; i !== d.cell; i = prev[i]) p.unshift(i); return p;
   }
-  function order(W, d, goal, mode = 'manual', deep = false) { if (goal === d.cell) { d.path = []; d.mode = 'hold'; return true; } const p = route(W, d, goal, deep); if (!p) return false; d.path = p; d.prog = 0; d.mode = mode; return true; }
+  function order(W, d, goal, mode = 'manual', deep = false) { if (!(goal >= 0 && goal < W.N)) return false; if (goal === d.cell) { d.path = []; d.mode = 'hold'; return true; } const p = route(W, d, goal, deep); if (!p) return false; d.path = p; d.prog = 0; d.mode = mode; return true; }
 
   // ===== الذكاء (نفس القواعد للطرفين) =====
   function frontCells(W, s) { const F = []; for (let i = 0; i < W.N; i++) if (W.ctrl[i] === s && W.cells[i].nb.some(j => W.ctrl[j] !== s)) F.push(i); return F; }

@@ -5,6 +5,24 @@
  "tier": "C",
  "asOf": "2026-11",
  "src": {
+  "wiki_air": {
+   "t": "Wikipedia: Gabonese Air Force",
+   "u": "https://en.wikipedia.org/wiki/Gabonese_Air_Force?oldid=1343828959",
+   "y": 2026,
+   "note": "نسخة الصفحة بتاريخ السحب؛ أرقام ويكيبيديا تنراجع ويا مصادر ثانية"
+  },
+  "wiki_army": {
+   "t": "Wikipedia: Armed Forces of Gabon",
+   "u": "https://en.wikipedia.org/wiki/Armed_Forces_of_Gabon?oldid=1365890955",
+   "y": 2026,
+   "note": "نسخة الصفحة بتاريخ السحب؛ أرقام ويكيبيديا تنراجع ويا مصادر ثانية"
+  },
+  "wiki_navy": {
+   "t": "Wikipedia: Gabonese Navy",
+   "u": "https://en.wikipedia.org/wiki/Gabonese_Navy?oldid=1317746846",
+   "y": 2026,
+   "note": "نسخة الصفحة بتاريخ السحب؛ أرقام ويكيبيديا تنراجع ويا مصادر ثانية"
+  },
   "iiss_eq": {
    "t": "Wikipedia: List of countries by level of military equipment (من IISS Military Balance ومصادر ثانية)",
    "u": "https://en.wikipedia.org/wiki/List_of_countries_by_level_of_military_equipment?oldid=1384804191",
@@ -49,6 +67,11 @@
   "tierA": {
    "t": "تقدير المصمم (تشرين الثاني 2026) لصناعة السلاح والاستقرار: SIPRI Arms Transfers Database (أكبر المصدّرين 2020–24)، SIPRI Top 100 Arms-Producing Companies، Fragile States Index 2025، أخبار 2026",
    "u": "https://www.sipri.org/databases/armstransfers",
+   "y": 2026
+  },
+  "tpl": {
+   "t": "قالب منطقة (af): موديلات شائعة ونسب تقريبية من الدبابات (مدرعات ×2.5، مدفعية ×0.9، مروحيات ×0.25) — تقدير المصمم",
+   "u": "docs/features/world-plan.md",
    "y": 2026
   }
  },
@@ -216,11 +239,353 @@
     "c": "ت"
    }
   },
-  "land": [],
+  "land": [
+   {
+    "m": "AML-60/AML-90",
+    "n": 24,
+    "orig": "FRA",
+    "s": "wiki_army",
+    "c": "ت",
+    "note": "Including the South African Eland derivative.",
+    "gen": 2,
+    "cat": "apc"
+   },
+   {
+    "m": "EE-3 Jararaca",
+    "n": 12,
+    "orig": "BRA",
+    "s": "wiki_army",
+    "c": "ت",
+    "gen": 2,
+    "cat": "apc"
+   },
+   {
+    "m": "EE-9 Cascavel",
+    "n": 14,
+    "orig": "BRA",
+    "s": "wiki_army",
+    "c": "ت",
+    "gen": 2,
+    "cat": "apc"
+   },
+   {
+    "m": "ERC-90F4 Sagaie",
+    "n": 6,
+    "orig": "FRA",
+    "s": "wiki_army",
+    "c": "ت",
+    "gen": 2,
+    "cat": "apc"
+   },
+   {
+    "m": "RAM MK3",
+    "n": 7,
+    "orig": "ISR",
+    "s": "wiki_army",
+    "c": "ت",
+    "gen": 2,
+    "cat": "apc"
+   },
+   {
+    "m": "Véhicule Blindé Léger",
+    "n": 14,
+    "orig": "FRA",
+    "s": "wiki_army",
+    "c": "ت",
+    "gen": 2,
+    "cat": "apc"
+   },
+   {
+    "m": "EE-11 Urutu",
+    "n": 12,
+    "orig": "BRA",
+    "s": "wiki_army",
+    "c": "ت",
+    "note": "Armed with 20 mm gun.",
+    "gen": 2,
+    "cat": "ifv"
+   },
+   {
+    "m": "VN-1",
+    "n": 5,
+    "orig": "CHN",
+    "s": "wiki_army",
+    "c": "ت",
+    "gen": 2,
+    "cat": "ifv"
+   },
+   {
+    "m": "Type 07P",
+    "n": 14,
+    "orig": "CHN",
+    "s": "wiki_army",
+    "c": "ت",
+    "gen": 2,
+    "cat": "ifv"
+   },
+   {
+    "m": "V-150 Command",
+    "n": 9,
+    "orig": "USA",
+    "s": "wiki_army",
+    "c": "ت",
+    "gen": 2,
+    "cat": "apc"
+   },
+   {
+    "m": "Bastion",
+    "n": 5,
+    "orig": "FRA",
+    "s": "wiki_army",
+    "c": "ت",
+    "gen": 2,
+    "cat": "apc"
+   },
+   {
+    "m": "WZ-523",
+    "n": 3,
+    "orig": "CHN",
+    "s": "wiki_army",
+    "c": "ت",
+    "gen": 2,
+    "cat": "apc"
+   },
+   {
+    "m": "Véhicule de l'Avant Blindé",
+    "n": 5,
+    "orig": "FRA",
+    "s": "wiki_army",
+    "c": "ت",
+    "gen": 2,
+    "cat": "apc"
+   },
+   {
+    "m": "VXB-170",
+    "n": 12,
+    "orig": "FRA",
+    "s": "wiki_army",
+    "c": "ت",
+    "gen": 2,
+    "cat": "apc"
+   },
+   {
+    "m": "Pandur I",
+    "n": 1,
+    "orig": "AUT",
+    "s": "wiki_army",
+    "c": "ت",
+    "gen": 2,
+    "cat": "apc"
+   },
+   {
+    "m": "ZFB-05",
+    "n": 3,
+    "orig": "CHN",
+    "s": "wiki_army",
+    "c": "ت",
+    "gen": 2,
+    "cat": "apc"
+   },
+   {
+    "m": "Aravis",
+    "n": 8,
+    "orig": "FRA",
+    "s": "wiki_army",
+    "c": "ت",
+    "gen": 2,
+    "cat": "mrap"
+   },
+   {
+    "m": "Matador",
+    "n": 24,
+    "orig": "ZAF",
+    "s": "wiki_army",
+    "c": "ت",
+    "gen": 2,
+    "cat": "mrap"
+   },
+   {
+    "m": "Ashok Leyland MPV",
+    "n": 34,
+    "orig": "IND",
+    "s": "wiki_army",
+    "c": "ت",
+    "gen": 2,
+    "cat": "mrap"
+   },
+   {
+    "m": "M101",
+    "n": 4,
+    "orig": "USA",
+    "s": "wiki_army",
+    "c": "ت",
+    "gen": 2,
+    "cat": "towed"
+   },
+   {
+    "m": "Type 63",
+    "n": 16,
+    "orig": "CHN",
+    "s": "wiki_army",
+    "c": "ت",
+    "gen": 2,
+    "cat": "mlrs"
+   },
+   {
+    "m": "Type 90",
+    "n": 4,
+    "orig": "CHN",
+    "s": "wiki_army",
+    "c": "ت",
+    "gen": 2,
+    "cat": "mlrs"
+   },
+   {
+    "m": "Teruel",
+    "n": 8,
+    "orig": "ESP",
+    "s": "wiki_army",
+    "c": "ت",
+    "gen": 2,
+    "cat": "mlrs"
+   },
+   {
+    "m": "ZU-23-2",
+    "n": 24,
+    "orig": "SUN",
+    "s": "wiki_army",
+    "c": "ت",
+    "gen": 2,
+    "cat": "towed"
+   },
+   {
+    "m": "M1939",
+    "n": 10,
+    "orig": "SUN",
+    "s": "wiki_army",
+    "c": "ت",
+    "gen": 2,
+    "cat": "towed"
+   },
+   {
+    "m": "L/70",
+    "n": 3,
+    "orig": "SWE",
+    "s": "wiki_army",
+    "c": "ت",
+    "gen": 2,
+    "cat": "towed"
+   }
+  ],
   "air": [],
-  "ad": [],
+  "ad": [
+   {
+    "m": "ERC-20",
+    "n": 4,
+    "orig": "FRA",
+    "s": "wiki_army",
+    "c": "ت",
+    "gen": 2,
+    "cat": "short"
+   }
+  ],
   "msl": [],
-  "navy": []
+  "navy": [],
+  "grp": {
+   "afv": {
+    "n": 212,
+    "s": "wiki_army",
+    "c": "ت",
+    "top": [
+     [
+      "Ashok Leyland MPV",
+      34,
+      2,
+      "IND"
+     ],
+     [
+      "AML-60/AML-90",
+      24,
+      2,
+      "FRA"
+     ],
+     [
+      "Matador",
+      24,
+      2,
+      "ZAF"
+     ]
+    ],
+    "gen": 2.0
+   },
+   "art": {
+    "n": 69,
+    "s": "wiki_army",
+    "c": "ت",
+    "top": [
+     [
+      "ZU-23-2",
+      24,
+      2,
+      "SUN"
+     ],
+     [
+      "Type 63",
+      16,
+      2,
+      "CHN"
+     ],
+     [
+      "M1939",
+      10,
+      2,
+      "SUN"
+     ]
+    ],
+    "gen": 2.0
+   },
+   "jet": {
+    "n": 6,
+    "s": "iiss_eq",
+    "c": "ت",
+    "top": [
+     [
+      "MiG-21",
+      null,
+      null,
+      null
+     ],
+     [
+      "Su-25",
+      null,
+      null,
+      null
+     ],
+     [
+      "L-39",
+      null,
+      null,
+      null
+     ]
+    ],
+    "gen": 1.6,
+    "tpl": "af"
+   },
+   "ad": {
+    "n": 4,
+    "s": "wiki_army",
+    "c": "ت",
+    "top": [
+     [
+      "ERC-20",
+      4,
+      2,
+      "FRA"
+     ]
+    ],
+    "gen": 2.0
+   }
+  }
  },
  "ind": null,
  "pol": {

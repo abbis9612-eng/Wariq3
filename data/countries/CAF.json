@@ -5,6 +5,18 @@
  "tier": "C",
  "asOf": "2026-11",
  "src": {
+  "wiki_air": {
+   "t": "Wikipedia: Central African Republic Air Force",
+   "u": "https://en.wikipedia.org/wiki/Central_African_Republic_Air_Force?oldid=1347190237",
+   "y": 2026,
+   "note": "نسخة الصفحة بتاريخ السحب؛ أرقام ويكيبيديا تنراجع ويا مصادر ثانية"
+  },
+  "wiki_army": {
+   "t": "Wikipedia: Central African Armed Forces",
+   "u": "https://en.wikipedia.org/wiki/Central_African_Armed_Forces?oldid=1377993834",
+   "y": 2026,
+   "note": "نسخة الصفحة بتاريخ السحب؛ أرقام ويكيبيديا تنراجع ويا مصادر ثانية"
+  },
   "iiss_eq": {
    "t": "Wikipedia: List of countries by level of military equipment (من IISS Military Balance ومصادر ثانية)",
    "u": "https://en.wikipedia.org/wiki/List_of_countries_by_level_of_military_equipment?oldid=1384804191",
@@ -49,6 +61,11 @@
   "tierA": {
    "t": "تقدير المصمم (تشرين الثاني 2026) لصناعة السلاح والاستقرار: SIPRI Arms Transfers Database (أكبر المصدّرين 2020–24)، SIPRI Top 100 Arms-Producing Companies، Fragile States Index 2025، أخبار 2026",
    "u": "https://www.sipri.org/databases/armstransfers",
+   "y": 2026
+  },
+  "tpl": {
+   "t": "قالب منطقة (af): موديلات شائعة ونسب تقريبية من الدبابات (مدرعات ×2.5، مدفعية ×0.9، مروحيات ×0.25) — تقدير المصمم",
+   "u": "docs/features/world-plan.md",
    "y": 2026
   }
  },
@@ -219,11 +236,117 @@
     "c": "ت"
    }
   },
-  "land": [],
-  "air": [],
+  "land": [
+   {
+    "m": "BRDM-2",
+    "n": 21,
+    "orig": "SUN",
+    "s": "wiki_army",
+    "c": "ت",
+    "gen": 2,
+    "cat": "apc"
+   },
+   {
+    "m": "Daimler Ferret",
+    "n": 8,
+    "orig": "GBR",
+    "s": "wiki_army",
+    "c": "ت",
+    "gen": 2,
+    "cat": "apc"
+   },
+   {
+    "m": "Ratel-90",
+    "n": 2,
+    "orig": "ZAF",
+    "s": "wiki_army",
+    "c": "ت",
+    "note": "Original order for 18 canceled.",
+    "gen": 2,
+    "cat": "ifv"
+   }
+  ],
+  "air": [
+   {
+    "m": "Aero L-39",
+    "n": 6,
+    "orig": "CZE",
+    "s": "wiki_air",
+    "c": "ت",
+    "gen": 2,
+    "cat": "trainer"
+   },
+   {
+    "m": "Eurocopter AS 350 Ecureuil",
+    "n": 1,
+    "orig": "INT",
+    "s": "wiki_army",
+    "c": "ت",
+    "gen": 2,
+    "cat": "heli_util"
+   },
+   {
+    "m": "Mil Mi-8 Hip",
+    "n": 2,
+    "orig": "INT",
+    "s": "wiki_army",
+    "c": "ت",
+    "note": "Unconfirmed",
+    "gen": 2,
+    "cat": "heli_util"
+   }
+  ],
   "ad": [],
   "msl": [],
-  "navy": []
+  "navy": [],
+  "grp": {
+   "afv": {
+    "n": 31,
+    "s": "wiki_army",
+    "c": "ت",
+    "top": [
+     [
+      "BRDM-2",
+      21,
+      2,
+      "SUN"
+     ],
+     [
+      "Daimler Ferret",
+      8,
+      2,
+      "GBR"
+     ],
+     [
+      "Ratel-90",
+      2,
+      2,
+      "ZAF"
+     ]
+    ],
+    "gen": 2.0
+   },
+   "heli": {
+    "n": 3,
+    "s": "wiki_army",
+    "c": "ت",
+    "top": [
+     [
+      "Mil Mi-8 Hip",
+      2,
+      2,
+      "INT"
+     ],
+     [
+      "Eurocopter AS 350 Ecureuil",
+      1,
+      2,
+      "INT"
+     ]
+    ],
+    "gen": 2.0
+   }
+  }
  },
  "ind": null,
  "pol": {

@@ -5,6 +5,24 @@
  "tier": "C",
  "asOf": "2026-11",
  "src": {
+  "wiki_air": {
+   "t": "Wikipedia: Nigerian Air Force",
+   "u": "https://en.wikipedia.org/wiki/Nigerian_Air_Force?oldid=1384044775",
+   "y": 2026,
+   "note": "نسخة الصفحة بتاريخ السحب؛ أرقام ويكيبيديا تنراجع ويا مصادر ثانية"
+  },
+  "wiki_army": {
+   "t": "Wikipedia: Niger Armed Forces",
+   "u": "https://en.wikipedia.org/wiki/Niger_Armed_Forces?oldid=1385612610",
+   "y": 2026,
+   "note": "نسخة الصفحة بتاريخ السحب؛ أرقام ويكيبيديا تنراجع ويا مصادر ثانية"
+  },
+  "wiki_navy": {
+   "t": "Wikipedia: Nigerian Navy",
+   "u": "https://en.wikipedia.org/wiki/Nigerian_Navy?oldid=1383499185",
+   "y": 2026,
+   "note": "نسخة الصفحة بتاريخ السحب؛ أرقام ويكيبيديا تنراجع ويا مصادر ثانية"
+  },
   "iiss_eq": {
    "t": "Wikipedia: List of countries by level of military equipment (من IISS Military Balance ومصادر ثانية)",
    "u": "https://en.wikipedia.org/wiki/List_of_countries_by_level_of_military_equipment?oldid=1384804191",
@@ -49,6 +67,11 @@
   "tierA": {
    "t": "تقدير المصمم (تشرين الثاني 2026) لصناعة السلاح والاستقرار: SIPRI Arms Transfers Database (أكبر المصدّرين 2020–24)، SIPRI Top 100 Arms-Producing Companies، Fragile States Index 2025، أخبار 2026",
    "u": "https://www.sipri.org/databases/armstransfers",
+   "y": 2026
+  },
+  "tpl": {
+   "t": "قالب منطقة (af): موديلات شائعة ونسب تقريبية من الدبابات (مدرعات ×2.5، مدفعية ×0.9، مروحيات ×0.25) — تقدير المصمم",
+   "u": "docs/features/world-plan.md",
    "y": 2026
   }
  },
@@ -204,11 +227,464 @@
     "c": "ت"
    }
   },
-  "land": [],
-  "air": [],
+  "land": [
+   {
+    "m": "ZFB-05",
+    "n": 8,
+    "orig": "CHN",
+    "s": "wiki_army",
+    "c": "ت",
+    "gen": 2,
+    "cat": "apc"
+   },
+   {
+    "m": "WZ-523",
+    "n": 2,
+    "orig": "CHN",
+    "s": "wiki_army",
+    "c": "ت",
+    "gen": 2,
+    "cat": "apc"
+   },
+   {
+    "m": "UR-416",
+    "n": 8,
+    "orig": "DEU",
+    "s": "wiki_army",
+    "c": "ت",
+    "gen": 2,
+    "cat": "apc"
+   },
+   {
+    "m": "Mamba Mk7",
+    "n": 35,
+    "orig": "ZAF",
+    "s": "wiki_army",
+    "c": "ت",
+    "gen": 2,
+    "cat": "apc"
+   },
+   {
+    "m": "PUMA M26-15",
+    "n": 11,
+    "orig": "ZAF",
+    "s": "wiki_army",
+    "c": "ت",
+    "gen": 4,
+    "cat": "apc"
+   },
+   {
+    "m": "Panhard VBL",
+    "n": 7,
+    "orig": "FRA",
+    "s": "wiki_army",
+    "c": "ت",
+    "gen": 2,
+    "cat": "apc"
+   },
+   {
+    "m": "AML 60/90",
+    "n": 125,
+    "orig": "FRA",
+    "s": "wiki_army",
+    "c": "ت",
+    "gen": 2,
+    "cat": "apc"
+   },
+   {
+    "m": "Panhard M3",
+    "n": 32,
+    "orig": "FRA",
+    "s": "wiki_army",
+    "c": "ت",
+    "gen": 2,
+    "cat": "apc"
+   },
+   {
+    "m": "BRDM-2",
+    "n": 30,
+    "orig": "SUN",
+    "s": "wiki_army",
+    "c": "ت",
+    "gen": 2,
+    "cat": "apc"
+   },
+   {
+    "m": "Nurol Ejder",
+    "n": 24,
+    "orig": "TUR",
+    "s": "wiki_army",
+    "c": "ت",
+    "note": "On order.",
+    "gen": 2,
+    "cat": "mrap"
+   }
+  ],
+  "air": [
+   {
+    "m": "Bell 412 (AB-412)",
+    "n": 4,
+    "orig": "ITA",
+    "s": "wiki_army",
+    "c": "ت",
+    "gen": 2,
+    "cat": "heli_util"
+   },
+   {
+    "m": "Mil Mi-17",
+    "n": 4,
+    "orig": "RUS",
+    "s": "wiki_army",
+    "c": "ت",
+    "note": "2 Mi-171 donated by Algeria in 2026",
+    "gen": 2,
+    "cat": "heli_util"
+   },
+   {
+    "m": "Mil Mi-24 (Mi-35)",
+    "n": 1,
+    "orig": "RUS",
+    "s": "wiki_army",
+    "c": "ت",
+    "note": "2 on order as of 2024",
+    "gen": 3,
+    "cat": "heli_attack"
+   },
+   {
+    "m": "Mil Mi-24 (SuperHind Mk.III)",
+    "n": 2,
+    "orig": "ZAF",
+    "s": "wiki_army",
+    "c": "ت",
+    "note": "Donated by Algeria in 2026",
+    "gen": 3,
+    "cat": "heli_attack"
+   },
+   {
+    "m": "Aérospatiale Gazelle (SA342)",
+    "n": 5,
+    "orig": "FRA",
+    "s": "wiki_army",
+    "c": "ت",
+    "gen": 2,
+    "cat": "heli_attack"
+   },
+   {
+    "m": "Bayraktar TB2",
+    "n": 6,
+    "orig": "TUR",
+    "s": "wiki_army",
+    "c": "ت",
+    "note": "-",
+    "gen": 4,
+    "cat": "uav_strike"
+   }
+  ],
   "ad": [],
   "msl": [],
-  "navy": []
+  "navy": [
+   {
+    "m": "MEKO 360 Type H1",
+    "n": 1,
+    "orig": "NER",
+    "s": "wiki_navy",
+    "c": "ت",
+    "cat": "frigate",
+    "gen": 2,
+    "note": "عدد الصفوف بالقائمة"
+   },
+   {
+    "m": "Thunder Class",
+    "n": 1,
+    "orig": "NER",
+    "s": "wiki_navy",
+    "c": "ت",
+    "cat": "frigate",
+    "gen": 2,
+    "note": "عدد الصفوف بالقائمة"
+   },
+   {
+    "m": "Centenary Class",
+    "n": 1,
+    "orig": "NER",
+    "s": "wiki_navy",
+    "c": "ت",
+    "cat": "corvette",
+    "gen": 2,
+    "note": "عدد الصفوف بالقائمة"
+   },
+   {
+    "m": "OPV 76",
+    "n": 1,
+    "orig": "NER",
+    "s": "wiki_navy",
+    "c": "ت",
+    "cat": "patrol",
+    "gen": 2,
+    "note": "عدد الصفوف بالقائمة"
+   },
+   {
+    "m": "Tuzla class",
+    "n": 1,
+    "orig": "NER",
+    "s": "wiki_navy",
+    "c": "ت",
+    "cat": "patrol",
+    "gen": 2,
+    "note": "عدد الصفوف بالقائمة"
+   },
+   {
+    "m": "Andoni Class",
+    "n": 1,
+    "orig": "NER",
+    "s": "wiki_navy",
+    "c": "ت",
+    "cat": "patrol",
+    "gen": 2,
+    "note": "عدد الصفوف بالقائمة"
+   },
+   {
+    "m": "Sagbama Class",
+    "n": 1,
+    "orig": "NER",
+    "s": "wiki_navy",
+    "c": "ت",
+    "cat": "patrol",
+    "gen": 2,
+    "note": "عدد الصفوف بالقائمة"
+   },
+   {
+    "m": "Zaria Class",
+    "n": 1,
+    "orig": "NER",
+    "s": "wiki_navy",
+    "c": "ت",
+    "cat": "patrol",
+    "gen": 2,
+    "note": "عدد الصفوف بالقائمة"
+   },
+   {
+    "m": "Chamsuri class",
+    "n": 1,
+    "orig": "NER",
+    "s": "wiki_navy",
+    "c": "ت",
+    "cat": "patrol",
+    "gen": 2,
+    "note": "عدد الصفوف بالقائمة"
+   },
+   {
+    "m": "Nguru Class",
+    "n": 1,
+    "orig": "NER",
+    "s": "wiki_navy",
+    "c": "ت",
+    "cat": "patrol",
+    "gen": 2,
+    "note": "عدد الصفوف بالقائمة"
+   },
+   {
+    "m": "Dorina Class",
+    "n": 1,
+    "orig": "NER",
+    "s": "wiki_navy",
+    "c": "ت",
+    "cat": "patrol",
+    "gen": 2,
+    "note": "عدد الصفوف بالقائمة"
+   },
+   {
+    "m": "Okpoku Class",
+    "n": 1,
+    "orig": "NER",
+    "s": "wiki_navy",
+    "c": "ت",
+    "cat": "patrol",
+    "gen": 2,
+    "note": "عدد الصفوف بالقائمة"
+   },
+   {
+    "m": "Shaldag class",
+    "n": 1,
+    "orig": "NER",
+    "s": "wiki_navy",
+    "c": "ت",
+    "cat": "patrol",
+    "gen": 2,
+    "note": "عدد الصفوف بالقائمة"
+   },
+   {
+    "m": "Manta Class",
+    "n": 1,
+    "orig": "NER",
+    "s": "wiki_navy",
+    "c": "ت",
+    "cat": "patrol",
+    "gen": 2,
+    "note": "عدد الصفوف بالقائمة"
+   },
+   {
+    "m": "Wave Rider class",
+    "n": 1,
+    "orig": "NER",
+    "s": "wiki_navy",
+    "c": "ت",
+    "cat": "patrol",
+    "gen": 2,
+    "note": "عدد الصفوف بالقائمة"
+   },
+   {
+    "m": "Cedric Class",
+    "n": 1,
+    "orig": "NER",
+    "s": "wiki_navy",
+    "c": "ت",
+    "cat": "patrol",
+    "gen": 2,
+    "note": "عدد الصفوف بالقائمة"
+   },
+   {
+    "m": "Epenal Gunboat",
+    "n": 1,
+    "orig": "NER",
+    "s": "wiki_navy",
+    "c": "ت",
+    "cat": "patrol",
+    "gen": 2,
+    "note": "عدد الصفوف بالقائمة"
+   },
+   {
+    "m": "LST-100",
+    "n": 1,
+    "orig": "NER",
+    "s": "wiki_navy",
+    "c": "ت",
+    "cat": "amphib",
+    "gen": 2,
+    "note": "عدد الصفوف بالقائمة"
+   }
+  ],
+  "grp": {
+   "afv": {
+    "n": 282,
+    "s": "wiki_army",
+    "c": "ت",
+    "top": [
+     [
+      "AML 60/90",
+      125,
+      2,
+      "FRA"
+     ],
+     [
+      "Mamba Mk7",
+      35,
+      2,
+      "ZAF"
+     ],
+     [
+      "Panhard M3",
+      32,
+      2,
+      "FRA"
+     ]
+    ],
+    "gen": 2.1
+   },
+   "jet": {
+    "n": 2,
+    "s": "iiss_eq",
+    "c": "ت",
+    "top": [
+     [
+      "MiG-21",
+      null,
+      null,
+      null
+     ],
+     [
+      "Su-25",
+      null,
+      null,
+      null
+     ],
+     [
+      "L-39",
+      null,
+      null,
+      null
+     ]
+    ],
+    "gen": 1.6,
+    "tpl": "af"
+   },
+   "heli": {
+    "n": 16,
+    "s": "wiki_army",
+    "c": "ت",
+    "top": [
+     [
+      "Aérospatiale Gazelle (SA342)",
+      5,
+      2,
+      "FRA"
+     ],
+     [
+      "Bell 412 (AB-412)",
+      4,
+      2,
+      "ITA"
+     ],
+     [
+      "Mil Mi-17",
+      4,
+      2,
+      "RUS"
+     ]
+    ],
+    "gen": 2.2
+   },
+   "uav": {
+    "n": 6,
+    "s": "wiki_army",
+    "c": "ت",
+    "top": [
+     [
+      "Bayraktar TB2",
+      6,
+      4,
+      "TUR"
+     ]
+    ],
+    "gen": 4.0
+   },
+   "navy": {
+    "n": 18,
+    "s": "wiki_navy",
+    "c": "ت",
+    "top": [
+     [
+      "MEKO 360 Type H1",
+      1,
+      2,
+      "NER"
+     ],
+     [
+      "Thunder Class",
+      1,
+      2,
+      "NER"
+     ],
+     [
+      "Centenary Class",
+      1,
+      2,
+      "NER"
+     ]
+    ],
+    "gen": 2.0
+   }
+  }
  },
  "ind": null,
  "pol": {

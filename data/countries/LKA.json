@@ -5,6 +5,24 @@
  "tier": "B",
  "asOf": "2026-11",
  "src": {
+  "wiki_air": {
+   "t": "Wikipedia: Sri Lanka Air Force",
+   "u": "https://en.wikipedia.org/wiki/Sri_Lanka_Air_Force?oldid=1386475530",
+   "y": 2026,
+   "note": "نسخة الصفحة بتاريخ السحب؛ أرقام ويكيبيديا تنراجع ويا مصادر ثانية"
+  },
+  "wiki_army": {
+   "t": "Wikipedia: Sri Lanka Army",
+   "u": "https://en.wikipedia.org/wiki/Sri_Lanka_Army?oldid=1386016472",
+   "y": 2026,
+   "note": "نسخة الصفحة بتاريخ السحب؛ أرقام ويكيبيديا تنراجع ويا مصادر ثانية"
+  },
+  "wiki_navy": {
+   "t": "Wikipedia: Sri Lanka Navy",
+   "u": "https://en.wikipedia.org/wiki/Sri_Lanka_Navy?oldid=1385860088",
+   "y": 2026,
+   "note": "نسخة الصفحة بتاريخ السحب؛ أرقام ويكيبيديا تنراجع ويا مصادر ثانية"
+  },
   "iiss_eq": {
    "t": "Wikipedia: List of countries by level of military equipment (من IISS Military Balance ومصادر ثانية)",
    "u": "https://en.wikipedia.org/wiki/List_of_countries_by_level_of_military_equipment?oldid=1384804191",
@@ -49,6 +67,11 @@
   "tierA": {
    "t": "تقدير المصمم (تشرين الثاني 2026) لصناعة السلاح والاستقرار: SIPRI Arms Transfers Database (أكبر المصدّرين 2020–24)، SIPRI Top 100 Arms-Producing Companies، Fragile States Index 2025، أخبار 2026",
    "u": "https://www.sipri.org/databases/armstransfers",
+   "y": 2026
+  },
+  "tpl": {
+   "t": "قالب منطقة (as): موديلات شائعة ونسب تقريبية من الدبابات (مدرعات ×2.5، مدفعية ×0.9، مروحيات ×0.25) — تقدير المصمم",
+   "u": "docs/features/world-plan.md",
    "y": 2026
   }
  },
@@ -216,11 +239,430 @@
     "c": "ت"
    }
   },
-  "land": [],
-  "air": [],
+  "land": [
+   {
+    "m": "Type 59",
+    "n": 25,
+    "orig": "CHN",
+    "s": "wiki_army",
+    "c": "ت",
+    "gen": 1,
+    "cat": "tank"
+   },
+   {
+    "m": "Type 85 (YW-309)",
+    "n": 20,
+    "orig": "CHN",
+    "s": "wiki_army",
+    "c": "ت",
+    "gen": 2,
+    "cat": "tank"
+   },
+   {
+    "m": "Type 89 (YW-534)",
+    "n": 40,
+    "orig": "CHN",
+    "s": "wiki_army",
+    "c": "ت",
+    "note": "Tracked, including command post version",
+    "gen": 2,
+    "cat": "apc"
+   },
+   {
+    "m": "Type 85 (YW-531H)",
+    "n": 30,
+    "orig": "CHN",
+    "s": "wiki_army",
+    "c": "ت",
+    "note": "Tracked, amphibious",
+    "gen": 2,
+    "cat": "apc"
+   },
+   {
+    "m": "Type 63 (YW-531)",
+    "n": 10,
+    "orig": "CHN",
+    "s": "wiki_army",
+    "c": "ت",
+    "note": "Tracked",
+    "gen": 2,
+    "cat": "apc"
+   },
+   {
+    "m": "BTR-80/80A",
+    "n": 25,
+    "orig": "SUN",
+    "s": "wiki_army",
+    "c": "ت",
+    "note": "Wheeled",
+    "gen": 3,
+    "cat": "apc"
+   },
+   {
+    "m": "Type-59-1",
+    "n": 30,
+    "orig": "CHN",
+    "s": "wiki_army",
+    "c": "ت",
+    "note": "27 km range",
+    "gen": 2,
+    "cat": "towed"
+   }
+  ],
+  "air": [
+   {
+    "m": "IAI Kfir (Kfir C-12)",
+    "n": 5,
+    "orig": "ISR",
+    "s": "wiki_air",
+    "c": "ت",
+    "note": "5 in service recently overhauled by IAI to 4+ generation Block 60 standard.",
+    "gen": 2,
+    "cat": "fighter"
+   },
+   {
+    "m": "Chengdu J-7 (F-7GS)",
+    "n": 5,
+    "orig": "CHN",
+    "s": "wiki_air",
+    "c": "ت",
+    "note": "Only about 2 to 3 F7s are operational or limited service",
+    "gen": 1,
+    "cat": "fighter"
+   },
+   {
+    "m": "Beechcraft Super King Air (King Air 200)",
+    "n": 2,
+    "orig": "USA",
+    "s": "wiki_air",
+    "c": "ت",
+    "gen": 2,
+    "cat": "isr"
+   },
+   {
+    "m": "Dornier 228 (Do-228-101)",
+    "n": 1,
+    "orig": "DEU",
+    "s": "wiki_air",
+    "c": "ت",
+    "note": "1on order",
+    "gen": 2,
+    "cat": "isr"
+   },
+   {
+    "m": "Antonov An-32 (An-32B)",
+    "n": 4,
+    "orig": "RUS",
+    "s": "wiki_air",
+    "c": "ت",
+    "gen": 2,
+    "cat": "transport"
+   },
+   {
+    "m": "Harbin Y-12 (II/IV)",
+    "n": 10,
+    "orig": "CHN",
+    "s": "wiki_air",
+    "c": "ت",
+    "gen": 2,
+    "cat": "transport"
+   },
+   {
+    "m": "Lockheed C-130 (C-130K)",
+    "n": 2,
+    "orig": "USA",
+    "s": "wiki_air",
+    "c": "ت",
+    "note": "2 C-130s wait for overhaul (now in reserve)",
+    "gen": 2,
+    "cat": "transport"
+   },
+   {
+    "m": "Bell 206 (Bell 206A)",
+    "n": 2,
+    "orig": "USA",
+    "s": "wiki_air",
+    "c": "ت",
+    "gen": 2,
+    "cat": "heli_util"
+   },
+   {
+    "m": "Bell 206 (Bell 206B)",
+    "n": 2,
+    "orig": "USA",
+    "s": "wiki_air",
+    "c": "ت",
+    "gen": 2,
+    "cat": "heli_util"
+   },
+   {
+    "m": "Bell 206 (TH-57C Sea Ranger)",
+    "n": 10,
+    "orig": "USA",
+    "s": "wiki_air",
+    "c": "ت",
+    "note": "Received from United States under the Excess Defence Articles programme.",
+    "gen": 2,
+    "cat": "heli_util"
+   },
+   {
+    "m": "Bell 212",
+    "n": 4,
+    "orig": "USA",
+    "s": "wiki_air",
+    "c": "ت",
+    "gen": 2,
+    "cat": "heli_util"
+   },
+   {
+    "m": "Bell 412 (Bell-412)",
+    "n": 8,
+    "orig": "USA",
+    "s": "wiki_air",
+    "c": "ت",
+    "gen": 2,
+    "cat": "heli_util"
+   },
+   {
+    "m": "Bell 412 (Bell-412EP)",
+    "n": 8,
+    "orig": "USA",
+    "s": "wiki_air",
+    "c": "ت",
+    "gen": 2,
+    "cat": "heli_util"
+   },
+   {
+    "m": "Mil Mi-17 (Mi-171E)",
+    "n": 20,
+    "orig": "RUS",
+    "s": "wiki_air",
+    "c": "ت",
+    "note": "Majority grounded due to maintenance issues. Waiting overhaul.",
+    "gen": 2,
+    "cat": "heli_util"
+   },
+   {
+    "m": "Mil Mi-17 (Mi-17 V5)",
+    "n": 20,
+    "orig": "RUS",
+    "s": "wiki_air",
+    "c": "ت",
+    "note": "Majority grounded due to maintenance issues. Waiting overhaul.",
+    "gen": 2,
+    "cat": "heli_util"
+   },
+   {
+    "m": "Mil Mi-17 (Mi-171Sh)",
+    "n": 20,
+    "orig": "RUS",
+    "s": "wiki_air",
+    "c": "ت",
+    "note": "Majority grounded due to maintenance issues. Waiting overhaul.",
+    "gen": 2,
+    "cat": "heli_util"
+   },
+   {
+    "m": "Mil Mi-17 (Mi-17 1V)",
+    "n": 20,
+    "orig": "RUS",
+    "s": "wiki_air",
+    "c": "ت",
+    "note": "Majority grounded due to maintenance issues. Waiting overhaul.",
+    "gen": 2,
+    "cat": "heli_util"
+   },
+   {
+    "m": "Mil Mi-24 (Mi-24V Mi-35)",
+    "n": 5,
+    "orig": "RUS",
+    "s": "wiki_air",
+    "c": "ت",
+    "note": "Up to 10 helicopters in storage",
+    "gen": 3,
+    "cat": "heli_attack"
+   },
+   {
+    "m": "Hongdu JL-8 (K-8)",
+    "n": 6,
+    "orig": "CHN",
+    "s": "wiki_air",
+    "c": "ت",
+    "gen": 2,
+    "cat": "attack"
+   },
+   {
+    "m": "Cessna 150 (Cessna 150L)",
+    "n": 6,
+    "orig": "USA",
+    "s": "wiki_air",
+    "c": "ت",
+    "gen": 2,
+    "cat": "trainer"
+   },
+   {
+    "m": "ThunderB- VTOL UAS",
+    "n": 4,
+    "orig": "ISR",
+    "s": "wiki_air",
+    "c": "ت",
+    "note": "The $12.8 million defence deal has been approved for the acquisition of two ThunderB VTOL UAVs and two additional, yet-to-be-specified UAVs ",
+    "gen": 2,
+    "cat": "uav_isr"
+   },
+   {
+    "m": "Lihiniya MK I/MK II (MK IE)",
+    "n": 2,
+    "orig": "LKA",
+    "s": "wiki_air",
+    "c": "ت",
+    "gen": 2,
+    "cat": "uav_isr"
+   }
+  ],
   "ad": [],
   "msl": [],
-  "navy": []
+  "navy": [],
+  "grp": {
+   "tank": {
+    "n": 62,
+    "s": "iiss_eq",
+    "c": "ت",
+    "top": [
+     [
+      "Type 59",
+      25,
+      1,
+      "CHN"
+     ],
+     [
+      "Type 85 (YW-309)",
+      20,
+      2,
+      "CHN"
+     ]
+    ],
+    "gen": 1.4
+   },
+   "afv": {
+    "n": 105,
+    "s": "wiki_army",
+    "c": "ت",
+    "top": [
+     [
+      "Type 89 (YW-534)",
+      40,
+      2,
+      "CHN"
+     ],
+     [
+      "Type 85 (YW-531H)",
+      30,
+      2,
+      "CHN"
+     ],
+     [
+      "BTR-80/80A",
+      25,
+      3,
+      "SUN"
+     ]
+    ],
+    "gen": 2.2
+   },
+   "art": {
+    "n": 30,
+    "s": "wiki_army",
+    "c": "ت",
+    "top": [
+     [
+      "Type-59-1",
+      30,
+      2,
+      "CHN"
+     ]
+    ],
+    "gen": 2.0
+   },
+   "jet": {
+    "n": 5,
+    "s": "iiss_eq",
+    "c": "ت",
+    "top": [
+     [
+      "Hongdu JL-8 (K-8)",
+      6,
+      2,
+      "CHN"
+     ],
+     [
+      "IAI Kfir (Kfir C-12)",
+      5,
+      2,
+      "ISR"
+     ],
+     [
+      "Chengdu J-7 (F-7GS)",
+      5,
+      1,
+      "CHN"
+     ]
+    ],
+    "gen": 1.7,
+    "note": "مجموع القوائم 16 يختلف عن الإجمالي؛ الإجمالي هو المعتمد"
+   },
+   "heli": {
+    "n": 119,
+    "s": "wiki_air",
+    "c": "ت",
+    "top": [
+     [
+      "Mil Mi-17 (Mi-171E)",
+      20,
+      2,
+      "RUS"
+     ],
+     [
+      "Mil Mi-17 (Mi-17 V5)",
+      20,
+      2,
+      "RUS"
+     ],
+     [
+      "Mil Mi-17 (Mi-171Sh)",
+      20,
+      2,
+      "RUS"
+     ]
+    ],
+    "gen": 2.0
+   },
+   "uav": {
+    "n": 6,
+    "s": "wiki_air",
+    "c": "ت",
+    "top": [
+     [
+      "ThunderB- VTOL UAS",
+      4,
+      2,
+      "ISR"
+     ],
+     [
+      "Lihiniya MK I/MK II (MK IE)",
+      2,
+      2,
+      "LKA"
+     ]
+    ],
+    "gen": 2.0
+   },
+   "navy": {
+    "n": 2,
+    "s": "iiss_eq",
+    "c": "ت"
+   }
+  }
  },
  "ind": null,
  "pol": {

@@ -68,6 +68,11 @@
    "t": "تقدير المصمم (تشرين الثاني 2026) لصناعة السلاح والاستقرار: SIPRI Arms Transfers Database (أكبر المصدّرين 2020–24)، SIPRI Top 100 Arms-Producing Companies، Fragile States Index 2025، أخبار 2026",
    "u": "https://www.sipri.org/databases/armstransfers",
    "y": 2026
+  },
+  "tpl": {
+   "t": "قالب منطقة (as): موديلات شائعة ونسب تقريبية من الدبابات (مدرعات ×2.5، مدفعية ×0.9، مروحيات ×0.25) — تقدير المصمم",
+   "u": "docs/features/world-plan.md",
+   "y": 2026
   }
  },
  "gov": {
@@ -232,6 +237,121 @@
    }
   },
   "land": [
+   {
+    "m": "Haider",
+    "n": 176,
+    "orig": "PAK",
+    "s": "wiki_army",
+    "c": "ت",
+    "note": "Total 679 planned.",
+    "gen": 2,
+    "cat": "tank"
+   },
+   {
+    "m": "VT-4",
+    "n": 176,
+    "orig": "CHN",
+    "s": "wiki_army",
+    "c": "ت",
+    "note": "Total 679 planned.",
+    "gen": 2,
+    "cat": "tank"
+   },
+   {
+    "m": "Al-Khalid I",
+    "n": 110,
+    "orig": "PAK",
+    "s": "wiki_army",
+    "c": "ت",
+    "gen": 2,
+    "cat": "tank"
+   },
+   {
+    "m": "Al-Khalid",
+    "n": 300,
+    "orig": "PAK",
+    "s": "wiki_army",
+    "c": "ت",
+    "gen": 2,
+    "cat": "tank"
+   },
+   {
+    "m": "Al-Zarrar",
+    "n": 500,
+    "orig": "PAK",
+    "s": "wiki_army",
+    "c": "ت",
+    "gen": 2,
+    "cat": "tank"
+   },
+   {
+    "m": "T-80UD",
+    "n": 350,
+    "orig": "UKR",
+    "s": "wiki_army",
+    "c": "ت",
+    "gen": 3,
+    "cat": "tank"
+   },
+   {
+    "m": "Type-85-IIAP",
+    "n": 268,
+    "orig": "CHN",
+    "s": "wiki_army",
+    "c": "ت",
+    "note": "Some source estimate around 400 in service.",
+    "gen": 2,
+    "cat": "tank"
+   },
+   {
+    "m": "Type-69",
+    "n": 400,
+    "orig": "CHN",
+    "s": "wiki_army",
+    "c": "ت",
+    "note": "Some in reserve.",
+    "gen": 2,
+    "cat": "tank"
+   },
+   {
+    "m": "Type-59",
+    "n": 600,
+    "orig": "CHN",
+    "s": "wiki_army",
+    "c": "ت",
+    "gen": 2,
+    "cat": "tank"
+   },
+   {
+    "m": "T-55H",
+    "n": 282,
+    "orig": "SUN",
+    "s": "wiki_army",
+    "c": "ت",
+    "note": "282 T-55H modernized tanks delivered from Serbia in 2020.",
+    "gen": 1,
+    "cat": "tank"
+   },
+   {
+    "m": "T-54/T-55",
+    "n": 54,
+    "orig": "SUN",
+    "s": "wiki_army",
+    "c": "ت",
+    "note": "100 T-54s and 100 T-55s delivered from Soviet Union in 1968-69.",
+    "gen": 1,
+    "cat": "tank"
+   },
+   {
+    "m": "M48 Patton",
+    "n": 300,
+    "orig": "USA",
+    "s": "wiki_army",
+    "c": "ت",
+    "note": "300 M48A5s retired from active service in 2002, currently in reserve.",
+    "gen": 1,
+    "cat": "tank"
+   },
    {
     "m": "HIT Dragoon 2",
     "n": 600,
@@ -403,24 +523,154 @@
     "cat": "mrap"
    },
    {
-    "m": "MaxxPro MRV",
-    "n": 40,
-    "orig": "USA",
+    "m": "SH-15",
+    "n": 300,
+    "orig": "CHN",
     "s": "wiki_army",
     "c": "ت",
-    "note": "Light armoured recovery vehicle. Based on MaxxPro.",
+    "note": "155 mm truck-mounted howitzer. Pakistan has ordered around 236–300 more units, further these howitzers will be locally produced under ToT by",
     "gen": 2,
-    "cat": "mrap"
+    "cat": "spg"
    },
    {
-    "m": "Cougar JERRV",
-    "n": 20,
+    "m": "SH-1",
+    "n": 90,
+    "orig": "CHN",
+    "s": "wiki_army",
+    "c": "ت",
+    "note": "PLL01 (Chinese variant of the GC-45) 155 mm howitzer, mounted on WS5252 6x6.",
+    "gen": 2,
+    "cat": "spg"
+   },
+   {
+    "m": "M109",
+    "n": 438,
     "orig": "USA",
     "s": "wiki_army",
     "c": "ت",
-    "note": "Mine-clearing vehicle. Buffalo Explosive Ordnance Disposal version.",
+    "note": "155 mm tracked howitzer. M109A2: (200) M109A5: (115) M109L: (123)",
     "gen": 2,
-    "cat": "mrap"
+    "cat": "spg"
+   },
+   {
+    "m": "M110",
+    "n": 60,
+    "orig": "USA",
+    "s": "wiki_army",
+    "c": "ت",
+    "note": "203 mm tracked howitzer. M110A2 variant in service.",
+    "gen": 2,
+    "cat": "spg"
+   },
+   {
+    "m": "M115",
+    "n": 28,
+    "orig": "USA",
+    "s": "wiki_army",
+    "c": "ت",
+    "note": "203 mm howitzer.",
+    "gen": 2,
+    "cat": "towed"
+   },
+   {
+    "m": "M198",
+    "n": 148,
+    "orig": "USA",
+    "s": "wiki_army",
+    "c": "ت",
+    "note": "155 mm howitzer.",
+    "gen": 2,
+    "cat": "towed"
+   },
+   {
+    "m": "M114A2",
+    "n": 144,
+    "orig": "USA",
+    "s": "wiki_army",
+    "c": "ت",
+    "note": "155 mm howitzer.",
+    "gen": 2,
+    "cat": "towed"
+   },
+   {
+    "m": "M59",
+    "n": 300,
+    "orig": "USA",
+    "s": "wiki_army",
+    "c": "ت",
+    "note": "155 mm howitzer.",
+    "gen": 2,
+    "cat": "towed"
+   },
+   {
+    "m": "Panter",
+    "n": 72,
+    "orig": "TUR",
+    "s": "wiki_army",
+    "c": "ت",
+    "note": "155 mm howitzer.",
+    "gen": 2,
+    "cat": "towed"
+   },
+   {
+    "m": "Type 59-1",
+    "n": 410,
+    "orig": "CHN",
+    "s": "wiki_army",
+    "c": "ت",
+    "note": "130 mm howitzer. Based on M-46.",
+    "gen": 1,
+    "cat": "towed"
+   },
+   {
+    "m": "Type 86",
+    "n": 80,
+    "orig": "CHN",
+    "s": "wiki_army",
+    "c": "ت",
+    "note": "122 mm howitzer. Based on D-30A.",
+    "gen": 2,
+    "cat": "towed"
+   },
+   {
+    "m": "Type 54-1",
+    "n": 490,
+    "orig": "CHN",
+    "s": "wiki_army",
+    "c": "ت",
+    "note": "122 mm howitzer. Based on M-30.",
+    "gen": 2,
+    "cat": "towed"
+   },
+   {
+    "m": "M-56",
+    "n": 113,
+    "orig": "USA",
+    "s": "wiki_army",
+    "c": "ت",
+    "note": "105 mm howitzer.",
+    "gen": 2,
+    "cat": "towed"
+   },
+   {
+    "m": "M101A1",
+    "n": 216,
+    "orig": "USA",
+    "s": "wiki_army",
+    "c": "ت",
+    "note": "105 mm howitzer.",
+    "gen": 2,
+    "cat": "towed"
+   },
+   {
+    "m": "25-pounder Mk.IV",
+    "n": 1000,
+    "orig": "GBR",
+    "s": "wiki_army",
+    "c": "ت",
+    "note": "Still in service as of 2018. 88 mm shells being produced by POF.",
+    "gen": 2,
+    "cat": "towed"
    }
   ],
   "air": [
@@ -745,7 +995,181 @@
     "gen": 2,
     "cat": "patrol"
    }
-  ]
+  ],
+  "grp": {
+   "tank": {
+    "n": 2500,
+    "s": "iiss_eq",
+    "c": "ت",
+    "top": [
+     [
+      "Type-59",
+      600,
+      2,
+      "CHN"
+     ],
+     [
+      "Al-Zarrar",
+      500,
+      2,
+      "PAK"
+     ],
+     [
+      "Type-69",
+      400,
+      2,
+      "CHN"
+     ]
+    ],
+    "gen": 1.9
+   },
+   "afv": {
+    "n": 8476,
+    "s": "wiki_army",
+    "c": "ت",
+    "top": [
+     [
+      "Iveco VM 90",
+      2200,
+      2,
+      "ITA"
+     ],
+     [
+      "Otokar Akrep",
+      1800,
+      2,
+      "TUR"
+     ],
+     [
+      "Al-Fahd",
+      1000,
+      2,
+      "SAU"
+     ]
+    ],
+    "gen": 2.0
+   },
+   "art": {
+    "n": 3889,
+    "s": "wiki_army",
+    "c": "ت",
+    "top": [
+     [
+      "25-pounder Mk.IV",
+      1000,
+      2,
+      "GBR"
+     ],
+     [
+      "Type 54-1",
+      490,
+      2,
+      "CHN"
+     ],
+     [
+      "M109",
+      438,
+      2,
+      "USA"
+     ]
+    ],
+    "gen": 1.9
+   },
+   "jet": {
+    "n": 583,
+    "s": "iiss_eq",
+    "c": "ت",
+    "top": [
+     [
+      "F-5",
+      null,
+      null,
+      null
+     ],
+     [
+      "MiG-21",
+      null,
+      null,
+      null
+     ],
+     [
+      "F-7",
+      null,
+      null,
+      null
+     ]
+    ],
+    "gen": 2,
+    "tpl": "as"
+   },
+   "heli": {
+    "n": 323,
+    "s": "wiki_army",
+    "c": "ت",
+    "top": [
+     [
+      "Bell AH-1 Cobra (AH-1F)",
+      50,
+      2,
+      "USA"
+     ],
+     [
+      "Mil Mi-17 (Mi-171 Mi-17-1V Mi-171Sh Mi-1",
+      48,
+      2,
+      "RUS"
+     ],
+     [
+      "Aérospatiale/IAR SA 330 Puma (SA 330L)",
+      43,
+      4,
+      "FRA"
+     ]
+    ],
+    "gen": 2.3
+   },
+   "uav": {
+    "n": 85,
+    "s": "wiki_army",
+    "c": "ت",
+    "top": [
+     [
+      "RQ-11 Raven (Raven B)",
+      85,
+      2,
+      "USA"
+     ]
+    ],
+    "gen": 2.0
+   },
+   "navy": {
+    "n": 32,
+    "s": "iiss_eq",
+    "c": "ت",
+    "top": [
+     [
+      "Marine Assault Boats (MAB)",
+      20,
+      2,
+      "PAK"
+     ],
+     [
+      "Hangor class",
+      7,
+      2,
+      "CHN"
+     ],
+     [
+      "Tughril class",
+      4,
+      2,
+      "CHN"
+     ]
+    ],
+    "gen": 2.0,
+    "note": "مجموع القوائم 68 يختلف عن الإجمالي؛ الإجمالي هو المعتمد"
+   }
+  }
  },
  "ind": {
   "tech": {

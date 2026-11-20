@@ -5,6 +5,24 @@
  "tier": "B",
  "asOf": "2026-11",
  "src": {
+  "wiki_air": {
+   "t": "Wikipedia: Tunisian Air Force",
+   "u": "https://en.wikipedia.org/wiki/Tunisian_Air_Force?oldid=1374778711",
+   "y": 2026,
+   "note": "نسخة الصفحة بتاريخ السحب؛ أرقام ويكيبيديا تنراجع ويا مصادر ثانية"
+  },
+  "wiki_army": {
+   "t": "Wikipedia: List of equipment of the Tunisian Army",
+   "u": "https://en.wikipedia.org/wiki/List_of_equipment_of_the_Tunisian_Army?oldid=1386086811",
+   "y": 2026,
+   "note": "نسخة الصفحة بتاريخ السحب؛ أرقام ويكيبيديا تنراجع ويا مصادر ثانية"
+  },
+  "wiki_navy": {
+   "t": "Wikipedia: Tunisian Navy",
+   "u": "https://en.wikipedia.org/wiki/Tunisian_Navy?oldid=1386031813",
+   "y": 2026,
+   "note": "نسخة الصفحة بتاريخ السحب؛ أرقام ويكيبيديا تنراجع ويا مصادر ثانية"
+  },
   "iiss_eq": {
    "t": "Wikipedia: List of countries by level of military equipment (من IISS Military Balance ومصادر ثانية)",
    "u": "https://en.wikipedia.org/wiki/List_of_countries_by_level_of_military_equipment?oldid=1384804191",
@@ -49,6 +67,11 @@
   "tierA": {
    "t": "تقدير المصمم (تشرين الثاني 2026) لصناعة السلاح والاستقرار: SIPRI Arms Transfers Database (أكبر المصدّرين 2020–24)، SIPRI Top 100 Arms-Producing Companies، Fragile States Index 2025، أخبار 2026",
    "u": "https://www.sipri.org/databases/armstransfers",
+   "y": 2026
+  },
+  "tpl": {
+   "t": "قالب منطقة (me): موديلات شائعة ونسب تقريبية من الدبابات (مدرعات ×2.5، مدفعية ×0.9، مروحيات ×0.25) — تقدير المصمم",
+   "u": "docs/features/world-plan.md",
    "y": 2026
   }
  },
@@ -207,11 +230,713 @@
     "c": "ت"
    }
   },
-  "land": [],
-  "air": [],
-  "ad": [],
+  "land": [
+   {
+    "m": "M198",
+    "n": 57,
+    "orig": "USA",
+    "s": "wiki_army",
+    "c": "ت",
+    "note": "Main artillery piece equipping 3 artillery battalions each attached to a mechanized infantry brigade. Heavily deployed during Chaambi Operat",
+    "gen": 2,
+    "cat": "towed"
+   },
+   {
+    "m": "M101A1 howitzer",
+    "n": 10,
+    "orig": "USA",
+    "s": "wiki_army",
+    "c": "ت",
+    "note": "Several units were seen in use during African Lion 2024.",
+    "gen": 2,
+    "cat": "towed"
+   },
+   {
+    "m": "M60A1/A3",
+    "n": 90,
+    "orig": "USA",
+    "s": "wiki_army",
+    "c": "ت",
+    "note": "54 M60A3 delivered in 1984 (A contract valued at $92 million) and 30 M60A1 probably second hand Equipping two tank battalions, each attached",
+    "gen": 2,
+    "cat": "tank"
+   },
+   {
+    "m": "SK-105 Kürassier",
+    "n": 55,
+    "orig": "AUT",
+    "s": "wiki_army",
+    "c": "ت",
+    "note": "Delivered in 1979 equipped with FL-12 105mm tank turret of French AMX-13 Equipping 1 tank battalion attached to one infantry mechanized brig",
+    "gen": 2,
+    "cat": "tank"
+   },
+   {
+    "m": "Panhard AML60/90",
+    "n": 40,
+    "orig": "FRA",
+    "s": "wiki_army",
+    "c": "ت",
+    "note": "18 armored car delivered in 1970 and 10 second hand delivered in 1999. Variants includes AML-90 equipped with a 90mm gun and AML-60 equipped",
+    "gen": 2,
+    "cat": "apc"
+   },
+   {
+    "m": "EE-9 Cascavel",
+    "n": 36,
+    "orig": "BRA",
+    "s": "wiki_army",
+    "c": "ت",
+    "gen": 2,
+    "cat": "apc"
+   },
+   {
+    "m": "Cadillac Gage Commando 4×4",
+    "n": 15,
+    "orig": "USA",
+    "s": "wiki_army",
+    "c": "ت",
+    "gen": 2,
+    "cat": "apc"
+   },
+   {
+    "m": "M113",
+    "n": 300,
+    "orig": "USA",
+    "s": "wiki_army",
+    "c": "ت",
+    "note": "M113A1: 30 delivered in 1974 + 60 delivered in 1981. M-577A1 CP: 20 delivered in 1981 + 6 delivered in 2003. Equipping 3 mechanized infantry",
+    "gen": 2,
+    "cat": "apc"
+   },
+   {
+    "m": "Fiat-Otobreda 6614",
+    "n": 120,
+    "orig": "ITA",
+    "s": "wiki_army",
+    "c": "ت",
+    "note": "Delivered in 1980 Equipping 3 mechanized infantry battalions each attached to a mechanized infantry brigade.",
+    "gen": 2,
+    "cat": "apc"
+   },
+   {
+    "m": "EE-11 Urutu",
+    "n": 36,
+    "orig": "BRA",
+    "s": "wiki_army",
+    "c": "ت",
+    "gen": 2,
+    "cat": "apc"
+   },
+   {
+    "m": "BMC Kirpi",
+    "n": 270,
+    "orig": "TUR",
+    "s": "wiki_army",
+    "c": "ت",
+    "note": "Delivered in 2016. Aimed to improve soldier protection against improvised explosive device attacks and ambushes following deadly terrorist a",
+    "gen": 2,
+    "cat": "mrap"
+   },
+   {
+    "m": "Ejder Yalcin",
+    "n": 170,
+    "orig": "TUR",
+    "s": "wiki_army",
+    "c": "ت",
+    "note": "Delivered in 2017. Equipping Saharian territory infantry units.",
+    "gen": 2,
+    "cat": "mrap"
+   },
+   {
+    "m": "BMC Vuran",
+    "n": 50,
+    "orig": "TUR",
+    "s": "wiki_army",
+    "c": "ت",
+    "gen": 2,
+    "cat": "mrap"
+   },
+   {
+    "m": "Dingo 2",
+    "n": 100,
+    "orig": "DEU",
+    "s": "wiki_army",
+    "c": "ت",
+    "note": "Units were seen in use with Saharan territory forces, numbers are unknown.",
+    "gen": 2,
+    "cat": "mrap"
+   },
+   {
+    "m": "ACMAT Bastion",
+    "n": 8,
+    "orig": "FRA",
+    "s": "wiki_army",
+    "c": "ت",
+    "note": "Delivered in 2016, financed by the United States DoD. Equipping armored engineer, mine clearance unit.",
+    "gen": 2,
+    "cat": "mrap"
+   },
+   {
+    "m": "HMMWV Up-Armored",
+    "n": 648,
+    "orig": "USA",
+    "s": "wiki_army",
+    "c": "ت",
+    "note": "Delivered in 2016. M1165A1 version. Equipped with M2 Browning .50 BMG machine guns. in June 2025 Tunisia has received 70 up-armored units.",
+    "gen": 2,
+    "cat": "apc"
+   },
+   {
+    "m": "Iveco LMV",
+    "n": 150,
+    "orig": "ITA",
+    "s": "wiki_army",
+    "c": "ت",
+    "note": "Used by national guard special units as well.",
+    "gen": 2,
+    "cat": "apc"
+   },
+   {
+    "m": "Otokar Cobra II",
+    "n": 100,
+    "orig": "TUR",
+    "s": "wiki_army",
+    "c": "ت",
+    "gen": 2,
+    "cat": "apc"
+   },
+   {
+    "m": "Technamm Masstech T4",
+    "n": 100,
+    "orig": "FRA",
+    "s": "wiki_army",
+    "c": "ت",
+    "gen": 2,
+    "cat": "apc"
+   },
+   {
+    "m": "CSK-131",
+    "n": 100,
+    "orig": "CHN",
+    "s": "wiki_army",
+    "c": "ت",
+    "note": "Several units were seen in the streets of the capital for evaluation purpose, no purchase confirmed.",
+    "gen": 2,
+    "cat": "apc"
+   },
+   {
+    "m": "LPV Jeep J8",
+    "n": 70,
+    "orig": "USA",
+    "s": "wiki_army",
+    "c": "ت",
+    "note": "Delivered in 2016. Equipped with M2 Browning .50 BMG machine guns or Mk 19 grenade launchers.",
+    "gen": 2,
+    "cat": "apc"
+   },
+   {
+    "m": "NIMR",
+    "n": 40,
+    "orig": "ARE",
+    "s": "wiki_army",
+    "c": "ت",
+    "note": "Delivered in 2012, probably as aid.",
+    "gen": 2,
+    "cat": "apc"
+   }
+  ],
+  "air": [
+   {
+    "m": "Northrop F-5 (F-5E)",
+    "n": 10,
+    "orig": "USA",
+    "s": "wiki_air",
+    "c": "ت",
+    "gen": 2,
+    "cat": "fighter"
+   },
+   {
+    "m": "Maule MX-7",
+    "n": 12,
+    "orig": "USA",
+    "s": "wiki_air",
+    "c": "ت",
+    "note": "For border surveillance",
+    "gen": 2,
+    "cat": "isr"
+   },
+   {
+    "m": "Cessna 208",
+    "n": 4,
+    "orig": "USA",
+    "s": "wiki_air",
+    "c": "ت",
+    "gen": 2,
+    "cat": "isr"
+   },
+   {
+    "m": "Let L-410",
+    "n": 5,
+    "orig": "CZE",
+    "s": "wiki_air",
+    "c": "ت",
+    "gen": 2,
+    "cat": "transport"
+   },
+   {
+    "m": "C-130 Hercules (C-130B/H)",
+    "n": 4,
+    "orig": "USA",
+    "s": "wiki_air",
+    "c": "ت",
+    "note": "4 units were delivered between 2021 and January 2026",
+    "gen": 2,
+    "cat": "transport"
+   },
+   {
+    "m": "C-130J Super Hercules",
+    "n": 2,
+    "orig": "USA",
+    "s": "wiki_air",
+    "c": "ت",
+    "gen": 2,
+    "cat": "transport"
+   },
+   {
+    "m": "Bell 412",
+    "n": 2,
+    "orig": "USA",
+    "s": "wiki_air",
+    "c": "ت",
+    "gen": 2,
+    "cat": "heli_util"
+   },
+   {
+    "m": "Bell 205",
+    "n": 21,
+    "orig": "USA",
+    "s": "wiki_air",
+    "c": "ت",
+    "gen": 2,
+    "cat": "heli_util"
+   },
+   {
+    "m": "UH-1N Iroquois",
+    "n": 16,
+    "orig": "USA",
+    "s": "wiki_air",
+    "c": "ت",
+    "gen": 2,
+    "cat": "heli_util"
+   },
+   {
+    "m": "Aérospatiale Gazelle",
+    "n": 15,
+    "orig": "FRA",
+    "s": "wiki_air",
+    "c": "ت",
+    "note": "Armed with HOT MBDA missiles, seen in use during African Lion 2025",
+    "gen": 2,
+    "cat": "heli_util"
+   },
+   {
+    "m": "Bell OH-58 (OH-58D)",
+    "n": 18,
+    "orig": "USA",
+    "s": "wiki_air",
+    "c": "ت",
+    "note": "Ex US army",
+    "gen": 2,
+    "cat": "heli_util"
+   },
+   {
+    "m": "Alouette II",
+    "n": 8,
+    "orig": "FRA",
+    "s": "wiki_air",
+    "c": "ت",
+    "gen": 2,
+    "cat": "heli_util"
+   },
+   {
+    "m": "Alouette III",
+    "n": 7,
+    "orig": "FRA",
+    "s": "wiki_air",
+    "c": "ت",
+    "gen": 2,
+    "cat": "heli_util"
+   },
+   {
+    "m": "Sikorsky HH-3",
+    "n": 15,
+    "orig": "USA",
+    "s": "wiki_air",
+    "c": "ت",
+    "gen": 2,
+    "cat": "heli_util"
+   },
+   {
+    "m": "Sikorsky UH-60 (UH-60M)",
+    "n": 8,
+    "orig": "USA",
+    "s": "wiki_air",
+    "c": "ت",
+    "gen": 2,
+    "cat": "heli_util"
+   },
+   {
+    "m": "Eurocopter AS350",
+    "n": 6,
+    "orig": "FRA",
+    "s": "wiki_air",
+    "c": "ت",
+    "gen": 2,
+    "cat": "heli_util"
+   },
+   {
+    "m": "Northrop F-5 (F-5F)",
+    "n": 3,
+    "orig": "USA",
+    "s": "wiki_air",
+    "c": "ت",
+    "gen": 2,
+    "cat": "trainer"
+   },
+   {
+    "m": "Aero L-59 (L-59T)",
+    "n": 6,
+    "orig": "CSK",
+    "s": "wiki_air",
+    "c": "ت",
+    "gen": 2,
+    "cat": "trainer"
+   },
+   {
+    "m": "SF.260",
+    "n": 17,
+    "orig": "ITA",
+    "s": "wiki_air",
+    "c": "ت",
+    "gen": 2,
+    "cat": "trainer"
+   },
+   {
+    "m": "Textron T-6 Texan II (T-6C)",
+    "n": 8,
+    "orig": "USA",
+    "s": "wiki_air",
+    "c": "ت",
+    "note": "4 on order.",
+    "gen": 2,
+    "cat": "trainer"
+   },
+   {
+    "m": "TAI Anka (Anka S)",
+    "n": 6,
+    "orig": "TUR",
+    "s": "wiki_air",
+    "c": "ت",
+    "gen": 2,
+    "cat": "uav_strike"
+   }
+  ],
+  "ad": [
+   {
+    "m": "Zastava M55",
+    "n": 100,
+    "orig": "YUG",
+    "s": "wiki_army",
+    "c": "ت",
+    "note": "Mostly employed as direct-fire artillery.",
+    "gen": 2,
+    "cat": "short"
+   }
+  ],
   "msl": [],
-  "navy": []
+  "navy": [
+   {
+    "m": "Damen Offshore Patrol Vessel 1400",
+    "n": 4,
+    "orig": "NLD",
+    "s": "wiki_navy",
+    "c": "ت",
+    "gen": 2,
+    "cat": "patrol"
+   },
+   {
+    "m": "Island-class patrol boat",
+    "n": 2,
+    "orig": "USA",
+    "s": "wiki_navy",
+    "c": "ت",
+    "gen": 2,
+    "cat": "patrol"
+   },
+   {
+    "m": "Rais Al Adeb class (ex-Kondor I class)",
+    "n": 1,
+    "orig": "GDR",
+    "s": "wiki_navy",
+    "c": "ت",
+    "gen": 2,
+    "cat": "frigate"
+   },
+   {
+    "m": "La Galite (La Combatante 42)",
+    "n": 3,
+    "orig": "FRA",
+    "s": "wiki_navy",
+    "c": "ت",
+    "gen": 2,
+    "cat": "missile_boat"
+   },
+   {
+    "m": "Bizerte class (Lurssen 58-meter type)",
+    "n": 3,
+    "orig": "DEU",
+    "s": "wiki_navy",
+    "c": "ت",
+    "gen": 2,
+    "cat": "missile_boat"
+   },
+   {
+    "m": "Albatros class (Albatroz class)",
+    "n": 3,
+    "orig": "DEU",
+    "s": "wiki_navy",
+    "c": "ت",
+    "gen": 2,
+    "cat": "patrol"
+   },
+   {
+    "m": "Vosper 37m Type",
+    "n": 4,
+    "orig": "GBR",
+    "s": "wiki_navy",
+    "c": "ت",
+    "gen": 2,
+    "cat": "patrol"
+   },
+   {
+    "m": "Rampart 36 Type",
+    "n": 4,
+    "orig": "GBR",
+    "s": "wiki_navy",
+    "c": "ت",
+    "gen": 2,
+    "cat": "patrol"
+   },
+   {
+    "m": "J class",
+    "n": 6,
+    "orig": "FRA",
+    "s": "wiki_navy",
+    "c": "ت",
+    "gen": 2,
+    "cat": "patrol"
+   },
+   {
+    "m": "Jebel Boukornine class",
+    "n": 4,
+    "orig": "TUN",
+    "s": "wiki_navy",
+    "c": "ت",
+    "gen": 2,
+    "cat": "patrol"
+   },
+   {
+    "m": "Defender class",
+    "n": 3,
+    "orig": "USA",
+    "s": "wiki_navy",
+    "c": "ت",
+    "gen": 2,
+    "cat": "patrol"
+   },
+   {
+    "m": "BATRAL class (BATRAL)",
+    "n": 1,
+    "orig": "FRA",
+    "s": "wiki_navy",
+    "c": "ت",
+    "gen": 2,
+    "cat": "amphib"
+   },
+   {
+    "m": "CTM class (CTM (landing craft))",
+    "n": 4,
+    "orig": "FRA",
+    "s": "wiki_navy",
+    "c": "ت",
+    "gen": 2,
+    "cat": "amphib"
+   }
+  ],
+  "grp": {
+   "tank": {
+    "n": 84,
+    "s": "iiss_eq",
+    "c": "ت",
+    "top": [
+     [
+      "M60A1/A3",
+      90,
+      2,
+      "USA"
+     ],
+     [
+      "SK-105 Kürassier",
+      55,
+      2,
+      "AUT"
+     ]
+    ],
+    "gen": 2.0,
+    "note": "مجموع القوائم 145 يختلف عن الإجمالي؛ الإجمالي هو المعتمد"
+   },
+   "afv": {
+    "n": 2353,
+    "s": "wiki_army",
+    "c": "ت",
+    "top": [
+     [
+      "HMMWV Up-Armored",
+      648,
+      2,
+      "USA"
+     ],
+     [
+      "M113",
+      300,
+      2,
+      "USA"
+     ],
+     [
+      "BMC Kirpi",
+      270,
+      2,
+      "TUR"
+     ]
+    ],
+    "gen": 2.0
+   },
+   "art": {
+    "n": 67,
+    "s": "wiki_army",
+    "c": "ت",
+    "top": [
+     [
+      "M198",
+      57,
+      2,
+      "USA"
+     ],
+     [
+      "M101A1 howitzer",
+      10,
+      2,
+      "USA"
+     ]
+    ],
+    "gen": 2.0
+   },
+   "jet": {
+    "n": 14,
+    "s": "iiss_eq",
+    "c": "ت",
+    "top": [
+     [
+      "Northrop F-5 (F-5E)",
+      10,
+      2,
+      "USA"
+     ]
+    ],
+    "gen": 2.0
+   },
+   "heli": {
+    "n": 116,
+    "s": "wiki_air",
+    "c": "ت",
+    "top": [
+     [
+      "Bell 205",
+      21,
+      2,
+      "USA"
+     ],
+     [
+      "Bell OH-58 (OH-58D)",
+      18,
+      2,
+      "USA"
+     ],
+     [
+      "UH-1N Iroquois",
+      16,
+      2,
+      "USA"
+     ]
+    ],
+    "gen": 2.0
+   },
+   "uav": {
+    "n": 6,
+    "s": "wiki_air",
+    "c": "ت",
+    "top": [
+     [
+      "TAI Anka (Anka S)",
+      6,
+      2,
+      "TUR"
+     ]
+    ],
+    "gen": 2.0
+   },
+   "ad": {
+    "n": 100,
+    "s": "wiki_army",
+    "c": "ت",
+    "top": [
+     [
+      "Zastava M55",
+      100,
+      2,
+      "YUG"
+     ]
+    ],
+    "gen": 2.0
+   },
+   "navy": {
+    "n": 42,
+    "s": "wiki_navy",
+    "c": "ت",
+    "top": [
+     [
+      "J class",
+      6,
+      2,
+      "FRA"
+     ],
+     [
+      "Damen Offshore Patrol Vessel 1400",
+      4,
+      2,
+      "NLD"
+     ],
+     [
+      "Vosper 37m Type",
+      4,
+      2,
+      "GBR"
+     ]
+    ],
+    "gen": 2.0
+   }
+  }
  },
  "ind": null,
  "pol": {

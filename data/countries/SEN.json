@@ -5,6 +5,18 @@
  "tier": "C",
  "asOf": "2026-11",
  "src": {
+  "wiki_air": {
+   "t": "Wikipedia: Senegalese Air Force",
+   "u": "https://en.wikipedia.org/wiki/Senegalese_Air_Force?oldid=1354808718",
+   "y": 2026,
+   "note": "نسخة الصفحة بتاريخ السحب؛ أرقام ويكيبيديا تنراجع ويا مصادر ثانية"
+  },
+  "wiki_army": {
+   "t": "Wikipedia: Armed Forces of Senegal",
+   "u": "https://en.wikipedia.org/wiki/Armed_Forces_of_Senegal?oldid=1384030291",
+   "y": 2026,
+   "note": "نسخة الصفحة بتاريخ السحب؛ أرقام ويكيبيديا تنراجع ويا مصادر ثانية"
+  },
   "iiss_eq": {
    "t": "Wikipedia: List of countries by level of military equipment (من IISS Military Balance ومصادر ثانية)",
    "u": "https://en.wikipedia.org/wiki/List_of_countries_by_level_of_military_equipment?oldid=1384804191",
@@ -49,6 +61,11 @@
   "tierA": {
    "t": "تقدير المصمم (تشرين الثاني 2026) لصناعة السلاح والاستقرار: SIPRI Arms Transfers Database (أكبر المصدّرين 2020–24)، SIPRI Top 100 Arms-Producing Companies، Fragile States Index 2025، أخبار 2026",
    "u": "https://www.sipri.org/databases/armstransfers",
+   "y": 2026
+  },
+  "tpl": {
+   "t": "قالب منطقة (af): موديلات شائعة ونسب تقريبية من الدبابات (مدرعات ×2.5، مدفعية ×0.9، مروحيات ×0.25) — تقدير المصمم",
+   "u": "docs/features/world-plan.md",
    "y": 2026
   }
  },
@@ -219,11 +236,358 @@
     "c": "ت"
    }
   },
-  "land": [],
-  "air": [],
-  "ad": [],
+  "land": [
+   {
+    "m": "Bastion-01",
+    "n": 6,
+    "orig": "UKR",
+    "s": "wiki_army",
+    "c": "ت",
+    "gen": 2,
+    "cat": "mlrs"
+   },
+   {
+    "m": "M101",
+    "n": 6,
+    "orig": "USA",
+    "s": "wiki_army",
+    "c": "ت",
+    "gen": 2,
+    "cat": "towed"
+   },
+   {
+    "m": "M-50",
+    "n": 6,
+    "orig": "FRA",
+    "s": "wiki_army",
+    "c": "ت",
+    "gen": 2,
+    "cat": "towed"
+   },
+   {
+    "m": "TRF1",
+    "n": 8,
+    "orig": "FRA",
+    "s": "wiki_army",
+    "c": "ت",
+    "gen": 2,
+    "cat": "towed"
+   },
+   {
+    "m": "MO-120-RT-61",
+    "n": 32,
+    "orig": "FRA",
+    "s": "wiki_army",
+    "c": "ت",
+    "gen": 2,
+    "cat": "towed"
+   },
+   {
+    "m": "WMA-301",
+    "n": 12,
+    "orig": "CHN",
+    "s": "wiki_army",
+    "c": "ت",
+    "gen": 2,
+    "cat": "atgm"
+   },
+   {
+    "m": "Ratel IFV",
+    "n": 26,
+    "orig": "ZAF",
+    "s": "wiki_army",
+    "c": "ت",
+    "gen": 2,
+    "cat": "ifv"
+   },
+   {
+    "m": "Panhard AML",
+    "n": 53,
+    "orig": "FRA",
+    "s": "wiki_army",
+    "c": "ت",
+    "gen": 2,
+    "cat": "apc"
+   },
+   {
+    "m": "Eland-90",
+    "n": 47,
+    "orig": "ZAF",
+    "s": "wiki_army",
+    "c": "ت",
+    "gen": 2,
+    "cat": "apc"
+   },
+   {
+    "m": "RAM MK3",
+    "n": 55,
+    "orig": "ISR",
+    "s": "wiki_army",
+    "c": "ت",
+    "gen": 2,
+    "cat": "apc"
+   },
+   {
+    "m": "Casspir",
+    "n": 9,
+    "orig": "ZAF",
+    "s": "wiki_army",
+    "c": "ت",
+    "gen": 2,
+    "cat": "mrap"
+   },
+   {
+    "m": "PUMA M26-15",
+    "n": 30,
+    "orig": "ZAF",
+    "s": "wiki_army",
+    "c": "ت",
+    "gen": 4,
+    "cat": "mrap"
+   },
+   {
+    "m": "Ejder Yalçın",
+    "n": 25,
+    "orig": "TUR",
+    "s": "wiki_army",
+    "c": "ت",
+    "gen": 2,
+    "cat": "mrap"
+   }
+  ],
+  "air": [
+   {
+    "m": "IPTN CN-235",
+    "n": 1,
+    "orig": "IDN",
+    "s": "wiki_air",
+    "c": "ت",
+    "gen": 2,
+    "cat": "isr"
+   },
+   {
+    "m": "IPTN CN-235",
+    "n": 2,
+    "orig": "IDN",
+    "s": "wiki_air",
+    "c": "ت",
+    "gen": 2,
+    "cat": "transport"
+   },
+   {
+    "m": "EADS CASA C-295",
+    "n": 1,
+    "orig": "ESP",
+    "s": "wiki_air",
+    "c": "ت",
+    "gen": 2,
+    "cat": "transport"
+   },
+   {
+    "m": "Beechcraft Super King Air (King Air 200)",
+    "n": 2,
+    "orig": "USA",
+    "s": "wiki_air",
+    "c": "ت",
+    "gen": 2,
+    "cat": "transport"
+   },
+   {
+    "m": "Bell 206",
+    "n": 1,
+    "orig": "USA",
+    "s": "wiki_air",
+    "c": "ت",
+    "gen": 2,
+    "cat": "heli_util"
+   },
+   {
+    "m": "Mil Mi-17",
+    "n": 4,
+    "orig": "RUS",
+    "s": "wiki_air",
+    "c": "ت",
+    "gen": 2,
+    "cat": "heli_util"
+   },
+   {
+    "m": "Mil Mi-24 (Mi-35)",
+    "n": 5,
+    "orig": "RUS",
+    "s": "wiki_air",
+    "c": "ت",
+    "gen": 3,
+    "cat": "heli_attack"
+   },
+   {
+    "m": "Aérospatiale Alouette III",
+    "n": 1,
+    "orig": "FRA",
+    "s": "wiki_air",
+    "c": "ت",
+    "gen": 2,
+    "cat": "heli_util"
+   },
+   {
+    "m": "Bell 505",
+    "n": 3,
+    "orig": "USA",
+    "s": "wiki_air",
+    "c": "ت",
+    "gen": 2,
+    "cat": "heli_util"
+   },
+   {
+    "m": "Socata TB 30",
+    "n": 6,
+    "orig": "FRA",
+    "s": "wiki_air",
+    "c": "ت",
+    "gen": 2,
+    "cat": "trainer"
+   },
+   {
+    "m": "KAI KT-1 Woongbi",
+    "n": 4,
+    "orig": "KOR",
+    "s": "wiki_air",
+    "c": "ت",
+    "gen": 2,
+    "cat": "trainer"
+   },
+   {
+    "m": "Hughes 269",
+    "n": 6,
+    "orig": "USA",
+    "s": "wiki_air",
+    "c": "ت",
+    "gen": 2,
+    "cat": "heli_util"
+   }
+  ],
+  "ad": [
+   {
+    "m": "Bofors L/60",
+    "n": 12,
+    "orig": "SWE",
+    "s": "wiki_army",
+    "c": "ت",
+    "gen": 2,
+    "cat": "short"
+   },
+   {
+    "m": "20 mm modèle F2 gun",
+    "n": 21,
+    "orig": "FRA",
+    "s": "wiki_army",
+    "c": "ت",
+    "note": "Used for air defence.",
+    "gen": 2,
+    "cat": "short"
+   }
+  ],
   "msl": [],
-  "navy": []
+  "navy": [],
+  "grp": {
+   "afv": {
+    "n": 245,
+    "s": "wiki_army",
+    "c": "ت",
+    "top": [
+     [
+      "RAM MK3",
+      55,
+      2,
+      "ISR"
+     ],
+     [
+      "Panhard AML",
+      53,
+      2,
+      "FRA"
+     ],
+     [
+      "Eland-90",
+      47,
+      2,
+      "ZAF"
+     ]
+    ],
+    "gen": 2.2
+   },
+   "art": {
+    "n": 58,
+    "s": "wiki_army",
+    "c": "ت",
+    "top": [
+     [
+      "MO-120-RT-61",
+      32,
+      2,
+      "FRA"
+     ],
+     [
+      "TRF1",
+      8,
+      2,
+      "FRA"
+     ],
+     [
+      "Bastion-01",
+      6,
+      2,
+      "UKR"
+     ]
+    ],
+    "gen": 2.0
+   },
+   "heli": {
+    "n": 20,
+    "s": "wiki_air",
+    "c": "ت",
+    "top": [
+     [
+      "Hughes 269",
+      6,
+      2,
+      "USA"
+     ],
+     [
+      "Mil Mi-24 (Mi-35)",
+      5,
+      3,
+      "RUS"
+     ],
+     [
+      "Mil Mi-17",
+      4,
+      2,
+      "RUS"
+     ]
+    ],
+    "gen": 2.2
+   },
+   "ad": {
+    "n": 33,
+    "s": "wiki_army",
+    "c": "ت",
+    "top": [
+     [
+      "20 mm modèle F2 gun",
+      21,
+      2,
+      "FRA"
+     ],
+     [
+      "Bofors L/60",
+      12,
+      2,
+      "SWE"
+     ]
+    ],
+    "gen": 2.0
+   }
+  }
  },
  "ind": null,
  "pol": {

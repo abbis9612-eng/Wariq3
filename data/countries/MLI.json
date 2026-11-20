@@ -50,6 +50,11 @@
    "t": "تقدير المصمم (تشرين الثاني 2026) لصناعة السلاح والاستقرار: SIPRI Arms Transfers Database (أكبر المصدّرين 2020–24)، SIPRI Top 100 Arms-Producing Companies، Fragile States Index 2025، أخبار 2026",
    "u": "https://www.sipri.org/databases/armstransfers",
    "y": 2026
+  },
+  "tpl": {
+   "t": "قالب منطقة (af): موديلات شائعة ونسب تقريبية من الدبابات (مدرعات ×2.5، مدفعية ×0.9، مروحيات ×0.25) — تقدير المصمم",
+   "u": "docs/features/world-plan.md",
+   "y": 2026
   }
  },
  "gov": {
@@ -220,7 +225,36 @@
   "air": [],
   "ad": [],
   "msl": [],
-  "navy": []
+  "navy": [],
+  "grp": {
+   "jet": {
+    "n": 13,
+    "s": "iiss_eq",
+    "c": "ت",
+    "top": [
+     [
+      "MiG-21",
+      null,
+      null,
+      null
+     ],
+     [
+      "Su-25",
+      null,
+      null,
+      null
+     ],
+     [
+      "L-39",
+      null,
+      null,
+      null
+     ]
+    ],
+    "gen": 1.6,
+    "tpl": "af"
+   }
+  }
  },
  "ind": null,
  "pol": {

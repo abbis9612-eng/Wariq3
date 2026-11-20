@@ -5,6 +5,24 @@
  "tier": "B",
  "asOf": "2026-11",
  "src": {
+  "wiki_air": {
+   "t": "Wikipedia: Ethiopian Air Force",
+   "u": "https://en.wikipedia.org/wiki/Ethiopian_Air_Force?oldid=1386086793",
+   "y": 2026,
+   "note": "نسخة الصفحة بتاريخ السحب؛ أرقام ويكيبيديا تنراجع ويا مصادر ثانية"
+  },
+  "wiki_army": {
+   "t": "Wikipedia: List of equipment of the Ethiopian Army",
+   "u": "https://en.wikipedia.org/wiki/List_of_equipment_of_the_Ethiopian_Army?oldid=1386582158",
+   "y": 2026,
+   "note": "نسخة الصفحة بتاريخ السحب؛ أرقام ويكيبيديا تنراجع ويا مصادر ثانية"
+  },
+  "wiki_navy": {
+   "t": "Wikipedia: Ethiopian Navy",
+   "u": "https://en.wikipedia.org/wiki/Ethiopian_Navy?oldid=1379086399",
+   "y": 2026,
+   "note": "نسخة الصفحة بتاريخ السحب؛ أرقام ويكيبيديا تنراجع ويا مصادر ثانية"
+  },
   "iiss_eq": {
    "t": "Wikipedia: List of countries by level of military equipment (من IISS Military Balance ومصادر ثانية)",
    "u": "https://en.wikipedia.org/wiki/List_of_countries_by_level_of_military_equipment?oldid=1384804191",
@@ -49,6 +67,11 @@
   "tierA": {
    "t": "تقدير المصمم (تشرين الثاني 2026) لصناعة السلاح والاستقرار: SIPRI Arms Transfers Database (أكبر المصدّرين 2020–24)، SIPRI Top 100 Arms-Producing Companies، Fragile States Index 2025، أخبار 2026",
    "u": "https://www.sipri.org/databases/armstransfers",
+   "y": 2026
+  },
+  "tpl": {
+   "t": "قالب منطقة (af): موديلات شائعة ونسب تقريبية من الدبابات (مدرعات ×2.5، مدفعية ×0.9، مروحيات ×0.25) — تقدير المصمم",
+   "u": "docs/features/world-plan.md",
    "y": 2026
   }
  },
@@ -219,11 +242,611 @@
     "c": "ت"
    }
   },
-  "land": [],
-  "air": [],
-  "ad": [],
+  "land": [
+   {
+    "m": "T-72",
+    "n": 221,
+    "orig": "SUN",
+    "s": "wiki_army",
+    "c": "ت",
+    "note": "50 T-72B (bought from Yemen), 171 T-72UA1",
+    "gen": 3,
+    "cat": "tank"
+   },
+   {
+    "m": "T-54/T-55",
+    "n": 240,
+    "orig": "SUN",
+    "s": "wiki_army",
+    "c": "ت",
+    "note": "T-54A T-55A T-55MB Tiran-5",
+    "gen": 1,
+    "cat": "tank"
+   },
+   {
+    "m": "Cadillac V-150",
+    "n": 12,
+    "orig": "USA",
+    "s": "wiki_army",
+    "c": "ت",
+    "gen": 2,
+    "cat": "apc"
+   },
+   {
+    "m": "Ze'ev",
+    "n": 369,
+    "orig": "ISR",
+    "s": "wiki_army",
+    "c": "ت",
+    "gen": 2,
+    "cat": "apc"
+   },
+   {
+    "m": "BMP-1",
+    "n": 20,
+    "orig": "SUN",
+    "s": "wiki_army",
+    "c": "ت",
+    "gen": 2,
+    "cat": "ifv"
+   },
+   {
+    "m": "BRDM-1",
+    "n": 30,
+    "orig": "SUN",
+    "s": "wiki_army",
+    "c": "ت",
+    "gen": 2,
+    "cat": "apc"
+   },
+   {
+    "m": "BRDM-2",
+    "n": 40,
+    "orig": "SUN",
+    "s": "wiki_army",
+    "c": "ت",
+    "gen": 2,
+    "cat": "apc"
+   },
+   {
+    "m": "2S1 Gvozdika",
+    "n": 82,
+    "orig": "SUN",
+    "s": "wiki_army",
+    "c": "ت",
+    "gen": 2,
+    "cat": "spg"
+   },
+   {
+    "m": "2S19 Msta-S",
+    "n": 10,
+    "orig": "SUN",
+    "s": "wiki_army",
+    "c": "ت",
+    "gen": 2,
+    "cat": "spg"
+   },
+   {
+    "m": "PLZ-45",
+    "n": 18,
+    "orig": "CHN",
+    "s": "wiki_army",
+    "c": "ت",
+    "note": "Delivered in 1999",
+    "gen": 2,
+    "cat": "spg"
+   },
+   {
+    "m": "SH-15",
+    "n": 32,
+    "orig": "CHN",
+    "s": "wiki_army",
+    "c": "ت",
+    "gen": 2,
+    "cat": "spg"
+   },
+   {
+    "m": "BM-21 Grad",
+    "n": 50,
+    "orig": "SUN",
+    "s": "wiki_army",
+    "c": "ت",
+    "gen": 2,
+    "cat": "mlrs"
+   },
+   {
+    "m": "Type 63",
+    "n": 25,
+    "orig": "CHN",
+    "s": "wiki_army",
+    "c": "ت",
+    "note": "Manufactured modernization by Gafat Armament Engineering Complex",
+    "gen": 2,
+    "cat": "mlrs"
+   },
+   {
+    "m": "PHL-03",
+    "n": 4,
+    "orig": "CHN",
+    "s": "wiki_army",
+    "c": "ت",
+    "gen": 2,
+    "cat": "mlrs"
+   },
+   {
+    "m": "M-30",
+    "n": 464,
+    "orig": "SUN",
+    "s": "wiki_army",
+    "c": "ت",
+    "gen": 2,
+    "cat": "towed"
+   },
+   {
+    "m": "2A18 D-30",
+    "n": 309,
+    "orig": "SUN",
+    "s": "wiki_army",
+    "c": "ت",
+    "note": "Manufactured modernization by Gafat Armament Engineering Complex",
+    "gen": 2,
+    "cat": "towed"
+   }
+  ],
+  "air": [
+   {
+    "m": "MiG-23 (MiG-23BN)",
+    "n": 9,
+    "orig": "SUN",
+    "s": "wiki_air",
+    "c": "ت",
+    "gen": 2,
+    "cat": "bomber"
+   },
+   {
+    "m": "Sukhoi Su-25 (Su-25UB)",
+    "n": 3,
+    "orig": "RUS",
+    "s": "wiki_air",
+    "c": "ت",
+    "gen": 3,
+    "cat": "attack"
+   },
+   {
+    "m": "Sukhoi Su-27 (Su-27SK)",
+    "n": 16,
+    "orig": "RUS",
+    "s": "wiki_air",
+    "c": "ت",
+    "gen": 3,
+    "cat": "fighter"
+   },
+   {
+    "m": "Sukhoi Su-30 (Su-30K)",
+    "n": 6,
+    "orig": "RUS",
+    "s": "wiki_air",
+    "c": "ت",
+    "gen": 4,
+    "cat": "fighter"
+   },
+   {
+    "m": "Sukhoi Su-35",
+    "n": 12,
+    "orig": "RUS",
+    "s": "wiki_air",
+    "c": "ت",
+    "gen": 4,
+    "cat": "fighter"
+   },
+   {
+    "m": "Ilyushin Il-76 (Il-76TD)",
+    "n": 3,
+    "orig": "RUS",
+    "s": "wiki_air",
+    "c": "ت",
+    "gen": 2,
+    "cat": "transport"
+   },
+   {
+    "m": "Antonov An-12",
+    "n": 4,
+    "orig": "SUN",
+    "s": "wiki_air",
+    "c": "ت",
+    "gen": 2,
+    "cat": "transport"
+   },
+   {
+    "m": "Antonov An-32",
+    "n": 1,
+    "orig": "UKR",
+    "s": "wiki_air",
+    "c": "ت",
+    "gen": 2,
+    "cat": "transport"
+   },
+   {
+    "m": "C-130 Hercules (C-130B/E)",
+    "n": 2,
+    "orig": "USA",
+    "s": "wiki_air",
+    "c": "ت",
+    "gen": 2,
+    "cat": "transport"
+   },
+   {
+    "m": "DHC-5 Buffalo",
+    "n": 1,
+    "orig": "CAN",
+    "s": "wiki_air",
+    "c": "ت",
+    "gen": 2,
+    "cat": "transport"
+   },
+   {
+    "m": "DHC-6 Twin Otter",
+    "n": 1,
+    "orig": "CAN",
+    "s": "wiki_air",
+    "c": "ت",
+    "gen": 2,
+    "cat": "transport"
+   },
+   {
+    "m": "Beechcraft King Air",
+    "n": 3,
+    "orig": "USA",
+    "s": "wiki_air",
+    "c": "ت",
+    "note": "One for VIP transport",
+    "gen": 2,
+    "cat": "transport"
+   },
+   {
+    "m": "Mil Mi-8 (Mi-8/17)",
+    "n": 15,
+    "orig": "RUS",
+    "s": "wiki_air",
+    "c": "ت",
+    "gen": 2,
+    "cat": "heli_util"
+   },
+   {
+    "m": "Mil Mi-24 (Mi-35)",
+    "n": 7,
+    "orig": "RUS",
+    "s": "wiki_air",
+    "c": "ت",
+    "gen": 3,
+    "cat": "heli_attack"
+   },
+   {
+    "m": "Alouette III",
+    "n": 3,
+    "orig": "FRA",
+    "s": "wiki_air",
+    "c": "ت",
+    "gen": 2,
+    "cat": "heli_util"
+   },
+   {
+    "m": "Tsehay 2.0",
+    "n": 2,
+    "orig": "ETH",
+    "s": "wiki_air",
+    "c": "ت",
+    "note": "More to be produced",
+    "gen": 2,
+    "cat": "isr"
+   },
+   {
+    "m": "Yakovlev Yak-130",
+    "n": 6,
+    "orig": "RUS",
+    "s": "wiki_air",
+    "c": "ت",
+    "note": "Total of 10 aircraft to be ordered. Aero L-39 replacement.",
+    "gen": 2,
+    "cat": "trainer"
+   },
+   {
+    "m": "Sukhoi Su-25",
+    "n": 1,
+    "orig": "RUS",
+    "s": "wiki_air",
+    "c": "ت",
+    "gen": 3,
+    "cat": "trainer"
+   },
+   {
+    "m": "Sukhoi Su-27 (Su-27UB)",
+    "n": 6,
+    "orig": "RUS",
+    "s": "wiki_air",
+    "c": "ت",
+    "gen": 3,
+    "cat": "trainer"
+   },
+   {
+    "m": "Aero L-39 (L-39C)",
+    "n": 15,
+    "orig": "CZE",
+    "s": "wiki_air",
+    "c": "ت",
+    "gen": 2,
+    "cat": "trainer"
+   },
+   {
+    "m": "Grob G 120TP",
+    "n": 12,
+    "orig": "DEU",
+    "s": "wiki_air",
+    "c": "ت",
+    "gen": 2,
+    "cat": "trainer"
+   },
+   {
+    "m": "Bayraktar TB2",
+    "n": 4,
+    "orig": "TUR",
+    "s": "wiki_air",
+    "c": "ت",
+    "gen": 4,
+    "cat": "uav_strike"
+   },
+   {
+    "m": "Wing Loong II",
+    "n": 2,
+    "orig": "CHN",
+    "s": "wiki_air",
+    "c": "ت",
+    "gen": 4,
+    "cat": "uav_strike"
+   }
+  ],
+  "ad": [
+   {
+    "m": "ZSU-23-4 Shilka",
+    "n": 60,
+    "orig": "SUN",
+    "s": "wiki_army",
+    "c": "ت",
+    "gen": 2,
+    "cat": "short"
+   },
+   {
+    "m": "S-75M3 Volkhov",
+    "n": 89,
+    "orig": "SUN",
+    "s": "wiki_army",
+    "c": "ت",
+    "note": "1st division",
+    "gen": 1,
+    "cat": "long"
+   },
+   {
+    "m": "S-125M1 Pechora-M1",
+    "n": 4,
+    "orig": "SUN",
+    "s": "wiki_army",
+    "c": "ت",
+    "note": "1st division",
+    "gen": 3,
+    "cat": "medium"
+   },
+   {
+    "m": "Pantsir-S1",
+    "n": 6,
+    "orig": "RUS",
+    "s": "wiki_army",
+    "c": "ت",
+    "gen": 3,
+    "cat": "short"
+   },
+   {
+    "m": "HQ-64",
+    "n": 12,
+    "orig": "CHN",
+    "s": "wiki_army",
+    "c": "ت",
+    "gen": 2,
+    "cat": "short"
+   },
+   {
+    "m": "SPYDER",
+    "n": 26,
+    "orig": "ISR",
+    "s": "wiki_army",
+    "c": "ت",
+    "gen": 2,
+    "cat": "medium"
+   },
+   {
+    "m": "S-400",
+    "n": 4,
+    "orig": "RUS",
+    "s": "wiki_army",
+    "c": "ت",
+    "note": "4 batteries on order.",
+    "gen": 4,
+    "cat": "long"
+   }
+  ],
   "msl": [],
-  "navy": []
+  "navy": [],
+  "grp": {
+   "tank": {
+    "n": 680,
+    "s": "iiss_eq",
+    "c": "ت",
+    "top": [
+     [
+      "T-54/T-55",
+      240,
+      1,
+      "SUN"
+     ],
+     [
+      "T-72",
+      221,
+      3,
+      "SUN"
+     ]
+    ],
+    "gen": 2.0
+   },
+   "afv": {
+    "n": 471,
+    "s": "wiki_army",
+    "c": "ت",
+    "top": [
+     [
+      "Ze'ev",
+      369,
+      2,
+      "ISR"
+     ],
+     [
+      "BRDM-2",
+      40,
+      2,
+      "SUN"
+     ],
+     [
+      "BRDM-1",
+      30,
+      2,
+      "SUN"
+     ]
+    ],
+    "gen": 2.0
+   },
+   "art": {
+    "n": 994,
+    "s": "wiki_army",
+    "c": "ت",
+    "top": [
+     [
+      "M-30",
+      464,
+      2,
+      "SUN"
+     ],
+     [
+      "2A18 D-30",
+      309,
+      2,
+      "SUN"
+     ],
+     [
+      "2S1 Gvozdika",
+      82,
+      2,
+      "SUN"
+     ]
+    ],
+    "gen": 2.0
+   },
+   "jet": {
+    "n": 29,
+    "s": "iiss_eq",
+    "c": "ت",
+    "top": [
+     [
+      "Sukhoi Su-27 (Su-27SK)",
+      16,
+      3,
+      "RUS"
+     ],
+     [
+      "Sukhoi Su-35",
+      12,
+      4,
+      "RUS"
+     ],
+     [
+      "MiG-23 (MiG-23BN)",
+      9,
+      2,
+      "SUN"
+     ]
+    ],
+    "gen": 3.2
+   },
+   "heli": {
+    "n": 25,
+    "s": "wiki_air",
+    "c": "ت",
+    "top": [
+     [
+      "Mil Mi-8 (Mi-8/17)",
+      15,
+      2,
+      "RUS"
+     ],
+     [
+      "Mil Mi-24 (Mi-35)",
+      7,
+      3,
+      "RUS"
+     ],
+     [
+      "Alouette III",
+      3,
+      2,
+      "FRA"
+     ]
+    ],
+    "gen": 2.3
+   },
+   "uav": {
+    "n": 6,
+    "s": "wiki_air",
+    "c": "ت",
+    "top": [
+     [
+      "Bayraktar TB2",
+      4,
+      4,
+      "TUR"
+     ],
+     [
+      "Wing Loong II",
+      2,
+      4,
+      "CHN"
+     ]
+    ],
+    "gen": 4.0
+   },
+   "ad": {
+    "n": 201,
+    "s": "wiki_army",
+    "c": "ت",
+    "top": [
+     [
+      "S-75M3 Volkhov",
+      89,
+      1,
+      "SUN"
+     ],
+     [
+      "ZSU-23-4 Shilka",
+      60,
+      2,
+      "SUN"
+     ],
+     [
+      "SPYDER",
+      26,
+      2,
+      "ISR"
+     ]
+    ],
+    "gen": 1.6
+   }
+  }
  },
  "ind": null,
  "pol": {

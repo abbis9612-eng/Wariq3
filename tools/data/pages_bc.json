@@ -1,0 +1,535 @@
+{
+"AZE": {
+"army": "List of equipment of the Azerbaijani Land Forces",
+"air": "Azerbaijani Air Forces",
+"navy": "Azerbaijani Navy"
+},
+"ARM": {
+"army": "Armed Forces of Armenia",
+"air": "Armenian Air Force",
+"navy": null
+},
+"AFG": {
+"army": "Armed Forces of the Democratic Republic of Afghanistan",
+"air": null,
+"navy": null
+},
+"AGO": {
+"army": "List of equipment of the Angolan Army",
+"air": "National Air Force of Angola",
+"navy": "Angolan Navy"
+},
+"UZB": {
+"army": "Armed Forces of the Republic of Uzbekistan",
+"air": null,
+"navy": null
+},
+"ETH": {
+"army": "List of equipment of the Ethiopian Army",
+"air": "Ethiopian Air Force",
+"navy": "Ethiopian Navy"
+},
+"EST": {
+"army": "List of equipment of the Estonian Defence Forces",
+"air": "Estonian Air Force",
+"navy": "Estonian Navy"
+},
+"ARG": {
+"army": null,
+"air": null,
+"navy": null
+},
+"BHR": {
+"army": "Royal Bahraini Army",
+"air": "Royal Bahraini Air Force",
+"navy": "Royal Bahraini Naval Force"
+},
+"PRT": {
+"army": null,
+"air": null,
+"navy": "Navy Museum (Portugal)"
+},
+"CZE": {
+"army": null,
+"air": null,
+"navy": null
+},
+"DNK": {
+"army": null,
+"air": "List of military aircraft of Denmark",
+"navy": null
+},
+"SDN": {
+"army": "Sudanese Armed Forces",
+"air": "South Sudan Air Force",
+"navy": "Sudanese Navy"
+},
+"SWE": {
+"army": null,
+"air": "List of military aircraft of Sweden",
+"navy": null
+},
+"PHL": {
+"army": "Armed Forces of the Philippines",
+"air": null,
+"navy": null
+},
+"KWT": {
+"army": "Kuwait Land Forces",
+"air": "Kuwait Air Force",
+"navy": "Kuwait Naval Force"
+},
+"HUN": {
+"army": "Second Army (Hungary)",
+"air": null,
+"navy": null
+},
+"MAR": {
+"army": null,
+"air": null,
+"navy": null
+},
+"MEX": {
+"army": null,
+"air": null,
+"navy": null
+},
+"NOR": {
+"army": null,
+"air": "List of military aircraft of Norway",
+"navy": null
+},
+"AUT": {
+"army": "List of equipment of the Austrian Armed Forces",
+"air": "Austrian Air Force",
+"navy": null
+},
+"YEM": {
+"army": "List of equipment of the Yemeni Army",
+"air": "Yemeni Air Force",
+"navy": "Yemeni Navy"
+},
+"GRC": {
+"army": null,
+"air": null,
+"navy": null
+},
+"BEL": {
+"army": null,
+"air": null,
+"navy": null
+},
+"BGR": {
+"army": "List of modern equipment of the Bulgarian Armed Forces",
+"air": "Bulgarian Air Force",
+"navy": "Bulgarian Navy"
+},
+"BGD": {
+"army": "List of equipment of the Bangladesh Army",
+"air": "Bangladesh Air Force",
+"navy": "List of active Bangladesh Navy ships"
+},
+"PER": {
+"army": "List of equipment of the Peruvian Army",
+"air": "Peruvian Air Force",
+"navy": "List of Peruvian Navy ships"
+},
+"BLR": {
+"army": "Armed Forces of Belarus",
+"air": "Belarusian Air Force",
+"navy": null
+},
+"THA": {
+"army": null,
+"air": "United States Air Force in Thailand",
+"navy": null
+},
+"CHL": {
+"army": "List of current equipment of the Chilean Army",
+"air": "Chilean Air Force",
+"navy": "List of active ships of the Chilean Navy"
+},
+"TUN": {
+"army": "List of equipment of the Tunisian Army",
+"air": "Tunisian Air Force",
+"navy": "Tunisian Navy"
+},
+"ZAF": {
+"army": "List of equipment of the South African Army",
+"air": "South African Air Force",
+"navy": "List of active South African Navy ships"
+},
+"GEO": {
+"army": "List of equipment of the Defense Forces of Georgia",
+"air": "Georgian Air Force",
+"navy": "Coast Guard of Georgia"
+},
+"ROU": {
+"army": "List of equipment of the Romanian Armed Forces",
+"air": "Romanian Air Force",
+"navy": "Romanian Naval Forces"
+},
+"LKA": {
+"army": "Sri Lanka Army",
+"air": "Sri Lanka Air Force",
+"navy": "Sri Lanka Navy"
+},
+"OMN": {
+"army": "Royal Army of Oman",
+"air": "Royal Air Force of Oman",
+"navy": "Royal Navy of Oman"
+},
+"SVK": {
+"army": null,
+"air": null,
+"navy": null
+},
+"SGP": {
+"army": "List of equipment of the Singapore Army",
+"air": "Republic of Singapore Air Force",
+"navy": "List of ships of the Republic of Singapore Navy"
+},
+"CHE": {
+"army": null,
+"air": null,
+"navy": null
+},
+"SRB": {
+"army": "List of equipment of the Serbian Armed Forces",
+"air": "Serbian Air Force and Air Defence",
+"navy": null
+},
+"PSX": {
+"army": null,
+"air": null,
+"navy": null
+},
+"VEN": {
+"army": "List of equipment of the Venezuelan Armed Forces",
+"air": "Bolivarian Military Aviation of Venezuela",
+"navy": "Bolivarian Navy of Venezuela"
+},
+"FIN": {
+"army": null,
+"air": "List of aircraft of Finland in World War II",
+"navy": null
+},
+"VNM": {
+"army": "List of equipment of the Vietnam People's Air Force",
+"air": "Vietnam Air Defence - Air Force",
+"navy": "Vietnam People's Navy"
+},
+"CYP": {
+"army": null,
+"air": null,
+"navy": "Cyprus Naval Command"
+},
+"KAZ": {
+"army": "Armed Forces of the Republic of Kazakhstan",
+"air": null,
+"navy": null
+},
+"HRV": {
+"army": "List of equipment of the Croatian Army",
+"air": "Croatian Air Force",
+"navy": "List of active Croatian Navy ships"
+},
+"CAN": {
+"army": "List of military equipment of Canada",
+"air": "List of aircraft of Canada's air forces",
+"navy": null
+},
+"CUB": {
+"army": "List of equipment of the Cuban Revolutionary Armed Forces",
+"air": null,
+"navy": "Cuban Revolutionary Navy"
+},
+"COL": {
+"army": "List of equipment of the National Army of Colombia",
+"air": "Colombian Air Force One",
+"navy": "Colombian Navy"
+},
+"KEN": {
+"army": "Kenya Army",
+"air": "Kenya Air Force",
+"navy": "Kenya Navy"
+},
+"LVA": {
+"army": "List of equipment of the Latvian Land Forces",
+"air": "Latvian Air Force",
+"navy": "Latvian Naval Forces"
+},
+"LBN": {
+"army": "South Lebanon Army",
+"air": null,
+"navy": null
+},
+"LBY": {
+"army": "Libyan Arab Armed Forces",
+"air": "Libyan Air Force",
+"navy": "Libyan Navy"
+},
+"LTU": {
+"army": "List of equipment of the Lithuanian Armed Forces",
+"air": "Lithuanian Air Force",
+"navy": "Lithuanian Navy"
+},
+"MYS": {
+"army": "List of equipment of the Malaysian Army",
+"air": "Royal Malaysian Air Force",
+"navy": "Royal Malaysian Navy"
+},
+"MMR": {
+"army": "List of equipment of the Myanmar Army",
+"air": "Myanmar Air Force",
+"navy": "Myanmar Navy"
+},
+"NGA": {
+"army": "List of equipment of the Nigerian Army",
+"air": "Nigerian Air Force",
+"navy": "Nigerian Navy"
+},
+"NZL": {
+"army": "List of equipment of the New Zealand Army",
+"air": "Royal New Zealand Air Force",
+"navy": "List of active Royal New Zealand Navy ships"
+},
+"NLD": {
+"army": "List of equipment of the Royal Netherlands Army",
+"air": "Royal Netherlands East Indies Army Air Force",
+"navy": "List of active Royal Netherlands Navy ships"
+},
+"ALB": {
+"army": "List of equipment of the Albanian Armed Forces",
+"air": "Albanian Air Force",
+"navy": "Albanian Naval Force"
+},
+"UGA": {
+"army": "Uganda People's Defence Force",
+"air": "Uganda Air Force",
+"navy": null
+},
+"ERI": {
+"army": "List of equipment of the Eritrean Army",
+"air": "Eritrean Air Force",
+"navy": "Eritrean Navy"
+},
+"SWZ": {
+"army": "Umbutfo Eswatini Defence Force",
+"air": null,
+"navy": null
+},
+"URY": {
+"army": "List of equipment of the Uruguayan Army",
+"air": "Uruguayan Air Force",
+"navy": "National Navy of Uruguay"
+},
+"ECU": {
+"army": "List of equipment of the Ecuadorian Armed Forces",
+"air": "Ecuadorian Air Force",
+"navy": "Ecuadorian Navy"
+},
+"BIH": {
+"army": "Army of the Republic of Bosnia and Herzegovina",
+"air": "Air Force and Anti-Aircraft Defence of Bosnia and Herzegovina",
+"navy": null
+},
+"SLV": {
+"army": "Armed Forces of El Salvador",
+"air": null,
+"navy": "Navy of El Salvador"
+},
+"SEN": {
+"army": "Armed Forces of Senegal",
+"air": "Senegalese Air Force",
+"navy": null
+},
+"SOM": {
+"army": null,
+"air": null,
+"navy": null
+},
+"GAB": {
+"army": "Armed Forces of Gabon",
+"air": "Gabonese Air Force",
+"navy": "Gabonese Navy"
+},
+"CMR": {
+"army": "List of equipment of the Cameroon Army",
+"air": "Cameroon Air Force",
+"navy": null
+},
+"NER": {
+"army": "Niger Armed Forces",
+"air": "Nigerian Air Force",
+"navy": "Nigerian Navy"
+},
+"PNG": {
+"army": "Papua New Guinea Defence Force",
+"air": null,
+"navy": null
+},
+"PRY": {
+"army": "Paraguayan Army",
+"air": "Paraguayan Air Force",
+"navy": "Paraguayan Navy"
+},
+"PAN": {
+"army": "Panama Defense Forces",
+"air": "Air Forces Panama",
+"navy": "Naval Base Panama Canal Zone"
+},
+"BEN": {
+"army": "Benin Armed Forces",
+"air": "Benin Air Force",
+"navy": null
+},
+"BWA": {
+"army": "List of equipment of the Botswana Ground Force",
+"air": null,
+"navy": null
+},
+"BFA": {
+"army": "Burkina Faso Armed Forces",
+"air": null,
+"navy": null
+},
+"BDI": {
+"army": "Burundi National Defence Force",
+"air": null,
+"navy": null
+},
+"BOL": {
+"army": "Bolivian Army",
+"air": "Bolivian Air Force",
+"navy": "Bolivian Navy"
+},
+"TKM": {
+"army": "Armed Forces of Turkmenistan",
+"air": null,
+"navy": null
+},
+"TTO": {
+"army": null,
+"air": null,
+"navy": "Naval Base Trinidad"
+},
+"TCD": {
+"army": "Chadian Ground Forces",
+"air": "Chadian Air Force",
+"navy": null
+},
+"TZA": {
+"army": "List of equipment of the Tanzanian Army",
+"air": "Tanzania Air Force Command",
+"navy": "Tanzania Naval Command"
+},
+"TGO": {
+"army": "Togolese Armed Forces",
+"air": "1974 Togolese Air Force C-47 crash",
+"navy": null
+},
+"TLS": {
+"army": "Timor-Leste Defence Force",
+"air": null,
+"navy": null
+},
+"JAM": {
+"army": "Jamaica Defence Force",
+"air": null,
+"navy": "Navy Island, Jamaica"
+},
+"CAF": {
+"army": "Central African Armed Forces",
+"air": "Central African Republic Air Force",
+"navy": null
+},
+"IRL": {
+"army": "Army Reserve (Ireland)",
+"air": null,
+"navy": null
+},
+"DOM": {
+"army": "List of equipment of the Dominican Army",
+"air": "Dominican Air Force",
+"navy": "Dominican Navy"
+},
+"COG": {
+"army": "List of equipment of the Land Forces of the Democratic Republic of the Congo",
+"air": "Air Force of the Democratic Republic of the Congo",
+"navy": "Navy of the Democratic Republic of the Congo"
+},
+"COD": {
+"army": "List of equipment of the Land Forces of the Democratic Republic of the Congo",
+"air": "Air Force of the Democratic Republic of the Congo",
+"navy": "Navy of the Democratic Republic of the Congo"
+},
+"SDS": {
+"army": "South Sudan People's Defence Forces",
+"air": "South Sudan Air Force",
+"navy": null
+},
+"DJI": {
+"army": "List of equipment of the Djiboutian Army",
+"air": "Djibouti Air Force",
+"navy": null
+},
+"RWA": {
+"army": "Rwandan Defence Force",
+"air": "Rwandan Air Force",
+"navy": null
+},
+"ZMB": {
+"army": "Zambian Army",
+"air": "Zambian Air Force",
+"navy": null
+},
+"ZWE": {
+"army": "Zimbabwe National Army",
+"air": "Air Force of Zimbabwe",
+"navy": null
+},
+"CIV": {
+"army": "Armed Forces of the Republic of Ivory Coast",
+"air": null,
+"navy": null
+},
+"SVN": {
+"army": "Slovenian Armed Forces",
+"air": "Slovenian Air Force and Air Defence",
+"navy": "Slovenian Navy"
+},
+"SLE": {
+"army": "Republic of Sierra Leone Armed Forces",
+"air": null,
+"navy": null
+},
+"TJK": {
+"army": "Tajikistani Armed Forces",
+"air": null,
+"navy": null
+},
+"GMB": {
+"army": "Gambia Armed Forces",
+"air": null,
+"navy": null
+},
+"GHA": {
+"army": "List of equipment of the Ghana Army",
+"air": "Ghana Air Force",
+"navy": "Ghana Navy"
+},
+"GTM": {
+"army": "Armed Forces of Guatemala",
+"air": "Guatemalan Air Force",
+"navy": null
+},
+"GIN": {
+"army": "List of equipment of the Guinean Army",
+"air": "Guinea-Bissau Air Force",
+"navy": "Navy of Equatorial Guinea"
+},
+"GNQ": {
+"army": "Armed Forces of Equatorial Guinea"
+}
+}

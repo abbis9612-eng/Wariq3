@@ -5,6 +5,24 @@
  "tier": "C",
  "asOf": "2026-11",
  "src": {
+  "wiki_air": {
+   "t": "Wikipedia: Ghana Air Force",
+   "u": "https://en.wikipedia.org/wiki/Ghana_Air_Force?oldid=1384260620",
+   "y": 2026,
+   "note": "نسخة الصفحة بتاريخ السحب؛ أرقام ويكيبيديا تنراجع ويا مصادر ثانية"
+  },
+  "wiki_army": {
+   "t": "Wikipedia: List of equipment of the Ghana Army",
+   "u": "https://en.wikipedia.org/wiki/List_of_equipment_of_the_Ghana_Army?oldid=1354896551",
+   "y": 2026,
+   "note": "نسخة الصفحة بتاريخ السحب؛ أرقام ويكيبيديا تنراجع ويا مصادر ثانية"
+  },
+  "wiki_navy": {
+   "t": "Wikipedia: Ghana Navy",
+   "u": "https://en.wikipedia.org/wiki/Ghana_Navy?oldid=1354456229",
+   "y": 2026,
+   "note": "نسخة الصفحة بتاريخ السحب؛ أرقام ويكيبيديا تنراجع ويا مصادر ثانية"
+  },
   "iiss_eq": {
    "t": "Wikipedia: List of countries by level of military equipment (من IISS Military Balance ومصادر ثانية)",
    "u": "https://en.wikipedia.org/wiki/List_of_countries_by_level_of_military_equipment?oldid=1384804191",
@@ -49,6 +67,11 @@
   "tierA": {
    "t": "تقدير المصمم (تشرين الثاني 2026) لصناعة السلاح والاستقرار: SIPRI Arms Transfers Database (أكبر المصدّرين 2020–24)، SIPRI Top 100 Arms-Producing Companies، Fragile States Index 2025، أخبار 2026",
    "u": "https://www.sipri.org/databases/armstransfers",
+   "y": 2026
+  },
+  "tpl": {
+   "t": "قالب منطقة (af): موديلات شائعة ونسب تقريبية من الدبابات (مدرعات ×2.5، مدفعية ×0.9، مروحيات ×0.25) — تقدير المصمم",
+   "u": "docs/features/world-plan.md",
    "y": 2026
   }
  },
@@ -216,11 +239,352 @@
     "c": "ت"
    }
   },
-  "land": [],
-  "air": [],
-  "ad": [],
+  "land": [
+   {
+    "m": "EE-9 Cascavel",
+    "n": 3,
+    "orig": "BRA",
+    "s": "wiki_army",
+    "c": "ت",
+    "note": "No photos available of vehicle in service",
+    "gen": 2,
+    "cat": "apc"
+   },
+   {
+    "m": "Mowag Piranha I",
+    "n": 63,
+    "orig": "CHE",
+    "s": "wiki_army",
+    "c": "ت",
+    "note": "4 of the units are armed with a 25mm gun.",
+    "gen": 2,
+    "cat": "apc"
+   },
+   {
+    "m": "Ratel-90",
+    "n": 24,
+    "orig": "ZAF",
+    "s": "wiki_army",
+    "c": "ت",
+    "note": "Seen in exercises in 2024",
+    "gen": 2,
+    "cat": "ifv"
+   },
+   {
+    "m": "Ratel-20",
+    "n": 15,
+    "orig": "ZAF",
+    "s": "wiki_army",
+    "c": "ت",
+    "note": "Seen in exercises in 2021",
+    "gen": 2,
+    "cat": "ifv"
+   },
+   {
+    "m": "STREIT Typhoon",
+    "n": 50,
+    "orig": "ARE",
+    "s": "wiki_army",
+    "c": "ت",
+    "gen": 4,
+    "cat": "mrap"
+   },
+   {
+    "m": "Casspir",
+    "n": 4,
+    "orig": "ZAF",
+    "s": "wiki_army",
+    "c": "ت",
+    "gen": 2,
+    "cat": "mrap"
+   },
+   {
+    "m": "Type 63",
+    "n": 3,
+    "orig": "CHN",
+    "s": "wiki_army",
+    "c": "ت",
+    "gen": 2,
+    "cat": "mlrs"
+   },
+   {
+    "m": "PHL-81",
+    "n": 3,
+    "orig": "CHN",
+    "s": "wiki_army",
+    "c": "ت",
+    "gen": 2,
+    "cat": "mlrs"
+   },
+   {
+    "m": "D-30",
+    "n": 6,
+    "orig": "SUN",
+    "s": "wiki_army",
+    "c": "ت",
+    "gen": 2,
+    "cat": "towed"
+   }
+  ],
+  "air": [
+   {
+    "m": "Diamond DA42",
+    "n": 2,
+    "orig": "AUT",
+    "s": "wiki_air",
+    "c": "ت",
+    "gen": 2,
+    "cat": "isr"
+   },
+   {
+    "m": "CASA C-295",
+    "n": 2,
+    "orig": "ESP",
+    "s": "wiki_air",
+    "c": "ت",
+    "gen": 2,
+    "cat": "transport"
+   },
+   {
+    "m": "Airbus H175 (2 H175M, 1 ACH175)",
+    "n": 1,
+    "orig": "ESP",
+    "s": "wiki_air",
+    "c": "ت",
+    "note": "2 on order.",
+    "gen": 2,
+    "cat": "heli_util"
+   },
+   {
+    "m": "Mil Mi-17 (Mi-17/171)",
+    "n": 5,
+    "orig": "RUS",
+    "s": "wiki_air",
+    "c": "ت",
+    "note": "1 damaged 19 March 2024.",
+    "gen": 2,
+    "cat": "heli_util"
+   },
+   {
+    "m": "Bell 412",
+    "n": 1,
+    "orig": "USA",
+    "s": "wiki_air",
+    "c": "ت",
+    "gen": 2,
+    "cat": "heli_util"
+   },
+   {
+    "m": "Harbin Z-9",
+    "n": 3,
+    "orig": "CHN",
+    "s": "wiki_air",
+    "c": "ت",
+    "note": "1 crashed 6 August 2025.",
+    "gen": 2,
+    "cat": "heli_util"
+   },
+   {
+    "m": "Hongdu K-8",
+    "n": 4,
+    "orig": "CHN",
+    "s": "wiki_air",
+    "c": "ت",
+    "gen": 2,
+    "cat": "trainer"
+   },
+   {
+    "m": "Diamond DA42",
+    "n": 1,
+    "orig": "AUT",
+    "s": "wiki_air",
+    "c": "ت",
+    "gen": 2,
+    "cat": "trainer"
+   }
+  ],
+  "ad": [
+   {
+    "m": "ZPU-4",
+    "n": 2,
+    "orig": "SUN",
+    "s": "wiki_army",
+    "c": "ت",
+    "gen": 2,
+    "cat": "short"
+   },
+   {
+    "m": "ZPU-2",
+    "n": 4,
+    "orig": "SUN",
+    "s": "wiki_army",
+    "c": "ت",
+    "gen": 2,
+    "cat": "short"
+   },
+   {
+    "m": "ZU-23-2",
+    "n": 4,
+    "orig": "SUN",
+    "s": "wiki_army",
+    "c": "ت",
+    "gen": 2,
+    "cat": "short"
+   },
+   {
+    "m": "FN-6",
+    "n": 100,
+    "orig": "CHN",
+    "s": "wiki_army",
+    "c": "ت",
+    "gen": 2,
+    "cat": "short"
+   },
+   {
+    "m": "9K32 Strela-2",
+    "n": 200,
+    "orig": "SUN",
+    "s": "wiki_army",
+    "c": "ت",
+    "gen": 2,
+    "cat": "short"
+   }
+  ],
   "msl": [],
-  "navy": []
+  "navy": [],
+  "grp": {
+   "afv": {
+    "n": 159,
+    "s": "wiki_army",
+    "c": "ت",
+    "top": [
+     [
+      "Mowag Piranha I",
+      63,
+      2,
+      "CHE"
+     ],
+     [
+      "STREIT Typhoon",
+      50,
+      4,
+      "ARE"
+     ],
+     [
+      "Ratel-90",
+      24,
+      2,
+      "ZAF"
+     ]
+    ],
+    "gen": 2.6
+   },
+   "art": {
+    "n": 12,
+    "s": "wiki_army",
+    "c": "ت",
+    "top": [
+     [
+      "D-30",
+      6,
+      2,
+      "SUN"
+     ],
+     [
+      "Type 63",
+      3,
+      2,
+      "CHN"
+     ],
+     [
+      "PHL-81",
+      3,
+      2,
+      "CHN"
+     ]
+    ],
+    "gen": 2.0
+   },
+   "jet": {
+    "n": 8,
+    "s": "iiss_eq",
+    "c": "ت",
+    "top": [
+     [
+      "MiG-21",
+      null,
+      null,
+      null
+     ],
+     [
+      "Su-25",
+      null,
+      null,
+      null
+     ],
+     [
+      "L-39",
+      null,
+      null,
+      null
+     ]
+    ],
+    "gen": 1.6,
+    "tpl": "af"
+   },
+   "heli": {
+    "n": 10,
+    "s": "wiki_air",
+    "c": "ت",
+    "top": [
+     [
+      "Mil Mi-17 (Mi-17/171)",
+      5,
+      2,
+      "RUS"
+     ],
+     [
+      "Harbin Z-9",
+      3,
+      2,
+      "CHN"
+     ],
+     [
+      "Airbus H175 (2 H175M, 1 ACH175)",
+      1,
+      2,
+      "ESP"
+     ]
+    ],
+    "gen": 2.0
+   },
+   "ad": {
+    "n": 310,
+    "s": "wiki_army",
+    "c": "ت",
+    "top": [
+     [
+      "9K32 Strela-2",
+      200,
+      2,
+      "SUN"
+     ],
+     [
+      "FN-6",
+      100,
+      2,
+      "CHN"
+     ],
+     [
+      "ZPU-2",
+      4,
+      2,
+      "SUN"
+     ]
+    ],
+    "gen": 2.0
+   }
+  }
  },
  "ind": null,
  "pol": {

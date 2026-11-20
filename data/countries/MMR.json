@@ -5,6 +5,24 @@
  "tier": "B",
  "asOf": "2026-11",
  "src": {
+  "wiki_air": {
+   "t": "Wikipedia: Myanmar Air Force",
+   "u": "https://en.wikipedia.org/wiki/Myanmar_Air_Force?oldid=1381469387",
+   "y": 2026,
+   "note": "نسخة الصفحة بتاريخ السحب؛ أرقام ويكيبيديا تنراجع ويا مصادر ثانية"
+  },
+  "wiki_army": {
+   "t": "Wikipedia: List of equipment of the Myanmar Army",
+   "u": "https://en.wikipedia.org/wiki/List_of_equipment_of_the_Myanmar_Army?oldid=1385180253",
+   "y": 2026,
+   "note": "نسخة الصفحة بتاريخ السحب؛ أرقام ويكيبيديا تنراجع ويا مصادر ثانية"
+  },
+  "wiki_navy": {
+   "t": "Wikipedia: Myanmar Navy",
+   "u": "https://en.wikipedia.org/wiki/Myanmar_Navy?oldid=1372401607",
+   "y": 2026,
+   "note": "نسخة الصفحة بتاريخ السحب؛ أرقام ويكيبيديا تنراجع ويا مصادر ثانية"
+  },
   "iiss_eq": {
    "t": "Wikipedia: List of countries by level of military equipment (من IISS Military Balance ومصادر ثانية)",
    "u": "https://en.wikipedia.org/wiki/List_of_countries_by_level_of_military_equipment?oldid=1384804191",
@@ -49,6 +67,11 @@
   "tierA": {
    "t": "تقدير المصمم (تشرين الثاني 2026) لصناعة السلاح والاستقرار: SIPRI Arms Transfers Database (أكبر المصدّرين 2020–24)، SIPRI Top 100 Arms-Producing Companies، Fragile States Index 2025، أخبار 2026",
    "u": "https://www.sipri.org/databases/armstransfers",
+   "y": 2026
+  },
+  "tpl": {
+   "t": "قالب منطقة (as): موديلات شائعة ونسب تقريبية من الدبابات (مدرعات ×2.5، مدفعية ×0.9، مروحيات ×0.25) — تقدير المصمم",
+   "u": "docs/features/world-plan.md",
    "y": 2026
   }
  },
@@ -210,11 +233,1062 @@
     "c": "ت"
    }
   },
-  "land": [],
-  "air": [],
-  "ad": [],
+  "land": [
+   {
+    "m": "R-2 Bar'yer",
+    "n": 300,
+    "orig": "UKR",
+    "s": "wiki_army",
+    "c": "ت",
+    "note": "For MT-LB armoured vehicles and infantry use. Variant of BA'YER anti-tank guided missile system, capable of penetrating 800mm of Rolled Homo",
+    "gen": 2,
+    "cat": "atgm"
+   },
+   {
+    "m": "T-72S",
+    "n": 300,
+    "orig": "RUS",
+    "s": "wiki_army",
+    "c": "ت",
+    "note": "Sold by Russia and received in Between 2008 to 2011",
+    "gen": 3,
+    "cat": "tank"
+   },
+   {
+    "m": "Type-59D",
+    "n": 250,
+    "orig": "CHN",
+    "s": "wiki_army",
+    "c": "ت",
+    "gen": 2,
+    "cat": "tank"
+   },
+   {
+    "m": "Type-69-ll",
+    "n": 100,
+    "orig": "CHN",
+    "s": "wiki_army",
+    "c": "ت",
+    "gen": 2,
+    "cat": "tank"
+   },
+   {
+    "m": "Type-90-ll",
+    "n": 200,
+    "orig": "CHN",
+    "s": "wiki_army",
+    "c": "ت",
+    "gen": 2,
+    "cat": "tank"
+   },
+   {
+    "m": "Type 63",
+    "n": 105,
+    "orig": "CHN",
+    "s": "wiki_army",
+    "c": "ت",
+    "gen": 2,
+    "cat": "tank"
+   },
+   {
+    "m": "AML-90",
+    "n": 50,
+    "orig": "FRA",
+    "s": "wiki_army",
+    "c": "ت",
+    "note": "At least two units were destroyed by rebel forces",
+    "gen": 2,
+    "cat": "apc"
+   },
+   {
+    "m": "BRDM-2MS",
+    "n": 100,
+    "orig": "SUN",
+    "s": "wiki_army",
+    "c": "ت",
+    "note": "Received from Russia after the 2021 Myanmar Coup.",
+    "gen": 2,
+    "cat": "apc"
+   },
+   {
+    "m": "EE-9 Cascavel",
+    "n": 150,
+    "orig": "BRA",
+    "s": "wiki_army",
+    "c": "ت",
+    "note": "Refurbished and sold by Israel",
+    "gen": 2,
+    "cat": "apc"
+   },
+   {
+    "m": "MAV-1",
+    "n": 250,
+    "orig": "MMR",
+    "s": "wiki_army",
+    "c": "ت",
+    "gen": 2,
+    "cat": "apc"
+   },
+   {
+    "m": "BTR-3U",
+    "n": 800,
+    "orig": "UKR",
+    "s": "wiki_army",
+    "c": "ت",
+    "note": "500+ BTR-3Us in service. 10+ BTR-3Us bought from Ukraine in 2001. Kyiv signed a US$500 million contract in 2004 to supply 1000 BTR-3U armour",
+    "gen": 2,
+    "cat": "ifv"
+   },
+   {
+    "m": "MT-LBMSh",
+    "n": 350,
+    "orig": "UKR",
+    "s": "wiki_army",
+    "c": "ت",
+    "gen": 2,
+    "cat": "ifv"
+   },
+   {
+    "m": "ZSD-85",
+    "n": 350,
+    "orig": "CHN",
+    "s": "wiki_army",
+    "c": "ت",
+    "gen": 2,
+    "cat": "apc"
+   },
+   {
+    "m": "ZSD-90",
+    "n": 200,
+    "orig": "CHN",
+    "s": "wiki_army",
+    "c": "ت",
+    "gen": 2,
+    "cat": "apc"
+   },
+   {
+    "m": "ZSL-92",
+    "n": 450,
+    "orig": "CHN",
+    "s": "wiki_army",
+    "c": "ت",
+    "note": "one of the most widely use IFV of Myanmar Army. More than four units had been destroyed by rebel forces",
+    "gen": 2,
+    "cat": "apc"
+   },
+   {
+    "m": "MPV",
+    "n": 250,
+    "orig": "IND",
+    "s": "wiki_army",
+    "c": "ت",
+    "note": "First batch of MPV were received in 2004. Second batch in 2018 and unknown units were receive in 2020",
+    "gen": 2,
+    "cat": "apc"
+   },
+   {
+    "m": "MMT-40",
+    "n": 80,
+    "orig": "UKR",
+    "s": "wiki_army",
+    "c": "ت",
+    "note": "Light tank with 105 mm gun, based on 2S1 chassis. One tank unveiled in 2017. Producing with Ukraine's technical assistance and called MMT-40",
+    "gen": 2,
+    "cat": "tank"
+   },
+   {
+    "m": "BTR-4EM",
+    "n": 200,
+    "orig": "UKR",
+    "s": "wiki_army",
+    "c": "ت",
+    "note": "Joint-venture with Ukraine to assemble BTR-4 kits in Myanmar.Euipped with new turret system.",
+    "gen": 3,
+    "cat": "ifv"
+   },
+   {
+    "m": "M-3 VTT",
+    "n": 10,
+    "orig": "FRA",
+    "s": "wiki_army",
+    "c": "ت",
+    "note": "10 M-3 VTT armoured vehicles. Used vehicles refurbished by Israel before delivery. Received in 2011. Supplier probably Israel.",
+    "gen": 2,
+    "cat": "apc"
+   },
+   {
+    "m": "M-1985 (M-1991, MAM-02 (MA240))",
+    "n": 100,
+    "orig": "PRK",
+    "s": "wiki_army",
+    "c": "ت",
+    "note": "240mm multiple rocket launcher system M-1991 version in use in Myanmar has only twelve launcher tubes which are fitted on the Iveco Eurotrak",
+    "gen": 2,
+    "cat": "mlrs"
+   },
+   {
+    "m": "BM-21 Grad (9P138 \"Grad-1\")",
+    "n": 230,
+    "orig": "RUS",
+    "s": "wiki_army",
+    "c": "ت",
+    "note": "Used in Battle of Border Post-9631 with Thailand in 2001. Only 100 in service as of 2020. They are upgraded with the turrets and rocket laun",
+    "gen": 2,
+    "cat": "mlrs"
+   },
+   {
+    "m": "Type 81",
+    "n": 120,
+    "orig": "CHN",
+    "s": "wiki_army",
+    "c": "ت",
+    "note": "122mm multiple rocket launcher system. Ordered in 2010 and received in 2012. Unveiled at the 69th Armed Force Day Parade (2014).",
+    "gen": 2,
+    "cat": "mlrs"
+   },
+   {
+    "m": "Type 81 (Type 90B MAM-01)",
+    "n": 120,
+    "orig": "CHN",
+    "s": "wiki_army",
+    "c": "ت",
+    "note": "122mm multiple rocket launcher system. Ordered in 2004 and received in 2006. Still does not unveiled to the public yet.",
+    "gen": 2,
+    "cat": "mlrs"
+   },
+   {
+    "m": "MAM-01 (MA122) (MAM-01 (early version))",
+    "n": 200,
+    "orig": "MMR",
+    "s": "wiki_army",
+    "c": "ت",
+    "note": "122mm multiple rocket launcher system. The first variant of MAM-01 multiple launch rocket systems. Based on North Korea's BM-11 technology. ",
+    "gen": 2,
+    "cat": "mlrs"
+   },
+   {
+    "m": "MAM-01 (MA122) (MAM-01A (improved version))",
+    "n": 200,
+    "orig": "MMR",
+    "s": "wiki_army",
+    "c": "ت",
+    "note": "Upgraded variant of MAM-01 rocket artillery with Digital Fire Control System and the range of the rocket types are extended to 35–40 km. Bas",
+    "gen": 2,
+    "cat": "mlrs"
+   },
+   {
+    "m": "MAM-01 (MA122)",
+    "n": 200,
+    "orig": "MMR",
+    "s": "wiki_army",
+    "c": "ت",
+    "gen": 2,
+    "cat": "mlrs"
+   },
+   {
+    "m": "MAM-01 (MA122) (MAM-01B)",
+    "n": 200,
+    "orig": "MMR",
+    "s": "wiki_army",
+    "c": "ت",
+    "note": "122mm multiple rocket launcher system. The latest variant of MAM-01 multiple launch rocket systems. Producing started in 2019. Each system h",
+    "gen": 2,
+    "cat": "mlrs"
+   },
+   {
+    "m": "Norinco SH1",
+    "n": 150,
+    "orig": "CHN",
+    "s": "wiki_army",
+    "c": "ت",
+    "note": "155 mm self-propelled howitzer. For six battalions.",
+    "gen": 2,
+    "cat": "spg"
+   },
+   {
+    "m": "Nora B-52",
+    "n": 40,
+    "orig": "SRB",
+    "s": "wiki_army",
+    "c": "ت",
+    "note": "155 mm self-propelled howitzer.",
+    "gen": 2,
+    "cat": "spg"
+   },
+   {
+    "m": "KH-179",
+    "n": 100,
+    "orig": "KOR",
+    "s": "wiki_army",
+    "c": "ت",
+    "note": "155 mm howitzer",
+    "gen": 2,
+    "cat": "towed"
+   },
+   {
+    "m": "Type 59-1",
+    "n": 160,
+    "orig": "CHN",
+    "s": "wiki_army",
+    "c": "ت",
+    "note": "130 mm field gun. Received from China in 1998.",
+    "gen": 1,
+    "cat": "towed"
+   },
+   {
+    "m": "D-30M",
+    "n": 560,
+    "orig": "SUN",
+    "s": "wiki_army",
+    "c": "ت",
+    "note": "122 mm howitzer. Received from Russia between 2004 and 2006.",
+    "gen": 2,
+    "cat": "towed"
+   },
+   {
+    "m": "BL 5.5-inch medium gun",
+    "n": 200,
+    "orig": "GBR",
+    "s": "wiki_army",
+    "c": "ت",
+    "note": "5.5 inch (140 mm) gun. Status unclear. May not be in service",
+    "gen": 2,
+    "cat": "towed"
+   },
+   {
+    "m": "M101 howitzer",
+    "n": 100,
+    "orig": "USA",
+    "s": "wiki_army",
+    "c": "ت",
+    "note": "105 mm M2A1",
+    "gen": 2,
+    "cat": "towed"
+   },
+   {
+    "m": "Indian Field Gun",
+    "n": 10,
+    "orig": "IND",
+    "s": "wiki_army",
+    "c": "ت",
+    "note": "105 mm gun. Provided by India in 2006 to fight Assamese rebels operating out of Myanmar.",
+    "gen": 2,
+    "cat": "towed"
+   },
+   {
+    "m": "M-56",
+    "n": 250,
+    "orig": "YUG",
+    "s": "wiki_army",
+    "c": "ت",
+    "note": "Types: M2A1/M56 and others. Not including modern towed guns.",
+    "gen": 2,
+    "cat": "towed"
+   },
+   {
+    "m": "Ordnance QF 25-pounder",
+    "n": 150,
+    "orig": "GBR",
+    "s": "wiki_army",
+    "c": "ت",
+    "note": "87.6 mm gun. Status unclear. May not be in service",
+    "gen": 2,
+    "cat": "towed"
+   },
+   {
+    "m": "M48",
+    "n": 100,
+    "orig": "YUG",
+    "s": "wiki_army",
+    "c": "ت",
+    "note": "76 mm mountain gun. Status unclear. May not be in service",
+    "gen": 1,
+    "cat": "towed"
+   }
+  ],
+  "air": [
+   {
+    "m": "Sukhoi Su-30 (Su-30SME)",
+    "n": 6,
+    "orig": "RUS",
+    "s": "wiki_air",
+    "c": "ت",
+    "gen": 4,
+    "cat": "fighter"
+   },
+   {
+    "m": "JF-17 Thunder (• JF-17 Block II • JF-17B Block II)",
+    "n": 11,
+    "orig": "CHN",
+    "s": "wiki_air",
+    "c": "ت",
+    "note": "5 on order JF-17B is a Dual-seat variant.",
+    "gen": 3,
+    "cat": "fighter"
+   },
+   {
+    "m": "Mikoyan MiG-29 (SM/SMT)",
+    "n": 38,
+    "orig": "RUS",
+    "s": "wiki_air",
+    "c": "ت",
+    "note": "5 used for conversion training The breakdown is 11 MiG-29B, 6 MiG-29SE, 10 MiG-29SM and 5 MiG-29UB.In 2018, a $420 million contract was sign",
+    "gen": 3,
+    "cat": "fighter"
+   },
+   {
+    "m": "Chengdu J-7 (F-7M/FT-7)",
+    "n": 36,
+    "orig": "CHN",
+    "s": "wiki_air",
+    "c": "ت",
+    "note": "6 used for conversion training",
+    "gen": 1,
+    "cat": "fighter"
+   },
+   {
+    "m": "Nanchang Q-5 (A-5C)",
+    "n": 24,
+    "orig": "CHN",
+    "s": "wiki_air",
+    "c": "ت",
+    "gen": 2,
+    "cat": "attack"
+   },
+   {
+    "m": "ATR 42 / ATR 72",
+    "n": 10,
+    "orig": "FRA",
+    "s": "wiki_air",
+    "c": "ت",
+    "note": "of which 3 are ATR-72s",
+    "gen": 2,
+    "cat": "transport"
+   },
+   {
+    "m": "Beechcraft 1900",
+    "n": 7,
+    "orig": "USA",
+    "s": "wiki_air",
+    "c": "ت",
+    "gen": 2,
+    "cat": "transport"
+   },
+   {
+    "m": "Britten-Norman BN-2",
+    "n": 5,
+    "orig": "GBR",
+    "s": "wiki_air",
+    "c": "ت",
+    "gen": 2,
+    "cat": "transport"
+   },
+   {
+    "m": "Fokker 70",
+    "n": 2,
+    "orig": "NLD",
+    "s": "wiki_air",
+    "c": "ت",
+    "gen": 2,
+    "cat": "transport"
+   },
+   {
+    "m": "Harbin Y-12",
+    "n": 15,
+    "orig": "CHN",
+    "s": "wiki_air",
+    "c": "ت",
+    "gen": 2,
+    "cat": "transport"
+   },
+   {
+    "m": "Let L-410",
+    "n": 3,
+    "orig": "CZE",
+    "s": "wiki_air",
+    "c": "ت",
+    "gen": 2,
+    "cat": "transport"
+   },
+   {
+    "m": "Shaanxi Y-8",
+    "n": 8,
+    "orig": "CHN",
+    "s": "wiki_air",
+    "c": "ت",
+    "gen": 2,
+    "cat": "transport"
+   },
+   {
+    "m": "Bell 206",
+    "n": 3,
+    "orig": "USA",
+    "s": "wiki_air",
+    "c": "ت",
+    "gen": 2,
+    "cat": "heli_util"
+   },
+   {
+    "m": "Bell UH-1",
+    "n": 2,
+    "orig": "USA",
+    "s": "wiki_air",
+    "c": "ت",
+    "gen": 2,
+    "cat": "heli_util"
+   },
+   {
+    "m": "Kamov Ka-27 (Ka-28)",
+    "n": 2,
+    "orig": "RUS",
+    "s": "wiki_air",
+    "c": "ت",
+    "gen": 2,
+    "cat": "heli_util"
+   },
+   {
+    "m": "Mil Mi-2",
+    "n": 22,
+    "orig": "POL",
+    "s": "wiki_air",
+    "c": "ت",
+    "gen": 2,
+    "cat": "heli_util"
+   },
+   {
+    "m": "Mil Mi-38",
+    "n": 3,
+    "orig": "RUS",
+    "s": "wiki_air",
+    "c": "ت",
+    "gen": 2,
+    "cat": "heli_util"
+   },
+   {
+    "m": "Mil Mi-8/17",
+    "n": 25,
+    "orig": "RUS",
+    "s": "wiki_air",
+    "c": "ت",
+    "gen": 2,
+    "cat": "heli_util"
+   },
+   {
+    "m": "Mil Mi-24 (Mi-35P)",
+    "n": 24,
+    "orig": "RUS",
+    "s": "wiki_air",
+    "c": "ت",
+    "gen": 3,
+    "cat": "heli_attack"
+   },
+   {
+    "m": "Eurocopter EC120",
+    "n": 3,
+    "orig": "FRA",
+    "s": "wiki_air",
+    "c": "ت",
+    "gen": 2,
+    "cat": "heli_util"
+   },
+   {
+    "m": "Eurocopter AS350 Écureuil (Airbus Helicopters H125)",
+    "n": 2,
+    "orig": "FRA",
+    "s": "wiki_air",
+    "c": "ت",
+    "gen": 2,
+    "cat": "heli_util"
+   },
+   {
+    "m": "AMD Zodiac (CH-601)",
+    "n": 6,
+    "orig": "CAN",
+    "s": "wiki_air",
+    "c": "ت",
+    "gen": 2,
+    "cat": "trainer"
+   },
+   {
+    "m": "Diamond DART (DART-450)",
+    "n": 12,
+    "orig": "AUT",
+    "s": "wiki_air",
+    "c": "ت",
+    "gen": 2,
+    "cat": "trainer"
+   },
+   {
+    "m": "Grob G 120TP",
+    "n": 24,
+    "orig": "DEU",
+    "s": "wiki_air",
+    "c": "ت",
+    "gen": 2,
+    "cat": "trainer"
+   },
+   {
+    "m": "Hongdu JL-8 (K-8W)",
+    "n": 60,
+    "orig": "CHN",
+    "s": "wiki_air",
+    "c": "ت",
+    "note": "Unknown number on order",
+    "gen": 2,
+    "cat": "trainer"
+   },
+   {
+    "m": "Pilatus PC-7",
+    "n": 16,
+    "orig": "CHE",
+    "s": "wiki_air",
+    "c": "ت",
+    "gen": 2,
+    "cat": "trainer"
+   },
+   {
+    "m": "Pilatus PC-9",
+    "n": 10,
+    "orig": "CHE",
+    "s": "wiki_air",
+    "c": "ت",
+    "gen": 2,
+    "cat": "trainer"
+   },
+   {
+    "m": "Soko G-4",
+    "n": 3,
+    "orig": "YUG",
+    "s": "wiki_air",
+    "c": "ت",
+    "gen": 2,
+    "cat": "attack"
+   },
+   {
+    "m": "Yakovlev Yak-130",
+    "n": 24,
+    "orig": "RUS",
+    "s": "wiki_air",
+    "c": "ت",
+    "gen": 2,
+    "cat": "trainer"
+   },
+   {
+    "m": "MTX-1A",
+    "n": 12,
+    "orig": "MMR",
+    "s": "wiki_air",
+    "c": "ت",
+    "gen": 2,
+    "cat": "trainer"
+   },
+   {
+    "m": "MTX-1B",
+    "n": 8,
+    "orig": "MMR",
+    "s": "wiki_air",
+    "c": "ت",
+    "gen": 2,
+    "cat": "trainer"
+   },
+   {
+    "m": "HAL HJT-16 Kiran",
+    "n": 6,
+    "orig": "IND",
+    "s": "wiki_air",
+    "c": "ت",
+    "note": "6 Delivered from ex- Indian stocks",
+    "gen": 2,
+    "cat": "trainer"
+   },
+   {
+    "m": "Sky 02",
+    "n": 11,
+    "orig": "CHN",
+    "s": "wiki_air",
+    "c": "ت",
+    "gen": 2,
+    "cat": "uav_isr"
+   },
+   {
+    "m": "Yellow Cat A2",
+    "n": 22,
+    "orig": "MMR",
+    "s": "wiki_air",
+    "c": "ت",
+    "note": "domestic variant of the CH-3A",
+    "gen": 2,
+    "cat": "uav_isr"
+   }
+  ],
+  "ad": [
+   {
+    "m": "Type-74",
+    "n": 24,
+    "orig": "CHN",
+    "s": "wiki_army",
+    "c": "ت",
+    "note": "37 mm AAA.",
+    "gen": 2,
+    "cat": "short"
+   },
+   {
+    "m": "MAA-01 35mm anti-aircraft gun",
+    "n": 200,
+    "orig": "MMR",
+    "s": "wiki_army",
+    "c": "ت",
+    "note": "Locally producing with the Chinese assistance. Similar to Chinese Type-90 35 mm twin AA gun.",
+    "gen": 2,
+    "cat": "short"
+   },
+   {
+    "m": "Igla-1E (SA-16 Gimlet)",
+    "n": 2100,
+    "orig": "BGR",
+    "s": "wiki_army",
+    "c": "ت",
+    "note": "Very short-range portable surface-to-air missile. 100 SA-16s received from Bulgaria in 1999. A total of 2000 units of SA-16s producing in lo",
+    "gen": 2,
+    "cat": "short"
+   },
+   {
+    "m": "Igla (SA-18 Grouse)",
+    "n": 100,
+    "orig": "RUS",
+    "s": "wiki_army",
+    "c": "ت",
+    "note": "Very short-range portable surface-to-air missile. For infantry use.",
+    "gen": 2,
+    "cat": "short"
+   },
+   {
+    "m": "Igla-S (SA-24 Grinch)",
+    "n": 400,
+    "orig": "RUS",
+    "s": "wiki_army",
+    "c": "ت",
+    "note": "Very short-range portable surface-to-air missile. For infantry use.",
+    "gen": 1,
+    "cat": "short"
+   },
+   {
+    "m": "HN-5A",
+    "n": 200,
+    "orig": "CHN",
+    "s": "wiki_army",
+    "c": "ت",
+    "note": "Possibly being retired.",
+    "gen": 2,
+    "cat": "short"
+   },
+   {
+    "m": "S-200 Dubna (SA-5 Gammon)",
+    "n": 20,
+    "orig": "RUS",
+    "s": "wiki_army",
+    "c": "ت",
+    "note": "Long-range air defence system. North Korea have shipped as many as 20 S-200 launchers to Myanmar. Unclear as to how many units remain in ser",
+    "gen": 2,
+    "cat": "long"
+   },
+   {
+    "m": "Pechora-2M (SA-3 Goa)",
+    "n": 8,
+    "orig": "RUS",
+    "s": "wiki_army",
+    "c": "ت",
+    "note": "Medium range surface-to-air missile system. Total of 30 launching vehicles.",
+    "gen": 2,
+    "cat": "short"
+   },
+   {
+    "m": "Kub 2K12M2 (SA-6 \"Gainful\")",
+    "n": 24,
+    "orig": "BLR",
+    "s": "wiki_army",
+    "c": "ت",
+    "note": "Medium-range surface to air missile system.",
+    "gen": 2,
+    "cat": "medium"
+   },
+   {
+    "m": "Kub/Buk Kavadrat-M (SA-6 \"Gainful\")",
+    "n": 6,
+    "orig": "BLR",
+    "s": "wiki_army",
+    "c": "ت",
+    "note": "Medium range surface-to-air missile system. Received in 2016.",
+    "gen": 2,
+    "cat": "medium"
+   },
+   {
+    "m": "KS-1A",
+    "n": 16,
+    "orig": "CHN",
+    "s": "wiki_army",
+    "c": "ت",
+    "note": "Medium-range surface-to-air missile system.",
+    "gen": 2,
+    "cat": "short"
+   },
+   {
+    "m": "KS-1M",
+    "n": 16,
+    "orig": "MMR",
+    "s": "wiki_army",
+    "c": "ت",
+    "note": "Medium range surface-to-air missile system. Producing under licence in Myanmar. According to the licence, 12 batteries will be produced by 2",
+    "gen": 2,
+    "cat": "short"
+   },
+   {
+    "m": "S-75M3 Volga-2 (SA-2 Guideline)",
+    "n": 48,
+    "orig": "RUS",
+    "s": "wiki_army",
+    "c": "ت",
+    "note": "48 surface-to-air missile launchers and 250 missiles received in 2008.",
+    "gen": 1,
+    "cat": "long"
+   },
+   {
+    "m": "BAE Dynamics Bloodhound Mk.II",
+    "n": 60,
+    "orig": "GBR",
+    "s": "wiki_army",
+    "c": "ت",
+    "note": "Supplied by Singapore.Possibly retired from service.",
+    "gen": 2,
+    "cat": "short"
+   },
+   {
+    "m": "2K22M Tunguska (SA-19 \"Grison\")",
+    "n": 41,
+    "orig": "RUS",
+    "s": "wiki_army",
+    "c": "ت",
+    "note": "Total of 38 acquired from Russia between 2004 and 2007 and 3 from Ukraine in 2019",
+    "gen": 2,
+    "cat": "short"
+   },
+   {
+    "m": "MADV",
+    "n": 180,
+    "orig": "MMR",
+    "s": "wiki_army",
+    "c": "ت",
+    "note": "Air defence variants of locally made Naung Yoe armoured vehicle (utility version). Four Igla mounted MADVs are standard organic AD systems f",
+    "gen": 2,
+    "cat": "short"
+   },
+   {
+    "m": "Type-87",
+    "n": 380,
+    "orig": "CHN",
+    "s": "wiki_army",
+    "c": "ت",
+    "note": "Chinese variant of Soviet ZU-23-2 in 25x183mmB calibre.",
+    "gen": 2,
+    "cat": "short"
+   },
+   {
+    "m": "MR-4",
+    "n": 200,
+    "orig": "ROU",
+    "s": "wiki_army",
+    "c": "ت",
+    "note": "Romanian variant of ZPU-4.",
+    "gen": 2,
+    "cat": "short"
+   }
+  ],
   "msl": [],
-  "navy": []
+  "navy": [],
+  "grp": {
+   "tank": {
+    "n": 186,
+    "s": "iiss_eq",
+    "c": "ت",
+    "top": [
+     [
+      "T-72S",
+      300,
+      3,
+      "RUS"
+     ],
+     [
+      "Type-59D",
+      250,
+      2,
+      "CHN"
+     ],
+     [
+      "Type-90-ll",
+      200,
+      2,
+      "CHN"
+     ]
+    ],
+    "gen": 2.3,
+    "note": "مجموع القوائم 1035 يختلف عن الإجمالي؛ الإجمالي هو المعتمد"
+   },
+   "afv": {
+    "n": 3160,
+    "s": "wiki_army",
+    "c": "ت",
+    "top": [
+     [
+      "BTR-3U",
+      800,
+      2,
+      "UKR"
+     ],
+     [
+      "ZSL-92",
+      450,
+      2,
+      "CHN"
+     ],
+     [
+      "MT-LBMSh",
+      350,
+      2,
+      "UKR"
+     ]
+    ],
+    "gen": 2.1
+   },
+   "art": {
+    "n": 3190,
+    "s": "wiki_army",
+    "c": "ت",
+    "top": [
+     [
+      "D-30M",
+      560,
+      2,
+      "SUN"
+     ],
+     [
+      "M-56",
+      250,
+      2,
+      "YUG"
+     ],
+     [
+      "BM-21 Grad (9P138 \"Grad-1\")",
+      230,
+      2,
+      "RUS"
+     ]
+    ],
+    "gen": 1.9
+   },
+   "jet": {
+    "n": 92,
+    "s": "iiss_eq",
+    "c": "ت",
+    "top": [
+     [
+      "Mikoyan MiG-29 (SM/SMT)",
+      38,
+      3,
+      "RUS"
+     ],
+     [
+      "Chengdu J-7 (F-7M/FT-7)",
+      36,
+      1,
+      "CHN"
+     ],
+     [
+      "Nanchang Q-5 (A-5C)",
+      24,
+      2,
+      "CHN"
+     ]
+    ],
+    "gen": 2.2
+   },
+   "heli": {
+    "n": 86,
+    "s": "wiki_air",
+    "c": "ت",
+    "top": [
+     [
+      "Mil Mi-8/17",
+      25,
+      2,
+      "RUS"
+     ],
+     [
+      "Mil Mi-24 (Mi-35P)",
+      24,
+      3,
+      "RUS"
+     ],
+     [
+      "Mil Mi-2",
+      22,
+      2,
+      "POL"
+     ]
+    ],
+    "gen": 2.3
+   },
+   "uav": {
+    "n": 33,
+    "s": "wiki_air",
+    "c": "ت",
+    "top": [
+     [
+      "Yellow Cat A2",
+      22,
+      2,
+      "MMR"
+     ],
+     [
+      "Sky 02",
+      11,
+      2,
+      "CHN"
+     ]
+    ],
+    "gen": 2.0
+   },
+   "ad": {
+    "n": 4023,
+    "s": "wiki_army",
+    "c": "ت",
+    "top": [
+     [
+      "Igla-1E (SA-16 Gimlet)",
+      2100,
+      2,
+      "BGR"
+     ],
+     [
+      "Igla-S (SA-24 Grinch)",
+      400,
+      1,
+      "RUS"
+     ],
+     [
+      "Type-87",
+      380,
+      2,
+      "CHN"
+     ]
+    ],
+    "gen": 1.9
+   },
+   "navy": {
+    "n": 10,
+    "s": "iiss_eq",
+    "c": "ت"
+   }
+  }
  },
  "ind": null,
  "pol": {

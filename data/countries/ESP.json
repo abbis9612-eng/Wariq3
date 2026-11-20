@@ -68,6 +68,11 @@
    "t": "تقدير المصمم (تشرين الثاني 2026) لصناعة السلاح والاستقرار: SIPRI Arms Transfers Database (أكبر المصدّرين 2020–24)، SIPRI Top 100 Arms-Producing Companies، Fragile States Index 2025، أخبار 2026",
    "u": "https://www.sipri.org/databases/armstransfers",
    "y": 2026
+  },
+  "tpl": {
+   "t": "قالب منطقة (eu): موديلات شائعة ونسب تقريبية من الدبابات (مدرعات ×2.5، مدفعية ×0.9، مروحيات ×0.25) — تقدير المصمم",
+   "u": "docs/features/world-plan.md",
+   "y": 2026
   }
  },
  "gov": {
@@ -244,6 +249,26 @@
    }
   },
   "land": [
+   {
+    "m": "Leopard 2E",
+    "n": 219,
+    "orig": "ESP",
+    "s": "wiki_army",
+    "c": "ت",
+    "note": "In 2023, the Spanish government approved a contract worth 208 million euros to carry out some modernizations of the Leopard 2E tanks.",
+    "gen": 3,
+    "cat": "tank"
+   },
+   {
+    "m": "Leopard 2A4",
+    "n": 55,
+    "orig": "DEU",
+    "s": "wiki_army",
+    "c": "ت",
+    "note": "108 were acquired from Germany. 29 were handed over to Ukraine. It was planned to convert 40 of these machines, 24 into engineer versions an",
+    "gen": 3,
+    "cat": "tank"
+   },
    {
     "m": "Centauro",
     "n": 84,
@@ -652,9 +677,230 @@
     "cat": "heli_util"
    }
   ],
-  "ad": [],
+  "ad": [
+   {
+    "m": "Oerlikon-Contraves GDF-005/007 35/90 (Anti-aircraft artillery)",
+    "n": 92,
+    "orig": "CHE",
+    "s": "wiki_army",
+    "c": "ت",
+    "note": "18 renewed Skyguard and 27 Skydor fire directions",
+    "gen": 2,
+    "cat": "short"
+   },
+   {
+    "m": "MIM-23B I-Hawk Phase III (Surface-to-Air missile)",
+    "n": 32,
+    "orig": "USA",
+    "s": "wiki_army",
+    "c": "ت",
+    "gen": 2,
+    "cat": "medium"
+   },
+   {
+    "m": "NASAMS (Surface-to-Air missile system)",
+    "n": 8,
+    "orig": "USA",
+    "s": "wiki_army",
+    "c": "ت",
+    "note": "AN/MPQ-64 Sentinel 3D-Radar",
+    "gen": 2,
+    "cat": "medium"
+   },
+   {
+    "m": "Raytheon MIM-104 Patriot(PAC-2) (Surface-to-Air missile)",
+    "n": 18,
+    "orig": "USA",
+    "s": "wiki_army",
+    "c": "ت",
+    "note": "purchased from Germany on MAN Trucks",
+    "gen": 4,
+    "cat": "long"
+   },
+   {
+    "m": "MBDA Mistral missile (Anti-aircraft infrared homing missile system)",
+    "n": 168,
+    "orig": "FRA",
+    "s": "wiki_army",
+    "c": "ت",
+    "note": "Purchase of 100 used Mistral 3 rockets from France worth 47,795,000 euros starting in 2020",
+    "gen": 2,
+    "cat": "short"
+   }
+  ],
   "msl": [],
-  "navy": []
+  "navy": [],
+  "grp": {
+   "tank": {
+    "n": 230,
+    "s": "iiss_eq",
+    "c": "ت",
+    "top": [
+     [
+      "Leopard 2E",
+      219,
+      3,
+      "ESP"
+     ],
+     [
+      "Leopard 2A4",
+      55,
+      3,
+      "DEU"
+     ]
+    ],
+    "gen": 3.0
+   },
+   "afv": {
+    "n": 2402,
+    "s": "wiki_army",
+    "c": "ت",
+    "top": [
+     [
+      "M113 (M113A1 M113A2 M577A2)",
+      800,
+      2,
+      "USA"
+     ],
+     [
+      "Pegaso BMR (BMR-600 BMR-600M1)",
+      648,
+      3,
+      "ESP"
+     ],
+     [
+      "Iveco LMV",
+      346,
+      2,
+      "ESP"
+     ]
+    ],
+    "gen": 2.3
+   },
+   "art": {
+    "n": 234,
+    "s": "wiki_army",
+    "c": "ت",
+    "top": [
+     [
+      "M109A5E",
+      96,
+      2,
+      "USA"
+     ],
+     [
+      "SBS 155/52",
+      82,
+      2,
+      "ESP"
+     ],
+     [
+      "L118",
+      56,
+      2,
+      "GBR"
+     ]
+    ],
+    "gen": 2.0
+   },
+   "jet": {
+    "n": 152,
+    "s": "iiss_eq",
+    "c": "ت",
+    "top": [
+     [
+      "F/A-18 Hornet (EF-18A+ EF-18M)",
+      69,
+      3,
+      "USA"
+     ],
+     [
+      "Northrop F-5 (F-5BM SF-5M)",
+      19,
+      2,
+      "USA"
+     ],
+     [
+      "Bombardier CL-215 (–)",
+      10,
+      2,
+      "CAN"
+     ]
+    ],
+    "gen": 2.7
+   },
+   "heli": {
+    "n": 168,
+    "s": "wiki_air",
+    "c": "ت",
+    "top": [
+     [
+      "NH-90 (TTH)",
+      26,
+      2,
+      "INT"
+     ],
+     [
+      "Eurocopter Tiger (HAD-E)",
+      18,
+      2,
+      "INT"
+     ],
+     [
+      "CH-47 Chinook (CH-47F)",
+      17,
+      3,
+      "USA"
+     ]
+    ],
+    "gen": 2.4
+   },
+   "uav": {
+    "n": 4,
+    "s": "wiki_air",
+    "c": "ت",
+    "top": [
+     [
+      "MQ-9A Predator B (MQ-9A Block 5)",
+      4,
+      4,
+      "USA"
+     ]
+    ],
+    "gen": 4.0
+   },
+   "ad": {
+    "n": 318,
+    "s": "wiki_army",
+    "c": "ت",
+    "top": [
+     [
+      "MBDA Mistral missile (Anti-aircraft infr",
+      168,
+      2,
+      "FRA"
+     ],
+     [
+      "Oerlikon-Contraves GDF-005/007 35/90 (An",
+      92,
+      2,
+      "CHE"
+     ],
+     [
+      "MIM-23B I-Hawk Phase III (Surface-to-Air",
+      32,
+      2,
+      "USA"
+     ]
+    ],
+    "gen": 2.1
+   },
+   "navy": {
+    "n": 16,
+    "s": "iiss_eq",
+    "c": "ت"
+   }
+  }
  },
  "ind": {
   "tech": {

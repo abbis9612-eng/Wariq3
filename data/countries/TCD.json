@@ -5,6 +5,18 @@
  "tier": "C",
  "asOf": "2026-11",
  "src": {
+  "wiki_air": {
+   "t": "Wikipedia: Chadian Air Force",
+   "u": "https://en.wikipedia.org/wiki/Chadian_Air_Force?oldid=1384635938",
+   "y": 2026,
+   "note": "نسخة الصفحة بتاريخ السحب؛ أرقام ويكيبيديا تنراجع ويا مصادر ثانية"
+  },
+  "wiki_army": {
+   "t": "Wikipedia: Chadian Ground Forces",
+   "u": "https://en.wikipedia.org/wiki/Chadian_Ground_Forces?oldid=1380210571",
+   "y": 2026,
+   "note": "نسخة الصفحة بتاريخ السحب؛ أرقام ويكيبيديا تنراجع ويا مصادر ثانية"
+  },
   "iiss_eq": {
    "t": "Wikipedia: List of countries by level of military equipment (من IISS Military Balance ومصادر ثانية)",
    "u": "https://en.wikipedia.org/wiki/List_of_countries_by_level_of_military_equipment?oldid=1384804191",
@@ -49,6 +61,11 @@
   "tierA": {
    "t": "تقدير المصمم (تشرين الثاني 2026) لصناعة السلاح والاستقرار: SIPRI Arms Transfers Database (أكبر المصدّرين 2020–24)، SIPRI Top 100 Arms-Producing Companies، Fragile States Index 2025، أخبار 2026",
    "u": "https://www.sipri.org/databases/armstransfers",
+   "y": 2026
+  },
+  "tpl": {
+   "t": "قالب منطقة (af): موديلات شائعة ونسب تقريبية من الدبابات (مدرعات ×2.5، مدفعية ×0.9، مروحيات ×0.25) — تقدير المصمم",
+   "u": "docs/features/world-plan.md",
    "y": 2026
   }
  },
@@ -207,11 +224,515 @@
     "c": "ت"
    }
   },
-  "land": [],
-  "air": [],
-  "ad": [],
+  "land": [
+   {
+    "m": "2S1 Gvozdika",
+    "n": 10,
+    "orig": "SUN",
+    "s": "wiki_army",
+    "c": "ت",
+    "gen": 2,
+    "cat": "spg"
+   },
+   {
+    "m": "BM-21 Grad",
+    "n": 6,
+    "orig": "SUN",
+    "s": "wiki_army",
+    "c": "ت",
+    "gen": 2,
+    "cat": "mlrs"
+   },
+   {
+    "m": "PHL-81",
+    "n": 5,
+    "orig": "CHN",
+    "s": "wiki_army",
+    "c": "ت",
+    "gen": 2,
+    "cat": "mlrs"
+   },
+   {
+    "m": "D-74",
+    "n": 8,
+    "orig": "SUN",
+    "s": "wiki_army",
+    "c": "ت",
+    "gen": 2,
+    "cat": "towed"
+   },
+   {
+    "m": "M101",
+    "n": 5,
+    "orig": "USA",
+    "s": "wiki_army",
+    "c": "ت",
+    "gen": 2,
+    "cat": "towed"
+   },
+   {
+    "m": "Type 59G",
+    "n": 30,
+    "orig": "CHN",
+    "s": "wiki_army",
+    "c": "ت",
+    "gen": 1,
+    "cat": "tank"
+   },
+   {
+    "m": "T-55",
+    "n": 60,
+    "orig": "SUN",
+    "s": "wiki_army",
+    "c": "ت",
+    "gen": 1,
+    "cat": "tank"
+   },
+   {
+    "m": "WMA-301",
+    "n": 30,
+    "orig": "CHN",
+    "s": "wiki_army",
+    "c": "ت",
+    "gen": 2,
+    "cat": "atgm"
+   },
+   {
+    "m": "BMP-1",
+    "n": 80,
+    "orig": "SUN",
+    "s": "wiki_army",
+    "c": "ت",
+    "gen": 2,
+    "cat": "ifv"
+   },
+   {
+    "m": "BMP-1U",
+    "n": 42,
+    "orig": "SUN",
+    "s": "wiki_army",
+    "c": "ت",
+    "gen": 2,
+    "cat": "ifv"
+   },
+   {
+    "m": "BRDM-2",
+    "n": 100,
+    "orig": "SUN",
+    "s": "wiki_army",
+    "c": "ت",
+    "gen": 2,
+    "cat": "apc"
+   },
+   {
+    "m": "Cadillac V-150",
+    "n": 9,
+    "orig": "USA",
+    "s": "wiki_army",
+    "c": "ت",
+    "gen": 2,
+    "cat": "apc"
+   },
+   {
+    "m": "Panhard AML",
+    "n": 132,
+    "orig": "FRA",
+    "s": "wiki_army",
+    "c": "ت",
+    "note": "AML-60 and AML-90 variants",
+    "gen": 2,
+    "cat": "apc"
+   },
+   {
+    "m": "Eland-90",
+    "n": 82,
+    "orig": "ZAF",
+    "s": "wiki_army",
+    "c": "ت",
+    "gen": 2,
+    "cat": "apc"
+   },
+   {
+    "m": "ERC-90F1 Lynx",
+    "n": 4,
+    "orig": "FRA",
+    "s": "wiki_army",
+    "c": "ت",
+    "gen": 2,
+    "cat": "apc"
+   },
+   {
+    "m": "EE-9 Cascavel",
+    "n": 20,
+    "orig": "BRA",
+    "s": "wiki_army",
+    "c": "ت",
+    "gen": 2,
+    "cat": "apc"
+   },
+   {
+    "m": "RAM MK3",
+    "n": 42,
+    "orig": "ISR",
+    "s": "wiki_army",
+    "c": "ت",
+    "note": "Delivered in 2006-2008",
+    "gen": 2,
+    "cat": "apc"
+   },
+   {
+    "m": "Ejder Yalçın",
+    "n": 20,
+    "orig": "TUR",
+    "s": "wiki_army",
+    "c": "ت",
+    "gen": 2,
+    "cat": "mrap"
+   },
+   {
+    "m": "ARA II",
+    "n": 8,
+    "orig": "NGA",
+    "s": "wiki_army",
+    "c": "ت",
+    "gen": 2,
+    "cat": "mrap"
+   }
+  ],
+  "air": [
+   {
+    "m": "Sukhoi Su-25",
+    "n": 7,
+    "orig": "SUN",
+    "s": "wiki_air",
+    "c": "ت",
+    "gen": 3,
+    "cat": "attack"
+   },
+   {
+    "m": "Cessna 208",
+    "n": 4,
+    "orig": "USA",
+    "s": "wiki_air",
+    "c": "ت",
+    "gen": 2,
+    "cat": "transport"
+   },
+   {
+    "m": "C-27J Spartan",
+    "n": 1,
+    "orig": "ITA",
+    "s": "wiki_air",
+    "c": "ت",
+    "gen": 2,
+    "cat": "transport"
+   },
+   {
+    "m": "Antonov An-26",
+    "n": 3,
+    "orig": "SUN",
+    "s": "wiki_air",
+    "c": "ت",
+    "gen": 2,
+    "cat": "transport"
+   },
+   {
+    "m": "C-130 Hercules (C-130H)",
+    "n": 1,
+    "orig": "USA",
+    "s": "wiki_air",
+    "c": "ت",
+    "gen": 2,
+    "cat": "transport"
+   },
+   {
+    "m": "Mil Mi-17 (Mi-8/17/171)",
+    "n": 6,
+    "orig": "RUS",
+    "s": "wiki_air",
+    "c": "ت",
+    "gen": 2,
+    "cat": "heli_util"
+   },
+   {
+    "m": "Mil Mi-24 (Mi-35)",
+    "n": 3,
+    "orig": "SUN",
+    "s": "wiki_air",
+    "c": "ت",
+    "gen": 3,
+    "cat": "heli_attack"
+   },
+   {
+    "m": "Alouette III",
+    "n": 1,
+    "orig": "FRA",
+    "s": "wiki_air",
+    "c": "ت",
+    "gen": 2,
+    "cat": "heli_util"
+   },
+   {
+    "m": "Eurocopter AS550",
+    "n": 6,
+    "orig": "FRA",
+    "s": "wiki_air",
+    "c": "ت",
+    "gen": 2,
+    "cat": "heli_util"
+   },
+   {
+    "m": "Pilatus PC-9",
+    "n": 1,
+    "orig": "CHE",
+    "s": "wiki_air",
+    "c": "ت",
+    "gen": 2,
+    "cat": "trainer"
+   },
+   {
+    "m": "Sukhoi Su-25 (Su-25UB)",
+    "n": 2,
+    "orig": "SUN",
+    "s": "wiki_air",
+    "c": "ت",
+    "gen": 3,
+    "cat": "trainer"
+   },
+   {
+    "m": "Pilatus PC-7",
+    "n": 2,
+    "orig": "CHE",
+    "s": "wiki_air",
+    "c": "ت",
+    "gen": 2,
+    "cat": "trainer"
+   },
+   {
+    "m": "TAI Hürkuş (C)",
+    "n": 3,
+    "orig": "TUR",
+    "s": "wiki_air",
+    "c": "ت",
+    "gen": 2,
+    "cat": "attack"
+   },
+   {
+    "m": "TAI Anka (Anka S)",
+    "n": 2,
+    "orig": "TUR",
+    "s": "wiki_air",
+    "c": "ت",
+    "gen": 2,
+    "cat": "uav_strike"
+   },
+   {
+    "m": "TAI Aksungur",
+    "n": 2,
+    "orig": "TUR",
+    "s": "wiki_air",
+    "c": "ت",
+    "gen": 2,
+    "cat": "uav_strike"
+   }
+  ],
+  "ad": [
+   {
+    "m": "ZSU-23-4 Shilka",
+    "n": 6,
+    "orig": "SUN",
+    "s": "wiki_army",
+    "c": "ت",
+    "gen": 2,
+    "cat": "short"
+   },
+   {
+    "m": "2K12 Kub",
+    "n": 4,
+    "orig": "SUN",
+    "s": "wiki_army",
+    "c": "ت",
+    "gen": 2,
+    "cat": "medium"
+   },
+   {
+    "m": "9K38 Igla",
+    "n": 50,
+    "orig": "SUN",
+    "s": "wiki_army",
+    "c": "ت",
+    "gen": 2,
+    "cat": "short"
+   }
+  ],
   "msl": [],
-  "navy": []
+  "navy": [],
+  "grp": {
+   "tank": {
+    "n": 90,
+    "s": "iiss_eq",
+    "c": "ت",
+    "top": [
+     [
+      "T-55",
+      60,
+      1,
+      "SUN"
+     ],
+     [
+      "Type 59G",
+      30,
+      1,
+      "CHN"
+     ]
+    ],
+    "gen": 1.0
+   },
+   "afv": {
+    "n": 539,
+    "s": "wiki_army",
+    "c": "ت",
+    "top": [
+     [
+      "Panhard AML",
+      132,
+      2,
+      "FRA"
+     ],
+     [
+      "BRDM-2",
+      100,
+      2,
+      "SUN"
+     ],
+     [
+      "Eland-90",
+      82,
+      2,
+      "ZAF"
+     ]
+    ],
+    "gen": 2.0
+   },
+   "art": {
+    "n": 34,
+    "s": "wiki_army",
+    "c": "ت",
+    "top": [
+     [
+      "2S1 Gvozdika",
+      10,
+      2,
+      "SUN"
+     ],
+     [
+      "D-74",
+      8,
+      2,
+      "SUN"
+     ],
+     [
+      "BM-21 Grad",
+      6,
+      2,
+      "SUN"
+     ]
+    ],
+    "gen": 2.0
+   },
+   "jet": {
+    "n": 9,
+    "s": "iiss_eq",
+    "c": "ت",
+    "top": [
+     [
+      "Sukhoi Su-25",
+      7,
+      3,
+      "SUN"
+     ],
+     [
+      "TAI Hürkuş (C)",
+      3,
+      2,
+      "TUR"
+     ]
+    ],
+    "gen": 2.7
+   },
+   "heli": {
+    "n": 16,
+    "s": "wiki_air",
+    "c": "ت",
+    "top": [
+     [
+      "Mil Mi-17 (Mi-8/17/171)",
+      6,
+      2,
+      "RUS"
+     ],
+     [
+      "Eurocopter AS550",
+      6,
+      2,
+      "FRA"
+     ],
+     [
+      "Mil Mi-24 (Mi-35)",
+      3,
+      3,
+      "SUN"
+     ]
+    ],
+    "gen": 2.2
+   },
+   "uav": {
+    "n": 4,
+    "s": "wiki_air",
+    "c": "ت",
+    "top": [
+     [
+      "TAI Anka (Anka S)",
+      2,
+      2,
+      "TUR"
+     ],
+     [
+      "TAI Aksungur",
+      2,
+      2,
+      "TUR"
+     ]
+    ],
+    "gen": 2.0
+   },
+   "ad": {
+    "n": 60,
+    "s": "wiki_army",
+    "c": "ت",
+    "top": [
+     [
+      "9K38 Igla",
+      50,
+      2,
+      "SUN"
+     ],
+     [
+      "ZSU-23-4 Shilka",
+      6,
+      2,
+      "SUN"
+     ],
+     [
+      "2K12 Kub",
+      4,
+      2,
+      "SUN"
+     ]
+    ],
+    "gen": 2.0
+   }
+  }
  },
  "ind": null,
  "pol": {

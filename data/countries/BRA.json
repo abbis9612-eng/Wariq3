@@ -62,6 +62,11 @@
    "t": "تقدير المصمم (تشرين الثاني 2026) لصناعة السلاح والاستقرار: SIPRI Arms Transfers Database (أكبر المصدّرين 2020–24)، SIPRI Top 100 Arms-Producing Companies، Fragile States Index 2025، أخبار 2026",
    "u": "https://www.sipri.org/databases/armstransfers",
    "y": 2026
+  },
+  "tpl": {
+   "t": "قالب منطقة (la): موديلات شائعة ونسب تقريبية من الدبابات (مدرعات ×2.5، مدفعية ×0.9، مروحيات ×0.25) — تقدير المصمم",
+   "u": "docs/features/world-plan.md",
+   "y": 2026
   }
  },
  "gov": {
@@ -365,7 +370,171 @@
     "gen": 2,
     "cat": "sub"
    }
-  ]
+  ],
+  "grp": {
+   "tank": {
+    "n": 300,
+    "s": "iiss_eq",
+    "c": "ت",
+    "top": [
+     [
+      "AMX-13",
+      null,
+      null,
+      null
+     ],
+     [
+      "M41",
+      null,
+      null,
+      null
+     ],
+     [
+      "T-55",
+      null,
+      null,
+      null
+     ]
+    ],
+    "gen": 1.6,
+    "tpl": "la"
+   },
+   "afv": {
+    "n": 750,
+    "s": "tpl",
+    "c": "ق",
+    "top": [
+     [
+      "M113",
+      null,
+      null,
+      null
+     ],
+     [
+      "EE-11 Urutu",
+      null,
+      null,
+      null
+     ],
+     [
+      "BTR-80",
+      null,
+      null,
+      null
+     ]
+    ],
+    "gen": 1.8,
+    "tpl": "la"
+   },
+   "art": {
+    "n": 270,
+    "s": "tpl",
+    "c": "ق",
+    "top": [
+     [
+      "M101",
+      null,
+      null,
+      null
+     ],
+     [
+      "M114",
+      null,
+      null,
+      null
+     ],
+     [
+      "OTO Melara Mod 56",
+      null,
+      null,
+      null
+     ]
+    ],
+    "gen": 1.8,
+    "tpl": "la"
+   },
+   "jet": {
+    "n": 128,
+    "s": "iiss_eq",
+    "c": "ت",
+    "top": [
+     [
+      "A-29 Super Tucano",
+      null,
+      null,
+      null
+     ],
+     [
+      "F-5",
+      null,
+      null,
+      null
+     ],
+     [
+      "Mirage 5",
+      null,
+      null,
+      null
+     ]
+    ],
+    "gen": 1.8,
+    "tpl": "la"
+   },
+   "heli": {
+    "n": 75,
+    "s": "tpl",
+    "c": "ق",
+    "top": [
+     [
+      "Bell 412",
+      null,
+      null,
+      null
+     ],
+     [
+      "UH-1H",
+      null,
+      null,
+      null
+     ],
+     [
+      "Mi-17",
+      null,
+      null,
+      null
+     ]
+    ],
+    "gen": 2,
+    "tpl": "la"
+   },
+   "navy": {
+    "n": 18,
+    "s": "iiss_eq",
+    "c": "ت",
+    "top": [
+     [
+      "Grajaú",
+      12,
+      2,
+      "BRA"
+     ],
+     [
+      "Piratini",
+      5,
+      2,
+      "BRA"
+     ],
+     [
+      "Riachuelo",
+      4,
+      2,
+      "BRA"
+     ]
+    ],
+    "gen": 2.0,
+    "note": "مجموع القوائم 44 يختلف عن الإجمالي؛ الإجمالي هو المعتمد"
+   }
+  }
  },
  "ind": {
   "tech": {

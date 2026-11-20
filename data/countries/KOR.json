@@ -62,6 +62,11 @@
    "t": "تقدير المصمم (تشرين الثاني 2026) لصناعة السلاح والاستقرار: SIPRI Arms Transfers Database (أكبر المصدّرين 2020–24)، SIPRI Top 100 Arms-Producing Companies، Fragile States Index 2025، أخبار 2026",
    "u": "https://www.sipri.org/databases/armstransfers",
    "y": 2026
+  },
+  "tpl": {
+   "t": "قالب منطقة (as): موديلات شائعة ونسب تقريبية من الدبابات (مدرعات ×2.5، مدفعية ×0.9، مروحيات ×0.25) — تقدير المصمم",
+   "u": "docs/features/world-plan.md",
+   "y": 2026
   }
  },
  "gov": {
@@ -356,7 +361,7 @@
     "cat": "mrap"
    },
    {
-    "m": "M2/M2A1/M3/M101KM101A1",
+    "m": "105mm towed howitzer",
     "n": 3000,
     "orig": "USA",
     "s": "wiki_army",
@@ -366,7 +371,7 @@
     "cat": "towed"
    },
    {
-    "m": "M114",
+    "m": "155mm towed howitzer",
     "n": 1400,
     "orig": "USA",
     "s": "wiki_army",
@@ -376,26 +381,7 @@
     "cat": "towed"
    },
    {
-    "m": "KH179",
-    "n": 1400,
-    "orig": "KOR",
-    "s": "wiki_army",
-    "c": "ت",
-    "gen": 2,
-    "cat": "towed"
-   },
-   {
-    "m": "K55/K55A1",
-    "n": 1040,
-    "orig": "USA",
-    "s": "wiki_army",
-    "c": "ت",
-    "note": "M109A2 built under license by Samsung Techwin. All K55s have been upgraded to K55A1. Will eventually be replaced by the K9 Thunder.",
-    "gen": 2,
-    "cat": "spg"
-   },
-   {
-    "m": "K9/A1 Thunder",
+    "m": "155mm self-propelled howitzer",
     "n": 1240,
     "orig": "KOR",
     "s": "wiki_army",
@@ -405,7 +391,7 @@
     "cat": "spg"
    },
    {
-    "m": "K105A1",
+    "m": "105mm wheeled self-propelled howitzer",
     "n": 200,
     "orig": "KOR",
     "s": "wiki_army",
@@ -786,7 +772,7 @@
   ],
   "msl": [
    {
-    "m": "Hyunmoo-2",
+    "m": "Short-range ballistic missile",
     "n": 30,
     "orig": "INT",
     "s": "wiki_army",
@@ -795,7 +781,7 @@
     "cat": "srbm"
    },
    {
-    "m": "ATACMS",
+    "m": "Tactical ballistic missile",
     "n": 111,
     "orig": "INT",
     "s": "wiki_army",
@@ -804,7 +790,196 @@
     "cat": "srbm"
    }
   ],
-  "navy": []
+  "navy": [],
+  "grp": {
+   "tank": {
+    "n": 2200,
+    "s": "iiss_eq",
+    "c": "ت",
+    "top": [
+     [
+      "K1/K1E2",
+      1027,
+      2,
+      "KOR"
+     ],
+     [
+      "K1A2",
+      484,
+      2,
+      "KOR"
+     ],
+     [
+      "T-80UT-80UK",
+      33,
+      3,
+      "SUN"
+     ]
+    ],
+    "gen": 2.0
+   },
+   "afv": {
+    "n": 2819,
+    "s": "wiki_army",
+    "c": "ت",
+    "top": [
+     [
+      "K200/A1",
+      1700,
+      2,
+      "KOR"
+     ],
+     [
+      "K808 White Tiger",
+      500,
+      2,
+      "KOR"
+     ],
+     [
+      "K21",
+      466,
+      4,
+      "KOR"
+     ]
+    ],
+    "gen": 2.4
+   },
+   "art": {
+    "n": 6876,
+    "s": "wiki_army",
+    "c": "ت",
+    "top": [
+     [
+      "105mm towed howitzer",
+      3000,
+      2,
+      "USA"
+     ],
+     [
+      "155mm towed howitzer",
+      1400,
+      2,
+      "USA"
+     ],
+     [
+      "155mm self-propelled howitzer",
+      1240,
+      2,
+      "KOR"
+     ]
+    ],
+    "gen": 2.0
+   },
+   "jet": {
+    "n": 580,
+    "s": "iiss_eq",
+    "c": "ت",
+    "top": [
+     [
+      "F-16 Fighting Falcon (KF-16C/U)",
+      118,
+      3,
+      "USA"
+     ],
+     [
+      "KT-1 Woongbi (KA-1)",
+      103,
+      2,
+      "KOR"
+     ],
+     [
+      "F-5 Tiger II (KF-5E/F)",
+      61,
+      2,
+      "USA"
+     ]
+    ],
+    "gen": 3.0
+   },
+   "heli": {
+    "n": 85,
+    "s": "wiki_air",
+    "c": "ت",
+    "top": [
+     [
+      "Bell 505",
+      50,
+      2,
+      "INT"
+     ],
+     [
+      "Sikorsky S-70 (HH-60P)",
+      17,
+      2,
+      "USA"
+     ],
+     [
+      "CH-47 Chinook (HH-47D)",
+      9,
+      3,
+      "USA"
+     ]
+    ],
+    "gen": 2.2
+   },
+   "uav": {
+    "n": 10,
+    "s": "wiki_air",
+    "c": "ت",
+    "top": [
+     [
+      "RQ-4 Global Hawk",
+      4,
+      2,
+      "USA"
+     ],
+     [
+      "KAI RQ-101 Songgolmae",
+      4,
+      2,
+      "INT"
+     ],
+     [
+      "IAI Searcher",
+      2,
+      2,
+      "INT"
+     ]
+    ],
+    "gen": 2.0
+   },
+   "ad": {
+    "n": 1052,
+    "s": "wiki_army",
+    "c": "ت",
+    "top": [
+     [
+      "Mistral",
+      406,
+      2,
+      "FRA"
+     ],
+     [
+      "K263A1",
+      200,
+      2,
+      "KOR"
+     ],
+     [
+      "K30 Biho",
+      176,
+      2,
+      "KOR"
+     ]
+    ],
+    "gen": 2.0
+   },
+   "navy": {
+    "n": 65,
+    "s": "iiss_eq",
+    "c": "ت"
+   }
+  }
  },
  "ind": {
   "tech": {

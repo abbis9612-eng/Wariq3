@@ -5,6 +5,24 @@
  "tier": "B",
  "asOf": "2026-11",
  "src": {
+  "wiki_air": {
+   "t": "Wikipedia: Azerbaijani Air Forces",
+   "u": "https://en.wikipedia.org/wiki/Azerbaijani_Air_Forces?oldid=1384260193",
+   "y": 2026,
+   "note": "نسخة الصفحة بتاريخ السحب؛ أرقام ويكيبيديا تنراجع ويا مصادر ثانية"
+  },
+  "wiki_army": {
+   "t": "Wikipedia: List of equipment of the Azerbaijani Land Forces",
+   "u": "https://en.wikipedia.org/wiki/List_of_equipment_of_the_Azerbaijani_Land_Forces?oldid=1382878010",
+   "y": 2026,
+   "note": "نسخة الصفحة بتاريخ السحب؛ أرقام ويكيبيديا تنراجع ويا مصادر ثانية"
+  },
+  "wiki_navy": {
+   "t": "Wikipedia: Azerbaijani Navy",
+   "u": "https://en.wikipedia.org/wiki/Azerbaijani_Navy?oldid=1382502038",
+   "y": 2026,
+   "note": "نسخة الصفحة بتاريخ السحب؛ أرقام ويكيبيديا تنراجع ويا مصادر ثانية"
+  },
   "iiss_eq": {
    "t": "Wikipedia: List of countries by level of military equipment (من IISS Military Balance ومصادر ثانية)",
    "u": "https://en.wikipedia.org/wiki/List_of_countries_by_level_of_military_equipment?oldid=1384804191",
@@ -49,6 +67,11 @@
   "tierA": {
    "t": "تقدير المصمم (تشرين الثاني 2026) لصناعة السلاح والاستقرار: SIPRI Arms Transfers Database (أكبر المصدّرين 2020–24)، SIPRI Top 100 Arms-Producing Companies، Fragile States Index 2025، أخبار 2026",
    "u": "https://www.sipri.org/databases/armstransfers",
+   "y": 2026
+  },
+  "tpl": {
+   "t": "قالب منطقة (as): موديلات شائعة ونسب تقريبية من الدبابات (مدرعات ×2.5، مدفعية ×0.9، مروحيات ×0.25) — تقدير المصمم",
+   "u": "docs/features/world-plan.md",
    "y": 2026
   }
  },
@@ -219,11 +242,1347 @@
     "c": "ت"
    }
   },
-  "land": [],
-  "air": [],
-  "ad": [],
-  "msl": [],
-  "navy": []
+  "land": [
+   {
+    "m": "Spike-LR",
+    "n": 350,
+    "orig": "ISR",
+    "s": "wiki_army",
+    "c": "ت",
+    "note": "[Range: 4 km].",
+    "gen": 2,
+    "cat": "atgm"
+   },
+   {
+    "m": "Spike-NLOS",
+    "n": 250,
+    "orig": "ISR",
+    "s": "wiki_army",
+    "c": "ت",
+    "note": "[Range: 25 km], (For use by Mi-17 attack helicopters and Sa'ar 62 patrol vessels).",
+    "gen": 2,
+    "cat": "atgm"
+   },
+   {
+    "m": "LAHAT",
+    "n": 100,
+    "orig": "ISR",
+    "s": "wiki_army",
+    "c": "ت",
+    "note": "[Range: 13 km], (For use by Mi-17 attack helicopters).",
+    "gen": 2,
+    "cat": "atgm"
+   },
+   {
+    "m": "AT-1K",
+    "n": 70,
+    "orig": "KOR",
+    "s": "wiki_army",
+    "c": "ت",
+    "gen": 2,
+    "cat": "atgm"
+   },
+   {
+    "m": "9M133 Kornet",
+    "n": 100,
+    "orig": "RUS",
+    "s": "wiki_army",
+    "c": "ت",
+    "note": "In 2009-2010, 100 units were purchased from Russia",
+    "gen": 2,
+    "cat": "atgm"
+   },
+   {
+    "m": "T-90",
+    "n": 93,
+    "orig": "RUS",
+    "s": "wiki_army",
+    "c": "ت",
+    "note": "In 2011, 100 tanks were purchased under a contract with Rosoboronexport. They were delivered to Azerbaijan in 2011-2015.",
+    "gen": 4,
+    "cat": "tank"
+   },
+   {
+    "m": "T-72",
+    "n": 405,
+    "orig": "SUN",
+    "s": "wiki_army",
+    "c": "ت",
+    "note": "In 2001, 600 T-72Bs were ordered from Russia, 350 T-72A tanks were ordered from Belarus, 153 T-72Bs from Ukraine, 48 T-72M1 tanks were order",
+    "gen": 3,
+    "cat": "tank"
+   },
+   {
+    "m": "BMP-3",
+    "n": 118,
+    "orig": "RUS",
+    "s": "wiki_army",
+    "c": "ت",
+    "note": "Together with the Vesna-K thermal launch vehicle. According to the 2013 contract, 119 units were to be delivered.",
+    "gen": 4,
+    "cat": "ifv"
+   },
+   {
+    "m": "BMP-2",
+    "n": 300,
+    "orig": "SUN",
+    "s": "wiki_army",
+    "c": "ت",
+    "gen": 3,
+    "cat": "ifv"
+   },
+   {
+    "m": "BMP-1",
+    "n": 160,
+    "orig": "SUN",
+    "s": "wiki_army",
+    "c": "ت",
+    "note": "268 BMP-1 and BMP-2 in service with the State Border Service",
+    "gen": 2,
+    "cat": "ifv"
+   },
+   {
+    "m": "9M123 Khrizantema",
+    "n": 37,
+    "orig": "RUS",
+    "s": "wiki_army",
+    "c": "ت",
+    "note": "In 2014, 10 units of Chrysanthemum-S were ordered. The first batch was delivered in June 2015. In 2017, 12 units of Chrysanthemum-S were del",
+    "gen": 2,
+    "cat": "atgm"
+   },
+   {
+    "m": "BTR-82A",
+    "n": 230,
+    "orig": "RUS",
+    "s": "wiki_army",
+    "c": "ت",
+    "note": "230 units purchased in 2013-2018",
+    "gen": 2,
+    "cat": "apc"
+   },
+   {
+    "m": "BTR-80A",
+    "n": 187,
+    "orig": "RUS",
+    "s": "wiki_army",
+    "c": "ت",
+    "note": "70 were purchased in 2007-2008 117 were purchased in 2008-2010",
+    "gen": 3,
+    "cat": "apc"
+   },
+   {
+    "m": "BTR-80",
+    "n": 210,
+    "orig": "SUN",
+    "s": "wiki_army",
+    "c": "ت",
+    "note": "Purchased from Ukraine and Belarus",
+    "gen": 3,
+    "cat": "apc"
+   },
+   {
+    "m": "MT-LB",
+    "n": 400,
+    "orig": "SUN",
+    "s": "wiki_army",
+    "c": "ت",
+    "gen": 2,
+    "cat": "apc"
+   },
+   {
+    "m": "BTR-70",
+    "n": 259,
+    "orig": "SUN",
+    "s": "wiki_army",
+    "c": "ت",
+    "note": "Most have been modernized by Israel's Elbit Systems, 132 are in use, the rest are in reserve.",
+    "gen": 2,
+    "cat": "apc"
+   },
+   {
+    "m": "BRDM-2",
+    "n": 100,
+    "orig": "SUN",
+    "s": "wiki_army",
+    "c": "ت",
+    "note": "Unknown amount modernized and named \"ZKDM\".",
+    "gen": 2,
+    "cat": "apc"
+   },
+   {
+    "m": "Humvee",
+    "n": 100,
+    "orig": "USA",
+    "s": "wiki_army",
+    "c": "ت",
+    "note": "Used by peacekeeping and internal forces.",
+    "gen": 2,
+    "cat": "apc"
+   },
+   {
+    "m": "AIL Storm",
+    "n": 90,
+    "orig": "ISR",
+    "s": "wiki_army",
+    "c": "ت",
+    "note": "Unknown amount in service.",
+    "gen": 3,
+    "cat": "apc"
+   },
+   {
+    "m": "AIL Abir",
+    "n": 110,
+    "orig": "ISR",
+    "s": "wiki_army",
+    "c": "ت",
+    "note": "Unknown amount in service.",
+    "gen": 2,
+    "cat": "apc"
+   },
+   {
+    "m": "Plasan SandCat",
+    "n": 230,
+    "orig": "ISR",
+    "s": "wiki_army",
+    "c": "ت",
+    "note": "10 Sandcat SPEAR 120MM, 10 Spike-LR, 100 basic sandcat (some spotted with drone launchers). R-010SC command and control, MOES-720 mobile ele",
+    "gen": 2,
+    "cat": "apc"
+   },
+   {
+    "m": "Otokar Cobra",
+    "n": 350,
+    "orig": "TUR",
+    "s": "wiki_army",
+    "c": "ت",
+    "note": "Delivered in 2010.",
+    "gen": 2,
+    "cat": "apc"
+   },
+   {
+    "m": "Otokar Cobra II",
+    "n": 70,
+    "orig": "TUR",
+    "s": "wiki_army",
+    "c": "ت",
+    "gen": 2,
+    "cat": "apc"
+   },
+   {
+    "m": "Otokar APV",
+    "n": 200,
+    "orig": "TUR",
+    "s": "wiki_army",
+    "c": "ت",
+    "gen": 2,
+    "cat": "apc"
+   },
+   {
+    "m": "Marauder",
+    "n": 110,
+    "orig": "ZAF",
+    "s": "wiki_army",
+    "c": "ت",
+    "note": "Produced in Azerbaijan with engines made in the United States.",
+    "gen": 2,
+    "cat": "apc"
+   },
+   {
+    "m": "Matador",
+    "n": 110,
+    "orig": "ZAF",
+    "s": "wiki_army",
+    "c": "ت",
+    "note": "Produced in Azerbaijan with engines made in the United States.",
+    "gen": 2,
+    "cat": "apc"
+   },
+   {
+    "m": "Cougar",
+    "n": 4,
+    "orig": "USA",
+    "s": "wiki_army",
+    "c": "ت",
+    "note": "Used by peacekeeping forces.",
+    "gen": 2,
+    "cat": "apc"
+   },
+   {
+    "m": "85mm D-44",
+    "n": 100,
+    "orig": "SUN",
+    "s": "wiki_army",
+    "c": "ت",
+    "note": "[Range: 15.6 km].",
+    "gen": 2,
+    "cat": "towed"
+   },
+   {
+    "m": "122mm D-30",
+    "n": 423,
+    "orig": "SUN",
+    "s": "wiki_army",
+    "c": "ت",
+    "note": "[Range: 15.4 km or 21.9 km when using RAPs].",
+    "gen": 2,
+    "cat": "towed"
+   },
+   {
+    "m": "130mm M-46",
+    "n": 36,
+    "orig": "SUN",
+    "s": "wiki_army",
+    "c": "ت",
+    "note": "[Range: 27.5 km or 38 km when using RAPs].",
+    "gen": 2,
+    "cat": "towed"
+   },
+   {
+    "m": "152mm Giatsint-B",
+    "n": 49,
+    "orig": "SUN",
+    "s": "wiki_army",
+    "c": "ت",
+    "note": "[Range: 15.2 km or 21.9 km when using RAPs].",
+    "gen": 2,
+    "cat": "towed"
+   },
+   {
+    "m": "152mm D-20",
+    "n": 43,
+    "orig": "SUN",
+    "s": "wiki_army",
+    "c": "ت",
+    "gen": 2,
+    "cat": "towed"
+   },
+   {
+    "m": "155mm ATMOS 2000",
+    "n": 6,
+    "orig": "ISR",
+    "s": "wiki_army",
+    "c": "ت",
+    "gen": 2,
+    "cat": "spg"
+   },
+   {
+    "m": "152mm SpGH DANA",
+    "n": 36,
+    "orig": "CSK",
+    "s": "wiki_army",
+    "c": "ت",
+    "note": "[Range: 20 km].",
+    "gen": 2,
+    "cat": "spg"
+   },
+   {
+    "m": "152mm 2S19 Msta",
+    "n": 18,
+    "orig": "RUS",
+    "s": "wiki_army",
+    "c": "ت",
+    "note": "[Range: 25 km or 28.9 km when using RAPs].",
+    "gen": 2,
+    "cat": "spg"
+   },
+   {
+    "m": "203mm 2S7 Pion",
+    "n": 15,
+    "orig": "SUN",
+    "s": "wiki_army",
+    "c": "ت",
+    "note": "[Range: 37.5 km or 55.5 km when using RAPs].",
+    "gen": 2,
+    "cat": "spg"
+   },
+   {
+    "m": "PULS",
+    "n": 75,
+    "orig": "ISR",
+    "s": "wiki_army",
+    "c": "ت",
+    "note": "They were newly brought to Azerbaijan and displayed at the 2025 Victory Parade. They are equipped with the Accural Sky Striker Block 4 and t",
+    "gen": 2,
+    "cat": "towed"
+   },
+   {
+    "m": "306mm Extra",
+    "n": 30,
+    "orig": "ISR",
+    "s": "wiki_army",
+    "c": "ت",
+    "note": "[Range: 150 km], [CEP: 10m].",
+    "gen": 2,
+    "cat": "towed"
+   },
+   {
+    "m": "122mm LAR-160",
+    "n": 30,
+    "orig": "ISR",
+    "s": "wiki_army",
+    "c": "ت",
+    "gen": 2,
+    "cat": "towed"
+   },
+   {
+    "m": "160mm LYNX",
+    "n": 30,
+    "orig": "ISR",
+    "s": "wiki_army",
+    "c": "ت",
+    "gen": 2,
+    "cat": "towed"
+   },
+   {
+    "m": "302mm TRG-300 Kasirga",
+    "n": 36,
+    "orig": "TUR",
+    "s": "wiki_army",
+    "c": "ت",
+    "note": "[Range: 120 km], [CEP: 10m].",
+    "gen": 2,
+    "cat": "towed"
+   },
+   {
+    "m": "122mm T-122 'Sakarya'",
+    "n": 44,
+    "orig": "TUR",
+    "s": "wiki_army",
+    "c": "ت",
+    "note": "[Range: 40 km].",
+    "gen": 2,
+    "cat": "towed"
+   },
+   {
+    "m": "230mm TRLG-230",
+    "n": 20,
+    "orig": "TUR",
+    "s": "wiki_army",
+    "c": "ت",
+    "note": "[Range: 70 km], [CEP: 2m]",
+    "gen": 2,
+    "cat": "towed"
+   },
+   {
+    "m": "107mm TR-107 Boran",
+    "n": 100,
+    "orig": "AZE",
+    "s": "wiki_army",
+    "c": "ت",
+    "note": "[Range: 11 km].",
+    "gen": 2,
+    "cat": "towed"
+   },
+   {
+    "m": "107mm MRLS-107",
+    "n": 100,
+    "orig": "AZE",
+    "s": "wiki_army",
+    "c": "ت",
+    "note": "[Range: 11 km].",
+    "gen": 2,
+    "cat": "towed"
+   },
+   {
+    "m": "220mm TOS-1A",
+    "n": 36,
+    "orig": "RUS",
+    "s": "wiki_army",
+    "c": "ت",
+    "note": "[Range: 6 km].",
+    "gen": 2,
+    "cat": "towed"
+   },
+   {
+    "m": "300mm BM-30 'Smerch'",
+    "n": 50,
+    "orig": "RUS",
+    "s": "wiki_army",
+    "c": "ت",
+    "note": "20 were purchased from Ukraine and 30 from Russia.",
+    "gen": 2,
+    "cat": "towed"
+   },
+   {
+    "m": "122mm RM-70",
+    "n": 30,
+    "orig": "CSK",
+    "s": "wiki_army",
+    "c": "ت",
+    "note": "[Range: 40 km].",
+    "gen": 2,
+    "cat": "towed"
+   },
+   {
+    "m": "301mm Polonez",
+    "n": 10,
+    "orig": "CHN",
+    "s": "wiki_army",
+    "c": "ت",
+    "note": "[Range: 200 km], [CEP: 30m].",
+    "gen": 2,
+    "cat": "towed"
+   },
+   {
+    "m": "122mm KRL 122",
+    "n": 55,
+    "orig": "PAK",
+    "s": "wiki_army",
+    "c": "ت",
+    "note": "[Range: 40 km].",
+    "gen": 2,
+    "cat": "towed"
+   },
+   {
+    "m": "128mm RAK-12",
+    "n": 10,
+    "orig": "HRV",
+    "s": "wiki_army",
+    "c": "ت",
+    "note": "[Range: 13 km].",
+    "gen": 2,
+    "cat": "towed"
+   },
+   {
+    "m": "122mm BM-21 'Grad'",
+    "n": 140,
+    "orig": "SUN",
+    "s": "wiki_army",
+    "c": "ت",
+    "note": "BM-21 and BM-21V [Range: 40 km].",
+    "gen": 2,
+    "cat": "towed"
+   },
+   {
+    "m": "120mm Spear Mk2",
+    "n": 47,
+    "orig": "ISR",
+    "s": "wiki_army",
+    "c": "ت",
+    "note": "Used with SandCat [Range: 10 km].",
+    "gen": 4,
+    "cat": "towed"
+   },
+   {
+    "m": "120mm Cardom",
+    "n": 50,
+    "orig": "ISR",
+    "s": "wiki_army",
+    "c": "ت",
+    "note": "[Range: 8 km].",
+    "gen": 2,
+    "cat": "towed"
+   },
+   {
+    "m": "120mm 2S31 Vena",
+    "n": 18,
+    "orig": "RUS",
+    "s": "wiki_army",
+    "c": "ت",
+    "note": "[Range: 18 km].",
+    "gen": 2,
+    "cat": "towed"
+   },
+   {
+    "m": "2S9 Nona",
+    "n": 18,
+    "orig": "SUN",
+    "s": "wiki_army",
+    "c": "ت",
+    "gen": 2,
+    "cat": "towed"
+   },
+   {
+    "m": "Komando 20N6MT",
+    "n": 400,
+    "orig": "AZE",
+    "s": "wiki_army",
+    "c": "ت",
+    "gen": 2,
+    "cat": "towed"
+   },
+   {
+    "m": "20N5",
+    "n": 280,
+    "orig": "AZE",
+    "s": "wiki_army",
+    "c": "ت",
+    "gen": 2,
+    "cat": "towed"
+   },
+   {
+    "m": "2B14 Podnos",
+    "n": 400,
+    "orig": "SUN",
+    "s": "wiki_army",
+    "c": "ت",
+    "gen": 2,
+    "cat": "towed"
+   },
+   {
+    "m": "2B11",
+    "n": 600,
+    "orig": "SUN",
+    "s": "wiki_army",
+    "c": "ت",
+    "gen": 2,
+    "cat": "towed"
+   },
+   {
+    "m": "2S12",
+    "n": 180,
+    "orig": "SUN",
+    "s": "wiki_army",
+    "c": "ت",
+    "gen": 2,
+    "cat": "towed"
+   },
+   {
+    "m": "M1938 mortar",
+    "n": 27,
+    "orig": "SUN",
+    "s": "wiki_army",
+    "c": "ت",
+    "gen": 2,
+    "cat": "towed"
+   },
+   {
+    "m": "RM-38",
+    "n": 107,
+    "orig": "SUN",
+    "s": "wiki_army",
+    "c": "ت",
+    "gen": 2,
+    "cat": "towed"
+   },
+   {
+    "m": "T-55",
+    "n": 155,
+    "orig": "SUN",
+    "s": "wiki_army",
+    "c": "ت",
+    "note": "Bought from Ukraine between 1993-1994. Modernized version of T-55s were used as an artillery during the 2nd Karabakh War.",
+    "gen": 1,
+    "cat": "tank"
+   },
+   {
+    "m": "BRM-1K",
+    "n": 21,
+    "orig": "SUN",
+    "s": "wiki_army",
+    "c": "ت",
+    "gen": 2,
+    "cat": "apc"
+   },
+   {
+    "m": "BMD-1",
+    "n": 41,
+    "orig": "SUN",
+    "s": "wiki_army",
+    "c": "ت",
+    "note": "Not currently active",
+    "gen": 2,
+    "cat": "ifv"
+   },
+   {
+    "m": "BTR-60",
+    "n": 35,
+    "orig": "SUN",
+    "s": "wiki_army",
+    "c": "ت",
+    "note": "More in storage.",
+    "gen": 2,
+    "cat": "apc"
+   },
+   {
+    "m": "BTR-D",
+    "n": 11,
+    "orig": "SUN",
+    "s": "wiki_army",
+    "c": "ت",
+    "gen": 2,
+    "cat": "apc"
+   },
+   {
+    "m": "152mm 2S3 Akatsiya",
+    "n": 22,
+    "orig": "SUN",
+    "s": "wiki_army",
+    "c": "ت",
+    "note": "The latest was presented at the Victory Parade on November 8, 2025. It will be replaced by the 155mm Dita and Nora-B52",
+    "gen": 2,
+    "cat": "spg"
+   },
+   {
+    "m": "122mm 2S1 Gvozdika",
+    "n": 70,
+    "orig": "SUN",
+    "s": "wiki_army",
+    "c": "ت",
+    "note": "The latest was presented at the Victory Parade on November 8, 2025. It will be replaced by the 155mm Dita and Nora-B52.",
+    "gen": 2,
+    "cat": "spg"
+   }
+  ],
+  "air": [
+   {
+    "m": "JF-17 Thunder (JF-17 Block 3)",
+    "n": 9,
+    "orig": "CHN",
+    "s": "wiki_air",
+    "c": "ت",
+    "note": "40 ordered in a reported $4.6 billion agreement. Assigned to the newly raised 408th \"Jaguar\" Squadron out of Nasosnaya Air Base. 31 remainin",
+    "gen": 3,
+    "cat": "fighter"
+   },
+   {
+    "m": "MiG-29 (MiG-29A 9.13)",
+    "n": 11,
+    "orig": "SUN",
+    "s": "wiki_air",
+    "c": "ت",
+    "note": "3 used for conversion training",
+    "gen": 3,
+    "cat": "fighter"
+   },
+   {
+    "m": "MiG-29 (MiG-29UB)",
+    "n": 3,
+    "orig": "SUN",
+    "s": "wiki_air",
+    "c": "ت",
+    "note": "3 used for conversion training",
+    "gen": 3,
+    "cat": "fighter"
+   },
+   {
+    "m": "Sukhoi Su-25 (Su-25ML)",
+    "n": 20,
+    "orig": "SUN",
+    "s": "wiki_air",
+    "c": "ت",
+    "note": "Su-25UB used for training",
+    "gen": 3,
+    "cat": "attack"
+   },
+   {
+    "m": "Sukhoi Su-25 (Su-25UB)",
+    "n": 1,
+    "orig": "SUN",
+    "s": "wiki_air",
+    "c": "ت",
+    "note": "Su-25UB used for training",
+    "gen": 3,
+    "cat": "attack"
+   },
+   {
+    "m": "Boeing 767 (767-300ER)",
+    "n": 1,
+    "orig": "USA",
+    "s": "wiki_air",
+    "c": "ت",
+    "note": "Leased from AZAL",
+    "gen": 2,
+    "cat": "transport"
+   },
+   {
+    "m": "Ilyushin Il-76",
+    "n": 2,
+    "orig": "SUN",
+    "s": "wiki_air",
+    "c": "ت",
+    "gen": 2,
+    "cat": "transport"
+   },
+   {
+    "m": "C-27J Spartan",
+    "n": 2,
+    "orig": "ITA",
+    "s": "wiki_air",
+    "c": "ت",
+    "gen": 2,
+    "cat": "transport"
+   },
+   {
+    "m": "Bell 407",
+    "n": 1,
+    "orig": "USA",
+    "s": "wiki_air",
+    "c": "ت",
+    "gen": 2,
+    "cat": "heli_util"
+   },
+   {
+    "m": "Bell 412 (AB-412)",
+    "n": 3,
+    "orig": "USA",
+    "s": "wiki_air",
+    "c": "ت",
+    "gen": 2,
+    "cat": "heli_util"
+   },
+   {
+    "m": "Mil Mi-17 (Mi-17-1V)",
+    "n": 33,
+    "orig": "RUS",
+    "s": "wiki_air",
+    "c": "ت",
+    "gen": 2,
+    "cat": "heli_util"
+   },
+   {
+    "m": "Mil Mi-8 (Mi-8MTV-1)",
+    "n": 8,
+    "orig": "RUS",
+    "s": "wiki_air",
+    "c": "ت",
+    "gen": 2,
+    "cat": "heli_util"
+   },
+   {
+    "m": "Mil Mi-24 (Mi-24V/Mi-35M)",
+    "n": 16,
+    "orig": "RUS",
+    "s": "wiki_air",
+    "c": "ت",
+    "gen": 3,
+    "cat": "heli_attack"
+   },
+   {
+    "m": "Kamov Ka-27 (Ka-32S)",
+    "n": 3,
+    "orig": "RUS",
+    "s": "wiki_air",
+    "c": "ت",
+    "gen": 2,
+    "cat": "heli_util"
+   },
+   {
+    "m": "MD 500 (MD-530F)",
+    "n": 1,
+    "orig": "USA",
+    "s": "wiki_air",
+    "c": "ت",
+    "gen": 2,
+    "cat": "heli_util"
+   },
+   {
+    "m": "Aero L-39",
+    "n": 14,
+    "orig": "CZE",
+    "s": "wiki_air",
+    "c": "ت",
+    "gen": 2,
+    "cat": "trainer"
+   },
+   {
+    "m": "Mil Mi-2",
+    "n": 7,
+    "orig": "POL",
+    "s": "wiki_air",
+    "c": "ت",
+    "gen": 2,
+    "cat": "heli_util"
+   },
+   {
+    "m": "PAC MFI-17 Mushshak (MFI-395 Super Mushshak)",
+    "n": 10,
+    "orig": "PAK",
+    "s": "wiki_air",
+    "c": "ت",
+    "gen": 2,
+    "cat": "trainer"
+   },
+   {
+    "m": "Hermes 450",
+    "n": 12,
+    "orig": "ISR",
+    "s": "wiki_air",
+    "c": "ت",
+    "note": "Two are Hermes 900",
+    "gen": 2,
+    "cat": "uav_isr"
+   },
+   {
+    "m": "IAI Heron",
+    "n": 5,
+    "orig": "ISR",
+    "s": "wiki_air",
+    "c": "ت",
+    "gen": 2,
+    "cat": "uav_isr"
+   },
+   {
+    "m": "IAI Searcher",
+    "n": 5,
+    "orig": "ISR",
+    "s": "wiki_air",
+    "c": "ت",
+    "gen": 2,
+    "cat": "uav_isr"
+   },
+   {
+    "m": "Orbiter",
+    "n": 10,
+    "orig": "ISR",
+    "s": "wiki_air",
+    "c": "ت",
+    "note": "Produced in Azerbaijan",
+    "gen": 2,
+    "cat": "uav_isr"
+   },
+   {
+    "m": "Aerostar",
+    "n": 4,
+    "orig": "ISR",
+    "s": "wiki_air",
+    "c": "ت",
+    "note": "Produced in Azerbaijan",
+    "gen": 2,
+    "cat": "uav_isr"
+   }
+  ],
+  "ad": [
+   {
+    "m": "Barak 8",
+    "n": 18,
+    "orig": "ISR",
+    "s": "wiki_army",
+    "c": "ت",
+    "gen": 2,
+    "cat": "medium"
+   },
+   {
+    "m": "S-300PMU-2",
+    "n": 24,
+    "orig": "RUS",
+    "s": "wiki_army",
+    "c": "ت",
+    "gen": 3,
+    "cat": "long"
+   },
+   {
+    "m": "Pantsir",
+    "n": 10,
+    "orig": "RUS",
+    "s": "wiki_army",
+    "c": "ت",
+    "note": "Approved by the Ministry of Defense of Azerbaijan",
+    "gen": 3,
+    "cat": "short"
+   },
+   {
+    "m": "Buk-MB",
+    "n": 18,
+    "orig": "RUS",
+    "s": "wiki_army",
+    "c": "ت",
+    "gen": 2,
+    "cat": "medium"
+   },
+   {
+    "m": "Tor-M2U",
+    "n": 20,
+    "orig": "RUS",
+    "s": "wiki_army",
+    "c": "ت",
+    "gen": 3,
+    "cat": "short"
+   },
+   {
+    "m": "Buk-Mb2k",
+    "n": 10,
+    "orig": "BLR",
+    "s": "wiki_army",
+    "c": "ت",
+    "gen": 2,
+    "cat": "medium"
+   },
+   {
+    "m": "Osa-1t",
+    "n": 90,
+    "orig": "BLR",
+    "s": "wiki_army",
+    "c": "ت",
+    "gen": 2,
+    "cat": "short"
+   },
+   {
+    "m": "S-125",
+    "n": 54,
+    "orig": "BLR",
+    "s": "wiki_army",
+    "c": "ت",
+    "gen": 2,
+    "cat": "medium"
+   },
+   {
+    "m": "9K35 Strela",
+    "n": 60,
+    "orig": "SUN",
+    "s": "wiki_army",
+    "c": "ت",
+    "gen": 2,
+    "cat": "short"
+   },
+   {
+    "m": "ZSU-23-4 Shilka",
+    "n": 50,
+    "orig": "SUN",
+    "s": "wiki_army",
+    "c": "ت",
+    "gen": 2,
+    "cat": "short"
+   },
+   {
+    "m": "S-200",
+    "n": 24,
+    "orig": "INT",
+    "s": "wiki_army",
+    "c": "ت",
+    "gen": 2,
+    "cat": "long"
+   },
+   {
+    "m": "S-75",
+    "n": 10,
+    "orig": "INT",
+    "s": "wiki_army",
+    "c": "ت",
+    "gen": 1,
+    "cat": "long"
+   }
+  ],
+  "msl": [
+   {
+    "m": "LORA",
+    "n": 4,
+    "orig": "ISR",
+    "s": "wiki_army",
+    "c": "ت",
+    "note": "[Range: 430 km], [CEP: 10m].",
+    "gen": 2,
+    "cat": "srbm"
+   },
+   {
+    "m": "OTR-21 Tochka-U",
+    "n": 4,
+    "orig": "SUN",
+    "s": "wiki_army",
+    "c": "ت",
+    "note": "It was taken out of service and was in reserve storage.",
+    "gen": 2,
+    "cat": "srbm"
+   }
+  ],
+  "navy": [
+   {
+    "m": "Petya class",
+    "n": 1,
+    "orig": "INT",
+    "s": "wiki_navy",
+    "c": "ت",
+    "note": "Ex Petya II class frigate. ARG Gusar(G121) modernised by USA and Turkey.",
+    "gen": 2,
+    "cat": "patrol"
+   },
+   {
+    "m": "Wodnik class (Project 888)",
+    "n": 1,
+    "orig": "INT",
+    "s": "wiki_navy",
+    "c": "ت",
+    "note": "Wodnik 2. Also used for training.",
+    "gen": 2,
+    "cat": "patrol"
+   },
+   {
+    "m": "Project 1388M",
+    "n": 1,
+    "orig": "INT",
+    "s": "wiki_navy",
+    "c": "ت",
+    "gen": 2,
+    "cat": "patrol"
+   },
+   {
+    "m": "AB-25 class",
+    "n": 1,
+    "orig": "INT",
+    "s": "wiki_navy",
+    "c": "ت",
+    "note": "Ex Turkish AB-25",
+    "gen": 2,
+    "cat": "patrol"
+   },
+   {
+    "m": "Project 722",
+    "n": 1,
+    "orig": "INT",
+    "s": "wiki_navy",
+    "c": "ت",
+    "gen": 2,
+    "cat": "patrol"
+   },
+   {
+    "m": "Project 368",
+    "n": 1,
+    "orig": "INT",
+    "s": "wiki_navy",
+    "c": "ت",
+    "gen": 2,
+    "cat": "patrol"
+   },
+   {
+    "m": "Stenka-class",
+    "n": 3,
+    "orig": "INT",
+    "s": "wiki_navy",
+    "c": "ت",
+    "gen": 2,
+    "cat": "patrol"
+   },
+   {
+    "m": "Polnocny-class",
+    "n": 2,
+    "orig": "INT",
+    "s": "wiki_navy",
+    "c": "ت",
+    "note": "Polnocny-A and Polnocny-B version",
+    "gen": 2,
+    "cat": "amphib"
+   },
+   {
+    "m": "Project 1175",
+    "n": 2,
+    "orig": "INT",
+    "s": "wiki_navy",
+    "c": "ت",
+    "gen": 2,
+    "cat": "amphib"
+   },
+   {
+    "m": "Project 1176",
+    "n": 1,
+    "orig": "INT",
+    "s": "wiki_navy",
+    "c": "ت",
+    "gen": 2,
+    "cat": "amphib"
+   }
+  ],
+  "grp": {
+   "tank": {
+    "n": 920,
+    "s": "iiss_eq",
+    "c": "ت",
+    "top": [
+     [
+      "T-72",
+      405,
+      3,
+      "SUN"
+     ],
+     [
+      "T-55",
+      155,
+      1,
+      "SUN"
+     ],
+     [
+      "T-90",
+      93,
+      4,
+      "RUS"
+     ]
+    ],
+    "gen": 2.7
+   },
+   "afv": {
+    "n": 3446,
+    "s": "wiki_army",
+    "c": "ت",
+    "top": [
+     [
+      "MT-LB",
+      400,
+      2,
+      "SUN"
+     ],
+     [
+      "Otokar Cobra",
+      350,
+      2,
+      "TUR"
+     ],
+     [
+      "BMP-2",
+      300,
+      3,
+      "SUN"
+     ]
+    ],
+    "gen": 2.3
+   },
+   "art": {
+    "n": 3741,
+    "s": "wiki_army",
+    "c": "ت",
+    "top": [
+     [
+      "2B11",
+      600,
+      2,
+      "SUN"
+     ],
+     [
+      "122mm D-30",
+      423,
+      2,
+      "SUN"
+     ],
+     [
+      "Komando 20N6MT",
+      400,
+      2,
+      "AZE"
+     ]
+    ],
+    "gen": 2.0
+   },
+   "jet": {
+    "n": 31,
+    "s": "iiss_eq",
+    "c": "ت",
+    "top": [
+     [
+      "Sukhoi Su-25 (Su-25ML)",
+      20,
+      3,
+      "SUN"
+     ],
+     [
+      "MiG-29 (MiG-29A 9.13)",
+      11,
+      3,
+      "SUN"
+     ],
+     [
+      "JF-17 Thunder (JF-17 Block 3)",
+      9,
+      3,
+      "CHN"
+     ]
+    ],
+    "gen": 3.0
+   },
+   "heli": {
+    "n": 72,
+    "s": "wiki_air",
+    "c": "ت",
+    "top": [
+     [
+      "Mil Mi-17 (Mi-17-1V)",
+      33,
+      2,
+      "RUS"
+     ],
+     [
+      "Mil Mi-24 (Mi-24V/Mi-35M)",
+      16,
+      3,
+      "RUS"
+     ],
+     [
+      "Mil Mi-8 (Mi-8MTV-1)",
+      8,
+      2,
+      "RUS"
+     ]
+    ],
+    "gen": 2.2
+   },
+   "uav": {
+    "n": 36,
+    "s": "wiki_air",
+    "c": "ت",
+    "top": [
+     [
+      "Hermes 450",
+      12,
+      2,
+      "ISR"
+     ],
+     [
+      "Orbiter",
+      10,
+      2,
+      "ISR"
+     ],
+     [
+      "IAI Heron",
+      5,
+      2,
+      "ISR"
+     ]
+    ],
+    "gen": 2.0
+   },
+   "ad": {
+    "n": 388,
+    "s": "wiki_army",
+    "c": "ت",
+    "top": [
+     [
+      "Osa-1t",
+      90,
+      2,
+      "BLR"
+     ],
+     [
+      "9K35 Strela",
+      60,
+      2,
+      "SUN"
+     ],
+     [
+      "S-125",
+      54,
+      2,
+      "BLR"
+     ]
+    ],
+    "gen": 2.1
+   },
+   "navy": {
+    "n": 4,
+    "s": "iiss_eq",
+    "c": "ت",
+    "top": [
+     [
+      "Stenka-class",
+      3,
+      2,
+      "INT"
+     ],
+     [
+      "Polnocny-class",
+      2,
+      2,
+      "INT"
+     ],
+     [
+      "Project 1175",
+      2,
+      2,
+      "INT"
+     ]
+    ],
+    "gen": 2.0,
+    "note": "مجموع القوائم 14 يختلف عن الإجمالي؛ الإجمالي هو المعتمد"
+   }
+  }
  },
  "ind": null,
  "pol": {

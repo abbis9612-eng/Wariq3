@@ -68,6 +68,11 @@
    "t": "تقدير المصمم (تشرين الثاني 2026) لصناعة السلاح والاستقرار: SIPRI Arms Transfers Database (أكبر المصدّرين 2020–24)، SIPRI Top 100 Arms-Producing Companies، Fragile States Index 2025، أخبار 2026",
    "u": "https://www.sipri.org/databases/armstransfers",
    "y": 2026
+  },
+  "tpl": {
+   "t": "قالب منطقة (me): موديلات شائعة ونسب تقريبية من الدبابات (مدرعات ×2.5، مدفعية ×0.9، مروحيات ×0.25) — تقدير المصمم",
+   "u": "docs/features/world-plan.md",
+   "y": 2026
   }
  },
  "gov": {
@@ -244,6 +249,33 @@
    }
   },
   "land": [
+   {
+    "m": "M1 Abrams (M1A2S)",
+    "n": 575,
+    "orig": "USA",
+    "s": "wiki_army",
+    "c": "ت",
+    "gen": 4,
+    "cat": "tank"
+   },
+   {
+    "m": "M60 Patton (M60A3)",
+    "n": 370,
+    "orig": "USA",
+    "s": "wiki_army",
+    "c": "ت",
+    "gen": 2,
+    "cat": "tank"
+   },
+   {
+    "m": "AMX-30 (AMX-30SA)",
+    "n": 140,
+    "orig": "FRA",
+    "s": "wiki_army",
+    "c": "ت",
+    "gen": 2,
+    "cat": "tank"
+   },
    {
     "m": "Panhard AML (AML-60 AML-90)",
     "n": 300,
@@ -617,7 +649,194 @@
     "gen": 2,
     "cat": "missile_boat"
    }
-  ]
+  ],
+  "grp": {
+   "tank": {
+    "n": 900,
+    "s": "iiss_eq",
+    "c": "ت",
+    "top": [
+     [
+      "M1 Abrams (M1A2S)",
+      575,
+      4,
+      "USA"
+     ],
+     [
+      "M60 Patton (M60A3)",
+      370,
+      2,
+      "USA"
+     ],
+     [
+      "AMX-30 (AMX-30SA)",
+      140,
+      2,
+      "FRA"
+     ]
+    ],
+    "gen": 3.1
+   },
+   "afv": {
+    "n": 2500,
+    "s": "wiki_army",
+    "c": "ت",
+    "top": [
+     [
+      "M113 (M113A1 M113A3)",
+      1190,
+      2,
+      "USA"
+     ],
+     [
+      "M2 Bradley (M2A2)",
+      380,
+      3,
+      "USA"
+     ],
+     [
+      "AMX-10P",
+      380,
+      2,
+      "FRA"
+     ]
+    ],
+    "gen": 2.2
+   },
+   "art": {
+    "n": 810,
+    "s": "tpl",
+    "c": "ق",
+    "top": [
+     [
+      "D-30",
+      null,
+      null,
+      null
+     ],
+     [
+      "M109",
+      null,
+      null,
+      null
+     ],
+     [
+      "BM-21 Grad",
+      null,
+      null,
+      null
+     ]
+    ],
+    "gen": 2,
+    "tpl": "me"
+   },
+   "jet": {
+    "n": 364,
+    "s": "iiss_eq",
+    "c": "ت",
+    "top": [
+     [
+      "F-15 Eagle (F-15C/D MSIP II)",
+      210,
+      3,
+      "USA"
+     ],
+     [
+      "F-15E Strike Eagle (F-15SR)",
+      210,
+      4,
+      "USA"
+     ],
+     [
+      "F-15EX Eagle II (F-15SA)",
+      210,
+      4,
+      "USA"
+     ]
+    ],
+    "gen": 3.7,
+    "note": "مجموع القوائم 630 يختلف عن الإجمالي؛ الإجمالي هو المعتمد"
+   },
+   "heli": {
+    "n": 263,
+    "s": "wiki_air",
+    "c": "ت",
+    "top": [
+     [
+      "Sikorsky UH-60 Black Hawk (UH-60L UH-60M",
+      100,
+      2,
+      "USA"
+     ],
+     [
+      "Boeing CH-47 Chinook (CH-47F)",
+      48,
+      3,
+      "USA"
+     ],
+     [
+      "Boeing AH-64 Apache (AH-64D AH-64E)",
+      47,
+      4,
+      "USA"
+     ]
+    ],
+    "gen": 2.5
+   },
+   "uav": {
+    "n": 540,
+    "s": "wiki_army",
+    "c": "ت",
+    "top": [
+     [
+      "CAIG Wing Loong (Pterodactyl Wing Loong ",
+      300,
+      4,
+      "CHN"
+     ],
+     [
+      "Saqr (Saqr1 Saqr2 Saqr3 Saqr4)",
+      230,
+      2,
+      "SAU"
+     ],
+     [
+      "Aeryon Scout (?)",
+      10,
+      2,
+      "CAN"
+     ]
+    ],
+    "gen": 3.1
+   },
+   "navy": {
+    "n": 10,
+    "s": "iiss_eq",
+    "c": "ت",
+    "top": [
+     [
+      "Al Siddiq class",
+      9,
+      2,
+      "USA"
+     ],
+     [
+      "Al Jubail class",
+      5,
+      2,
+      "ESP"
+     ],
+     [
+      "Al Madinah class",
+      4,
+      2,
+      "FRA"
+     ]
+    ],
+    "gen": 2.0,
+    "note": "مجموع القوائم 29 يختلف عن الإجمالي؛ الإجمالي هو المعتمد"
+   }
+  }
  },
  "ind": {
   "tech": {

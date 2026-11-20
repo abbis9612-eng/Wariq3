@@ -5,6 +5,24 @@
  "tier": "B",
  "asOf": "2026-11",
  "src": {
+  "wiki_air": {
+   "t": "Wikipedia: Romanian Air Force",
+   "u": "https://en.wikipedia.org/wiki/Romanian_Air_Force?oldid=1386504008",
+   "y": 2026,
+   "note": "نسخة الصفحة بتاريخ السحب؛ أرقام ويكيبيديا تنراجع ويا مصادر ثانية"
+  },
+  "wiki_army": {
+   "t": "Wikipedia: List of equipment of the Romanian Armed Forces",
+   "u": "https://en.wikipedia.org/wiki/List_of_equipment_of_the_Romanian_Armed_Forces?oldid=1386604018",
+   "y": 2026,
+   "note": "نسخة الصفحة بتاريخ السحب؛ أرقام ويكيبيديا تنراجع ويا مصادر ثانية"
+  },
+  "wiki_navy": {
+   "t": "Wikipedia: Romanian Naval Forces",
+   "u": "https://en.wikipedia.org/wiki/Romanian_Naval_Forces?oldid=1383759648",
+   "y": 2026,
+   "note": "نسخة الصفحة بتاريخ السحب؛ أرقام ويكيبيديا تنراجع ويا مصادر ثانية"
+  },
   "iiss_eq": {
    "t": "Wikipedia: List of countries by level of military equipment (من IISS Military Balance ومصادر ثانية)",
    "u": "https://en.wikipedia.org/wiki/List_of_countries_by_level_of_military_equipment?oldid=1384804191",
@@ -49,6 +67,11 @@
   "tierA": {
    "t": "تقدير المصمم (تشرين الثاني 2026) لصناعة السلاح والاستقرار: SIPRI Arms Transfers Database (أكبر المصدّرين 2020–24)، SIPRI Top 100 Arms-Producing Companies، Fragile States Index 2025، أخبار 2026",
    "u": "https://www.sipri.org/databases/armstransfers",
+   "y": 2026
+  },
+  "tpl": {
+   "t": "قالب منطقة (eu): موديلات شائعة ونسب تقريبية من الدبابات (مدرعات ×2.5، مدفعية ×0.9، مروحيات ×0.25) — تقدير المصمم",
+   "u": "docs/features/world-plan.md",
    "y": 2026
   }
  },
@@ -219,11 +242,911 @@
     "c": "ت"
    }
   },
-  "land": [],
-  "air": [],
-  "ad": [],
-  "msl": [],
-  "navy": []
+  "land": [
+   {
+    "m": "T-55 (T-55AM T-55AM2)",
+    "n": 162,
+    "orig": "SUN",
+    "s": "wiki_army",
+    "c": "ت",
+    "gen": 1,
+    "cat": "tank"
+   },
+   {
+    "m": "TR-85 (TR-85-800 TR-85M1 Bizonul)",
+    "n": 103,
+    "orig": "ROU",
+    "s": "wiki_army",
+    "c": "ت",
+    "gen": 3,
+    "cat": "tank"
+   },
+   {
+    "m": "MLI-84 (MLI-84 MLI-84M Jderul)",
+    "n": 23,
+    "orig": "ROU",
+    "s": "wiki_army",
+    "c": "ت",
+    "gen": 2,
+    "cat": "ifv"
+   },
+   {
+    "m": "Piranha V (120 mm mortar Command post CBRN Ambulance Recovery vehicle)",
+    "n": 227,
+    "orig": "CHE",
+    "s": "wiki_army",
+    "c": "ت",
+    "gen": 2,
+    "cat": "ifv"
+   },
+   {
+    "m": "TABC-79 (TAB-CTAB-79A-PCOMATAB-79ARTAB RCH-84)",
+    "n": 402,
+    "orig": "ROU",
+    "s": "wiki_army",
+    "c": "ت",
+    "gen": 2,
+    "cat": "apc"
+   },
+   {
+    "m": "TAB-71 (TAB-71MTAB-71ATAB-71AR)",
+    "n": 211,
+    "orig": "ROU",
+    "s": "wiki_army",
+    "c": "ت",
+    "gen": 2,
+    "cat": "apc"
+   },
+   {
+    "m": "TAB-77 (TAB-77MTAB-77ATAB-77A-PCOMA)",
+    "n": 155,
+    "orig": "ROU",
+    "s": "wiki_army",
+    "c": "ت",
+    "gen": 2,
+    "cat": "apc"
+   },
+   {
+    "m": "TAB B33 Zimbru",
+    "n": 69,
+    "orig": "ROU",
+    "s": "wiki_army",
+    "c": "ت",
+    "gen": 2,
+    "cat": "apc"
+   },
+   {
+    "m": "MLVM (MLVMMLVM-MMLVM ARABALMEDEVAC)",
+    "n": 76,
+    "orig": "ROU",
+    "s": "wiki_army",
+    "c": "ت",
+    "gen": 2,
+    "cat": "ifv"
+   },
+   {
+    "m": "Piranha IIIC (Personnel transport Command post CBRN Mortar carrier MEDEVAC Recovery vehicle)",
+    "n": 43,
+    "orig": "CHE",
+    "s": "wiki_army",
+    "c": "ت",
+    "gen": 2,
+    "cat": "apc"
+   },
+   {
+    "m": "Otokar Cobra II (Personnel transport Reconnaissance RCWS Spike LR 120 mm mortar 81 mm mortar CBRN Engineering MEDEVAC)",
+    "n": 378,
+    "orig": "TUR",
+    "s": "wiki_army",
+    "c": "ت",
+    "gen": 2,
+    "cat": "mrap"
+   },
+   {
+    "m": "Humvee (M1113M1114M1165M1151)",
+    "n": 300,
+    "orig": "USA",
+    "s": "wiki_army",
+    "c": "ت",
+    "gen": 2,
+    "cat": "apc"
+   },
+   {
+    "m": "Oshkosh JLTV (M1278A1 Heavy Gun Carrier)",
+    "n": 70,
+    "orig": "USA",
+    "s": "wiki_army",
+    "c": "ت",
+    "gen": 2,
+    "cat": "mrap"
+   },
+   {
+    "m": "Panhard PVP",
+    "n": 16,
+    "orig": "FRA",
+    "s": "wiki_army",
+    "c": "ت",
+    "gen": 2,
+    "cat": "apc"
+   },
+   {
+    "m": "Wolf Armoured Vehicle",
+    "n": 3,
+    "orig": "ISR",
+    "s": "wiki_army",
+    "c": "ت",
+    "gen": 2,
+    "cat": "apc"
+   },
+   {
+    "m": "Stimpex Dracon",
+    "n": 1,
+    "orig": "ROU",
+    "s": "wiki_army",
+    "c": "ت",
+    "gen": 2,
+    "cat": "apc"
+   },
+   {
+    "m": "Cougar (JERRV)",
+    "n": 4,
+    "orig": "USA",
+    "s": "wiki_army",
+    "c": "ت",
+    "gen": 2,
+    "cat": "mrap"
+   },
+   {
+    "m": "M82 [ro]",
+    "n": 82,
+    "orig": "ROU",
+    "s": "wiki_army",
+    "c": "ت",
+    "gen": 2,
+    "cat": "towed"
+   },
+   {
+    "m": "M30M",
+    "n": 202,
+    "orig": "ROU",
+    "s": "wiki_army",
+    "c": "ت",
+    "gen": 2,
+    "cat": "towed"
+   },
+   {
+    "m": "M1981",
+    "n": 320,
+    "orig": "ROU",
+    "s": "wiki_army",
+    "c": "ت",
+    "gen": 2,
+    "cat": "towed"
+   },
+   {
+    "m": "M1985",
+    "n": 116,
+    "orig": "ROU",
+    "s": "wiki_army",
+    "c": "ت",
+    "gen": 2,
+    "cat": "towed"
+   },
+   {
+    "m": "K9 Tunet",
+    "n": 5,
+    "orig": "KOR",
+    "s": "wiki_army",
+    "c": "ت",
+    "gen": 2,
+    "cat": "spg"
+   },
+   {
+    "m": "APR-40",
+    "n": 135,
+    "orig": "ROU",
+    "s": "wiki_army",
+    "c": "ت",
+    "gen": 2,
+    "cat": "mlrs"
+   },
+   {
+    "m": "LAROM",
+    "n": 54,
+    "orig": "ROU",
+    "s": "wiki_army",
+    "c": "ت",
+    "gen": 2,
+    "cat": "mlrs"
+   },
+   {
+    "m": "M142 HIMARS",
+    "n": 54,
+    "orig": "USA",
+    "s": "wiki_army",
+    "c": "ت",
+    "gen": 2,
+    "cat": "mlrs"
+   },
+   {
+    "m": "M1977",
+    "n": 206,
+    "orig": "ROU",
+    "s": "wiki_army",
+    "c": "ت",
+    "gen": 2,
+    "cat": "atgm"
+   },
+   {
+    "m": "9P122 \"Malyutka\"",
+    "n": 90,
+    "orig": "SUN",
+    "s": "wiki_army",
+    "c": "ت",
+    "gen": 2,
+    "cat": "atgm"
+   },
+   {
+    "m": "9P148 \"Konkurs\"",
+    "n": 48,
+    "orig": "SUN",
+    "s": "wiki_army",
+    "c": "ت",
+    "gen": 2,
+    "cat": "atgm"
+   },
+   {
+    "m": "Spike-ER (170 mm)",
+    "n": 1000,
+    "orig": "ISR",
+    "s": "wiki_army",
+    "c": "ت",
+    "gen": 2,
+    "cat": "atgm"
+   },
+   {
+    "m": "Assault Amphibious Vehicle (AAVP-7A1AAVC-7A1AAVR-7A1)",
+    "n": 9,
+    "orig": "USA",
+    "s": "wiki_army",
+    "c": "ت",
+    "gen": 2,
+    "cat": "apc"
+   },
+   {
+    "m": "Main Battle Tank",
+    "n": 216,
+    "orig": "KOR",
+    "s": "wiki_army",
+    "c": "ت",
+    "gen": 2,
+    "cat": "tank"
+   },
+   {
+    "m": "Self-propelled artillery",
+    "n": 36,
+    "orig": "ISR",
+    "s": "wiki_army",
+    "c": "ت",
+    "gen": 2,
+    "cat": "spg"
+   },
+   {
+    "m": "M 1993 [ro]",
+    "n": 5,
+    "orig": "ROU",
+    "s": "wiki_army",
+    "c": "ت",
+    "gen": 2,
+    "cat": "towed"
+   },
+   {
+    "m": "ML-20",
+    "n": 4,
+    "orig": "SUN",
+    "s": "wiki_army",
+    "c": "ت",
+    "gen": 2,
+    "cat": "towed"
+   },
+   {
+    "m": "Md. 89",
+    "n": 42,
+    "orig": "ROU",
+    "s": "wiki_army",
+    "c": "ت",
+    "gen": 2,
+    "cat": "spg"
+   },
+   {
+    "m": "2S1",
+    "n": 6,
+    "orig": "SUN",
+    "s": "wiki_army",
+    "c": "ت",
+    "gen": 2,
+    "cat": "spg"
+   },
+   {
+    "m": "TR-580",
+    "n": 9,
+    "orig": "ROU",
+    "s": "wiki_army",
+    "c": "ت",
+    "gen": 2,
+    "cat": "tank"
+   },
+   {
+    "m": "M82",
+    "n": 75,
+    "orig": "ROU",
+    "s": "wiki_army",
+    "c": "ت",
+    "gen": 2,
+    "cat": "towed"
+   },
+   {
+    "m": "SU-100",
+    "n": 23,
+    "orig": "CSK",
+    "s": "wiki_army",
+    "c": "ت",
+    "gen": 2,
+    "cat": "atgm"
+   }
+  ],
+  "air": [
+   {
+    "m": "F-16 Fighting Falcon (F-16AM/BM)",
+    "n": 64,
+    "orig": "USA",
+    "s": "wiki_air",
+    "c": "ت",
+    "note": "3 surplus Norwegian units to be delivered. 24 used for conversion training. 6 additional aircraft used for ground training.",
+    "gen": 3,
+    "cat": "fighter"
+   },
+   {
+    "m": "Antonov An-30",
+    "n": 2,
+    "orig": "SUN",
+    "s": "wiki_air",
+    "c": "ت",
+    "gen": 2,
+    "cat": "isr"
+   },
+   {
+    "m": "Antonov An-26",
+    "n": 1,
+    "orig": "SUN",
+    "s": "wiki_air",
+    "c": "ت",
+    "gen": 2,
+    "cat": "transport"
+   },
+   {
+    "m": "C-27J Spartan",
+    "n": 7,
+    "orig": "ITA",
+    "s": "wiki_air",
+    "c": "ت",
+    "gen": 2,
+    "cat": "transport"
+   },
+   {
+    "m": "C-130 Hercules (C-130B/H)",
+    "n": 9,
+    "orig": "USA",
+    "s": "wiki_air",
+    "c": "ت",
+    "note": "4 are C-130B, 5 are C-130H",
+    "gen": 2,
+    "cat": "transport"
+   },
+   {
+    "m": "IAR 330",
+    "n": 56,
+    "orig": "ROU",
+    "s": "wiki_air",
+    "c": "ت",
+    "note": "22 SOCAT used in a gunship role",
+    "gen": 2,
+    "cat": "heli_util"
+   },
+   {
+    "m": "IAR 99 (IAR 99C/SM)",
+    "n": 21,
+    "orig": "ROU",
+    "s": "wiki_air",
+    "c": "ت",
+    "note": "11 are IAR 99C, 10 IAR 99SM on order (2 delivered by 2026)",
+    "gen": 2,
+    "cat": "trainer"
+   },
+   {
+    "m": "IAR 316",
+    "n": 7,
+    "orig": "ROU",
+    "s": "wiki_air",
+    "c": "ت",
+    "note": "Licensed built SA316B",
+    "gen": 2,
+    "cat": "trainer"
+   },
+   {
+    "m": "Yakovlev Yak-52",
+    "n": 14,
+    "orig": "ROU",
+    "s": "wiki_air",
+    "c": "ت",
+    "gen": 2,
+    "cat": "trainer"
+   },
+   {
+    "m": "Bayraktar TB2 (TB2 SİHA)",
+    "n": 18,
+    "orig": "TUR",
+    "s": "wiki_army",
+    "c": "ت",
+    "gen": 4,
+    "cat": "uav_strike"
+   },
+   {
+    "m": "ScanEagle",
+    "n": 10,
+    "orig": "USA",
+    "s": "wiki_army",
+    "c": "ت",
+    "gen": 2,
+    "cat": "uav_isr"
+   },
+   {
+    "m": "DJI (DJI Avata 2)",
+    "n": 8,
+    "orig": "CHN",
+    "s": "wiki_army",
+    "c": "ت",
+    "gen": 2,
+    "cat": "uav_isr"
+   },
+   {
+    "m": "DJI (DJI Neo)",
+    "n": 8,
+    "orig": "CHN",
+    "s": "wiki_army",
+    "c": "ت",
+    "gen": 2,
+    "cat": "uav_isr"
+   },
+   {
+    "m": "DJI (DJI Phantom)",
+    "n": 8,
+    "orig": "CHN",
+    "s": "wiki_army",
+    "c": "ت",
+    "gen": 2,
+    "cat": "uav_isr"
+   },
+   {
+    "m": "DJI (DJI Matrice 300 RTK)",
+    "n": 8,
+    "orig": "CHN",
+    "s": "wiki_army",
+    "c": "ت",
+    "gen": 2,
+    "cat": "uav_isr"
+   },
+   {
+    "m": "Phoenix 30",
+    "n": 4,
+    "orig": "USA",
+    "s": "wiki_army",
+    "c": "ت",
+    "gen": 2,
+    "cat": "uav_isr"
+   },
+   {
+    "m": "Quantum-Systems (Vector)",
+    "n": 56,
+    "orig": "DEU",
+    "s": "wiki_army",
+    "c": "ت",
+    "gen": 3,
+    "cat": "uav_isr"
+   },
+   {
+    "m": "IAR 316",
+    "n": 7,
+    "orig": "ROU",
+    "s": "wiki_army",
+    "c": "ت",
+    "gen": 2,
+    "cat": "heli_util"
+   },
+   {
+    "m": "RQ-4 Global Hawk (Block 40)",
+    "n": 5,
+    "orig": "USA",
+    "s": "wiki_army",
+    "c": "ت",
+    "gen": 2,
+    "cat": "uav_isr"
+   },
+   {
+    "m": "IAR 330 (Puma Naval)",
+    "n": 3,
+    "orig": "ROU",
+    "s": "wiki_army",
+    "c": "ت",
+    "gen": 4,
+    "cat": "heli_util"
+   },
+   {
+    "m": "Shield AI MQ-35A V-BAT",
+    "n": 4,
+    "orig": "USA",
+    "s": "wiki_army",
+    "c": "ت",
+    "gen": 2,
+    "cat": "uav_isr"
+   }
+  ],
+  "ad": [
+   {
+    "m": "M 1980/88 [ro]",
+    "n": 300,
+    "orig": "ROU",
+    "s": "wiki_army",
+    "c": "ت",
+    "gen": 2,
+    "cat": "short"
+   },
+   {
+    "m": "Gepard",
+    "n": 36,
+    "orig": "DEU",
+    "s": "wiki_army",
+    "c": "ت",
+    "gen": 2,
+    "cat": "short"
+   },
+   {
+    "m": "Chiron",
+    "n": 83,
+    "orig": "KOR",
+    "s": "wiki_army",
+    "c": "ت",
+    "gen": 2,
+    "cat": "short"
+   },
+   {
+    "m": "CA-95M",
+    "n": 48,
+    "orig": "ROU",
+    "s": "wiki_army",
+    "c": "ت",
+    "gen": 2,
+    "cat": "short"
+   },
+   {
+    "m": "9K33 Osa",
+    "n": 16,
+    "orig": "SUN",
+    "s": "wiki_army",
+    "c": "ت",
+    "gen": 2,
+    "cat": "short"
+   },
+   {
+    "m": "2K12 Kub",
+    "n": 32,
+    "orig": "SUN",
+    "s": "wiki_army",
+    "c": "ت",
+    "gen": 2,
+    "cat": "medium"
+   },
+   {
+    "m": "MIM-23 (Hawk XXI)",
+    "n": 8,
+    "orig": "USA",
+    "s": "wiki_army",
+    "c": "ت",
+    "gen": 2,
+    "cat": "short"
+   },
+   {
+    "m": "MIM-104 Patriot (- 456 PAC-2 GEM-T missiles - 168 PAC-3 MSE missiles)",
+    "n": 3,
+    "orig": "USA",
+    "s": "wiki_army",
+    "c": "ت",
+    "gen": 4,
+    "cat": "long"
+   }
+  ],
+  "msl": [
+   {
+    "m": "ATACMS M57 (Block 1A)",
+    "n": 54,
+    "orig": "USA",
+    "s": "wiki_army",
+    "c": "ت",
+    "gen": 2,
+    "cat": "srbm"
+   }
+  ],
+  "navy": [
+   {
+    "m": "Kilo",
+    "n": 1,
+    "orig": "ROU",
+    "s": "wiki_navy",
+    "c": "ت",
+    "cat": "sub",
+    "gen": 2,
+    "note": "عدد الصفوف بالقائمة"
+   },
+   {
+    "m": "Mărășești",
+    "n": 1,
+    "orig": "ROU",
+    "s": "wiki_navy",
+    "c": "ت",
+    "cat": "frigate",
+    "gen": 2,
+    "note": "عدد الصفوف بالقائمة"
+   },
+   {
+    "m": "Type 22",
+    "n": 2,
+    "orig": "ROU",
+    "s": "wiki_navy",
+    "c": "ت",
+    "cat": "frigate",
+    "gen": 2,
+    "note": "عدد الصفوف بالقائمة"
+   },
+   {
+    "m": "Tetal-I",
+    "n": 2,
+    "orig": "ROU",
+    "s": "wiki_navy",
+    "c": "ت",
+    "cat": "corvette",
+    "gen": 2,
+    "note": "عدد الصفوف بالقائمة"
+   },
+   {
+    "m": "Hisar",
+    "n": 1,
+    "orig": "ROU",
+    "s": "wiki_navy",
+    "c": "ت",
+    "cat": "corvette",
+    "gen": 2,
+    "note": "عدد الصفوف بالقائمة"
+   },
+   {
+    "m": "Tetal-II",
+    "n": 2,
+    "orig": "ROU",
+    "s": "wiki_navy",
+    "c": "ت",
+    "cat": "corvette",
+    "gen": 2,
+    "note": "عدد الصفوف بالقائمة"
+   },
+   {
+    "m": "Tarantul class",
+    "n": 3,
+    "orig": "ROU",
+    "s": "wiki_navy",
+    "c": "ت",
+    "cat": "corvette",
+    "gen": 2,
+    "note": "عدد الصفوف بالقائمة"
+   }
+  ],
+  "grp": {
+   "tank": {
+    "n": 377,
+    "s": "iiss_eq",
+    "c": "ت",
+    "top": [
+     [
+      "Main Battle Tank",
+      216,
+      2,
+      "KOR"
+     ],
+     [
+      "T-55 (T-55AM T-55AM2)",
+      162,
+      1,
+      "SUN"
+     ],
+     [
+      "TR-85 (TR-85-800 TR-85M1 Bizonul)",
+      103,
+      3,
+      "ROU"
+     ]
+    ],
+    "gen": 1.9
+   },
+   "afv": {
+    "n": 1987,
+    "s": "wiki_army",
+    "c": "ت",
+    "top": [
+     [
+      "TABC-79 (TAB-CTAB-79A-PCOMATAB-79ARTAB R",
+      402,
+      2,
+      "ROU"
+     ],
+     [
+      "Otokar Cobra II (Personnel transport Rec",
+      378,
+      2,
+      "TUR"
+     ],
+     [
+      "Humvee (M1113M1114M1165M1151)",
+      300,
+      2,
+      "USA"
+     ]
+    ],
+    "gen": 2.0
+   },
+   "art": {
+    "n": 1136,
+    "s": "wiki_army",
+    "c": "ت",
+    "top": [
+     [
+      "M1981",
+      320,
+      2,
+      "ROU"
+     ],
+     [
+      "M30M",
+      202,
+      2,
+      "ROU"
+     ],
+     [
+      "APR-40",
+      135,
+      2,
+      "ROU"
+     ]
+    ],
+    "gen": 2.0
+   },
+   "jet": {
+    "n": 49,
+    "s": "iiss_eq",
+    "c": "ت",
+    "top": [
+     [
+      "F-16 Fighting Falcon (F-16AM/BM)",
+      64,
+      3,
+      "USA"
+     ]
+    ],
+    "gen": 3.0
+   },
+   "heli": {
+    "n": 66,
+    "s": "wiki_air",
+    "c": "ت",
+    "top": [
+     [
+      "IAR 330",
+      56,
+      2,
+      "ROU"
+     ],
+     [
+      "IAR 316",
+      7,
+      2,
+      "ROU"
+     ],
+     [
+      "IAR 330 (Puma Naval)",
+      3,
+      4,
+      "ROU"
+     ]
+    ],
+    "gen": 2.1
+   },
+   "uav": {
+    "n": 129,
+    "s": "wiki_army",
+    "c": "ت",
+    "top": [
+     [
+      "Quantum-Systems (Vector)",
+      56,
+      3,
+      "DEU"
+     ],
+     [
+      "Bayraktar TB2 (TB2 SİHA)",
+      18,
+      4,
+      "TUR"
+     ],
+     [
+      "ScanEagle",
+      10,
+      2,
+      "USA"
+     ]
+    ],
+    "gen": 2.7
+   },
+   "ad": {
+    "n": 526,
+    "s": "wiki_army",
+    "c": "ت",
+    "top": [
+     [
+      "M 1980/88 [ro]",
+      300,
+      2,
+      "ROU"
+     ],
+     [
+      "Chiron",
+      83,
+      2,
+      "KOR"
+     ],
+     [
+      "CA-95M",
+      48,
+      2,
+      "ROU"
+     ]
+    ],
+    "gen": 2.0
+   },
+   "navy": {
+    "n": 7,
+    "s": "iiss_eq",
+    "c": "ت",
+    "top": [
+     [
+      "Tarantul class",
+      3,
+      2,
+      "ROU"
+     ],
+     [
+      "Type 22",
+      2,
+      2,
+      "ROU"
+     ],
+     [
+      "Tetal-I",
+      2,
+      2,
+      "ROU"
+     ]
+    ],
+    "gen": 2.0,
+    "note": "مجموع القوائم 12 يختلف عن الإجمالي؛ الإجمالي هو المعتمد"
+   }
+  }
  },
  "ind": null,
  "pol": {

@@ -5,6 +5,24 @@
  "tier": "B",
  "asOf": "2026-11",
  "src": {
+  "wiki_air": {
+   "t": "Wikipedia: Royal Netherlands East Indies Army Air Force",
+   "u": "https://en.wikipedia.org/wiki/Royal_Netherlands_East_Indies_Army_Air_Force?oldid=1365661686",
+   "y": 2026,
+   "note": "نسخة الصفحة بتاريخ السحب؛ أرقام ويكيبيديا تنراجع ويا مصادر ثانية"
+  },
+  "wiki_army": {
+   "t": "Wikipedia: List of equipment of the Royal Netherlands Army",
+   "u": "https://en.wikipedia.org/wiki/List_of_equipment_of_the_Royal_Netherlands_Army?oldid=1385886655",
+   "y": 2026,
+   "note": "نسخة الصفحة بتاريخ السحب؛ أرقام ويكيبيديا تنراجع ويا مصادر ثانية"
+  },
+  "wiki_navy": {
+   "t": "Wikipedia: List of active Royal Netherlands Navy ships",
+   "u": "https://en.wikipedia.org/wiki/List_of_active_Royal_Netherlands_Navy_ships?oldid=1386424261",
+   "y": 2026,
+   "note": "نسخة الصفحة بتاريخ السحب؛ أرقام ويكيبيديا تنراجع ويا مصادر ثانية"
+  },
   "iiss_eq": {
    "t": "Wikipedia: List of countries by level of military equipment (من IISS Military Balance ومصادر ثانية)",
    "u": "https://en.wikipedia.org/wiki/List_of_countries_by_level_of_military_equipment?oldid=1384804191",
@@ -49,6 +67,11 @@
   "tierA": {
    "t": "تقدير المصمم (تشرين الثاني 2026) لصناعة السلاح والاستقرار: SIPRI Arms Transfers Database (أكبر المصدّرين 2020–24)، SIPRI Top 100 Arms-Producing Companies، Fragile States Index 2025، أخبار 2026",
    "u": "https://www.sipri.org/databases/armstransfers",
+   "y": 2026
+  },
+  "tpl": {
+   "t": "قالب منطقة (eu): موديلات شائعة ونسب تقريبية من الدبابات (مدرعات ×2.5، مدفعية ×0.9، مروحيات ×0.25) — تقدير المصمم",
+   "u": "docs/features/world-plan.md",
    "y": 2026
   }
  },
@@ -219,11 +242,565 @@
     "c": "ت"
    }
   },
-  "land": [],
-  "air": [],
-  "ad": [],
+  "land": [
+   {
+    "m": "Leopard 2A6MA2",
+    "n": 18,
+    "orig": "DEU",
+    "s": "wiki_army",
+    "c": "ت",
+    "note": "The tanks are part of the 4th company of the German-Dutch 414 Tank Battalion, which is part of the Dutch 43rd Mechanised Brigade and are lea",
+    "gen": 4,
+    "cat": "tank"
+   },
+   {
+    "m": "CV9035NL Mk IIIC",
+    "n": 128,
+    "orig": "SWE",
+    "s": "wiki_army",
+    "c": "ت",
+    "note": "192 CV9035 MkIII (184 IFV, 8 instruction vehicles) ordered in December 2004, entered service from 2008. 44 were sold to Estonia in 2014 (148",
+    "gen": 4,
+    "cat": "ifv"
+   },
+   {
+    "m": "Bushmaster",
+    "n": 102,
+    "orig": "AUS",
+    "s": "wiki_army",
+    "c": "ت",
+    "note": "Initially purchased as an emergency protection measure against the IED threat during the ISAF deployment Task Force Uruzgan. Multiple varian",
+    "gen": 2,
+    "cat": "mrap"
+   },
+   {
+    "m": "Fennek",
+    "n": 345,
+    "orig": "NLD",
+    "s": "wiki_army",
+    "c": "ت",
+    "note": "367 purchased originally. After modernisation, 345 vehicles will remain in service: 146 LVB (light reconnaissance) 47 FST (fire support team",
+    "gen": 2,
+    "cat": "apc"
+   },
+   {
+    "m": "TPz Fuchs",
+    "n": 16,
+    "orig": "DEU",
+    "s": "wiki_army",
+    "c": "ت",
+    "note": "Multiple versions in use. 9 EW vehicles, 6 NBC vehicles and 1 driver training vehicle: Electronic warfare (EW): Fuchs \"EOV Sensorstation\": S",
+    "gen": 2,
+    "cat": "apc"
+   },
+   {
+    "m": "Pantserhouwitser 2000NL",
+    "n": 46,
+    "orig": "DEU",
+    "s": "wiki_army",
+    "c": "ت",
+    "note": "57 originally ordered of which 46 will be upgraded in joint project with Germany, 8 were transferred to Ukraine in 2022. Suited to fire the ",
+    "gen": 2,
+    "cat": "spg"
+   },
+   {
+    "m": "25-pounder",
+    "n": 8,
+    "orig": "GBR",
+    "s": "wiki_army",
+    "c": "ت",
+    "note": "Only used for ceremonial gun salutes.",
+    "gen": 2,
+    "cat": "towed"
+   },
+   {
+    "m": "MO-120-HB",
+    "n": 22,
+    "orig": "FRA",
+    "s": "wiki_army",
+    "c": "ت",
+    "note": "120 mm mortar produced by Hotchkiss-Brandt (HB) to be replaced by new 120 mm mortars with loitering munitions from 2026 onwards for the 11th",
+    "gen": 2,
+    "cat": "towed"
+   }
+  ],
+  "air": [
+   {
+    "m": "Milrem THeMIS",
+    "n": 6,
+    "orig": "EST",
+    "s": "wiki_army",
+    "c": "ت",
+    "note": "Two vehicles of the Cargo variant, which can be optionally equipped with an FN deFNder remote weapon station, and four Combat variants which",
+    "gen": 2,
+    "cat": "uav_isr"
+   },
+   {
+    "m": "Black Hornet Nano",
+    "n": 48,
+    "orig": "NOR",
+    "s": "wiki_army",
+    "c": "ت",
+    "note": "In use with Brigade Reconnaissance Squadrons and Korps Commandotroepen.",
+    "gen": 2,
+    "cat": "uav_isr"
+   },
+   {
+    "m": "AeroVironment RQ-11B DDL Raven",
+    "n": 48,
+    "orig": "USA",
+    "s": "wiki_army",
+    "c": "ت",
+    "note": "Replaced the Raven B NLD, acquired combinedly with the RQ-21, Wasp III and RQ-20.",
+    "gen": 2,
+    "cat": "uav_isr"
+   },
+   {
+    "m": "AeroVironment RQ-20 Puma",
+    "n": 12,
+    "orig": "USA",
+    "s": "wiki_army",
+    "c": "ت",
+    "note": "Acquired combinedly with the RQ-21, RQ-11B DDL and Wasp III.",
+    "gen": 4,
+    "cat": "uav_isr"
+   },
+   {
+    "m": "AeroVironment Wasp III",
+    "n": 18,
+    "orig": "USA",
+    "s": "wiki_army",
+    "c": "ت",
+    "note": "Acquired combinedly with the RQ-21, RQ-11B DDL and RQ-20.",
+    "gen": 2,
+    "cat": "uav_isr"
+   },
+   {
+    "m": "Boeing Insitu RQ-21 Blackjack",
+    "n": 15,
+    "orig": "USA",
+    "s": "wiki_army",
+    "c": "ت",
+    "note": "5 systems in use, with 3 UAVs eachs. Operated by the Joint ISTAR Command.",
+    "gen": 2,
+    "cat": "uav_isr"
+   },
+   {
+    "m": "Boeing Insitu ScanEagle",
+    "n": 12,
+    "orig": "USA",
+    "s": "wiki_army",
+    "c": "ت",
+    "note": "Gradually replaced by the RQ-21.",
+    "gen": 2,
+    "cat": "uav_isr"
+   }
+  ],
+  "ad": [
+   {
+    "m": "Fennek SWP Stinger Weapon Platform",
+    "n": 18,
+    "orig": "DEU",
+    "s": "wiki_army",
+    "c": "ت",
+    "note": "Fennek converted to the SWP variant in 2007. Operated by 13th Air Defence Battery. System equipped with 4 ready-to-fire missiles. The launch",
+    "gen": 2,
+    "cat": "short"
+   },
+   {
+    "m": "NASAMS II",
+    "n": 2,
+    "orig": "NOR",
+    "s": "wiki_army",
+    "c": "ت",
+    "note": "System acquired in 2006. Operated by 13th Air Defence Battery, and it is part of the AGBADS. The Netherlands Army has 2 NASAMS-2 systems in ",
+    "gen": 2,
+    "cat": "medium"
+   },
+   {
+    "m": "NASAMS launchers Mk2",
+    "n": 6,
+    "orig": "NOR",
+    "s": "wiki_army",
+    "c": "ت",
+    "note": "System acquired in 2006. Operated by 13th Air Defence Battery, and it is part of the AGBADS. The Netherlands Army has 2 NASAMS-2 systems in ",
+    "gen": 4,
+    "cat": "medium"
+   },
+   {
+    "m": "Kongsberg SFC SHORAD fire control",
+    "n": 2,
+    "orig": "NOR",
+    "s": "wiki_army",
+    "c": "ت",
+    "note": "System acquired in 2006. Operated by 13th Air Defence Battery, and it is part of the AGBADS. The Netherlands Army has 2 NASAMS-2 systems in ",
+    "gen": 2,
+    "cat": "short"
+   },
+   {
+    "m": "MIM-104 Patriot",
+    "n": 4,
+    "orig": "USA",
+    "s": "wiki_army",
+    "c": "ت",
+    "note": "Operated by 802 Squadron, upgraded to the latest US Army version with Patriot PAC-2 and PAC-3 MSE missiles.",
+    "gen": 4,
+    "cat": "long"
+   }
+  ],
   "msl": [],
-  "navy": []
+  "navy": [
+   {
+    "m": "Walrus class",
+    "n": 3,
+    "orig": "NLD",
+    "s": "wiki_navy",
+    "c": "ت",
+    "note": "To be replaced by the Orka class",
+    "gen": 2,
+    "cat": "sub"
+   },
+   {
+    "m": "Karel Doorman class M-class",
+    "n": 2,
+    "orig": "NLD",
+    "s": "wiki_navy",
+    "c": "ت",
+    "note": "Van Speijk inactive due to personnel shortage.",
+    "gen": 2,
+    "cat": "frigate"
+   },
+   {
+    "m": "De Zeven Provinciën class",
+    "n": 4,
+    "orig": "NLD",
+    "s": "wiki_navy",
+    "c": "ت",
+    "note": "Internationally considered destroyers due to their size, armament, and role.",
+    "gen": 2,
+    "cat": "frigate"
+   },
+   {
+    "m": "Holland class",
+    "n": 4,
+    "orig": "NLD",
+    "s": "wiki_navy",
+    "c": "ت",
+    "note": "1 ship of the Holland class is assigned to the Caribbean Coast Guard.",
+    "gen": 2,
+    "cat": "patrol"
+   },
+   {
+    "m": "Rotterdam class",
+    "n": 2,
+    "orig": "NLD",
+    "s": "wiki_navy",
+    "c": "ت",
+    "note": "2 LCU and 3 LCVP carried.",
+    "gen": 2,
+    "cat": "amphib"
+   },
+   {
+    "m": "Karel Doorman class",
+    "n": 1,
+    "orig": "NLD",
+    "s": "wiki_navy",
+    "c": "ت",
+    "note": "2 LCVP carried.",
+    "gen": 2,
+    "cat": "amphib"
+   },
+   {
+    "m": "LCU 3607 class",
+    "n": 5,
+    "orig": "NLD",
+    "s": "wiki_navy",
+    "c": "ت",
+    "note": "Being upgraded to the Mk.III standard.",
+    "gen": 2,
+    "cat": "amphib"
+   },
+   {
+    "m": "LCVP Mk.V (NL)",
+    "n": 12,
+    "orig": "NLD",
+    "s": "wiki_navy",
+    "c": "ت",
+    "note": "To be replaced by 12 new LCVP and 8 new LCM from 2025 onwards.",
+    "gen": 2,
+    "cat": "amphib"
+   },
+   {
+    "m": "–",
+    "n": 1,
+    "orig": "NLD",
+    "s": "wiki_navy",
+    "c": "ت",
+    "note": "To be replaced by new naval support vessels.",
+    "gen": 2,
+    "cat": "sub"
+   },
+   {
+    "m": "Noorderhaaks class",
+    "n": 2,
+    "orig": "NLD",
+    "s": "wiki_navy",
+    "c": "ت",
+    "gen": 2,
+    "cat": "patrol"
+   },
+   {
+    "m": "–",
+    "n": 1,
+    "orig": "NLD",
+    "s": "wiki_navy",
+    "c": "ت",
+    "note": "Active in the North Sea. 2 RHIB on board.",
+    "gen": 2,
+    "cat": "patrol"
+   },
+   {
+    "m": "Damen Stan Patrol 4207",
+    "n": 2,
+    "orig": "NLD",
+    "s": "wiki_navy",
+    "c": "ت",
+    "note": "1 RHIB on board.",
+    "gen": 2,
+    "cat": "patrol"
+   },
+   {
+    "m": "Damen Stan Patrol 2706",
+    "n": 1,
+    "orig": "NLD",
+    "s": "wiki_navy",
+    "c": "ت",
+    "gen": 2,
+    "cat": "patrol"
+   },
+   {
+    "m": "Damen Stan Patrol 2506",
+    "n": 3,
+    "orig": "NLD",
+    "s": "wiki_navy",
+    "c": "ت",
+    "gen": 2,
+    "cat": "patrol"
+   },
+   {
+    "m": "West Indies Guard Ship (WIGS)",
+    "n": 1,
+    "orig": "ROU",
+    "s": "wiki_navy",
+    "c": "ت",
+    "note": "Rotation of the Royal Netherlands Navy every 4 to 6 months in support of the Dutch Caribbean Coast Guard. Most often Holland class ship.",
+    "gen": 2,
+    "cat": "patrol"
+   },
+   {
+    "m": "Stan Patrol 4100 class",
+    "n": 3,
+    "orig": "NLD",
+    "s": "wiki_navy",
+    "c": "ت",
+    "note": "Stationed in Aruba, Curaçao, Sint Maarten",
+    "gen": 2,
+    "cat": "patrol"
+   },
+   {
+    "m": "38 Defiant",
+    "n": 12,
+    "orig": "USA",
+    "s": "wiki_navy",
+    "c": "ت",
+    "note": "To patrol waters of Aruba, Bonaire, Curaçao, St. Eustatius, St. Maarten and Saba. Successor of the RHIB.",
+    "gen": 2,
+    "cat": "patrol"
+   },
+   {
+    "m": "Justice 20",
+    "n": 5,
+    "orig": "USA",
+    "s": "wiki_navy",
+    "c": "ت",
+    "gen": 2,
+    "cat": "patrol"
+   }
+  ],
+  "grp": {
+   "tank": {
+    "n": 0,
+    "s": "iiss_eq",
+    "c": "ت",
+    "top": [
+     [
+      "Leopard 2A6MA2",
+      18,
+      4,
+      "DEU"
+     ]
+    ],
+    "gen": 4.0
+   },
+   "afv": {
+    "n": 591,
+    "s": "wiki_army",
+    "c": "ت",
+    "top": [
+     [
+      "Fennek",
+      345,
+      2,
+      "NLD"
+     ],
+     [
+      "CV9035NL Mk IIIC",
+      128,
+      4,
+      "SWE"
+     ],
+     [
+      "Bushmaster",
+      102,
+      2,
+      "AUS"
+     ]
+    ],
+    "gen": 2.4
+   },
+   "art": {
+    "n": 76,
+    "s": "wiki_army",
+    "c": "ت",
+    "top": [
+     [
+      "Pantserhouwitser 2000NL",
+      46,
+      2,
+      "DEU"
+     ],
+     [
+      "MO-120-HB",
+      22,
+      2,
+      "FRA"
+     ],
+     [
+      "25-pounder",
+      8,
+      2,
+      "GBR"
+     ]
+    ],
+    "gen": 2.0
+   },
+   "jet": {
+    "n": 58,
+    "s": "iiss_eq",
+    "c": "ت",
+    "top": [
+     [
+      "F-16",
+      null,
+      null,
+      null
+     ],
+     [
+      "MiG-29",
+      null,
+      null,
+      null
+     ],
+     [
+      "Gripen",
+      null,
+      null,
+      null
+     ]
+    ],
+    "gen": 2.8,
+    "tpl": "eu"
+   },
+   "uav": {
+    "n": 159,
+    "s": "wiki_army",
+    "c": "ت",
+    "top": [
+     [
+      "Black Hornet Nano",
+      48,
+      2,
+      "NOR"
+     ],
+     [
+      "AeroVironment RQ-11B DDL Raven",
+      48,
+      2,
+      "USA"
+     ],
+     [
+      "AeroVironment Wasp III",
+      18,
+      2,
+      "USA"
+     ]
+    ],
+    "gen": 2.2
+   },
+   "ad": {
+    "n": 32,
+    "s": "wiki_army",
+    "c": "ت",
+    "top": [
+     [
+      "Fennek SWP Stinger Weapon Platform",
+      18,
+      2,
+      "DEU"
+     ],
+     [
+      "NASAMS launchers Mk2",
+      6,
+      4,
+      "NOR"
+     ],
+     [
+      "MIM-104 Patriot",
+      4,
+      4,
+      "USA"
+     ]
+    ],
+    "gen": 2.6
+   },
+   "navy": {
+    "n": 13,
+    "s": "iiss_eq",
+    "c": "ت",
+    "top": [
+     [
+      "LCVP Mk.V (NL)",
+      12,
+      2,
+      "NLD"
+     ],
+     [
+      "38 Defiant",
+      12,
+      2,
+      "USA"
+     ],
+     [
+      "LCU 3607 class",
+      5,
+      2,
+      "NLD"
+     ]
+    ],
+    "gen": 2.0,
+    "note": "مجموع القوائم 64 يختلف عن الإجمالي؛ الإجمالي هو المعتمد"
+   }
+  }
  },
  "ind": null,
  "pol": {

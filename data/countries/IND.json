@@ -68,6 +68,11 @@
    "t": "تقدير المصمم (تشرين الثاني 2026) لصناعة السلاح والاستقرار: SIPRI Arms Transfers Database (أكبر المصدّرين 2020–24)، SIPRI Top 100 Arms-Producing Companies، Fragile States Index 2025، أخبار 2026",
    "u": "https://www.sipri.org/databases/armstransfers",
    "y": 2026
+  },
+  "tpl": {
+   "t": "قالب منطقة (as): موديلات شائعة ونسب تقريبية من الدبابات (مدرعات ×2.5، مدفعية ×0.9، مروحيات ×0.25) — تقدير المصمم",
+   "u": "docs/features/world-plan.md",
+   "y": 2026
   }
  },
  "gov": {
@@ -432,6 +437,26 @@
     "c": "ت",
     "note": "Status: in service. 180 upgraded to 155 mm standard by Soltam in 2008. 300 M-46 guns being upgraded by OFB to 155 mm/45 calibre \"Sharang\" gu",
     "gen": 2,
+    "cat": "towed"
+   },
+   {
+    "m": "Vijayanta MBT",
+    "n": 200,
+    "orig": "IND",
+    "s": "wiki_army",
+    "c": "ت",
+    "note": "Status: In service. 105 mm Gun, used as static defence on LOC.",
+    "gen": 2,
+    "cat": "towed"
+   },
+   {
+    "m": "T-55 MBT",
+    "n": 700,
+    "orig": "IND",
+    "s": "wiki_army",
+    "c": "ت",
+    "note": "Status: In service. 105 mm Gun, used as static defence on LOC.",
+    "gen": 1,
     "cat": "towed"
    },
    {
@@ -1274,12 +1299,32 @@
     "cat": "short"
    },
    {
+    "m": "AK-630",
+    "n": 6,
+    "orig": "RUS",
+    "s": "wiki_army",
+    "c": "ت",
+    "note": "Status: Indian Army Air Defence has floated an RFP (Request for Proposal) for the procurement of six AK-630 Air Defence Gun Systems with AWE",
+    "gen": 2,
+    "cat": "short"
+   },
+   {
     "m": "Carrier Air Defence Tracked (CADET)",
     "n": 90,
     "orig": "IND",
     "s": "wiki_army",
     "c": "ت",
     "note": "Status: Tender (RFI) issued in 2024. Track-based (4 crew) platform with high power-to-weight ratio. To be integrated with Akashteer Control ",
+    "gen": 2,
+    "cat": "short"
+   },
+   {
+    "m": "Sudarshan CIWS",
+    "n": 200,
+    "orig": "IND",
+    "s": "wiki_army",
+    "c": "ت",
+    "note": "Status: In Service. Advanced version of Bofors L/70 manufactured by L&T Defence. System includes 3D AESA radar and has a range of 3.5 km and",
     "gen": 2,
     "cat": "short"
    }
@@ -1306,7 +1351,196 @@
     "cat": "cruise"
    }
   ],
-  "navy": []
+  "navy": [],
+  "grp": {
+   "tank": {
+    "n": 3750,
+    "s": "iiss_eq",
+    "c": "ت",
+    "top": [
+     [
+      "T-72M1 AjeyaT-72 Ajeya Mk 2 T-72 Combat ",
+      2418,
+      3,
+      "SUN"
+     ],
+     [
+      "T-90S Bhishma T-90S Bhishma Mk 2 T-90 Bh",
+      1300,
+      4,
+      "RUS"
+     ],
+     [
+      "Arjun Mk 1Arjun Mk 1A",
+      124,
+      2,
+      "IND"
+     ]
+    ],
+    "gen": 3.3
+   },
+   "afv": {
+    "n": 4393,
+    "s": "wiki_army",
+    "c": "ت",
+    "top": [
+     [
+      "BMP-2 Sarath",
+      2400,
+      3,
+      "IND"
+     ],
+     [
+      "OFB Aditya",
+      1600,
+      2,
+      "IND"
+     ],
+     [
+      "Casspir",
+      200,
+      2,
+      "ZAF"
+     ]
+    ],
+    "gen": 2.5
+   },
+   "art": {
+    "n": 7395,
+    "s": "wiki_army",
+    "c": "ت",
+    "top": [
+     [
+      "OFB Indian Field Gun Mk 1/2/3",
+      2400,
+      2,
+      "IND"
+     ],
+     [
+      "M-46",
+      1000,
+      2,
+      "IND"
+     ],
+     [
+      "Mounted Gun System (MGS)",
+      814,
+      2,
+      "IND"
+     ]
+    ],
+    "gen": 1.9
+   },
+   "jet": {
+    "n": 926,
+    "s": "iiss_eq",
+    "c": "ت",
+    "top": [
+     [
+      "Sukhoi Su-30MKI",
+      258,
+      4,
+      "RUS"
+     ],
+     [
+      "SEPECAT Jaguar (Jaguar-IS)",
+      78,
+      2,
+      "GBR"
+     ],
+     [
+      "Mikoyan MiG-29 (MiG-29B)",
+      40,
+      3,
+      "SUN"
+     ]
+    ],
+    "gen": 3.2
+   },
+   "heli": {
+    "n": 848,
+    "s": "wiki_air",
+    "c": "ت",
+    "top": [
+     [
+      "Mil Mi-17 (Mi-17V-5)",
+      222,
+      2,
+      "RUS"
+     ],
+     [
+      "Aérospatiale SA 315B (Cheetah)",
+      115,
+      2,
+      "FRA"
+     ],
+     [
+      "HAL Dhruv (Dhruv Mk I/III)",
+      95,
+      2,
+      "IND"
+     ]
+    ],
+    "gen": 2.1
+   },
+   "uav": {
+    "n": 795,
+    "s": "wiki_air",
+    "c": "ت",
+    "top": [
+     [
+      "All Terrain Tactical Haulers (ATT Hauler",
+      300,
+      2,
+      "ISR"
+     ],
+     [
+      "IFT Switch (Switch 1.0)",
+      200,
+      2,
+      "IND"
+     ],
+     [
+      "Newspace Beluga/Nimbus",
+      100,
+      2,
+      "IND"
+     ]
+    ],
+    "gen": 2.0
+   },
+   "ad": {
+    "n": 948,
+    "s": "wiki_army",
+    "c": "ت",
+    "top": [
+     [
+      "9K35 Strela-10 (SA-13 Gopher)",
+      200,
+      2,
+      "SUN"
+     ],
+     [
+      "Sudarshan CIWS",
+      200,
+      2,
+      "IND"
+     ],
+     [
+      "Kub (SA-6 Gainful)",
+      180,
+      2,
+      "SUN"
+     ]
+    ],
+    "gen": 2.0
+   },
+   "navy": {
+    "n": 95,
+    "s": "iiss_eq",
+    "c": "ت"
+   }
+  }
  },
  "ind": {
   "tech": {

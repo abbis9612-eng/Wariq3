@@ -5,6 +5,24 @@
  "tier": "B",
  "asOf": "2026-11",
  "src": {
+  "wiki_air": {
+   "t": "Wikipedia: Nigerian Air Force",
+   "u": "https://en.wikipedia.org/wiki/Nigerian_Air_Force?oldid=1384044775",
+   "y": 2026,
+   "note": "نسخة الصفحة بتاريخ السحب؛ أرقام ويكيبيديا تنراجع ويا مصادر ثانية"
+  },
+  "wiki_army": {
+   "t": "Wikipedia: List of equipment of the Nigerian Army",
+   "u": "https://en.wikipedia.org/wiki/List_of_equipment_of_the_Nigerian_Army?oldid=1386087073",
+   "y": 2026,
+   "note": "نسخة الصفحة بتاريخ السحب؛ أرقام ويكيبيديا تنراجع ويا مصادر ثانية"
+  },
+  "wiki_navy": {
+   "t": "Wikipedia: Nigerian Navy",
+   "u": "https://en.wikipedia.org/wiki/Nigerian_Navy?oldid=1383499185",
+   "y": 2026,
+   "note": "نسخة الصفحة بتاريخ السحب؛ أرقام ويكيبيديا تنراجع ويا مصادر ثانية"
+  },
   "iiss_eq": {
    "t": "Wikipedia: List of countries by level of military equipment (من IISS Military Balance ومصادر ثانية)",
    "u": "https://en.wikipedia.org/wiki/List_of_countries_by_level_of_military_equipment?oldid=1384804191",
@@ -49,6 +67,11 @@
   "tierA": {
    "t": "تقدير المصمم (تشرين الثاني 2026) لصناعة السلاح والاستقرار: SIPRI Arms Transfers Database (أكبر المصدّرين 2020–24)، SIPRI Top 100 Arms-Producing Companies، Fragile States Index 2025، أخبار 2026",
    "u": "https://www.sipri.org/databases/armstransfers",
+   "y": 2026
+  },
+  "tpl": {
+   "t": "قالب منطقة (af): موديلات شائعة ونسب تقريبية من الدبابات (مدرعات ×2.5، مدفعية ×0.9، مروحيات ×0.25) — تقدير المصمم",
+   "u": "docs/features/world-plan.md",
    "y": 2026
   }
  },
@@ -198,11 +221,744 @@
     "c": "ت"
    }
   },
-  "land": [],
-  "air": [],
-  "ad": [],
+  "land": [
+   {
+    "m": "VT-4",
+    "n": 17,
+    "orig": "CHN",
+    "s": "wiki_army",
+    "c": "ت",
+    "gen": 2,
+    "cat": "tank"
+   },
+   {
+    "m": "T-72 (T-72AVT-72M1)",
+    "n": 10,
+    "orig": "SUN",
+    "s": "wiki_army",
+    "c": "ت",
+    "gen": 3,
+    "cat": "tank"
+   },
+   {
+    "m": "T-54 (T-55)",
+    "n": 100,
+    "orig": "SUN",
+    "s": "wiki_army",
+    "c": "ت",
+    "gen": 1,
+    "cat": "tank"
+   },
+   {
+    "m": "Vickers (Vickers Mk3)",
+    "n": 172,
+    "orig": "GBR",
+    "s": "wiki_army",
+    "c": "ت",
+    "gen": 2,
+    "cat": "tank"
+   },
+   {
+    "m": "FV101 Scorpion",
+    "n": 157,
+    "orig": "GBR",
+    "s": "wiki_army",
+    "c": "ت",
+    "gen": 2,
+    "cat": "apc"
+   },
+   {
+    "m": "FV107 Scimitar",
+    "n": 5,
+    "orig": "GBR",
+    "s": "wiki_army",
+    "c": "ت",
+    "note": "More units purchased from Jordan",
+    "gen": 2,
+    "cat": "apc"
+   },
+   {
+    "m": "EE-9 Cascavel",
+    "n": 70,
+    "orig": "BRA",
+    "s": "wiki_army",
+    "c": "ت",
+    "note": "Delivered in 1994.",
+    "gen": 2,
+    "cat": "apc"
+   },
+   {
+    "m": "Panhard ERC (ERC-90)",
+    "n": 80,
+    "orig": "FRA",
+    "s": "wiki_army",
+    "c": "ت",
+    "note": "40 with Lynx turret.",
+    "gen": 2,
+    "cat": "apc"
+   },
+   {
+    "m": "Panhard AML (AML-60 AML-90)",
+    "n": 130,
+    "orig": "FRA",
+    "s": "wiki_army",
+    "c": "ت",
+    "gen": 2,
+    "cat": "apc"
+   },
+   {
+    "m": "Panhard VBL (VB2L PC)",
+    "n": 72,
+    "orig": "FRA",
+    "s": "wiki_army",
+    "c": "ت",
+    "gen": 2,
+    "cat": "apc"
+   },
+   {
+    "m": "BMP (BMP-1 BMP-2)",
+    "n": 22,
+    "orig": "SUN",
+    "s": "wiki_army",
+    "c": "ت",
+    "gen": 3,
+    "cat": "ifv"
+   },
+   {
+    "m": "CS/VP3 MRAP",
+    "n": 310,
+    "orig": "CHN",
+    "s": "wiki_army",
+    "c": "ت",
+    "note": "120 was delivered in 2015, 40 delivered in 2018, and a further 100 was delivered in 2021 between March and November. Additional 50 was deliv",
+    "gen": 2,
+    "cat": "mrap"
+   },
+   {
+    "m": "Ezugwu",
+    "n": 80,
+    "orig": "NGA",
+    "s": "wiki_army",
+    "c": "ت",
+    "note": "80 confirmed. 28+52",
+    "gen": 2,
+    "cat": "mrap"
+   },
+   {
+    "m": "PF ARA",
+    "n": 40,
+    "orig": "NGA",
+    "s": "wiki_army",
+    "c": "ت",
+    "gen": 2,
+    "cat": "mrap"
+   },
+   {
+    "m": "PF Hulk",
+    "n": 5,
+    "orig": "NGA",
+    "s": "wiki_army",
+    "c": "ت",
+    "gen": 2,
+    "cat": "mrap"
+   },
+   {
+    "m": "Reva",
+    "n": 40,
+    "orig": "ZAF",
+    "s": "wiki_army",
+    "c": "ت",
+    "note": "Mk III.",
+    "gen": 2,
+    "cat": "mrap"
+   },
+   {
+    "m": "PF Viper",
+    "n": 120,
+    "orig": "NGA",
+    "s": "wiki_army",
+    "c": "ت",
+    "gen": 2,
+    "cat": "apc"
+   },
+   {
+    "m": "Dongfeng Mengshi Csk131",
+    "n": 120,
+    "orig": "CHN",
+    "s": "wiki_army",
+    "c": "ت",
+    "note": "20 reverse engineered units delivered to the army in May 2024",
+    "gen": 2,
+    "cat": "apc"
+   },
+   {
+    "m": "Otokar Cobra",
+    "n": 204,
+    "orig": "TUR",
+    "s": "wiki_army",
+    "c": "ت",
+    "gen": 2,
+    "cat": "apc"
+   },
+   {
+    "m": "KLTV",
+    "n": 5,
+    "orig": "KOR",
+    "s": "wiki_army",
+    "c": "ت",
+    "gen": 2,
+    "cat": "apc"
+   },
+   {
+    "m": "SH-5 SH-2",
+    "n": 15,
+    "orig": "CHN",
+    "s": "wiki_army",
+    "c": "ت",
+    "note": "105mm caliber 122mm caliber",
+    "gen": 2,
+    "cat": "spg"
+   },
+   {
+    "m": "Palmaria",
+    "n": 25,
+    "orig": "ITA",
+    "s": "wiki_army",
+    "c": "ت",
+    "gen": 2,
+    "cat": "spg"
+   },
+   {
+    "m": "APR–40",
+    "n": 25,
+    "orig": "ROU",
+    "s": "wiki_army",
+    "c": "ت",
+    "gen": 2,
+    "cat": "mlrs"
+   },
+   {
+    "m": "BM-21 Grad",
+    "n": 5,
+    "orig": "SUN",
+    "s": "wiki_army",
+    "c": "ت",
+    "gen": 2,
+    "cat": "mlrs"
+   },
+   {
+    "m": "RM-70",
+    "n": 7,
+    "orig": "CSK",
+    "s": "wiki_army",
+    "c": "ت",
+    "gen": 2,
+    "cat": "mlrs"
+   },
+   {
+    "m": "D-30",
+    "n": 90,
+    "orig": "SUN",
+    "s": "wiki_army",
+    "c": "ت",
+    "gen": 2,
+    "cat": "towed"
+   },
+   {
+    "m": "D-74",
+    "n": 90,
+    "orig": "SUN",
+    "s": "wiki_army",
+    "c": "ت",
+    "gen": 2,
+    "cat": "towed"
+   },
+   {
+    "m": "M46",
+    "n": 7,
+    "orig": "SUN",
+    "s": "wiki_army",
+    "c": "ت",
+    "gen": 2,
+    "cat": "towed"
+   },
+   {
+    "m": "D-20",
+    "n": 4,
+    "orig": "SUN",
+    "s": "wiki_army",
+    "c": "ت",
+    "note": "Delivered in 1992.",
+    "gen": 2,
+    "cat": "towed"
+   },
+   {
+    "m": "Haubits FH77",
+    "n": 24,
+    "orig": "SWE",
+    "s": "wiki_army",
+    "c": "ت",
+    "note": "Reportedly, all guns are in storage.",
+    "gen": 2,
+    "cat": "towed"
+   },
+   {
+    "m": "OTO Melara Mod 56",
+    "n": 124,
+    "orig": "ITA",
+    "s": "wiki_army",
+    "c": "ت",
+    "note": "200 delivered.",
+    "gen": 2,
+    "cat": "towed"
+   },
+   {
+    "m": "Swingfire",
+    "n": 100,
+    "orig": "GBR",
+    "s": "wiki_army",
+    "c": "ت",
+    "gen": 2,
+    "cat": "atgm"
+   },
+   {
+    "m": "ZU-23-2",
+    "n": 350,
+    "orig": "SUN",
+    "s": "wiki_army",
+    "c": "ت",
+    "gen": 2,
+    "cat": "towed"
+   }
+  ],
+  "air": [
+   {
+    "m": "Bayraktar TB2",
+    "n": 6,
+    "orig": "TUR",
+    "s": "wiki_army",
+    "c": "ت",
+    "gen": 4,
+    "cat": "uav_isr"
+   }
+  ],
+  "ad": [
+   {
+    "m": "Roland",
+    "n": 16,
+    "orig": "FRA",
+    "s": "wiki_army",
+    "c": "ت",
+    "note": "Mounted on AMX-30 chassis.",
+    "gen": 2,
+    "cat": "short"
+   },
+   {
+    "m": "Blowpipe",
+    "n": 48,
+    "orig": "GBR",
+    "s": "wiki_army",
+    "c": "ت",
+    "gen": 2,
+    "cat": "short"
+   },
+   {
+    "m": "9K32 Strela-2",
+    "n": 100,
+    "orig": "SUN",
+    "s": "wiki_army",
+    "c": "ت",
+    "gen": 2,
+    "cat": "short"
+   },
+   {
+    "m": "ZSU-23-4",
+    "n": 30,
+    "orig": "SUN",
+    "s": "wiki_army",
+    "c": "ت",
+    "gen": 2,
+    "cat": "short"
+   }
+  ],
   "msl": [],
-  "navy": []
+  "navy": [
+   {
+    "m": "MEKO 360 Type H1",
+    "n": 1,
+    "orig": "NGA",
+    "s": "wiki_navy",
+    "c": "ت",
+    "cat": "frigate",
+    "gen": 2,
+    "note": "عدد الصفوف بالقائمة"
+   },
+   {
+    "m": "Thunder Class",
+    "n": 1,
+    "orig": "NGA",
+    "s": "wiki_navy",
+    "c": "ت",
+    "cat": "frigate",
+    "gen": 2,
+    "note": "عدد الصفوف بالقائمة"
+   },
+   {
+    "m": "Centenary Class",
+    "n": 1,
+    "orig": "NGA",
+    "s": "wiki_navy",
+    "c": "ت",
+    "cat": "corvette",
+    "gen": 2,
+    "note": "عدد الصفوف بالقائمة"
+   },
+   {
+    "m": "OPV 76",
+    "n": 1,
+    "orig": "NGA",
+    "s": "wiki_navy",
+    "c": "ت",
+    "cat": "patrol",
+    "gen": 2,
+    "note": "عدد الصفوف بالقائمة"
+   },
+   {
+    "m": "Tuzla class",
+    "n": 1,
+    "orig": "NGA",
+    "s": "wiki_navy",
+    "c": "ت",
+    "cat": "patrol",
+    "gen": 2,
+    "note": "عدد الصفوف بالقائمة"
+   },
+   {
+    "m": "Andoni Class",
+    "n": 1,
+    "orig": "NGA",
+    "s": "wiki_navy",
+    "c": "ت",
+    "cat": "patrol",
+    "gen": 2,
+    "note": "عدد الصفوف بالقائمة"
+   },
+   {
+    "m": "Sagbama Class",
+    "n": 1,
+    "orig": "NGA",
+    "s": "wiki_navy",
+    "c": "ت",
+    "cat": "patrol",
+    "gen": 2,
+    "note": "عدد الصفوف بالقائمة"
+   },
+   {
+    "m": "Zaria Class",
+    "n": 1,
+    "orig": "NGA",
+    "s": "wiki_navy",
+    "c": "ت",
+    "cat": "patrol",
+    "gen": 2,
+    "note": "عدد الصفوف بالقائمة"
+   },
+   {
+    "m": "Chamsuri class",
+    "n": 1,
+    "orig": "NGA",
+    "s": "wiki_navy",
+    "c": "ت",
+    "cat": "patrol",
+    "gen": 2,
+    "note": "عدد الصفوف بالقائمة"
+   },
+   {
+    "m": "Nguru Class",
+    "n": 1,
+    "orig": "NGA",
+    "s": "wiki_navy",
+    "c": "ت",
+    "cat": "patrol",
+    "gen": 2,
+    "note": "عدد الصفوف بالقائمة"
+   },
+   {
+    "m": "Dorina Class",
+    "n": 1,
+    "orig": "NGA",
+    "s": "wiki_navy",
+    "c": "ت",
+    "cat": "patrol",
+    "gen": 2,
+    "note": "عدد الصفوف بالقائمة"
+   },
+   {
+    "m": "Okpoku Class",
+    "n": 1,
+    "orig": "NGA",
+    "s": "wiki_navy",
+    "c": "ت",
+    "cat": "patrol",
+    "gen": 2,
+    "note": "عدد الصفوف بالقائمة"
+   },
+   {
+    "m": "Shaldag class",
+    "n": 1,
+    "orig": "NGA",
+    "s": "wiki_navy",
+    "c": "ت",
+    "cat": "patrol",
+    "gen": 2,
+    "note": "عدد الصفوف بالقائمة"
+   },
+   {
+    "m": "Manta Class",
+    "n": 1,
+    "orig": "NGA",
+    "s": "wiki_navy",
+    "c": "ت",
+    "cat": "patrol",
+    "gen": 2,
+    "note": "عدد الصفوف بالقائمة"
+   },
+   {
+    "m": "Wave Rider class",
+    "n": 1,
+    "orig": "NGA",
+    "s": "wiki_navy",
+    "c": "ت",
+    "cat": "patrol",
+    "gen": 2,
+    "note": "عدد الصفوف بالقائمة"
+   },
+   {
+    "m": "Cedric Class",
+    "n": 1,
+    "orig": "NGA",
+    "s": "wiki_navy",
+    "c": "ت",
+    "cat": "patrol",
+    "gen": 2,
+    "note": "عدد الصفوف بالقائمة"
+   },
+   {
+    "m": "Epenal Gunboat",
+    "n": 1,
+    "orig": "NGA",
+    "s": "wiki_navy",
+    "c": "ت",
+    "cat": "patrol",
+    "gen": 2,
+    "note": "عدد الصفوف بالقائمة"
+   },
+   {
+    "m": "LST-100",
+    "n": 1,
+    "orig": "NGA",
+    "s": "wiki_navy",
+    "c": "ت",
+    "cat": "amphib",
+    "gen": 2,
+    "note": "عدد الصفوف بالقائمة"
+   }
+  ],
+  "grp": {
+   "tank": {
+    "n": 317,
+    "s": "iiss_eq",
+    "c": "ت",
+    "top": [
+     [
+      "Vickers (Vickers Mk3)",
+      172,
+      2,
+      "GBR"
+     ],
+     [
+      "T-54 (T-55)",
+      100,
+      1,
+      "SUN"
+     ],
+     [
+      "VT-4",
+      17,
+      2,
+      "CHN"
+     ]
+    ],
+    "gen": 1.7
+   },
+   "afv": {
+    "n": 1460,
+    "s": "wiki_army",
+    "c": "ت",
+    "top": [
+     [
+      "CS/VP3 MRAP",
+      310,
+      2,
+      "CHN"
+     ],
+     [
+      "Otokar Cobra",
+      204,
+      2,
+      "TUR"
+     ],
+     [
+      "FV101 Scorpion",
+      157,
+      2,
+      "GBR"
+     ]
+    ],
+    "gen": 2.0
+   },
+   "art": {
+    "n": 766,
+    "s": "wiki_army",
+    "c": "ت",
+    "top": [
+     [
+      "ZU-23-2",
+      350,
+      2,
+      "SUN"
+     ],
+     [
+      "OTO Melara Mod 56",
+      124,
+      2,
+      "ITA"
+     ],
+     [
+      "D-30",
+      90,
+      2,
+      "SUN"
+     ]
+    ],
+    "gen": 2.0
+   },
+   "jet": {
+    "n": 38,
+    "s": "iiss_eq",
+    "c": "ت",
+    "top": [
+     [
+      "MiG-21",
+      null,
+      null,
+      null
+     ],
+     [
+      "Su-25",
+      null,
+      null,
+      null
+     ],
+     [
+      "L-39",
+      null,
+      null,
+      null
+     ]
+    ],
+    "gen": 1.6,
+    "tpl": "af"
+   },
+   "heli": {
+    "n": 79,
+    "s": "tpl",
+    "c": "ق",
+    "top": [
+     [
+      "Mi-24",
+      null,
+      null,
+      null
+     ],
+     [
+      "Mi-8/17",
+      null,
+      null,
+      null
+     ]
+    ],
+    "gen": 2,
+    "tpl": "af"
+   },
+   "uav": {
+    "n": 6,
+    "s": "wiki_army",
+    "c": "ت",
+    "top": [
+     [
+      "Bayraktar TB2",
+      6,
+      4,
+      "TUR"
+     ]
+    ],
+    "gen": 4.0
+   },
+   "ad": {
+    "n": 194,
+    "s": "wiki_army",
+    "c": "ت",
+    "top": [
+     [
+      "9K32 Strela-2",
+      100,
+      2,
+      "SUN"
+     ],
+     [
+      "Blowpipe",
+      48,
+      2,
+      "GBR"
+     ],
+     [
+      "ZSU-23-4",
+      30,
+      2,
+      "SUN"
+     ]
+    ],
+    "gen": 2.0
+   },
+   "navy": {
+    "n": 2,
+    "s": "iiss_eq",
+    "c": "ت",
+    "top": [
+     [
+      "MEKO 360 Type H1",
+      1,
+      2,
+      "NGA"
+     ],
+     [
+      "Thunder Class",
+      1,
+      2,
+      "NGA"
+     ],
+     [
+      "Centenary Class",
+      1,
+      2,
+      "NGA"
+     ]
+    ],
+    "gen": 2.0,
+    "note": "مجموع القوائم 18 يختلف عن الإجمالي؛ الإجمالي هو المعتمد"
+   }
+  }
  },
  "ind": null,
  "pol": {

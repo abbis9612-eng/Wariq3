@@ -5,6 +5,24 @@
  "tier": "B",
  "asOf": "2026-11",
  "src": {
+  "wiki_air": {
+   "t": "Wikipedia: South African Air Force",
+   "u": "https://en.wikipedia.org/wiki/South_African_Air_Force?oldid=1384352873",
+   "y": 2026,
+   "note": "نسخة الصفحة بتاريخ السحب؛ أرقام ويكيبيديا تنراجع ويا مصادر ثانية"
+  },
+  "wiki_army": {
+   "t": "Wikipedia: List of equipment of the South African Army",
+   "u": "https://en.wikipedia.org/wiki/List_of_equipment_of_the_South_African_Army?oldid=1376173699",
+   "y": 2026,
+   "note": "نسخة الصفحة بتاريخ السحب؛ أرقام ويكيبيديا تنراجع ويا مصادر ثانية"
+  },
+  "wiki_navy": {
+   "t": "Wikipedia: List of active South African Navy ships",
+   "u": "https://en.wikipedia.org/wiki/List_of_active_South_African_Navy_ships?oldid=1368990800",
+   "y": 2026,
+   "note": "نسخة الصفحة بتاريخ السحب؛ أرقام ويكيبيديا تنراجع ويا مصادر ثانية"
+  },
   "iiss_eq": {
    "t": "Wikipedia: List of countries by level of military equipment (من IISS Military Balance ومصادر ثانية)",
    "u": "https://en.wikipedia.org/wiki/List_of_countries_by_level_of_military_equipment?oldid=1384804191",
@@ -49,6 +67,11 @@
   "tierA": {
    "t": "تقدير المصمم (تشرين الثاني 2026) لصناعة السلاح والاستقرار: SIPRI Arms Transfers Database (أكبر المصدّرين 2020–24)، SIPRI Top 100 Arms-Producing Companies، Fragile States Index 2025، أخبار 2026",
    "u": "https://www.sipri.org/databases/armstransfers",
+   "y": 2026
+  },
+  "tpl": {
+   "t": "قالب منطقة (af): موديلات شائعة ونسب تقريبية من الدبابات (مدرعات ×2.5، مدفعية ×0.9، مروحيات ×0.25) — تقدير المصمم",
+   "u": "docs/features/world-plan.md",
    "y": 2026
   }
  },
@@ -216,11 +239,365 @@
     "c": "ت"
    }
   },
-  "land": [],
+  "land": [
+   {
+    "m": "Olifant",
+    "n": 266,
+    "orig": "GBR",
+    "s": "wiki_army",
+    "c": "ت",
+    "gen": 2,
+    "cat": "tank"
+   },
+   {
+    "m": "Rooikat",
+    "n": 242,
+    "orig": "ZAF",
+    "s": "wiki_army",
+    "c": "ت",
+    "gen": 2,
+    "cat": "apc"
+   },
+   {
+    "m": "Ratel IFV",
+    "n": 1400,
+    "orig": "ZAF",
+    "s": "wiki_army",
+    "c": "ت",
+    "gen": 2,
+    "cat": "ifv"
+   },
+   {
+    "m": "Mamba MK-2",
+    "n": 330,
+    "orig": "ZAF",
+    "s": "wiki_army",
+    "c": "ت",
+    "gen": 2,
+    "cat": "mrap"
+   },
+   {
+    "m": "Mamba MK-3",
+    "n": 220,
+    "orig": "ZAF",
+    "s": "wiki_army",
+    "c": "ت",
+    "gen": 2,
+    "cat": "mrap"
+   },
+   {
+    "m": "Casspir",
+    "n": 2800,
+    "orig": "ZAF",
+    "s": "wiki_army",
+    "c": "ت",
+    "gen": 2,
+    "cat": "mrap"
+   },
+   {
+    "m": "MILKOR 4x4",
+    "n": 462,
+    "orig": "ZAF",
+    "s": "wiki_army",
+    "c": "ت",
+    "gen": 2,
+    "cat": "mrap"
+   },
+   {
+    "m": "SVI MAX 3",
+    "n": 6,
+    "orig": "ZAF",
+    "s": "wiki_army",
+    "c": "ت",
+    "gen": 2,
+    "cat": "mrap"
+   },
+   {
+    "m": "Bateleur",
+    "n": 25,
+    "orig": "ZAF",
+    "s": "wiki_army",
+    "c": "ت",
+    "gen": 2,
+    "cat": "mlrs"
+   },
+   {
+    "m": "Valkiri",
+    "n": 26,
+    "orig": "ZAF",
+    "s": "wiki_army",
+    "c": "ت",
+    "gen": 2,
+    "cat": "mlrs"
+   },
+   {
+    "m": "G6 Rhino",
+    "n": 153,
+    "orig": "ZAF",
+    "s": "wiki_army",
+    "c": "ت",
+    "gen": 2,
+    "cat": "spg"
+   },
+   {
+    "m": "G5 Leopard",
+    "n": 75,
+    "orig": "ZAF",
+    "s": "wiki_army",
+    "c": "ت",
+    "gen": 2,
+    "cat": "towed"
+   },
+   {
+    "m": "G4 Howitzer",
+    "n": 32,
+    "orig": "ISR",
+    "s": "wiki_army",
+    "c": "ت",
+    "gen": 2,
+    "cat": "towed"
+   },
+   {
+    "m": "G2 Howitzer",
+    "n": 75,
+    "orig": "GBR",
+    "s": "wiki_army",
+    "c": "ت",
+    "gen": 2,
+    "cat": "towed"
+   },
+   {
+    "m": "G1 Howitzer",
+    "n": 30,
+    "orig": "GBR",
+    "s": "wiki_army",
+    "c": "ت",
+    "gen": 2,
+    "cat": "towed"
+   }
+  ],
   "air": [],
-  "ad": [],
+  "ad": [
+   {
+    "m": "ZU-23-2 Zumlac",
+    "n": 36,
+    "orig": "SUN",
+    "s": "wiki_army",
+    "c": "ت",
+    "gen": 2,
+    "cat": "short"
+   }
+  ],
   "msl": [],
-  "navy": []
+  "navy": [
+   {
+    "m": "2015, Damen ATD Tug 2909",
+    "n": 1,
+    "orig": "ZAF",
+    "s": "wiki_navy",
+    "c": "ت",
+    "cat": "patrol",
+    "gen": 2,
+    "note": "عدد الصفوف بالقائمة"
+   },
+   {
+    "m": "2016, Damen ATD Tug 2909",
+    "n": 1,
+    "orig": "ZAF",
+    "s": "wiki_navy",
+    "c": "ت",
+    "cat": "patrol",
+    "gen": 2,
+    "note": "عدد الصفوف بالقائمة"
+   },
+   {
+    "m": "2006, Damen Stan Tug 2006 (via Farocean Marine)",
+    "n": 1,
+    "orig": "ZAF",
+    "s": "wiki_navy",
+    "c": "ت",
+    "cat": "patrol",
+    "gen": 2,
+    "note": "عدد الصفوف بالقائمة"
+   },
+   {
+    "m": "2006, Damen Stan Tug 2006",
+    "n": 1,
+    "orig": "ZAF",
+    "s": "wiki_navy",
+    "c": "ت",
+    "cat": "patrol",
+    "gen": 2,
+    "note": "عدد الصفوف بالقائمة"
+   },
+   {
+    "m": "1995 (acquired in 1997)",
+    "n": 1,
+    "orig": "ZAF",
+    "s": "wiki_navy",
+    "c": "ت",
+    "cat": "patrol",
+    "gen": 2,
+    "note": "عدد الصفوف بالقائمة"
+   }
+  ],
+  "grp": {
+   "tank": {
+    "n": 157,
+    "s": "iiss_eq",
+    "c": "ت",
+    "top": [
+     [
+      "Olifant",
+      266,
+      2,
+      "GBR"
+     ]
+    ],
+    "gen": 2.0,
+    "note": "مجموع القوائم 266 يختلف عن الإجمالي؛ الإجمالي هو المعتمد"
+   },
+   "afv": {
+    "n": 5460,
+    "s": "wiki_army",
+    "c": "ت",
+    "top": [
+     [
+      "Casspir",
+      2800,
+      2,
+      "ZAF"
+     ],
+     [
+      "Ratel IFV",
+      1400,
+      2,
+      "ZAF"
+     ],
+     [
+      "MILKOR 4x4",
+      462,
+      2,
+      "ZAF"
+     ]
+    ],
+    "gen": 2.0
+   },
+   "art": {
+    "n": 416,
+    "s": "wiki_army",
+    "c": "ت",
+    "top": [
+     [
+      "G6 Rhino",
+      153,
+      2,
+      "ZAF"
+     ],
+     [
+      "G5 Leopard",
+      75,
+      2,
+      "ZAF"
+     ],
+     [
+      "G2 Howitzer",
+      75,
+      2,
+      "GBR"
+     ]
+    ],
+    "gen": 2.0
+   },
+   "jet": {
+    "n": 26,
+    "s": "iiss_eq",
+    "c": "ت",
+    "top": [
+     [
+      "MiG-21",
+      null,
+      null,
+      null
+     ],
+     [
+      "Su-25",
+      null,
+      null,
+      null
+     ],
+     [
+      "L-39",
+      null,
+      null,
+      null
+     ]
+    ],
+    "gen": 1.6,
+    "tpl": "af"
+   },
+   "heli": {
+    "n": 39,
+    "s": "tpl",
+    "c": "ق",
+    "top": [
+     [
+      "Mi-24",
+      null,
+      null,
+      null
+     ],
+     [
+      "Mi-8/17",
+      null,
+      null,
+      null
+     ]
+    ],
+    "gen": 2,
+    "tpl": "af"
+   },
+   "ad": {
+    "n": 36,
+    "s": "wiki_army",
+    "c": "ت",
+    "top": [
+     [
+      "ZU-23-2 Zumlac",
+      36,
+      2,
+      "SUN"
+     ]
+    ],
+    "gen": 2.0
+   },
+   "navy": {
+    "n": 6,
+    "s": "iiss_eq",
+    "c": "ت",
+    "top": [
+     [
+      "2015, Damen ATD Tug 2909",
+      1,
+      2,
+      "ZAF"
+     ],
+     [
+      "2016, Damen ATD Tug 2909",
+      1,
+      2,
+      "ZAF"
+     ],
+     [
+      "2006, Damen Stan Tug 2006 (via Farocean ",
+      1,
+      2,
+      "ZAF"
+     ]
+    ],
+    "gen": 2.0
+   }
+  }
  },
  "ind": null,
  "pol": {

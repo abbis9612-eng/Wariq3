@@ -5,6 +5,12 @@
  "tier": "B",
  "asOf": "2026-11",
  "src": {
+  "wiki_army": {
+   "t": "Wikipedia: South Lebanon Army",
+   "u": "https://en.wikipedia.org/wiki/South_Lebanon_Army?oldid=1383916479",
+   "y": 2026,
+   "note": "نسخة الصفحة بتاريخ السحب؛ أرقام ويكيبيديا تنراجع ويا مصادر ثانية"
+  },
   "iiss_eq": {
    "t": "Wikipedia: List of countries by level of military equipment (من IISS Military Balance ومصادر ثانية)",
    "u": "https://en.wikipedia.org/wiki/List_of_countries_by_level_of_military_equipment?oldid=1384804191",
@@ -49,6 +55,11 @@
   "tierA": {
    "t": "تقدير المصمم (تشرين الثاني 2026) لصناعة السلاح والاستقرار: SIPRI Arms Transfers Database (أكبر المصدّرين 2020–24)، SIPRI Top 100 Arms-Producing Companies، Fragile States Index 2025، أخبار 2026",
    "u": "https://www.sipri.org/databases/armstransfers",
+   "y": 2026
+  },
+  "tpl": {
+   "t": "قالب منطقة (me): موديلات شائعة ونسب تقريبية من الدبابات (مدرعات ×2.5، مدفعية ×0.9، مروحيات ×0.25) — تقدير المصمم",
+   "u": "docs/features/world-plan.md",
    "y": 2026
   }
  },
@@ -223,7 +234,144 @@
   "air": [],
   "ad": [],
   "msl": [],
-  "navy": []
+  "navy": [],
+  "grp": {
+   "tank": {
+    "n": 204,
+    "s": "iiss_eq",
+    "c": "ت",
+    "top": [
+     [
+      "T-62",
+      null,
+      null,
+      null
+     ],
+     [
+      "T-55",
+      null,
+      null,
+      null
+     ],
+     [
+      "M60",
+      null,
+      null,
+      null
+     ]
+    ],
+    "gen": 2,
+    "tpl": "me"
+   },
+   "afv": {
+    "n": 510,
+    "s": "tpl",
+    "c": "ق",
+    "top": [
+     [
+      "BMP-1",
+      null,
+      null,
+      null
+     ],
+     [
+      "M113",
+      null,
+      null,
+      null
+     ],
+     [
+      "BTR-60",
+      null,
+      null,
+      null
+     ]
+    ],
+    "gen": 2,
+    "tpl": "me"
+   },
+   "art": {
+    "n": 184,
+    "s": "tpl",
+    "c": "ق",
+    "top": [
+     [
+      "D-30",
+      null,
+      null,
+      null
+     ],
+     [
+      "M109",
+      null,
+      null,
+      null
+     ],
+     [
+      "BM-21 Grad",
+      null,
+      null,
+      null
+     ]
+    ],
+    "gen": 2,
+    "tpl": "me"
+   },
+   "jet": {
+    "n": 9,
+    "s": "iiss_eq",
+    "c": "ت",
+    "top": [
+     [
+      "MiG-29",
+      null,
+      null,
+      null
+     ],
+     [
+      "F-5",
+      null,
+      null,
+      null
+     ],
+     [
+      "Mirage F1",
+      null,
+      null,
+      null
+     ]
+    ],
+    "gen": 2.2,
+    "tpl": "me"
+   },
+   "heli": {
+    "n": 51,
+    "s": "tpl",
+    "c": "ق",
+    "top": [
+     [
+      "Mi-24",
+      null,
+      null,
+      null
+     ],
+     [
+      "Mi-8/17",
+      null,
+      null,
+      null
+     ],
+     [
+      "Bell 412",
+      null,
+      null,
+      null
+     ]
+    ],
+    "gen": 2.2,
+    "tpl": "me"
+   }
+  }
  },
  "ind": null,
  "pol": {

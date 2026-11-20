@@ -5,6 +5,24 @@
  "tier": "C",
  "asOf": "2026-11",
  "src": {
+  "wiki_air": {
+   "t": "Wikipedia: Uruguayan Air Force",
+   "u": "https://en.wikipedia.org/wiki/Uruguayan_Air_Force?oldid=1380983972",
+   "y": 2026,
+   "note": "نسخة الصفحة بتاريخ السحب؛ أرقام ويكيبيديا تنراجع ويا مصادر ثانية"
+  },
+  "wiki_army": {
+   "t": "Wikipedia: List of equipment of the Uruguayan Army",
+   "u": "https://en.wikipedia.org/wiki/List_of_equipment_of_the_Uruguayan_Army?oldid=1381267068",
+   "y": 2026,
+   "note": "نسخة الصفحة بتاريخ السحب؛ أرقام ويكيبيديا تنراجع ويا مصادر ثانية"
+  },
+  "wiki_navy": {
+   "t": "Wikipedia: National Navy of Uruguay",
+   "u": "https://en.wikipedia.org/wiki/National_Navy_of_Uruguay?oldid=1385000367",
+   "y": 2026,
+   "note": "نسخة الصفحة بتاريخ السحب؛ أرقام ويكيبيديا تنراجع ويا مصادر ثانية"
+  },
   "iiss_eq": {
    "t": "Wikipedia: List of countries by level of military equipment (من IISS Military Balance ومصادر ثانية)",
    "u": "https://en.wikipedia.org/wiki/List_of_countries_by_level_of_military_equipment?oldid=1384804191",
@@ -49,6 +67,11 @@
   "tierA": {
    "t": "تقدير المصمم (تشرين الثاني 2026) لصناعة السلاح والاستقرار: SIPRI Arms Transfers Database (أكبر المصدّرين 2020–24)، SIPRI Top 100 Arms-Producing Companies، Fragile States Index 2025، أخبار 2026",
    "u": "https://www.sipri.org/databases/armstransfers",
+   "y": 2026
+  },
+  "tpl": {
+   "t": "قالب منطقة (la): موديلات شائعة ونسب تقريبية من الدبابات (مدرعات ×2.5، مدفعية ×0.9، مروحيات ×0.25) — تقدير المصمم",
+   "u": "docs/features/world-plan.md",
    "y": 2026
   }
  },
@@ -216,11 +239,511 @@
     "c": "ت"
    }
   },
-  "land": [],
-  "air": [],
-  "ad": [],
+  "land": [
+   {
+    "m": "M41 Walker Bulldog",
+    "n": 47,
+    "orig": "USA",
+    "s": "wiki_army",
+    "c": "ت",
+    "note": "22 M41A1UR 25 M41C",
+    "gen": 2,
+    "cat": "tank"
+   },
+   {
+    "m": "Ti-67",
+    "n": 15,
+    "orig": "SUN",
+    "s": "wiki_army",
+    "c": "ت",
+    "note": "Ex-Israeli",
+    "gen": 2,
+    "cat": "tank"
+   },
+   {
+    "m": "BVP-1",
+    "n": 18,
+    "orig": "SUN",
+    "s": "wiki_army",
+    "c": "ت",
+    "gen": 2,
+    "cat": "ifv"
+   },
+   {
+    "m": "EE-3 Jararaca",
+    "n": 16,
+    "orig": "BRA",
+    "s": "wiki_army",
+    "c": "ت",
+    "gen": 2,
+    "cat": "apc"
+   },
+   {
+    "m": "Katmerciler Hızır",
+    "n": 1,
+    "orig": "TUR",
+    "s": "wiki_army",
+    "c": "ت",
+    "gen": 2,
+    "cat": "mrap"
+   },
+   {
+    "m": "Oshkosh M-ATV",
+    "n": 6,
+    "orig": "USA",
+    "s": "wiki_army",
+    "c": "ت",
+    "gen": 2,
+    "cat": "mrap"
+   },
+   {
+    "m": "Mamba APC",
+    "n": 13,
+    "orig": "ZAF",
+    "s": "wiki_army",
+    "c": "ت",
+    "gen": 2,
+    "cat": "mrap"
+   },
+   {
+    "m": "EE-9 Cascavel",
+    "n": 15,
+    "orig": "BRA",
+    "s": "wiki_army",
+    "c": "ت",
+    "note": "Delivered from Brazil in 1985.",
+    "gen": 2,
+    "cat": "apc"
+   },
+   {
+    "m": "2S1 Gvozdika",
+    "n": 6,
+    "orig": "SUN",
+    "s": "wiki_army",
+    "c": "ت",
+    "note": "Delivered from Czech Republic in 1998.",
+    "gen": 2,
+    "cat": "spg"
+   },
+   {
+    "m": "M108AP",
+    "n": 10,
+    "orig": "USA",
+    "s": "wiki_army",
+    "c": "ت",
+    "note": "Supplied from Brazil",
+    "gen": 2,
+    "cat": "spg"
+   },
+   {
+    "m": "RM-70",
+    "n": 4,
+    "orig": "CSK",
+    "s": "wiki_army",
+    "c": "ت",
+    "gen": 2,
+    "cat": "mlrs"
+   },
+   {
+    "m": "M101",
+    "n": 60,
+    "orig": "USA",
+    "s": "wiki_army",
+    "c": "ت",
+    "note": "Delivered from South Korea in 1981.",
+    "gen": 2,
+    "cat": "towed"
+   },
+   {
+    "m": "M114A2",
+    "n": 8,
+    "orig": "USA",
+    "s": "wiki_army",
+    "c": "ت",
+    "note": "Delivered from South Korea in 1981.",
+    "gen": 2,
+    "cat": "towed"
+   },
+   {
+    "m": "M102",
+    "n": 15,
+    "orig": "USA",
+    "s": "wiki_army",
+    "c": "ت",
+    "note": "Delivered from United States in 1972.",
+    "gen": 2,
+    "cat": "towed"
+   },
+   {
+    "m": "MILAN",
+    "n": 438,
+    "orig": "FRA",
+    "s": "wiki_army",
+    "c": "ت",
+    "gen": 2,
+    "cat": "atgm"
+   }
+  ],
+  "air": [
+   {
+    "m": "A-29 Super Tucano",
+    "n": 2,
+    "orig": "BRA",
+    "s": "wiki_air",
+    "c": "ت",
+    "note": "4 more on order",
+    "gen": 2,
+    "cat": "attack"
+   },
+   {
+    "m": "KC-130 Hercules (KC-130H)",
+    "n": 2,
+    "orig": "USA",
+    "s": "wiki_air",
+    "c": "ت",
+    "note": "Formerly operated by Spain",
+    "gen": 2,
+    "cat": "transport"
+   },
+   {
+    "m": "CASA C-212 (200 / 300)",
+    "n": 5,
+    "orig": "ESP",
+    "s": "wiki_air",
+    "c": "ت",
+    "note": "Four provide maritime patrol",
+    "gen": 2,
+    "cat": "transport"
+   },
+   {
+    "m": "Beechcraft Baron (55 / 58)",
+    "n": 1,
+    "orig": "USA",
+    "s": "wiki_air",
+    "c": "ت",
+    "gen": 2,
+    "cat": "transport"
+   },
+   {
+    "m": "Cessna 206 (U-206H)",
+    "n": 6,
+    "orig": "USA",
+    "s": "wiki_air",
+    "c": "ت",
+    "gen": 2,
+    "cat": "transport"
+   },
+   {
+    "m": "Embraer EMB 120",
+    "n": 2,
+    "orig": "BRA",
+    "s": "wiki_air",
+    "c": "ت",
+    "note": "Presidential aircraft",
+    "gen": 2,
+    "cat": "transport"
+   },
+   {
+    "m": "Embraer EMB 110",
+    "n": 1,
+    "orig": "BRA",
+    "s": "wiki_air",
+    "c": "ت",
+    "note": "Remains in storage awaiting major overhaul",
+    "gen": 2,
+    "cat": "transport"
+   },
+   {
+    "m": "Bell 212",
+    "n": 5,
+    "orig": "USA",
+    "s": "wiki_air",
+    "c": "ت",
+    "gen": 2,
+    "cat": "heli_util"
+   },
+   {
+    "m": "Bell UH-1 (UH-1H)",
+    "n": 3,
+    "orig": "USA",
+    "s": "wiki_air",
+    "c": "ت",
+    "gen": 2,
+    "cat": "heli_util"
+   },
+   {
+    "m": "Eurocopter AS365",
+    "n": 2,
+    "orig": "FRA",
+    "s": "wiki_air",
+    "c": "ت",
+    "note": "Also used for presidential transport",
+    "gen": 2,
+    "cat": "heli_util"
+   },
+   {
+    "m": "Bell 206",
+    "n": 3,
+    "orig": "USA",
+    "s": "wiki_air",
+    "c": "ت",
+    "gen": 2,
+    "cat": "heli_util"
+   },
+   {
+    "m": "Pilatus PC-7",
+    "n": 5,
+    "orig": "CHE",
+    "s": "wiki_air",
+    "c": "ت",
+    "gen": 2,
+    "cat": "trainer"
+   },
+   {
+    "m": "SIAI-Marchetti SF.260",
+    "n": 6,
+    "orig": "ITA",
+    "s": "wiki_air",
+    "c": "ت",
+    "gen": 2,
+    "cat": "trainer"
+   }
+  ],
+  "ad": [
+   {
+    "m": "Bofors L/60",
+    "n": 8,
+    "orig": "SWE",
+    "s": "wiki_army",
+    "c": "ت",
+    "gen": 2,
+    "cat": "short"
+   },
+   {
+    "m": "M167 VADS",
+    "n": 6,
+    "orig": "USA",
+    "s": "wiki_army",
+    "c": "ت",
+    "gen": 2,
+    "cat": "short"
+   }
+  ],
   "msl": [],
-  "navy": []
+  "navy": [
+   {
+    "m": "Chamsuri (C)",
+    "n": 1,
+    "orig": "URY",
+    "s": "wiki_navy",
+    "c": "ت",
+    "cat": "patrol",
+    "gen": 2,
+    "note": "عدد الصفوف بالقائمة"
+   },
+   {
+    "m": "Cape (C)",
+    "n": 1,
+    "orig": "URY",
+    "s": "wiki_navy",
+    "c": "ت",
+    "cat": "patrol",
+    "gen": 2,
+    "note": "عدد الصفوف بالقائمة"
+   },
+   {
+    "m": "Marine Protector (C)",
+    "n": 3,
+    "orig": "URY",
+    "s": "wiki_navy",
+    "c": "ت",
+    "cat": "patrol",
+    "gen": 3,
+    "note": "عدد الصفوف بالقائمة"
+   },
+   {
+    "m": "Type 270",
+    "n": 1,
+    "orig": "URY",
+    "s": "wiki_navy",
+    "c": "ت",
+    "cat": "patrol",
+    "gen": 2,
+    "note": "عدد الصفوف بالقائمة"
+   },
+   {
+    "m": "Beechcraft Super King Air (King Air 200)",
+    "n": 2,
+    "orig": "USA",
+    "s": "wiki_navy",
+    "c": "ت",
+    "gen": 2,
+    "cat": "patrol"
+   }
+  ],
+  "grp": {
+   "tank": {
+    "n": 15,
+    "s": "iiss_eq",
+    "c": "ت",
+    "top": [
+     [
+      "M41 Walker Bulldog",
+      47,
+      2,
+      "USA"
+     ],
+     [
+      "Ti-67",
+      15,
+      2,
+      "SUN"
+     ]
+    ],
+    "gen": 2.0,
+    "note": "مجموع القوائم 62 يختلف عن الإجمالي؛ الإجمالي هو المعتمد"
+   },
+   "afv": {
+    "n": 69,
+    "s": "wiki_army",
+    "c": "ت",
+    "top": [
+     [
+      "BVP-1",
+      18,
+      2,
+      "SUN"
+     ],
+     [
+      "EE-3 Jararaca",
+      16,
+      2,
+      "BRA"
+     ],
+     [
+      "EE-9 Cascavel",
+      15,
+      2,
+      "BRA"
+     ]
+    ],
+    "gen": 2.0
+   },
+   "art": {
+    "n": 103,
+    "s": "wiki_army",
+    "c": "ت",
+    "top": [
+     [
+      "M101",
+      60,
+      2,
+      "USA"
+     ],
+     [
+      "M102",
+      15,
+      2,
+      "USA"
+     ],
+     [
+      "M108AP",
+      10,
+      2,
+      "USA"
+     ]
+    ],
+    "gen": 2.0
+   },
+   "jet": {
+    "n": 7,
+    "s": "iiss_eq",
+    "c": "ت",
+    "top": [
+     [
+      "A-29 Super Tucano",
+      2,
+      2,
+      "BRA"
+     ]
+    ],
+    "gen": 2.0,
+    "note": "مجموع القوائم 2 يختلف عن الإجمالي؛ الإجمالي هو المعتمد"
+   },
+   "heli": {
+    "n": 13,
+    "s": "wiki_air",
+    "c": "ت",
+    "top": [
+     [
+      "Bell 212",
+      5,
+      2,
+      "USA"
+     ],
+     [
+      "Bell UH-1 (UH-1H)",
+      3,
+      2,
+      "USA"
+     ],
+     [
+      "Bell 206",
+      3,
+      2,
+      "USA"
+     ]
+    ],
+    "gen": 2.0
+   },
+   "ad": {
+    "n": 14,
+    "s": "wiki_army",
+    "c": "ت",
+    "top": [
+     [
+      "Bofors L/60",
+      8,
+      2,
+      "SWE"
+     ],
+     [
+      "M167 VADS",
+      6,
+      2,
+      "USA"
+     ]
+    ],
+    "gen": 2.0
+   },
+   "navy": {
+    "n": 2,
+    "s": "iiss_eq",
+    "c": "ت",
+    "top": [
+     [
+      "Marine Protector (C)",
+      3,
+      3,
+      "URY"
+     ],
+     [
+      "Beechcraft Super King Air (King Air 200)",
+      2,
+      2,
+      "USA"
+     ],
+     [
+      "Chamsuri (C)",
+      1,
+      2,
+      "URY"
+     ]
+    ],
+    "gen": 2.4,
+    "note": "مجموع القوائم 8 يختلف عن الإجمالي؛ الإجمالي هو المعتمد"
+   }
+  }
  },
  "ind": null,
  "pol": {

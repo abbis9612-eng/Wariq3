@@ -5,6 +5,12 @@
  "tier": "C",
  "asOf": "2026-11",
  "src": {
+  "wiki_army": {
+   "t": "Wikipedia: Armed Forces of the Republic of Ivory Coast",
+   "u": "https://en.wikipedia.org/wiki/Armed_Forces_of_the_Republic_of_Ivory_Coast?oldid=1378403135",
+   "y": 2026,
+   "note": "نسخة الصفحة بتاريخ السحب؛ أرقام ويكيبيديا تنراجع ويا مصادر ثانية"
+  },
   "iiss_eq": {
    "t": "Wikipedia: List of countries by level of military equipment (من IISS Military Balance ومصادر ثانية)",
    "u": "https://en.wikipedia.org/wiki/List_of_countries_by_level_of_military_equipment?oldid=1384804191",
@@ -49,6 +55,11 @@
   "tierA": {
    "t": "تقدير المصمم (تشرين الثاني 2026) لصناعة السلاح والاستقرار: SIPRI Arms Transfers Database (أكبر المصدّرين 2020–24)، SIPRI Top 100 Arms-Producing Companies، Fragile States Index 2025، أخبار 2026",
    "u": "https://www.sipri.org/databases/armstransfers",
+   "y": 2026
+  },
+  "tpl": {
+   "t": "قالب منطقة (af): موديلات شائعة ونسب تقريبية من الدبابات (مدرعات ×2.5، مدفعية ×0.9، مروحيات ×0.25) — تقدير المصمم",
+   "u": "docs/features/world-plan.md",
    "y": 2026
   }
  },
@@ -220,10 +231,156 @@
    }
   },
   "land": [],
-  "air": [],
+  "air": [
+   {
+    "m": "Mil Mi-8",
+    "n": 1,
+    "orig": "SUN",
+    "s": "wiki_army",
+    "c": "ت",
+    "gen": 2,
+    "cat": "heli_util"
+   },
+   {
+    "m": "Mil Mi-24",
+    "n": 5,
+    "orig": "SUN",
+    "s": "wiki_army",
+    "c": "ت",
+    "gen": 3,
+    "cat": "heli_attack"
+   },
+   {
+    "m": "Mil Mi-17",
+    "n": 4,
+    "orig": "SUN",
+    "s": "wiki_army",
+    "c": "ت",
+    "gen": 2,
+    "cat": "heli_util"
+   },
+   {
+    "m": "AS350",
+    "n": 3,
+    "orig": "FRA",
+    "s": "wiki_army",
+    "c": "ت",
+    "gen": 2,
+    "cat": "heli_util"
+   }
+  ],
   "ad": [],
   "msl": [],
-  "navy": []
+  "navy": [],
+  "grp": {
+   "tank": {
+    "n": 10,
+    "s": "iiss_eq",
+    "c": "ت",
+    "top": [
+     [
+      "T-55",
+      null,
+      null,
+      null
+     ],
+     [
+      "T-54",
+      null,
+      null,
+      null
+     ],
+     [
+      "Type 59",
+      null,
+      null,
+      null
+     ]
+    ],
+    "gen": 1.4,
+    "tpl": "af"
+   },
+   "afv": {
+    "n": 25,
+    "s": "tpl",
+    "c": "ق",
+    "top": [
+     [
+      "BTR-60",
+      null,
+      null,
+      null
+     ],
+     [
+      "BRDM-2",
+      null,
+      null,
+      null
+     ],
+     [
+      "Panhard AML",
+      null,
+      null,
+      null
+     ]
+    ],
+    "gen": 1.6,
+    "tpl": "af"
+   },
+   "art": {
+    "n": 9,
+    "s": "tpl",
+    "c": "ق",
+    "top": [
+     [
+      "D-30",
+      null,
+      null,
+      null
+     ],
+     [
+      "BM-21 Grad",
+      null,
+      null,
+      null
+     ],
+     [
+      "M-46",
+      null,
+      null,
+      null
+     ]
+    ],
+    "gen": 1.8,
+    "tpl": "af"
+   },
+   "heli": {
+    "n": 13,
+    "s": "wiki_army",
+    "c": "ت",
+    "top": [
+     [
+      "Mil Mi-24",
+      5,
+      3,
+      "SUN"
+     ],
+     [
+      "Mil Mi-17",
+      4,
+      2,
+      "SUN"
+     ],
+     [
+      "AS350",
+      3,
+      2,
+      "FRA"
+     ]
+    ],
+    "gen": 2.4
+   }
+  }
  },
  "ind": null,
  "pol": {

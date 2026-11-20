@@ -7,7 +7,7 @@ const ids = new Set(list.map(c => c.id)), tierOf = Object.fromEntries(list.map(c
 let fails = 0, warns = 0; const bad = m => { console.log('❌ ' + m); fails++; }, warn = m => { if (warns++ < 40) console.log('⚠️ ' + m); };
 const files = fs.readdirSync(new URL('countries/', root)).filter(f => /^[A-Z]{3}\.json$/.test(f));
 const KNOWN = new Set([...ids, 'SUN', 'CSK', 'YUG', 'GDR', 'EU', 'INT']);   // منشأ قديم أو مشترك (سوفيتي، تشيكوسلوفاكي، يوغسلافي...)
-let nums = 0;
+let nums = 0, tplN = 0;
 for (const f of files) {
   const id = f.slice(0, 3); let d; try { d = JSON.parse(fs.readFileSync(new URL('countries/' + f, root), 'utf8')); } catch (e) { bad(`${f}: JSON خربان ${e.message}`); continue; }
   if (!ids.has(id) || d.id !== id) bad(`${f}: الرمز مو بالقائمة أو ما يطابق`);
@@ -27,10 +27,15 @@ for (const f of files) {
   if (g && mb && mb > g * .4) bad(`${id}: ميزانية الجيش ${mb} أكبر من 40٪ من الناتج ${g}`);
   if (pop && act && act > pop * .06) bad(`${id}: الجيش العامل ${act} أكبر من 6٪ من السكان`);
   for (const [o, v] of Object.entries(d.rel || {})) { if (!ids.has(o)) bad(`${id}: علاقة ويا «${o}» مو بالقائمة`); if (!(v >= -100 && v <= 100)) bad(`${id}: علاقة ${o} = ${v}`); }
+  // W4: ملخص الفئات — الجيش اللي إله دبابات أو طيارات لازم ملخصه موجود بجيل معقول، ودرجة ب لازم تكون موديلاتها من قوائم (مو قالب)
+  const G = d.mil?.grp || {}, sm = d.mil?.sum || {};
+  if ((sm.tanks?.v || 0) > 0 && !G.tank) bad(`${id}: عدها دبابات بس ما إلها ملخص فئة`);
+  for (const [g, o] of Object.entries(G)) { if (o.gen != null && !(o.gen >= 1 && o.gen <= 5)) bad(`${id} grp.${g}: جيل ${o.gen}`); if (o.tpl) { tplN++; if (tierOf[id] !== 'C') warn(`${id} (درجة ${tierOf[id]}) grp.${g}: قالب منطقة بدل قائمة حقيقية`); } }
   if (tierOf[id] === 'A') for (const k of ['gov', 'pop', 'eco', 'mil', 'ind', 'pol', 'rel']) if (!d[k]) bad(`${id} (درجة أ): القسم «${k}» ناقص`);
 }
 const have = new Set(files.map(f => f.slice(0, 3)));
 const cov = t => `${list.filter(c => c.tier === t && have.has(c.id)).length}/${list.filter(c => c.tier === t).length}`;
+console.log(`فئات من قالب منطقة: ${tplN}`);
 console.log(`الدول ${list.length} · ملفات ${files.length} · أرقام ${nums} · التغطية: أ ${cov('A')}، ب ${cov('B')}، ج ${cov('C')}${warns ? ` · تحذيرات ${warns}` : ''}`);
 for (const w of ['blocs', 'nuclear', 'sanctions', 'conflicts']) if (!fs.existsSync(new URL(`world/${w}.json`, root))) console.log(`⏳ data/world/${w}.json لسه ما انعمل`);
 console.log(fails ? `\n❌ ${fails} مشكلة` : '\n✅ البيانات الموجودة سليمة'); process.exit(fails ? 1 : 0);

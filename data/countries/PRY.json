@@ -5,6 +5,24 @@
  "tier": "C",
  "asOf": "2026-11",
  "src": {
+  "wiki_air": {
+   "t": "Wikipedia: Paraguayan Air Force",
+   "u": "https://en.wikipedia.org/wiki/Paraguayan_Air_Force?oldid=1361291008",
+   "y": 2026,
+   "note": "نسخة الصفحة بتاريخ السحب؛ أرقام ويكيبيديا تنراجع ويا مصادر ثانية"
+  },
+  "wiki_army": {
+   "t": "Wikipedia: Paraguayan Army",
+   "u": "https://en.wikipedia.org/wiki/Paraguayan_Army?oldid=1386675492",
+   "y": 2026,
+   "note": "نسخة الصفحة بتاريخ السحب؛ أرقام ويكيبيديا تنراجع ويا مصادر ثانية"
+  },
+  "wiki_navy": {
+   "t": "Wikipedia: Paraguayan Navy",
+   "u": "https://en.wikipedia.org/wiki/Paraguayan_Navy?oldid=1363630784",
+   "y": 2026,
+   "note": "نسخة الصفحة بتاريخ السحب؛ أرقام ويكيبيديا تنراجع ويا مصادر ثانية"
+  },
   "iiss_eq": {
    "t": "Wikipedia: List of countries by level of military equipment (من IISS Military Balance ومصادر ثانية)",
    "u": "https://en.wikipedia.org/wiki/List_of_countries_by_level_of_military_equipment?oldid=1384804191",
@@ -49,6 +67,11 @@
   "tierA": {
    "t": "تقدير المصمم (تشرين الثاني 2026) لصناعة السلاح والاستقرار: SIPRI Arms Transfers Database (أكبر المصدّرين 2020–24)، SIPRI Top 100 Arms-Producing Companies، Fragile States Index 2025، أخبار 2026",
    "u": "https://www.sipri.org/databases/armstransfers",
+   "y": 2026
+  },
+  "tpl": {
+   "t": "قالب منطقة (la): موديلات شائعة ونسب تقريبية من الدبابات (مدرعات ×2.5، مدفعية ×0.9، مروحيات ×0.25) — تقدير المصمم",
+   "u": "docs/features/world-plan.md",
    "y": 2026
   }
  },
@@ -216,11 +239,430 @@
     "c": "ت"
    }
   },
-  "land": [],
-  "air": [],
-  "ad": [],
+  "land": [
+   {
+    "m": "M3 Stuart",
+    "n": 10,
+    "orig": "USA",
+    "s": "wiki_army",
+    "c": "ت",
+    "note": "5 M3 and 5 M3A1",
+    "gen": 2,
+    "cat": "tank"
+   },
+   {
+    "m": "M8 Greyhound",
+    "n": 12,
+    "orig": "USA",
+    "s": "wiki_army",
+    "c": "ت",
+    "gen": 2,
+    "cat": "apc"
+   },
+   {
+    "m": "EE-9 Cascavel",
+    "n": 30,
+    "orig": "BRA",
+    "s": "wiki_army",
+    "c": "ت",
+    "note": "Upgraded in Brazil in 2008",
+    "gen": 2,
+    "cat": "apc"
+   },
+   {
+    "m": "M101",
+    "n": 26,
+    "orig": "USA",
+    "s": "wiki_army",
+    "c": "ت",
+    "gen": 2,
+    "cat": "towed"
+   },
+   {
+    "m": "QF-25",
+    "n": 12,
+    "orig": "GBR",
+    "s": "wiki_army",
+    "c": "ت",
+    "gen": 2,
+    "cat": "towed"
+   },
+   {
+    "m": "M108AP",
+    "n": 6,
+    "orig": "USA",
+    "s": "wiki_army",
+    "c": "ت",
+    "note": "Supplied from Brazil",
+    "gen": 2,
+    "cat": "spg"
+   }
+  ],
+  "air": [
+   {
+    "m": "EMB 314 Super Tucano (AT-29)",
+    "n": 6,
+    "orig": "BRA",
+    "s": "wiki_air",
+    "c": "ت",
+    "note": "Recently acquired, as of 2025",
+    "gen": 2,
+    "cat": "attack"
+   },
+   {
+    "m": "EMB 312 Tucano (AT-27)",
+    "n": 6,
+    "orig": "BRA",
+    "s": "wiki_air",
+    "c": "ت",
+    "note": "Modernized by Embraer in 2024",
+    "gen": 2,
+    "cat": "attack"
+   },
+   {
+    "m": "Diamond DA62MMP (D62)",
+    "n": 1,
+    "orig": "AUT",
+    "s": "wiki_air",
+    "c": "ت",
+    "note": "SAR",
+    "gen": 2,
+    "cat": "isr"
+   },
+   {
+    "m": "Citation Jet Sovereign (C680)",
+    "n": 1,
+    "orig": "USA",
+    "s": "wiki_air",
+    "c": "ت",
+    "note": "Government transport",
+    "gen": 2,
+    "cat": "transport"
+   },
+   {
+    "m": "Beechcraft Super King Air (B350 / C90)",
+    "n": 2,
+    "orig": "USA",
+    "s": "wiki_air",
+    "c": "ت",
+    "note": "Military transport / Surveillance",
+    "gen": 2,
+    "cat": "transport"
+   },
+   {
+    "m": "Airbus Defense CASA C-212 (212-200 212-400)",
+    "n": 3,
+    "orig": "ESP",
+    "s": "wiki_air",
+    "c": "ت",
+    "note": "Paratrooper transport",
+    "gen": 2,
+    "cat": "transport"
+   },
+   {
+    "m": "De Havilland DHC-6 Twin Otter (DHC6)",
+    "n": 1,
+    "orig": "CAN",
+    "s": "wiki_air",
+    "c": "ت",
+    "note": "Multi-role",
+    "gen": 2,
+    "cat": "transport"
+   },
+   {
+    "m": "Cessna 208 Grand Caravan (C208)",
+    "n": 5,
+    "orig": "USA",
+    "s": "wiki_air",
+    "c": "ت",
+    "note": "Multi-role",
+    "gen": 2,
+    "cat": "transport"
+   },
+   {
+    "m": "Enaer T-35 Pillan",
+    "n": 12,
+    "orig": "CHL",
+    "s": "wiki_air",
+    "c": "ت",
+    "note": "Modernized in 2023",
+    "gen": 2,
+    "cat": "trainer"
+   },
+   {
+    "m": "Beechcraft Baron B58",
+    "n": 2,
+    "orig": "USA",
+    "s": "wiki_air",
+    "c": "ت",
+    "note": "Trainer",
+    "gen": 2,
+    "cat": "trainer"
+   },
+   {
+    "m": "Aerovehicles PY (Mbopy)",
+    "n": 1,
+    "orig": "PRY",
+    "s": "wiki_air",
+    "c": "ت",
+    "note": "Made in Paraguay",
+    "gen": 2,
+    "cat": "uav_isr"
+   },
+   {
+    "m": "Bell UH-1 Huey (UH-1H)",
+    "n": 12,
+    "orig": "USA",
+    "s": "wiki_air",
+    "c": "ت",
+    "note": "Multi-role",
+    "gen": 2,
+    "cat": "heli_util"
+   },
+   {
+    "m": "Airbus Helicopter H125 (AS350)",
+    "n": 4,
+    "orig": "FRA",
+    "s": "wiki_air",
+    "c": "ت",
+    "note": "Light attack",
+    "gen": 2,
+    "cat": "heli_attack"
+   },
+   {
+    "m": "Bell 427 (B427)",
+    "n": 1,
+    "orig": "USA",
+    "s": "wiki_air",
+    "c": "ت",
+    "note": "Government transport",
+    "gen": 2,
+    "cat": "heli_util"
+   },
+   {
+    "m": "Bell 407 Gxi (B407)",
+    "n": 1,
+    "orig": "USA",
+    "s": "wiki_air",
+    "c": "ت",
+    "note": "Government transport",
+    "gen": 2,
+    "cat": "heli_util"
+   }
+  ],
+  "ad": [
+   {
+    "m": "Bofors L/60",
+    "n": 16,
+    "orig": "SWE",
+    "s": "wiki_army",
+    "c": "ت",
+    "gen": 2,
+    "cat": "short"
+   }
+  ],
   "msl": [],
-  "navy": []
+  "navy": [
+   {
+    "m": "Cessna 150",
+    "n": 2,
+    "orig": "USA",
+    "s": "wiki_navy",
+    "c": "ت",
+    "gen": 2,
+    "cat": "sub_nuc"
+   },
+   {
+    "m": "Cessna 210",
+    "n": 1,
+    "orig": "USA",
+    "s": "wiki_navy",
+    "c": "ت",
+    "gen": 2,
+    "cat": "sub_nuc"
+   },
+   {
+    "m": "Cessna 310",
+    "n": 2,
+    "orig": "USA",
+    "s": "wiki_navy",
+    "c": "ت",
+    "gen": 2,
+    "cat": "sub_nuc"
+   },
+   {
+    "m": "Cessna 401",
+    "n": 1,
+    "orig": "USA",
+    "s": "wiki_navy",
+    "c": "ت",
+    "gen": 2,
+    "cat": "sub_nuc"
+   }
+  ],
+  "grp": {
+   "tank": {
+    "n": 0,
+    "s": "iiss_eq",
+    "c": "ت",
+    "top": [
+     [
+      "M3 Stuart",
+      10,
+      2,
+      "USA"
+     ]
+    ],
+    "gen": 2.0
+   },
+   "afv": {
+    "n": 42,
+    "s": "wiki_army",
+    "c": "ت",
+    "top": [
+     [
+      "EE-9 Cascavel",
+      30,
+      2,
+      "BRA"
+     ],
+     [
+      "M8 Greyhound",
+      12,
+      2,
+      "USA"
+     ]
+    ],
+    "gen": 2.0
+   },
+   "art": {
+    "n": 44,
+    "s": "wiki_army",
+    "c": "ت",
+    "top": [
+     [
+      "M101",
+      26,
+      2,
+      "USA"
+     ],
+     [
+      "QF-25",
+      12,
+      2,
+      "GBR"
+     ],
+     [
+      "M108AP",
+      6,
+      2,
+      "USA"
+     ]
+    ],
+    "gen": 2.0
+   },
+   "jet": {
+    "n": 6,
+    "s": "iiss_eq",
+    "c": "ت",
+    "top": [
+     [
+      "EMB 314 Super Tucano (AT-29)",
+      6,
+      2,
+      "BRA"
+     ],
+     [
+      "EMB 312 Tucano (AT-27)",
+      6,
+      2,
+      "BRA"
+     ]
+    ],
+    "gen": 2.0,
+    "note": "مجموع القوائم 12 يختلف عن الإجمالي؛ الإجمالي هو المعتمد"
+   },
+   "heli": {
+    "n": 18,
+    "s": "wiki_air",
+    "c": "ت",
+    "top": [
+     [
+      "Bell UH-1 Huey (UH-1H)",
+      12,
+      2,
+      "USA"
+     ],
+     [
+      "Airbus Helicopter H125 (AS350)",
+      4,
+      2,
+      "FRA"
+     ],
+     [
+      "Bell 427 (B427)",
+      1,
+      2,
+      "USA"
+     ]
+    ],
+    "gen": 2.0
+   },
+   "uav": {
+    "n": 1,
+    "s": "wiki_air",
+    "c": "ت",
+    "top": [
+     [
+      "Aerovehicles PY (Mbopy)",
+      1,
+      2,
+      "PRY"
+     ]
+    ],
+    "gen": 2.0
+   },
+   "ad": {
+    "n": 16,
+    "s": "wiki_army",
+    "c": "ت",
+    "top": [
+     [
+      "Bofors L/60",
+      16,
+      2,
+      "SWE"
+     ]
+    ],
+    "gen": 2.0
+   },
+   "navy": {
+    "n": 6,
+    "s": "wiki_navy",
+    "c": "ت",
+    "top": [
+     [
+      "Cessna 150",
+      2,
+      2,
+      "USA"
+     ],
+     [
+      "Cessna 310",
+      2,
+      2,
+      "USA"
+     ],
+     [
+      "Cessna 210",
+      1,
+      2,
+      "USA"
+     ]
+    ],
+    "gen": 2.0
+   }
+  }
  },
  "ind": null,
  "pol": {

@@ -5,6 +5,24 @@
  "tier": "B",
  "asOf": "2026-11",
  "src": {
+  "wiki_air": {
+   "t": "Wikipedia: Croatian Air Force",
+   "u": "https://en.wikipedia.org/wiki/Croatian_Air_Force?oldid=1378372432",
+   "y": 2026,
+   "note": "نسخة الصفحة بتاريخ السحب؛ أرقام ويكيبيديا تنراجع ويا مصادر ثانية"
+  },
+  "wiki_army": {
+   "t": "Wikipedia: List of equipment of the Croatian Army",
+   "u": "https://en.wikipedia.org/wiki/List_of_equipment_of_the_Croatian_Army?oldid=1386210047",
+   "y": 2026,
+   "note": "نسخة الصفحة بتاريخ السحب؛ أرقام ويكيبيديا تنراجع ويا مصادر ثانية"
+  },
+  "wiki_navy": {
+   "t": "Wikipedia: List of active Croatian Navy ships",
+   "u": "https://en.wikipedia.org/wiki/List_of_active_Croatian_Navy_ships?oldid=1385814884",
+   "y": 2026,
+   "note": "نسخة الصفحة بتاريخ السحب؛ أرقام ويكيبيديا تنراجع ويا مصادر ثانية"
+  },
   "iiss_eq": {
    "t": "Wikipedia: List of countries by level of military equipment (من IISS Military Balance ومصادر ثانية)",
    "u": "https://en.wikipedia.org/wiki/List_of_countries_by_level_of_military_equipment?oldid=1384804191",
@@ -49,6 +67,11 @@
   "tierA": {
    "t": "تقدير المصمم (تشرين الثاني 2026) لصناعة السلاح والاستقرار: SIPRI Arms Transfers Database (أكبر المصدّرين 2020–24)، SIPRI Top 100 Arms-Producing Companies، Fragile States Index 2025، أخبار 2026",
    "u": "https://www.sipri.org/databases/armstransfers",
+   "y": 2026
+  },
+  "tpl": {
+   "t": "قالب منطقة (eu): موديلات شائعة ونسب تقريبية من الدبابات (مدرعات ×2.5، مدفعية ×0.9، مروحيات ×0.25) — تقدير المصمم",
+   "u": "docs/features/world-plan.md",
    "y": 2026
   }
  },
@@ -219,11 +242,520 @@
     "c": "ت"
    }
   },
-  "land": [],
-  "air": [],
-  "ad": [],
+  "land": [
+   {
+    "m": "M116 howitzer",
+    "n": 12,
+    "orig": "USA",
+    "s": "wiki_army",
+    "c": "ت",
+    "note": "Used primarily as ceremonial cannons. Range: ≤ 8.8 km (5.5 mi)",
+    "gen": 2,
+    "cat": "towed"
+   },
+   {
+    "m": "D-30 RH M94",
+    "n": 54,
+    "orig": "SUN",
+    "s": "wiki_army",
+    "c": "ت",
+    "note": "Some of the D-30 were transferred to Ukraine (with M1954 (M-46)). Variant modified by Croatia (new muzzle brake, redesigned trail, improved ",
+    "gen": 2,
+    "cat": "towed"
+   },
+   {
+    "m": "PzH 2000",
+    "n": 16,
+    "orig": "DEU",
+    "s": "wiki_army",
+    "c": "ت",
+    "note": "System purchased second-hand from the German Army (€55 million). Among the 16 howitzers: 12 in service and were modernised 1 used for traini",
+    "gen": 2,
+    "cat": "spg"
+   },
+   {
+    "m": "2S1 Gvozdika",
+    "n": 8,
+    "orig": "SUN",
+    "s": "wiki_army",
+    "c": "ت",
+    "note": "To be replaced by the Caesar Mk2 artillery system.",
+    "gen": 2,
+    "cat": "spg"
+   },
+   {
+    "m": "M-92 Vulkan",
+    "n": 6,
+    "orig": "YUG",
+    "s": "wiki_army",
+    "c": "ت",
+    "note": "System currently used by the Croatian contingent in Battle Group Poland. Former M-77 Oganj (128 mm) from the Yugoslavian Army that were capt",
+    "gen": 2,
+    "cat": "mlrs"
+   },
+   {
+    "m": "APR–40",
+    "n": 30,
+    "orig": "ROU",
+    "s": "wiki_army",
+    "c": "ت",
+    "note": "Acquired by Croatia in 1991 from Romania (former Warsaw Pact) during the War of Independence. It is based on the BM-21 Grad and installed on",
+    "gen": 2,
+    "cat": "mlrs"
+   },
+   {
+    "m": "M-84A4 Sniper",
+    "n": 45,
+    "orig": "YUG",
+    "s": "wiki_army",
+    "c": "ت",
+    "note": "30 M-84s and 30 M-80s were transferred to Ukraine through a \"Ringtausch\". Germany offered an exchange for Leopard 2A8 at a discounted price.",
+    "gen": 2,
+    "cat": "tank"
+   },
+   {
+    "m": "M-80A",
+    "n": 74,
+    "orig": "YUG",
+    "s": "wiki_army",
+    "c": "ت",
+    "note": "30 M-80s and 30 M-84s were transferred to Ukraine through a \"Ringtausch\". Germany offered an exchange for Leopard 2A8 at a discounted price.",
+    "gen": 2,
+    "cat": "ifv"
+   },
+   {
+    "m": "M2 Bradley (A2 ODS SA)",
+    "n": 62,
+    "orig": "USA",
+    "s": "wiki_army",
+    "c": "ت",
+    "note": "89 vehicles were donated by the US, and the refurbishment of 62 Bradley is financed by Croatia, performed by Đuro Đaković. Out of 89 Bradley",
+    "gen": 3,
+    "cat": "ifv"
+   },
+   {
+    "m": "Patria AMV - AIFV-30 (BOV-P30) Armoured infantry fighting vehicle",
+    "n": 8,
+    "orig": "FIN",
+    "s": "wiki_army",
+    "c": "ت",
+    "note": "Part of the two first batches ordered in 2007 / 2009, but the 8 turrets were ordered in 2017 (USD $14.9 million). The vehicles were all deli",
+    "gen": 2,
+    "cat": "ifv"
+   },
+   {
+    "m": "Elbit UT30 Mk2 turret",
+    "n": 8,
+    "orig": "ISR",
+    "s": "wiki_army",
+    "c": "ت",
+    "note": "Orders of the turrets: 2017: contract for 8 turrets, worth USD $14.9 million 2021: contract worth $1.8 million for an unknown amount of turr",
+    "gen": 4,
+    "cat": "ifv"
+   },
+   {
+    "m": "Patria AMV - ATGMV (BOV-POB) Anti-tank guided missile vehicle",
+    "n": 8,
+    "orig": "FIN",
+    "s": "wiki_army",
+    "c": "ت",
+    "note": "8 are in service. Spike LR2 ordered in 2023 for the existing Patria AMV fleet. The firing systems are transported in the vehicle, and the ve",
+    "gen": 2,
+    "cat": "atgm"
+   },
+   {
+    "m": "M1224 International MaxxPro PLUS (4×4)",
+    "n": 30,
+    "orig": "USA",
+    "s": "wiki_army",
+    "c": "ت",
+    "note": "Approved in 2013. Received in 2014 from the US Army. It is used by: 21 - with the army 5 - CROSOFCOM 2 - support command 2 - military police",
+    "gen": 2,
+    "cat": "mrap"
+   },
+   {
+    "m": "M1240 A1 Oshkosh M-ATV (4×4) MRAP All Terrain Vehicle",
+    "n": 162,
+    "orig": "USA",
+    "s": "wiki_army",
+    "c": "ت",
+    "note": "Approved in 2013 in 2 batches, one for 120 M-ATV, the other for 42 additional M-ATV. The 162 vehicles were received in from 2014 to 2016. 14",
+    "gen": 2,
+    "cat": "mrap"
+   },
+   {
+    "m": "M1151 enhanced-armament carrier HMMWV (up-armoured capable)",
+    "n": 50,
+    "orig": "USA",
+    "s": "wiki_army",
+    "c": "ت",
+    "note": "Programme 1202 30 M1151 HMMWV Programme 1206: 7 Humvee in 2010, equipped with ANIPRC-148 radio (3 Machine Guns and 4 ) 13 Humvee purchased i",
+    "gen": 2,
+    "cat": "apc"
+   },
+   {
+    "m": "M1114 up-armoured armament carrier HMMWV",
+    "n": 18,
+    "orig": "USA",
+    "s": "wiki_army",
+    "c": "ت",
+    "note": "Programme 1202: 18 M1114 HMMWV",
+    "gen": 2,
+    "cat": "apc"
+   },
+   {
+    "m": "Iveco LMV (4×4) Light multirole vehicle",
+    "n": 10,
+    "orig": "ITA",
+    "s": "wiki_army",
+    "c": "ت",
+    "note": "10 purchased in 2007.",
+    "gen": 2,
+    "cat": "mrap"
+   }
+  ],
+  "air": [
+   {
+    "m": "Aeronautics Orbiter 3b",
+    "n": 6,
+    "orig": "ISR",
+    "s": "wiki_army",
+    "c": "ت",
+    "note": "First 6 ordered in early 2018. Additional expected later on.",
+    "gen": 2,
+    "cat": "uav_isr"
+   }
+  ],
+  "ad": [
+   {
+    "m": "9K32 Strela-2M",
+    "n": 500,
+    "orig": "SUN",
+    "s": "wiki_army",
+    "c": "ت",
+    "note": "System operational until large missile stocks are depleted. Unknown quantities donated to Ukraine.",
+    "gen": 2,
+    "cat": "short"
+   },
+   {
+    "m": "Mistral 3",
+    "n": 70,
+    "orig": "FRA",
+    "s": "wiki_army",
+    "c": "ت",
+    "note": "Procurement approved by Government of Croatia on 8 December 2022. Procurement to be finalized by the end of 2025.",
+    "gen": 2,
+    "cat": "short"
+   },
+   {
+    "m": "Strijela - 10CROA1",
+    "n": 6,
+    "orig": "HRV",
+    "s": "wiki_army",
+    "c": "ت",
+    "note": "Domestically produced wheeled version of the Soviet 9K35 Strela-10 system incorporating some improvements.",
+    "gen": 2,
+    "cat": "short"
+   },
+   {
+    "m": "9K35 Strela-10",
+    "n": 3,
+    "orig": "SUN",
+    "s": "wiki_army",
+    "c": "ت",
+    "note": "Seen on military parade in 2025.",
+    "gen": 2,
+    "cat": "short"
+   },
+   {
+    "m": "BOV 20/3",
+    "n": 42,
+    "orig": "YUG",
+    "s": "wiki_army",
+    "c": "ت",
+    "note": "Triple M55 20mm anti-aircraft guns mounted on a BOV APC. The systems are to remain in service (in 7 batteries, each with 6 vehicles).",
+    "gen": 2,
+    "cat": "short"
+   }
+  ],
   "msl": [],
-  "navy": []
+  "navy": [
+   {
+    "m": "Končar class",
+    "n": 1,
+    "orig": "YUG",
+    "s": "wiki_navy",
+    "c": "ت",
+    "note": "Ship captured by Croatian forces during the Battle of Šibenik.",
+    "gen": 2,
+    "cat": "missile_boat"
+   },
+   {
+    "m": "Helsinki class",
+    "n": 2,
+    "orig": "FIN",
+    "s": "wiki_navy",
+    "c": "ت",
+    "note": "Purchased second-hand in 2008, as a support for the Patria AMV order.",
+    "gen": 2,
+    "cat": "missile_boat"
+   },
+   {
+    "m": "Kralj class",
+    "n": 2,
+    "orig": "HRV",
+    "s": "wiki_navy",
+    "c": "ت",
+    "note": "Captured unfinished by Croatian forces during the Battle of Šibenik.",
+    "gen": 2,
+    "cat": "missile_boat"
+   },
+   {
+    "m": "Mirna class",
+    "n": 4,
+    "orig": "YUG",
+    "s": "wiki_navy",
+    "c": "ت",
+    "note": "Boats captured during the Battle of Šibenik, except for the Šolta which was refloated and repaired by Croatia after the Battle of the Dalmat",
+    "gen": 2,
+    "cat": "patrol"
+   },
+   {
+    "m": "Silba class",
+    "n": 2,
+    "orig": "HRV",
+    "s": "wiki_navy",
+    "c": "ت",
+    "note": "Project initiated under Yugoslavian leadership.",
+    "gen": 2,
+    "cat": "amphib"
+   },
+   {
+    "m": "Type 21 class",
+    "n": 2,
+    "orig": "YUG",
+    "s": "wiki_navy",
+    "c": "ت",
+    "note": "Boats captured by Croatia.",
+    "gen": 2,
+    "cat": "amphib"
+   },
+   {
+    "m": "Type 22 class",
+    "n": 1,
+    "orig": "YUG",
+    "s": "wiki_navy",
+    "c": "ت",
+    "gen": 2,
+    "cat": "amphib"
+   },
+   {
+    "m": "Korčula class",
+    "n": 1,
+    "orig": "HRV",
+    "s": "wiki_navy",
+    "c": "ت",
+    "gen": 2,
+    "cat": "patrol"
+   },
+   {
+    "m": "–",
+    "n": 1,
+    "orig": "YUG",
+    "s": "wiki_navy",
+    "c": "ت",
+    "gen": 2,
+    "cat": "amphib"
+   }
+  ],
+  "grp": {
+   "tank": {
+    "n": 78,
+    "s": "iiss_eq",
+    "c": "ت",
+    "top": [
+     [
+      "M-84A4 Sniper",
+      45,
+      2,
+      "YUG"
+     ]
+    ],
+    "gen": 2.0
+   },
+   "afv": {
+    "n": 422,
+    "s": "wiki_army",
+    "c": "ت",
+    "top": [
+     [
+      "M1240 A1 Oshkosh M-ATV (4×4) MRAP All Te",
+      162,
+      2,
+      "USA"
+     ],
+     [
+      "M-80A",
+      74,
+      2,
+      "YUG"
+     ],
+     [
+      "M2 Bradley (A2 ODS SA)",
+      62,
+      3,
+      "USA"
+     ]
+    ],
+    "gen": 2.2
+   },
+   "art": {
+    "n": 126,
+    "s": "wiki_army",
+    "c": "ت",
+    "top": [
+     [
+      "D-30 RH M94",
+      54,
+      2,
+      "SUN"
+     ],
+     [
+      "APR–40",
+      30,
+      2,
+      "ROU"
+     ],
+     [
+      "PzH 2000",
+      16,
+      2,
+      "DEU"
+     ]
+    ],
+    "gen": 2.0
+   },
+   "jet": {
+    "n": 11,
+    "s": "iiss_eq",
+    "c": "ت",
+    "top": [
+     [
+      "F-16",
+      null,
+      null,
+      null
+     ],
+     [
+      "MiG-29",
+      null,
+      null,
+      null
+     ],
+     [
+      "Gripen",
+      null,
+      null,
+      null
+     ]
+    ],
+    "gen": 2.8,
+    "tpl": "eu"
+   },
+   "heli": {
+    "n": 20,
+    "s": "tpl",
+    "c": "ق",
+    "top": [
+     [
+      "Mi-24",
+      null,
+      null,
+      null
+     ],
+     [
+      "AW139",
+      null,
+      null,
+      null
+     ],
+     [
+      "UH-60",
+      null,
+      null,
+      null
+     ]
+    ],
+    "gen": 2.6,
+    "tpl": "eu"
+   },
+   "uav": {
+    "n": 6,
+    "s": "wiki_army",
+    "c": "ت",
+    "top": [
+     [
+      "Aeronautics Orbiter 3b",
+      6,
+      2,
+      "ISR"
+     ]
+    ],
+    "gen": 2.0
+   },
+   "ad": {
+    "n": 621,
+    "s": "wiki_army",
+    "c": "ت",
+    "top": [
+     [
+      "9K32 Strela-2M",
+      500,
+      2,
+      "SUN"
+     ],
+     [
+      "Mistral 3",
+      70,
+      2,
+      "FRA"
+     ],
+     [
+      "BOV 20/3",
+      42,
+      2,
+      "YUG"
+     ]
+    ],
+    "gen": 2.0
+   },
+   "navy": {
+    "n": 16,
+    "s": "wiki_navy",
+    "c": "ت",
+    "top": [
+     [
+      "Mirna class",
+      4,
+      2,
+      "YUG"
+     ],
+     [
+      "Helsinki class",
+      2,
+      2,
+      "FIN"
+     ],
+     [
+      "Kralj class",
+      2,
+      2,
+      "HRV"
+     ]
+    ],
+    "gen": 2.0
+   }
+  }
  },
  "ind": null,
  "pol": {

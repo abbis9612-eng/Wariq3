@@ -5,6 +5,24 @@
  "tier": "B",
  "asOf": "2026-11",
  "src": {
+  "wiki_air": {
+   "t": "Wikipedia: Kuwait Air Force",
+   "u": "https://en.wikipedia.org/wiki/Kuwait_Air_Force?oldid=1383706622",
+   "y": 2026,
+   "note": "نسخة الصفحة بتاريخ السحب؛ أرقام ويكيبيديا تنراجع ويا مصادر ثانية"
+  },
+  "wiki_army": {
+   "t": "Wikipedia: Kuwait Land Forces",
+   "u": "https://en.wikipedia.org/wiki/Kuwait_Land_Forces?oldid=1379626908",
+   "y": 2026,
+   "note": "نسخة الصفحة بتاريخ السحب؛ أرقام ويكيبيديا تنراجع ويا مصادر ثانية"
+  },
+  "wiki_navy": {
+   "t": "Wikipedia: Kuwait Naval Force",
+   "u": "https://en.wikipedia.org/wiki/Kuwait_Naval_Force?oldid=1383825406",
+   "y": 2026,
+   "note": "نسخة الصفحة بتاريخ السحب؛ أرقام ويكيبيديا تنراجع ويا مصادر ثانية"
+  },
   "iiss_eq": {
    "t": "Wikipedia: List of countries by level of military equipment (من IISS Military Balance ومصادر ثانية)",
    "u": "https://en.wikipedia.org/wiki/List_of_countries_by_level_of_military_equipment?oldid=1384804191",
@@ -49,6 +67,11 @@
   "tierA": {
    "t": "تقدير المصمم (تشرين الثاني 2026) لصناعة السلاح والاستقرار: SIPRI Arms Transfers Database (أكبر المصدّرين 2020–24)، SIPRI Top 100 Arms-Producing Companies، Fragile States Index 2025، أخبار 2026",
    "u": "https://www.sipri.org/databases/armstransfers",
+   "y": 2026
+  },
+  "tpl": {
+   "t": "قالب منطقة (me): موديلات شائعة ونسب تقريبية من الدبابات (مدرعات ×2.5، مدفعية ×0.9، مروحيات ×0.25) — تقدير المصمم",
+   "u": "docs/features/world-plan.md",
    "y": 2026
   }
  },
@@ -207,11 +230,384 @@
     "c": "ت"
    }
   },
-  "land": [],
-  "air": [],
+  "land": [
+   {
+    "m": "M1A2 Abrams",
+    "n": 218,
+    "orig": "USA",
+    "s": "wiki_army",
+    "c": "ت",
+    "note": "218 ordered in the 1990s, followed by an order of 218 M1A1 hulls upgraded to M1A2K variant in 2017.",
+    "gen": 4,
+    "cat": "tank"
+   },
+   {
+    "m": "M-84AB",
+    "n": 149,
+    "orig": "YUG",
+    "s": "wiki_army",
+    "c": "ت",
+    "note": "200 Ordered 1989 and 15 in service by 1990.",
+    "gen": 2,
+    "cat": "tank"
+   },
+   {
+    "m": "Desert Warrior",
+    "n": 254,
+    "orig": "GBR",
+    "s": "wiki_army",
+    "c": "ت",
+    "note": "236 with 25 mm gun, 18 APC. in 2009 Kuwait Upgraded the fire control system, (GITS II) hardware, Improved Thermal Sight System and 2nd Gener",
+    "gen": 3,
+    "cat": "ifv"
+   },
+   {
+    "m": "BMP-3",
+    "n": 200,
+    "orig": "SUN",
+    "s": "wiki_army",
+    "c": "ت",
+    "note": "142 delivered in 1994–1997. A new contract was signed in 2009 for 70 BMP-3M delivered in 2010-2011. another Contract was signed in 2014 for ",
+    "gen": 4,
+    "cat": "ifv"
+   },
+   {
+    "m": "BMP-2",
+    "n": 76,
+    "orig": "SUN",
+    "s": "wiki_army",
+    "c": "ت",
+    "note": "245 delivered between 1989–90 and 46 delivered between 1994–95, 76 in service as of 2005",
+    "gen": 3,
+    "cat": "ifv"
+   },
+   {
+    "m": "M113A2",
+    "n": 260,
+    "orig": "USA",
+    "s": "wiki_army",
+    "c": "ت",
+    "note": "230 M113A2, 30 M577 (CP)",
+    "gen": 2,
+    "cat": "apc"
+   },
+   {
+    "m": "M577",
+    "n": 30,
+    "orig": "USA",
+    "s": "wiki_army",
+    "c": "ت",
+    "note": "the Kuwait Army operates 30 M577 Command Post Vehicles, mostly M577A1s. Following the 1991 Gulf War a number of M577A3s were purchased from ",
+    "gen": 2,
+    "cat": "apc"
+   },
+   {
+    "m": "Fahd 240",
+    "n": 60,
+    "orig": "EGY",
+    "s": "wiki_army",
+    "c": "ت",
+    "note": "Second largest operator in 1988. The Fahd was used by the Kuwaiti side during the invasion of Kuwait, when it lost most of them. Kuwait rece",
+    "gen": 2,
+    "cat": "apc"
+   },
+   {
+    "m": "BM-30 Smerch",
+    "n": 27,
+    "orig": "SUN",
+    "s": "wiki_army",
+    "c": "ت",
+    "note": "Purchased 1995–96",
+    "gen": 2,
+    "cat": "mlrs"
+   },
+   {
+    "m": "PLZ-45",
+    "n": 51,
+    "orig": "CHN",
+    "s": "wiki_army",
+    "c": "ت",
+    "note": "(51) 27 PLZ-45s (to form a training platoon and the first battalion) ordered in 1998 and delivered in 2000–2001. 24 more howitzers (to form ",
+    "gen": 2,
+    "cat": "spg"
+   },
+   {
+    "m": "TOW M-901",
+    "n": 400,
+    "orig": "USA",
+    "s": "wiki_army",
+    "c": "ت",
+    "gen": 2,
+    "cat": "atgm"
+   },
+   {
+    "m": "M966/M966A1",
+    "n": 900,
+    "orig": "USA",
+    "s": "wiki_army",
+    "c": "ت",
+    "gen": 2,
+    "cat": "atgm"
+   },
+   {
+    "m": "TOW II",
+    "n": 82,
+    "orig": "USA",
+    "s": "wiki_army",
+    "c": "ت",
+    "gen": 2,
+    "cat": "atgm"
+   },
+   {
+    "m": "9M113 Konkurs",
+    "n": 2402,
+    "orig": "SUN",
+    "s": "wiki_army",
+    "c": "ت",
+    "gen": 2,
+    "cat": "atgm"
+   },
+   {
+    "m": "AT-10",
+    "n": 1250,
+    "orig": "RUS",
+    "s": "wiki_army",
+    "c": "ت",
+    "gen": 2,
+    "cat": "atgm"
+   }
+  ],
+  "air": [
+   {
+    "m": "Boeing F/A-18 Hornet (F/A-18C)",
+    "n": 27,
+    "orig": "USA",
+    "s": "wiki_air",
+    "c": "ت",
+    "gen": 3,
+    "cat": "fighter"
+   },
+   {
+    "m": "Eurofighter Typhoon (Tranche 3A)",
+    "n": 20,
+    "orig": "INT",
+    "s": "wiki_air",
+    "c": "ت",
+    "note": "8 on order",
+    "gen": 4,
+    "cat": "fighter"
+   },
+   {
+    "m": "KC-130 Hercules (KC-130J)",
+    "n": 3,
+    "orig": "USA",
+    "s": "wiki_air",
+    "c": "ت",
+    "gen": 2,
+    "cat": "tanker"
+   },
+   {
+    "m": "Boeing C-17 Globemaster III (C-17A)",
+    "n": 2,
+    "orig": "USA",
+    "s": "wiki_air",
+    "c": "ت",
+    "gen": 2,
+    "cat": "transport"
+   },
+   {
+    "m": "Boeing AH-64 Apache (AH-64D)",
+    "n": 16,
+    "orig": "USA",
+    "s": "wiki_air",
+    "c": "ت",
+    "note": "8 AH-64Es on order",
+    "gen": 3,
+    "cat": "heli_attack"
+   },
+   {
+    "m": "Sikorsky S-92",
+    "n": 4,
+    "orig": "USA",
+    "s": "wiki_air",
+    "c": "ت",
+    "note": "Flown for the State of Kuwait",
+    "gen": 2,
+    "cat": "heli_util"
+   },
+   {
+    "m": "Eurocopter AS332",
+    "n": 5,
+    "orig": "FRA",
+    "s": "wiki_air",
+    "c": "ت",
+    "gen": 2,
+    "cat": "heli_util"
+   },
+   {
+    "m": "Aérospatiale SA330",
+    "n": 6,
+    "orig": "FRA",
+    "s": "wiki_air",
+    "c": "ت",
+    "gen": 2,
+    "cat": "heli_util"
+   },
+   {
+    "m": "Aérospatiale SA342",
+    "n": 13,
+    "orig": "FRA",
+    "s": "wiki_air",
+    "c": "ت",
+    "gen": 2,
+    "cat": "heli_attack"
+   },
+   {
+    "m": "Airbus H225M",
+    "n": 30,
+    "orig": "FRA",
+    "s": "wiki_air",
+    "c": "ت",
+    "note": "4 used by the Kuwait Naval Force , and 6 by the Kuwait National Guard",
+    "gen": 2,
+    "cat": "heli_util"
+   },
+   {
+    "m": "BAE Hawk (Hawk 64)",
+    "n": 6,
+    "orig": "GBR",
+    "s": "wiki_air",
+    "c": "ت",
+    "gen": 2,
+    "cat": "trainer"
+   },
+   {
+    "m": "Boeing F/A-18 Hornet (F/A-18D)",
+    "n": 7,
+    "orig": "USA",
+    "s": "wiki_air",
+    "c": "ت",
+    "gen": 3,
+    "cat": "trainer"
+   }
+  ],
   "ad": [],
   "msl": [],
-  "navy": []
+  "navy": [],
+  "grp": {
+   "tank": {
+    "n": 368,
+    "s": "iiss_eq",
+    "c": "ت",
+    "top": [
+     [
+      "M1A2 Abrams",
+      218,
+      4,
+      "USA"
+     ],
+     [
+      "M-84AB",
+      149,
+      2,
+      "YUG"
+     ]
+    ],
+    "gen": 3.2
+   },
+   "afv": {
+    "n": 880,
+    "s": "wiki_army",
+    "c": "ت",
+    "top": [
+     [
+      "M113A2",
+      260,
+      2,
+      "USA"
+     ],
+     [
+      "Desert Warrior",
+      254,
+      3,
+      "GBR"
+     ],
+     [
+      "BMP-3",
+      200,
+      4,
+      "SUN"
+     ]
+    ],
+    "gen": 2.8
+   },
+   "art": {
+    "n": 78,
+    "s": "wiki_army",
+    "c": "ت",
+    "top": [
+     [
+      "PLZ-45",
+      51,
+      2,
+      "CHN"
+     ],
+     [
+      "BM-30 Smerch",
+      27,
+      2,
+      "SUN"
+     ]
+    ],
+    "gen": 2.0
+   },
+   "jet": {
+    "n": 40,
+    "s": "iiss_eq",
+    "c": "ت",
+    "top": [
+     [
+      "Boeing F/A-18 Hornet (F/A-18C)",
+      27,
+      3,
+      "USA"
+     ],
+     [
+      "Eurofighter Typhoon (Tranche 3A)",
+      20,
+      4,
+      "INT"
+     ]
+    ],
+    "gen": 3.4
+   },
+   "heli": {
+    "n": 74,
+    "s": "wiki_air",
+    "c": "ت",
+    "top": [
+     [
+      "Airbus H225M",
+      30,
+      2,
+      "FRA"
+     ],
+     [
+      "Boeing AH-64 Apache (AH-64D)",
+      16,
+      3,
+      "USA"
+     ],
+     [
+      "Aérospatiale SA342",
+      13,
+      2,
+      "FRA"
+     ]
+    ],
+    "gen": 2.2
+   }
+  }
  },
  "ind": null,
  "pol": {

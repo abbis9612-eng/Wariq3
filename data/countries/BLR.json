@@ -5,6 +5,18 @@
  "tier": "B",
  "asOf": "2026-11",
  "src": {
+  "wiki_air": {
+   "t": "Wikipedia: Belarusian Air Force",
+   "u": "https://en.wikipedia.org/wiki/Belarusian_Air_Force?oldid=1378436657",
+   "y": 2026,
+   "note": "نسخة الصفحة بتاريخ السحب؛ أرقام ويكيبيديا تنراجع ويا مصادر ثانية"
+  },
+  "wiki_army": {
+   "t": "Wikipedia: Armed Forces of Belarus",
+   "u": "https://en.wikipedia.org/wiki/Armed_Forces_of_Belarus?oldid=1386561531",
+   "y": 2026,
+   "note": "نسخة الصفحة بتاريخ السحب؛ أرقام ويكيبيديا تنراجع ويا مصادر ثانية"
+  },
   "iiss_eq": {
    "t": "Wikipedia: List of countries by level of military equipment (من IISS Military Balance ومصادر ثانية)",
    "u": "https://en.wikipedia.org/wiki/List_of_countries_by_level_of_military_equipment?oldid=1384804191",
@@ -49,6 +61,11 @@
   "tierA": {
    "t": "تقدير المصمم (تشرين الثاني 2026) لصناعة السلاح والاستقرار: SIPRI Arms Transfers Database (أكبر المصدّرين 2020–24)، SIPRI Top 100 Arms-Producing Companies، Fragile States Index 2025، أخبار 2026",
    "u": "https://www.sipri.org/databases/armstransfers",
+   "y": 2026
+  },
+  "tpl": {
+   "t": "قالب منطقة (eu): موديلات شائعة ونسب تقريبية من الدبابات (مدرعات ×2.5، مدفعية ×0.9، مروحيات ×0.25) — تقدير المصمم",
+   "u": "docs/features/world-plan.md",
    "y": 2026
   }
  },
@@ -217,10 +234,257 @@
    }
   },
   "land": [],
-  "air": [],
+  "air": [
+   {
+    "m": "Mikoyan MiG-29 (BM S/UB)",
+    "n": 32,
+    "orig": "SUN",
+    "s": "wiki_air",
+    "c": "ت",
+    "note": "13 upgraded to MiG-29BM in 2004",
+    "gen": 3,
+    "cat": "fighter"
+   },
+   {
+    "m": "Sukhoi Su-30 (SM/SM2)",
+    "n": 16,
+    "orig": "RUS",
+    "s": "wiki_air",
+    "c": "ت",
+    "note": "8 SU-30SM and 8 upgraded SU-30SM2",
+    "gen": 4,
+    "cat": "fighter"
+   },
+   {
+    "m": "Sukhoi Su-25",
+    "n": 50,
+    "orig": "SUN",
+    "s": "wiki_air",
+    "c": "ت",
+    "gen": 3,
+    "cat": "attack"
+   },
+   {
+    "m": "Ilyushin Il-76 (MD)",
+    "n": 2,
+    "orig": "SUN",
+    "s": "wiki_air",
+    "c": "ت",
+    "gen": 2,
+    "cat": "transport"
+   },
+   {
+    "m": "Antonov An-26",
+    "n": 2,
+    "orig": "SUN",
+    "s": "wiki_air",
+    "c": "ت",
+    "gen": 2,
+    "cat": "transport"
+   },
+   {
+    "m": "Mil Mi-8 (Mi-8T MTV-5 17-V5)",
+    "n": 36,
+    "orig": "SUN",
+    "s": "wiki_air",
+    "c": "ت",
+    "gen": 2,
+    "cat": "heli_util"
+   },
+   {
+    "m": "Mil Mi-24 (Mi-24V Mi-24P)",
+    "n": 29,
+    "orig": "RUS",
+    "s": "wiki_air",
+    "c": "ت",
+    "note": "12 Mi-35s",
+    "gen": 3,
+    "cat": "heli_attack"
+   },
+   {
+    "m": "Mil Mi-26",
+    "n": 3,
+    "orig": "SUN",
+    "s": "wiki_air",
+    "c": "ت",
+    "gen": 2,
+    "cat": "heli_util"
+   },
+   {
+    "m": "Yak-130",
+    "n": 11,
+    "orig": "RUS",
+    "s": "wiki_air",
+    "c": "ت",
+    "gen": 2,
+    "cat": "trainer"
+   },
+   {
+    "m": "Aero L-39 (C)",
+    "n": 10,
+    "orig": "CSK",
+    "s": "wiki_air",
+    "c": "ت",
+    "gen": 2,
+    "cat": "trainer"
+   },
+   {
+    "m": "Sukhoi Su-27 (UB)",
+    "n": 1,
+    "orig": "RUS",
+    "s": "wiki_air",
+    "c": "ت",
+    "gen": 3,
+    "cat": "trainer"
+   },
+   {
+    "m": "Sukhoi Su-25",
+    "n": 5,
+    "orig": "SUN",
+    "s": "wiki_air",
+    "c": "ت",
+    "gen": 3,
+    "cat": "trainer"
+   }
+  ],
   "ad": [],
   "msl": [],
-  "navy": []
+  "navy": [],
+  "grp": {
+   "tank": {
+    "n": 517,
+    "s": "iiss_eq",
+    "c": "ت",
+    "top": [
+     [
+      "T-72",
+      null,
+      null,
+      null
+     ],
+     [
+      "Leopard 1",
+      null,
+      null,
+      null
+     ],
+     [
+      "Leopard 2A4",
+      null,
+      null,
+      null
+     ]
+    ],
+    "gen": 2.6,
+    "tpl": "eu"
+   },
+   "afv": {
+    "n": 1292,
+    "s": "tpl",
+    "c": "ق",
+    "top": [
+     [
+      "BMP-2",
+      null,
+      null,
+      null
+     ],
+     [
+      "M113",
+      null,
+      null,
+      null
+     ],
+     [
+      "Patria AMV",
+      null,
+      null,
+      null
+     ]
+    ],
+    "gen": 2.4,
+    "tpl": "eu"
+   },
+   "art": {
+    "n": 465,
+    "s": "tpl",
+    "c": "ق",
+    "top": [
+     [
+      "2S1",
+      null,
+      null,
+      null
+     ],
+     [
+      "M109",
+      null,
+      null,
+      null
+     ],
+     [
+      "D-30",
+      null,
+      null,
+      null
+     ]
+    ],
+    "gen": 2.4,
+    "tpl": "eu"
+   },
+   "jet": {
+    "n": 105,
+    "s": "iiss_eq",
+    "c": "ت",
+    "top": [
+     [
+      "Sukhoi Su-25",
+      50,
+      3,
+      "SUN"
+     ],
+     [
+      "Mikoyan MiG-29 (BM S/UB)",
+      32,
+      3,
+      "SUN"
+     ],
+     [
+      "Sukhoi Su-30 (SM/SM2)",
+      16,
+      4,
+      "RUS"
+     ]
+    ],
+    "gen": 3.2
+   },
+   "heli": {
+    "n": 68,
+    "s": "wiki_air",
+    "c": "ت",
+    "top": [
+     [
+      "Mil Mi-8 (Mi-8T MTV-5 17-V5)",
+      36,
+      2,
+      "SUN"
+     ],
+     [
+      "Mil Mi-24 (Mi-24V Mi-24P)",
+      29,
+      3,
+      "RUS"
+     ],
+     [
+      "Mil Mi-26",
+      3,
+      2,
+      "SUN"
+     ]
+    ],
+    "gen": 2.4
+   }
+  }
  },
  "ind": null,
  "pol": {

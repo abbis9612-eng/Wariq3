@@ -5,6 +5,18 @@
  "tier": "C",
  "asOf": "2026-11",
  "src": {
+  "wiki_air": {
+   "t": "Wikipedia: 1974 Togolese Air Force C-47 crash",
+   "u": "https://en.wikipedia.org/wiki/1974_Togolese_Air_Force_C-47_crash?oldid=1368393551",
+   "y": 2026,
+   "note": "نسخة الصفحة بتاريخ السحب؛ أرقام ويكيبيديا تنراجع ويا مصادر ثانية"
+  },
+  "wiki_army": {
+   "t": "Wikipedia: Togolese Armed Forces",
+   "u": "https://en.wikipedia.org/wiki/Togolese_Armed_Forces?oldid=1366280644",
+   "y": 2026,
+   "note": "نسخة الصفحة بتاريخ السحب؛ أرقام ويكيبيديا تنراجع ويا مصادر ثانية"
+  },
   "iiss_eq": {
    "t": "Wikipedia: List of countries by level of military equipment (من IISS Military Balance ومصادر ثانية)",
    "u": "https://en.wikipedia.org/wiki/List_of_countries_by_level_of_military_equipment?oldid=1384804191",
@@ -49,6 +61,11 @@
   "tierA": {
    "t": "تقدير المصمم (تشرين الثاني 2026) لصناعة السلاح والاستقرار: SIPRI Arms Transfers Database (أكبر المصدّرين 2020–24)، SIPRI Top 100 Arms-Producing Companies، Fragile States Index 2025، أخبار 2026",
    "u": "https://www.sipri.org/databases/armstransfers",
+   "y": 2026
+  },
+  "tpl": {
+   "t": "قالب منطقة (af): موديلات شائعة ونسب تقريبية من الدبابات (مدرعات ×2.5، مدفعية ×0.9، مروحيات ×0.25) — تقدير المصمم",
+   "u": "docs/features/world-plan.md",
    "y": 2026
   }
  },
@@ -219,11 +236,326 @@
     "c": "ت"
    }
   },
-  "land": [],
-  "air": [],
+  "land": [
+   {
+    "m": "T-54",
+    "n": 4,
+    "orig": "SUN",
+    "s": "wiki_army",
+    "c": "ت",
+    "gen": 1,
+    "cat": "tank"
+   },
+   {
+    "m": "T-34-85",
+    "n": 7,
+    "orig": "SUN",
+    "s": "wiki_army",
+    "c": "ت",
+    "gen": 2,
+    "cat": "tank"
+   },
+   {
+    "m": "FV101 Scorpion",
+    "n": 20,
+    "orig": "GBR",
+    "s": "wiki_army",
+    "c": "ت",
+    "gen": 2,
+    "cat": "tank"
+   },
+   {
+    "m": "BMP-2",
+    "n": 20,
+    "orig": "RUS",
+    "s": "wiki_army",
+    "c": "ت",
+    "note": "purchased 1997 from Polish Land Forces",
+    "gen": 3,
+    "cat": "ifv"
+   },
+   {
+    "m": "UR-416",
+    "n": 30,
+    "orig": "DEU",
+    "s": "wiki_army",
+    "c": "ت",
+    "gen": 2,
+    "cat": "apc"
+   },
+   {
+    "m": "Panhard M3",
+    "n": 5,
+    "orig": "FRA",
+    "s": "wiki_army",
+    "c": "ت",
+    "note": "Reconnaissance vehicle",
+    "gen": 2,
+    "cat": "apc"
+   },
+   {
+    "m": "Véhicule Blindé Léger",
+    "n": 2,
+    "orig": "FRA",
+    "s": "wiki_army",
+    "c": "ت",
+    "gen": 2,
+    "cat": "apc"
+   },
+   {
+    "m": "EE-9 Cascavel",
+    "n": 36,
+    "orig": "BRA",
+    "s": "wiki_army",
+    "c": "ت",
+    "gen": 2,
+    "cat": "apc"
+   },
+   {
+    "m": "M8 Greyhound",
+    "n": 9,
+    "orig": "USA",
+    "s": "wiki_army",
+    "c": "ت",
+    "note": "of which 3 are the M20 variant",
+    "gen": 2,
+    "cat": "apc"
+   },
+   {
+    "m": "Véhicule d'Action dans la Profondeur",
+    "n": 6,
+    "orig": "FRA",
+    "s": "wiki_army",
+    "c": "ت",
+    "gen": 2,
+    "cat": "apc"
+   },
+   {
+    "m": "Panhard AML",
+    "n": 10,
+    "orig": "FRA",
+    "s": "wiki_army",
+    "c": "ت",
+    "gen": 2,
+    "cat": "apc"
+   },
+   {
+    "m": "M2A1",
+    "n": 4,
+    "orig": "USA",
+    "s": "wiki_army",
+    "c": "ت",
+    "note": "105mm towed howitzer",
+    "gen": 2,
+    "cat": "towed"
+   },
+   {
+    "m": "2S1 Gvozdika",
+    "n": 6,
+    "orig": "SUN",
+    "s": "wiki_army",
+    "c": "ت",
+    "gen": 2,
+    "cat": "spg"
+   }
+  ],
+  "air": [
+   {
+    "m": "Aérospatiale Gazelle (SA342L1)",
+    "n": 2,
+    "orig": "FRA",
+    "s": "wiki_army",
+    "c": "ت",
+    "gen": 2,
+    "cat": "heli_util"
+   },
+   {
+    "m": "Aérospatiale SA 315B Lama",
+    "n": 2,
+    "orig": "FRA",
+    "s": "wiki_army",
+    "c": "ت",
+    "gen": 2,
+    "cat": "heli_util"
+   },
+   {
+    "m": "Aérospatiale Puma",
+    "n": 1,
+    "orig": "FRA",
+    "s": "wiki_army",
+    "c": "ت",
+    "note": "In storage",
+    "gen": 4,
+    "cat": "heli_util"
+   },
+   {
+    "m": "Alouette III (SA319 / SA316)",
+    "n": 2,
+    "orig": "FRA",
+    "s": "wiki_army",
+    "c": "ت",
+    "gen": 2,
+    "cat": "heli_util"
+   },
+   {
+    "m": "Mil Mi-8 (Mi-8T)",
+    "n": 2,
+    "orig": "RUS",
+    "s": "wiki_army",
+    "c": "ت",
+    "gen": 2,
+    "cat": "heli_util"
+   },
+   {
+    "m": "Mil Mi-17 (Hip-H)",
+    "n": 2,
+    "orig": "RUS",
+    "s": "wiki_army",
+    "c": "ت",
+    "gen": 2,
+    "cat": "heli_util"
+   },
+   {
+    "m": "Mil Mi-24 (Mi-35M)",
+    "n": 2,
+    "orig": "RUS",
+    "s": "wiki_army",
+    "c": "ت",
+    "gen": 3,
+    "cat": "heli_attack"
+   }
+  ],
   "ad": [],
   "msl": [],
-  "navy": []
+  "navy": [],
+  "grp": {
+   "tank": {
+    "n": 2,
+    "s": "iiss_eq",
+    "c": "ت",
+    "top": [
+     [
+      "FV101 Scorpion",
+      20,
+      2,
+      "GBR"
+     ],
+     [
+      "T-34-85",
+      7,
+      2,
+      "SUN"
+     ],
+     [
+      "T-54",
+      4,
+      1,
+      "SUN"
+     ]
+    ],
+    "gen": 1.9,
+    "note": "مجموع القوائم 31 يختلف عن الإجمالي؛ الإجمالي هو المعتمد"
+   },
+   "afv": {
+    "n": 118,
+    "s": "wiki_army",
+    "c": "ت",
+    "top": [
+     [
+      "EE-9 Cascavel",
+      36,
+      2,
+      "BRA"
+     ],
+     [
+      "UR-416",
+      30,
+      2,
+      "DEU"
+     ],
+     [
+      "BMP-2",
+      20,
+      3,
+      "RUS"
+     ]
+    ],
+    "gen": 2.2
+   },
+   "art": {
+    "n": 10,
+    "s": "wiki_army",
+    "c": "ت",
+    "top": [
+     [
+      "2S1 Gvozdika",
+      6,
+      2,
+      "SUN"
+     ],
+     [
+      "M2A1",
+      4,
+      2,
+      "USA"
+     ]
+    ],
+    "gen": 2.0
+   },
+   "jet": {
+    "n": 11,
+    "s": "iiss_eq",
+    "c": "ت",
+    "top": [
+     [
+      "MiG-21",
+      null,
+      null,
+      null
+     ],
+     [
+      "Su-25",
+      null,
+      null,
+      null
+     ],
+     [
+      "L-39",
+      null,
+      null,
+      null
+     ]
+    ],
+    "gen": 1.6,
+    "tpl": "af"
+   },
+   "heli": {
+    "n": 13,
+    "s": "wiki_army",
+    "c": "ت",
+    "top": [
+     [
+      "Aérospatiale Gazelle (SA342L1)",
+      2,
+      2,
+      "FRA"
+     ],
+     [
+      "Aérospatiale SA 315B Lama",
+      2,
+      2,
+      "FRA"
+     ],
+     [
+      "Alouette III (SA319 / SA316)",
+      2,
+      2,
+      "FRA"
+     ]
+    ],
+    "gen": 2.3
+   }
+  }
  },
  "ind": null,
  "pol": {

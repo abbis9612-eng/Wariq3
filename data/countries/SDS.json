@@ -5,6 +5,18 @@
  "tier": "C",
  "asOf": "2026-11",
  "src": {
+  "wiki_air": {
+   "t": "Wikipedia: South Sudan Air Force",
+   "u": "https://en.wikipedia.org/wiki/South_Sudan_Air_Force?oldid=1384638740",
+   "y": 2026,
+   "note": "نسخة الصفحة بتاريخ السحب؛ أرقام ويكيبيديا تنراجع ويا مصادر ثانية"
+  },
+  "wiki_army": {
+   "t": "Wikipedia: South Sudan People's Defence Forces",
+   "u": "https://en.wikipedia.org/wiki/South_Sudan_People's_Defence_Forces?oldid=1386245248",
+   "y": 2026,
+   "note": "نسخة الصفحة بتاريخ السحب؛ أرقام ويكيبيديا تنراجع ويا مصادر ثانية"
+  },
   "iiss_eq": {
    "t": "Wikipedia: List of countries by level of military equipment (من IISS Military Balance ومصادر ثانية)",
    "u": "https://en.wikipedia.org/wiki/List_of_countries_by_level_of_military_equipment?oldid=1384804191",
@@ -49,6 +61,11 @@
   "tierA": {
    "t": "تقدير المصمم (تشرين الثاني 2026) لصناعة السلاح والاستقرار: SIPRI Arms Transfers Database (أكبر المصدّرين 2020–24)، SIPRI Top 100 Arms-Producing Companies، Fragile States Index 2025، أخبار 2026",
    "u": "https://www.sipri.org/databases/armstransfers",
+   "y": 2026
+  },
+  "tpl": {
+   "t": "قالب منطقة (af): موديلات شائعة ونسب تقريبية من الدبابات (مدرعات ×2.5، مدفعية ×0.9، مروحيات ×0.25) — تقدير المصمم",
+   "u": "docs/features/world-plan.md",
    "y": 2026
   }
  },
@@ -205,10 +222,175 @@
    }
   },
   "land": [],
-  "air": [],
+  "air": [
+   {
+    "m": "Boeing 727",
+    "n": 1,
+    "orig": "USA",
+    "s": "wiki_air",
+    "c": "ت",
+    "gen": 2,
+    "cat": "transport"
+   },
+   {
+    "m": "Antonov An-26",
+    "n": 2,
+    "orig": "SUN",
+    "s": "wiki_air",
+    "c": "ت",
+    "gen": 2,
+    "cat": "transport"
+   },
+   {
+    "m": "Let L-410 Turbolet",
+    "n": 2,
+    "orig": "CZE",
+    "s": "wiki_air",
+    "c": "ت",
+    "gen": 2,
+    "cat": "transport"
+   },
+   {
+    "m": "AgustaWestland AW109",
+    "n": 2,
+    "orig": "ITA",
+    "s": "wiki_air",
+    "c": "ت",
+    "gen": 2,
+    "cat": "heli_util"
+   },
+   {
+    "m": "Mil Mi-17 (Mi-172 / Mi-17V-5)",
+    "n": 7,
+    "orig": "SUN",
+    "s": "wiki_air",
+    "c": "ت",
+    "note": "1 configured for VIP transport",
+    "gen": 2,
+    "cat": "heli_util"
+   },
+   {
+    "m": "Mil Mi-24 (Mi-35)",
+    "n": 6,
+    "orig": "SUN",
+    "s": "wiki_air",
+    "c": "ت",
+    "gen": 3,
+    "cat": "heli_attack"
+   }
+  ],
   "ad": [],
   "msl": [],
-  "navy": []
+  "navy": [],
+  "grp": {
+   "tank": {
+    "n": 81,
+    "s": "iiss_eq",
+    "c": "ت",
+    "top": [
+     [
+      "T-55",
+      null,
+      null,
+      null
+     ],
+     [
+      "T-54",
+      null,
+      null,
+      null
+     ],
+     [
+      "Type 59",
+      null,
+      null,
+      null
+     ]
+    ],
+    "gen": 1.4,
+    "tpl": "af"
+   },
+   "afv": {
+    "n": 202,
+    "s": "tpl",
+    "c": "ق",
+    "top": [
+     [
+      "BTR-60",
+      null,
+      null,
+      null
+     ],
+     [
+      "BRDM-2",
+      null,
+      null,
+      null
+     ],
+     [
+      "Panhard AML",
+      null,
+      null,
+      null
+     ]
+    ],
+    "gen": 1.6,
+    "tpl": "af"
+   },
+   "art": {
+    "n": 73,
+    "s": "tpl",
+    "c": "ق",
+    "top": [
+     [
+      "D-30",
+      null,
+      null,
+      null
+     ],
+     [
+      "BM-21 Grad",
+      null,
+      null,
+      null
+     ],
+     [
+      "M-46",
+      null,
+      null,
+      null
+     ]
+    ],
+    "gen": 1.8,
+    "tpl": "af"
+   },
+   "heli": {
+    "n": 15,
+    "s": "wiki_air",
+    "c": "ت",
+    "top": [
+     [
+      "Mil Mi-17 (Mi-172 / Mi-17V-5)",
+      7,
+      2,
+      "SUN"
+     ],
+     [
+      "Mil Mi-24 (Mi-35)",
+      6,
+      3,
+      "SUN"
+     ],
+     [
+      "AgustaWestland AW109",
+      2,
+      2,
+      "ITA"
+     ]
+    ],
+    "gen": 2.4
+   }
+  }
  },
  "ind": null,
  "pol": {

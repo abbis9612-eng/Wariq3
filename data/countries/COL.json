@@ -5,6 +5,24 @@
  "tier": "B",
  "asOf": "2026-11",
  "src": {
+  "wiki_air": {
+   "t": "Wikipedia: Colombian Air Force One",
+   "u": "https://en.wikipedia.org/wiki/Colombian_Air_Force_One?oldid=1348823356",
+   "y": 2026,
+   "note": "نسخة الصفحة بتاريخ السحب؛ أرقام ويكيبيديا تنراجع ويا مصادر ثانية"
+  },
+  "wiki_army": {
+   "t": "Wikipedia: List of equipment of the National Army of Colombia",
+   "u": "https://en.wikipedia.org/wiki/List_of_equipment_of_the_National_Army_of_Colombia?oldid=1381266091",
+   "y": 2026,
+   "note": "نسخة الصفحة بتاريخ السحب؛ أرقام ويكيبيديا تنراجع ويا مصادر ثانية"
+  },
+  "wiki_navy": {
+   "t": "Wikipedia: Colombian Navy",
+   "u": "https://en.wikipedia.org/wiki/Colombian_Navy?oldid=1381988600",
+   "y": 2026,
+   "note": "نسخة الصفحة بتاريخ السحب؛ أرقام ويكيبيديا تنراجع ويا مصادر ثانية"
+  },
   "iiss_eq": {
    "t": "Wikipedia: List of countries by level of military equipment (من IISS Military Balance ومصادر ثانية)",
    "u": "https://en.wikipedia.org/wiki/List_of_countries_by_level_of_military_equipment?oldid=1384804191",
@@ -49,6 +67,11 @@
   "tierA": {
    "t": "تقدير المصمم (تشرين الثاني 2026) لصناعة السلاح والاستقرار: SIPRI Arms Transfers Database (أكبر المصدّرين 2020–24)، SIPRI Top 100 Arms-Producing Companies، Fragile States Index 2025، أخبار 2026",
    "u": "https://www.sipri.org/databases/armstransfers",
+   "y": 2026
+  },
+  "tpl": {
+   "t": "قالب منطقة (la): موديلات شائعة ونسب تقريبية من الدبابات (مدرعات ×2.5، مدفعية ×0.9، مروحيات ×0.25) — تقدير المصمم",
+   "u": "docs/features/world-plan.md",
    "y": 2026
   }
  },
@@ -216,11 +239,287 @@
     "c": "ت"
    }
   },
-  "land": [],
-  "air": [],
-  "ad": [],
+  "land": [
+   {
+    "m": "LAV III",
+    "n": 82,
+    "orig": "CAN",
+    "s": "wiki_army",
+    "c": "ت",
+    "gen": 2,
+    "cat": "apc"
+   },
+   {
+    "m": "EE-9 Cascavel",
+    "n": 121,
+    "orig": "BRA",
+    "s": "wiki_army",
+    "c": "ت",
+    "gen": 2,
+    "cat": "apc"
+   },
+   {
+    "m": "Joya SAA-1",
+    "n": 6,
+    "orig": "USA",
+    "s": "wiki_army",
+    "c": "ت",
+    "gen": 2,
+    "cat": "spg"
+   }
+  ],
+  "air": [
+   {
+    "m": "UH-1 Iroquois UH-1N Twin Huey",
+    "n": 64,
+    "orig": "USA",
+    "s": "wiki_army",
+    "c": "ت",
+    "note": "41 of the UH-1N Twin Hueys are retired Canadian Forces aircraft.",
+    "gen": 2,
+    "cat": "heli_util"
+   },
+   {
+    "m": "Mil Mi-17",
+    "n": 20,
+    "orig": "RUS",
+    "s": "wiki_army",
+    "c": "ت",
+    "note": "One lost on 25 February 2013 and in 2024",
+    "gen": 2,
+    "cat": "heli_util"
+   },
+   {
+    "m": "Sikorsky UH-60 Black Hawk",
+    "n": 53,
+    "orig": "USA",
+    "s": "wiki_army",
+    "c": "ت",
+    "note": "Including the 15 from Plan Colombia. Two UH-60 lost on 22 February 2013 and on 5 February 2024. All S-70i helicopters used by the Special Op",
+    "gen": 2,
+    "cat": "heli_util"
+   },
+   {
+    "m": "RQ-11 Raven",
+    "n": 15,
+    "orig": "USA",
+    "s": "wiki_army",
+    "c": "ت",
+    "note": "Special Forces",
+    "gen": 2,
+    "cat": "uav_isr"
+   }
+  ],
+  "ad": [
+   {
+    "m": "M-8 Tow AA",
+    "n": 20,
+    "orig": "USA",
+    "s": "wiki_army",
+    "c": "ت",
+    "gen": 2,
+    "cat": "short"
+   },
+   {
+    "m": "M-462 Abir Nimrod Anti-aircraft system",
+    "n": 500,
+    "orig": "ISR",
+    "s": "wiki_army",
+    "c": "ت",
+    "gen": 2,
+    "cat": "short"
+   },
+   {
+    "m": "Nimrod Anti-aircraft system",
+    "n": 40,
+    "orig": "ISR",
+    "s": "wiki_army",
+    "c": "ت",
+    "gen": 2,
+    "cat": "short"
+   },
+   {
+    "m": "Anti-aircraft batteries Eagle Eye",
+    "n": 120,
+    "orig": "USA",
+    "s": "wiki_army",
+    "c": "ت",
+    "gen": 2,
+    "cat": "short"
+   },
+   {
+    "m": "Oerlikon dual gun system",
+    "n": 75,
+    "orig": "CHE",
+    "s": "wiki_army",
+    "c": "ت",
+    "gen": 2,
+    "cat": "short"
+   },
+   {
+    "m": "Bofors M1",
+    "n": 150,
+    "orig": "SWE",
+    "s": "wiki_army",
+    "c": "ت",
+    "gen": 3,
+    "cat": "short"
+   },
+   {
+    "m": "M8/M-55 AAA",
+    "n": 75,
+    "orig": "USA",
+    "s": "wiki_army",
+    "c": "ت",
+    "gen": 2,
+    "cat": "short"
+   },
+   {
+    "m": "FIM-92 Stinger",
+    "n": 60,
+    "orig": "USA",
+    "s": "wiki_army",
+    "c": "ت",
+    "gen": 2,
+    "cat": "short"
+   }
+  ],
   "msl": [],
-  "navy": []
+  "navy": [],
+  "grp": {
+   "afv": {
+    "n": 203,
+    "s": "wiki_army",
+    "c": "ت",
+    "top": [
+     [
+      "EE-9 Cascavel",
+      121,
+      2,
+      "BRA"
+     ],
+     [
+      "LAV III",
+      82,
+      2,
+      "CAN"
+     ]
+    ],
+    "gen": 2.0
+   },
+   "art": {
+    "n": 6,
+    "s": "wiki_army",
+    "c": "ت",
+    "top": [
+     [
+      "Joya SAA-1",
+      6,
+      2,
+      "USA"
+     ]
+    ],
+    "gen": 2.0
+   },
+   "jet": {
+    "n": 55,
+    "s": "iiss_eq",
+    "c": "ت",
+    "top": [
+     [
+      "A-29 Super Tucano",
+      null,
+      null,
+      null
+     ],
+     [
+      "F-5",
+      null,
+      null,
+      null
+     ],
+     [
+      "Mirage 5",
+      null,
+      null,
+      null
+     ]
+    ],
+    "gen": 1.8,
+    "tpl": "la"
+   },
+   "heli": {
+    "n": 137,
+    "s": "wiki_army",
+    "c": "ت",
+    "top": [
+     [
+      "UH-1 Iroquois UH-1N Twin Huey",
+      64,
+      2,
+      "USA"
+     ],
+     [
+      "Sikorsky UH-60 Black Hawk",
+      53,
+      2,
+      "USA"
+     ],
+     [
+      "Mil Mi-17",
+      20,
+      2,
+      "RUS"
+     ]
+    ],
+    "gen": 2.0
+   },
+   "uav": {
+    "n": 15,
+    "s": "wiki_army",
+    "c": "ت",
+    "top": [
+     [
+      "RQ-11 Raven",
+      15,
+      2,
+      "USA"
+     ]
+    ],
+    "gen": 2.0
+   },
+   "ad": {
+    "n": 1040,
+    "s": "wiki_army",
+    "c": "ت",
+    "top": [
+     [
+      "M-462 Abir Nimrod Anti-aircraft system",
+      500,
+      2,
+      "ISR"
+     ],
+     [
+      "Bofors M1",
+      150,
+      3,
+      "SWE"
+     ],
+     [
+      "Anti-aircraft batteries Eagle Eye",
+      120,
+      2,
+      "USA"
+     ]
+    ],
+    "gen": 2.1
+   },
+   "navy": {
+    "n": 18,
+    "s": "iiss_eq",
+    "c": "ت"
+   }
+  }
  },
  "ind": null,
  "pol": {

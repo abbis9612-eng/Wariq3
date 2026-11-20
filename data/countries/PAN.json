@@ -5,6 +5,24 @@
  "tier": "C",
  "asOf": "2026-11",
  "src": {
+  "wiki_air": {
+   "t": "Wikipedia: Air Forces Panama",
+   "u": "https://en.wikipedia.org/wiki/Air_Forces_Panama?oldid=1335872437",
+   "y": 2026,
+   "note": "نسخة الصفحة بتاريخ السحب؛ أرقام ويكيبيديا تنراجع ويا مصادر ثانية"
+  },
+  "wiki_army": {
+   "t": "Wikipedia: Panama Defense Forces",
+   "u": "https://en.wikipedia.org/wiki/Panama_Defense_Forces?oldid=1380629146",
+   "y": 2026,
+   "note": "نسخة الصفحة بتاريخ السحب؛ أرقام ويكيبيديا تنراجع ويا مصادر ثانية"
+  },
+  "wiki_navy": {
+   "t": "Wikipedia: Naval Base Panama Canal Zone",
+   "u": "https://en.wikipedia.org/wiki/Naval_Base_Panama_Canal_Zone?oldid=1385088510",
+   "y": 2026,
+   "note": "نسخة الصفحة بتاريخ السحب؛ أرقام ويكيبيديا تنراجع ويا مصادر ثانية"
+  },
   "iiss_eq": {
    "t": "Wikipedia: List of countries by level of military equipment (من IISS Military Balance ومصادر ثانية)",
    "u": "https://en.wikipedia.org/wiki/List_of_countries_by_level_of_military_equipment?oldid=1384804191",
@@ -49,6 +67,11 @@
   "tierA": {
    "t": "تقدير المصمم (تشرين الثاني 2026) لصناعة السلاح والاستقرار: SIPRI Arms Transfers Database (أكبر المصدّرين 2020–24)، SIPRI Top 100 Arms-Producing Companies، Fragile States Index 2025، أخبار 2026",
    "u": "https://www.sipri.org/databases/armstransfers",
+   "y": 2026
+  },
+  "tpl": {
+   "t": "قالب منطقة (la): موديلات شائعة ونسب تقريبية من الدبابات (مدرعات ×2.5، مدفعية ×0.9، مروحيات ×0.25) — تقدير المصمم",
+   "u": "docs/features/world-plan.md",
    "y": 2026
   }
  },
@@ -216,11 +239,134 @@
     "c": "ت"
    }
   },
-  "land": [],
-  "air": [],
-  "ad": [],
+  "land": [
+   {
+    "m": "V-150",
+    "n": 17,
+    "orig": "USA",
+    "s": "wiki_army",
+    "c": "ت",
+    "note": "4 Command Vehicles, and 13 Armored Personnel Carriers, Fitted with mounted 7.62mm Machine guns/and or Browning .50 Machine guns, also a '90'",
+    "gen": 2,
+    "cat": "apc"
+   },
+   {
+    "m": "V-300",
+    "n": 13,
+    "orig": "USA",
+    "s": "wiki_army",
+    "c": "ت",
+    "note": "Multiple versions – APC versions, Recovery Versions, and a Fire Support Vehicle version fitted with Belgian Cockerel 90mm MK III gun and 7.6",
+    "gen": 2,
+    "cat": "apc"
+   }
+  ],
+  "air": [
+   {
+    "m": "Bell 205A1",
+    "n": 21,
+    "orig": "USA",
+    "s": "wiki_army",
+    "c": "ت",
+    "note": "Armed with M60D machine guns in each door. At least 1 with FN MAG machineguns fitted in gunpods. According to World Defense Forces Second Ed",
+    "gen": 2,
+    "cat": "heli_util"
+   },
+   {
+    "m": "Fairchild Hiller FH-1100",
+    "n": 3,
+    "orig": "USA",
+    "s": "wiki_army",
+    "c": "ت",
+    "gen": 2,
+    "cat": "heli_util"
+   },
+   {
+    "m": "Eurocopter Super Puma",
+    "n": 1,
+    "orig": "FRA",
+    "s": "wiki_army",
+    "c": "ت",
+    "gen": 4,
+    "cat": "heli_util"
+   }
+  ],
+  "ad": [
+   {
+    "m": "ZPU-4",
+    "n": 20,
+    "orig": "SUN",
+    "s": "wiki_army",
+    "c": "ت",
+    "note": "14.5mm Anti-Aircraft gun",
+    "gen": 2,
+    "cat": "short"
+   }
+  ],
   "msl": [],
-  "navy": []
+  "navy": [],
+  "grp": {
+   "afv": {
+    "n": 30,
+    "s": "wiki_army",
+    "c": "ت",
+    "top": [
+     [
+      "V-150",
+      17,
+      2,
+      "USA"
+     ],
+     [
+      "V-300",
+      13,
+      2,
+      "USA"
+     ]
+    ],
+    "gen": 2.0
+   },
+   "heli": {
+    "n": 25,
+    "s": "wiki_army",
+    "c": "ت",
+    "top": [
+     [
+      "Bell 205A1",
+      21,
+      2,
+      "USA"
+     ],
+     [
+      "Fairchild Hiller FH-1100",
+      3,
+      2,
+      "USA"
+     ],
+     [
+      "Eurocopter Super Puma",
+      1,
+      4,
+      "FRA"
+     ]
+    ],
+    "gen": 2.1
+   },
+   "ad": {
+    "n": 20,
+    "s": "wiki_army",
+    "c": "ت",
+    "top": [
+     [
+      "ZPU-4",
+      20,
+      2,
+      "SUN"
+     ]
+    ],
+    "gen": 2.0
+   }
+  }
  },
  "ind": null,
  "pol": {

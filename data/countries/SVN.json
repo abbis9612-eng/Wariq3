@@ -5,6 +5,24 @@
  "tier": "C",
  "asOf": "2026-11",
  "src": {
+  "wiki_air": {
+   "t": "Wikipedia: Slovenian Air Force and Air Defence",
+   "u": "https://en.wikipedia.org/wiki/Slovenian_Air_Force_and_Air_Defence?oldid=1357544526",
+   "y": 2026,
+   "note": "نسخة الصفحة بتاريخ السحب؛ أرقام ويكيبيديا تنراجع ويا مصادر ثانية"
+  },
+  "wiki_army": {
+   "t": "Wikipedia: Slovenian Armed Forces",
+   "u": "https://en.wikipedia.org/wiki/Slovenian_Armed_Forces?oldid=1376009490",
+   "y": 2026,
+   "note": "نسخة الصفحة بتاريخ السحب؛ أرقام ويكيبيديا تنراجع ويا مصادر ثانية"
+  },
+  "wiki_navy": {
+   "t": "Wikipedia: Slovenian Navy",
+   "u": "https://en.wikipedia.org/wiki/Slovenian_Navy?oldid=1343220562",
+   "y": 2026,
+   "note": "نسخة الصفحة بتاريخ السحب؛ أرقام ويكيبيديا تنراجع ويا مصادر ثانية"
+  },
   "iiss_eq": {
    "t": "Wikipedia: List of countries by level of military equipment (من IISS Military Balance ومصادر ثانية)",
    "u": "https://en.wikipedia.org/wiki/List_of_countries_by_level_of_military_equipment?oldid=1384804191",
@@ -49,6 +67,11 @@
   "tierA": {
    "t": "تقدير المصمم (تشرين الثاني 2026) لصناعة السلاح والاستقرار: SIPRI Arms Transfers Database (أكبر المصدّرين 2020–24)، SIPRI Top 100 Arms-Producing Companies، Fragile States Index 2025، أخبار 2026",
    "u": "https://www.sipri.org/databases/armstransfers",
+   "y": 2026
+  },
+  "tpl": {
+   "t": "قالب منطقة (eu): موديلات شائعة ونسب تقريبية من الدبابات (مدرعات ×2.5، مدفعية ×0.9، مروحيات ×0.25) — تقدير المصمم",
+   "u": "docs/features/world-plan.md",
    "y": 2026
   }
  },
@@ -220,10 +243,247 @@
    }
   },
   "land": [],
-  "air": [],
+  "air": [
+   {
+    "m": "Light attack aircraft",
+    "n": 9,
+    "orig": "CHE",
+    "s": "wiki_air",
+    "c": "ت",
+    "gen": 2,
+    "cat": "attack"
+   },
+   {
+    "m": "Tactical airlifter",
+    "n": 2,
+    "orig": "ITA",
+    "s": "wiki_air",
+    "c": "ت",
+    "note": "The Slovenian Air Force took delivery of the first aircraft named Martin Krpan at the end of 2023, and the second aircraft named Edvard Rusj",
+    "gen": 2,
+    "cat": "transport"
+   },
+   {
+    "m": "Transport",
+    "n": 1,
+    "orig": "CZE",
+    "s": "wiki_air",
+    "c": "ت",
+    "gen": 2,
+    "cat": "transport"
+   },
+   {
+    "m": "VIP transport",
+    "n": 1,
+    "orig": "FRA",
+    "s": "wiki_air",
+    "c": "ت",
+    "gen": 2,
+    "cat": "transport"
+   },
+   {
+    "m": "Utility",
+    "n": 8,
+    "orig": "USA",
+    "s": "wiki_air",
+    "c": "ت",
+    "gen": 2,
+    "cat": "transport"
+   },
+   {
+    "m": "Transport / Utility",
+    "n": 4,
+    "orig": "FRA",
+    "s": "wiki_air",
+    "c": "ت",
+    "gen": 2,
+    "cat": "transport"
+   },
+   {
+    "m": "Trainer / Utility",
+    "n": 4,
+    "orig": "USA",
+    "s": "wiki_air",
+    "c": "ت",
+    "gen": 2,
+    "cat": "trainer"
+   },
+   {
+    "m": "Trainer",
+    "n": 8,
+    "orig": "CZE",
+    "s": "wiki_air",
+    "c": "ت",
+    "gen": 2,
+    "cat": "trainer"
+   }
+  ],
   "ad": [],
   "msl": [],
-  "navy": []
+  "navy": [
+   {
+    "m": "Super Dvora Mk II",
+    "n": 1,
+    "orig": "ISR",
+    "s": "wiki_navy",
+    "c": "ت",
+    "gen": 2,
+    "cat": "patrol"
+   },
+   {
+    "m": "Project 10412",
+    "n": 1,
+    "orig": "SUN",
+    "s": "wiki_navy",
+    "c": "ت",
+    "gen": 2,
+    "cat": "patrol"
+   }
+  ],
+  "grp": {
+   "tank": {
+    "n": 46,
+    "s": "iiss_eq",
+    "c": "ت",
+    "top": [
+     [
+      "T-72",
+      null,
+      null,
+      null
+     ],
+     [
+      "Leopard 1",
+      null,
+      null,
+      null
+     ],
+     [
+      "Leopard 2A4",
+      null,
+      null,
+      null
+     ]
+    ],
+    "gen": 2.6,
+    "tpl": "eu"
+   },
+   "afv": {
+    "n": 115,
+    "s": "tpl",
+    "c": "ق",
+    "top": [
+     [
+      "BMP-2",
+      null,
+      null,
+      null
+     ],
+     [
+      "M113",
+      null,
+      null,
+      null
+     ],
+     [
+      "Patria AMV",
+      null,
+      null,
+      null
+     ]
+    ],
+    "gen": 2.4,
+    "tpl": "eu"
+   },
+   "art": {
+    "n": 41,
+    "s": "tpl",
+    "c": "ق",
+    "top": [
+     [
+      "2S1",
+      null,
+      null,
+      null
+     ],
+     [
+      "M109",
+      null,
+      null,
+      null
+     ],
+     [
+      "D-30",
+      null,
+      null,
+      null
+     ]
+    ],
+    "gen": 2.4,
+    "tpl": "eu"
+   },
+   "jet": {
+    "n": 0,
+    "s": "iiss_eq",
+    "c": "ت",
+    "top": [
+     [
+      "Light attack aircraft",
+      9,
+      2,
+      "CHE"
+     ]
+    ],
+    "gen": 2.0
+   },
+   "heli": {
+    "n": 12,
+    "s": "tpl",
+    "c": "ق",
+    "top": [
+     [
+      "Mi-24",
+      null,
+      null,
+      null
+     ],
+     [
+      "AW139",
+      null,
+      null,
+      null
+     ],
+     [
+      "UH-60",
+      null,
+      null,
+      null
+     ]
+    ],
+    "gen": 2.6,
+    "tpl": "eu"
+   },
+   "navy": {
+    "n": 2,
+    "s": "wiki_navy",
+    "c": "ت",
+    "top": [
+     [
+      "Super Dvora Mk II",
+      1,
+      2,
+      "ISR"
+     ],
+     [
+      "Project 10412",
+      1,
+      2,
+      "SUN"
+     ]
+    ],
+    "gen": 2.0
+   }
+  }
  },
  "ind": null,
  "pol": {

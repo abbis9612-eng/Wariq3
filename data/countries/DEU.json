@@ -62,6 +62,11 @@
    "t": "تقدير المصمم (تشرين الثاني 2026) لصناعة السلاح والاستقرار: SIPRI Arms Transfers Database (أكبر المصدّرين 2020–24)، SIPRI Top 100 Arms-Producing Companies، Fragile States Index 2025، أخبار 2026",
    "u": "https://www.sipri.org/databases/armstransfers",
    "y": 2026
+  },
+  "tpl": {
+   "t": "قالب منطقة (eu): موديلات شائعة ونسب تقريبية من الدبابات (مدرعات ×2.5، مدفعية ×0.9، مروحيات ×0.25) — تقدير المصمم",
+   "u": "docs/features/world-plan.md",
+   "y": 2026
   }
  },
  "gov": {
@@ -454,7 +459,182 @@
     "gen": 2,
     "cat": "corvette"
    }
-  ]
+  ],
+  "grp": {
+   "tank": {
+    "n": 300,
+    "s": "iiss_eq",
+    "c": "ت",
+    "top": [
+     [
+      "T-72",
+      null,
+      null,
+      null
+     ],
+     [
+      "Leopard 1",
+      null,
+      null,
+      null
+     ],
+     [
+      "Leopard 2A4",
+      null,
+      null,
+      null
+     ]
+    ],
+    "gen": 2.6,
+    "tpl": "eu"
+   },
+   "afv": {
+    "n": 750,
+    "s": "tpl",
+    "c": "ق",
+    "top": [
+     [
+      "BMP-2",
+      null,
+      null,
+      null
+     ],
+     [
+      "M113",
+      null,
+      null,
+      null
+     ],
+     [
+      "Patria AMV",
+      null,
+      null,
+      null
+     ]
+    ],
+    "gen": 2.4,
+    "tpl": "eu"
+   },
+   "art": {
+    "n": 270,
+    "s": "tpl",
+    "c": "ق",
+    "top": [
+     [
+      "2S1",
+      null,
+      null,
+      null
+     ],
+     [
+      "M109",
+      null,
+      null,
+      null
+     ],
+     [
+      "D-30",
+      null,
+      null,
+      null
+     ]
+    ],
+    "gen": 2.4,
+    "tpl": "eu"
+   },
+   "jet": {
+    "n": 209,
+    "s": "iiss_eq",
+    "c": "ت",
+    "top": [
+     [
+      "Eurofighter Typhoon (T1, T2, T3, T4)",
+      141,
+      4,
+      "INT"
+     ],
+     [
+      "Panavia Tornado (IDS / ECR)",
+      63,
+      3,
+      "INT"
+     ]
+    ],
+    "gen": 3.7
+   },
+   "heli": {
+    "n": 86,
+    "s": "wiki_air",
+    "c": "ت",
+    "top": [
+     [
+      "Sikorsky CH-53 (CH-53GA/GS)",
+      66,
+      4,
+      "USA"
+     ],
+     [
+      "Eurocopter EC145 (H145M LUH SOF)",
+      15,
+      2,
+      "DEU"
+     ],
+     [
+      "Eurocopter AS532 (AS532 U2)",
+      3,
+      2,
+      "FRA"
+     ]
+    ],
+    "gen": 3.5
+   },
+   "uav": {
+    "n": 11,
+    "s": "wiki_air",
+    "c": "ت",
+    "top": [
+     [
+      "IAI Heron (Heron 1)",
+      6,
+      2,
+      "ISR"
+     ],
+     [
+      "IAI Eitan (Heron TP)",
+      5,
+      2,
+      "ISR"
+     ]
+    ],
+    "gen": 2.0
+   },
+   "navy": {
+    "n": 21,
+    "s": "iiss_eq",
+    "c": "ت",
+    "top": [
+     [
+      "Type 212A U-Boot-Klasse 212 A",
+      6,
+      2,
+      "DEU"
+     ],
+     [
+      "Braunschweig class Type K130 batch 1",
+      5,
+      2,
+      "DEU"
+     ],
+     [
+      "Brandenburg class Type F123",
+      4,
+      2,
+      "DEU"
+     ]
+    ],
+    "gen": 2.0
+   }
+  }
  },
  "ind": {
   "tech": {

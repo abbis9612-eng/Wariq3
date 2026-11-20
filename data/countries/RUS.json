@@ -68,6 +68,11 @@
    "t": "تقدير المصمم (تشرين الثاني 2026) لصناعة السلاح والاستقرار: SIPRI Arms Transfers Database (أكبر المصدّرين 2020–24)، SIPRI Top 100 Arms-Producing Companies، Fragile States Index 2025، أخبار 2026",
    "u": "https://www.sipri.org/databases/armstransfers",
    "y": 2026
+  },
+  "tpl": {
+   "t": "قالب منطقة (eu): موديلات شائعة ونسب تقريبية من الدبابات (مدرعات ×2.5، مدفعية ×0.9، مروحيات ×0.25) — تقدير المصمم",
+   "u": "docs/features/world-plan.md",
+   "y": 2026
   }
  },
  "gov": {
@@ -811,6 +816,526 @@
   ],
   "navy": [
    {
+    "m": "Delta IV",
+    "n": 6,
+    "orig": "RUS",
+    "s": "wiki_navy",
+    "c": "ت",
+    "cat": "sub",
+    "gen": 2,
+    "note": "عدد الصفوف بالقائمة"
+   },
+   {
+    "m": "Borei",
+    "n": 8,
+    "orig": "RUS",
+    "s": "wiki_navy",
+    "c": "ت",
+    "cat": "sub",
+    "gen": 2,
+    "note": "عدد الصفوف بالقائمة"
+   },
+   {
+    "m": "Oscar II",
+    "n": 6,
+    "orig": "RUS",
+    "s": "wiki_navy",
+    "c": "ت",
+    "cat": "sub",
+    "gen": 2,
+    "note": "عدد الصفوف بالقائمة"
+   },
+   {
+    "m": "Sierra II",
+    "n": 2,
+    "orig": "RUS",
+    "s": "wiki_navy",
+    "c": "ت",
+    "cat": "sub_nuc",
+    "gen": 2,
+    "note": "عدد الصفوف بالقائمة"
+   },
+   {
+    "m": "Victor III",
+    "n": 2,
+    "orig": "RUS",
+    "s": "wiki_navy",
+    "c": "ت",
+    "cat": "sub_nuc",
+    "gen": 3,
+    "note": "عدد الصفوف بالقائمة"
+   },
+   {
+    "m": "Akula",
+    "n": 9,
+    "orig": "RUS",
+    "s": "wiki_navy",
+    "c": "ت",
+    "cat": "sub_nuc",
+    "gen": 2,
+    "note": "عدد الصفوف بالقائمة"
+   },
+   {
+    "m": "Yasen",
+    "n": 5,
+    "orig": "RUS",
+    "s": "wiki_navy",
+    "c": "ت",
+    "cat": "sub_nuc",
+    "gen": 2,
+    "note": "عدد الصفوف بالقائمة"
+   },
+   {
+    "m": "Kilo",
+    "n": 5,
+    "orig": "RUS",
+    "s": "wiki_navy",
+    "c": "ت",
+    "cat": "sub",
+    "gen": 2,
+    "note": "عدد الصفوف بالقائمة"
+   },
+   {
+    "m": "Improved Kilo",
+    "n": 12,
+    "orig": "RUS",
+    "s": "wiki_navy",
+    "c": "ت",
+    "cat": "sub",
+    "gen": 2,
+    "note": "عدد الصفوف بالقائمة"
+   },
+   {
+    "m": "Lada",
+    "n": 2,
+    "orig": "RUS",
+    "s": "wiki_navy",
+    "c": "ت",
+    "cat": "sub",
+    "gen": 2,
+    "note": "عدد الصفوف بالقائمة"
+   },
+   {
+    "m": "ex Delta III",
+    "n": 1,
+    "orig": "RUS",
+    "s": "wiki_navy",
+    "c": "ت",
+    "cat": "sub",
+    "gen": 2,
+    "note": "عدد الصفوف بالقائمة"
+   },
+   {
+    "m": "ex Delta IV",
+    "n": 1,
+    "orig": "RUS",
+    "s": "wiki_navy",
+    "c": "ت",
+    "cat": "sub",
+    "gen": 2,
+    "note": "عدد الصفوف بالقائمة"
+   },
+   {
+    "m": "Sarov",
+    "n": 1,
+    "orig": "RUS",
+    "s": "wiki_navy",
+    "c": "ت",
+    "cat": "sub",
+    "gen": 2,
+    "note": "عدد الصفوف بالقائمة"
+   },
+   {
+    "m": "Almaz (X-Ray)",
+    "n": 1,
+    "orig": "RUS",
+    "s": "wiki_navy",
+    "c": "ت",
+    "cat": "sub",
+    "gen": 2,
+    "note": "عدد الصفوف بالقائمة"
+   },
+   {
+    "m": "Paltus",
+    "n": 2,
+    "orig": "RUS",
+    "s": "wiki_navy",
+    "c": "ت",
+    "cat": "sub",
+    "gen": 2,
+    "note": "عدد الصفوف بالقائمة"
+   },
+   {
+    "m": "Kashalot",
+    "n": 2,
+    "orig": "RUS",
+    "s": "wiki_navy",
+    "c": "ت",
+    "cat": "sub",
+    "gen": 2,
+    "note": "عدد الصفوف بالقائمة"
+   },
+   {
+    "m": "ex Oscar II",
+    "n": 1,
+    "orig": "RUS",
+    "s": "wiki_navy",
+    "c": "ت",
+    "cat": "sub",
+    "gen": 2,
+    "note": "عدد الصفوف بالقائمة"
+   },
+   {
+    "m": "Losharik",
+    "n": 1,
+    "orig": "RUS",
+    "s": "wiki_navy",
+    "c": "ت",
+    "cat": "sub",
+    "gen": 2,
+    "note": "عدد الصفوف بالقائمة"
+   },
+   {
+    "m": "Udaloy",
+    "n": 8,
+    "orig": "RUS",
+    "s": "wiki_navy",
+    "c": "ت",
+    "cat": "destroyer",
+    "gen": 2,
+    "note": "عدد الصفوف بالقائمة"
+   },
+   {
+    "m": "Krivak",
+    "n": 2,
+    "orig": "RUS",
+    "s": "wiki_navy",
+    "c": "ت",
+    "cat": "frigate",
+    "gen": 2,
+    "note": "عدد الصفوف بالقائمة"
+   },
+   {
+    "m": "Neustrashimy",
+    "n": 2,
+    "orig": "RUS",
+    "s": "wiki_navy",
+    "c": "ت",
+    "cat": "frigate",
+    "gen": 2,
+    "note": "عدد الصفوف بالقائمة"
+   },
+   {
+    "m": "Admiral Grigorovich",
+    "n": 3,
+    "orig": "RUS",
+    "s": "wiki_navy",
+    "c": "ت",
+    "cat": "frigate",
+    "gen": 2,
+    "note": "عدد الصفوف بالقائمة"
+   },
+   {
+    "m": "Gepard",
+    "n": 2,
+    "orig": "RUS",
+    "s": "wiki_navy",
+    "c": "ت",
+    "cat": "frigate",
+    "gen": 2,
+    "note": "عدد الصفوف بالقائمة"
+   },
+   {
+    "m": "Admiral Gorshkov",
+    "n": 3,
+    "orig": "RUS",
+    "s": "wiki_navy",
+    "c": "ت",
+    "cat": "frigate",
+    "gen": 2,
+    "note": "عدد الصفوف بالقائمة"
+   },
+   {
+    "m": "Steregushchiy",
+    "n": 9,
+    "orig": "RUS",
+    "s": "wiki_navy",
+    "c": "ت",
+    "cat": "corvette",
+    "gen": 2,
+    "note": "عدد الصفوف بالقائمة"
+   },
+   {
+    "m": "Gremyashchiy",
+    "n": 1,
+    "orig": "RUS",
+    "s": "wiki_navy",
+    "c": "ت",
+    "cat": "corvette",
+    "gen": 2,
+    "note": "عدد الصفوف بالقائمة"
+   },
+   {
+    "m": "Nanuchka",
+    "n": 7,
+    "orig": "RUS",
+    "s": "wiki_navy",
+    "c": "ت",
+    "cat": "corvette",
+    "gen": 2,
+    "note": "عدد الصفوف بالقائمة"
+   },
+   {
+    "m": "Tarantul",
+    "n": 16,
+    "orig": "RUS",
+    "s": "wiki_navy",
+    "c": "ت",
+    "cat": "corvette",
+    "gen": 2,
+    "note": "عدد الصفوف بالقائمة"
+   },
+   {
+    "m": "Bora",
+    "n": 2,
+    "orig": "RUS",
+    "s": "wiki_navy",
+    "c": "ت",
+    "cat": "corvette",
+    "gen": 2,
+    "note": "عدد الصفوف بالقائمة"
+   },
+   {
+    "m": "Buyan-M",
+    "n": 12,
+    "orig": "RUS",
+    "s": "wiki_navy",
+    "c": "ت",
+    "cat": "corvette",
+    "gen": 2,
+    "note": "عدد الصفوف بالقائمة"
+   },
+   {
+    "m": "Karakurt",
+    "n": 7,
+    "orig": "RUS",
+    "s": "wiki_navy",
+    "c": "ت",
+    "cat": "corvette",
+    "gen": 2,
+    "note": "عدد الصفوف بالقائمة"
+   },
+   {
+    "m": "Grisha",
+    "n": 16,
+    "orig": "RUS",
+    "s": "wiki_navy",
+    "c": "ت",
+    "cat": "corvette",
+    "gen": 2,
+    "note": "عدد الصفوف بالقائمة"
+   },
+   {
+    "m": "Parchim",
+    "n": 6,
+    "orig": "RUS",
+    "s": "wiki_navy",
+    "c": "ت",
+    "cat": "corvette",
+    "gen": 2,
+    "note": "عدد الصفوف بالقائمة"
+   },
+   {
+    "m": "Buyan",
+    "n": 3,
+    "orig": "RUS",
+    "s": "wiki_navy",
+    "c": "ت",
+    "cat": "corvette",
+    "gen": 2,
+    "note": "عدد الصفوف بالقائمة"
+   },
+   {
+    "m": "Tapir",
+    "n": 3,
+    "orig": "RUS",
+    "s": "wiki_navy",
+    "c": "ت",
+    "cat": "amphib",
+    "gen": 2,
+    "note": "عدد الصفوف بالقائمة"
+   },
+   {
+    "m": "Ropucha",
+    "n": 12,
+    "orig": "RUS",
+    "s": "wiki_navy",
+    "c": "ت",
+    "cat": "amphib",
+    "gen": 2,
+    "note": "عدد الصفوف بالقائمة"
+   },
+   {
+    "m": "Ivan Gren",
+    "n": 2,
+    "orig": "RUS",
+    "s": "wiki_navy",
+    "c": "ت",
+    "cat": "amphib",
+    "gen": 2,
+    "note": "عدد الصفوف بالقائمة"
+   },
+   {
+    "m": "Zubr",
+    "n": 2,
+    "orig": "RUS",
+    "s": "wiki_navy",
+    "c": "ت",
+    "cat": "amphib",
+    "gen": 2,
+    "note": "عدد الصفوف بالقائمة"
+   },
+   {
+    "m": "Serna",
+    "n": 12,
+    "orig": "RUS",
+    "s": "wiki_navy",
+    "c": "ت",
+    "cat": "amphib",
+    "gen": 2,
+    "note": "عدد الصفوف بالقائمة"
+   },
+   {
+    "m": "Dyugon",
+    "n": 5,
+    "orig": "RUS",
+    "s": "wiki_navy",
+    "c": "ت",
+    "cat": "amphib",
+    "gen": 2,
+    "note": "عدد الصفوف بالقائمة"
+   },
+   {
+    "m": "Ondatra",
+    "n": 12,
+    "orig": "RUS",
+    "s": "wiki_navy",
+    "c": "ت",
+    "cat": "amphib",
+    "gen": 2,
+    "note": "عدد الصفوف بالقائمة"
+   },
+   {
+    "m": "BK-16",
+    "n": 14,
+    "orig": "RUS",
+    "s": "wiki_navy",
+    "c": "ت",
+    "cat": "amphib",
+    "gen": 2,
+    "note": "عدد الصفوف بالقائمة"
+   },
+   {
+    "m": "BK-18",
+    "n": 2,
+    "orig": "RUS",
+    "s": "wiki_navy",
+    "c": "ت",
+    "cat": "amphib",
+    "gen": 2,
+    "note": "عدد الصفوف بالقائمة"
+   },
+   {
+    "m": "BK-10/M/M1/D",
+    "n": 1,
+    "orig": "RUS",
+    "s": "wiki_navy",
+    "c": "ت",
+    "cat": "amphib",
+    "gen": 3,
+    "note": "عدد الصفوف بالقائمة"
+   },
+   {
+    "m": "Project 22160",
+    "n": 4,
+    "orig": "RUS",
+    "s": "wiki_navy",
+    "c": "ت",
+    "cat": "patrol",
+    "gen": 2,
+    "note": "عدد الصفوف بالقائمة"
+   },
+   {
+    "m": "Project 23550",
+    "n": 1,
+    "orig": "RUS",
+    "s": "wiki_navy",
+    "c": "ت",
+    "cat": "patrol",
+    "gen": 2,
+    "note": "عدد الصفوف بالقائمة"
+   },
+   {
+    "m": "Grachonok",
+    "n": 24,
+    "orig": "RUS",
+    "s": "wiki_navy",
+    "c": "ت",
+    "cat": "patrol",
+    "gen": 2,
+    "note": "عدد الصفوف بالقائمة"
+   },
+   {
+    "m": "Raptor-class patrol boat",
+    "n": 17,
+    "orig": "RUS",
+    "s": "wiki_navy",
+    "c": "ت",
+    "cat": "patrol",
+    "gen": 3,
+    "note": "عدد الصفوف بالقائمة"
+   },
+   {
+    "m": "Dockstavarvet IC16M",
+    "n": 1,
+    "orig": "RUS",
+    "s": "wiki_navy",
+    "c": "ت",
+    "cat": "patrol",
+    "gen": 2,
+    "note": "عدد الصفوف بالقائمة"
+   },
+   {
+    "m": "Shmel",
+    "n": 4,
+    "orig": "RUS",
+    "s": "wiki_navy",
+    "c": "ت",
+    "cat": "patrol",
+    "gen": 2,
+    "note": "عدد الصفوف بالقائمة"
+   },
+   {
+    "m": "Gyurza-M",
+    "n": 2,
+    "orig": "RUS",
+    "s": "wiki_navy",
+    "c": "ت",
+    "cat": "patrol",
+    "gen": 2,
+    "note": "عدد الصفوف بالقائمة"
+   },
+   {
+    "m": "Zhuk-class patrol boat",
+    "n": 1,
+    "orig": "RUS",
+    "s": "wiki_navy",
+    "c": "ت",
+    "cat": "patrol",
+    "gen": 2,
+    "note": "عدد الصفوف بالقائمة"
+   },
+   {
     "m": "Ivan Susanin",
     "n": 2,
     "orig": "INT",
@@ -846,7 +1371,220 @@
     "gen": 2,
     "cat": "sub"
    }
-  ]
+  ],
+  "grp": {
+   "tank": {
+    "n": 2000,
+    "s": "iiss_eq",
+    "c": "ت",
+    "top": [
+     [
+      "T-72",
+      1000,
+      3,
+      "SUN"
+     ],
+     [
+      "T-90",
+      620,
+      4,
+      "RUS"
+     ],
+     [
+      "T-62",
+      600,
+      2,
+      "SUN"
+     ]
+    ],
+    "gen": 2.9
+   },
+   "afv": {
+    "n": 8045,
+    "s": "wiki_army",
+    "c": "ت",
+    "top": [
+     [
+      "MT-LB",
+      2500,
+      2,
+      "SUN"
+     ],
+     [
+      "BTR-80",
+      1200,
+      3,
+      "SUN"
+     ],
+     [
+      "BTR-60",
+      800,
+      2,
+      "SUN"
+     ]
+    ],
+    "gen": 2.4
+   },
+   "art": {
+    "n": 3675,
+    "s": "wiki_army",
+    "c": "ت",
+    "top": [
+     [
+      "BM-21 Grad",
+      650,
+      2,
+      "SUN"
+     ],
+     [
+      "2S3 Akatsiya",
+      600,
+      2,
+      "SUN"
+     ],
+     [
+      "2S19 Msta",
+      450,
+      2,
+      "SUN"
+     ]
+    ],
+    "gen": 2.1
+   },
+   "jet": {
+    "n": 1517,
+    "s": "iiss_eq",
+    "c": "ت",
+    "top": [
+     [
+      "F-16",
+      null,
+      null,
+      null
+     ],
+     [
+      "MiG-29",
+      null,
+      null,
+      null
+     ],
+     [
+      "Gripen",
+      null,
+      null,
+      null
+     ]
+    ],
+    "gen": 2.8,
+    "tpl": "eu"
+   },
+   "heli": {
+    "n": 500,
+    "s": "tpl",
+    "c": "ق",
+    "top": [
+     [
+      "Mi-24",
+      null,
+      null,
+      null
+     ],
+     [
+      "AW139",
+      null,
+      null,
+      null
+     ],
+     [
+      "UH-60",
+      null,
+      null,
+      null
+     ]
+    ],
+    "gen": 2.6,
+    "tpl": "eu"
+   },
+   "uav": {
+    "n": 3314,
+    "s": "wiki_army",
+    "c": "ت",
+    "top": [
+     [
+      "Veles",
+      1500,
+      2,
+      "RUS"
+     ],
+     [
+      "Orlan-10",
+      1000,
+      2,
+      "RUS"
+     ],
+     [
+      "ZALA 421-08/Strekoza",
+      400,
+      2,
+      "RUS"
+     ]
+    ],
+    "gen": 2.0
+   },
+   "ad": {
+    "n": 1129,
+    "s": "wiki_army",
+    "c": "ت",
+    "top": [
+     [
+      "Buk missile system",
+      310,
+      2,
+      "SUN"
+     ],
+     [
+      "9K35M3 Strela-10M3/MN",
+      300,
+      2,
+      "SUN"
+     ],
+     [
+      "9K22 Tunguska",
+      190,
+      2,
+      "SUN"
+     ]
+    ],
+    "gen": 2.1
+   },
+   "navy": {
+    "n": 174,
+    "s": "iiss_eq",
+    "c": "ت",
+    "top": [
+     [
+      "Grachonok",
+      24,
+      2,
+      "RUS"
+     ],
+     [
+      "Raptor-class patrol boat",
+      17,
+      3,
+      "RUS"
+     ],
+     [
+      "Tarantul",
+      16,
+      2,
+      "RUS"
+     ]
+    ],
+    "gen": 2.1,
+    "note": "مجموع القوائم 292 يختلف عن الإجمالي؛ الإجمالي هو المعتمد"
+   }
+  }
  },
  "ind": {
   "tech": {

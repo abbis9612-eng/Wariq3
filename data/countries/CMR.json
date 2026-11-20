@@ -5,6 +5,18 @@
  "tier": "C",
  "asOf": "2026-11",
  "src": {
+  "wiki_air": {
+   "t": "Wikipedia: Cameroon Air Force",
+   "u": "https://en.wikipedia.org/wiki/Cameroon_Air_Force?oldid=1343822760",
+   "y": 2026,
+   "note": "نسخة الصفحة بتاريخ السحب؛ أرقام ويكيبيديا تنراجع ويا مصادر ثانية"
+  },
+  "wiki_army": {
+   "t": "Wikipedia: List of equipment of the Cameroon Army",
+   "u": "https://en.wikipedia.org/wiki/List_of_equipment_of_the_Cameroon_Army?oldid=1377990054",
+   "y": 2026,
+   "note": "نسخة الصفحة بتاريخ السحب؛ أرقام ويكيبيديا تنراجع ويا مصادر ثانية"
+  },
   "iiss_eq": {
    "t": "Wikipedia: List of countries by level of military equipment (من IISS Military Balance ومصادر ثانية)",
    "u": "https://en.wikipedia.org/wiki/List_of_countries_by_level_of_military_equipment?oldid=1384804191",
@@ -49,6 +61,11 @@
   "tierA": {
    "t": "تقدير المصمم (تشرين الثاني 2026) لصناعة السلاح والاستقرار: SIPRI Arms Transfers Database (أكبر المصدّرين 2020–24)، SIPRI Top 100 Arms-Producing Companies، Fragile States Index 2025، أخبار 2026",
    "u": "https://www.sipri.org/databases/armstransfers",
+   "y": 2026
+  },
+  "tpl": {
+   "t": "قالب منطقة (af): موديلات شائعة ونسب تقريبية من الدبابات (مدرعات ×2.5، مدفعية ×0.9، مروحيات ×0.25) — تقدير المصمم",
+   "u": "docs/features/world-plan.md",
    "y": 2026
   }
  },
@@ -219,11 +236,438 @@
     "c": "ت"
    }
   },
-  "land": [],
-  "air": [],
+  "land": [
+   {
+    "m": "WMA301 Assaulter",
+    "n": 12,
+    "orig": "CHN",
+    "s": "wiki_army",
+    "c": "ت",
+    "gen": 2,
+    "cat": "atgm"
+   },
+   {
+    "m": "Ferret",
+    "n": 15,
+    "orig": "GBR",
+    "s": "wiki_army",
+    "c": "ت",
+    "gen": 2,
+    "cat": "ifv"
+   },
+   {
+    "m": "Véhicule Blindé Léger",
+    "n": 5,
+    "orig": "FRA",
+    "s": "wiki_army",
+    "c": "ت",
+    "gen": 2,
+    "cat": "ifv"
+   },
+   {
+    "m": "M8 Greyhound",
+    "n": 8,
+    "orig": "USA",
+    "s": "wiki_army",
+    "c": "ت",
+    "note": "Delivered from France in 1963.",
+    "gen": 2,
+    "cat": "ifv"
+   },
+   {
+    "m": "RAM MK3",
+    "n": 5,
+    "orig": "ISR",
+    "s": "wiki_army",
+    "c": "ت",
+    "gen": 2,
+    "cat": "ifv"
+   },
+   {
+    "m": "Panhard AML-90",
+    "n": 31,
+    "orig": "FRA",
+    "s": "wiki_army",
+    "c": "ت",
+    "note": "31 AML-90 Delivered via Bosnian Army in 2002.",
+    "gen": 2,
+    "cat": "ifv"
+   },
+   {
+    "m": "AMX-10 RC",
+    "n": 6,
+    "orig": "FRA",
+    "s": "wiki_army",
+    "c": "ت",
+    "gen": 2,
+    "cat": "ifv"
+   },
+   {
+    "m": "Ratel 20",
+    "n": 12,
+    "orig": "ZAF",
+    "s": "wiki_army",
+    "c": "ت",
+    "gen": 2,
+    "cat": "ifv"
+   },
+   {
+    "m": "Type 07P",
+    "n": 8,
+    "orig": "CHN",
+    "s": "wiki_army",
+    "c": "ت",
+    "gen": 2,
+    "cat": "ifv"
+   },
+   {
+    "m": "Panthera T6",
+    "n": 2,
+    "orig": "ARE",
+    "s": "wiki_army",
+    "c": "ت",
+    "note": "Used by Rapid Intervention Battalion.",
+    "gen": 2,
+    "cat": "ifv"
+   },
+   {
+    "m": "Gaia Thunder",
+    "n": 16,
+    "orig": "ISR",
+    "s": "wiki_army",
+    "c": "ت",
+    "gen": 2,
+    "cat": "ifv"
+   },
+   {
+    "m": "Cadillac Gage V-150 Commando",
+    "n": 43,
+    "orig": "USA",
+    "s": "wiki_army",
+    "c": "ت",
+    "note": "22 IFV versions armed with a 20 mm gun and a 90 mm gun.",
+    "gen": 2,
+    "cat": "ifv"
+   },
+   {
+    "m": "ACMAT Bastion",
+    "n": 38,
+    "orig": "FRA",
+    "s": "wiki_army",
+    "c": "ت",
+    "note": "23 arrived 2015-2016 and 15 in 2017.",
+    "gen": 2,
+    "cat": "ifv"
+   },
+   {
+    "m": "M3 Half-track",
+    "n": 12,
+    "orig": "USA",
+    "s": "wiki_army",
+    "c": "ت",
+    "gen": 2,
+    "cat": "ifv"
+   },
+   {
+    "m": "Cougar H",
+    "n": 6,
+    "orig": "USA",
+    "s": "wiki_army",
+    "c": "ت",
+    "gen": 2,
+    "cat": "ifv"
+   },
+   {
+    "m": "General Dynamics Land Systems PKSV",
+    "n": 27,
+    "orig": "USA",
+    "s": "wiki_army",
+    "c": "ت",
+    "gen": 2,
+    "cat": "ifv"
+   },
+   {
+    "m": "M101",
+    "n": 20,
+    "orig": "USA",
+    "s": "wiki_army",
+    "c": "ت",
+    "gen": 2,
+    "cat": "towed"
+   },
+   {
+    "m": "M1982",
+    "n": 12,
+    "orig": "ROU",
+    "s": "wiki_army",
+    "c": "ت",
+    "gen": 2,
+    "cat": "towed"
+   },
+   {
+    "m": "Type 59",
+    "n": 12,
+    "orig": "CHN",
+    "s": "wiki_army",
+    "c": "ت",
+    "gen": 1,
+    "cat": "towed"
+   },
+   {
+    "m": "Soltam M-71",
+    "n": 8,
+    "orig": "ISR",
+    "s": "wiki_army",
+    "c": "ت",
+    "gen": 2,
+    "cat": "towed"
+   },
+   {
+    "m": "ATMOS 2000",
+    "n": 18,
+    "orig": "ISR",
+    "s": "wiki_army",
+    "c": "ت",
+    "gen": 2,
+    "cat": "spg"
+   },
+   {
+    "m": "BM-21 Grad",
+    "n": 20,
+    "orig": "SUN",
+    "s": "wiki_army",
+    "c": "ت",
+    "note": "20 delivered from Romania in 1996. Some more from an unknown source in the 2010s.",
+    "gen": 2,
+    "cat": "mlrs"
+   },
+   {
+    "m": "Type 58",
+    "n": 18,
+    "orig": "CHN",
+    "s": "wiki_army",
+    "c": "ت",
+    "gen": 2,
+    "cat": "towed"
+   },
+   {
+    "m": "Oerlikon GDF-002",
+    "n": 18,
+    "orig": "CHE",
+    "s": "wiki_army",
+    "c": "ت",
+    "gen": 2,
+    "cat": "towed"
+   }
+  ],
+  "air": [
+   {
+    "m": "Xian MA60",
+    "n": 1,
+    "orig": "CHN",
+    "s": "wiki_air",
+    "c": "ت",
+    "gen": 2,
+    "cat": "transport"
+   },
+   {
+    "m": "Cessna 208 (208EX)",
+    "n": 3,
+    "orig": "USA",
+    "s": "wiki_air",
+    "c": "ت",
+    "note": "two aircraft used ISR missions",
+    "gen": 2,
+    "cat": "transport"
+   },
+   {
+    "m": "CASA CN-235",
+    "n": 1,
+    "orig": "ESP",
+    "s": "wiki_air",
+    "c": "ت",
+    "gen": 2,
+    "cat": "transport"
+   },
+   {
+    "m": "C-130 Hercules (C-130H)",
+    "n": 3,
+    "orig": "USA",
+    "s": "wiki_air",
+    "c": "ت",
+    "gen": 2,
+    "cat": "transport"
+   },
+   {
+    "m": "Bell 206",
+    "n": 1,
+    "orig": "USA",
+    "s": "wiki_air",
+    "c": "ت",
+    "gen": 2,
+    "cat": "heli_util"
+   },
+   {
+    "m": "Bell 412",
+    "n": 1,
+    "orig": "USA",
+    "s": "wiki_air",
+    "c": "ت",
+    "gen": 2,
+    "cat": "heli_util"
+   },
+   {
+    "m": "Mil Mi-17",
+    "n": 5,
+    "orig": "RUS",
+    "s": "wiki_air",
+    "c": "ت",
+    "gen": 2,
+    "cat": "heli_util"
+   },
+   {
+    "m": "Harbin Z-9",
+    "n": 3,
+    "orig": "CHN",
+    "s": "wiki_air",
+    "c": "ت",
+    "gen": 2,
+    "cat": "heli_util"
+   },
+   {
+    "m": "Alouette II",
+    "n": 1,
+    "orig": "FRA",
+    "s": "wiki_air",
+    "c": "ت",
+    "gen": 2,
+    "cat": "heli_util"
+   },
+   {
+    "m": "SA330 Puma",
+    "n": 2,
+    "orig": "FRA",
+    "s": "wiki_air",
+    "c": "ت",
+    "gen": 4,
+    "cat": "heli_util"
+   },
+   {
+    "m": "AgustaWestland AW109",
+    "n": 4,
+    "orig": "ITA",
+    "s": "wiki_air",
+    "c": "ت",
+    "gen": 2,
+    "cat": "heli_util"
+   },
+   {
+    "m": "Alpha Jet",
+    "n": 6,
+    "orig": "DEU",
+    "s": "wiki_air",
+    "c": "ت",
+    "gen": 2,
+    "cat": "attack"
+   }
+  ],
   "ad": [],
   "msl": [],
-  "navy": []
+  "navy": [],
+  "grp": {
+   "afv": {
+    "n": 234,
+    "s": "wiki_army",
+    "c": "ت",
+    "top": [
+     [
+      "Cadillac Gage V-150 Commando",
+      43,
+      2,
+      "USA"
+     ],
+     [
+      "ACMAT Bastion",
+      38,
+      2,
+      "FRA"
+     ],
+     [
+      "Panhard AML-90",
+      31,
+      2,
+      "FRA"
+     ]
+    ],
+    "gen": 2.0
+   },
+   "art": {
+    "n": 126,
+    "s": "wiki_army",
+    "c": "ت",
+    "top": [
+     [
+      "M101",
+      20,
+      2,
+      "USA"
+     ],
+     [
+      "BM-21 Grad",
+      20,
+      2,
+      "SUN"
+     ],
+     [
+      "ATMOS 2000",
+      18,
+      2,
+      "ISR"
+     ]
+    ],
+    "gen": 1.9
+   },
+   "jet": {
+    "n": 6,
+    "s": "iiss_eq",
+    "c": "ت",
+    "top": [
+     [
+      "Alpha Jet",
+      6,
+      2,
+      "DEU"
+     ]
+    ],
+    "gen": 2.0
+   },
+   "heli": {
+    "n": 17,
+    "s": "wiki_air",
+    "c": "ت",
+    "top": [
+     [
+      "Mil Mi-17",
+      5,
+      2,
+      "RUS"
+     ],
+     [
+      "AgustaWestland AW109",
+      4,
+      2,
+      "ITA"
+     ],
+     [
+      "Harbin Z-9",
+      3,
+      2,
+      "CHN"
+     ]
+    ],
+    "gen": 2.2
+   }
+  }
  },
  "ind": null,
  "pol": {

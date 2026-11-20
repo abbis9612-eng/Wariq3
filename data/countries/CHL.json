@@ -5,6 +5,24 @@
  "tier": "B",
  "asOf": "2026-11",
  "src": {
+  "wiki_air": {
+   "t": "Wikipedia: Chilean Air Force",
+   "u": "https://en.wikipedia.org/wiki/Chilean_Air_Force?oldid=1382330684",
+   "y": 2026,
+   "note": "نسخة الصفحة بتاريخ السحب؛ أرقام ويكيبيديا تنراجع ويا مصادر ثانية"
+  },
+  "wiki_army": {
+   "t": "Wikipedia: List of current equipment of the Chilean Army",
+   "u": "https://en.wikipedia.org/wiki/List_of_current_equipment_of_the_Chilean_Army?oldid=1381508927",
+   "y": 2026,
+   "note": "نسخة الصفحة بتاريخ السحب؛ أرقام ويكيبيديا تنراجع ويا مصادر ثانية"
+  },
+  "wiki_navy": {
+   "t": "Wikipedia: List of active ships of the Chilean Navy",
+   "u": "https://en.wikipedia.org/wiki/List_of_active_ships_of_the_Chilean_Navy?oldid=1385816883",
+   "y": 2026,
+   "note": "نسخة الصفحة بتاريخ السحب؛ أرقام ويكيبيديا تنراجع ويا مصادر ثانية"
+  },
   "iiss_eq": {
    "t": "Wikipedia: List of countries by level of military equipment (من IISS Military Balance ومصادر ثانية)",
    "u": "https://en.wikipedia.org/wiki/List_of_countries_by_level_of_military_equipment?oldid=1384804191",
@@ -49,6 +67,11 @@
   "tierA": {
    "t": "تقدير المصمم (تشرين الثاني 2026) لصناعة السلاح والاستقرار: SIPRI Arms Transfers Database (أكبر المصدّرين 2020–24)، SIPRI Top 100 Arms-Producing Companies، Fragile States Index 2025، أخبار 2026",
    "u": "https://www.sipri.org/databases/armstransfers",
+   "y": 2026
+  },
+  "tpl": {
+   "t": "قالب منطقة (la): موديلات شائعة ونسب تقريبية من الدبابات (مدرعات ×2.5، مدفعية ×0.9، مروحيات ×0.25) — تقدير المصمم",
+   "u": "docs/features/world-plan.md",
    "y": 2026
   }
  },
@@ -216,11 +239,672 @@
     "c": "ت"
    }
   },
-  "land": [],
-  "air": [],
+  "land": [
+   {
+    "m": "M109A3 CL M109A5 CL",
+    "n": 48,
+    "orig": "USA",
+    "s": "wiki_army",
+    "c": "ت",
+    "gen": 2,
+    "cat": "spg"
+   },
+   {
+    "m": "LAR-160",
+    "n": 8,
+    "orig": "INT",
+    "s": "wiki_army",
+    "c": "ت",
+    "gen": 2,
+    "cat": "mlrs"
+   },
+   {
+    "m": "M101",
+    "n": 136,
+    "orig": "USA",
+    "s": "wiki_army",
+    "c": "ت",
+    "gen": 2,
+    "cat": "towed"
+   },
+   {
+    "m": "OTO Melara M-56/14 P",
+    "n": 53,
+    "orig": "INT",
+    "s": "wiki_army",
+    "c": "ت",
+    "gen": 2,
+    "cat": "towed"
+   },
+   {
+    "m": "Soltam M-71",
+    "n": 60,
+    "orig": "INT",
+    "s": "wiki_army",
+    "c": "ت",
+    "gen": 2,
+    "cat": "towed"
+   },
+   {
+    "m": "Leopard 1V",
+    "n": 200,
+    "orig": "INT",
+    "s": "wiki_army",
+    "c": "ت",
+    "gen": 2,
+    "cat": "tank"
+   },
+   {
+    "m": "Leopard 2A4CHL",
+    "n": 186,
+    "orig": "INT",
+    "s": "wiki_army",
+    "c": "ت",
+    "gen": 3,
+    "cat": "tank"
+   },
+   {
+    "m": "M113A1 M113A2",
+    "n": 408,
+    "orig": "USA",
+    "s": "wiki_army",
+    "c": "ت",
+    "gen": 2,
+    "cat": "apc"
+   },
+   {
+    "m": "AIFV-B YPR-765",
+    "n": 169,
+    "orig": "USA",
+    "s": "wiki_army",
+    "c": "ت",
+    "gen": 2,
+    "cat": "ifv"
+   },
+   {
+    "m": "Marder 1A3",
+    "n": 180,
+    "orig": "INT",
+    "s": "wiki_army",
+    "c": "ت",
+    "gen": 3,
+    "cat": "ifv"
+   },
+   {
+    "m": "M113A2 Plus",
+    "n": 14,
+    "orig": "USA",
+    "s": "wiki_army",
+    "c": "ت",
+    "gen": 2,
+    "cat": "apc"
+   },
+   {
+    "m": "محلي (بلا اسم)",
+    "n": 2,
+    "orig": "INT",
+    "s": "wiki_army",
+    "c": "ت",
+    "gen": 2,
+    "cat": "apc"
+   }
+  ],
+  "air": [
+   {
+    "m": "Northrop F-5 (F-5E F-5F)",
+    "n": 8,
+    "orig": "USA",
+    "s": "wiki_air",
+    "c": "ت",
+    "note": "Originally, 18 F-5E/F Tiger IIs were acquired in 1975. In the 1990s, they were upgraded to the F-5 Tiger III variant. F-5F used as trainers.",
+    "gen": 2,
+    "cat": "fighter"
+   },
+   {
+    "m": "F-16 Fighting Falcon (F-16C/D F-16A/B MLU)",
+    "n": 10,
+    "orig": "USA",
+    "s": "wiki_air",
+    "c": "ت",
+    "note": "10 F-16C/D Block 50 received from the US in 2006 and 36 F-16 AM/BM MLU Block 15/20 from the RNLAF between 2006 and 2011. 11 F-16B/D used as ",
+    "gen": 3,
+    "cat": "fighter"
+   },
+   {
+    "m": "E-3 Sentry (E-3D MK1)",
+    "n": 2,
+    "orig": "USA",
+    "s": "wiki_air",
+    "c": "ت",
+    "note": "3 units received from the RAF in 2022, one for spare parts.",
+    "gen": 2,
+    "cat": "awacs"
+   },
+   {
+    "m": "Cessna L-19 (L-19A)",
+    "n": 3,
+    "orig": "USA",
+    "s": "wiki_air",
+    "c": "ت",
+    "note": "Originally, 6 units were acquired in 1955.",
+    "gen": 2,
+    "cat": "transport"
+   },
+   {
+    "m": "Cessna O-2 Skymaster (O-2A)",
+    "n": 2,
+    "orig": "USA",
+    "s": "wiki_air",
+    "c": "ت",
+    "gen": 2,
+    "cat": "transport"
+   },
+   {
+    "m": "DHC-6 Twin Otter (DHC-6-100 DHC-6-300)",
+    "n": 13,
+    "orig": "CAN",
+    "s": "wiki_air",
+    "c": "ت",
+    "note": "Originally, 20 units were acquired; 8 of the 100 series in 1966, 6 of the 300 series to LAM in 1974 and 6 more of the 300 series in 1978.",
+    "gen": 2,
+    "cat": "transport"
+   },
+   {
+    "m": "C-130 Hercules (C-130H)",
+    "n": 4,
+    "orig": "USA",
+    "s": "wiki_air",
+    "c": "ت",
+    "note": "2 units of this transport variant were received from Lockheed Martin between 1972 and 1973. In 2021, 2 more units were received from the USA",
+    "gen": 2,
+    "cat": "transport"
+   },
+   {
+    "m": "C-212 Aviocar (C-212-200 C-212-300)",
+    "n": 2,
+    "orig": "ESP",
+    "s": "wiki_air",
+    "c": "ت",
+    "note": "Originally 4 units received since March 1995; 2 C-212-200 and 2 C-212-300.",
+    "gen": 2,
+    "cat": "transport"
+   },
+   {
+    "m": "Boeing 737 (330QC 58N)",
+    "n": 1,
+    "orig": "USA",
+    "s": "wiki_air",
+    "c": "ت",
+    "gen": 2,
+    "cat": "transport"
+   },
+   {
+    "m": "Cessna CitationJet (CJ1)",
+    "n": 4,
+    "orig": "USA",
+    "s": "wiki_air",
+    "c": "ت",
+    "note": "4 units received in 2001.",
+    "gen": 2,
+    "cat": "trainer"
+   },
+   {
+    "m": "Gulfstream G-IV",
+    "n": 4,
+    "orig": "USA",
+    "s": "wiki_air",
+    "c": "ت",
+    "note": "4 aircraft in total; the first acquired in 2005, the second in 2015, the third in 2020 and the fourth in 2021.",
+    "gen": 2,
+    "cat": "transport"
+   },
+   {
+    "m": "Boeing 767 (300ER)",
+    "n": 1,
+    "orig": "USA",
+    "s": "wiki_air",
+    "c": "ت",
+    "note": "1 unit incorporated in 2008.",
+    "gen": 2,
+    "cat": "transport"
+   },
+   {
+    "m": "UH-1 Iroquois (UH-1H)",
+    "n": 13,
+    "orig": "USA",
+    "s": "wiki_air",
+    "c": "ت",
+    "note": "Its replacement is contemplated by 14 units of a helicopter to choose from during the second half of 2023.",
+    "gen": 2,
+    "cat": "heli_util"
+   },
+   {
+    "m": "Bell 206 (206B Jet Ranger III)",
+    "n": 5,
+    "orig": "USA",
+    "s": "wiki_air",
+    "c": "ت",
+    "gen": 2,
+    "cat": "heli_util"
+   },
+   {
+    "m": "UH-60 Black Hawk (S-70A-39 (UH-60L) S-70i (MH-60M))",
+    "n": 1,
+    "orig": "USA",
+    "s": "wiki_air",
+    "c": "ت",
+    "note": "1 unit acquired in 1998. 6 units of PZL Mielec in 2018.",
+    "gen": 2,
+    "cat": "heli_util"
+   },
+   {
+    "m": "Bell 412 (412SP 412EP)",
+    "n": 16,
+    "orig": "USA",
+    "s": "wiki_air",
+    "c": "ت",
+    "gen": 2,
+    "cat": "heli_util"
+   },
+   {
+    "m": "T-35 Pillán (T-35A T-35B T-35BE)",
+    "n": 30,
+    "orig": "CHL",
+    "s": "wiki_air",
+    "c": "ت",
+    "note": "Various units received from ENAER starting in 1986. They will be replaced from the 2027-2028 period by 33 T-35 Pillán II aircraft.",
+    "gen": 2,
+    "cat": "trainer"
+   },
+   {
+    "m": "A-29 Super Tucano (A-29B)",
+    "n": 22,
+    "orig": "BRA",
+    "s": "wiki_air",
+    "c": "ت",
+    "note": "22 units in total acquired from Embraer; 12 received since 2009, 6 in 2018 and 4 in 2020.",
+    "gen": 2,
+    "cat": "attack"
+   },
+   {
+    "m": "Cirrus SR22 (SR-22T)",
+    "n": 8,
+    "orig": "USA",
+    "s": "wiki_air",
+    "c": "ت",
+    "note": "8 units in total; 2 received in 2013, 2 in 2015, 2 in 2016 and 2 in 2017.",
+    "gen": 2,
+    "cat": "trainer"
+   },
+   {
+    "m": "Hermes 900",
+    "n": 3,
+    "orig": "ISR",
+    "s": "wiki_air",
+    "c": "ت",
+    "note": "3 units purchased from Elbit Systems in 2011.",
+    "gen": 2,
+    "cat": "uav_isr"
+   },
+   {
+    "m": "Mantis",
+    "n": 2,
+    "orig": "ESP",
+    "s": "wiki_air",
+    "c": "ت",
+    "note": "UAVs acquired around 2014.",
+    "gen": 2,
+    "cat": "uav_isr"
+   },
+   {
+    "m": "Airbus Helicopters",
+    "n": 10,
+    "orig": "FRA",
+    "s": "wiki_army",
+    "c": "ت",
+    "gen": 2,
+    "cat": "heli_util"
+   },
+   {
+    "m": "McDonnell Douglas MD 500 Defender",
+    "n": 9,
+    "orig": "USA",
+    "s": "wiki_army",
+    "c": "ت",
+    "gen": 2,
+    "cat": "heli_util"
+   }
+  ],
   "ad": [],
   "msl": [],
-  "navy": []
+  "navy": [
+   {
+    "m": "Scorpène class",
+    "n": 2,
+    "orig": "INT",
+    "s": "wiki_navy",
+    "c": "ت",
+    "gen": 2,
+    "cat": "sub"
+   },
+   {
+    "m": "Thomson class (Type 209/1400-L)",
+    "n": 2,
+    "orig": "INT",
+    "s": "wiki_navy",
+    "c": "ت",
+    "gen": 2,
+    "cat": "sub"
+   },
+   {
+    "m": "Type 22 Batch 2 (Boxer class)",
+    "n": 1,
+    "orig": "INT",
+    "s": "wiki_navy",
+    "c": "ت",
+    "gen": 2,
+    "cat": "frigate"
+   },
+   {
+    "m": "Type 23 (Duke class)",
+    "n": 3,
+    "orig": "INT",
+    "s": "wiki_navy",
+    "c": "ت",
+    "gen": 2,
+    "cat": "frigate"
+   },
+   {
+    "m": "Adelaide class",
+    "n": 2,
+    "orig": "INT",
+    "s": "wiki_navy",
+    "c": "ت",
+    "gen": 2,
+    "cat": "frigate"
+   },
+   {
+    "m": "Karel Doorman class (M class)",
+    "n": 2,
+    "orig": "INT",
+    "s": "wiki_navy",
+    "c": "ت",
+    "gen": 2,
+    "cat": "frigate"
+   },
+   {
+    "m": "OPV-80 class",
+    "n": 4,
+    "orig": "INT",
+    "s": "wiki_navy",
+    "c": "ت",
+    "gen": 2,
+    "cat": "patrol"
+   },
+   {
+    "m": "Taitao class",
+    "n": 4,
+    "orig": "INT",
+    "s": "wiki_navy",
+    "c": "ت",
+    "gen": 2,
+    "cat": "patrol"
+   },
+   {
+    "m": "Sa'ar 4 class (Reshef class)",
+    "n": 3,
+    "orig": "INT",
+    "s": "wiki_navy",
+    "c": "ت",
+    "gen": 2,
+    "cat": "missile_boat"
+   },
+   {
+    "m": "Protector class",
+    "n": 16,
+    "orig": "INT",
+    "s": "wiki_navy",
+    "c": "ت",
+    "gen": 3,
+    "cat": "patrol"
+   },
+   {
+    "m": "Ona class",
+    "n": 1,
+    "orig": "INT",
+    "s": "wiki_navy",
+    "c": "ت",
+    "gen": 2,
+    "cat": "patrol"
+   },
+   {
+    "m": "Alacalufe class",
+    "n": 2,
+    "orig": "INT",
+    "s": "wiki_navy",
+    "c": "ت",
+    "gen": 2,
+    "cat": "patrol"
+   },
+   {
+    "m": "Dabur class",
+    "n": 4,
+    "orig": "INT",
+    "s": "wiki_navy",
+    "c": "ت",
+    "gen": 2,
+    "cat": "patrol"
+   },
+   {
+    "m": "Type 44",
+    "n": 6,
+    "orig": "INT",
+    "s": "wiki_navy",
+    "c": "ت",
+    "gen": 2,
+    "cat": "patrol"
+   },
+   {
+    "m": "Foudre class",
+    "n": 1,
+    "orig": "INT",
+    "s": "wiki_navy",
+    "c": "ت",
+    "gen": 2,
+    "cat": "amphib"
+   },
+   {
+    "m": "BATRAL class",
+    "n": 2,
+    "orig": "INT",
+    "s": "wiki_navy",
+    "c": "ت",
+    "gen": 2,
+    "cat": "amphib"
+   },
+   {
+    "m": "Elicura class",
+    "n": 1,
+    "orig": "INT",
+    "s": "wiki_navy",
+    "c": "ت",
+    "gen": 2,
+    "cat": "amphib"
+   }
+  ],
+  "grp": {
+   "tank": {
+    "n": 270,
+    "s": "iiss_eq",
+    "c": "ت",
+    "top": [
+     [
+      "Leopard 1V",
+      200,
+      2,
+      "INT"
+     ],
+     [
+      "Leopard 2A4CHL",
+      186,
+      3,
+      "INT"
+     ]
+    ],
+    "gen": 2.5
+   },
+   "afv": {
+    "n": 773,
+    "s": "wiki_army",
+    "c": "ت",
+    "top": [
+     [
+      "M113A1 M113A2",
+      408,
+      2,
+      "USA"
+     ],
+     [
+      "Marder 1A3",
+      180,
+      3,
+      "INT"
+     ],
+     [
+      "AIFV-B YPR-765",
+      169,
+      2,
+      "USA"
+     ]
+    ],
+    "gen": 2.2
+   },
+   "art": {
+    "n": 305,
+    "s": "wiki_army",
+    "c": "ت",
+    "top": [
+     [
+      "M101",
+      136,
+      2,
+      "USA"
+     ],
+     [
+      "Soltam M-71",
+      60,
+      2,
+      "INT"
+     ],
+     [
+      "OTO Melara M-56/14 P",
+      53,
+      2,
+      "INT"
+     ]
+    ],
+    "gen": 2.0
+   },
+   "jet": {
+    "n": 57,
+    "s": "iiss_eq",
+    "c": "ت",
+    "top": [
+     [
+      "A-29 Super Tucano (A-29B)",
+      22,
+      2,
+      "BRA"
+     ],
+     [
+      "F-16 Fighting Falcon (F-16C/D F-16A/B ML",
+      10,
+      3,
+      "USA"
+     ],
+     [
+      "Northrop F-5 (F-5E F-5F)",
+      8,
+      2,
+      "USA"
+     ]
+    ],
+    "gen": 2.2
+   },
+   "heli": {
+    "n": 54,
+    "s": "wiki_air",
+    "c": "ت",
+    "top": [
+     [
+      "Bell 412 (412SP 412EP)",
+      16,
+      2,
+      "USA"
+     ],
+     [
+      "UH-1 Iroquois (UH-1H)",
+      13,
+      2,
+      "USA"
+     ],
+     [
+      "Airbus Helicopters",
+      10,
+      2,
+      "FRA"
+     ]
+    ],
+    "gen": 2.0
+   },
+   "uav": {
+    "n": 5,
+    "s": "wiki_air",
+    "c": "ت",
+    "top": [
+     [
+      "Hermes 900",
+      3,
+      2,
+      "ISR"
+     ],
+     [
+      "Mantis",
+      2,
+      2,
+      "ESP"
+     ]
+    ],
+    "gen": 2.0
+   },
+   "navy": {
+    "n": 16,
+    "s": "iiss_eq",
+    "c": "ت",
+    "top": [
+     [
+      "Protector class",
+      16,
+      3,
+      "INT"
+     ],
+     [
+      "Type 44",
+      6,
+      2,
+      "INT"
+     ],
+     [
+      "OPV-80 class",
+      4,
+      2,
+      "INT"
+     ]
+    ],
+    "gen": 2.3,
+    "note": "مجموع القوائم 56 يختلف عن الإجمالي؛ الإجمالي هو المعتمد"
+   }
+  }
  },
  "ind": null,
  "pol": {

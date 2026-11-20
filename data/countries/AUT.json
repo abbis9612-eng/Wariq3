@@ -5,6 +5,18 @@
  "tier": "B",
  "asOf": "2026-11",
  "src": {
+  "wiki_air": {
+   "t": "Wikipedia: Austrian Air Force",
+   "u": "https://en.wikipedia.org/wiki/Austrian_Air_Force?oldid=1372677422",
+   "y": 2026,
+   "note": "نسخة الصفحة بتاريخ السحب؛ أرقام ويكيبيديا تنراجع ويا مصادر ثانية"
+  },
+  "wiki_army": {
+   "t": "Wikipedia: List of equipment of the Austrian Armed Forces",
+   "u": "https://en.wikipedia.org/wiki/List_of_equipment_of_the_Austrian_Armed_Forces?oldid=1384502564",
+   "y": 2026,
+   "note": "نسخة الصفحة بتاريخ السحب؛ أرقام ويكيبيديا تنراجع ويا مصادر ثانية"
+  },
   "iiss_eq": {
    "t": "Wikipedia: List of countries by level of military equipment (من IISS Military Balance ومصادر ثانية)",
    "u": "https://en.wikipedia.org/wiki/List_of_countries_by_level_of_military_equipment?oldid=1384804191",
@@ -49,6 +61,11 @@
   "tierA": {
    "t": "تقدير المصمم (تشرين الثاني 2026) لصناعة السلاح والاستقرار: SIPRI Arms Transfers Database (أكبر المصدّرين 2020–24)، SIPRI Top 100 Arms-Producing Companies، Fragile States Index 2025، أخبار 2026",
    "u": "https://www.sipri.org/databases/armstransfers",
+   "y": 2026
+  },
+  "tpl": {
+   "t": "قالب منطقة (eu): موديلات شائعة ونسب تقريبية من الدبابات (مدرعات ×2.5، مدفعية ×0.9، مروحيات ×0.25) — تقدير المصمم",
+   "u": "docs/features/world-plan.md",
    "y": 2026
   }
  },
@@ -219,11 +236,435 @@
     "c": "ت"
    }
   },
-  "land": [],
-  "air": [],
-  "ad": [],
+  "land": [
+   {
+    "m": "M109 PzHb M109 A5Ö",
+    "n": 53,
+    "orig": "USA",
+    "s": "wiki_army",
+    "c": "ت",
+    "gen": 2,
+    "cat": "spg"
+   },
+   {
+    "m": "Leopard 2A4 KPz Leopard",
+    "n": 56,
+    "orig": "DEU",
+    "s": "wiki_army",
+    "c": "ت",
+    "note": "114 purchased in 1996 from the Netherlands as part of the \"Mech-Paket\" in a broader effort to modernise all mechanised units. They entered s",
+    "gen": 3,
+    "cat": "tank"
+   },
+   {
+    "m": "ASCOD SPZ Ulan",
+    "n": 112,
+    "orig": "AUT",
+    "s": "wiki_army",
+    "c": "ت",
+    "note": "112 IFV ordered in 1999, it entered service in 2002. Turret Steyr SP30 equipped with a Mauser MK 30/2 [de] autocanon (30×173 mm) and a FN MA",
+    "gen": 2,
+    "cat": "ifv"
+   },
+   {
+    "m": "Pandur I (A3) Mannschafts Transportpanzer Pandur A3 (MTPz)",
+    "n": 68,
+    "orig": "AUT",
+    "s": "wiki_army",
+    "c": "ت",
+    "note": "68 Pandur ordered in the 1990s, and it entered service in 1996. Equipment: Manned weapon station equipped with M2 Browning First modernisati",
+    "gen": 2,
+    "cat": "apc"
+   },
+   {
+    "m": "BvS10 MkIIB AUT Universal Geländefahhrzeug BVS10 Hägglunds",
+    "n": 32,
+    "orig": "SWE",
+    "s": "wiki_army",
+    "c": "ت",
+    "note": "32 purchased in 2016 for €85 million, entering service in 2018. Equipment and specifications: ESLAIT EFWS WS4 Panther RCWS \"Combat NG\" battl",
+    "gen": 2,
+    "cat": "apc"
+   },
+   {
+    "m": "ATF Dingo 2 A1 PatSi Allschutzfahrzeug Dingo 2",
+    "n": 20,
+    "orig": "DEU",
+    "s": "wiki_army",
+    "c": "ت",
+    "note": "20 ordered in October 2004, it entered service in 2005. Equipment: KMW 1530 RCWS with a Rheinmetall MG3 (MG 74)",
+    "gen": 2,
+    "cat": "apc"
+   },
+   {
+    "m": "ATF Dingo 2 A3 PatSi Allschutzfahrzeug Dingo 2",
+    "n": 46,
+    "orig": "DEU",
+    "s": "wiki_army",
+    "c": "ت",
+    "note": "Purchases: 14 ordered in April 2016 32 ordered in March 2017, deliveries in 2017 - 2018 Equipment: ESLAIT EFWS WS4 Panther RCWS IR headlight",
+    "gen": 2,
+    "cat": "apc"
+   },
+   {
+    "m": "Iveco LMV Geschütztes Mehrzweckfahrzeug Husar / Husar MP (GMF Husar)",
+    "n": 123,
+    "orig": "ITA",
+    "s": "wiki_army",
+    "c": "ت",
+    "note": "150 Iveco LMV purchased, 27 in specialised variants (see below). It entered service in 2008. Equipment: ESLAIT EFWS WS4 Panther RCWS Mine an",
+    "gen": 2,
+    "cat": "apc"
+   },
+   {
+    "m": "Iveco LMV BAA-EO Geschütztes Mehrzweckfahrzeug Husar (BAA-EO GMF Husar)",
+    "n": 22,
+    "orig": "ITA",
+    "s": "wiki_army",
+    "c": "ت",
+    "note": "22 ordered in November 2013. It entered service in 2017. 12 for reconnaissance companies, 6 for artillery observation teams, 4 for the Jagdk",
+    "gen": 2,
+    "cat": "apc"
+   },
+   {
+    "m": "ATF Dingo 2 AC-Aufklärungsfahrzeug Dingo 2",
+    "n": 12,
+    "orig": "DEU",
+    "s": "wiki_army",
+    "c": "ت",
+    "note": "NBC reconnaissance ordered in 2005",
+    "gen": 2,
+    "cat": "apc"
+   },
+   {
+    "m": "Pandur I",
+    "n": 6,
+    "orig": "AUT",
+    "s": "wiki_army",
+    "c": "ت",
+    "note": "Purchased second-hand to the Belgian Army in 2016, and used for spare parts.",
+    "gen": 2,
+    "cat": "apc"
+   },
+   {
+    "m": "MAN TGM 18.340 4×4 Universallöschfahrzeuge für Flugplatz, 3000 / 400 / 250 (ULFzg 3000 / 400 / 250)",
+    "n": 6,
+    "orig": "AUT",
+    "s": "wiki_army",
+    "c": "ت",
+    "note": "3,000 litres water 400 litres foaming agent 250 kg of fire extinguishing powder",
+    "gen": 2,
+    "cat": "apc"
+   },
+   {
+    "m": "Rosenbauer / MAN TGM 18.320 4×4 ABC-Löschfahrzeug",
+    "n": 10,
+    "orig": "AUT",
+    "s": "wiki_army",
+    "c": "ت",
+    "note": "In service since 2016. Equipment RS14 generator",
+    "gen": 2,
+    "cat": "apc"
+   },
+   {
+    "m": "EMPL Löschcontainer",
+    "n": 3,
+    "orig": "AUT",
+    "s": "wiki_army",
+    "c": "ت",
+    "note": "Container with firefighting equipment: power generators 200 liter foam tank 4,000 liter built-in diesel powered pump pressure hoses distribu",
+    "gen": 2,
+    "cat": "apc"
+   },
+   {
+    "m": "DOK-ING MV-5",
+    "n": 2,
+    "orig": "HRV",
+    "s": "wiki_army",
+    "c": "ت",
+    "note": "Comes with tools such as a rotary gripper.",
+    "gen": 2,
+    "cat": "apc"
+   },
+   {
+    "m": "Pinzgauer 712 (6×6) Rette- und Bergefahrzeug Pinzgauer 712 (RuB Pinzgauer)",
+    "n": 18,
+    "orig": "AUT",
+    "s": "wiki_army",
+    "c": "ت",
+    "gen": 2,
+    "cat": "apc"
+   },
+   {
+    "m": "MAMMUT Decontamination module [de] Dekontaminationssystem MAMMUT",
+    "n": 10,
+    "orig": "DEU",
+    "s": "wiki_army",
+    "c": "ت",
+    "note": "Equipment: 33-meter-tonne Palfinger PK 33002 EHcrane Module 1: vehicle decontamination with collecting basin Module 2: vacuum chamber for dr",
+    "gen": 2,
+    "cat": "apc"
+   },
+   {
+    "m": "Oerlikon GDF 005 35 mm ZFlAK 85",
+    "n": 28,
+    "orig": "CHE",
+    "s": "wiki_army",
+    "c": "ت",
+    "note": "The system will be upgraded to the GDF-009 standard and will use AHEAD ammunition.",
+    "gen": 2,
+    "cat": "towed"
+   }
+  ],
+  "air": [
+   {
+    "m": "Eurofighter Typhoon (Tranche 1)",
+    "n": 15,
+    "orig": "INT",
+    "s": "wiki_air",
+    "c": "ت",
+    "note": "The Austrian government has planned to replace the old T1 Eurofighters with 36 modern fighter jets.",
+    "gen": 4,
+    "cat": "fighter"
+   },
+   {
+    "m": "C-130 Hercules (C-130K)",
+    "n": 2,
+    "orig": "USA",
+    "s": "wiki_air",
+    "c": "ت",
+    "note": "Three ex-Royal Air Force aircraft were purchased, one of which was retired in 2025.",
+    "gen": 2,
+    "cat": "transport"
+   },
+   {
+    "m": "Pilatus PC-6",
+    "n": 8,
+    "orig": "CHE",
+    "s": "wiki_air",
+    "c": "ت",
+    "gen": 2,
+    "cat": "transport"
+   },
+   {
+    "m": "AgustaWestland AW169 (AW169M)",
+    "n": 11,
+    "orig": "ITA",
+    "s": "wiki_air",
+    "c": "ت",
+    "note": "According to World Air Forces 2026, these 11 are \"trainer helicopters\" (+1 on order) with 0 \"combat helicopters\" (+24 on order) in inventory",
+    "gen": 2,
+    "cat": "heli_util"
+   },
+   {
+    "m": "Agusta/Bell AB 212",
+    "n": 22,
+    "orig": "USA",
+    "s": "wiki_air",
+    "c": "ت",
+    "gen": 2,
+    "cat": "heli_util"
+   },
+   {
+    "m": "Bell OH-58 (OH-58B)",
+    "n": 10,
+    "orig": "USA",
+    "s": "wiki_air",
+    "c": "ت",
+    "note": "Is mounted with a machine gun. To be replaced by AW169.",
+    "gen": 2,
+    "cat": "heli_attack"
+   },
+   {
+    "m": "Sikorsky UH-60 Black Hawk (S-70A/UH-60M)",
+    "n": 9,
+    "orig": "USA",
+    "s": "wiki_air",
+    "c": "ت",
+    "note": "9 in service and 15 more ordered. 3 ex-Royal Jordanian Air Force S-70A and 12 new UH-60M on order.",
+    "gen": 2,
+    "cat": "heli_util"
+   },
+   {
+    "m": "Pilatus PC-7",
+    "n": 12,
+    "orig": "CHE",
+    "s": "wiki_air",
+    "c": "ت",
+    "note": "Can be armed with two 12.7 mm machine guns.",
+    "gen": 2,
+    "cat": "trainer"
+   },
+   {
+    "m": "Diamond DA40 (DA40 NG)",
+    "n": 4,
+    "orig": "AUT",
+    "s": "wiki_air",
+    "c": "ت",
+    "gen": 2,
+    "cat": "trainer"
+   },
+   {
+    "m": "Bell OH-58 Kiowa",
+    "n": 10,
+    "orig": "USA",
+    "s": "wiki_army",
+    "c": "ت",
+    "note": "12 received from 1978 onwards, 10 remaining in service. To be replaced by the AW-169M (second order) by 2028.",
+    "gen": 2,
+    "cat": "heli_util"
+   },
+   {
+    "m": "Sikorsky S-70 Black Hawk S-70A-42",
+    "n": 9,
+    "orig": "USA",
+    "s": "wiki_army",
+    "c": "ت",
+    "note": "Nine S-70 ordered in 2000 for $183 million with an option for three more (which weren't ordered), all delivered in 2002. A modernisation pro",
+    "gen": 2,
+    "cat": "heli_util"
+   },
+   {
+    "m": "AW169B Lion",
+    "n": 12,
+    "orig": "ITA",
+    "s": "wiki_army",
+    "c": "ت",
+    "note": "First order of 18 AW169 in December 2021. The government-to-government (G2G) agreement is valued at €346 million. The aircraft in this order",
+    "gen": 2,
+    "cat": "heli_util"
+   }
+  ],
+  "ad": [
+   {
+    "m": "Mistral lFAL Mistral",
+    "n": 59,
+    "orig": "FRA",
+    "s": "wiki_army",
+    "c": "ت",
+    "note": "Originally equipped with Mistral 1 missiles, gradually replaced with Mistral 2 missiles. Coupled with Thomson-CSF (Thales Group) RAC 3D rada",
+    "gen": 2,
+    "cat": "short"
+   }
+  ],
   "msl": [],
-  "navy": []
+  "navy": [],
+  "grp": {
+   "tank": {
+    "n": 58,
+    "s": "iiss_eq",
+    "c": "ت",
+    "top": [
+     [
+      "Leopard 2A4 KPz Leopard",
+      56,
+      3,
+      "DEU"
+     ]
+    ],
+    "gen": 3.0
+   },
+   "afv": {
+    "n": 490,
+    "s": "wiki_army",
+    "c": "ت",
+    "top": [
+     [
+      "Iveco LMV Geschütztes Mehrzweckfahrzeug ",
+      123,
+      2,
+      "ITA"
+     ],
+     [
+      "ASCOD SPZ Ulan",
+      112,
+      2,
+      "AUT"
+     ],
+     [
+      "Pandur I (A3) Mannschafts Transportpanze",
+      68,
+      2,
+      "AUT"
+     ]
+    ],
+    "gen": 2.0
+   },
+   "art": {
+    "n": 81,
+    "s": "wiki_army",
+    "c": "ت",
+    "top": [
+     [
+      "M109 PzHb M109 A5Ö",
+      53,
+      2,
+      "USA"
+     ],
+     [
+      "Oerlikon GDF 005 35 mm ZFlAK 85",
+      28,
+      2,
+      "CHE"
+     ]
+    ],
+    "gen": 2.0
+   },
+   "jet": {
+    "n": 15,
+    "s": "iiss_eq",
+    "c": "ت",
+    "top": [
+     [
+      "Eurofighter Typhoon (Tranche 1)",
+      15,
+      4,
+      "INT"
+     ]
+    ],
+    "gen": 4.0
+   },
+   "heli": {
+    "n": 83,
+    "s": "wiki_air",
+    "c": "ت",
+    "top": [
+     [
+      "Agusta/Bell AB 212",
+      22,
+      2,
+      "USA"
+     ],
+     [
+      "AW169B Lion",
+      12,
+      2,
+      "ITA"
+     ],
+     [
+      "AgustaWestland AW169 (AW169M)",
+      11,
+      2,
+      "ITA"
+     ]
+    ],
+    "gen": 2.0
+   },
+   "ad": {
+    "n": 59,
+    "s": "wiki_army",
+    "c": "ت",
+    "top": [
+     [
+      "Mistral lFAL Mistral",
+      59,
+      2,
+      "FRA"
+     ]
+    ],
+    "gen": 2.0
+   }
+  }
  },
  "ind": null,
  "pol": {

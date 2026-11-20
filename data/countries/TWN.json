@@ -74,6 +74,11 @@
    "t": "تقدير المصمم (تشرين الثاني 2026) لصناعة السلاح والاستقرار: SIPRI Arms Transfers Database (أكبر المصدّرين 2020–24)، SIPRI Top 100 Arms-Producing Companies، Fragile States Index 2025، أخبار 2026",
    "u": "https://www.sipri.org/databases/armstransfers",
    "y": 2026
+  },
+  "tpl": {
+   "t": "قالب منطقة (as): موديلات شائعة ونسب تقريبية من الدبابات (مدرعات ×2.5، مدفعية ×0.9، مروحيات ×0.25) — تقدير المصمم",
+   "u": "docs/features/world-plan.md",
+   "y": 2026
   }
  },
  "gov": {
@@ -378,47 +383,7 @@
     "cat": "mlrs"
    },
    {
-    "m": "Hellfire AGM-114L",
-    "n": 1000,
-    "orig": "USA",
-    "s": "wiki_army",
-    "c": "ت",
-    "note": "Carried by AH-64E since 2012-2014.",
-    "gen": 2,
-    "cat": "atgm"
-   },
-   {
-    "m": "Hellfire AGM-114K3",
-    "n": 240,
-    "orig": "USA",
-    "s": "wiki_army",
-    "c": "ت",
-    "note": "Carried by AH-1W and OH-58D since 1999.",
-    "gen": 2,
-    "cat": "atgm"
-   },
-   {
-    "m": "Hellfire AGM-114C",
-    "n": 684,
-    "orig": "USA",
-    "s": "wiki_army",
-    "c": "ت",
-    "note": "Carried by AH-1W and OH-58D.",
-    "gen": 2,
-    "cat": "atgm"
-   },
-   {
-    "m": "FGM-148 Javelin",
-    "n": 2200,
-    "orig": "USA",
-    "s": "wiki_army",
-    "c": "ت",
-    "note": "40 launchers, 360 missiles ordered in 2002. 20 launchers, 182 missiles ordered in 2008. 60 launchers, 208 missiles ordered in 2017. 42 launc",
-    "gen": 2,
-    "cat": "atgm"
-   },
-   {
-    "m": "APILAS",
+    "m": "Anti-tank missile",
     "n": 1000,
     "orig": "FRA",
     "s": "wiki_army",
@@ -522,7 +487,17 @@
   ],
   "ad": [
    {
-    "m": "Surface-to-air TC-2",
+    "m": "Air-to-air missile",
+    "n": 300,
+    "orig": "USA",
+    "s": "wiki_army",
+    "c": "ت",
+    "note": "AIM-9S. Carried by AH-1W.",
+    "gen": 2,
+    "cat": "short"
+   },
+   {
+    "m": "Medium-range surface-to-air missile",
     "n": 29,
     "orig": "TWN",
     "s": "wiki_army",
@@ -532,7 +507,7 @@
     "cat": "short"
    },
    {
-    "m": "M1097 Avenger (AN/TWQ-1)",
+    "m": "Self-propelled anti-aircraft weapon",
     "n": 74,
     "orig": "USA",
     "s": "wiki_army",
@@ -542,12 +517,22 @@
     "cat": "short"
    },
    {
-    "m": "Dual Mounted Stinger",
+    "m": "Short-range surface-to-air missile",
     "n": 116,
     "orig": "USA",
     "s": "wiki_army",
     "c": "ت",
     "note": "55 Stinger DMS launchers with 465 RMP rounds, from the United States Army stockpile and rebuilt/refurbished, sold to Taiwan May 1996 for 80 ",
+    "gen": 2,
+    "cat": "short"
+   },
+   {
+    "m": "Man-portable air-defense system",
+    "n": 1800,
+    "orig": "USA",
+    "s": "wiki_army",
+    "c": "ت",
+    "note": "250 Stinger Block-1-92 ordered in 2018 and an additional 254 Stinger Block-1-92F in 2019.",
     "gen": 2,
     "cat": "short"
    }
@@ -562,6 +547,36 @@
     "c": "ت",
     "gen": 2,
     "cat": "missile_boat"
+   },
+   {
+    "m": "Chien Lung-class",
+    "n": 1,
+    "orig": "TWN",
+    "s": "wiki_navy",
+    "c": "ت",
+    "cat": "sub",
+    "gen": 2,
+    "note": "عدد الصفوف بالقائمة"
+   },
+   {
+    "m": "Hai Shih-class (Tench-class)",
+    "n": 1,
+    "orig": "TWN",
+    "s": "wiki_navy",
+    "c": "ت",
+    "cat": "sub",
+    "gen": 2,
+    "note": "عدد الصفوف بالقائمة"
+   },
+   {
+    "m": "Hai Kun-class",
+    "n": 1,
+    "orig": "TWN",
+    "s": "wiki_navy",
+    "c": "ت",
+    "cat": "sub",
+    "gen": 2,
+    "note": "عدد الصفوف بالقائمة"
    },
    {
     "m": "Lockheed P-3 Orion (P-3C)",
@@ -593,7 +608,219 @@
     "gen": 2,
     "cat": "sub"
    }
-  ]
+  ],
+  "grp": {
+   "tank": {
+    "n": 1000,
+    "s": "iiss_eq",
+    "c": "ت",
+    "top": [
+     [
+      "M60A3 TTS",
+      460,
+      2,
+      "USA"
+     ],
+     [
+      "CM11 Brave Tiger",
+      450,
+      2,
+      "USA"
+     ],
+     [
+      "M1A2T Abrams",
+      108,
+      4,
+      "USA"
+     ]
+    ],
+    "gen": 2.2
+   },
+   "afv": {
+    "n": 2499,
+    "s": "wiki_army",
+    "c": "ت",
+    "top": [
+     [
+      "CM21",
+      1025,
+      2,
+      "USA"
+     ],
+     [
+      "M113",
+      650,
+      2,
+      "USA"
+     ],
+     [
+      "CM32",
+      378,
+      2,
+      "TWN"
+     ]
+    ],
+    "gen": 2.0
+   },
+   "art": {
+    "n": 1609,
+    "s": "wiki_army",
+    "c": "ت",
+    "top": [
+     [
+      "M101A1(T-63)",
+      650,
+      2,
+      "USA"
+     ],
+     [
+      "M114A1",
+      250,
+      2,
+      "CHN"
+     ],
+     [
+      "M109",
+      225,
+      2,
+      "USA"
+     ]
+    ],
+    "gen": 2.0
+   },
+   "jet": {
+    "n": 346,
+    "s": "iiss_eq",
+    "c": "ت",
+    "top": [
+     [
+      "F-5",
+      null,
+      null,
+      null
+     ],
+     [
+      "MiG-21",
+      null,
+      null,
+      null
+     ],
+     [
+      "F-7",
+      null,
+      null,
+      null
+     ]
+    ],
+    "gen": 2,
+    "tpl": "as"
+   },
+   "heli": {
+    "n": 195,
+    "s": "wiki_army",
+    "c": "ت",
+    "top": [
+     [
+      "AH-1 SuperCobra (AH-1W)",
+      61,
+      2,
+      "USA"
+     ],
+     [
+      "OH-58 Kiowa (OH-58D)",
+      37,
+      2,
+      "USA"
+     ],
+     [
+      "UH-60 Black Hawk (UH-60M)",
+      30,
+      2,
+      "USA"
+     ]
+    ],
+    "gen": 2.3
+   },
+   "uav": {
+    "n": 653,
+    "s": "wiki_army",
+    "c": "ت",
+    "top": [
+     [
+      "NCSIST Capricorn [zh] (Unmanned aerial v",
+      300,
+      2,
+      "TWN"
+     ],
+     [
+      "Altius-600M (Unmanned aerial vehicle)",
+      291,
+      2,
+      "USA"
+     ],
+     [
+      "NCSIST Albatross (Medium recon unmanned ",
+      32,
+      2,
+      "TWN"
+     ]
+    ],
+    "gen": 2.0
+   },
+   "ad": {
+    "n": 2319,
+    "s": "wiki_army",
+    "c": "ت",
+    "top": [
+     [
+      "Man-portable air-defense system",
+      1800,
+      2,
+      "USA"
+     ],
+     [
+      "Air-to-air missile",
+      300,
+      2,
+      "USA"
+     ],
+     [
+      "Short-range surface-to-air missile",
+      116,
+      2,
+      "USA"
+     ]
+    ],
+    "gen": 2.0
+   },
+   "navy": {
+    "n": 49,
+    "s": "iiss_eq",
+    "c": "ت",
+    "top": [
+     [
+      "Kuang Hua VI-class",
+      61,
+      2,
+      "INT"
+     ],
+     [
+      "Sikorsky S-70 (S-70C(M)-1/2 Thunderhawk)",
+      18,
+      2,
+      "USA"
+     ],
+     [
+      "Lockheed P-3 Orion (P-3C)",
+      12,
+      2,
+      "USA"
+     ]
+    ],
+    "gen": 2.0,
+    "note": "مجموع القوائم 101 يختلف عن الإجمالي؛ الإجمالي هو المعتمد"
+   }
+  }
  },
  "ind": {
   "tech": {

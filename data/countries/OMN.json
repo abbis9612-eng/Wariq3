@@ -5,6 +5,24 @@
  "tier": "B",
  "asOf": "2026-11",
  "src": {
+  "wiki_air": {
+   "t": "Wikipedia: Royal Air Force of Oman",
+   "u": "https://en.wikipedia.org/wiki/Royal_Air_Force_of_Oman?oldid=1380562211",
+   "y": 2026,
+   "note": "نسخة الصفحة بتاريخ السحب؛ أرقام ويكيبيديا تنراجع ويا مصادر ثانية"
+  },
+  "wiki_army": {
+   "t": "Wikipedia: Royal Army of Oman",
+   "u": "https://en.wikipedia.org/wiki/Royal_Army_of_Oman?oldid=1363422152",
+   "y": 2026,
+   "note": "نسخة الصفحة بتاريخ السحب؛ أرقام ويكيبيديا تنراجع ويا مصادر ثانية"
+  },
+  "wiki_navy": {
+   "t": "Wikipedia: Royal Navy of Oman",
+   "u": "https://en.wikipedia.org/wiki/Royal_Navy_of_Oman?oldid=1369600480",
+   "y": 2026,
+   "note": "نسخة الصفحة بتاريخ السحب؛ أرقام ويكيبيديا تنراجع ويا مصادر ثانية"
+  },
   "iiss_eq": {
    "t": "Wikipedia: List of countries by level of military equipment (من IISS Military Balance ومصادر ثانية)",
    "u": "https://en.wikipedia.org/wiki/List_of_countries_by_level_of_military_equipment?oldid=1384804191",
@@ -49,6 +67,11 @@
   "tierA": {
    "t": "تقدير المصمم (تشرين الثاني 2026) لصناعة السلاح والاستقرار: SIPRI Arms Transfers Database (أكبر المصدّرين 2020–24)، SIPRI Top 100 Arms-Producing Companies، Fragile States Index 2025، أخبار 2026",
    "u": "https://www.sipri.org/databases/armstransfers",
+   "y": 2026
+  },
+  "tpl": {
+   "t": "قالب منطقة (me): موديلات شائعة ونسب تقريبية من الدبابات (مدرعات ×2.5، مدفعية ×0.9، مروحيات ×0.25) — تقدير المصمم",
+   "u": "docs/features/world-plan.md",
    "y": 2026
   }
  },
@@ -207,11 +230,507 @@
     "c": "ت"
    }
   },
-  "land": [],
-  "air": [],
-  "ad": [],
+  "land": [
+   {
+    "m": "Challenger 2",
+    "n": 38,
+    "orig": "GBR",
+    "s": "wiki_army",
+    "c": "ت",
+    "gen": 3,
+    "cat": "tank"
+   },
+   {
+    "m": "FV4201 Chieftain",
+    "n": 27,
+    "orig": "GBR",
+    "s": "wiki_army",
+    "c": "ت",
+    "note": "Delivered by United Kingdom from 1981 to 1985",
+    "gen": 3,
+    "cat": "tank"
+   },
+   {
+    "m": "M60A1/A3",
+    "n": 79,
+    "orig": "USA",
+    "s": "wiki_army",
+    "c": "ت",
+    "note": "6 M60A1 73 M60A3",
+    "gen": 2,
+    "cat": "tank"
+   },
+   {
+    "m": "FV101 Scorpion",
+    "n": 120,
+    "orig": "GBR",
+    "s": "wiki_army",
+    "c": "ت",
+    "gen": 2,
+    "cat": "tank"
+   },
+   {
+    "m": "B1 Centauro",
+    "n": 9,
+    "orig": "ITA",
+    "s": "wiki_army",
+    "c": "ت",
+    "note": "With 120mm gun",
+    "gen": 2,
+    "cat": "atgm"
+   },
+   {
+    "m": "Panhard VBL",
+    "n": 124,
+    "orig": "FRA",
+    "s": "wiki_army",
+    "c": "ت",
+    "note": "8 equipped with BGM-71 TOW",
+    "gen": 2,
+    "cat": "apc"
+   },
+   {
+    "m": "M109A0",
+    "n": 15,
+    "orig": "USA",
+    "s": "wiki_army",
+    "c": "ت",
+    "gen": 2,
+    "cat": "spg"
+   },
+   {
+    "m": "G6 Rhino",
+    "n": 24,
+    "orig": "ZAF",
+    "s": "wiki_army",
+    "c": "ت",
+    "gen": 2,
+    "cat": "spg"
+   },
+   {
+    "m": "M-46",
+    "n": 24,
+    "orig": "SUN",
+    "s": "wiki_army",
+    "c": "ت",
+    "note": "12 M-46 12 Type 59–1",
+    "gen": 2,
+    "cat": "towed"
+   },
+   {
+    "m": "L118",
+    "n": 42,
+    "orig": "GBR",
+    "s": "wiki_army",
+    "c": "ت",
+    "gen": 2,
+    "cat": "towed"
+   },
+   {
+    "m": "D-30",
+    "n": 30,
+    "orig": "SUN",
+    "s": "wiki_army",
+    "c": "ت",
+    "gen": 2,
+    "cat": "towed"
+   },
+   {
+    "m": "FH70",
+    "n": 12,
+    "orig": "DEU",
+    "s": "wiki_army",
+    "c": "ت",
+    "gen": 2,
+    "cat": "towed"
+   },
+   {
+    "m": "M102",
+    "n": 36,
+    "orig": "USA",
+    "s": "wiki_army",
+    "c": "ت",
+    "gen": 2,
+    "cat": "towed"
+   },
+   {
+    "m": "ZU-23-2",
+    "n": 4,
+    "orig": "SUN",
+    "s": "wiki_army",
+    "c": "ت",
+    "gen": 2,
+    "cat": "towed"
+   },
+   {
+    "m": "Bofors L/60",
+    "n": 12,
+    "orig": "SWE",
+    "s": "wiki_army",
+    "c": "ت",
+    "gen": 2,
+    "cat": "towed"
+   },
+   {
+    "m": "Oerlikon GDF",
+    "n": 10,
+    "orig": "CHE",
+    "s": "wiki_army",
+    "c": "ت",
+    "gen": 2,
+    "cat": "towed"
+   }
+  ],
+  "air": [
+   {
+    "m": "Eurofighter Typhoon (Tranche 3A)",
+    "n": 12,
+    "orig": "GBR",
+    "s": "wiki_air",
+    "c": "ت",
+    "gen": 4,
+    "cat": "fighter"
+   },
+   {
+    "m": "F-16 (F-16C Block 50)",
+    "n": 17,
+    "orig": "USA",
+    "s": "wiki_air",
+    "c": "ت",
+    "gen": 3,
+    "cat": "fighter"
+   },
+   {
+    "m": "BAE Hawk (Hawk 203)",
+    "n": 10,
+    "orig": "GBR",
+    "s": "wiki_air",
+    "c": "ت",
+    "gen": 2,
+    "cat": "fighter"
+   },
+   {
+    "m": "Airbus C295 (C295 MPA)",
+    "n": 4,
+    "orig": "ESP",
+    "s": "wiki_air",
+    "c": "ت",
+    "gen": 2,
+    "cat": "isr"
+   },
+   {
+    "m": "Airbus C295 (C295M)",
+    "n": 4,
+    "orig": "ESP",
+    "s": "wiki_air",
+    "c": "ت",
+    "gen": 2,
+    "cat": "transport"
+   },
+   {
+    "m": "C-130 Hercules (C-130H)",
+    "n": 3,
+    "orig": "USA",
+    "s": "wiki_air",
+    "c": "ت",
+    "gen": 2,
+    "cat": "transport"
+   },
+   {
+    "m": "C-130 Super Hercules (C-130J-30)",
+    "n": 2,
+    "orig": "USA",
+    "s": "wiki_air",
+    "c": "ت",
+    "gen": 2,
+    "cat": "transport"
+   },
+   {
+    "m": "NHIndustries NH90 (NH90 TTH)",
+    "n": 18,
+    "orig": "FRA",
+    "s": "wiki_air",
+    "c": "ت",
+    "note": "Assembled on the French assembly line.",
+    "gen": 2,
+    "cat": "heli_util"
+   },
+   {
+    "m": "Westland Lynx (Super Lynx Mk.120)",
+    "n": 13,
+    "orig": "GBR",
+    "s": "wiki_air",
+    "c": "ت",
+    "gen": 2,
+    "cat": "heli_util"
+   },
+   {
+    "m": "F-16 (F-16D Block 50)",
+    "n": 6,
+    "orig": "USA",
+    "s": "wiki_air",
+    "c": "ت",
+    "gen": 3,
+    "cat": "trainer"
+   },
+   {
+    "m": "BAE Hawk (Hawk AJT - 166 (advanced jet trainer))",
+    "n": 8,
+    "orig": "GBR",
+    "s": "wiki_air",
+    "c": "ت",
+    "gen": 2,
+    "cat": "trainer"
+   },
+   {
+    "m": "BAE Hawk (Hawk 103)",
+    "n": 3,
+    "orig": "GBR",
+    "s": "wiki_air",
+    "c": "ت",
+    "gen": 2,
+    "cat": "trainer"
+   },
+   {
+    "m": "Pilatus PC-9 (PC-9M)",
+    "n": 12,
+    "orig": "CHE",
+    "s": "wiki_air",
+    "c": "ت",
+    "gen": 2,
+    "cat": "trainer"
+   },
+   {
+    "m": "PAC Mushshak (MFI-395 Super Mushshak)",
+    "n": 7,
+    "orig": "PAK",
+    "s": "wiki_air",
+    "c": "ت",
+    "gen": 2,
+    "cat": "trainer"
+   },
+   {
+    "m": "Bell 429",
+    "n": 5,
+    "orig": "USA",
+    "s": "wiki_air",
+    "c": "ت",
+    "gen": 2,
+    "cat": "heli_util"
+   },
+   {
+    "m": "Bell 206",
+    "n": 4,
+    "orig": "USA",
+    "s": "wiki_air",
+    "c": "ت",
+    "gen": 2,
+    "cat": "heli_util"
+   },
+   {
+    "m": "Agusta-Bell 206 (AB206A)",
+    "n": 4,
+    "orig": "ITA",
+    "s": "wiki_air",
+    "c": "ت",
+    "gen": 2,
+    "cat": "heli_util"
+   }
+  ],
+  "ad": [
+   {
+    "m": "96K6 Pantsir-S1E",
+    "n": 12,
+    "orig": "RUS",
+    "s": "wiki_army",
+    "c": "ت",
+    "note": "Based on MAN SX chassic",
+    "gen": 3,
+    "cat": "short"
+   },
+   {
+    "m": "Rapier",
+    "n": 28,
+    "orig": "GBR",
+    "s": "wiki_army",
+    "c": "ت",
+    "note": "600 Rapier-1+ 800 Rapier-2 missiles",
+    "gen": 2,
+    "cat": "short"
+   },
+   {
+    "m": "Mistral",
+    "n": 54,
+    "orig": "FRA",
+    "s": "wiki_army",
+    "c": "ت",
+    "gen": 2,
+    "cat": "short"
+   },
+   {
+    "m": "FV4333 Stormer HVM",
+    "n": 4,
+    "orig": "GBR",
+    "s": "wiki_army",
+    "c": "ت",
+    "gen": 3,
+    "cat": "short"
+   }
+  ],
   "msl": [],
-  "navy": []
+  "navy": [],
+  "grp": {
+   "tank": {
+    "n": 117,
+    "s": "iiss_eq",
+    "c": "ت",
+    "top": [
+     [
+      "FV101 Scorpion",
+      120,
+      2,
+      "GBR"
+     ],
+     [
+      "M60A1/A3",
+      79,
+      2,
+      "USA"
+     ],
+     [
+      "Challenger 2",
+      38,
+      3,
+      "GBR"
+     ]
+    ],
+    "gen": 2.2,
+    "note": "مجموع القوائم 264 يختلف عن الإجمالي؛ الإجمالي هو المعتمد"
+   },
+   "afv": {
+    "n": 124,
+    "s": "wiki_army",
+    "c": "ت",
+    "top": [
+     [
+      "Panhard VBL",
+      124,
+      2,
+      "FRA"
+     ]
+    ],
+    "gen": 2.0
+   },
+   "art": {
+    "n": 209,
+    "s": "wiki_army",
+    "c": "ت",
+    "top": [
+     [
+      "L118",
+      42,
+      2,
+      "GBR"
+     ],
+     [
+      "M102",
+      36,
+      2,
+      "USA"
+     ],
+     [
+      "D-30",
+      30,
+      2,
+      "SUN"
+     ]
+    ],
+    "gen": 2.0
+   },
+   "jet": {
+    "n": 56,
+    "s": "iiss_eq",
+    "c": "ت",
+    "top": [
+     [
+      "F-16 (F-16C Block 50)",
+      17,
+      3,
+      "USA"
+     ],
+     [
+      "Eurofighter Typhoon (Tranche 3A)",
+      12,
+      4,
+      "GBR"
+     ],
+     [
+      "BAE Hawk (Hawk 203)",
+      10,
+      2,
+      "GBR"
+     ]
+    ],
+    "gen": 3.1
+   },
+   "heli": {
+    "n": 44,
+    "s": "wiki_air",
+    "c": "ت",
+    "top": [
+     [
+      "NHIndustries NH90 (NH90 TTH)",
+      18,
+      2,
+      "FRA"
+     ],
+     [
+      "Westland Lynx (Super Lynx Mk.120)",
+      13,
+      2,
+      "GBR"
+     ],
+     [
+      "Bell 429",
+      5,
+      2,
+      "USA"
+     ]
+    ],
+    "gen": 2.0
+   },
+   "ad": {
+    "n": 98,
+    "s": "wiki_army",
+    "c": "ت",
+    "top": [
+     [
+      "Mistral",
+      54,
+      2,
+      "FRA"
+     ],
+     [
+      "Rapier",
+      28,
+      2,
+      "GBR"
+     ],
+     [
+      "96K6 Pantsir-S1E",
+      12,
+      3,
+      "RUS"
+     ]
+    ],
+    "gen": 2.2
+   },
+   "navy": {
+    "n": 6,
+    "s": "iiss_eq",
+    "c": "ت"
+   }
+  }
  },
  "ind": null,
  "pol": {

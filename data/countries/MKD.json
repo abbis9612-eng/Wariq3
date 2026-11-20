@@ -50,6 +50,11 @@
    "t": "تقدير المصمم (تشرين الثاني 2026) لصناعة السلاح والاستقرار: SIPRI Arms Transfers Database (أكبر المصدّرين 2020–24)، SIPRI Top 100 Arms-Producing Companies، Fragile States Index 2025، أخبار 2026",
    "u": "https://www.sipri.org/databases/armstransfers",
    "y": 2026
+  },
+  "tpl": {
+   "t": "قالب منطقة (eu): موديلات شائعة ونسب تقريبية من الدبابات (مدرعات ×2.5، مدفعية ×0.9، مروحيات ×0.25) — تقدير المصمم",
+   "u": "docs/features/world-plan.md",
+   "y": 2026
   }
  },
  "gov": {
@@ -223,7 +228,117 @@
   "air": [],
   "ad": [],
   "msl": [],
-  "navy": []
+  "navy": [],
+  "grp": {
+   "tank": {
+    "n": 31,
+    "s": "iiss_eq",
+    "c": "ت",
+    "top": [
+     [
+      "T-72",
+      null,
+      null,
+      null
+     ],
+     [
+      "Leopard 1",
+      null,
+      null,
+      null
+     ],
+     [
+      "Leopard 2A4",
+      null,
+      null,
+      null
+     ]
+    ],
+    "gen": 2.6,
+    "tpl": "eu"
+   },
+   "afv": {
+    "n": 78,
+    "s": "tpl",
+    "c": "ق",
+    "top": [
+     [
+      "BMP-2",
+      null,
+      null,
+      null
+     ],
+     [
+      "M113",
+      null,
+      null,
+      null
+     ],
+     [
+      "Patria AMV",
+      null,
+      null,
+      null
+     ]
+    ],
+    "gen": 2.4,
+    "tpl": "eu"
+   },
+   "art": {
+    "n": 28,
+    "s": "tpl",
+    "c": "ق",
+    "top": [
+     [
+      "2S1",
+      null,
+      null,
+      null
+     ],
+     [
+      "M109",
+      null,
+      null,
+      null
+     ],
+     [
+      "D-30",
+      null,
+      null,
+      null
+     ]
+    ],
+    "gen": 2.4,
+    "tpl": "eu"
+   },
+   "heli": {
+    "n": 8,
+    "s": "tpl",
+    "c": "ق",
+    "top": [
+     [
+      "Mi-24",
+      null,
+      null,
+      null
+     ],
+     [
+      "AW139",
+      null,
+      null,
+      null
+     ],
+     [
+      "UH-60",
+      null,
+      null,
+      null
+     ]
+    ],
+    "gen": 2.6,
+    "tpl": "eu"
+   }
+  }
  },
  "ind": null,
  "pol": {

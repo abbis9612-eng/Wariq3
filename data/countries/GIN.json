@@ -5,6 +5,24 @@
  "tier": "C",
  "asOf": "2026-11",
  "src": {
+  "wiki_air": {
+   "t": "Wikipedia: Guinea-Bissau Air Force",
+   "u": "https://en.wikipedia.org/wiki/Guinea-Bissau_Air_Force?oldid=1383531503",
+   "y": 2026,
+   "note": "نسخة الصفحة بتاريخ السحب؛ أرقام ويكيبيديا تنراجع ويا مصادر ثانية"
+  },
+  "wiki_army": {
+   "t": "Wikipedia: List of equipment of the Guinean Army",
+   "u": "https://en.wikipedia.org/wiki/List_of_equipment_of_the_Guinean_Army?oldid=1362196768",
+   "y": 2026,
+   "note": "نسخة الصفحة بتاريخ السحب؛ أرقام ويكيبيديا تنراجع ويا مصادر ثانية"
+  },
+  "wiki_navy": {
+   "t": "Wikipedia: Navy of Equatorial Guinea",
+   "u": "https://en.wikipedia.org/wiki/Navy_of_Equatorial_Guinea?oldid=1371510972",
+   "y": 2026,
+   "note": "نسخة الصفحة بتاريخ السحب؛ أرقام ويكيبيديا تنراجع ويا مصادر ثانية"
+  },
   "iiss_eq": {
    "t": "Wikipedia: List of countries by level of military equipment (من IISS Military Balance ومصادر ثانية)",
    "u": "https://en.wikipedia.org/wiki/List_of_countries_by_level_of_military_equipment?oldid=1384804191",
@@ -49,6 +67,11 @@
   "tierA": {
    "t": "تقدير المصمم (تشرين الثاني 2026) لصناعة السلاح والاستقرار: SIPRI Arms Transfers Database (أكبر المصدّرين 2020–24)، SIPRI Top 100 Arms-Producing Companies، Fragile States Index 2025، أخبار 2026",
    "u": "https://www.sipri.org/databases/armstransfers",
+   "y": 2026
+  },
+  "tpl": {
+   "t": "قالب منطقة (af): موديلات شائعة ونسب تقريبية من الدبابات (مدرعات ×2.5، مدفعية ×0.9، مروحيات ×0.25) — تقدير المصمم",
+   "u": "docs/features/world-plan.md",
    "y": 2026
   }
  },
@@ -207,11 +230,166 @@
     "c": "ت"
    }
   },
-  "land": [],
+  "land": [
+   {
+    "m": "BM-27 Uragan",
+    "n": 3,
+    "orig": "SUN",
+    "s": "wiki_army",
+    "c": "ت",
+    "gen": 2,
+    "cat": "mlrs"
+   },
+   {
+    "m": "ZiS-2",
+    "n": 2,
+    "orig": "SUN",
+    "s": "wiki_army",
+    "c": "ت",
+    "gen": 2,
+    "cat": "atgm"
+   },
+   {
+    "m": "A-19",
+    "n": 12,
+    "orig": "SUN",
+    "s": "wiki_army",
+    "c": "ت",
+    "gen": 2,
+    "cat": "towed"
+   },
+   {
+    "m": "D-44",
+    "n": 6,
+    "orig": "SUN",
+    "s": "wiki_army",
+    "c": "ت",
+    "gen": 2,
+    "cat": "towed"
+   },
+   {
+    "m": "M-46",
+    "n": 12,
+    "orig": "SUN",
+    "s": "wiki_army",
+    "c": "ت",
+    "gen": 2,
+    "cat": "towed"
+   }
+  ],
   "air": [],
-  "ad": [],
+  "ad": [
+   {
+    "m": "61-K",
+    "n": 8,
+    "orig": "SUN",
+    "s": "wiki_army",
+    "c": "ت",
+    "gen": 2,
+    "cat": "short"
+   },
+   {
+    "m": "Type 59",
+    "n": 12,
+    "orig": "SUN",
+    "s": "wiki_army",
+    "c": "ت",
+    "gen": 1,
+    "cat": "short"
+   },
+   {
+    "m": "KS-19",
+    "n": 4,
+    "orig": "SUN",
+    "s": "wiki_army",
+    "c": "ت",
+    "gen": 2,
+    "cat": "short"
+   }
+  ],
   "msl": [],
-  "navy": []
+  "navy": [],
+  "grp": {
+   "art": {
+    "n": 33,
+    "s": "wiki_army",
+    "c": "ت",
+    "top": [
+     [
+      "A-19",
+      12,
+      2,
+      "SUN"
+     ],
+     [
+      "M-46",
+      12,
+      2,
+      "SUN"
+     ],
+     [
+      "D-44",
+      6,
+      2,
+      "SUN"
+     ]
+    ],
+    "gen": 2.0
+   },
+   "jet": {
+    "n": 3,
+    "s": "iiss_eq",
+    "c": "ت",
+    "top": [
+     [
+      "MiG-21",
+      null,
+      null,
+      null
+     ],
+     [
+      "Su-25",
+      null,
+      null,
+      null
+     ],
+     [
+      "L-39",
+      null,
+      null,
+      null
+     ]
+    ],
+    "gen": 1.6,
+    "tpl": "af"
+   },
+   "ad": {
+    "n": 24,
+    "s": "wiki_army",
+    "c": "ت",
+    "top": [
+     [
+      "Type 59",
+      12,
+      1,
+      "SUN"
+     ],
+     [
+      "61-K",
+      8,
+      2,
+      "SUN"
+     ],
+     [
+      "KS-19",
+      4,
+      2,
+      "SUN"
+     ]
+    ],
+    "gen": 1.5
+   }
+  }
  },
  "ind": null,
  "pol": {

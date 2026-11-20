@@ -5,6 +5,24 @@
  "tier": "B",
  "asOf": "2026-11",
  "src": {
+  "wiki_air": {
+   "t": "Wikipedia: Estonian Air Force",
+   "u": "https://en.wikipedia.org/wiki/Estonian_Air_Force?oldid=1381424708",
+   "y": 2026,
+   "note": "نسخة الصفحة بتاريخ السحب؛ أرقام ويكيبيديا تنراجع ويا مصادر ثانية"
+  },
+  "wiki_army": {
+   "t": "Wikipedia: List of equipment of the Estonian Defence Forces",
+   "u": "https://en.wikipedia.org/wiki/List_of_equipment_of_the_Estonian_Defence_Forces?oldid=1384499951",
+   "y": 2026,
+   "note": "نسخة الصفحة بتاريخ السحب؛ أرقام ويكيبيديا تنراجع ويا مصادر ثانية"
+  },
+  "wiki_navy": {
+   "t": "Wikipedia: Estonian Navy",
+   "u": "https://en.wikipedia.org/wiki/Estonian_Navy?oldid=1382269707",
+   "y": 2026,
+   "note": "نسخة الصفحة بتاريخ السحب؛ أرقام ويكيبيديا تنراجع ويا مصادر ثانية"
+  },
   "iiss_eq": {
    "t": "Wikipedia: List of countries by level of military equipment (من IISS Military Balance ومصادر ثانية)",
    "u": "https://en.wikipedia.org/wiki/List_of_countries_by_level_of_military_equipment?oldid=1384804191",
@@ -49,6 +67,11 @@
   "tierA": {
    "t": "تقدير المصمم (تشرين الثاني 2026) لصناعة السلاح والاستقرار: SIPRI Arms Transfers Database (أكبر المصدّرين 2020–24)، SIPRI Top 100 Arms-Producing Companies، Fragile States Index 2025، أخبار 2026",
    "u": "https://www.sipri.org/databases/armstransfers",
+   "y": 2026
+  },
+  "tpl": {
+   "t": "قالب منطقة (eu): موديلات شائعة ونسب تقريبية من الدبابات (مدرعات ×2.5، مدفعية ×0.9، مروحيات ×0.25) — تقدير المصمم",
+   "u": "docs/features/world-plan.md",
    "y": 2026
   }
  },
@@ -219,11 +242,173 @@
     "c": "ت"
    }
   },
-  "land": [],
-  "air": [],
-  "ad": [],
+  "land": [
+   {
+    "m": "CV9035EE, (CV90N)",
+    "n": 44,
+    "orig": "SWE",
+    "s": "wiki_army",
+    "c": "ت",
+    "note": "44 CV9035NL purchased from Netherlands and 37 CV90 hulls bought from Norway. Most of these hulls have been delivered to Scoutspataljon. CV90",
+    "gen": 4,
+    "cat": "ifv"
+   },
+   {
+    "m": "Patria Pasi",
+    "n": 136,
+    "orig": "FIN",
+    "s": "wiki_army",
+    "c": "ت",
+    "note": "XA-180: 60 units purchased from Finland (56 in service). XA-188: 81 units purchased from Netherlands (80 in service). XA-180 models to be re",
+    "gen": 2,
+    "cat": "apc"
+   },
+   {
+    "m": "Otokar ARMA 6×6",
+    "n": 130,
+    "orig": "TUR",
+    "s": "wiki_army",
+    "c": "ت",
+    "note": "Contract awarded in October 2023 for €130 million, including training, and equipment maintenance. It was ordered jointly with the Makina NMS",
+    "gen": 2,
+    "cat": "apc"
+   },
+   {
+    "m": "Nurol Makina NMS 4×4",
+    "n": 100,
+    "orig": "TUR",
+    "s": "wiki_army",
+    "c": "ت",
+    "note": "Contract awarded in October 2023, including training, and equipment maintenance. Ordered jointly with the ARMA 6×6. The delivery started in ",
+    "gen": 2,
+    "cat": "apc"
+   },
+   {
+    "m": "K9EST \"Kõu\"",
+    "n": 36,
+    "orig": "KOR",
+    "s": "wiki_army",
+    "c": "ت",
+    "note": "36 ordered from South Korea in total and the first howitzers were delivered in 2018. The domestic company Go Craft AS was contracted to inte",
+    "gen": 2,
+    "cat": "spg"
+   }
+  ],
+  "air": [
+   {
+    "m": "M28 Skytruck (C145A)",
+    "n": 2,
+    "orig": "POL",
+    "s": "wiki_air",
+    "c": "ت",
+    "note": "Replaced two Antonov An-2s. Used for parachuting & JTAC (Joint Terminal Attack Controller) training. Also used for maritime surveillance in ",
+    "gen": 2,
+    "cat": "transport"
+   },
+   {
+    "m": "Aero L-39 (L39C)",
+    "n": 2,
+    "orig": "CSK",
+    "s": "wiki_air",
+    "c": "ت",
+    "note": "Used for JTAC training. Leased from Aerohooldus OÜ.",
+    "gen": 2,
+    "cat": "trainer"
+   },
+   {
+    "m": "THeMIS",
+    "n": 3,
+    "orig": "EST",
+    "s": "wiki_army",
+    "c": "ت",
+    "gen": 2,
+    "cat": "uav_isr"
+   }
+  ],
+  "ad": [
+   {
+    "m": "Mistral",
+    "n": 209,
+    "orig": "FRA",
+    "s": "wiki_army",
+    "c": "ت",
+    "note": "Mistral M2 (second generation) acquired in 2007. The latest generation Mistral F3 acquired in 2015, 2018 and 2023. Some donated to Ukraine. ",
+    "gen": 2,
+    "cat": "short"
+   }
+  ],
   "msl": [],
-  "navy": []
+  "navy": [],
+  "grp": {
+   "afv": {
+    "n": 410,
+    "s": "wiki_army",
+    "c": "ت",
+    "top": [
+     [
+      "Patria Pasi",
+      136,
+      2,
+      "FIN"
+     ],
+     [
+      "Otokar ARMA 6×6",
+      130,
+      2,
+      "TUR"
+     ],
+     [
+      "Nurol Makina NMS 4×4",
+      100,
+      2,
+      "TUR"
+     ]
+    ],
+    "gen": 2.2
+   },
+   "art": {
+    "n": 36,
+    "s": "wiki_army",
+    "c": "ت",
+    "top": [
+     [
+      "K9EST \"Kõu\"",
+      36,
+      2,
+      "KOR"
+     ]
+    ],
+    "gen": 2.0
+   },
+   "uav": {
+    "n": 3,
+    "s": "wiki_army",
+    "c": "ت",
+    "top": [
+     [
+      "THeMIS",
+      3,
+      2,
+      "EST"
+     ]
+    ],
+    "gen": 2.0
+   },
+   "ad": {
+    "n": 209,
+    "s": "wiki_army",
+    "c": "ت",
+    "top": [
+     [
+      "Mistral",
+      209,
+      2,
+      "FRA"
+     ]
+    ],
+    "gen": 2.0
+   }
+  }
  },
  "ind": null,
  "pol": {

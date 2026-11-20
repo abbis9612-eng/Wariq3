@@ -5,6 +5,24 @@
  "tier": "B",
  "asOf": "2026-11",
  "src": {
+  "wiki_air": {
+   "t": "Wikipedia: Peruvian Air Force",
+   "u": "https://en.wikipedia.org/wiki/Peruvian_Air_Force?oldid=1375865979",
+   "y": 2026,
+   "note": "نسخة الصفحة بتاريخ السحب؛ أرقام ويكيبيديا تنراجع ويا مصادر ثانية"
+  },
+  "wiki_army": {
+   "t": "Wikipedia: List of equipment of the Peruvian Army",
+   "u": "https://en.wikipedia.org/wiki/List_of_equipment_of_the_Peruvian_Army?oldid=1382787184",
+   "y": 2026,
+   "note": "نسخة الصفحة بتاريخ السحب؛ أرقام ويكيبيديا تنراجع ويا مصادر ثانية"
+  },
+  "wiki_navy": {
+   "t": "Wikipedia: List of Peruvian Navy ships",
+   "u": "https://en.wikipedia.org/wiki/List_of_Peruvian_Navy_ships?oldid=1382010189",
+   "y": 2026,
+   "note": "نسخة الصفحة بتاريخ السحب؛ أرقام ويكيبيديا تنراجع ويا مصادر ثانية"
+  },
   "iiss_eq": {
    "t": "Wikipedia: List of countries by level of military equipment (من IISS Military Balance ومصادر ثانية)",
    "u": "https://en.wikipedia.org/wiki/List_of_countries_by_level_of_military_equipment?oldid=1384804191",
@@ -49,6 +67,11 @@
   "tierA": {
    "t": "تقدير المصمم (تشرين الثاني 2026) لصناعة السلاح والاستقرار: SIPRI Arms Transfers Database (أكبر المصدّرين 2020–24)، SIPRI Top 100 Arms-Producing Companies، Fragile States Index 2025، أخبار 2026",
    "u": "https://www.sipri.org/databases/armstransfers",
+   "y": 2026
+  },
+  "tpl": {
+   "t": "قالب منطقة (la): موديلات شائعة ونسب تقريبية من الدبابات (مدرعات ×2.5، مدفعية ×0.9، مروحيات ×0.25) — تقدير المصمم",
+   "u": "docs/features/world-plan.md",
    "y": 2026
   }
  },
@@ -216,11 +239,772 @@
     "c": "ت"
    }
   },
-  "land": [],
-  "air": [],
-  "ad": [],
+  "land": [
+   {
+    "m": "T-55",
+    "n": 280,
+    "orig": "SUN",
+    "s": "wiki_army",
+    "c": "ت",
+    "note": "75+ in store",
+    "gen": 1,
+    "cat": "tank"
+   },
+   {
+    "m": "AMX-13",
+    "n": 108,
+    "orig": "FRA",
+    "s": "wiki_army",
+    "c": "ت",
+    "note": "Originally 108 of which 78 armed with the 105 mm cannon while 30 with the 75 mm, the 75 mm armed vehicles have been phased out since 2009 an",
+    "gen": 2,
+    "cat": "tank"
+   },
+   {
+    "m": "UR-416",
+    "n": 150,
+    "orig": "DEU",
+    "s": "wiki_army",
+    "c": "ت",
+    "gen": 2,
+    "cat": "apc"
+   },
+   {
+    "m": "Fiat 6614",
+    "n": 25,
+    "orig": "ITA",
+    "s": "wiki_army",
+    "c": "ت",
+    "gen": 2,
+    "cat": "apc"
+   },
+   {
+    "m": "M113A1",
+    "n": 120,
+    "orig": "USA",
+    "s": "wiki_army",
+    "c": "ت",
+    "gen": 2,
+    "cat": "apc"
+   },
+   {
+    "m": "M1165A2",
+    "n": 22,
+    "orig": "USA",
+    "s": "wiki_army",
+    "c": "ت",
+    "note": "with 9K135 Kornet E",
+    "gen": 2,
+    "cat": "atgm"
+   },
+   {
+    "m": "M109A2",
+    "n": 12,
+    "orig": "USA",
+    "s": "wiki_army",
+    "c": "ت",
+    "gen": 2,
+    "cat": "spg"
+   },
+   {
+    "m": "M101",
+    "n": 44,
+    "orig": "USA",
+    "s": "wiki_army",
+    "c": "ت",
+    "gen": 2,
+    "cat": "towed"
+   },
+   {
+    "m": "M2A1",
+    "n": 24,
+    "orig": "USA",
+    "s": "wiki_army",
+    "c": "ت",
+    "gen": 2,
+    "cat": "towed"
+   },
+   {
+    "m": "M-56",
+    "n": 60,
+    "orig": "YUG",
+    "s": "wiki_army",
+    "c": "ت",
+    "gen": 2,
+    "cat": "towed"
+   },
+   {
+    "m": "Model 56",
+    "n": 24,
+    "orig": "ITA",
+    "s": "wiki_army",
+    "c": "ت",
+    "gen": 2,
+    "cat": "towed"
+   },
+   {
+    "m": "D-30",
+    "n": 36,
+    "orig": "SUN",
+    "s": "wiki_army",
+    "c": "ت",
+    "gen": 2,
+    "cat": "towed"
+   },
+   {
+    "m": "M-46",
+    "n": 36,
+    "orig": "SUN",
+    "s": "wiki_army",
+    "c": "ت",
+    "gen": 2,
+    "cat": "towed"
+   },
+   {
+    "m": "M114",
+    "n": 36,
+    "orig": "USA",
+    "s": "wiki_army",
+    "c": "ت",
+    "gen": 2,
+    "cat": "towed"
+   },
+   {
+    "m": "Model 50",
+    "n": 30,
+    "orig": "FRA",
+    "s": "wiki_army",
+    "c": "ت",
+    "gen": 2,
+    "cat": "towed"
+   },
+   {
+    "m": "BM-21 Grad",
+    "n": 22,
+    "orig": "SUN",
+    "s": "wiki_army",
+    "c": "ت",
+    "gen": 2,
+    "cat": "mlrs"
+   },
+   {
+    "m": "Type-90B",
+    "n": 27,
+    "orig": "CHN",
+    "s": "wiki_army",
+    "c": "ت",
+    "gen": 2,
+    "cat": "mlrs"
+   },
+   {
+    "m": "ZU-23-2",
+    "n": 80,
+    "orig": "SUN",
+    "s": "wiki_army",
+    "c": "ت",
+    "gen": 2,
+    "cat": "towed"
+   },
+   {
+    "m": "ZU-23",
+    "n": 50,
+    "orig": "SUN",
+    "s": "wiki_army",
+    "c": "ت",
+    "gen": 2,
+    "cat": "towed"
+   }
+  ],
+  "air": [
+   {
+    "m": "Dassault Mirage 2000 (2000P)",
+    "n": 9,
+    "orig": "FRA",
+    "s": "wiki_air",
+    "c": "ت",
+    "note": "One lost in April 2024 in a training accident.",
+    "gen": 3,
+    "cat": "fighter"
+   },
+   {
+    "m": "Dassault Mirage 2000 (2000DP)",
+    "n": 2,
+    "orig": "FRA",
+    "s": "wiki_air",
+    "c": "ت",
+    "note": "Used for conversion training",
+    "gen": 3,
+    "cat": "fighter"
+   },
+   {
+    "m": "MiG-29 (SMP/UBP)",
+    "n": 6,
+    "orig": "RUS",
+    "s": "wiki_air",
+    "c": "ت",
+    "note": "Two used for conversion training",
+    "gen": 3,
+    "cat": "fighter"
+   },
+   {
+    "m": "Sukhoi Su-25 (Su-25K)",
+    "n": 2,
+    "orig": "RUS",
+    "s": "wiki_air",
+    "c": "ت",
+    "gen": 3,
+    "cat": "attack"
+   },
+   {
+    "m": "Cessna A-37 (A-37B)",
+    "n": 20,
+    "orig": "USA",
+    "s": "wiki_air",
+    "c": "ت",
+    "gen": 2,
+    "cat": "attack"
+   },
+   {
+    "m": "C-26 Metroliner (C-26B)",
+    "n": 3,
+    "orig": "USA",
+    "s": "wiki_air",
+    "c": "ت",
+    "note": "donated by the U.S. for anti-drug operations",
+    "gen": 2,
+    "cat": "isr"
+   },
+   {
+    "m": "Learjet 35 (U-36)",
+    "n": 2,
+    "orig": "USA",
+    "s": "wiki_air",
+    "c": "ت",
+    "gen": 2,
+    "cat": "isr"
+   },
+   {
+    "m": "Boeing 737 (500)",
+    "n": 1,
+    "orig": "USA",
+    "s": "wiki_air",
+    "c": "ت",
+    "gen": 2,
+    "cat": "transport"
+   },
+   {
+    "m": "Learjet 45",
+    "n": 1,
+    "orig": "USA",
+    "s": "wiki_air",
+    "c": "ت",
+    "gen": 2,
+    "cat": "transport"
+   },
+   {
+    "m": "Boeing 737 NG (800)",
+    "n": 1,
+    "orig": "USA",
+    "s": "wiki_air",
+    "c": "ت",
+    "gen": 2,
+    "cat": "transport"
+   },
+   {
+    "m": "Piper PA-34",
+    "n": 1,
+    "orig": "USA",
+    "s": "wiki_air",
+    "c": "ت",
+    "gen": 2,
+    "cat": "transport"
+   },
+   {
+    "m": "Beechcraft Super King Air",
+    "n": 1,
+    "orig": "USA",
+    "s": "wiki_air",
+    "c": "ت",
+    "gen": 2,
+    "cat": "transport"
+   },
+   {
+    "m": "Aero Commander 690B",
+    "n": 1,
+    "orig": "USA",
+    "s": "wiki_air",
+    "c": "ت",
+    "gen": 2,
+    "cat": "transport"
+   },
+   {
+    "m": "C-27J Spartan",
+    "n": 6,
+    "orig": "ITA",
+    "s": "wiki_air",
+    "c": "ت",
+    "gen": 2,
+    "cat": "transport"
+   },
+   {
+    "m": "Antonov An-32",
+    "n": 3,
+    "orig": "UKR",
+    "s": "wiki_air",
+    "c": "ت",
+    "gen": 2,
+    "cat": "transport"
+   },
+   {
+    "m": "Beechcraft Baron",
+    "n": 1,
+    "orig": "USA",
+    "s": "wiki_air",
+    "c": "ت",
+    "gen": 2,
+    "cat": "transport"
+   },
+   {
+    "m": "DHC-6 Twin Otter",
+    "n": 15,
+    "orig": "CAN",
+    "s": "wiki_air",
+    "c": "ت",
+    "note": "STOL capable aircraft",
+    "gen": 2,
+    "cat": "transport"
+   },
+   {
+    "m": "Lockheed L-100",
+    "n": 3,
+    "orig": "USA",
+    "s": "wiki_air",
+    "c": "ت",
+    "gen": 2,
+    "cat": "transport"
+   },
+   {
+    "m": "Pilatus PC-6",
+    "n": 1,
+    "orig": "CHE",
+    "s": "wiki_air",
+    "c": "ت",
+    "note": "STOL capable aircraft",
+    "gen": 2,
+    "cat": "transport"
+   },
+   {
+    "m": "Bell 412",
+    "n": 2,
+    "orig": "USA",
+    "s": "wiki_air",
+    "c": "ت",
+    "gen": 2,
+    "cat": "heli_util"
+   },
+   {
+    "m": "Bell 212",
+    "n": 1,
+    "orig": "USA",
+    "s": "wiki_air",
+    "c": "ت",
+    "gen": 2,
+    "cat": "heli_util"
+   },
+   {
+    "m": "Mil Mi-8",
+    "n": 1,
+    "orig": "RUS",
+    "s": "wiki_air",
+    "c": "ت",
+    "gen": 2,
+    "cat": "heli_util"
+   },
+   {
+    "m": "Mil Mi-17 (Mi-17/171)",
+    "n": 10,
+    "orig": "RUS",
+    "s": "wiki_air",
+    "c": "ت",
+    "note": "8 on order",
+    "gen": 2,
+    "cat": "heli_util"
+   },
+   {
+    "m": "Mil Mi-25 (Mi-35)",
+    "n": 18,
+    "orig": "RUS",
+    "s": "wiki_air",
+    "c": "ت",
+    "gen": 3,
+    "cat": "heli_attack"
+   },
+   {
+    "m": "MBB Bo 105",
+    "n": 2,
+    "orig": "DEU",
+    "s": "wiki_air",
+    "c": "ت",
+    "gen": 2,
+    "cat": "heli_util"
+   },
+   {
+    "m": "Kaman Super Seasprite (SH-2G)",
+    "n": 5,
+    "orig": "USA",
+    "s": "wiki_air",
+    "c": "ت",
+    "gen": 2,
+    "cat": "heli_util"
+   },
+   {
+    "m": "Zlín Z 42 (Z 242)",
+    "n": 3,
+    "orig": "CZE",
+    "s": "wiki_air",
+    "c": "ت",
+    "gen": 2,
+    "cat": "trainer"
+   },
+   {
+    "m": "CH2000",
+    "n": 10,
+    "orig": "USA",
+    "s": "wiki_air",
+    "c": "ت",
+    "note": "8 on order",
+    "gen": 2,
+    "cat": "trainer"
+   },
+   {
+    "m": "Piper PA-44",
+    "n": 1,
+    "orig": "USA",
+    "s": "wiki_air",
+    "c": "ت",
+    "gen": 2,
+    "cat": "trainer"
+   },
+   {
+    "m": "Sikorsky S-300",
+    "n": 4,
+    "orig": "USA",
+    "s": "wiki_air",
+    "c": "ت",
+    "gen": 3,
+    "cat": "heli_util"
+   },
+   {
+    "m": "Enstrom 280",
+    "n": 4,
+    "orig": "USA",
+    "s": "wiki_air",
+    "c": "ت",
+    "note": "4 on order",
+    "gen": 2,
+    "cat": "heli_util"
+   },
+   {
+    "m": "KT-1 Woongbi (KT-1P)",
+    "n": 19,
+    "orig": "KOR",
+    "s": "wiki_air",
+    "c": "ت",
+    "note": "1 lost in 2025",
+    "gen": 2,
+    "cat": "trainer"
+   },
+   {
+    "m": "UAV FAP",
+    "n": 6,
+    "orig": "PER",
+    "s": "wiki_air",
+    "c": "ت",
+    "gen": 2,
+    "cat": "uav_isr"
+   },
+   {
+    "m": "An-32",
+    "n": 3,
+    "orig": "SUN",
+    "s": "wiki_army",
+    "c": "ت",
+    "gen": 2,
+    "cat": "transport"
+   },
+   {
+    "m": "Beech 1900",
+    "n": 1,
+    "orig": "USA",
+    "s": "wiki_army",
+    "c": "ت",
+    "gen": 2,
+    "cat": "transport"
+   },
+   {
+    "m": "Cessna 208",
+    "n": 1,
+    "orig": "USA",
+    "s": "wiki_army",
+    "c": "ت",
+    "gen": 2,
+    "cat": "transport"
+   },
+   {
+    "m": "Citation XLS",
+    "n": 1,
+    "orig": "USA",
+    "s": "wiki_army",
+    "c": "ت",
+    "gen": 2,
+    "cat": "transport"
+   },
+   {
+    "m": "King Air 350",
+    "n": 1,
+    "orig": "USA",
+    "s": "wiki_army",
+    "c": "ت",
+    "gen": 2,
+    "cat": "transport"
+   },
+   {
+    "m": "AW109",
+    "n": 1,
+    "orig": "ITA",
+    "s": "wiki_army",
+    "c": "ت",
+    "gen": 2,
+    "cat": "heli_util"
+   },
+   {
+    "m": "Mi-8",
+    "n": 43,
+    "orig": "SUN",
+    "s": "wiki_army",
+    "c": "ت",
+    "gen": 2,
+    "cat": "heli_util"
+   },
+   {
+    "m": "Mi-17",
+    "n": 43,
+    "orig": "RUS",
+    "s": "wiki_army",
+    "c": "ت",
+    "gen": 2,
+    "cat": "heli_util"
+   },
+   {
+    "m": "Mi-171",
+    "n": 43,
+    "orig": "RUS",
+    "s": "wiki_army",
+    "c": "ت",
+    "gen": 2,
+    "cat": "heli_util"
+   },
+   {
+    "m": "Mi-2",
+    "n": 1,
+    "orig": "INT",
+    "s": "wiki_army",
+    "c": "ت",
+    "gen": 2,
+    "cat": "heli_util"
+   },
+   {
+    "m": "Enstrom F-28",
+    "n": 2,
+    "orig": "USA",
+    "s": "wiki_army",
+    "c": "ت",
+    "gen": 2,
+    "cat": "heli_util"
+   },
+   {
+    "m": "R44",
+    "n": 1,
+    "orig": "USA",
+    "s": "wiki_army",
+    "c": "ت",
+    "gen": 2,
+    "cat": "heli_util"
+   }
+  ],
+  "ad": [
+   {
+    "m": "ZSU-23-4",
+    "n": 35,
+    "orig": "SUN",
+    "s": "wiki_army",
+    "c": "ت",
+    "gen": 2,
+    "cat": "short"
+   }
+  ],
   "msl": [],
-  "navy": []
+  "navy": [],
+  "grp": {
+   "tank": {
+    "n": 240,
+    "s": "iiss_eq",
+    "c": "ت",
+    "top": [
+     [
+      "T-55",
+      280,
+      1,
+      "SUN"
+     ],
+     [
+      "AMX-13",
+      108,
+      2,
+      "FRA"
+     ]
+    ],
+    "gen": 1.3,
+    "note": "مجموع القوائم 388 يختلف عن الإجمالي؛ الإجمالي هو المعتمد"
+   },
+   "afv": {
+    "n": 295,
+    "s": "wiki_army",
+    "c": "ت",
+    "top": [
+     [
+      "UR-416",
+      150,
+      2,
+      "DEU"
+     ],
+     [
+      "M113A1",
+      120,
+      2,
+      "USA"
+     ],
+     [
+      "Fiat 6614",
+      25,
+      2,
+      "ITA"
+     ]
+    ],
+    "gen": 2.0
+   },
+   "art": {
+    "n": 481,
+    "s": "wiki_army",
+    "c": "ت",
+    "top": [
+     [
+      "ZU-23-2",
+      80,
+      2,
+      "SUN"
+     ],
+     [
+      "M-56",
+      60,
+      2,
+      "YUG"
+     ],
+     [
+      "ZU-23",
+      50,
+      2,
+      "SUN"
+     ]
+    ],
+    "gen": 2.0
+   },
+   "jet": {
+    "n": 48,
+    "s": "iiss_eq",
+    "c": "ت",
+    "top": [
+     [
+      "Cessna A-37 (A-37B)",
+      20,
+      2,
+      "USA"
+     ],
+     [
+      "Dassault Mirage 2000 (2000P)",
+      9,
+      3,
+      "FRA"
+     ],
+     [
+      "MiG-29 (SMP/UBP)",
+      6,
+      3,
+      "RUS"
+     ]
+    ],
+    "gen": 2.5
+   },
+   "heli": {
+    "n": 181,
+    "s": "wiki_air",
+    "c": "ت",
+    "top": [
+     [
+      "Mi-8",
+      43,
+      2,
+      "SUN"
+     ],
+     [
+      "Mi-17",
+      43,
+      2,
+      "RUS"
+     ],
+     [
+      "Mi-171",
+      43,
+      2,
+      "RUS"
+     ]
+    ],
+    "gen": 2.1
+   },
+   "uav": {
+    "n": 6,
+    "s": "wiki_air",
+    "c": "ت",
+    "top": [
+     [
+      "UAV FAP",
+      6,
+      2,
+      "PER"
+     ]
+    ],
+    "gen": 2.0
+   },
+   "ad": {
+    "n": 35,
+    "s": "wiki_army",
+    "c": "ت",
+    "top": [
+     [
+      "ZSU-23-4",
+      35,
+      2,
+      "SUN"
+     ]
+    ],
+    "gen": 2.0
+   },
+   "navy": {
+    "n": 23,
+    "s": "iiss_eq",
+    "c": "ت"
+   }
+  }
  },
  "ind": null,
  "pol": {

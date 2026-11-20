@@ -38,7 +38,7 @@ def qty(s):
     return n, 'ت' if approx else None
 
 # ===== النوع =====
-LAND = [(r'anti-tank|anti tank|atgm|tank destroyer|guided missile', 'atgm'), (r'main battle tank|light tank|(?<!anti-)\btank\b', 'tank'), (r'infantry fighting', 'ifv'), (r'self[- ]propelled (howitzer|gun|artillery|mortar)|spg|sph', 'spg'),
+LAND = [(r'anti-tank|anti tank|atgm|tank destroyer|guided missile', 'atgm'), (r'main battle tank|light tank|\bmbt\b|(?<!anti-)(?<!anti )\btanks?\b', 'tank'), (r'infantry fighting|\bifv', 'ifv'), (r'self[- ]propelled (howitzer|gun|artillery|mortar)|spg|sph', 'spg'),
   (r'multiple rocket|mlrs|rocket launcher|rocket artillery', 'mlrs'), (r'howitzer|field gun|gun-howitzer|towed', 'towed'), (r'anti-aircraft|surface-to-air|\bsam\b|air defen|spaag|anti aircraft', 'shorad'),
   (r'mrap|mine.resistant', 'mrap'), (r'armou?red personnel|\bapc\b|infantry mobility|armou?red (vehicle|car)|reconnaissance vehicle|scout|protected', 'apc'), (r'anti-tank|atgm|tank destroyer', 'atgm'),
   (r'ballistic missile|\bsrbm\b|\bmrbm\b|tactical missile', 'srbm'), (r'cruise missile', 'cruise')]
@@ -73,14 +73,26 @@ def wsrc(f, d):
     k = 'wiki_' + os.path.basename(f)[4:-5]
     src[k] = {'t': 'Wikipedia: ' + d['title'], 'u': d['url'] + (f"?oldid={d['revid']}" if d.get('revid') else ''), 'y': 2026, 'note': 'نسخة الصفحة بتاريخ السحب؛ أرقام ويكيبيديا تنراجع ويا مصادر ثانية'}
     return k
-BAD_SEC = r'history|histor|1990|gulf war|losses|personnel|infantry weapons|protective|radar|former|retired|small arms|commander|rank|future|order|procurement|historic|museum|captured'
+BAD_SEC = r'non-commissioned|support|ready reserve|reserve fleet|under construction|history|histor|1990|gulf war|losses|personnel|infantry weapons|protective|radar|former|retired|small arms|commander|rank|future|order|procurement|historic|museum|captured'
 for f in sorted(glob.glob(f'{R}/raw/wiki/{ID}_*.json')):
     d = json.load(open(f)); sk = wsrc(f, d); kind = os.path.basename(f)[4:-5]
     for t in d['tables']:
         if re.search(BAD_SEC, t['sec'].lower()): continue
-        H = t['hdr']; col = lambda *ks: next((i for k in ks for i, h in enumerate(H) if k in h and 'name' not in h and 'pennant' not in h), None)
-        ci_n = 0; ci_o = col('origin', 'country', 'manufacturer'); ci_t = col('type', 'role'); ci_q = col('in service', 'quantity', 'number in service', 'number of', 'total', 'active', 'inventory', 'number', 'no.', 'ships', 'units'); ci_v = col('variant')
-        if ci_q is None: continue
+        H = t['hdr']; col = lambda *ks: next((i for k in ks for i, h in enumerate(H) if k in h and 'name' not in h and 'pennant' not in h and 'hull' not in h), None)
+        ci_n = next((i for k in ('class', 'model', 'name', 'aircraft', 'system', 'vehicle', 'type') for i, h in enumerate(H) if h.startswith(k)), next((i for i, h in enumerate(H) if h not in ('image', 'picture', 'photo', 'images', '')), 0)); ci_o = col('origin', 'country', 'manufacturer'); ci_t = col('type', 'role'); ci_q = col('in service', 'quantity', 'number in service', 'number of', 'total', 'active', 'inventory', 'number', 'ships', 'units'); ci_v = col('variant')
+        if ci_q is None:
+            # قوائم سفن بلا عمود عدد: كل صف = سفينة، نجمعها حسب الفئة (class)
+            ci_c = col('class')
+            if kind != 'navy' or ci_c is None: continue
+            agg = {}; ty = {}
+            for r in t['rows']:
+                if len(set(r)) == 1 or len(r) <= ci_c: continue
+                k = re.sub(r'\s+', ' ', r[ci_c]).strip()
+                if k: agg[k] = agg.get(k, 0) + 1; ty[k] = r[ci_t] if ci_t is not None and ci_t < len(r) else ''
+            for k, n in agg.items():
+                cc = cat_of(NAVY, ty.get(k, ''), t['sec'], k)
+                if cc: navy.append({'m': k, 'n': n, 'orig': ID, 's': sk, 'c': 'ت', 'cat': cc, 'gen': gen_of(k)[0], 'note': 'عدد الصفوف بالقائمة'})
+            continue
         grp = ''
         for r in t['rows']:
             if len(set(r)) == 1: grp = r[0]; continue
@@ -110,7 +122,7 @@ for f in sorted(glob.glob(f'{R}/raw/wiki/{ID}_*.json')):
                     cc = cat_of(AIR, typ + ' ' + grp + (' heli' if 'helicopter' in grp.lower() else ''))
                     if cc: it['cat'] = cc; air.append(it)
                     continue
-                cc = cat_of(LAND, typ, grp)
+                cc = cat_of(LAND, typ, grp) or cat_of(LAND, t['sec'].split('/')[-1])
                 if not cc: continue
                 if cc == 'shorad' or re.search(LONG, name.lower()):
                     lvl = 'long' if re.search(SHORT_LONG['long'], name.lower()) else 'medium' if re.search(SHORT_LONG['medium'], name.lower()) else 'short'
@@ -197,6 +209,37 @@ out = {'id': ID, 'ar': CL[ID]['ar'], 'en': CL[ID]['en'], 'tier': CL[ID]['tier'],
      'revPct': W('rev', 1, 1), 'spendPct': W('spend', 1, 1), 'expPct': W('exp', 1, 1), **cur.get('eco', {})}.items() if v},
   'mil': {k: v for k, v in {'budgetBusd': W('milx', 1e-9, 2), 'budgetPctGdp': W('milpct', 1, 2), 'personnelWB': W('troops', 1, 0), 'sum': sumo or None, **cur.get('mil', {}), 'land': land, 'air': air, 'ad': ad, 'msl': msl, 'navy': navy}.items() if v is not None},
   'ind': ind, 'pol': pol, 'rel': rel, 'treaties': treaties, 'sanctions': sanct, 'conflicts': confl, 'notes': cur.get('notes', '')}
+# ===== ملخص بالفئات (W4): المجموع، الجيل الغالب، وأهم 3 موديلات — لكل الدول؛ درجة ج بلا قوائم تاخذ قالب منطقتها =====
+ME_IDS = {'IRQ', 'IRN', 'SYR', 'JOR', 'LBN', 'ISR', 'PSX', 'SAU', 'ARE', 'QAT', 'KWT', 'BHR', 'OMN', 'YEM', 'TUR', 'EGY', 'LBY', 'TUN', 'DZA', 'MAR', 'AFG'}
+reg = 'me' if ID in ME_IDS else {'af': 'af', 'eu': 'eu', 'as': 'as', 'na': 'la', 'sa': 'la', 'oc': 'as'}[CL[ID]['cont']]
+if ID in ('USA', 'CAN'): reg = 'eu'
+TPL = {   # قوالب تقريبية لما ما عدنا قائمة (ق): الموديلات الشائعة بكل منطقة
+  'af': {'tank': (1.4, ['T-55', 'T-54', 'Type 59']), 'afv': (1.6, ['BTR-60', 'BRDM-2', 'Panhard AML']), 'art': (1.8, ['D-30', 'BM-21 Grad', 'M-46']), 'jet': (1.6, ['MiG-21', 'Su-25', 'L-39']), 'heli': (2, ['Mi-24', 'Mi-8/17'])},
+  'me': {'tank': (2, ['T-62', 'T-55', 'M60']), 'afv': (2, ['BMP-1', 'M113', 'BTR-60']), 'art': (2, ['D-30', 'M109', 'BM-21 Grad']), 'jet': (2.2, ['MiG-29', 'F-5', 'Mirage F1']), 'heli': (2.2, ['Mi-24', 'Mi-8/17', 'Bell 412'])},
+  'eu': {'tank': (2.6, ['T-72', 'Leopard 1', 'Leopard 2A4']), 'afv': (2.4, ['BMP-2', 'M113', 'Patria AMV']), 'art': (2.4, ['2S1', 'M109', 'D-30']), 'jet': (2.8, ['F-16', 'MiG-29', 'Gripen']), 'heli': (2.6, ['Mi-24', 'AW139', 'UH-60'])},
+  'as': {'tank': (1.8, ['Type 59', 'T-55', 'T-72']), 'afv': (1.8, ['M113', 'BTR-70', 'Type 63']), 'art': (1.8, ['M101', 'D-30', 'Type 54']), 'jet': (2, ['F-5', 'MiG-21', 'F-7']), 'heli': (2, ['Mi-8/17', 'Bell 412', 'UH-1'])},
+  'la': {'tank': (1.6, ['AMX-13', 'M41', 'T-55']), 'afv': (1.8, ['M113', 'EE-11 Urutu', 'BTR-80']), 'art': (1.8, ['M101', 'M114', 'OTO Melara Mod 56']), 'jet': (1.8, ['A-29 Super Tucano', 'F-5', 'Mirage 5']), 'heli': (2, ['Bell 412', 'UH-1H', 'Mi-17'])}}[reg]
+GR = {'tank': (land, ('tank',)), 'afv': (land, ('ifv', 'apc', 'mrap')), 'art': (land, ('spg', 'towed', 'mlrs')), 'jet': (air, ('fighter', 'attack', 'bomber')), 'heli': (air, ('heli_attack', 'heli_util')),
+  'uav': (air, ('uav_isr', 'uav_strike')), 'ad': (ad, ('long', 'medium', 'short')), 'navy': (navy, None)}
+sv0 = lambda k: (sumo.get(k) or {}).get('v') if sumo else None
+OFF = {'tank': sv0('tanksActive') or sv0('tanks'), 'jet': sv0('combatAir'), 'navy': sum(sv0(k) or 0 for k in ('carriers', 'cruisers', 'destroyers', 'frigates', 'corvettes', 'subNuc', 'subs', 'amphib')) or None}
+grp = {}
+for g, (L, cats) in GR.items():
+    its = [x for x in L if cats is None or x['cat'] in cats]; nP = sum(x['n'] for x in its)
+    top = sorted(its, key=lambda x: -x['n'])[:3]
+    gen = round(sum(x['n'] * x['gen'] for x in its) / nP, 1) if nP else None
+    n, sk, cf = OFF.get(g), 'iiss_eq', 'ت'
+    if n is None and nP: n, sk, cf = nP, its[0]['s'], 'ت'
+    if n is None and g in TPL and OFF.get('tank'):   # تقدير من الدبابات (نسب شائعة) [ق]
+        n, sk, cf = round(OFF['tank'] * {'afv': 2.5, 'art': .9, 'heli': .25}.get(g, 0)) or None, 'tpl', 'ق'
+    if not n and not nP: continue
+    o = {'n': n or 0, 's': sk, 'c': cf}
+    if top: o['top'] = [[x['m'][:40], x['n'], x['gen'], x['orig']] for x in top]; o['gen'] = gen
+    elif g in TPL: o['top'] = [[m, None, None, None] for m in TPL[g][1]]; o['gen'] = TPL[g][0]; o['tpl'] = reg
+    if nP and n and abs(nP - n) / max(n, 1) > .6: o['note'] = f'مجموع القوائم {nP} يختلف عن الإجمالي؛ الإجمالي هو المعتمد'
+    grp[g] = o
+src['tpl'] = {'t': f'قالب منطقة ({reg}): موديلات شائعة ونسب تقريبية من الدبابات (مدرعات ×2.5، مدفعية ×0.9، مروحيات ×0.25) — تقدير المصمم', 'u': 'docs/features/world-plan.md', 'y': 2026}
+out['mil']['grp'] = grp
 json.dump(out, open(f'{R}/countries/{ID}.json', 'w'), ensure_ascii=False, indent=1)
 tot = lambda L, *cs: sum(x['n'] for x in L if not cs or x['cat'] in cs)
 sv = lambda k: (sumo.get(k) or {}).get('v', '-')

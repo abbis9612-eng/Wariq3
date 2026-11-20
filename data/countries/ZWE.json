@@ -5,6 +5,18 @@
  "tier": "C",
  "asOf": "2026-11",
  "src": {
+  "wiki_air": {
+   "t": "Wikipedia: Air Force of Zimbabwe",
+   "u": "https://en.wikipedia.org/wiki/Air_Force_of_Zimbabwe?oldid=1383082783",
+   "y": 2026,
+   "note": "نسخة الصفحة بتاريخ السحب؛ أرقام ويكيبيديا تنراجع ويا مصادر ثانية"
+  },
+  "wiki_army": {
+   "t": "Wikipedia: Zimbabwe National Army",
+   "u": "https://en.wikipedia.org/wiki/Zimbabwe_National_Army?oldid=1376040013",
+   "y": 2026,
+   "note": "نسخة الصفحة بتاريخ السحب؛ أرقام ويكيبيديا تنراجع ويا مصادر ثانية"
+  },
   "iiss_eq": {
    "t": "Wikipedia: List of countries by level of military equipment (من IISS Military Balance ومصادر ثانية)",
    "u": "https://en.wikipedia.org/wiki/List_of_countries_by_level_of_military_equipment?oldid=1384804191",
@@ -49,6 +61,11 @@
   "tierA": {
    "t": "تقدير المصمم (تشرين الثاني 2026) لصناعة السلاح والاستقرار: SIPRI Arms Transfers Database (أكبر المصدّرين 2020–24)، SIPRI Top 100 Arms-Producing Companies، Fragile States Index 2025، أخبار 2026",
    "u": "https://www.sipri.org/databases/armstransfers",
+   "y": 2026
+  },
+  "tpl": {
+   "t": "قالب منطقة (af): موديلات شائعة ونسب تقريبية من الدبابات (مدرعات ×2.5، مدفعية ×0.9، مروحيات ×0.25) — تقدير المصمم",
+   "u": "docs/features/world-plan.md",
    "y": 2026
   }
  },
@@ -216,11 +233,357 @@
     "c": "ت"
    }
   },
-  "land": [],
-  "air": [],
+  "land": [
+   {
+    "m": "Type 59",
+    "n": 30,
+    "orig": "CHN",
+    "s": "wiki_army",
+    "c": "ت",
+    "gen": 1,
+    "cat": "tank"
+   },
+   {
+    "m": "Type 69",
+    "n": 10,
+    "orig": "CHN",
+    "s": "wiki_army",
+    "c": "ت",
+    "gen": 1,
+    "cat": "tank"
+   },
+   {
+    "m": "T-54/55",
+    "n": 20,
+    "orig": "SUN",
+    "s": "wiki_army",
+    "c": "ت",
+    "note": "Status uncertain.",
+    "gen": 1,
+    "cat": "tank"
+   },
+   {
+    "m": "EE-9 Cascavel",
+    "n": 80,
+    "orig": "BRA",
+    "s": "wiki_army",
+    "c": "ت",
+    "note": "Refurbished in 2014.",
+    "gen": 2,
+    "cat": "apc"
+   },
+   {
+    "m": "Eland",
+    "n": 20,
+    "orig": "ZAF",
+    "s": "wiki_army",
+    "c": "ت",
+    "gen": 2,
+    "cat": "apc"
+   },
+   {
+    "m": "Ferret",
+    "n": 15,
+    "orig": "GBR",
+    "s": "wiki_army",
+    "c": "ت",
+    "gen": 2,
+    "cat": "apc"
+   },
+   {
+    "m": "Type 63",
+    "n": 30,
+    "orig": "CHN",
+    "s": "wiki_army",
+    "c": "ت",
+    "gen": 2,
+    "cat": "apc"
+   },
+   {
+    "m": "VTT-323",
+    "n": 22,
+    "orig": "CHN",
+    "s": "wiki_army",
+    "c": "ت",
+    "gen": 2,
+    "cat": "apc"
+   },
+   {
+    "m": "ACMAT TPK 420 BL",
+    "n": 55,
+    "orig": "FRA",
+    "s": "wiki_army",
+    "c": "ت",
+    "gen": 2,
+    "cat": "apc"
+   },
+   {
+    "m": "UR-416",
+    "n": 14,
+    "orig": "DEU",
+    "s": "wiki_army",
+    "c": "ت",
+    "note": "Unlicensed variant produced locally.",
+    "gen": 2,
+    "cat": "apc"
+   },
+   {
+    "m": "EE-11 Urutu",
+    "n": 7,
+    "orig": "BRA",
+    "s": "wiki_army",
+    "c": "ت",
+    "gen": 2,
+    "cat": "apc"
+   },
+   {
+    "m": "Crocodile",
+    "n": 50,
+    "orig": "INT",
+    "s": "wiki_army",
+    "c": "ت",
+    "gen": 2,
+    "cat": "mrap"
+   }
+  ],
+  "air": [
+   {
+    "m": "Bell 412, Mil Mi-17",
+    "n": 8,
+    "orig": "INT",
+    "s": "wiki_air",
+    "c": "ت",
+    "gen": 2,
+    "cat": "heli_util"
+   },
+   {
+    "m": "Chengdu J-7 (F-7)",
+    "n": 9,
+    "orig": "CHN",
+    "s": "wiki_air",
+    "c": "ت",
+    "note": "2 FT-7 trainer variants in addition.",
+    "gen": 1,
+    "cat": "fighter"
+   },
+   {
+    "m": "BN-2 Islander (BN-2A)",
+    "n": 5,
+    "orig": "GBR",
+    "s": "wiki_air",
+    "c": "ت",
+    "gen": 2,
+    "cat": "transport"
+   },
+   {
+    "m": "CASA C-212",
+    "n": 9,
+    "orig": "ESP",
+    "s": "wiki_air",
+    "c": "ت",
+    "gen": 2,
+    "cat": "transport"
+   },
+   {
+    "m": "Bell 412 (AB412)",
+    "n": 8,
+    "orig": "USA",
+    "s": "wiki_air",
+    "c": "ت",
+    "gen": 2,
+    "cat": "heli_util"
+   },
+   {
+    "m": "Mil Mi-24 (Mi-35)",
+    "n": 6,
+    "orig": "SUN",
+    "s": "wiki_air",
+    "c": "ت",
+    "gen": 3,
+    "cat": "heli_attack"
+   },
+   {
+    "m": "Mil Mi-17 (Mi-172)",
+    "n": 1,
+    "orig": "SUN",
+    "s": "wiki_air",
+    "c": "ت",
+    "gen": 2,
+    "cat": "heli_util"
+   },
+   {
+    "m": "Alouette III (SA316)",
+    "n": 13,
+    "orig": "FRA",
+    "s": "wiki_air",
+    "c": "ت",
+    "gen": 2,
+    "cat": "heli_util"
+   },
+   {
+    "m": "Chengdu J-7 (FT-7)",
+    "n": 2,
+    "orig": "CHN",
+    "s": "wiki_air",
+    "c": "ت",
+    "note": "9 F-7 multirole combat variants in addition.",
+    "gen": 1,
+    "cat": "trainer"
+   },
+   {
+    "m": "Hongdu JL-8 (K-8)",
+    "n": 12,
+    "orig": "CHN",
+    "s": "wiki_air",
+    "c": "ت",
+    "gen": 2,
+    "cat": "trainer"
+   },
+   {
+    "m": "SIAI-Marchetti SF.260",
+    "n": 6,
+    "orig": "ITA",
+    "s": "wiki_air",
+    "c": "ت",
+    "note": "9 SF.260 in light combat service in addition.",
+    "gen": 2,
+    "cat": "trainer"
+   },
+   {
+    "m": "BAE Systems Hawk (BAe Hawk T.Mk60/60As)",
+    "n": 4,
+    "orig": "GBR",
+    "s": "wiki_air",
+    "c": "ت",
+    "note": "Restored to service in 2022-23.",
+    "gen": 2,
+    "cat": "trainer"
+   }
+  ],
   "ad": [],
   "msl": [],
-  "navy": []
+  "navy": [],
+  "grp": {
+   "tank": {
+    "n": 40,
+    "s": "iiss_eq",
+    "c": "ت",
+    "top": [
+     [
+      "Type 59",
+      30,
+      1,
+      "CHN"
+     ],
+     [
+      "T-54/55",
+      20,
+      1,
+      "SUN"
+     ],
+     [
+      "Type 69",
+      10,
+      1,
+      "CHN"
+     ]
+    ],
+    "gen": 1.0
+   },
+   "afv": {
+    "n": 293,
+    "s": "wiki_army",
+    "c": "ت",
+    "top": [
+     [
+      "EE-9 Cascavel",
+      80,
+      2,
+      "BRA"
+     ],
+     [
+      "ACMAT TPK 420 BL",
+      55,
+      2,
+      "FRA"
+     ],
+     [
+      "Crocodile",
+      50,
+      2,
+      "INT"
+     ]
+    ],
+    "gen": 2.0
+   },
+   "art": {
+    "n": 36,
+    "s": "tpl",
+    "c": "ق",
+    "top": [
+     [
+      "D-30",
+      null,
+      null,
+      null
+     ],
+     [
+      "BM-21 Grad",
+      null,
+      null,
+      null
+     ],
+     [
+      "M-46",
+      null,
+      null,
+      null
+     ]
+    ],
+    "gen": 1.8,
+    "tpl": "af"
+   },
+   "jet": {
+    "n": 20,
+    "s": "iiss_eq",
+    "c": "ت",
+    "top": [
+     [
+      "Chengdu J-7 (F-7)",
+      9,
+      1,
+      "CHN"
+     ]
+    ],
+    "gen": 1.0
+   },
+   "heli": {
+    "n": 36,
+    "s": "wiki_air",
+    "c": "ت",
+    "top": [
+     [
+      "Alouette III (SA316)",
+      13,
+      2,
+      "FRA"
+     ],
+     [
+      "Bell 412, Mil Mi-17",
+      8,
+      2,
+      "INT"
+     ],
+     [
+      "Bell 412 (AB412)",
+      8,
+      2,
+      "USA"
+     ]
+    ],
+    "gen": 2.2
+   }
+  }
  },
  "ind": null,
  "pol": {

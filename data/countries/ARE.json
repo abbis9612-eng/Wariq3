@@ -68,6 +68,11 @@
    "t": "تقدير المصمم (تشرين الثاني 2026) لصناعة السلاح والاستقرار: SIPRI Arms Transfers Database (أكبر المصدّرين 2020–24)، SIPRI Top 100 Arms-Producing Companies، Fragile States Index 2025، أخبار 2026",
    "u": "https://www.sipri.org/databases/armstransfers",
    "y": 2026
+  },
+  "tpl": {
+   "t": "قالب منطقة (me): موديلات شائعة ونسب تقريبية من الدبابات (مدرعات ×2.5، مدفعية ×0.9، مروحيات ×0.25) — تقدير المصمم",
+   "u": "docs/features/world-plan.md",
+   "y": 2026
   }
  },
  "gov": {
@@ -996,7 +1001,194 @@
     "gen": 2,
     "cat": "amphib"
    }
-  ]
+  ],
+  "grp": {
+   "tank": {
+    "n": 350,
+    "s": "iiss_eq",
+    "c": "ت",
+    "top": [
+     [
+      "Leclerc",
+      354,
+      4,
+      "FRA"
+     ]
+    ],
+    "gen": 4.0
+   },
+   "afv": {
+    "n": 8190,
+    "s": "wiki_army",
+    "c": "ت",
+    "top": [
+     [
+      "International MaxxPro",
+      3375,
+      2,
+      "USA"
+     ],
+     [
+      "BAE Caiman",
+      931,
+      2,
+      "USA"
+     ],
+     [
+      "Oshkosh M-ATV",
+      750,
+      2,
+      "USA"
+     ]
+    ],
+    "gen": 2.2
+   },
+   "art": {
+    "n": 293,
+    "s": "wiki_army",
+    "c": "ت",
+    "top": [
+     [
+      "M109",
+      87,
+      2,
+      "USA"
+     ],
+     [
+      "G6",
+      78,
+      2,
+      "ZAF"
+     ],
+     [
+      "L118 light gun",
+      73,
+      2,
+      "GBR"
+     ]
+    ],
+    "gen": 1.9
+   },
+   "jet": {
+    "n": 155,
+    "s": "iiss_eq",
+    "c": "ت",
+    "top": [
+     [
+      "F-16 Fighting Falcon (E Block 60)",
+      55,
+      3,
+      "USA"
+     ],
+     [
+      "Dassault Mirage 2000 (9/EAD/RAD)",
+      44,
+      3,
+      "FRA"
+     ],
+     [
+      "Ayres Thrush (IOMAX S2R-T660 Archangel)",
+      24,
+      2,
+      "USA"
+     ]
+    ],
+    "gen": 2.8
+   },
+   "heli": {
+    "n": 246,
+    "s": "wiki_air",
+    "c": "ت",
+    "top": [
+     [
+      "UH-60 Black Hawk (UH-60L/M)",
+      80,
+      2,
+      "USA"
+     ],
+     [
+      "AH-64 Apache (AH-64D/E)",
+      30,
+      3,
+      "USA"
+     ],
+     [
+      "Bell 407",
+      29,
+      2,
+      "USA"
+     ]
+    ],
+    "gen": 2.2
+   },
+   "uav": {
+    "n": 11,
+    "s": "wiki_air",
+    "c": "ت",
+    "top": [
+     [
+      "Denel Dynamics Seeker (Seeker II)",
+      11,
+      2,
+      "ZAF"
+     ]
+    ],
+    "gen": 2.0
+   },
+   "ad": {
+    "n": 405,
+    "s": "wiki_army",
+    "c": "ت",
+    "top": [
+     [
+      "MIM-23 Hawk",
+      343,
+      2,
+      "USA"
+     ],
+     [
+      "Pantsir",
+      50,
+      3,
+      "RUS"
+     ],
+     [
+      "MIM-104 Patriot",
+      12,
+      4,
+      "USA"
+     ]
+    ],
+    "gen": 2.2
+   },
+   "navy": {
+    "n": 9,
+    "s": "iiss_eq",
+    "c": "ت",
+    "top": [
+     [
+      "Unknown",
+      20,
+      2,
+      "INT"
+     ],
+     [
+      "Ghannatha",
+      12,
+      2,
+      "INT"
+     ],
+     [
+      "Unknown",
+      7,
+      2,
+      "INT"
+     ]
+    ],
+    "gen": 2.0,
+    "note": "مجموع القوائم 72 يختلف عن الإجمالي؛ الإجمالي هو المعتمد"
+   }
+  }
  },
  "ind": {
   "tech": {

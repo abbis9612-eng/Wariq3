@@ -5,6 +5,24 @@
  "tier": "C",
  "asOf": "2026-11",
  "src": {
+  "wiki_air": {
+   "t": "Wikipedia: Eritrean Air Force",
+   "u": "https://en.wikipedia.org/wiki/Eritrean_Air_Force?oldid=1384678211",
+   "y": 2026,
+   "note": "نسخة الصفحة بتاريخ السحب؛ أرقام ويكيبيديا تنراجع ويا مصادر ثانية"
+  },
+  "wiki_army": {
+   "t": "Wikipedia: List of equipment of the Eritrean Army",
+   "u": "https://en.wikipedia.org/wiki/List_of_equipment_of_the_Eritrean_Army?oldid=1341802075",
+   "y": 2026,
+   "note": "نسخة الصفحة بتاريخ السحب؛ أرقام ويكيبيديا تنراجع ويا مصادر ثانية"
+  },
+  "wiki_navy": {
+   "t": "Wikipedia: Eritrean Navy",
+   "u": "https://en.wikipedia.org/wiki/Eritrean_Navy?oldid=1345836996",
+   "y": 2026,
+   "note": "نسخة الصفحة بتاريخ السحب؛ أرقام ويكيبيديا تنراجع ويا مصادر ثانية"
+  },
   "iiss_eq": {
    "t": "Wikipedia: List of countries by level of military equipment (من IISS Military Balance ومصادر ثانية)",
    "u": "https://en.wikipedia.org/wiki/List_of_countries_by_level_of_military_equipment?oldid=1384804191",
@@ -49,6 +67,11 @@
   "tierA": {
    "t": "تقدير المصمم (تشرين الثاني 2026) لصناعة السلاح والاستقرار: SIPRI Arms Transfers Database (أكبر المصدّرين 2020–24)، SIPRI Top 100 Arms-Producing Companies، Fragile States Index 2025، أخبار 2026",
    "u": "https://www.sipri.org/databases/armstransfers",
+   "y": 2026
+  },
+  "tpl": {
+   "t": "قالب منطقة (af): موديلات شائعة ونسب تقريبية من الدبابات (مدرعات ×2.5، مدفعية ×0.9، مروحيات ×0.25) — تقدير المصمم",
+   "u": "docs/features/world-plan.md",
    "y": 2026
   }
  },
@@ -192,11 +215,368 @@
     "c": "ت"
    }
   },
-  "land": [],
-  "air": [],
-  "ad": [],
+  "land": [
+   {
+    "m": "T-55A",
+    "n": 270,
+    "orig": "SUN",
+    "s": "wiki_army",
+    "c": "ت",
+    "note": "120 T-55As were ordered in 2004 from Bulgaria and delivered in 2005",
+    "gen": 1,
+    "cat": "tank"
+   },
+   {
+    "m": "BRDM-1",
+    "n": 40,
+    "orig": "SUN",
+    "s": "wiki_army",
+    "c": "ت",
+    "gen": 2,
+    "cat": "apc"
+   },
+   {
+    "m": "BRDM-2",
+    "n": 40,
+    "orig": "SUN",
+    "s": "wiki_army",
+    "c": "ت",
+    "gen": 2,
+    "cat": "apc"
+   },
+   {
+    "m": "BMP-1",
+    "n": 15,
+    "orig": "SUN",
+    "s": "wiki_army",
+    "c": "ت",
+    "gen": 2,
+    "cat": "ifv"
+   },
+   {
+    "m": "BM-21 Grad",
+    "n": 35,
+    "orig": "SUN",
+    "s": "wiki_army",
+    "c": "ت",
+    "gen": 2,
+    "cat": "mlrs"
+   },
+   {
+    "m": "BM-27 Uragan",
+    "n": 9,
+    "orig": "SUN",
+    "s": "wiki_army",
+    "c": "ت",
+    "note": "Transferred from Belarus to Eritrea in 2007",
+    "gen": 2,
+    "cat": "mlrs"
+   },
+   {
+    "m": "2S1 Gvozdika",
+    "n": 32,
+    "orig": "SUN",
+    "s": "wiki_army",
+    "c": "ت",
+    "note": "Acquired from Bulgaria",
+    "gen": 2,
+    "cat": "spg"
+   },
+   {
+    "m": "2S5 Giatsint-S",
+    "n": 13,
+    "orig": "SUN",
+    "s": "wiki_army",
+    "c": "ت",
+    "gen": 2,
+    "cat": "spg"
+   },
+   {
+    "m": "M-46",
+    "n": 39,
+    "orig": "SUN",
+    "s": "wiki_army",
+    "c": "ت",
+    "note": "Acquired from Bulgaria in 1999 and 2004",
+    "gen": 2,
+    "cat": "towed"
+   },
+   {
+    "m": "ZU-23-2",
+    "n": 6,
+    "orig": "SUN",
+    "s": "wiki_army",
+    "c": "ت",
+    "gen": 2,
+    "cat": "towed"
+   }
+  ],
+  "air": [
+   {
+    "m": "Sukhoi Su-27 (SK)",
+    "n": 1,
+    "orig": "RUS",
+    "s": "wiki_air",
+    "c": "ت",
+    "gen": 3,
+    "cat": "fighter"
+   },
+   {
+    "m": "Super King Air (200)",
+    "n": 1,
+    "orig": "USA",
+    "s": "wiki_air",
+    "c": "ت",
+    "gen": 2,
+    "cat": "transport"
+   },
+   {
+    "m": "Harbin Y-12",
+    "n": 4,
+    "orig": "CHN",
+    "s": "wiki_air",
+    "c": "ت",
+    "gen": 2,
+    "cat": "transport"
+   },
+   {
+    "m": "Bell 412",
+    "n": 1,
+    "orig": "USA",
+    "s": "wiki_air",
+    "c": "ت",
+    "gen": 2,
+    "cat": "heli_util"
+   },
+   {
+    "m": "Mil Mi-17 (Mi-17/171)",
+    "n": 6,
+    "orig": "RUS",
+    "s": "wiki_air",
+    "c": "ت",
+    "gen": 2,
+    "cat": "heli_util"
+   },
+   {
+    "m": "Mil Mi-24 (Mi-35)",
+    "n": 6,
+    "orig": "RUS",
+    "s": "wiki_air",
+    "c": "ت",
+    "gen": 3,
+    "cat": "heli_attack"
+   },
+   {
+    "m": "Sukhoi Su-27 (UB)",
+    "n": 1,
+    "orig": "RUS",
+    "s": "wiki_air",
+    "c": "ت",
+    "gen": 3,
+    "cat": "trainer"
+   }
+  ],
+  "ad": [
+   {
+    "m": "ZSU-23-4",
+    "n": 3,
+    "orig": "SUN",
+    "s": "wiki_army",
+    "c": "ت",
+    "gen": 2,
+    "cat": "short"
+   }
+  ],
   "msl": [],
-  "navy": []
+  "navy": [
+   {
+    "m": "IAI Super Dvora Mk II patrol boat",
+    "n": 6,
+    "orig": "ISR",
+    "s": "wiki_navy",
+    "c": "ت",
+    "gen": 2,
+    "cat": "patrol"
+   },
+   {
+    "m": "Vostochnaya Verf Osa-class missile boats (Osa II in service)",
+    "n": 5,
+    "orig": "SUN",
+    "s": "wiki_navy",
+    "c": "ت",
+    "gen": 2,
+    "cat": "missile_boat"
+   },
+   {
+    "m": "Sewart Seacraft Swift ship Patrol boats",
+    "n": 3,
+    "orig": "USA",
+    "s": "wiki_navy",
+    "c": "ت",
+    "gen": 2,
+    "cat": "patrol"
+   },
+   {
+    "m": "35 Ton Patrol boats",
+    "n": 4,
+    "orig": "INT",
+    "s": "wiki_navy",
+    "c": "ت",
+    "gen": 2,
+    "cat": "patrol"
+   }
+  ],
+  "grp": {
+   "tank": {
+    "n": 1756,
+    "s": "iiss_eq",
+    "c": "ت",
+    "top": [
+     [
+      "T-55A",
+      270,
+      1,
+      "SUN"
+     ]
+    ],
+    "gen": 1.0,
+    "note": "مجموع القوائم 270 يختلف عن الإجمالي؛ الإجمالي هو المعتمد"
+   },
+   "afv": {
+    "n": 95,
+    "s": "wiki_army",
+    "c": "ت",
+    "top": [
+     [
+      "BRDM-1",
+      40,
+      2,
+      "SUN"
+     ],
+     [
+      "BRDM-2",
+      40,
+      2,
+      "SUN"
+     ],
+     [
+      "BMP-1",
+      15,
+      2,
+      "SUN"
+     ]
+    ],
+    "gen": 2.0
+   },
+   "art": {
+    "n": 134,
+    "s": "wiki_army",
+    "c": "ت",
+    "top": [
+     [
+      "M-46",
+      39,
+      2,
+      "SUN"
+     ],
+     [
+      "BM-21 Grad",
+      35,
+      2,
+      "SUN"
+     ],
+     [
+      "2S1 Gvozdika",
+      32,
+      2,
+      "SUN"
+     ]
+    ],
+    "gen": 2.0
+   },
+   "jet": {
+    "n": 9,
+    "s": "iiss_eq",
+    "c": "ت",
+    "top": [
+     [
+      "Sukhoi Su-27 (SK)",
+      1,
+      3,
+      "RUS"
+     ]
+    ],
+    "gen": 3.0,
+    "note": "مجموع القوائم 1 يختلف عن الإجمالي؛ الإجمالي هو المعتمد"
+   },
+   "heli": {
+    "n": 13,
+    "s": "wiki_air",
+    "c": "ت",
+    "top": [
+     [
+      "Mil Mi-17 (Mi-17/171)",
+      6,
+      2,
+      "RUS"
+     ],
+     [
+      "Mil Mi-24 (Mi-35)",
+      6,
+      3,
+      "RUS"
+     ],
+     [
+      "Bell 412",
+      1,
+      2,
+      "USA"
+     ]
+    ],
+    "gen": 2.5
+   },
+   "ad": {
+    "n": 3,
+    "s": "wiki_army",
+    "c": "ت",
+    "top": [
+     [
+      "ZSU-23-4",
+      3,
+      2,
+      "SUN"
+     ]
+    ],
+    "gen": 2.0
+   },
+   "navy": {
+    "n": 2,
+    "s": "iiss_eq",
+    "c": "ت",
+    "top": [
+     [
+      "IAI Super Dvora Mk II patrol boat",
+      6,
+      2,
+      "ISR"
+     ],
+     [
+      "Vostochnaya Verf Osa-class missile boats",
+      5,
+      2,
+      "SUN"
+     ],
+     [
+      "35 Ton Patrol boats",
+      4,
+      2,
+      "INT"
+     ]
+    ],
+    "gen": 2.0,
+    "note": "مجموع القوائم 18 يختلف عن الإجمالي؛ الإجمالي هو المعتمد"
+   }
+  }
  },
  "ind": null,
  "pol": {

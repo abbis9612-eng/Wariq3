@@ -68,6 +68,11 @@
    "t": "تقدير المصمم (تشرين الثاني 2026) لصناعة السلاح والاستقرار: SIPRI Arms Transfers Database (أكبر المصدّرين 2020–24)، SIPRI Top 100 Arms-Producing Companies، Fragile States Index 2025، أخبار 2026",
    "u": "https://www.sipri.org/databases/armstransfers",
    "y": 2026
+  },
+  "tpl": {
+   "t": "قالب منطقة (me): موديلات شائعة ونسب تقريبية من الدبابات (مدرعات ×2.5، مدفعية ×0.9، مروحيات ×0.25) — تقدير المصمم",
+   "u": "docs/features/world-plan.md",
+   "y": 2026
   }
  },
  "gov": {
@@ -859,7 +864,191 @@
    }
   ],
   "msl": [],
-  "navy": []
+  "navy": [],
+  "grp": {
+   "tank": {
+    "n": 2280,
+    "s": "iiss_eq",
+    "c": "ت",
+    "top": [
+     [
+      "M48 Patton",
+      400,
+      1,
+      "USA"
+     ],
+     [
+      "M60 Patton",
+      100,
+      2,
+      "USA"
+     ]
+    ],
+    "gen": 1.2,
+    "note": "مجموع القوائم 500 يختلف عن الإجمالي؛ الإجمالي هو المعتمد"
+   },
+   "afv": {
+    "n": 10311,
+    "s": "wiki_army",
+    "c": "ت",
+    "top": [
+     [
+      "M113 (M113A1/A2)",
+      2813,
+      2,
+      "USA"
+     ],
+     [
+      "ACV-15 (ACV-AAPC)",
+      1381,
+      2,
+      "TUR"
+     ],
+     [
+      "BMC Kirpi (KIRPI-II)",
+      1100,
+      2,
+      "TUR"
+     ]
+    ],
+    "gen": 2.0
+   },
+   "art": {
+    "n": 600,
+    "s": "wiki_army",
+    "c": "ت",
+    "top": [
+     [
+      "M116",
+      180,
+      2,
+      "USA"
+     ],
+     [
+      "M106 (M106A1)",
+      179,
+      2,
+      "USA"
+     ],
+     [
+      "FNSS ACV-15 (ACV-AMV)",
+      170,
+      2,
+      "TUR"
+     ]
+    ],
+    "gen": 2.0
+   },
+   "jet": {
+    "n": 291,
+    "s": "iiss_eq",
+    "c": "ت",
+    "top": [
+     [
+      "F-16 Fighting Falcon (F-16C/DM Block 40 ",
+      172,
+      3,
+      "USA"
+     ],
+     [
+      "F-16 Fighting Falcon (F-16C/D Block 30TM",
+      34,
+      3,
+      "USA"
+     ],
+     [
+      "F-4 Phantom II (F-4E Terminator 2020)",
+      30,
+      3,
+      "USA"
+     ]
+    ],
+    "gen": 3.0
+   },
+   "heli": {
+    "n": 159,
+    "s": "wiki_air",
+    "c": "ت",
+    "top": [
+     [
+      "UH-1 Iroquois (UH-1H)",
+      56,
+      2,
+      "USA"
+     ],
+     [
+      "TAI/Agusta Westland T129 ATAK (T-129B)",
+      49,
+      4,
+      "TUR"
+     ],
+     [
+      "Bell 206 JetRanger (AB206R)",
+      22,
+      2,
+      "USA"
+     ]
+    ],
+    "gen": 2.6
+   },
+   "uav": {
+    "n": 64,
+    "s": "wiki_air",
+    "c": "ت",
+    "top": [
+     [
+      "TAI Anka (B / S)",
+      36,
+      2,
+      "TUR"
+     ],
+     [
+      "Bayraktar Akinci",
+      20,
+      4,
+      "TUR"
+     ],
+     [
+      "TAI Aksungur",
+      5,
+      2,
+      "TUR"
+     ]
+    ],
+    "gen": 2.7
+   },
+   "ad": {
+    "n": 2075,
+    "s": "wiki_army",
+    "c": "ت",
+    "top": [
+     [
+      "L/60 and L/70 Bofors",
+      803,
+      2,
+      "SWE"
+     ],
+     [
+      "Oerlikon 20 mm",
+      439,
+      2,
+      "CHE"
+     ],
+     [
+      "Rheinmetall 20 mm",
+      300,
+      2,
+      "DEU"
+     ]
+    ],
+    "gen": 2.0
+   },
+   "navy": {
+    "n": 43,
+    "s": "iiss_eq",
+    "c": "ت"
+   }
+  }
  },
  "ind": {
   "tech": {

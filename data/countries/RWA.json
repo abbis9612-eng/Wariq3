@@ -5,6 +5,18 @@
  "tier": "C",
  "asOf": "2026-11",
  "src": {
+  "wiki_air": {
+   "t": "Wikipedia: Rwandan Air Force",
+   "u": "https://en.wikipedia.org/wiki/Rwandan_Air_Force?oldid=1303431577",
+   "y": 2026,
+   "note": "نسخة الصفحة بتاريخ السحب؛ أرقام ويكيبيديا تنراجع ويا مصادر ثانية"
+  },
+  "wiki_army": {
+   "t": "Wikipedia: Rwandan Defence Force",
+   "u": "https://en.wikipedia.org/wiki/Rwandan_Defence_Force?oldid=1380580548",
+   "y": 2026,
+   "note": "نسخة الصفحة بتاريخ السحب؛ أرقام ويكيبيديا تنراجع ويا مصادر ثانية"
+  },
   "iiss_eq": {
    "t": "Wikipedia: List of countries by level of military equipment (من IISS Military Balance ومصادر ثانية)",
    "u": "https://en.wikipedia.org/wiki/List_of_countries_by_level_of_military_equipment?oldid=1384804191",
@@ -49,6 +61,11 @@
   "tierA": {
    "t": "تقدير المصمم (تشرين الثاني 2026) لصناعة السلاح والاستقرار: SIPRI Arms Transfers Database (أكبر المصدّرين 2020–24)، SIPRI Top 100 Arms-Producing Companies، Fragile States Index 2025، أخبار 2026",
    "u": "https://www.sipri.org/databases/armstransfers",
+   "y": 2026
+  },
+  "tpl": {
+   "t": "قالب منطقة (af): موديلات شائعة ونسب تقريبية من الدبابات (مدرعات ×2.5، مدفعية ×0.9، مروحيات ×0.25) — تقدير المصمم",
+   "u": "docs/features/world-plan.md",
    "y": 2026
   }
  },
@@ -219,11 +236,218 @@
     "c": "ت"
    }
   },
-  "land": [],
-  "air": [],
+  "land": [
+   {
+    "m": "T-55",
+    "n": 24,
+    "orig": "SUN",
+    "s": "wiki_army",
+    "c": "ت",
+    "gen": 1,
+    "cat": "tank"
+   },
+   {
+    "m": "BTR-60",
+    "n": 20,
+    "orig": "SUN",
+    "s": "wiki_army",
+    "c": "ت",
+    "gen": 2,
+    "cat": "apc"
+   },
+   {
+    "m": "Panhard M3",
+    "n": 10,
+    "orig": "FRA",
+    "s": "wiki_army",
+    "c": "ت",
+    "gen": 2,
+    "cat": "apc"
+   },
+   {
+    "m": "WZ-551",
+    "n": 20,
+    "orig": "CHN",
+    "s": "wiki_army",
+    "c": "ت",
+    "gen": 2,
+    "cat": "apc"
+   },
+   {
+    "m": "RG-31 Nyala",
+    "n": 40,
+    "orig": "ZAF",
+    "s": "wiki_army",
+    "c": "ت",
+    "gen": 2,
+    "cat": "mrap"
+   },
+   {
+    "m": "M101 howitzer",
+    "n": 10,
+    "orig": "USA",
+    "s": "wiki_army",
+    "c": "ت",
+    "gen": 2,
+    "cat": "towed"
+   },
+   {
+    "m": "D-30",
+    "n": 6,
+    "orig": "SUN",
+    "s": "wiki_army",
+    "c": "ت",
+    "gen": 2,
+    "cat": "towed"
+   },
+   {
+    "m": "Type-54",
+    "n": 30,
+    "orig": "CHN",
+    "s": "wiki_army",
+    "c": "ت",
+    "gen": 2,
+    "cat": "towed"
+   },
+   {
+    "m": "RM-70",
+    "n": 5,
+    "orig": "CSK",
+    "s": "wiki_army",
+    "c": "ت",
+    "gen": 2,
+    "cat": "mlrs"
+   }
+  ],
+  "air": [
+   {
+    "m": "Cessna 208 Caravan",
+    "n": 2,
+    "orig": "USA",
+    "s": "wiki_air",
+    "c": "ت",
+    "gen": 2,
+    "cat": "transport"
+   },
+   {
+    "m": "Diamond DA42",
+    "n": 2,
+    "orig": "AUT",
+    "s": "wiki_air",
+    "c": "ت",
+    "gen": 2,
+    "cat": "transport"
+   },
+   {
+    "m": "Mil Mi-17",
+    "n": 12,
+    "orig": "SUN",
+    "s": "wiki_air",
+    "c": "ت",
+    "gen": 2,
+    "cat": "heli_util"
+   },
+   {
+    "m": "Mil Mi-24 (Mi-35)",
+    "n": 5,
+    "orig": "SUN",
+    "s": "wiki_air",
+    "c": "ت",
+    "gen": 3,
+    "cat": "heli_attack"
+   }
+  ],
   "ad": [],
   "msl": [],
-  "navy": []
+  "navy": [],
+  "grp": {
+   "tank": {
+    "n": 34,
+    "s": "iiss_eq",
+    "c": "ت",
+    "top": [
+     [
+      "T-55",
+      24,
+      1,
+      "SUN"
+     ]
+    ],
+    "gen": 1.0
+   },
+   "afv": {
+    "n": 90,
+    "s": "wiki_army",
+    "c": "ت",
+    "top": [
+     [
+      "RG-31 Nyala",
+      40,
+      2,
+      "ZAF"
+     ],
+     [
+      "BTR-60",
+      20,
+      2,
+      "SUN"
+     ],
+     [
+      "WZ-551",
+      20,
+      2,
+      "CHN"
+     ]
+    ],
+    "gen": 2.0
+   },
+   "art": {
+    "n": 51,
+    "s": "wiki_army",
+    "c": "ت",
+    "top": [
+     [
+      "Type-54",
+      30,
+      2,
+      "CHN"
+     ],
+     [
+      "M101 howitzer",
+      10,
+      2,
+      "USA"
+     ],
+     [
+      "D-30",
+      6,
+      2,
+      "SUN"
+     ]
+    ],
+    "gen": 2.0
+   },
+   "heli": {
+    "n": 17,
+    "s": "wiki_air",
+    "c": "ت",
+    "top": [
+     [
+      "Mil Mi-17",
+      12,
+      2,
+      "SUN"
+     ],
+     [
+      "Mil Mi-24 (Mi-35)",
+      5,
+      3,
+      "SUN"
+     ]
+    ],
+    "gen": 2.3
+   }
+  }
  },
  "ind": null,
  "pol": {

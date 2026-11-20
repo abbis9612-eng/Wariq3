@@ -68,6 +68,11 @@
    "t": "تقدير المصمم (تشرين الثاني 2026) لصناعة السلاح والاستقرار: SIPRI Arms Transfers Database (أكبر المصدّرين 2020–24)، SIPRI Top 100 Arms-Producing Companies، Fragile States Index 2025، أخبار 2026",
    "u": "https://www.sipri.org/databases/armstransfers",
    "y": 2026
+  },
+  "tpl": {
+   "t": "قالب منطقة (eu): موديلات شائعة ونسب تقريبية من الدبابات (مدرعات ×2.5، مدفعية ×0.9، مروحيات ×0.25) — تقدير المصمم",
+   "u": "docs/features/world-plan.md",
+   "y": 2026
   }
  },
  "gov": {
@@ -445,12 +450,32 @@
     "cat": "mrap"
    },
    {
+    "m": "GMV Flyer 72",
+    "n": 27,
+    "orig": "USA",
+    "s": "wiki_army",
+    "c": "ت",
+    "note": "In use in the Col Moschin 9º Reggimento d'Assalto Paracadutisti (9th Parachute Assault Regiment).+ 52 to be ordered.",
+    "gen": 2,
+    "cat": "apc"
+   },
+   {
     "m": "Bandvagn 206",
     "n": 300,
     "orig": "SWE",
     "s": "wiki_army",
     "c": "ت",
     "note": "Variants in service: 110 BV206 (unprotected) 112 BV-206S7 (armoured) acquired between 2002 and 2008 46 BV-206D (specialised version) acquire",
+    "gen": 2,
+    "cat": "apc"
+   },
+   {
+    "m": "AAV7-A1",
+    "n": 17,
+    "orig": "USA",
+    "s": "wiki_army",
+    "c": "ت",
+    "note": "Variants in use: 15 AAVP-7 (APC) 1 AAVC-7 (Command vehicle) 1 AAVR-7 (ARV) To be replaced by: 64 Iveco SuperAV for the Army 18 Iveco SuperAV",
     "gen": 2,
     "cat": "apc"
    },
@@ -906,7 +931,207 @@
     "gen": 2,
     "cat": "patrol"
    }
-  ]
+  ],
+  "grp": {
+   "tank": {
+    "n": 150,
+    "s": "iiss_eq",
+    "c": "ت",
+    "top": [
+     [
+      "Ariete C1",
+      110,
+      2,
+      "ITA"
+     ]
+    ],
+    "gen": 2.0
+   },
+   "afv": {
+    "n": 1702,
+    "s": "wiki_army",
+    "c": "ت",
+    "top": [
+     [
+      "VBM Freccia",
+      630,
+      2,
+      "ITA"
+     ],
+     [
+      "Bandvagn 206",
+      300,
+      2,
+      "SWE"
+     ],
+     [
+      "Jeep Wrangler J8 Nuova Autovettura da Ri",
+      210,
+      2,
+      "USA"
+     ]
+    ],
+    "gen": 2.2
+   },
+   "art": {
+    "n": 332,
+    "s": "wiki_army",
+    "c": "ت",
+    "top": [
+     [
+      "MO-120 RT",
+      139,
+      2,
+      "FRA"
+     ],
+     [
+      "FH70",
+      90,
+      2,
+      "ITA"
+     ],
+     [
+      "Panzerhaubitze 2000",
+      64,
+      2,
+      "DEU"
+     ]
+    ],
+    "gen": 2.0
+   },
+   "jet": {
+    "n": 221,
+    "s": "iiss_eq",
+    "c": "ت",
+    "top": [
+     [
+      "F-16",
+      null,
+      null,
+      null
+     ],
+     [
+      "MiG-29",
+      null,
+      null,
+      null
+     ],
+     [
+      "Gripen",
+      null,
+      null,
+      null
+     ]
+    ],
+    "gen": 2.8,
+    "tpl": "eu"
+   },
+   "heli": {
+    "n": 222,
+    "s": "wiki_army",
+    "c": "ت",
+    "top": [
+     [
+      "NH90 TTH",
+      59,
+      2,
+      "FRA"
+     ],
+     [
+      "A129 Mangusta",
+      37,
+      2,
+      "ITA"
+     ],
+     [
+      "AB-205",
+      37,
+      2,
+      "USA"
+     ]
+    ],
+    "gen": 2.1
+   },
+   "uav": {
+    "n": 66,
+    "s": "wiki_army",
+    "c": "ت",
+    "top": [
+     [
+      "RQ-11 Raven (Made by AeroVironment)",
+      36,
+      2,
+      "USA"
+     ],
+     [
+      "RQ-7B Shadow (Made by AAI Corporation)",
+      16,
+      2,
+      "USA"
+     ],
+     [
+      "APR Rapier X-25 (Made by Sky Eye Systems",
+      6,
+      2,
+      "ITA"
+     ]
+    ],
+    "gen": 2.0
+   },
+   "ad": {
+    "n": 152,
+    "s": "wiki_army",
+    "c": "ت",
+    "top": [
+     [
+      "FIM-92 Stinger",
+      145,
+      2,
+      "USA"
+     ],
+     [
+      "SAMP/T",
+      5,
+      2,
+      "FRA"
+     ],
+     [
+      "GRIFO",
+      2,
+      2,
+      "GBR"
+     ]
+    ],
+    "gen": 2.0
+   },
+   "navy": {
+    "n": 29,
+    "s": "iiss_eq",
+    "c": "ت",
+    "top": [
+     [
+      "MTP96 class",
+      20,
+      2,
+      "INT"
+     ],
+     [
+      "GGS 1012 class",
+      13,
+      2,
+      "INT"
+     ],
+     [
+      "LCM62 class MTM C828",
+      9,
+      2,
+      "INT"
+     ]
+    ],
+    "gen": 2.0,
+    "note": "مجموع القوائم 106 يختلف عن الإجمالي؛ الإجمالي هو المعتمد"
+   }
+  }
  },
  "ind": {
   "tech": {

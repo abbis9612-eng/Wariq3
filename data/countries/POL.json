@@ -68,6 +68,11 @@
    "t": "تقدير المصمم (تشرين الثاني 2026) لصناعة السلاح والاستقرار: SIPRI Arms Transfers Database (أكبر المصدّرين 2020–24)، SIPRI Top 100 Arms-Producing Companies، Fragile States Index 2025، أخبار 2026",
    "u": "https://www.sipri.org/databases/armstransfers",
    "y": 2026
+  },
+  "tpl": {
+   "t": "قالب منطقة (eu): موديلات شائعة ونسب تقريبية من الدبابات (مدرعات ×2.5، مدفعية ×0.9، مروحيات ×0.25) — تقدير المصمم",
+   "u": "docs/features/world-plan.md",
+   "y": 2026
   }
  },
  "gov": {
@@ -281,6 +286,42 @@
     "cat": "spg"
    },
    {
+    "m": "K9 Thunder (K9A1)",
+    "n": 218,
+    "orig": "KOR",
+    "s": "wiki_army",
+    "c": "ت",
+    "gen": 2,
+    "cat": "spg"
+   },
+   {
+    "m": "K9 Thunder (K9PL)",
+    "n": 24,
+    "orig": "KOR",
+    "s": "wiki_army",
+    "c": "ت",
+    "gen": 2,
+    "cat": "spg"
+   },
+   {
+    "m": "Krab (KrabKrab 2)",
+    "n": 60,
+    "orig": "POL",
+    "s": "wiki_army",
+    "c": "ت",
+    "gen": 2,
+    "cat": "spg"
+   },
+   {
+    "m": "2S1 Goździk (2S1M Goździk2S1T Goździk)",
+    "n": 206,
+    "orig": "SUN",
+    "s": "wiki_army",
+    "c": "ت",
+    "gen": 2,
+    "cat": "spg"
+   },
+   {
     "m": "K239 Chunmoo (K239PL HOMAR-K)",
     "n": 156,
     "orig": "KOR",
@@ -315,6 +356,87 @@
     "c": "ت",
     "gen": 2,
     "cat": "mlrs"
+   },
+   {
+    "m": "K2 Black Panther (K2 (batch IV))",
+    "n": 238,
+    "orig": "KOR",
+    "s": "wiki_army",
+    "c": "ت",
+    "gen": 4,
+    "cat": "tank"
+   },
+   {
+    "m": "M1 Abrams (M1A1 FEP)",
+    "n": 116,
+    "orig": "USA",
+    "s": "wiki_army",
+    "c": "ت",
+    "gen": 3,
+    "cat": "tank"
+   },
+   {
+    "m": "M1 Abrams (M1A2 SEPv3)",
+    "n": 217,
+    "orig": "USA",
+    "s": "wiki_army",
+    "c": "ت",
+    "gen": 4,
+    "cat": "tank"
+   },
+   {
+    "m": "Leopard 2 (2A4)",
+    "n": 13,
+    "orig": "DEU",
+    "s": "wiki_army",
+    "c": "ت",
+    "gen": 3,
+    "cat": "tank"
+   },
+   {
+    "m": "Leopard 2 (2A5)",
+    "n": 105,
+    "orig": "DEU",
+    "s": "wiki_army",
+    "c": "ت",
+    "gen": 3,
+    "cat": "tank"
+   },
+   {
+    "m": "Leopard 2 (2PL)",
+    "n": 115,
+    "orig": "POL",
+    "s": "wiki_army",
+    "c": "ت",
+    "gen": 3,
+    "cat": "tank"
+   },
+   {
+    "m": "PT-91 Twardy",
+    "n": 12,
+    "orig": "POL",
+    "s": "wiki_army",
+    "c": "ت",
+    "gen": 2,
+    "cat": "tank"
+   },
+   {
+    "m": "PT-91 Twardy (PT-91MA)",
+    "n": 27,
+    "orig": "POL",
+    "s": "wiki_army",
+    "c": "ت",
+    "gen": 2,
+    "cat": "tank"
+   },
+   {
+    "m": "PT-91 Twardy (PT-91MA1)",
+    "n": 113,
+    "orig": "POL",
+    "s": "wiki_army",
+    "c": "ت",
+    "gen": 2,
+    "cat": "tank"
    },
    {
     "m": "KTO Rosomak",
@@ -776,6 +898,24 @@
   ],
   "ad": [
    {
+    "m": "PPZR Piorun",
+    "n": 1020,
+    "orig": "POL",
+    "s": "wiki_army",
+    "c": "ت",
+    "gen": 2,
+    "cat": "short"
+   },
+   {
+    "m": "PPZR Grom",
+    "n": 400,
+    "orig": "POL",
+    "s": "wiki_army",
+    "c": "ت",
+    "gen": 2,
+    "cat": "short"
+   },
+   {
     "m": "9K33 Osa (9K33 Osa-AK9K33 Osa-AK(M)Osa-P Żądło)",
     "n": 64,
     "orig": "SUN",
@@ -792,6 +932,24 @@
     "c": "ت",
     "gen": 2,
     "cat": "medium"
+   },
+   {
+    "m": "ZSU-23-4 Shilka (ZSU-23-4 Szyłka ZSU-23-4MP Biała)",
+    "n": 220,
+    "orig": "SUN",
+    "s": "wiki_army",
+    "c": "ت",
+    "gen": 2,
+    "cat": "short"
+   },
+   {
+    "m": "Hibneryt (Hibneryt Hibneryt-KG Hibneryt-P Hibneryt-3)",
+    "n": 70,
+    "orig": "POL",
+    "s": "wiki_army",
+    "c": "ت",
+    "gen": 2,
+    "cat": "short"
    }
   ],
   "msl": [],
@@ -815,7 +973,212 @@
     "gen": 2,
     "cat": "patrol"
    }
-  ]
+  ],
+  "grp": {
+   "tank": {
+    "n": 700,
+    "s": "iiss_eq",
+    "c": "ت",
+    "top": [
+     [
+      "K2 Black Panther (K2PL)",
+      820,
+      4,
+      "KOR"
+     ],
+     [
+      "K2 Black Panther (K2 (batch IV))",
+      238,
+      4,
+      "KOR"
+     ],
+     [
+      "M1 Abrams (M1A2 SEPv3)",
+      217,
+      4,
+      "USA"
+     ]
+    ],
+    "gen": 3.6,
+    "note": "مجموع القوائم 1776 يختلف عن الإجمالي؛ الإجمالي هو المعتمد"
+   },
+   "afv": {
+    "n": 2803,
+    "s": "wiki_army",
+    "c": "ت",
+    "top": [
+     [
+      "BWP-1 (BWP-1 BWP-1D)",
+      850,
+      2,
+      "SUN"
+     ],
+     [
+      "Ratel (Heavy Infantry Fighting Vehicle)",
+      700,
+      2,
+      "POL"
+     ],
+     [
+      "KTO Rosomak",
+      360,
+      2,
+      "FIN"
+     ]
+    ],
+    "gen": 2.0
+   },
+   "art": {
+    "n": 912,
+    "s": "wiki_army",
+    "c": "ت",
+    "top": [
+     [
+      "K9 Thunder (K9A1)",
+      218,
+      2,
+      "KOR"
+     ],
+     [
+      "2S1 Goździk (2S1M Goździk2S1T Goździk)",
+      206,
+      2,
+      "SUN"
+     ],
+     [
+      "K239 Chunmoo (K239PL HOMAR-K)",
+      156,
+      2,
+      "KOR"
+     ]
+    ],
+    "gen": 2.0
+   },
+   "jet": {
+    "n": 109,
+    "s": "iiss_eq",
+    "c": "ت",
+    "top": [
+     [
+      "F-16 Fighting Falcon (F-16C/D)",
+      47,
+      3,
+      "USA"
+     ],
+     [
+      "F-35 Lightning II (F-35A)",
+      21,
+      5,
+      "USA"
+     ],
+     [
+      "KAI FA-50 (FA-50GF)",
+      12,
+      2,
+      "KOR"
+     ]
+    ],
+    "gen": 3.3
+   },
+   "heli": {
+    "n": 299,
+    "s": "wiki_air",
+    "c": "ت",
+    "top": [
+     [
+      "AH-64 (AH-64E)",
+      96,
+      4,
+      "USA"
+     ],
+     [
+      "PZL Mi-2 (N/A)",
+      41,
+      2,
+      "POL"
+     ],
+     [
+      "Mi-8/17",
+      27,
+      2,
+      "SUN"
+     ]
+    ],
+    "gen": 2.8
+   },
+   "uav": {
+    "n": 633,
+    "s": "wiki_air",
+    "c": "ت",
+    "top": [
+     [
+      "WB Electronics Warmate (Warmate 3)",
+      360,
+      2,
+      "POL"
+     ],
+     [
+      "WB Electronics Warmate",
+      100,
+      2,
+      "POL"
+     ],
+     [
+      "Wizjer (NeoX 2)",
+      76,
+      2,
+      "POL"
+     ]
+    ],
+    "gen": 2.1
+   },
+   "ad": {
+    "n": 1794,
+    "s": "wiki_army",
+    "c": "ت",
+    "top": [
+     [
+      "PPZR Piorun",
+      1020,
+      2,
+      "POL"
+     ],
+     [
+      "PPZR Grom",
+      400,
+      2,
+      "POL"
+     ],
+     [
+      "ZSU-23-4 Shilka (ZSU-23-4 Szyłka ZSU-23-",
+      220,
+      2,
+      "SUN"
+     ]
+    ],
+    "gen": 2.0
+   },
+   "navy": {
+    "n": 11,
+    "s": "iiss_eq",
+    "c": "ت",
+    "top": [
+     [
+      "An-28 / PZL M28 (An-28/M28 (MPA))",
+      9,
+      2,
+      "POL"
+     ],
+     [
+      "NSM CDS division Naval Strike Missile Co",
+      2,
+      2,
+      "NOR"
+     ]
+    ],
+    "gen": 2.0
+   }
+  }
  },
  "ind": {
   "tech": {

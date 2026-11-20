@@ -5,6 +5,12 @@
  "tier": "C",
  "asOf": "2026-11",
  "src": {
+  "wiki_army": {
+   "t": "Wikipedia: Papua New Guinea Defence Force",
+   "u": "https://en.wikipedia.org/wiki/Papua_New_Guinea_Defence_Force?oldid=1384430099",
+   "y": 2026,
+   "note": "نسخة الصفحة بتاريخ السحب؛ أرقام ويكيبيديا تنراجع ويا مصادر ثانية"
+  },
   "iiss_eq": {
    "t": "Wikipedia: List of countries by level of military equipment (من IISS Military Balance ومصادر ثانية)",
    "u": "https://en.wikipedia.org/wiki/List_of_countries_by_level_of_military_equipment?oldid=1384804191",
@@ -49,6 +55,11 @@
   "tierA": {
    "t": "تقدير المصمم (تشرين الثاني 2026) لصناعة السلاح والاستقرار: SIPRI Arms Transfers Database (أكبر المصدّرين 2020–24)، SIPRI Top 100 Arms-Producing Companies، Fragile States Index 2025، أخبار 2026",
    "u": "https://www.sipri.org/databases/armstransfers",
+   "y": 2026
+  },
+  "tpl": {
+   "t": "قالب منطقة (as): موديلات شائعة ونسب تقريبية من الدبابات (مدرعات ×2.5، مدفعية ×0.9، مروحيات ×0.25) — تقدير المصمم",
+   "u": "docs/features/world-plan.md",
    "y": 2026
   }
  },
@@ -213,11 +224,109 @@
     "c": "ت"
    }
   },
-  "land": [],
-  "air": [],
-  "ad": [],
+  "land": [
+   {
+    "m": "WZ-551",
+    "n": 4,
+    "orig": "CHN",
+    "s": "wiki_army",
+    "c": "ت",
+    "note": "Donated by China",
+    "gen": 2,
+    "cat": "ifv"
+   }
+  ],
+  "air": [
+   {
+    "m": "Bell 412",
+    "n": 1,
+    "orig": "USA",
+    "s": "wiki_army",
+    "c": "ت",
+    "note": "Leased for PNG by Australian Government.",
+    "gen": 2,
+    "cat": "heli_util"
+   }
+  ],
+  "ad": [
+   {
+    "m": "Harrow Security Vehicles Tygor E1 up-armoured Toyota Land Cruiser",
+    "n": 9,
+    "orig": "ARE",
+    "s": "wiki_army",
+    "c": "ت",
+    "note": "Donated by Australia",
+    "gen": 2,
+    "cat": "long"
+   },
+   {
+    "m": "Harrow Security Vehicles Vader X up-armoured Toyota Land Cruiser",
+    "n": 3,
+    "orig": "ARE",
+    "s": "wiki_army",
+    "c": "ت",
+    "note": "Donated by Australia",
+    "gen": 2,
+    "cat": "long"
+   }
+  ],
   "msl": [],
-  "navy": []
+  "navy": [],
+  "grp": {
+   "afv": {
+    "n": 4,
+    "s": "wiki_army",
+    "c": "ت",
+    "top": [
+     [
+      "WZ-551",
+      4,
+      2,
+      "CHN"
+     ]
+    ],
+    "gen": 2.0
+   },
+   "heli": {
+    "n": 1,
+    "s": "wiki_army",
+    "c": "ت",
+    "top": [
+     [
+      "Bell 412",
+      1,
+      2,
+      "USA"
+     ]
+    ],
+    "gen": 2.0
+   },
+   "ad": {
+    "n": 12,
+    "s": "wiki_army",
+    "c": "ت",
+    "top": [
+     [
+      "Harrow Security Vehicles Tygor E1 up-arm",
+      9,
+      2,
+      "ARE"
+     ],
+     [
+      "Harrow Security Vehicles Vader X up-armo",
+      3,
+      2,
+      "ARE"
+     ]
+    ],
+    "gen": 2.0
+   },
+   "navy": {
+    "n": 2,
+    "s": "iiss_eq",
+    "c": "ت"
+   }
+  }
  },
  "ind": null,
  "pol": {

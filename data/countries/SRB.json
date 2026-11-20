@@ -5,6 +5,18 @@
  "tier": "B",
  "asOf": "2026-11",
  "src": {
+  "wiki_air": {
+   "t": "Wikipedia: Serbian Air Force and Air Defence",
+   "u": "https://en.wikipedia.org/wiki/Serbian_Air_Force_and_Air_Defence?oldid=1386361254",
+   "y": 2026,
+   "note": "نسخة الصفحة بتاريخ السحب؛ أرقام ويكيبيديا تنراجع ويا مصادر ثانية"
+  },
+  "wiki_army": {
+   "t": "Wikipedia: List of equipment of the Serbian Armed Forces",
+   "u": "https://en.wikipedia.org/wiki/List_of_equipment_of_the_Serbian_Armed_Forces?oldid=1384675897",
+   "y": 2026,
+   "note": "نسخة الصفحة بتاريخ السحب؛ أرقام ويكيبيديا تنراجع ويا مصادر ثانية"
+  },
   "iiss_eq": {
    "t": "Wikipedia: List of countries by level of military equipment (من IISS Military Balance ومصادر ثانية)",
    "u": "https://en.wikipedia.org/wiki/List_of_countries_by_level_of_military_equipment?oldid=1384804191",
@@ -49,6 +61,11 @@
   "tierA": {
    "t": "تقدير المصمم (تشرين الثاني 2026) لصناعة السلاح والاستقرار: SIPRI Arms Transfers Database (أكبر المصدّرين 2020–24)، SIPRI Top 100 Arms-Producing Companies، Fragile States Index 2025، أخبار 2026",
    "u": "https://www.sipri.org/databases/armstransfers",
+   "y": 2026
+  },
+  "tpl": {
+   "t": "قالب منطقة (eu): موديلات شائعة ونسب تقريبية من الدبابات (مدرعات ×2.5، مدفعية ×0.9، مروحيات ×0.25) — تقدير المصمم",
+   "u": "docs/features/world-plan.md",
    "y": 2026
   }
  },
@@ -219,11 +236,909 @@
     "c": "ت"
    }
   },
-  "land": [],
-  "air": [],
-  "ad": [],
+  "land": [
+   {
+    "m": "T-72B1MS",
+    "n": 30,
+    "orig": "RUS",
+    "s": "wiki_army",
+    "c": "ت",
+    "note": "Deployed in the Tank Battalion of the Army Command. Modernized version of T-72B, equipped with optoelectronic systems.",
+    "gen": 3,
+    "cat": "tank"
+   },
+   {
+    "m": "Lazar 3M",
+    "n": 40,
+    "orig": "SRB",
+    "s": "wiki_army",
+    "c": "ت",
+    "note": "Deployed in infantry battalions of the four Army brigades. Infantry fighting vehicle variant of Lazar 3, armed with RCWS with 30 mm cannon. ",
+    "gen": 2,
+    "cat": "ifv"
+   },
+   {
+    "m": "Lazar 3",
+    "n": 80,
+    "orig": "SRB",
+    "s": "wiki_army",
+    "c": "ت",
+    "note": "Deployed in infantry battalions of the four Army brigades. Additional procurement is ongoing.",
+    "gen": 2,
+    "cat": "apc"
+   },
+   {
+    "m": "BTR-80AMS",
+    "n": 108,
+    "orig": "RUS",
+    "s": "wiki_army",
+    "c": "ت",
+    "note": "Basic version, BTR-80A, deployed in infantry battalions of the four Army brigades, has undergone serial modernization to the BTR-80AMS varia",
+    "gen": 3,
+    "cat": "apc"
+   },
+   {
+    "m": "BOV OT",
+    "n": 20,
+    "orig": "SRB",
+    "s": "wiki_army",
+    "c": "ت",
+    "note": "Deployed in infantry battalions of the four Army brigades. Additional procurement is ongoing.",
+    "gen": 2,
+    "cat": "apc"
+   },
+   {
+    "m": "M20 MRAP",
+    "n": 30,
+    "orig": "SRB",
+    "s": "wiki_army",
+    "c": "ت",
+    "note": "Deployed in infantry battalions of the four Army brigades. Additional procurement is ongoing.",
+    "gen": 2,
+    "cat": "mrap"
+   },
+   {
+    "m": "BOV M16 Miloš",
+    "n": 109,
+    "orig": "SRB",
+    "s": "wiki_army",
+    "c": "ت",
+    "note": "Deployed in infantry battalions of the four Army brigades and the special forces units (72nd Brigade for Special Operations and 63rd Parachu",
+    "gen": 2,
+    "cat": "mrap"
+   },
+   {
+    "m": "BRDM-2BRDM-2MS",
+    "n": 4630,
+    "orig": "SUN",
+    "s": "wiki_army",
+    "c": "ت",
+    "note": "Basic variant deployed in tank and mechanized battalions of the four Army brigades. Modernized variant BRDM-2MS deployed in the Armored Reco",
+    "gen": 2,
+    "cat": "apc"
+   },
+   {
+    "m": "BOV KIV",
+    "n": 20,
+    "orig": "SRB",
+    "s": "wiki_army",
+    "c": "ت",
+    "note": "Deployed in the Mixed Artillery Brigade. Additional procurement is planned.",
+    "gen": 2,
+    "cat": "apc"
+   },
+   {
+    "m": "MT-LBu",
+    "n": 32,
+    "orig": "SUN",
+    "s": "wiki_army",
+    "c": "ت",
+    "note": "Deployed in self-propelled artillery battalions of the four Army brigades. Modernization conducted between 2020 and 2025.",
+    "gen": 2,
+    "cat": "apc"
+   },
+   {
+    "m": "BOV-VP",
+    "n": 52,
+    "orig": "YUG",
+    "s": "wiki_army",
+    "c": "ت",
+    "note": "Deployed in the Military Police.",
+    "gen": 2,
+    "cat": "apc"
+   },
+   {
+    "m": "Humvee",
+    "n": 158,
+    "orig": "USA",
+    "s": "wiki_army",
+    "c": "ت",
+    "note": "Deployed in infantry battalions of the four Army brigades and the special forces units (72nd Brigade for Special Operations and 63rd Parachu",
+    "gen": 2,
+    "cat": "apc"
+   },
+   {
+    "m": "BearCat G3",
+    "n": 5,
+    "orig": "USA",
+    "s": "wiki_army",
+    "c": "ت",
+    "note": "Deployed in the 25th Military Police Battalion of the Guard.",
+    "gen": 2,
+    "cat": "apc"
+   },
+   {
+    "m": "Nora B-52",
+    "n": 24,
+    "orig": "SRB",
+    "s": "wiki_army",
+    "c": "ت",
+    "note": "Deployed in the Mixed Artillery Brigade. Additional procurement is ongoing.",
+    "gen": 2,
+    "cat": "spg"
+   },
+   {
+    "m": "2S1 Gvozdika2S1M Gvozdika",
+    "n": 1854,
+    "orig": "SUN",
+    "s": "wiki_army",
+    "c": "ت",
+    "note": "Basic version, 2S1, deployed in self-propelled artillery battalions of the four Army brigades, is undergoing serial modernization to the 2S1",
+    "gen": 2,
+    "cat": "spg"
+   },
+   {
+    "m": "Nora M-84",
+    "n": 36,
+    "orig": "YUG",
+    "s": "wiki_army",
+    "c": "ت",
+    "note": "Deployed in the Mixed Artillery Brigade.",
+    "gen": 2,
+    "cat": "towed"
+   },
+   {
+    "m": "M-46",
+    "n": 36,
+    "orig": "SUN",
+    "s": "wiki_army",
+    "c": "ت",
+    "note": "Deployed in the Mixed Artillery Brigade. Caliber conversion to 155mm conducted on a certain number of pieces.",
+    "gen": 2,
+    "cat": "towed"
+   },
+   {
+    "m": "D-30J",
+    "n": 80,
+    "orig": "SUN",
+    "s": "wiki_army",
+    "c": "ت",
+    "note": "Deployed in the Mixed Artillery Brigade.",
+    "gen": 2,
+    "cat": "towed"
+   },
+   {
+    "m": "ZiS-3",
+    "n": 18,
+    "orig": "SUN",
+    "s": "wiki_army",
+    "c": "ت",
+    "note": "Deployed in the Honour Guard Battalion of the Guard.",
+    "gen": 2,
+    "cat": "towed"
+   },
+   {
+    "m": "PULS",
+    "n": 20,
+    "orig": "ISR",
+    "s": "wiki_army",
+    "c": "ت",
+    "note": "Deployed in the Mixed Artillery Brigade. Armed with Predator Hawk tactical ballistic missiles (370 mm caliber and 300 km range) as well as E",
+    "gen": 2,
+    "cat": "mlrs"
+   },
+   {
+    "m": "M-87 Orkan",
+    "n": 4,
+    "orig": "YUG",
+    "s": "wiki_army",
+    "c": "ت",
+    "note": "Deployed in the Mixed Artillery Brigade.",
+    "gen": 2,
+    "cat": "mlrs"
+   },
+   {
+    "m": "RM-70 Vampire",
+    "n": 30,
+    "orig": "CZE",
+    "s": "wiki_army",
+    "c": "ت",
+    "note": "Deployed in the Mixed Artillery Brigade. Modernized variant of RM-70, features armored cabin and digital fire control.",
+    "gen": 2,
+    "cat": "mlrs"
+   },
+   {
+    "m": "M-18 Oganj",
+    "n": 8,
+    "orig": "SRB",
+    "s": "wiki_army",
+    "c": "ت",
+    "note": "Deployed in multiple rocket launcher artillery battalions of the four Army brigades. Armed with ALAS guided missile (175 mm caliber and 25 k",
+    "gen": 2,
+    "cat": "mlrs"
+   },
+   {
+    "m": "M-77 OganjM-17D Oganj",
+    "n": 3030,
+    "orig": "YUG",
+    "s": "wiki_army",
+    "c": "ت",
+    "note": "Basic version, M77, deployed in multiple rocket launcher artillery battalions of the four Army brigades, is undergoing serial modernization ",
+    "gen": 2,
+    "cat": "mlrs"
+   },
+   {
+    "m": "M-94 Plamen S",
+    "n": 18,
+    "orig": "SRB",
+    "s": "wiki_army",
+    "c": "ت",
+    "note": "Deployed in multiple rocket launcher artillery battalions of the four Army brigades. Modernized variant of M-63 Plamen.",
+    "gen": 2,
+    "cat": "mlrs"
+   },
+   {
+    "m": "M80 Zolja",
+    "n": 200,
+    "orig": "YUG",
+    "s": "wiki_army",
+    "c": "ت",
+    "note": "Used by infantry battalions of the four Army brigades.",
+    "gen": 2,
+    "cat": "mlrs"
+   },
+   {
+    "m": "FZ275 LGR",
+    "n": 600,
+    "orig": "BEL",
+    "s": "wiki_army",
+    "c": "ت",
+    "note": "Used in the 119th Mixed Helicopter Squadron of the 98th Air Brigade. In use on H145M helicopters.",
+    "gen": 2,
+    "cat": "atgm"
+   },
+   {
+    "m": "ALAS",
+    "n": 60,
+    "orig": "SRB",
+    "s": "wiki_army",
+    "c": "ت",
+    "note": "Used by the multiple rocket launcher artillery battalions of the four Army brigades. In use on M18 Oganj multiple rocket launchers.",
+    "gen": 2,
+    "cat": "atgm"
+   },
+   {
+    "m": "9K111 Fagot",
+    "n": 250,
+    "orig": "SUN",
+    "s": "wiki_army",
+    "c": "ت",
+    "note": "Used by infantry battalions of the four Army brigades. In use on POLK tripod launchers.",
+    "gen": 2,
+    "cat": "atgm"
+   }
+  ],
+  "air": [
+   {
+    "m": "Mikoyan MiG-29 (MiG-29SM)",
+    "n": 10,
+    "orig": "SUN",
+    "s": "wiki_air",
+    "c": "ت",
+    "note": "1 lost in 2026",
+    "gen": 3,
+    "cat": "fighter"
+   },
+   {
+    "m": "Soko J-22 Orao (J-22B)",
+    "n": 17,
+    "orig": "YUG",
+    "s": "wiki_air",
+    "c": "ت",
+    "gen": 2,
+    "cat": "attack"
+   },
+   {
+    "m": "Airbus C-295 (C-295W)",
+    "n": 2,
+    "orig": "ESP",
+    "s": "wiki_air",
+    "c": "ت",
+    "gen": 2,
+    "cat": "transport"
+   },
+   {
+    "m": "Antonov An-26",
+    "n": 1,
+    "orig": "SUN",
+    "s": "wiki_air",
+    "c": "ت",
+    "gen": 2,
+    "cat": "transport"
+   },
+   {
+    "m": "Mil Mi-24 (Mi-35)",
+    "n": 15,
+    "orig": "RUS",
+    "s": "wiki_air",
+    "c": "ت",
+    "note": "4 on order",
+    "gen": 3,
+    "cat": "heli_attack"
+   },
+   {
+    "m": "Mil Mi-17 (Mi-17V-5)",
+    "n": 5,
+    "orig": "RUS",
+    "s": "wiki_air",
+    "c": "ت",
+    "gen": 2,
+    "cat": "heli_util"
+   },
+   {
+    "m": "Airbus H145 (H145M)",
+    "n": 16,
+    "orig": "FRA",
+    "s": "wiki_air",
+    "c": "ت",
+    "gen": 2,
+    "cat": "heli_util"
+   },
+   {
+    "m": "Aérospatiale Gazelle (341/42)",
+    "n": 25,
+    "orig": "FRA",
+    "s": "wiki_air",
+    "c": "ت",
+    "gen": 2,
+    "cat": "heli_util"
+   },
+   {
+    "m": "Mikoyan MiG-29 (MiG-29UB)",
+    "n": 3,
+    "orig": "SUN",
+    "s": "wiki_air",
+    "c": "ت",
+    "gen": 3,
+    "cat": "trainer"
+   },
+   {
+    "m": "Soko G-4 (G-4M)",
+    "n": 15,
+    "orig": "YUG",
+    "s": "wiki_air",
+    "c": "ت",
+    "gen": 2,
+    "cat": "trainer"
+   },
+   {
+    "m": "Utva Lasta (Lasta 95V)",
+    "n": 14,
+    "orig": "SRB",
+    "s": "wiki_air",
+    "c": "ت",
+    "gen": 2,
+    "cat": "trainer"
+   },
+   {
+    "m": "Elbit Hermes (Hermes 900)",
+    "n": 3,
+    "orig": "ISR",
+    "s": "wiki_air",
+    "c": "ت",
+    "gen": 2,
+    "cat": "uav_isr"
+   },
+   {
+    "m": "CASC Rainbow (CH-95/92)",
+    "n": 10,
+    "orig": "CHN",
+    "s": "wiki_air",
+    "c": "ت",
+    "gen": 2,
+    "cat": "uav_isr"
+   },
+   {
+    "m": "Utva Pegaz",
+    "n": 12,
+    "orig": "SRB",
+    "s": "wiki_air",
+    "c": "ت",
+    "gen": 2,
+    "cat": "uav_isr"
+   },
+   {
+    "m": "Mali Miloš",
+    "n": 26,
+    "orig": "SRB",
+    "s": "wiki_army",
+    "c": "ت",
+    "note": "Deployed in the 72nd Brigade for Special Operations.",
+    "gen": 2,
+    "cat": "uav_isr"
+   },
+   {
+    "m": "Mi-35",
+    "n": 15,
+    "orig": "RUS",
+    "s": "wiki_army",
+    "c": "ت",
+    "note": "Deployed in the 714th Anti-armour Helicopter Squadron of the 98th Air Brigade. Four pieces in Mi-35M version (four more on order, delivery p",
+    "gen": 3,
+    "cat": "heli_attack"
+   },
+   {
+    "m": "Mi-17",
+    "n": 5,
+    "orig": "RUS",
+    "s": "wiki_army",
+    "c": "ت",
+    "note": "Deployed in the 890th Mixed Helicopter Squadron of the 204th Air Brigade. Three more on order, delivery postponed due to sanctions on Russia",
+    "gen": 2,
+    "cat": "heli_util"
+   },
+   {
+    "m": "H145M",
+    "n": 15,
+    "orig": "DEU",
+    "s": "wiki_army",
+    "c": "ت",
+    "note": "Deployed in the 119th Mixed Helicopter Squadron of the 98th Air Brigade. Ten pieces armed (seven with HForce 3 weapon system and three with ",
+    "gen": 2,
+    "cat": "heli_util"
+   },
+   {
+    "m": "SA341H",
+    "n": 25,
+    "orig": "FRA",
+    "s": "wiki_army",
+    "c": "ت",
+    "note": "Deployed in the 714th Anti-armour Helicopter Squadron (armed version with 9K11 Malyutka anti-armour missiles) and in the 119th Mixed Helicop",
+    "gen": 2,
+    "cat": "heli_util"
+   },
+   {
+    "m": "Hermes 900",
+    "n": 3,
+    "orig": "ISR",
+    "s": "wiki_army",
+    "c": "ت",
+    "note": "Deployed in the 353rd Reconnaissance Squadron of the 98th Air Brigade.",
+    "gen": 2,
+    "cat": "uav_isr"
+   },
+   {
+    "m": "CH-95",
+    "n": 10,
+    "orig": "CHN",
+    "s": "wiki_army",
+    "c": "ت",
+    "note": "Deployed in the 353rd Reconnaissance Squadron of the 98th Air Brigade.",
+    "gen": 2,
+    "cat": "uav_isr"
+   },
+   {
+    "m": "CH-92",
+    "n": 6,
+    "orig": "CHN",
+    "s": "wiki_army",
+    "c": "ت",
+    "note": "Deployed in the 353rd Reconnaissance Squadron of the 98th Air Brigade.",
+    "gen": 2,
+    "cat": "uav_isr"
+   },
+   {
+    "m": "Pegaz",
+    "n": 12,
+    "orig": "SRB",
+    "s": "wiki_army",
+    "c": "ت",
+    "note": "Deployed in the 353rd Reconnaissance Squadron of the 98th Air Brigade.",
+    "gen": 2,
+    "cat": "uav_isr"
+   },
+   {
+    "m": "Orbiter",
+    "n": 10,
+    "orig": "ISR",
+    "s": "wiki_army",
+    "c": "ت",
+    "note": "Deployed in infantry battalions of the four Army brigades.",
+    "gen": 2,
+    "cat": "uav_isr"
+   },
+   {
+    "m": "Vrabac",
+    "n": 50,
+    "orig": "SRB",
+    "s": "wiki_army",
+    "c": "ت",
+    "note": "Deployed in infantry battalions of the four Army brigades.",
+    "gen": 2,
+    "cat": "uav_isr"
+   },
+   {
+    "m": "Shadow 50",
+    "n": 60,
+    "orig": "ARE",
+    "s": "wiki_army",
+    "c": "ت",
+    "note": "Deployed in the Mixed Artillery Brigade.",
+    "gen": 2,
+    "cat": "uav_strike"
+   },
+   {
+    "m": "Shadow 25",
+    "n": 60,
+    "orig": "ARE",
+    "s": "wiki_army",
+    "c": "ت",
+    "note": "Deployed in the Mixed Artillery Brigade.",
+    "gen": 2,
+    "cat": "uav_strike"
+   },
+   {
+    "m": "SM2",
+    "n": 130,
+    "orig": "ARE",
+    "s": "wiki_army",
+    "c": "ت",
+    "note": "Deployed in the Mixed Artillery Brigade.",
+    "gen": 2,
+    "cat": "uav_strike"
+   },
+   {
+    "m": "Komarac",
+    "n": 5000,
+    "orig": "SRB",
+    "s": "wiki_army",
+    "c": "ت",
+    "note": "Deployed in infantry battalions of the four Army brigades.",
+    "gen": 2,
+    "cat": "uav_strike"
+   },
+   {
+    "m": "AR-100C",
+    "n": 60,
+    "orig": "DEU",
+    "s": "wiki_army",
+    "c": "ت",
+    "note": "Deployed in infantry battalions of the four Army brigades.",
+    "gen": 2,
+    "cat": "uav_isr"
+   },
+   {
+    "m": "DJI Matrice 350",
+    "n": 38,
+    "orig": "CHN",
+    "s": "wiki_army",
+    "c": "ت",
+    "note": "Deployed in infantry battalions of the four Army brigades.",
+    "gen": 2,
+    "cat": "uav_isr"
+   },
+   {
+    "m": "DJI Matrice 30",
+    "n": 50,
+    "orig": "CHN",
+    "s": "wiki_army",
+    "c": "ت",
+    "note": "Deployed in infantry battalions of the four Army brigades.",
+    "gen": 2,
+    "cat": "uav_isr"
+   },
+   {
+    "m": "DJI Mini 3 Pro",
+    "n": 60,
+    "orig": "CHN",
+    "s": "wiki_army",
+    "c": "ت",
+    "note": "Deployed in infantry battalions of the four Army brigades.",
+    "gen": 2,
+    "cat": "uav_isr"
+   },
+   {
+    "m": "DJI Mavic 3",
+    "n": 90,
+    "orig": "CHN",
+    "s": "wiki_army",
+    "c": "ت",
+    "note": "Deployed in infantry battalions of the four Army brigades.",
+    "gen": 2,
+    "cat": "uav_isr"
+   },
+   {
+    "m": "IKA-20",
+    "n": 50,
+    "orig": "SRB",
+    "s": "wiki_army",
+    "c": "ت",
+    "note": "Deployed in infantry battalions of the four Army brigades.",
+    "gen": 2,
+    "cat": "uav_isr"
+   }
+  ],
+  "ad": [
+   {
+    "m": "HQ-22",
+    "n": 4,
+    "orig": "CHN",
+    "s": "wiki_army",
+    "c": "ت",
+    "note": "Deployed in the 250th Air Defence Missile Brigade. In use is FK-3 version of the system (100 km range).",
+    "gen": 2,
+    "cat": "medium"
+   },
+   {
+    "m": "HQ-17",
+    "n": 2,
+    "orig": "CHN",
+    "s": "wiki_army",
+    "c": "ت",
+    "note": "Deployed in the 250th Air Defence Missile Brigade. In use is HQ-17AE version of the system (20 km range).",
+    "gen": 2,
+    "cat": "short"
+   },
+   {
+    "m": "Pantsir",
+    "n": 1,
+    "orig": "RUS",
+    "s": "wiki_army",
+    "c": "ت",
+    "note": "Deployed in the 250th Air Defense Missile Brigade. Two batteries of Pantsir-S1M on order, delivery postponed due to sanctions on Russia.",
+    "gen": 3,
+    "cat": "short"
+   },
+   {
+    "m": "2K12 Kub",
+    "n": 3,
+    "orig": "SUN",
+    "s": "wiki_army",
+    "c": "ت",
+    "note": "Deployed in the 250th Air Defence Missile Brigade. Modernization (version Kub M2) conducted between 2016 and 2018.",
+    "gen": 2,
+    "cat": "medium"
+   },
+   {
+    "m": "S-125 Neva",
+    "n": 5,
+    "orig": "SUN",
+    "s": "wiki_army",
+    "c": "ت",
+    "note": "Deployed in the 250th Air Defence Missile Brigade. Modernization (version Neva M1T) conducted between 2013 and 2015.",
+    "gen": 2,
+    "cat": "medium"
+   },
+   {
+    "m": "PASARS-16",
+    "n": 5,
+    "orig": "SRB",
+    "s": "wiki_army",
+    "c": "ت",
+    "note": "Deployed in air-defence artillery battalions of the four Army brigades. Hybrid system armed with Bofors L/70 40 mm anti-aircraft gun as well",
+    "gen": 2,
+    "cat": "short"
+   },
+   {
+    "m": "9K35 Strela-10",
+    "n": 1,
+    "orig": "SUN",
+    "s": "wiki_army",
+    "c": "ت",
+    "note": "Deployed in air-defence artillery battalions of the four Army brigades. Modernization (version 9K35 Strela-10M) conducted between 2020 and 2",
+    "gen": 2,
+    "cat": "short"
+   },
+   {
+    "m": "9K31 Strela-1",
+    "n": 4,
+    "orig": "SUN",
+    "s": "wiki_army",
+    "c": "ت",
+    "note": "Deployed in air-defence artillery battalions of the 2nd, 3rd and 4th Army brigades.",
+    "gen": 2,
+    "cat": "short"
+   },
+   {
+    "m": "Mistral 3",
+    "n": 18,
+    "orig": "FRA",
+    "s": "wiki_army",
+    "c": "ت",
+    "note": "Used by infantry battalions of the four Army brigades.",
+    "gen": 2,
+    "cat": "short"
+   },
+   {
+    "m": "9K38 Igla",
+    "n": 54,
+    "orig": "SUN",
+    "s": "wiki_army",
+    "c": "ت",
+    "note": "Used by infantry battalions of the four Army brigades.",
+    "gen": 2,
+    "cat": "short"
+   }
+  ],
   "msl": [],
-  "navy": []
+  "navy": [],
+  "grp": {
+   "tank": {
+    "n": 265,
+    "s": "iiss_eq",
+    "c": "ت",
+    "top": [
+     [
+      "T-72B1MS",
+      30,
+      3,
+      "RUS"
+     ]
+    ],
+    "gen": 3.0,
+    "note": "مجموع القوائم 30 يختلف عن الإجمالي؛ الإجمالي هو المعتمد"
+   },
+   "afv": {
+    "n": 5284,
+    "s": "wiki_army",
+    "c": "ت",
+    "top": [
+     [
+      "BRDM-2BRDM-2MS",
+      4630,
+      2,
+      "SUN"
+     ],
+     [
+      "Humvee",
+      158,
+      2,
+      "USA"
+     ],
+     [
+      "BOV M16 Miloš",
+      109,
+      2,
+      "SRB"
+     ]
+    ],
+    "gen": 2.0
+   },
+   "art": {
+    "n": 5358,
+    "s": "wiki_army",
+    "c": "ت",
+    "top": [
+     [
+      "M-77 OganjM-17D Oganj",
+      3030,
+      2,
+      "YUG"
+     ],
+     [
+      "2S1 Gvozdika2S1M Gvozdika",
+      1854,
+      2,
+      "SUN"
+     ],
+     [
+      "M80 Zolja",
+      200,
+      2,
+      "YUG"
+     ]
+    ],
+    "gen": 2.0
+   },
+   "jet": {
+    "n": 30,
+    "s": "iiss_eq",
+    "c": "ت",
+    "top": [
+     [
+      "Soko J-22 Orao (J-22B)",
+      17,
+      2,
+      "YUG"
+     ],
+     [
+      "Mikoyan MiG-29 (MiG-29SM)",
+      10,
+      3,
+      "SUN"
+     ]
+    ],
+    "gen": 2.4
+   },
+   "heli": {
+    "n": 121,
+    "s": "wiki_air",
+    "c": "ت",
+    "top": [
+     [
+      "Aérospatiale Gazelle (341/42)",
+      25,
+      2,
+      "FRA"
+     ],
+     [
+      "SA341H",
+      25,
+      2,
+      "FRA"
+     ],
+     [
+      "Airbus H145 (H145M)",
+      16,
+      2,
+      "FRA"
+     ]
+    ],
+    "gen": 2.2
+   },
+   "uav": {
+    "n": 5740,
+    "s": "wiki_air",
+    "c": "ت",
+    "top": [
+     [
+      "Komarac",
+      5000,
+      2,
+      "SRB"
+     ],
+     [
+      "SM2",
+      130,
+      2,
+      "ARE"
+     ],
+     [
+      "DJI Mavic 3",
+      90,
+      2,
+      "CHN"
+     ]
+    ],
+    "gen": 2.0
+   },
+   "ad": {
+    "n": 97,
+    "s": "wiki_army",
+    "c": "ت",
+    "top": [
+     [
+      "9K38 Igla",
+      54,
+      2,
+      "SUN"
+     ],
+     [
+      "Mistral 3",
+      18,
+      2,
+      "FRA"
+     ],
+     [
+      "S-125 Neva",
+      5,
+      2,
+      "SUN"
+     ]
+    ],
+    "gen": 2.0
+   }
+  }
  },
  "ind": null,
  "pol": {

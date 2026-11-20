@@ -50,6 +50,11 @@
    "t": "تقدير المصمم (تشرين الثاني 2026) لصناعة السلاح والاستقرار: SIPRI Arms Transfers Database (أكبر المصدّرين 2020–24)، SIPRI Top 100 Arms-Producing Companies، Fragile States Index 2025، أخبار 2026",
    "u": "https://www.sipri.org/databases/armstransfers",
    "y": 2026
+  },
+  "tpl": {
+   "t": "قالب منطقة (as): موديلات شائعة ونسب تقريبية من الدبابات (مدرعات ×2.5، مدفعية ×0.9، مروحيات ×0.25) — تقدير المصمم",
+   "u": "docs/features/world-plan.md",
+   "y": 2026
   }
  },
  "gov": {
@@ -223,7 +228,144 @@
   "air": [],
   "ad": [],
   "msl": [],
-  "navy": []
+  "navy": [],
+  "grp": {
+   "tank": {
+    "n": 420,
+    "s": "iiss_eq",
+    "c": "ت",
+    "top": [
+     [
+      "Type 59",
+      null,
+      null,
+      null
+     ],
+     [
+      "T-55",
+      null,
+      null,
+      null
+     ],
+     [
+      "T-72",
+      null,
+      null,
+      null
+     ]
+    ],
+    "gen": 1.8,
+    "tpl": "as"
+   },
+   "afv": {
+    "n": 1050,
+    "s": "tpl",
+    "c": "ق",
+    "top": [
+     [
+      "M113",
+      null,
+      null,
+      null
+     ],
+     [
+      "BTR-70",
+      null,
+      null,
+      null
+     ],
+     [
+      "Type 63",
+      null,
+      null,
+      null
+     ]
+    ],
+    "gen": 1.8,
+    "tpl": "as"
+   },
+   "art": {
+    "n": 378,
+    "s": "tpl",
+    "c": "ق",
+    "top": [
+     [
+      "M101",
+      null,
+      null,
+      null
+     ],
+     [
+      "D-30",
+      null,
+      null,
+      null
+     ],
+     [
+      "Type 54",
+      null,
+      null,
+      null
+     ]
+    ],
+    "gen": 1.8,
+    "tpl": "as"
+   },
+   "jet": {
+    "n": 2,
+    "s": "iiss_eq",
+    "c": "ت",
+    "top": [
+     [
+      "F-5",
+      null,
+      null,
+      null
+     ],
+     [
+      "MiG-21",
+      null,
+      null,
+      null
+     ],
+     [
+      "F-7",
+      null,
+      null,
+      null
+     ]
+    ],
+    "gen": 2,
+    "tpl": "as"
+   },
+   "heli": {
+    "n": 105,
+    "s": "tpl",
+    "c": "ق",
+    "top": [
+     [
+      "Mi-8/17",
+      null,
+      null,
+      null
+     ],
+     [
+      "Bell 412",
+      null,
+      null,
+      null
+     ],
+     [
+      "UH-1",
+      null,
+      null,
+      null
+     ]
+    ],
+    "gen": 2,
+    "tpl": "as"
+   }
+  }
  },
  "ind": null,
  "pol": {

@@ -5,6 +5,24 @@
  "tier": "B",
  "asOf": "2026-11",
  "src": {
+  "wiki_air": {
+   "t": "Wikipedia: Royal New Zealand Air Force",
+   "u": "https://en.wikipedia.org/wiki/Royal_New_Zealand_Air_Force?oldid=1386471313",
+   "y": 2026,
+   "note": "نسخة الصفحة بتاريخ السحب؛ أرقام ويكيبيديا تنراجع ويا مصادر ثانية"
+  },
+  "wiki_army": {
+   "t": "Wikipedia: List of equipment of the New Zealand Army",
+   "u": "https://en.wikipedia.org/wiki/List_of_equipment_of_the_New_Zealand_Army?oldid=1381938542",
+   "y": 2026,
+   "note": "نسخة الصفحة بتاريخ السحب؛ أرقام ويكيبيديا تنراجع ويا مصادر ثانية"
+  },
+  "wiki_navy": {
+   "t": "Wikipedia: List of active Royal New Zealand Navy ships",
+   "u": "https://en.wikipedia.org/wiki/List_of_active_Royal_New_Zealand_Navy_ships?oldid=1386455198",
+   "y": 2026,
+   "note": "نسخة الصفحة بتاريخ السحب؛ أرقام ويكيبيديا تنراجع ويا مصادر ثانية"
+  },
   "iiss_eq": {
    "t": "Wikipedia: List of countries by level of military equipment (من IISS Military Balance ومصادر ثانية)",
    "u": "https://en.wikipedia.org/wiki/List_of_countries_by_level_of_military_equipment?oldid=1384804191",
@@ -49,6 +67,11 @@
   "tierA": {
    "t": "تقدير المصمم (تشرين الثاني 2026) لصناعة السلاح والاستقرار: SIPRI Arms Transfers Database (أكبر المصدّرين 2020–24)، SIPRI Top 100 Arms-Producing Companies، Fragile States Index 2025، أخبار 2026",
    "u": "https://www.sipri.org/databases/armstransfers",
+   "y": 2026
+  },
+  "tpl": {
+   "t": "قالب منطقة (as): موديلات شائعة ونسب تقريبية من الدبابات (مدرعات ×2.5، مدفعية ×0.9، مروحيات ×0.25) — تقدير المصمم",
+   "u": "docs/features/world-plan.md",
    "y": 2026
   }
  },
@@ -219,11 +242,263 @@
     "c": "ت"
    }
   },
-  "land": [],
-  "air": [],
+  "land": [
+   {
+    "m": "L119 light gun",
+    "n": 24,
+    "orig": "GBR",
+    "s": "wiki_army",
+    "c": "ت",
+    "gen": 2,
+    "cat": "towed"
+   },
+   {
+    "m": "NZLAV",
+    "n": 73,
+    "orig": "CAN",
+    "s": "wiki_army",
+    "c": "ت",
+    "gen": 2,
+    "cat": "ifv"
+   },
+   {
+    "m": "Bushmaster Protected Mobility Vehicle",
+    "n": 48,
+    "orig": "AUS",
+    "s": "wiki_army",
+    "c": "ت",
+    "gen": 2,
+    "cat": "apc"
+   }
+  ],
+  "air": [
+   {
+    "m": "Boeing P-8 (P-8A)",
+    "n": 4,
+    "orig": "USA",
+    "s": "wiki_air",
+    "c": "ت",
+    "note": "Aircraft delivered in 2023.",
+    "gen": 2,
+    "cat": "isr"
+   },
+   {
+    "m": "Boeing 757 (757-2K2)",
+    "n": 2,
+    "orig": "USA",
+    "s": "wiki_air",
+    "c": "ت",
+    "note": "Due to be replaced in 2028 with two Airbus A321XLRs.",
+    "gen": 4,
+    "cat": "transport"
+   },
+   {
+    "m": "C-130J Super Hercules (C-130J-30)",
+    "n": 5,
+    "orig": "USA",
+    "s": "wiki_air",
+    "c": "ت",
+    "note": "Aircraft delivered in 2024.",
+    "gen": 2,
+    "cat": "transport"
+   },
+   {
+    "m": "NHIndustries NH90 (NH90 TTH)",
+    "n": 8,
+    "orig": "FRA",
+    "s": "wiki_air",
+    "c": "ت",
+    "note": "Aircraft delivered in 2014.",
+    "gen": 2,
+    "cat": "heli_util"
+   },
+   {
+    "m": "AgustaWestland AW109 (A109LUH)",
+    "n": 5,
+    "orig": "ITA",
+    "s": "wiki_air",
+    "c": "ت",
+    "note": "Aircraft delivered in 2011.",
+    "gen": 2,
+    "cat": "heli_util"
+   },
+   {
+    "m": "SH-2G Super Seasprite (SH-2G(I))",
+    "n": 5,
+    "orig": "USA",
+    "s": "wiki_air",
+    "c": "ت",
+    "note": "Due to be replaced in 2027 with five MH-60R Seahawks.",
+    "gen": 2,
+    "cat": "heli_util"
+   },
+   {
+    "m": "T-6 Texan II (T-6C)",
+    "n": 11,
+    "orig": "USA",
+    "s": "wiki_air",
+    "c": "ت",
+    "note": "Aircraft delivered in 2015.",
+    "gen": 2,
+    "cat": "trainer"
+   },
+   {
+    "m": "Super King Air (KA350)",
+    "n": 4,
+    "orig": "USA",
+    "s": "wiki_air",
+    "c": "ت",
+    "note": "Delivered in mid-2020. Two modified for maritime surveillance as well as training.",
+    "gen": 2,
+    "cat": "trainer"
+   },
+   {
+    "m": "AeroVironment RQ-20 Puma",
+    "n": 1,
+    "orig": "USA",
+    "s": "wiki_army",
+    "c": "ت",
+    "gen": 4,
+    "cat": "uav_isr"
+   }
+  ],
   "ad": [],
   "msl": [],
-  "navy": []
+  "navy": [
+   {
+    "m": "Anzac class Sub-class of MEKO-200",
+    "n": 2,
+    "orig": "NZL",
+    "s": "wiki_navy",
+    "c": "ت",
+    "cat": "frigate",
+    "gen": 2,
+    "note": "عدد الصفوف بالقائمة"
+   },
+   {
+    "m": "Protector class",
+    "n": 2,
+    "orig": "NZL",
+    "s": "wiki_navy",
+    "c": "ت",
+    "cat": "patrol",
+    "gen": 3,
+    "note": "عدد الصفوف بالقائمة"
+   },
+   {
+    "m": "Lake class",
+    "n": 2,
+    "orig": "NZL",
+    "s": "wiki_navy",
+    "c": "ت",
+    "cat": "patrol",
+    "gen": 2,
+    "note": "عدد الصفوف بالقائمة"
+   }
+  ],
+  "grp": {
+   "afv": {
+    "n": 121,
+    "s": "wiki_army",
+    "c": "ت",
+    "top": [
+     [
+      "NZLAV",
+      73,
+      2,
+      "CAN"
+     ],
+     [
+      "Bushmaster Protected Mobility Vehicle",
+      48,
+      2,
+      "AUS"
+     ]
+    ],
+    "gen": 2.0
+   },
+   "art": {
+    "n": 24,
+    "s": "wiki_army",
+    "c": "ت",
+    "top": [
+     [
+      "L119 light gun",
+      24,
+      2,
+      "GBR"
+     ]
+    ],
+    "gen": 2.0
+   },
+   "heli": {
+    "n": 18,
+    "s": "wiki_air",
+    "c": "ت",
+    "top": [
+     [
+      "NHIndustries NH90 (NH90 TTH)",
+      8,
+      2,
+      "FRA"
+     ],
+     [
+      "AgustaWestland AW109 (A109LUH)",
+      5,
+      2,
+      "ITA"
+     ],
+     [
+      "SH-2G Super Seasprite (SH-2G(I))",
+      5,
+      2,
+      "USA"
+     ]
+    ],
+    "gen": 2.0
+   },
+   "uav": {
+    "n": 1,
+    "s": "wiki_army",
+    "c": "ت",
+    "top": [
+     [
+      "AeroVironment RQ-20 Puma",
+      1,
+      4,
+      "USA"
+     ]
+    ],
+    "gen": 4.0
+   },
+   "navy": {
+    "n": 2,
+    "s": "iiss_eq",
+    "c": "ت",
+    "top": [
+     [
+      "Anzac class Sub-class of MEKO-200",
+      2,
+      2,
+      "NZL"
+     ],
+     [
+      "Protector class",
+      2,
+      3,
+      "NZL"
+     ],
+     [
+      "Lake class",
+      2,
+      2,
+      "NZL"
+     ]
+    ],
+    "gen": 2.3,
+    "note": "مجموع القوائم 6 يختلف عن الإجمالي؛ الإجمالي هو المعتمد"
+   }
+  }
  },
  "ind": null,
  "pol": {

@@ -5,6 +5,24 @@
  "tier": "B",
  "asOf": "2026-11",
  "src": {
+  "wiki_air": {
+   "t": "Wikipedia: Vietnam Air Defence - Air Force",
+   "u": "https://en.wikipedia.org/wiki/Vietnam_Air_Defence_-_Air_Force?oldid=1381526935",
+   "y": 2026,
+   "note": "نسخة الصفحة بتاريخ السحب؛ أرقام ويكيبيديا تنراجع ويا مصادر ثانية"
+  },
+  "wiki_army": {
+   "t": "Wikipedia: List of equipment of the Vietnam People's Air Force",
+   "u": "https://en.wikipedia.org/wiki/List_of_equipment_of_the_Vietnam_People's_Air_Force?oldid=1384524336",
+   "y": 2026,
+   "note": "نسخة الصفحة بتاريخ السحب؛ أرقام ويكيبيديا تنراجع ويا مصادر ثانية"
+  },
+  "wiki_navy": {
+   "t": "Wikipedia: Vietnam People's Navy",
+   "u": "https://en.wikipedia.org/wiki/Vietnam_People's_Navy?oldid=1381527029",
+   "y": 2026,
+   "note": "نسخة الصفحة بتاريخ السحب؛ أرقام ويكيبيديا تنراجع ويا مصادر ثانية"
+  },
   "iiss_eq": {
    "t": "Wikipedia: List of countries by level of military equipment (من IISS Military Balance ومصادر ثانية)",
    "u": "https://en.wikipedia.org/wiki/List_of_countries_by_level_of_military_equipment?oldid=1384804191",
@@ -49,6 +67,11 @@
   "tierA": {
    "t": "تقدير المصمم (تشرين الثاني 2026) لصناعة السلاح والاستقرار: SIPRI Arms Transfers Database (أكبر المصدّرين 2020–24)، SIPRI Top 100 Arms-Producing Companies، Fragile States Index 2025، أخبار 2026",
    "u": "https://www.sipri.org/databases/armstransfers",
+   "y": 2026
+  },
+  "tpl": {
+   "t": "قالب منطقة (as): موديلات شائعة ونسب تقريبية من الدبابات (مدرعات ×2.5، مدفعية ×0.9، مروحيات ×0.25) — تقدير المصمم",
+   "u": "docs/features/world-plan.md",
    "y": 2026
   }
  },
@@ -206,9 +229,228 @@
   },
   "land": [],
   "air": [],
-  "ad": [],
+  "ad": [
+   {
+    "m": "S-300 (S-300PMU1)",
+    "n": 12,
+    "orig": "RUS",
+    "s": "wiki_army",
+    "c": "ت",
+    "note": "Two systems were acquired. Received upgrade to the command center and range of the missile. Said to be upgraded to S-300PMU2 standards. Fact",
+    "gen": 3,
+    "cat": "long"
+   },
+   {
+    "m": "SPYDER (SPYDER-MR)",
+    "n": 5,
+    "orig": "ISR",
+    "s": "wiki_army",
+    "c": "ت",
+    "note": "Five received in 2016–2018.",
+    "gen": 2,
+    "cat": "medium"
+   },
+   {
+    "m": "SA-2 Dvina (Volga S-75M/M3)",
+    "n": 25,
+    "orig": "SUN",
+    "s": "wiki_army",
+    "c": "ت",
+    "note": "~27 to 35 km range. The Volga S-75M/M3 air defense missile complex (modern version of SAM-2) uses 5IA23 missiles and is a High-altitude air ",
+    "gen": 1,
+    "cat": "short"
+   },
+   {
+    "m": "S-125 Neva/Pechora (S-125TM Pechora-2TM S-125M Pechora-M S-125-VT)",
+    "n": 51,
+    "orig": "SUN",
+    "s": "wiki_army",
+    "c": "ت",
+    "note": "~35 km range. 30 S-125TM Pechora-2TM and 21 S-125M Pechora-M batteries as of 2024. The S-125-VT domestic modernized variant was reported to ",
+    "gen": 2,
+    "cat": "medium"
+   },
+   {
+    "m": "9K35 Strela-10",
+    "n": 20,
+    "orig": "SUN",
+    "s": "wiki_army",
+    "c": "ت",
+    "note": "~10 km range. Still being used according to official Vietnamese newspaper from 2024, but not mentioned in the Military Balance of 2024.",
+    "gen": 2,
+    "cat": "short"
+   }
+  ],
   "msl": [],
-  "navy": []
+  "navy": [],
+  "grp": {
+   "tank": {
+    "n": 1379,
+    "s": "iiss_eq",
+    "c": "ت",
+    "top": [
+     [
+      "Type 59",
+      null,
+      null,
+      null
+     ],
+     [
+      "T-55",
+      null,
+      null,
+      null
+     ],
+     [
+      "T-72",
+      null,
+      null,
+      null
+     ]
+    ],
+    "gen": 1.8,
+    "tpl": "as"
+   },
+   "afv": {
+    "n": 3448,
+    "s": "tpl",
+    "c": "ق",
+    "top": [
+     [
+      "M113",
+      null,
+      null,
+      null
+     ],
+     [
+      "BTR-70",
+      null,
+      null,
+      null
+     ],
+     [
+      "Type 63",
+      null,
+      null,
+      null
+     ]
+    ],
+    "gen": 1.8,
+    "tpl": "as"
+   },
+   "art": {
+    "n": 1241,
+    "s": "tpl",
+    "c": "ق",
+    "top": [
+     [
+      "M101",
+      null,
+      null,
+      null
+     ],
+     [
+      "D-30",
+      null,
+      null,
+      null
+     ],
+     [
+      "Type 54",
+      null,
+      null,
+      null
+     ]
+    ],
+    "gen": 1.8,
+    "tpl": "as"
+   },
+   "jet": {
+    "n": 80,
+    "s": "iiss_eq",
+    "c": "ت",
+    "top": [
+     [
+      "F-5",
+      null,
+      null,
+      null
+     ],
+     [
+      "MiG-21",
+      null,
+      null,
+      null
+     ],
+     [
+      "F-7",
+      null,
+      null,
+      null
+     ]
+    ],
+    "gen": 2,
+    "tpl": "as"
+   },
+   "heli": {
+    "n": 345,
+    "s": "tpl",
+    "c": "ق",
+    "top": [
+     [
+      "Mi-8/17",
+      null,
+      null,
+      null
+     ],
+     [
+      "Bell 412",
+      null,
+      null,
+      null
+     ],
+     [
+      "UH-1",
+      null,
+      null,
+      null
+     ]
+    ],
+    "gen": 2,
+    "tpl": "as"
+   },
+   "ad": {
+    "n": 113,
+    "s": "wiki_army",
+    "c": "ت",
+    "top": [
+     [
+      "S-125 Neva/Pechora (S-125TM Pechora-2TM ",
+      51,
+      2,
+      "SUN"
+     ],
+     [
+      "SA-2 Dvina (Volga S-75M/M3)",
+      25,
+      1,
+      "SUN"
+     ],
+     [
+      "9K35 Strela-10",
+      20,
+      2,
+      "SUN"
+     ]
+    ],
+    "gen": 1.9
+   },
+   "navy": {
+    "n": 27,
+    "s": "iiss_eq",
+    "c": "ت"
+   }
+  }
  },
  "ind": null,
  "pol": {

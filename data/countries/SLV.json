@@ -5,6 +5,18 @@
  "tier": "C",
  "asOf": "2026-11",
  "src": {
+  "wiki_army": {
+   "t": "Wikipedia: Armed Forces of El Salvador",
+   "u": "https://en.wikipedia.org/wiki/Armed_Forces_of_El_Salvador?oldid=1385688475",
+   "y": 2026,
+   "note": "نسخة الصفحة بتاريخ السحب؛ أرقام ويكيبيديا تنراجع ويا مصادر ثانية"
+  },
+  "wiki_navy": {
+   "t": "Wikipedia: Navy of El Salvador",
+   "u": "https://en.wikipedia.org/wiki/Navy_of_El_Salvador?oldid=1385683889",
+   "y": 2026,
+   "note": "نسخة الصفحة بتاريخ السحب؛ أرقام ويكيبيديا تنراجع ويا مصادر ثانية"
+  },
   "iiss_eq": {
    "t": "Wikipedia: List of countries by level of military equipment (من IISS Military Balance ومصادر ثانية)",
    "u": "https://en.wikipedia.org/wiki/List_of_countries_by_level_of_military_equipment?oldid=1384804191",
@@ -49,6 +61,11 @@
   "tierA": {
    "t": "تقدير المصمم (تشرين الثاني 2026) لصناعة السلاح والاستقرار: SIPRI Arms Transfers Database (أكبر المصدّرين 2020–24)، SIPRI Top 100 Arms-Producing Companies، Fragile States Index 2025، أخبار 2026",
    "u": "https://www.sipri.org/databases/armstransfers",
+   "y": 2026
+  },
+  "tpl": {
+   "t": "قالب منطقة (la): موديلات شائعة ونسب تقريبية من الدبابات (مدرعات ×2.5، مدفعية ×0.9، مروحيات ×0.25) — تقدير المصمم",
+   "u": "docs/features/world-plan.md",
    "y": 2026
   }
  },
@@ -220,7 +237,123 @@
   "air": [],
   "ad": [],
   "msl": [],
-  "navy": []
+  "navy": [
+   {
+    "m": "Camcraft-type",
+    "n": 1,
+    "orig": "SLV",
+    "s": "wiki_navy",
+    "c": "ت",
+    "cat": "patrol",
+    "gen": 2,
+    "note": "عدد الصفوف بالقائمة"
+   },
+   {
+    "m": "Swiftships 65 ft class",
+    "n": 1,
+    "orig": "SLV",
+    "s": "wiki_navy",
+    "c": "ت",
+    "cat": "patrol",
+    "gen": 2,
+    "note": "عدد الصفوف بالقائمة"
+   },
+   {
+    "m": "Swiftships 77 ft class",
+    "n": 1,
+    "orig": "SLV",
+    "s": "wiki_navy",
+    "c": "ت",
+    "cat": "patrol",
+    "gen": 2,
+    "note": "عدد الصفوف بالقائمة"
+   },
+   {
+    "m": "37-foot Boston Whaler",
+    "n": 1,
+    "orig": "SLV",
+    "s": "wiki_navy",
+    "c": "ت",
+    "cat": "patrol",
+    "gen": 2,
+    "note": "عدد الصفوف بالقائمة"
+   },
+   {
+    "m": "Protector class",
+    "n": 1,
+    "orig": "SLV",
+    "s": "wiki_navy",
+    "c": "ت",
+    "cat": "patrol",
+    "gen": 3,
+    "note": "عدد الصفوف بالقائمة"
+   },
+   {
+    "m": "USN LCM(8) craft",
+    "n": 2,
+    "orig": "SLV",
+    "s": "wiki_navy",
+    "c": "ت",
+    "cat": "amphib",
+    "gen": 2,
+    "note": "عدد الصفوف بالقائمة"
+   }
+  ],
+  "grp": {
+   "jet": {
+    "n": 13,
+    "s": "iiss_eq",
+    "c": "ت",
+    "top": [
+     [
+      "A-29 Super Tucano",
+      null,
+      null,
+      null
+     ],
+     [
+      "F-5",
+      null,
+      null,
+      null
+     ],
+     [
+      "Mirage 5",
+      null,
+      null,
+      null
+     ]
+    ],
+    "gen": 1.8,
+    "tpl": "la"
+   },
+   "navy": {
+    "n": 7,
+    "s": "wiki_navy",
+    "c": "ت",
+    "top": [
+     [
+      "USN LCM(8) craft",
+      2,
+      2,
+      "SLV"
+     ],
+     [
+      "Camcraft-type",
+      1,
+      2,
+      "SLV"
+     ],
+     [
+      "Swiftships 65 ft class",
+      1,
+      2,
+      "SLV"
+     ]
+    ],
+    "gen": 2.1
+   }
+  }
  },
  "ind": null,
  "pol": {

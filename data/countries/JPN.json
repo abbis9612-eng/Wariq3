@@ -68,6 +68,11 @@
    "t": "تقدير المصمم (تشرين الثاني 2026) لصناعة السلاح والاستقرار: SIPRI Arms Transfers Database (أكبر المصدّرين 2020–24)، SIPRI Top 100 Arms-Producing Companies، Fragile States Index 2025، أخبار 2026",
    "u": "https://www.sipri.org/databases/armstransfers",
    "y": 2026
+  },
+  "tpl": {
+   "t": "قالب منطقة (as): موديلات شائعة ونسب تقريبية من الدبابات (مدرعات ×2.5، مدفعية ×0.9، مروحيات ×0.25) — تقدير المصمم",
+   "u": "docs/features/world-plan.md",
+   "y": 2026
   }
  },
  "gov": {
@@ -237,7 +242,118 @@
     "note": "العاملة؛ الباقي من sum.tanks مخزون"
    }
   },
-  "land": [],
+  "land": [
+   {
+    "m": "FH-70",
+    "n": 480,
+    "orig": "GBR",
+    "s": "wiki_army",
+    "c": "ت",
+    "note": "Total of 480 built as of 2008. Built under license with the ordnance by Japan Steel Works.",
+    "gen": 2,
+    "cat": "towed"
+   },
+   {
+    "m": "–",
+    "n": 135,
+    "orig": "JPN",
+    "s": "wiki_army",
+    "c": "ت",
+    "note": "Artillery system made by Japan Steel Works, chassis from Mitsubishi Heavy Industries.",
+    "gen": 2,
+    "cat": "spg"
+   },
+   {
+    "m": "M270 MLRS",
+    "n": 99,
+    "orig": "USA",
+    "s": "wiki_army",
+    "c": "ت",
+    "note": "Made under licence by IHI. M270 [ja] purchased between 1992 and 2004. Expected to be retired in 2029.",
+    "gen": 2,
+    "cat": "mlrs"
+   },
+   {
+    "m": "–",
+    "n": 340,
+    "orig": "JPN",
+    "s": "wiki_army",
+    "c": "ت",
+    "note": "Built by MHI until 2009. Weapons: Tank gun: JSW / Rh-120 L44 (120 mm) Coaxial MG: Type 74 [ja] (7.62×51mm NATO) Pintle MG: M2 Browning (12.7",
+    "gen": 2,
+    "cat": "tank"
+   },
+   {
+    "m": "–",
+    "n": 111,
+    "orig": "JPN",
+    "s": "wiki_army",
+    "c": "ت",
+    "note": "Built by Komatsu. Based on the chassis of the Type 82 Command and Communication Vehicle. Ordered between 1987 and 2013. Weapons: Autocannon:",
+    "gen": 2,
+    "cat": "ifv"
+   },
+   {
+    "m": "–",
+    "n": 119,
+    "orig": "JPN",
+    "s": "wiki_army",
+    "c": "ت",
+    "note": "Built by MHI and Komatsu. Ordered between 2009 and 2020. Equipped with 6 × ATM-6 MPM-MR [ja] ATGM.",
+    "gen": 2,
+    "cat": "atgm"
+   },
+   {
+    "m": "AAV-7A1",
+    "n": 46,
+    "orig": "USA",
+    "s": "wiki_army",
+    "c": "ت",
+    "note": "Imported from BAE Systems. Equipped with a UGWS weapons station armed with: HMG: M2 Browning (12.7×99mm NATO) AGL: Mk19 (40×53mm HV)",
+    "gen": 2,
+    "cat": "apc"
+   },
+   {
+    "m": "–",
+    "n": 381,
+    "orig": "JPN",
+    "s": "wiki_army",
+    "c": "ت",
+    "note": "Built by Komatsu. Procured from 1996 and 2016 [ja]. Being replaced by the Patria AMV. Weapons on a pintle mount: HMG: M2 Browning (12.7×99mm",
+    "gen": 2,
+    "cat": "apc"
+   },
+   {
+    "m": "Komatsu LAV",
+    "n": 1818,
+    "orig": "JPN",
+    "s": "wiki_army",
+    "c": "ت",
+    "note": "Built from 2002 to 2019. 1,818 ordered by the 2015 budget. Exists in multiple variants, some with weapons on a pintle mount, such as: HMG M2",
+    "gen": 2,
+    "cat": "apc"
+   },
+   {
+    "m": "Bushmaster Protected Mobility Vehicle",
+    "n": 8,
+    "orig": "AUS",
+    "s": "wiki_army",
+    "c": "ت",
+    "note": "Built by Thales Australia. Used by the CRR in case of emergency evacuation of Japanese citizens needed. Purchases: 4 in 2014 4 in 2016",
+    "gen": 2,
+    "cat": "mrap"
+   },
+   {
+    "m": "–",
+    "n": 1,
+    "orig": "JPN",
+    "s": "wiki_army",
+    "c": "ت",
+    "note": "Ongoing selection of the Komatsu LAV successor. Around 2,000 to be produced under licence: MHI for the Hawkei Marubeni Aerospace",
+    "gen": 2,
+    "cat": "mrap"
+   }
+  ],
   "air": [
    {
     "m": "F-15 Eagle (F-15J)",
@@ -440,9 +556,99 @@
     "note": "2 on order",
     "gen": 2,
     "cat": "uav_isr"
+   },
+   {
+    "m": "CH-47 Chinook",
+    "n": 66,
+    "orig": "USA",
+    "s": "wiki_army",
+    "c": "ت",
+    "note": "Built under licence by Kawasaki. J variant operational since 1984, JA since 1995.",
+    "gen": 3,
+    "cat": "heli_util"
+   },
+   {
+    "m": "UH-60 Black Hawk",
+    "n": 39,
+    "orig": "USA",
+    "s": "wiki_army",
+    "c": "ت",
+    "note": "Built under licence by Mitsubishi. A total of forty purchased, one lost on the 6 April 2023.",
+    "gen": 2,
+    "cat": "heli_util"
+   },
+   {
+    "m": "Bell UH-1 Iroquois",
+    "n": 126,
+    "orig": "USA",
+    "s": "wiki_army",
+    "c": "ت",
+    "note": "Built under licence by Fuji. Being replaced by the Subaru-Bell UH-2. Equipment: Type 87 mine dispersal device [ja]",
+    "gen": 2,
+    "cat": "heli_util"
+   },
+   {
+    "m": "Bell CH-146 Griffon / Bell 412",
+    "n": 10,
+    "orig": "CAN",
+    "s": "wiki_army",
+    "c": "ت",
+    "note": "150 planned to be ordered in the programme. Confirmed purchases: 6 (budget 2019) 7 (budget 2021) 13 (budget 2022) 12 (budget 2023) 16 (budge",
+    "gen": 2,
+    "cat": "heli_util"
+   },
+   {
+    "m": "Enstrom 480",
+    "n": 30,
+    "orig": "USA",
+    "s": "wiki_army",
+    "c": "ت",
+    "note": "In service since 2011.",
+    "gen": 2,
+    "cat": "heli_util"
+   },
+   {
+    "m": "Yamaha R-MAX Type IIG",
+    "n": 6,
+    "orig": "JPN",
+    "s": "wiki_army",
+    "c": "ت",
+    "note": "Used during deployment to Iraq.",
+    "gen": 2,
+    "cat": "uav_isr"
+   },
+   {
+    "m": "–",
+    "n": 15,
+    "orig": "JPN",
+    "s": "wiki_army",
+    "c": "ت",
+    "gen": 2,
+    "cat": "uav_isr"
    }
   ],
-  "ad": [],
+  "ad": [
+   {
+    "m": "Self-propelled anti-aircraft gun",
+    "n": 52,
+    "orig": "JPN",
+    "s": "wiki_army",
+    "c": "ت",
+    "note": "Built by Mitsubishi. It uses 2 × Oerlikon KDA autocannons (35×228mm).",
+    "gen": 2,
+    "cat": "short"
+   },
+   {
+    "m": "–",
+    "n": 90,
+    "orig": "JPN",
+    "s": "wiki_army",
+    "c": "ت",
+    "note": "Built by Toshiba.",
+    "gen": 2,
+    "cat": "short"
+   }
+  ],
   "msl": [],
   "navy": [
    {
@@ -701,7 +907,199 @@
     "gen": 2,
     "cat": "sub"
    }
-  ]
+  ],
+  "grp": {
+   "tank": {
+    "n": 450,
+    "s": "iiss_eq",
+    "c": "ت",
+    "top": [
+     [
+      "–",
+      340,
+      2,
+      "JPN"
+     ]
+    ],
+    "gen": 2.0
+   },
+   "afv": {
+    "n": 2365,
+    "s": "wiki_army",
+    "c": "ت",
+    "top": [
+     [
+      "Komatsu LAV",
+      1818,
+      2,
+      "JPN"
+     ],
+     [
+      "–",
+      381,
+      2,
+      "JPN"
+     ],
+     [
+      "–",
+      111,
+      2,
+      "JPN"
+     ]
+    ],
+    "gen": 2.0
+   },
+   "art": {
+    "n": 714,
+    "s": "wiki_army",
+    "c": "ت",
+    "top": [
+     [
+      "FH-70",
+      480,
+      2,
+      "GBR"
+     ],
+     [
+      "–",
+      135,
+      2,
+      "JPN"
+     ],
+     [
+      "M270 MLRS",
+      99,
+      2,
+      "USA"
+     ]
+    ],
+    "gen": 2.0
+   },
+   "jet": {
+    "n": 313,
+    "s": "iiss_eq",
+    "c": "ت",
+    "top": [
+     [
+      "F-15 Eagle (F-15J)",
+      155,
+      3,
+      "USA"
+     ],
+     [
+      "Mitsubishi F-2 (F-2A)",
+      62,
+      2,
+      "JPN"
+     ],
+     [
+      "F-35 Lightning II (F-35A/B)",
+      47,
+      5,
+      "USA"
+     ]
+    ],
+    "gen": 3.1
+   },
+   "heli": {
+    "n": 349,
+    "s": "wiki_air",
+    "c": "ت",
+    "top": [
+     [
+      "Bell UH-1 Iroquois",
+      126,
+      2,
+      "USA"
+     ],
+     [
+      "CH-47 Chinook",
+      66,
+      3,
+      "USA"
+     ],
+     [
+      "Sikorsky UH-60 Black Hawk (UH-60J)",
+      61,
+      2,
+      "USA"
+     ]
+    ],
+    "gen": 2.2
+   },
+   "uav": {
+    "n": 22,
+    "s": "wiki_air",
+    "c": "ت",
+    "top": [
+     [
+      "–",
+      15,
+      2,
+      "JPN"
+     ],
+     [
+      "Yamaha R-MAX Type IIG",
+      6,
+      2,
+      "JPN"
+     ],
+     [
+      "RQ-4 Global Hawk (RQ-4B)",
+      1,
+      2,
+      "USA"
+     ]
+    ],
+    "gen": 2.0
+   },
+   "ad": {
+    "n": 142,
+    "s": "wiki_army",
+    "c": "ت",
+    "top": [
+     [
+      "–",
+      90,
+      2,
+      "JPN"
+     ],
+     [
+      "Self-propelled anti-aircraft gun",
+      52,
+      2,
+      "JPN"
+     ]
+    ],
+    "gen": 2.0
+   },
+   "navy": {
+    "n": 73,
+    "s": "iiss_eq",
+    "c": "ت",
+    "top": [
+     [
+      "Sōryū-class",
+      10,
+      2,
+      "INT"
+     ],
+     [
+      "Mogami-class",
+      10,
+      2,
+      "INT"
+     ],
+     [
+      "Murasame-class",
+      9,
+      2,
+      "INT"
+     ]
+    ],
+    "gen": 2.0
+   }
+  }
  },
  "ind": {
   "tech": {

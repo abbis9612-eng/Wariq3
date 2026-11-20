@@ -5,6 +5,18 @@
  "tier": "C",
  "asOf": "2026-11",
  "src": {
+  "wiki_air": {
+   "t": "Wikipedia: Djibouti Air Force",
+   "u": "https://en.wikipedia.org/wiki/Djibouti_Air_Force?oldid=1303957487",
+   "y": 2026,
+   "note": "نسخة الصفحة بتاريخ السحب؛ أرقام ويكيبيديا تنراجع ويا مصادر ثانية"
+  },
+  "wiki_army": {
+   "t": "Wikipedia: List of equipment of the Djiboutian Army",
+   "u": "https://en.wikipedia.org/wiki/List_of_equipment_of_the_Djiboutian_Army?oldid=1380973717",
+   "y": 2026,
+   "note": "نسخة الصفحة بتاريخ السحب؛ أرقام ويكيبيديا تنراجع ويا مصادر ثانية"
+  },
   "iiss_eq": {
    "t": "Wikipedia: List of countries by level of military equipment (من IISS Military Balance ومصادر ثانية)",
    "u": "https://en.wikipedia.org/wiki/List_of_countries_by_level_of_military_equipment?oldid=1384804191",
@@ -49,6 +61,11 @@
   "tierA": {
    "t": "تقدير المصمم (تشرين الثاني 2026) لصناعة السلاح والاستقرار: SIPRI Arms Transfers Database (أكبر المصدّرين 2020–24)، SIPRI Top 100 Arms-Producing Companies، Fragile States Index 2025، أخبار 2026",
    "u": "https://www.sipri.org/databases/armstransfers",
+   "y": 2026
+  },
+  "tpl": {
+   "t": "قالب منطقة (af): موديلات شائعة ونسب تقريبية من الدبابات (مدرعات ×2.5، مدفعية ×0.9، مروحيات ×0.25) — تقدير المصمم",
+   "u": "docs/features/world-plan.md",
    "y": 2026
   }
  },
@@ -204,11 +221,322 @@
     "c": "ت"
    }
   },
-  "land": [],
-  "air": [],
-  "ad": [],
+  "land": [
+   {
+    "m": "M109L",
+    "n": 10,
+    "orig": "USA",
+    "s": "wiki_army",
+    "c": "ت",
+    "note": "Gift of Italian Government",
+    "gen": 2,
+    "cat": "spg"
+   },
+   {
+    "m": "Type 63",
+    "n": 2,
+    "orig": "CHN",
+    "s": "wiki_army",
+    "c": "ت",
+    "gen": 2,
+    "cat": "mlrs"
+   },
+   {
+    "m": "D-30",
+    "n": 9,
+    "orig": "SUN",
+    "s": "wiki_army",
+    "c": "ت",
+    "gen": 2,
+    "cat": "towed"
+   },
+   {
+    "m": "MO-120-RT-61",
+    "n": 20,
+    "orig": "FRA",
+    "s": "wiki_army",
+    "c": "ت",
+    "gen": 2,
+    "cat": "towed"
+   },
+   {
+    "m": "WMA-301",
+    "n": 9,
+    "orig": "CHN",
+    "s": "wiki_army",
+    "c": "ت",
+    "gen": 2,
+    "cat": "atgm"
+   },
+   {
+    "m": "Ratel IFV",
+    "n": 20,
+    "orig": "ZAF",
+    "s": "wiki_army",
+    "c": "ت",
+    "gen": 2,
+    "cat": "ifv"
+   },
+   {
+    "m": "BRDM-2",
+    "n": 2,
+    "orig": "SUN",
+    "s": "wiki_army",
+    "c": "ت",
+    "gen": 2,
+    "cat": "apc"
+   },
+   {
+    "m": "Panhard VBL",
+    "n": 15,
+    "orig": "FRA",
+    "s": "wiki_army",
+    "c": "ت",
+    "gen": 2,
+    "cat": "apc"
+   },
+   {
+    "m": "Casspir",
+    "n": 3,
+    "orig": "ZAF",
+    "s": "wiki_army",
+    "c": "ت",
+    "note": "Casspir Casspir III",
+    "gen": 2,
+    "cat": "mrap"
+   },
+   {
+    "m": "Cougar",
+    "n": 12,
+    "orig": "USA",
+    "s": "wiki_army",
+    "c": "ت",
+    "gen": 2,
+    "cat": "mrap"
+   },
+   {
+    "m": "Panhard AML",
+    "n": 20,
+    "orig": "FRA",
+    "s": "wiki_army",
+    "c": "ت",
+    "note": "4 AML-60 and 17 AML-90",
+    "gen": 2,
+    "cat": "apc"
+   }
+  ],
+  "air": [
+   {
+    "m": "Cessna 208",
+    "n": 1,
+    "orig": "USA",
+    "s": "wiki_air",
+    "c": "ت",
+    "gen": 2,
+    "cat": "transport"
+   },
+   {
+    "m": "Harbin Y-12",
+    "n": 2,
+    "orig": "CHN",
+    "s": "wiki_air",
+    "c": "ت",
+    "gen": 2,
+    "cat": "transport"
+   },
+   {
+    "m": "Xi'an MA60 (MA60H-500)",
+    "n": 2,
+    "orig": "CHN",
+    "s": "wiki_air",
+    "c": "ت",
+    "gen": 2,
+    "cat": "transport"
+   },
+   {
+    "m": "Eurocopter AS355",
+    "n": 1,
+    "orig": "FRA",
+    "s": "wiki_air",
+    "c": "ت",
+    "gen": 2,
+    "cat": "heli_util"
+   },
+   {
+    "m": "Eurocopter AS565",
+    "n": 4,
+    "orig": "FRA",
+    "s": "wiki_air",
+    "c": "ت",
+    "gen": 2,
+    "cat": "heli_util"
+   },
+   {
+    "m": "Harbin Z-9",
+    "n": 1,
+    "orig": "CHN",
+    "s": "wiki_air",
+    "c": "ت",
+    "gen": 2,
+    "cat": "heli_util"
+   },
+   {
+    "m": "Mil Mi-8",
+    "n": 2,
+    "orig": "RUS",
+    "s": "wiki_air",
+    "c": "ت",
+    "gen": 2,
+    "cat": "heli_util"
+   },
+   {
+    "m": "Mil Mi-24 (Mil Mi-35)",
+    "n": 2,
+    "orig": "RUS",
+    "s": "wiki_air",
+    "c": "ت",
+    "gen": 3,
+    "cat": "heli_attack"
+   }
+  ],
+  "ad": [
+   {
+    "m": "Bofors L/70",
+    "n": 5,
+    "orig": "SWE",
+    "s": "wiki_army",
+    "c": "ت",
+    "gen": 2,
+    "cat": "short"
+   },
+   {
+    "m": "ZU-23-2",
+    "n": 5,
+    "orig": "SUN",
+    "s": "wiki_army",
+    "c": "ت",
+    "gen": 2,
+    "cat": "short"
+   },
+   {
+    "m": "20 mm modèle F2 gun",
+    "n": 5,
+    "orig": "FRA",
+    "s": "wiki_army",
+    "c": "ت",
+    "note": "Used for air defence.",
+    "gen": 2,
+    "cat": "short"
+   }
+  ],
   "msl": [],
-  "navy": []
+  "navy": [],
+  "grp": {
+   "afv": {
+    "n": 72,
+    "s": "wiki_army",
+    "c": "ت",
+    "top": [
+     [
+      "Ratel IFV",
+      20,
+      2,
+      "ZAF"
+     ],
+     [
+      "Panhard AML",
+      20,
+      2,
+      "FRA"
+     ],
+     [
+      "Panhard VBL",
+      15,
+      2,
+      "FRA"
+     ]
+    ],
+    "gen": 2.0
+   },
+   "art": {
+    "n": 41,
+    "s": "wiki_army",
+    "c": "ت",
+    "top": [
+     [
+      "MO-120-RT-61",
+      20,
+      2,
+      "FRA"
+     ],
+     [
+      "M109L",
+      10,
+      2,
+      "USA"
+     ],
+     [
+      "D-30",
+      9,
+      2,
+      "SUN"
+     ]
+    ],
+    "gen": 2.0
+   },
+   "heli": {
+    "n": 10,
+    "s": "wiki_air",
+    "c": "ت",
+    "top": [
+     [
+      "Eurocopter AS565",
+      4,
+      2,
+      "FRA"
+     ],
+     [
+      "Mil Mi-8",
+      2,
+      2,
+      "RUS"
+     ],
+     [
+      "Mil Mi-24 (Mil Mi-35)",
+      2,
+      3,
+      "RUS"
+     ]
+    ],
+    "gen": 2.2
+   },
+   "ad": {
+    "n": 15,
+    "s": "wiki_army",
+    "c": "ت",
+    "top": [
+     [
+      "Bofors L/70",
+      5,
+      2,
+      "SWE"
+     ],
+     [
+      "ZU-23-2",
+      5,
+      2,
+      "SUN"
+     ],
+     [
+      "20 mm modèle F2 gun",
+      5,
+      2,
+      "FRA"
+     ]
+    ],
+    "gen": 2.0
+   }
+  }
  },
  "ind": null,
  "pol": {

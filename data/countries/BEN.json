@@ -5,6 +5,18 @@
  "tier": "C",
  "asOf": "2026-11",
  "src": {
+  "wiki_air": {
+   "t": "Wikipedia: Benin Air Force",
+   "u": "https://en.wikipedia.org/wiki/Benin_Air_Force?oldid=1362879352",
+   "y": 2026,
+   "note": "نسخة الصفحة بتاريخ السحب؛ أرقام ويكيبيديا تنراجع ويا مصادر ثانية"
+  },
+  "wiki_army": {
+   "t": "Wikipedia: Benin Armed Forces",
+   "u": "https://en.wikipedia.org/wiki/Benin_Armed_Forces?oldid=1364337438",
+   "y": 2026,
+   "note": "نسخة الصفحة بتاريخ السحب؛ أرقام ويكيبيديا تنراجع ويا مصادر ثانية"
+  },
   "iiss_eq": {
    "t": "Wikipedia: List of countries by level of military equipment (من IISS Military Balance ومصادر ثانية)",
    "u": "https://en.wikipedia.org/wiki/List_of_countries_by_level_of_military_equipment?oldid=1384804191",
@@ -49,6 +61,11 @@
   "tierA": {
    "t": "تقدير المصمم (تشرين الثاني 2026) لصناعة السلاح والاستقرار: SIPRI Arms Transfers Database (أكبر المصدّرين 2020–24)، SIPRI Top 100 Arms-Producing Companies، Fragile States Index 2025، أخبار 2026",
    "u": "https://www.sipri.org/databases/armstransfers",
+   "y": 2026
+  },
+  "tpl": {
+   "t": "قالب منطقة (af): موديلات شائعة ونسب تقريبية من الدبابات (مدرعات ×2.5، مدفعية ×0.9، مروحيات ×0.25) — تقدير المصمم",
+   "u": "docs/features/world-plan.md",
    "y": 2026
   }
  },
@@ -204,11 +221,249 @@
     "c": "ت"
    }
   },
-  "land": [],
-  "air": [],
+  "land": [
+   {
+    "m": "PT-76",
+    "n": 18,
+    "orig": "SUN",
+    "s": "wiki_army",
+    "c": "ت",
+    "note": "Delivered by Soviet Union from 1982",
+    "gen": 1,
+    "cat": "tank"
+   },
+   {
+    "m": "BRDM-2",
+    "n": 14,
+    "orig": "SUN",
+    "s": "wiki_army",
+    "c": "ت",
+    "gen": 2,
+    "cat": "apc"
+   },
+   {
+    "m": "MBTS Cayman",
+    "n": 9,
+    "orig": "BLR",
+    "s": "wiki_army",
+    "c": "ت",
+    "gen": 2,
+    "cat": "apc"
+   },
+   {
+    "m": "Eland-90",
+    "n": 3,
+    "orig": "ZAF",
+    "s": "wiki_army",
+    "c": "ت",
+    "gen": 2,
+    "cat": "apc"
+   },
+   {
+    "m": "Panhard VBL",
+    "n": 10,
+    "orig": "FRA",
+    "s": "wiki_army",
+    "c": "ت",
+    "note": "Delivered by France from 1986",
+    "gen": 2,
+    "cat": "apc"
+   },
+   {
+    "m": "M8 Greyhound",
+    "n": 7,
+    "orig": "USA",
+    "s": "wiki_army",
+    "c": "ت",
+    "gen": 2,
+    "cat": "apc"
+   },
+   {
+    "m": "Casspir NG",
+    "n": 10,
+    "orig": "ZAF",
+    "s": "wiki_army",
+    "c": "ت",
+    "gen": 2,
+    "cat": "mrap"
+   },
+   {
+    "m": "L118",
+    "n": 12,
+    "orig": "GBR",
+    "s": "wiki_army",
+    "c": "ت",
+    "gen": 2,
+    "cat": "towed"
+   },
+   {
+    "m": "M101A1",
+    "n": 4,
+    "orig": "USA",
+    "s": "wiki_army",
+    "c": "ت",
+    "gen": 2,
+    "cat": "towed"
+   }
+  ],
+  "air": [
+   {
+    "m": "Cessna 208",
+    "n": 1,
+    "orig": "USA",
+    "s": "wiki_air",
+    "c": "ت",
+    "note": "Reconnaissance aircraft.",
+    "gen": 2,
+    "cat": "isr"
+   },
+   {
+    "m": "Beechcraft King Air 350",
+    "n": 1,
+    "orig": "USA",
+    "s": "wiki_air",
+    "c": "ت",
+    "gen": 2,
+    "cat": "transport"
+   },
+   {
+    "m": "Xi'an MA600",
+    "n": 1,
+    "orig": "CHN",
+    "s": "wiki_air",
+    "c": "ت",
+    "gen": 2,
+    "cat": "transport"
+   },
+   {
+    "m": "Eurocopter AS350 Fennec (H125M/AS350B)",
+    "n": 2,
+    "orig": "FRA",
+    "s": "wiki_air",
+    "c": "ت",
+    "note": "The two H125Ms are fitted with Trakka Systems TC-300 long-range high-definition electro-optical/infrared cameras",
+    "gen": 2,
+    "cat": "heli_util"
+   },
+   {
+    "m": "Eurocopter AS332 Super Puma (H215(M)/AS332)",
+    "n": 3,
+    "orig": "FRA",
+    "s": "wiki_air",
+    "c": "ت",
+    "gen": 4,
+    "cat": "heli_util"
+   },
+   {
+    "m": "AgustaWestland AW109 (BA)",
+    "n": 4,
+    "orig": "ITA",
+    "s": "wiki_air",
+    "c": "ت",
+    "gen": 2,
+    "cat": "heli_util"
+   },
+   {
+    "m": "Eurocopter AS550 Fennec",
+    "n": 2,
+    "orig": "FRA",
+    "s": "wiki_air",
+    "c": "ت",
+    "gen": 2,
+    "cat": "heli_util"
+   }
+  ],
   "ad": [],
   "msl": [],
-  "navy": []
+  "navy": [],
+  "grp": {
+   "tank": {
+    "n": 0,
+    "s": "iiss_eq",
+    "c": "ت",
+    "top": [
+     [
+      "PT-76",
+      18,
+      1,
+      "SUN"
+     ]
+    ],
+    "gen": 1.0
+   },
+   "afv": {
+    "n": 53,
+    "s": "wiki_army",
+    "c": "ت",
+    "top": [
+     [
+      "BRDM-2",
+      14,
+      2,
+      "SUN"
+     ],
+     [
+      "Panhard VBL",
+      10,
+      2,
+      "FRA"
+     ],
+     [
+      "Casspir NG",
+      10,
+      2,
+      "ZAF"
+     ]
+    ],
+    "gen": 2.0
+   },
+   "art": {
+    "n": 16,
+    "s": "wiki_army",
+    "c": "ت",
+    "top": [
+     [
+      "L118",
+      12,
+      2,
+      "GBR"
+     ],
+     [
+      "M101A1",
+      4,
+      2,
+      "USA"
+     ]
+    ],
+    "gen": 2.0
+   },
+   "heli": {
+    "n": 11,
+    "s": "wiki_air",
+    "c": "ت",
+    "top": [
+     [
+      "AgustaWestland AW109 (BA)",
+      4,
+      2,
+      "ITA"
+     ],
+     [
+      "Eurocopter AS332 Super Puma (H215(M)/AS3",
+      3,
+      4,
+      "FRA"
+     ],
+     [
+      "Eurocopter AS350 Fennec (H125M/AS350B)",
+      2,
+      2,
+      "FRA"
+     ]
+    ],
+    "gen": 2.5
+   }
+  }
  },
  "ind": null,
  "pol": {

@@ -68,6 +68,11 @@
    "t": "تقدير المصمم (تشرين الثاني 2026) لصناعة السلاح والاستقرار: SIPRI Arms Transfers Database (أكبر المصدّرين 2020–24)، SIPRI Top 100 Arms-Producing Companies، Fragile States Index 2025، أخبار 2026",
    "u": "https://www.sipri.org/databases/armstransfers",
    "y": 2026
+  },
+  "tpl": {
+   "t": "قالب منطقة (me): موديلات شائعة ونسب تقريبية من الدبابات (مدرعات ×2.5، مدفعية ×0.9، مروحيات ×0.25) — تقدير المصمم",
+   "u": "docs/features/world-plan.md",
+   "y": 2026
   }
  },
  "gov": {
@@ -548,7 +553,183 @@
    }
   ],
   "msl": [],
-  "navy": []
+  "navy": [
+   {
+    "m": "Dolphin class",
+    "n": 1,
+    "orig": "ISR",
+    "s": "wiki_navy",
+    "c": "ت",
+    "cat": "sub",
+    "gen": 2,
+    "note": "عدد الصفوف بالقائمة"
+   },
+   {
+    "m": "AIP Dolphin 2 class",
+    "n": 1,
+    "orig": "ISR",
+    "s": "wiki_navy",
+    "c": "ت",
+    "cat": "sub",
+    "gen": 2,
+    "note": "عدد الصفوف بالقائمة"
+   }
+  ],
+  "grp": {
+   "tank": {
+    "n": 500,
+    "s": "iiss_eq",
+    "c": "ت",
+    "top": [
+     [
+      "Merkava Mark 4M",
+      400,
+      3,
+      "ISR"
+     ],
+     [
+      "Merkava Mark IV",
+      400,
+      3,
+      "ISR"
+     ]
+    ],
+    "gen": 3.0
+   },
+   "afv": {
+    "n": 890,
+    "s": "wiki_army",
+    "c": "ت",
+    "top": [
+     [
+      "M113",
+      500,
+      2,
+      "USA"
+     ],
+     [
+      "Namer",
+      290,
+      2,
+      "ISR"
+     ],
+     [
+      "Achzarit",
+      100,
+      2,
+      "ISR"
+     ]
+    ],
+    "gen": 2.0
+   },
+   "art": {
+    "n": 280,
+    "s": "wiki_army",
+    "c": "ت",
+    "top": [
+     [
+      "M109 Doher",
+      250,
+      2,
+      "USA"
+     ],
+     [
+      "M270 \"Menatetz\"",
+      30,
+      2,
+      "USA"
+     ]
+    ],
+    "gen": 2.0
+   },
+   "jet": {
+    "n": 340,
+    "s": "iiss_eq",
+    "c": "ت",
+    "top": [
+     [
+      "F-16 Fighting Falcon (F-16C/I)",
+      173,
+      3,
+      "USA"
+     ],
+     [
+      "F-15 Eagle (F-15A/C)",
+      66,
+      3,
+      "USA"
+     ],
+     [
+      "F-15E Strike Eagle (F-15I)",
+      66,
+      4,
+      "USA"
+     ]
+    ],
+    "gen": 3.5
+   },
+   "heli": {
+    "n": 240,
+    "s": "wiki_air",
+    "c": "ت",
+    "top": [
+     [
+      "Sikorsky UH-60 (UH-60A/L)",
+      49,
+      2,
+      "USA"
+     ],
+     [
+      "AH-64 Apache (AH-64A/D)",
+      48,
+      3,
+      "USA"
+     ],
+     [
+      "Sikorsky S-70 (UH-60 Black Hawk)",
+      48,
+      2,
+      "USA"
+     ]
+    ],
+    "gen": 2.8
+   },
+   "ad": {
+    "n": 9,
+    "s": "wiki_army",
+    "c": "ت",
+    "top": [
+     [
+      "Iron Dome",
+      9,
+      2,
+      "ISR"
+     ]
+    ],
+    "gen": 2.0
+   },
+   "navy": {
+    "n": 12,
+    "s": "iiss_eq",
+    "c": "ت",
+    "top": [
+     [
+      "Dolphin class",
+      1,
+      2,
+      "ISR"
+     ],
+     [
+      "AIP Dolphin 2 class",
+      1,
+      2,
+      "ISR"
+     ]
+    ],
+    "gen": 2.0,
+    "note": "مجموع القوائم 2 يختلف عن الإجمالي؛ الإجمالي هو المعتمد"
+   }
+  }
  },
  "ind": {
   "tech": {

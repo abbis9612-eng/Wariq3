@@ -5,6 +5,18 @@
  "tier": "C",
  "asOf": "2026-11",
  "src": {
+  "wiki_air": {
+   "t": "Wikipedia: Guatemalan Air Force",
+   "u": "https://en.wikipedia.org/wiki/Guatemalan_Air_Force?oldid=1380492283",
+   "y": 2026,
+   "note": "نسخة الصفحة بتاريخ السحب؛ أرقام ويكيبيديا تنراجع ويا مصادر ثانية"
+  },
+  "wiki_army": {
+   "t": "Wikipedia: Armed Forces of Guatemala",
+   "u": "https://en.wikipedia.org/wiki/Armed_Forces_of_Guatemala?oldid=1361304581",
+   "y": 2026,
+   "note": "نسخة الصفحة بتاريخ السحب؛ أرقام ويكيبيديا تنراجع ويا مصادر ثانية"
+  },
   "iiss_eq": {
    "t": "Wikipedia: List of countries by level of military equipment (من IISS Military Balance ومصادر ثانية)",
    "u": "https://en.wikipedia.org/wiki/List_of_countries_by_level_of_military_equipment?oldid=1384804191",
@@ -49,6 +61,11 @@
   "tierA": {
    "t": "تقدير المصمم (تشرين الثاني 2026) لصناعة السلاح والاستقرار: SIPRI Arms Transfers Database (أكبر المصدّرين 2020–24)، SIPRI Top 100 Arms-Producing Companies، Fragile States Index 2025، أخبار 2026",
    "u": "https://www.sipri.org/databases/armstransfers",
+   "y": 2026
+  },
+  "tpl": {
+   "t": "قالب منطقة (la): موديلات شائعة ونسب تقريبية من الدبابات (مدرعات ×2.5، مدفعية ×0.9، مروحيات ×0.25) — تقدير المصمم",
+   "u": "docs/features/world-plan.md",
    "y": 2026
   }
  },
@@ -217,10 +234,286 @@
    }
   },
   "land": [],
-  "air": [],
+  "air": [
+   {
+    "m": "Pilatus PC-7",
+    "n": 2,
+    "orig": "CHE",
+    "s": "wiki_air",
+    "c": "ت",
+    "gen": 2,
+    "cat": "attack"
+   },
+   {
+    "m": "A-37 Dragonfly",
+    "n": 3,
+    "orig": "USA",
+    "s": "wiki_air",
+    "c": "ت",
+    "gen": 2,
+    "cat": "attack"
+   },
+   {
+    "m": "Cessna 208",
+    "n": 5,
+    "orig": "USA",
+    "s": "wiki_air",
+    "c": "ت",
+    "gen": 2,
+    "cat": "transport"
+   },
+   {
+    "m": "Super King Air (90/200)",
+    "n": 2,
+    "orig": "USA",
+    "s": "wiki_air",
+    "c": "ت",
+    "gen": 2,
+    "cat": "transport"
+   },
+   {
+    "m": "Pilatus PC-12",
+    "n": 2,
+    "orig": "USA",
+    "s": "wiki_air",
+    "c": "ت",
+    "gen": 2,
+    "cat": "transport"
+   },
+   {
+    "m": "DHC-6 Twin Otter",
+    "n": 1,
+    "orig": "CAN",
+    "s": "wiki_air",
+    "c": "ت",
+    "gen": 2,
+    "cat": "transport"
+   },
+   {
+    "m": "Dash 8",
+    "n": 1,
+    "orig": "CAN",
+    "s": "wiki_air",
+    "c": "ت",
+    "gen": 2,
+    "cat": "transport"
+   },
+   {
+    "m": "Piper PA-31 Navajo",
+    "n": 1,
+    "orig": "USA",
+    "s": "wiki_air",
+    "c": "ت",
+    "gen": 2,
+    "cat": "transport"
+   },
+   {
+    "m": "Ayres Thrush (S2R-T660)",
+    "n": 3,
+    "orig": "USA",
+    "s": "wiki_air",
+    "c": "ت",
+    "note": "Used for aerial firefighting.",
+    "gen": 2,
+    "cat": "transport"
+   },
+   {
+    "m": "Bell 206",
+    "n": 4,
+    "orig": "USA",
+    "s": "wiki_air",
+    "c": "ت",
+    "gen": 2,
+    "cat": "heli_util"
+   },
+   {
+    "m": "Bell 407",
+    "n": 1,
+    "orig": "USA",
+    "s": "wiki_air",
+    "c": "ت",
+    "gen": 2,
+    "cat": "heli_util"
+   },
+   {
+    "m": "Bell UH-1 (UH-1H)",
+    "n": 8,
+    "orig": "USA",
+    "s": "wiki_air",
+    "c": "ت",
+    "note": "One aircraft is an Agusta built AB 205",
+    "gen": 2,
+    "cat": "heli_util"
+   },
+   {
+    "m": "Bell 212",
+    "n": 2,
+    "orig": "USA",
+    "s": "wiki_air",
+    "c": "ت",
+    "gen": 2,
+    "cat": "heli_util"
+   },
+   {
+    "m": "Bell 412",
+    "n": 3,
+    "orig": "USA",
+    "s": "wiki_air",
+    "c": "ت",
+    "gen": 2,
+    "cat": "heli_util"
+   },
+   {
+    "m": "Eurocopter AS350",
+    "n": 1,
+    "orig": "FRA",
+    "s": "wiki_air",
+    "c": "ت",
+    "gen": 2,
+    "cat": "heli_util"
+   },
+   {
+    "m": "Bell 429",
+    "n": 1,
+    "orig": "USA",
+    "s": "wiki_air",
+    "c": "ت",
+    "gen": 2,
+    "cat": "heli_util"
+   }
+  ],
   "ad": [],
   "msl": [],
-  "navy": []
+  "navy": [],
+  "grp": {
+   "tank": {
+    "n": 10,
+    "s": "iiss_eq",
+    "c": "ت",
+    "top": [
+     [
+      "AMX-13",
+      null,
+      null,
+      null
+     ],
+     [
+      "M41",
+      null,
+      null,
+      null
+     ],
+     [
+      "T-55",
+      null,
+      null,
+      null
+     ]
+    ],
+    "gen": 1.6,
+    "tpl": "la"
+   },
+   "afv": {
+    "n": 25,
+    "s": "tpl",
+    "c": "ق",
+    "top": [
+     [
+      "M113",
+      null,
+      null,
+      null
+     ],
+     [
+      "EE-11 Urutu",
+      null,
+      null,
+      null
+     ],
+     [
+      "BTR-80",
+      null,
+      null,
+      null
+     ]
+    ],
+    "gen": 1.8,
+    "tpl": "la"
+   },
+   "art": {
+    "n": 9,
+    "s": "tpl",
+    "c": "ق",
+    "top": [
+     [
+      "M101",
+      null,
+      null,
+      null
+     ],
+     [
+      "M114",
+      null,
+      null,
+      null
+     ],
+     [
+      "OTO Melara Mod 56",
+      null,
+      null,
+      null
+     ]
+    ],
+    "gen": 1.8,
+    "tpl": "la"
+   },
+   "jet": {
+    "n": 4,
+    "s": "iiss_eq",
+    "c": "ت",
+    "top": [
+     [
+      "A-37 Dragonfly",
+      3,
+      2,
+      "USA"
+     ],
+     [
+      "Pilatus PC-7",
+      2,
+      2,
+      "CHE"
+     ]
+    ],
+    "gen": 2.0
+   },
+   "heli": {
+    "n": 20,
+    "s": "wiki_air",
+    "c": "ت",
+    "top": [
+     [
+      "Bell UH-1 (UH-1H)",
+      8,
+      2,
+      "USA"
+     ],
+     [
+      "Bell 206",
+      4,
+      2,
+      "USA"
+     ],
+     [
+      "Bell 412",
+      3,
+      2,
+      "USA"
+     ]
+    ],
+    "gen": 2.0
+   }
+  }
  },
  "ind": null,
  "pol": {

@@ -5,6 +5,24 @@
  "tier": "B",
  "asOf": "2026-11",
  "src": {
+  "wiki_air": {
+   "t": "Wikipedia: Royal Malaysian Air Force",
+   "u": "https://en.wikipedia.org/wiki/Royal_Malaysian_Air_Force?oldid=1383883715",
+   "y": 2026,
+   "note": "نسخة الصفحة بتاريخ السحب؛ أرقام ويكيبيديا تنراجع ويا مصادر ثانية"
+  },
+  "wiki_army": {
+   "t": "Wikipedia: List of equipment of the Malaysian Army",
+   "u": "https://en.wikipedia.org/wiki/List_of_equipment_of_the_Malaysian_Army?oldid=1384881519",
+   "y": 2026,
+   "note": "نسخة الصفحة بتاريخ السحب؛ أرقام ويكيبيديا تنراجع ويا مصادر ثانية"
+  },
+  "wiki_navy": {
+   "t": "Wikipedia: Royal Malaysian Navy",
+   "u": "https://en.wikipedia.org/wiki/Royal_Malaysian_Navy?oldid=1380528980",
+   "y": 2026,
+   "note": "نسخة الصفحة بتاريخ السحب؛ أرقام ويكيبيديا تنراجع ويا مصادر ثانية"
+  },
   "iiss_eq": {
    "t": "Wikipedia: List of countries by level of military equipment (من IISS Military Balance ومصادر ثانية)",
    "u": "https://en.wikipedia.org/wiki/List_of_countries_by_level_of_military_equipment?oldid=1384804191",
@@ -49,6 +67,11 @@
   "tierA": {
    "t": "تقدير المصمم (تشرين الثاني 2026) لصناعة السلاح والاستقرار: SIPRI Arms Transfers Database (أكبر المصدّرين 2020–24)، SIPRI Top 100 Arms-Producing Companies، Fragile States Index 2025، أخبار 2026",
    "u": "https://www.sipri.org/databases/armstransfers",
+   "y": 2026
+  },
+  "tpl": {
+   "t": "قالب منطقة (as): موديلات شائعة ونسب تقريبية من الدبابات (مدرعات ×2.5، مدفعية ×0.9، مروحيات ×0.25) — تقدير المصمم",
+   "u": "docs/features/world-plan.md",
    "y": 2026
   }
  },
@@ -219,11 +242,378 @@
     "c": "ت"
    }
   },
-  "land": [],
-  "air": [],
-  "ad": [],
+  "land": [
+   {
+    "m": "PT-91M Pendekar",
+    "n": 48,
+    "orig": "POL",
+    "s": "wiki_army",
+    "c": "ت",
+    "note": "Fitted with the SAGEM Savan 12 FCS, VIGY-15 commander's panoramic sight, Obra-3 laser warning system and the Slovak 2A46MS gun.",
+    "gen": 2,
+    "cat": "tank"
+   },
+   {
+    "m": "K-200A1 MIFV",
+    "n": 111,
+    "orig": "KOR",
+    "s": "wiki_army",
+    "c": "ت",
+    "note": "Originally purchased under UOR for UNPROFOR, the fleet includes K200A1 Personnel Carriers, K277A1 Command Vehicles, the K288A1 ARV, K200A1 A",
+    "gen": 2,
+    "cat": "apc"
+   },
+   {
+    "m": "ACV-300 Adnan",
+    "n": 267,
+    "orig": "TUR",
+    "s": "wiki_army",
+    "c": "ت",
+    "note": "License built in Pahang by DefTech. The IFV variants are fitted with a Sharpshooter turret mounting either a 25 mm Bushmaster autocannon or ",
+    "gen": 2,
+    "cat": "ifv"
+   },
+   {
+    "m": "AV4 Lipanbara",
+    "n": 20,
+    "orig": "THA",
+    "s": "wiki_army",
+    "c": "ت",
+    "note": "Built locally by DefTech. Armed with a 7.62 mm Dillon Aero M134D minigun.",
+    "gen": 2,
+    "cat": "mrap"
+   },
+   {
+    "m": "Ejder Yalcin",
+    "n": 20,
+    "orig": "TUR",
+    "s": "wiki_army",
+    "c": "ت",
+    "note": "Locally known as Panthera. Purchased for MALBATT in Lebanon. Fitted with the Aselsan SARP RWS.",
+    "gen": 2,
+    "cat": "mrap"
+   },
+   {
+    "m": "Guardian",
+    "n": 12,
+    "orig": "ARE",
+    "s": "wiki_army",
+    "c": "ت",
+    "note": "Purchased for MALBATT in Lebanon. Optionally armed with a single 7.62 mm FN MAG in an open-top turret.",
+    "gen": 2,
+    "cat": "mrap"
+   },
+   {
+    "m": "Astros II MLRS",
+    "n": 36,
+    "orig": "BRA",
+    "s": "wiki_army",
+    "c": "ت",
+    "note": "Can launch either SS-30 127 mm unitary HE rockets (32/launcher), SS-40 180 mm submunition-carrying rockets (16/launcher), SS-80 extended-ran",
+    "gen": 2,
+    "cat": "mlrs"
+   },
+   {
+    "m": "Denel G5 Mk III",
+    "n": 28,
+    "orig": "ZAF",
+    "s": "wiki_army",
+    "c": "ت",
+    "note": "Upgraded with new Integrated Fire Control System (IFCS) and other related components by Advanced Defence Systems Sdn. Bhd. (ADSSB).",
+    "gen": 2,
+    "cat": "towed"
+   },
+   {
+    "m": "OTO Melara Mod 56",
+    "n": 110,
+    "orig": "ITA",
+    "s": "wiki_army",
+    "c": "ت",
+    "gen": 2,
+    "cat": "towed"
+   },
+   {
+    "m": "LG1 Mk III",
+    "n": 18,
+    "orig": "FRA",
+    "s": "wiki_army",
+    "c": "ت",
+    "note": "Assembled locally by Advanced Defence Systems Sdn. Bhd. (ADSSB). Used exclusively by the 1st Regiment Royal Artillery or 1 RAD (Para) headqu",
+    "gen": 2,
+    "cat": "towed"
+   },
+   {
+    "m": "M102",
+    "n": 40,
+    "orig": "USA",
+    "s": "wiki_army",
+    "c": "ت",
+    "note": "Used exclusively by the 41st Battery (Ceremonial), headquartered at Sungai Buloh, Selangor.",
+    "gen": 2,
+    "cat": "towed"
+   },
+   {
+    "m": "SJ-09",
+    "n": 1,
+    "orig": "POL",
+    "s": "wiki_army",
+    "c": "ت",
+    "gen": 2,
+    "cat": "tank"
+   }
+  ],
+  "air": [
+   {
+    "m": "Tactical unmanned aerial vehicle",
+    "n": 6,
+    "orig": "CHN",
+    "s": "wiki_army",
+    "c": "ت",
+    "note": "6 drones and 2 command vehicles.",
+    "gen": 2,
+    "cat": "uav_isr"
+   },
+   {
+    "m": "MD Helicopters MD 500 Defender (MD530G)",
+    "n": 6,
+    "orig": "USA",
+    "s": "wiki_army",
+    "c": "ت",
+    "note": "Equipped with the Thales Scorpion helmet-mounted display and a L3Harris Wescam MX-10 FLIR turret. The outboard hardpoints can mount two of t",
+    "gen": 2,
+    "cat": "heli_attack"
+   },
+   {
+    "m": "AgustaWestland AW109 (A109LUH)",
+    "n": 10,
+    "orig": "ITA",
+    "s": "wiki_army",
+    "c": "ت",
+    "note": "Armed with either a cabin-mounted 7.62 mm Dillon Aero M134D minigun, or two 20 mm Nexter NC621 gun pods and/or Thales FZ220 7-round 70 mm ro",
+    "gen": 2,
+    "cat": "heli_util"
+   }
+  ],
+  "ad": [
+   {
+    "m": "Ground based air defence system / SHORAD (Rapier Jernas)",
+    "n": 15,
+    "orig": "GBR",
+    "s": "wiki_army",
+    "c": "ت",
+    "note": "15 Jernas launchers with more than 150 missiles.",
+    "gen": 2,
+    "cat": "short"
+   },
+   {
+    "m": "Vehicle mounted air defence system / SHORAD (Dzhigit Twin-Launcher)",
+    "n": 40,
+    "orig": "RUS",
+    "s": "wiki_army",
+    "c": "ت",
+    "note": "Installed on URO VAMTAC S3.",
+    "gen": 2,
+    "cat": "short"
+   },
+   {
+    "m": "Man-portable air defence system (Anza Mk.IAnza Mk.II)",
+    "n": 600,
+    "orig": "PAK",
+    "s": "wiki_army",
+    "c": "ت",
+    "note": "100 Anza Mk.I systems delivered for the first batch and 500 Anza MK.II systems delivered for the second batch.",
+    "gen": 2,
+    "cat": "short"
+   },
+   {
+    "m": "Anti-aircraft artillery (40x365 mm HE-VT)",
+    "n": 36,
+    "orig": "SWE",
+    "s": "wiki_army",
+    "c": "ت",
+    "note": "BOFI variant with laser rangefinder, electro-optical FCS and diesel APU.",
+    "gen": 2,
+    "cat": "short"
+   },
+   {
+    "m": "Anti-aircraft artillery (35x228 mm HE-I)",
+    "n": 28,
+    "orig": "CHE",
+    "s": "wiki_army",
+    "c": "ت",
+    "note": "GDF-003 variant.",
+    "gen": 2,
+    "cat": "short"
+   }
+  ],
   "msl": [],
-  "navy": []
+  "navy": [],
+  "grp": {
+   "tank": {
+    "n": 48,
+    "s": "iiss_eq",
+    "c": "ت",
+    "top": [
+     [
+      "PT-91M Pendekar",
+      48,
+      2,
+      "POL"
+     ],
+     [
+      "SJ-09",
+      1,
+      2,
+      "POL"
+     ]
+    ],
+    "gen": 2.0
+   },
+   "afv": {
+    "n": 430,
+    "s": "wiki_army",
+    "c": "ت",
+    "top": [
+     [
+      "ACV-300 Adnan",
+      267,
+      2,
+      "TUR"
+     ],
+     [
+      "K-200A1 MIFV",
+      111,
+      2,
+      "KOR"
+     ],
+     [
+      "AV4 Lipanbara",
+      20,
+      2,
+      "THA"
+     ]
+    ],
+    "gen": 2.0
+   },
+   "art": {
+    "n": 232,
+    "s": "wiki_army",
+    "c": "ت",
+    "top": [
+     [
+      "OTO Melara Mod 56",
+      110,
+      2,
+      "ITA"
+     ],
+     [
+      "M102",
+      40,
+      2,
+      "USA"
+     ],
+     [
+      "Astros II MLRS",
+      36,
+      2,
+      "BRA"
+     ]
+    ],
+    "gen": 2.0
+   },
+   "jet": {
+    "n": 38,
+    "s": "iiss_eq",
+    "c": "ت",
+    "top": [
+     [
+      "F-5",
+      null,
+      null,
+      null
+     ],
+     [
+      "MiG-21",
+      null,
+      null,
+      null
+     ],
+     [
+      "F-7",
+      null,
+      null,
+      null
+     ]
+    ],
+    "gen": 2,
+    "tpl": "as"
+   },
+   "heli": {
+    "n": 16,
+    "s": "wiki_army",
+    "c": "ت",
+    "top": [
+     [
+      "AgustaWestland AW109 (A109LUH)",
+      10,
+      2,
+      "ITA"
+     ],
+     [
+      "MD Helicopters MD 500 Defender (MD530G)",
+      6,
+      2,
+      "USA"
+     ]
+    ],
+    "gen": 2.0
+   },
+   "uav": {
+    "n": 6,
+    "s": "wiki_army",
+    "c": "ت",
+    "top": [
+     [
+      "Tactical unmanned aerial vehicle",
+      6,
+      2,
+      "CHN"
+     ]
+    ],
+    "gen": 2.0
+   },
+   "ad": {
+    "n": 719,
+    "s": "wiki_army",
+    "c": "ت",
+    "top": [
+     [
+      "Man-portable air defence system (Anza Mk",
+      600,
+      2,
+      "PAK"
+     ],
+     [
+      "Vehicle mounted air defence system / SHO",
+      40,
+      2,
+      "RUS"
+     ],
+     [
+      "Anti-aircraft artillery (40x365 mm HE-VT",
+      36,
+      2,
+      "SWE"
+     ]
+    ],
+    "gen": 2.0
+   },
+   "navy": {
+    "n": 12,
+    "s": "iiss_eq",
+    "c": "ت"
+   }
+  }
  },
  "ind": null,
  "pol": {

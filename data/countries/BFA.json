@@ -5,6 +5,12 @@
  "tier": "C",
  "asOf": "2026-11",
  "src": {
+  "wiki_army": {
+   "t": "Wikipedia: Burkina Faso Armed Forces",
+   "u": "https://en.wikipedia.org/wiki/Burkina_Faso_Armed_Forces?oldid=1385498081",
+   "y": 2026,
+   "note": "نسخة الصفحة بتاريخ السحب؛ أرقام ويكيبيديا تنراجع ويا مصادر ثانية"
+  },
   "iiss_eq": {
    "t": "Wikipedia: List of countries by level of military equipment (من IISS Military Balance ومصادر ثانية)",
    "u": "https://en.wikipedia.org/wiki/List_of_countries_by_level_of_military_equipment?oldid=1384804191",
@@ -49,6 +55,11 @@
   "tierA": {
    "t": "تقدير المصمم (تشرين الثاني 2026) لصناعة السلاح والاستقرار: SIPRI Arms Transfers Database (أكبر المصدّرين 2020–24)، SIPRI Top 100 Arms-Producing Companies، Fragile States Index 2025، أخبار 2026",
    "u": "https://www.sipri.org/databases/armstransfers",
+   "y": 2026
+  },
+  "tpl": {
+   "t": "قالب منطقة (af): موديلات شائعة ونسب تقريبية من الدبابات (مدرعات ×2.5، مدفعية ×0.9، مروحيات ×0.25) — تقدير المصمم",
+   "u": "docs/features/world-plan.md",
    "y": 2026
   }
  },
@@ -217,10 +228,151 @@
    }
   },
   "land": [],
-  "air": [],
+  "air": [
+   {
+    "m": "Mil Mi-17 (Mi-8/171)",
+    "n": 3,
+    "orig": "RUS",
+    "s": "wiki_army",
+    "c": "ت",
+    "note": "2 on order",
+    "gen": 2,
+    "cat": "heli_util"
+   },
+   {
+    "m": "Mil Mi-24 (Mi-35)",
+    "n": 5,
+    "orig": "RUS",
+    "s": "wiki_army",
+    "c": "ت",
+    "gen": 3,
+    "cat": "heli_attack"
+   },
+   {
+    "m": "Mil Mi-26",
+    "n": 1,
+    "orig": "RUS",
+    "s": "wiki_army",
+    "c": "ت",
+    "gen": 2,
+    "cat": "heli_util"
+   },
+   {
+    "m": "Bell UH-1 (UH-1H)",
+    "n": 1,
+    "orig": "USA",
+    "s": "wiki_army",
+    "c": "ت",
+    "note": "Donated by the Government of Taiwan",
+    "gen": 2,
+    "cat": "heli_util"
+   },
+   {
+    "m": "Eurocopter AS350",
+    "n": 8,
+    "orig": "FRA",
+    "s": "wiki_army",
+    "c": "ت",
+    "gen": 2,
+    "cat": "heli_util"
+   },
+   {
+    "m": "Bayraktar TB2",
+    "n": 5,
+    "orig": "TUR",
+    "s": "wiki_army",
+    "c": "ت",
+    "gen": 4,
+    "cat": "uav_strike"
+   },
+   {
+    "m": "Bayraktar Akıncı",
+    "n": 2,
+    "orig": "TUR",
+    "s": "wiki_army",
+    "c": "ت",
+    "gen": 4,
+    "cat": "uav_strike"
+   }
+  ],
   "ad": [],
   "msl": [],
-  "navy": []
+  "navy": [],
+  "grp": {
+   "jet": {
+    "n": 3,
+    "s": "iiss_eq",
+    "c": "ت",
+    "top": [
+     [
+      "MiG-21",
+      null,
+      null,
+      null
+     ],
+     [
+      "Su-25",
+      null,
+      null,
+      null
+     ],
+     [
+      "L-39",
+      null,
+      null,
+      null
+     ]
+    ],
+    "gen": 1.6,
+    "tpl": "af"
+   },
+   "heli": {
+    "n": 18,
+    "s": "wiki_army",
+    "c": "ت",
+    "top": [
+     [
+      "Eurocopter AS350",
+      8,
+      2,
+      "FRA"
+     ],
+     [
+      "Mil Mi-24 (Mi-35)",
+      5,
+      3,
+      "RUS"
+     ],
+     [
+      "Mil Mi-17 (Mi-8/171)",
+      3,
+      2,
+      "RUS"
+     ]
+    ],
+    "gen": 2.3
+   },
+   "uav": {
+    "n": 7,
+    "s": "wiki_army",
+    "c": "ت",
+    "top": [
+     [
+      "Bayraktar TB2",
+      5,
+      4,
+      "TUR"
+     ],
+     [
+      "Bayraktar Akıncı",
+      2,
+      4,
+      "TUR"
+     ]
+    ],
+    "gen": 4.0
+   }
+  }
  },
  "ind": null,
  "pol": {

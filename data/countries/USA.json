@@ -68,6 +68,11 @@
    "t": "تقدير المصمم (تشرين الثاني 2026) لصناعة السلاح والاستقرار: SIPRI Arms Transfers Database (أكبر المصدّرين 2020–24)، SIPRI Top 100 Arms-Producing Companies، Fragile States Index 2025، أخبار 2026",
    "u": "https://www.sipri.org/databases/armstransfers",
    "y": 2026
+  },
+  "tpl": {
+   "t": "قالب منطقة (eu): موديلات شائعة ونسب تقريبية من الدبابات (مدرعات ×2.5، مدفعية ×0.9، مروحيات ×0.25) — تقدير المصمم",
+   "u": "docs/features/world-plan.md",
+   "y": 2026
   }
  },
  "gov": {
@@ -307,6 +312,15 @@
     "s": "wiki_army",
     "c": "ت",
     "gen": 3,
+    "cat": "tank"
+   },
+   {
+    "m": "M10 Booker",
+    "n": 26,
+    "orig": "USA",
+    "s": "wiki_army",
+    "c": "ت",
+    "gen": 2,
     "cat": "tank"
    },
    {
@@ -1189,1077 +1203,370 @@
   "msl": [],
   "navy": [
    {
-    "m": "USS Abraham Lincoln",
-    "n": 72,
-    "orig": "INT",
+    "m": "Nimitz",
+    "n": 10,
+    "orig": "USA",
     "s": "wiki_navy",
     "c": "ت",
+    "cat": "carrier",
     "gen": 2,
-    "cat": "carrier"
+    "note": "عدد الصفوف بالقائمة"
    },
    {
-    "m": "USS America",
-    "n": 6,
-    "orig": "INT",
-    "s": "wiki_navy",
-    "c": "ت",
-    "gen": 2,
-    "cat": "amphib"
-   },
-   {
-    "m": "USS Anchorage",
-    "n": 23,
-    "orig": "INT",
-    "s": "wiki_navy",
-    "c": "ت",
-    "gen": 2,
-    "cat": "amphib"
-   },
-   {
-    "m": "USS Arleigh Burke",
-    "n": 51,
-    "orig": "INT",
-    "s": "wiki_navy",
-    "c": "ت",
-    "gen": 2,
-    "cat": "destroyer"
-   },
-   {
-    "m": "USS Arlington",
-    "n": 24,
-    "orig": "INT",
-    "s": "wiki_navy",
-    "c": "ت",
-    "gen": 2,
-    "cat": "amphib"
-   },
-   {
-    "m": "USS Ashland",
-    "n": 48,
-    "orig": "INT",
-    "s": "wiki_navy",
-    "c": "ت",
-    "gen": 2,
-    "cat": "amphib"
-   },
-   {
-    "m": "USS Bainbridge",
-    "n": 96,
-    "orig": "INT",
-    "s": "wiki_navy",
-    "c": "ت",
-    "gen": 2,
-    "cat": "destroyer"
-   },
-   {
-    "m": "USS Barry",
-    "n": 52,
-    "orig": "INT",
-    "s": "wiki_navy",
-    "c": "ت",
-    "gen": 2,
-    "cat": "destroyer"
-   },
-   {
-    "m": "USS Bataan",
-    "n": 5,
-    "orig": "INT",
-    "s": "wiki_navy",
-    "c": "ت",
-    "gen": 2,
-    "cat": "amphib"
-   },
-   {
-    "m": "USS Benfold",
-    "n": 65,
-    "orig": "INT",
-    "s": "wiki_navy",
-    "c": "ت",
-    "gen": 2,
-    "cat": "destroyer"
-   },
-   {
-    "m": "USS Blue Ridge",
-    "n": 19,
-    "orig": "INT",
-    "s": "wiki_navy",
-    "c": "ت",
-    "gen": 2,
-    "cat": "amphib"
-   },
-   {
-    "m": "USS Boxer",
-    "n": 4,
-    "orig": "INT",
-    "s": "wiki_navy",
-    "c": "ت",
-    "gen": 2,
-    "cat": "amphib"
-   },
-   {
-    "m": "USS Bulkeley",
-    "n": 84,
-    "orig": "INT",
-    "s": "wiki_navy",
-    "c": "ت",
-    "gen": 2,
-    "cat": "destroyer"
-   },
-   {
-    "m": "USS Carl M. Levin",
-    "n": 120,
-    "orig": "INT",
-    "s": "wiki_navy",
-    "c": "ت",
-    "gen": 2,
-    "cat": "destroyer"
-   },
-   {
-    "m": "USS Carl Vinson",
-    "n": 70,
-    "orig": "INT",
-    "s": "wiki_navy",
-    "c": "ت",
-    "gen": 2,
-    "cat": "carrier"
-   },
-   {
-    "m": "USS Carney",
-    "n": 64,
-    "orig": "INT",
-    "s": "wiki_navy",
-    "c": "ت",
-    "gen": 2,
-    "cat": "destroyer"
-   },
-   {
-    "m": "USS Carter Hall",
-    "n": 50,
-    "orig": "INT",
-    "s": "wiki_navy",
-    "c": "ت",
-    "gen": 2,
-    "cat": "amphib"
-   },
-   {
-    "m": "USS Chafee",
-    "n": 90,
-    "orig": "INT",
-    "s": "wiki_navy",
-    "c": "ت",
-    "gen": 2,
-    "cat": "destroyer"
-   },
-   {
-    "m": "USS Chung-Hoon",
-    "n": 93,
-    "orig": "INT",
-    "s": "wiki_navy",
-    "c": "ت",
-    "gen": 2,
-    "cat": "destroyer"
-   },
-   {
-    "m": "USS Cole",
-    "n": 67,
-    "orig": "INT",
-    "s": "wiki_navy",
-    "c": "ت",
-    "gen": 2,
-    "cat": "destroyer"
-   },
-   {
-    "m": "USS Comstock",
-    "n": 45,
-    "orig": "INT",
-    "s": "wiki_navy",
-    "c": "ت",
-    "gen": 2,
-    "cat": "amphib"
-   },
-   {
-    "m": "USS Connecticut",
-    "n": 22,
-    "orig": "INT",
-    "s": "wiki_navy",
-    "c": "ت",
-    "gen": 2,
-    "cat": "sub"
-   },
-   {
-    "m": "USS Curtis Wilbur",
-    "n": 54,
-    "orig": "INT",
-    "s": "wiki_navy",
-    "c": "ت",
-    "gen": 2,
-    "cat": "destroyer"
-   },
-   {
-    "m": "USS Daniel Inouye",
-    "n": 118,
-    "orig": "INT",
-    "s": "wiki_navy",
-    "c": "ت",
-    "gen": 2,
-    "cat": "destroyer"
-   },
-   {
-    "m": "USS Decatur",
-    "n": 73,
-    "orig": "INT",
-    "s": "wiki_navy",
-    "c": "ت",
-    "gen": 2,
-    "cat": "destroyer"
-   },
-   {
-    "m": "USS Delbert D. Black",
-    "n": 119,
-    "orig": "INT",
-    "s": "wiki_navy",
-    "c": "ت",
-    "gen": 2,
-    "cat": "destroyer"
-   },
-   {
-    "m": "USS Dewey",
-    "n": 105,
-    "orig": "INT",
-    "s": "wiki_navy",
-    "c": "ت",
-    "gen": 2,
-    "cat": "destroyer"
-   },
-   {
-    "m": "USS Donald Cook",
-    "n": 75,
-    "orig": "INT",
-    "s": "wiki_navy",
-    "c": "ت",
-    "gen": 2,
-    "cat": "destroyer"
-   },
-   {
-    "m": "USS Dwight D. Eisenhower",
-    "n": 69,
-    "orig": "INT",
-    "s": "wiki_navy",
-    "c": "ت",
-    "gen": 2,
-    "cat": "carrier"
-   },
-   {
-    "m": "USS Emory S. Land",
-    "n": 39,
-    "orig": "INT",
-    "s": "wiki_navy",
-    "c": "ت",
-    "gen": 2,
-    "cat": "sub"
-   },
-   {
-    "m": "USS Essex",
-    "n": 2,
-    "orig": "INT",
-    "s": "wiki_navy",
-    "c": "ت",
-    "gen": 2,
-    "cat": "amphib"
-   },
-   {
-    "m": "USS Farragut",
-    "n": 99,
-    "orig": "INT",
-    "s": "wiki_navy",
-    "c": "ت",
-    "gen": 2,
-    "cat": "destroyer"
-   },
-   {
-    "m": "USS Fitzgerald",
-    "n": 62,
-    "orig": "INT",
-    "s": "wiki_navy",
-    "c": "ت",
-    "gen": 2,
-    "cat": "destroyer"
-   },
-   {
-    "m": "USS Forrest Sherman",
-    "n": 98,
-    "orig": "INT",
-    "s": "wiki_navy",
-    "c": "ت",
-    "gen": 2,
-    "cat": "destroyer"
-   },
-   {
-    "m": "USS Fort Lauderdale",
-    "n": 28,
-    "orig": "INT",
-    "s": "wiki_navy",
-    "c": "ت",
-    "gen": 2,
-    "cat": "amphib"
-   },
-   {
-    "m": "USS Frank Cable",
-    "n": 40,
-    "orig": "INT",
-    "s": "wiki_navy",
-    "c": "ت",
-    "gen": 2,
-    "cat": "sub"
-   },
-   {
-    "m": "USS George Washington",
-    "n": 73,
-    "orig": "INT",
-    "s": "wiki_navy",
-    "c": "ت",
-    "gen": 2,
-    "cat": "carrier"
-   },
-   {
-    "m": "USS George H.W. Bush",
-    "n": 77,
-    "orig": "INT",
-    "s": "wiki_navy",
-    "c": "ت",
-    "gen": 2,
-    "cat": "carrier"
-   },
-   {
-    "m": "USS Gerald R. Ford",
-    "n": 78,
-    "orig": "INT",
-    "s": "wiki_navy",
-    "c": "ت",
-    "gen": 2,
-    "cat": "carrier"
-   },
-   {
-    "m": "USS Gonzalez",
-    "n": 66,
-    "orig": "INT",
-    "s": "wiki_navy",
-    "c": "ت",
-    "gen": 2,
-    "cat": "destroyer"
-   },
-   {
-    "m": "USS Gravely",
-    "n": 107,
-    "orig": "INT",
-    "s": "wiki_navy",
-    "c": "ت",
-    "gen": 2,
-    "cat": "destroyer"
-   },
-   {
-    "m": "USS Green Bay",
-    "n": 20,
-    "orig": "INT",
-    "s": "wiki_navy",
-    "c": "ت",
-    "gen": 2,
-    "cat": "amphib"
-   },
-   {
-    "m": "USS Gridley",
-    "n": 101,
-    "orig": "INT",
-    "s": "wiki_navy",
-    "c": "ت",
-    "gen": 2,
-    "cat": "destroyer"
-   },
-   {
-    "m": "USS Gunston Hall",
-    "n": 44,
-    "orig": "INT",
-    "s": "wiki_navy",
-    "c": "ت",
-    "gen": 2,
-    "cat": "amphib"
-   },
-   {
-    "m": "USS Halsey",
-    "n": 97,
-    "orig": "INT",
-    "s": "wiki_navy",
-    "c": "ت",
-    "gen": 2,
-    "cat": "destroyer"
-   },
-   {
-    "m": "USS Harpers Ferry",
-    "n": 49,
-    "orig": "INT",
-    "s": "wiki_navy",
-    "c": "ت",
-    "gen": 2,
-    "cat": "amphib"
-   },
-   {
-    "m": "USS Harry S. Truman",
-    "n": 75,
-    "orig": "INT",
-    "s": "wiki_navy",
-    "c": "ت",
-    "gen": 2,
-    "cat": "carrier"
-   },
-   {
-    "m": "USS Higgins",
-    "n": 76,
-    "orig": "INT",
-    "s": "wiki_navy",
-    "c": "ت",
-    "gen": 2,
-    "cat": "destroyer"
-   },
-   {
-    "m": "USS Hopper",
-    "n": 70,
-    "orig": "INT",
-    "s": "wiki_navy",
-    "c": "ت",
-    "gen": 2,
-    "cat": "destroyer"
-   },
-   {
-    "m": "USS Howard",
-    "n": 83,
-    "orig": "INT",
-    "s": "wiki_navy",
-    "c": "ت",
-    "gen": 2,
-    "cat": "destroyer"
-   },
-   {
-    "m": "USS Iwo Jima",
-    "n": 7,
-    "orig": "INT",
-    "s": "wiki_navy",
-    "c": "ت",
-    "gen": 2,
-    "cat": "amphib"
-   },
-   {
-    "m": "USS James E. Williams",
-    "n": 95,
-    "orig": "INT",
-    "s": "wiki_navy",
-    "c": "ت",
-    "gen": 2,
-    "cat": "destroyer"
-   },
-   {
-    "m": "USS Jason Dunham",
-    "n": 109,
-    "orig": "INT",
-    "s": "wiki_navy",
-    "c": "ت",
-    "gen": 2,
-    "cat": "destroyer"
-   },
-   {
-    "m": "USS Jimmy Carter",
-    "n": 23,
-    "orig": "INT",
-    "s": "wiki_navy",
-    "c": "ت",
-    "gen": 2,
-    "cat": "sub"
-   },
-   {
-    "m": "USS John C. Stennis",
-    "n": 74,
-    "orig": "INT",
-    "s": "wiki_navy",
-    "c": "ت",
-    "gen": 2,
-    "cat": "carrier"
-   },
-   {
-    "m": "USS John Finn",
-    "n": 113,
-    "orig": "INT",
-    "s": "wiki_navy",
-    "c": "ت",
-    "gen": 2,
-    "cat": "destroyer"
-   },
-   {
-    "m": "USS John P. Murtha",
-    "n": 26,
-    "orig": "INT",
-    "s": "wiki_navy",
-    "c": "ت",
-    "gen": 2,
-    "cat": "amphib"
-   },
-   {
-    "m": "USS John Paul Jones",
-    "n": 53,
-    "orig": "INT",
-    "s": "wiki_navy",
-    "c": "ت",
-    "gen": 2,
-    "cat": "destroyer"
-   },
-   {
-    "m": "USS John S. McCain",
-    "n": 56,
-    "orig": "INT",
-    "s": "wiki_navy",
-    "c": "ت",
-    "gen": 2,
-    "cat": "destroyer"
-   },
-   {
-    "m": "USS Kearsarge",
-    "n": 3,
-    "orig": "INT",
-    "s": "wiki_navy",
-    "c": "ت",
-    "gen": 2,
-    "cat": "amphib"
-   },
-   {
-    "m": "USS Kidd",
-    "n": 100,
-    "orig": "INT",
-    "s": "wiki_navy",
-    "c": "ت",
-    "gen": 2,
-    "cat": "destroyer"
-   },
-   {
-    "m": "USS Laboon",
-    "n": 58,
-    "orig": "INT",
-    "s": "wiki_navy",
-    "c": "ت",
-    "gen": 2,
-    "cat": "destroyer"
-   },
-   {
-    "m": "USS Lassen",
-    "n": 82,
-    "orig": "INT",
-    "s": "wiki_navy",
-    "c": "ت",
-    "gen": 2,
-    "cat": "destroyer"
-   },
-   {
-    "m": "USS Mahan",
-    "n": 72,
-    "orig": "INT",
-    "s": "wiki_navy",
-    "c": "ت",
-    "gen": 2,
-    "cat": "destroyer"
-   },
-   {
-    "m": "USS Makin Island",
-    "n": 8,
-    "orig": "INT",
-    "s": "wiki_navy",
-    "c": "ت",
-    "gen": 2,
-    "cat": "amphib"
-   },
-   {
-    "m": "USS Mason",
-    "n": 87,
-    "orig": "INT",
-    "s": "wiki_navy",
-    "c": "ت",
-    "gen": 2,
-    "cat": "destroyer"
-   },
-   {
-    "m": "USS McCampbell",
-    "n": 85,
-    "orig": "INT",
-    "s": "wiki_navy",
-    "c": "ت",
-    "gen": 2,
-    "cat": "destroyer"
-   },
-   {
-    "m": "USS McFaul",
-    "n": 74,
-    "orig": "INT",
-    "s": "wiki_navy",
-    "c": "ت",
-    "gen": 2,
-    "cat": "destroyer"
-   },
-   {
-    "m": "USS Mesa Verde",
-    "n": 19,
-    "orig": "INT",
-    "s": "wiki_navy",
-    "c": "ت",
-    "gen": 2,
-    "cat": "amphib"
-   },
-   {
-    "m": "USS Michael Murphy",
-    "n": 112,
-    "orig": "INT",
-    "s": "wiki_navy",
-    "c": "ت",
-    "gen": 2,
-    "cat": "destroyer"
-   },
-   {
-    "m": "USS Milius",
-    "n": 69,
-    "orig": "INT",
-    "s": "wiki_navy",
-    "c": "ت",
-    "gen": 2,
-    "cat": "destroyer"
-   },
-   {
-    "m": "USS Mitscher",
-    "n": 57,
-    "orig": "INT",
-    "s": "wiki_navy",
-    "c": "ت",
-    "gen": 2,
-    "cat": "destroyer"
-   },
-   {
-    "m": "USS Momsen",
-    "n": 92,
-    "orig": "INT",
-    "s": "wiki_navy",
-    "c": "ت",
-    "gen": 2,
-    "cat": "destroyer"
-   },
-   {
-    "m": "USS Mount Whitney",
-    "n": 20,
-    "orig": "INT",
-    "s": "wiki_navy",
-    "c": "ت",
-    "gen": 2,
-    "cat": "amphib"
-   },
-   {
-    "m": "USS Mustin",
-    "n": 89,
-    "orig": "INT",
-    "s": "wiki_navy",
-    "c": "ت",
-    "gen": 2,
-    "cat": "destroyer"
-   },
-   {
-    "m": "USS New Orleans",
-    "n": 18,
-    "orig": "INT",
-    "s": "wiki_navy",
-    "c": "ت",
-    "gen": 2,
-    "cat": "amphib"
-   },
-   {
-    "m": "USS New York",
-    "n": 21,
-    "orig": "INT",
-    "s": "wiki_navy",
-    "c": "ت",
-    "gen": 2,
-    "cat": "amphib"
-   },
-   {
-    "m": "USS Nimitz",
-    "n": 68,
-    "orig": "INT",
-    "s": "wiki_navy",
-    "c": "ت",
-    "gen": 2,
-    "cat": "carrier"
-   },
-   {
-    "m": "USS Nitze",
-    "n": 94,
-    "orig": "INT",
-    "s": "wiki_navy",
-    "c": "ت",
-    "gen": 2,
-    "cat": "destroyer"
-   },
-   {
-    "m": "USS O'Kane",
-    "n": 77,
-    "orig": "INT",
-    "s": "wiki_navy",
-    "c": "ت",
-    "gen": 2,
-    "cat": "destroyer"
-   },
-   {
-    "m": "USS Oak Hill",
-    "n": 51,
-    "orig": "INT",
-    "s": "wiki_navy",
-    "c": "ت",
-    "gen": 2,
-    "cat": "amphib"
-   },
-   {
-    "m": "USS Oscar Austin",
-    "n": 79,
-    "orig": "INT",
-    "s": "wiki_navy",
-    "c": "ت",
-    "gen": 2,
-    "cat": "destroyer"
-   },
-   {
-    "m": "USS Paul Hamilton",
-    "n": 60,
-    "orig": "INT",
-    "s": "wiki_navy",
-    "c": "ت",
-    "gen": 2,
-    "cat": "destroyer"
-   },
-   {
-    "m": "USS Paul Ignatius",
-    "n": 117,
-    "orig": "INT",
-    "s": "wiki_navy",
-    "c": "ت",
-    "gen": 2,
-    "cat": "destroyer"
-   },
-   {
-    "m": "USS Pearl Harbor",
-    "n": 52,
-    "orig": "INT",
-    "s": "wiki_navy",
-    "c": "ت",
-    "gen": 2,
-    "cat": "amphib"
-   },
-   {
-    "m": "USS Pinckney",
-    "n": 91,
-    "orig": "INT",
-    "s": "wiki_navy",
-    "c": "ت",
-    "gen": 2,
-    "cat": "destroyer"
-   },
-   {
-    "m": "USS Porter",
-    "n": 78,
-    "orig": "INT",
-    "s": "wiki_navy",
-    "c": "ت",
-    "gen": 2,
-    "cat": "destroyer"
-   },
-   {
-    "m": "USS Portland",
-    "n": 27,
-    "orig": "INT",
-    "s": "wiki_navy",
-    "c": "ت",
-    "gen": 2,
-    "cat": "amphib"
-   },
-   {
-    "m": "USS Preble",
-    "n": 88,
-    "orig": "INT",
-    "s": "wiki_navy",
-    "c": "ت",
-    "gen": 2,
-    "cat": "destroyer"
-   },
-   {
-    "m": "USS Rafael Peralta",
-    "n": 115,
-    "orig": "INT",
-    "s": "wiki_navy",
-    "c": "ت",
-    "gen": 2,
-    "cat": "destroyer"
-   },
-   {
-    "m": "USS Ralph Johnson",
-    "n": 114,
-    "orig": "INT",
-    "s": "wiki_navy",
-    "c": "ت",
-    "gen": 2,
-    "cat": "destroyer"
-   },
-   {
-    "m": "USS Ramage",
-    "n": 61,
-    "orig": "INT",
-    "s": "wiki_navy",
-    "c": "ت",
-    "gen": 2,
-    "cat": "destroyer"
-   },
-   {
-    "m": "USS Richard M. McCool Jr.",
-    "n": 29,
-    "orig": "INT",
-    "s": "wiki_navy",
-    "c": "ت",
-    "gen": 2,
-    "cat": "amphib"
-   },
-   {
-    "m": "USS Ronald Reagan",
-    "n": 76,
-    "orig": "INT",
-    "s": "wiki_navy",
-    "c": "ت",
-    "gen": 2,
-    "cat": "carrier"
-   },
-   {
-    "m": "USS Roosevelt",
-    "n": 80,
-    "orig": "INT",
-    "s": "wiki_navy",
-    "c": "ت",
-    "gen": 2,
-    "cat": "destroyer"
-   },
-   {
-    "m": "USS Ross",
-    "n": 71,
-    "orig": "INT",
-    "s": "wiki_navy",
-    "c": "ت",
-    "gen": 2,
-    "cat": "destroyer"
-   },
-   {
-    "m": "USS Rushmore",
-    "n": 47,
-    "orig": "INT",
-    "s": "wiki_navy",
-    "c": "ت",
-    "gen": 2,
-    "cat": "amphib"
-   },
-   {
-    "m": "USS Russell",
-    "n": 59,
-    "orig": "INT",
-    "s": "wiki_navy",
-    "c": "ت",
-    "gen": 2,
-    "cat": "destroyer"
-   },
-   {
-    "m": "USS Sampson",
-    "n": 102,
-    "orig": "INT",
-    "s": "wiki_navy",
-    "c": "ت",
-    "gen": 2,
-    "cat": "destroyer"
-   },
-   {
-    "m": "USS San Antonio",
+    "m": "Ohio",
     "n": 17,
-    "orig": "INT",
+    "orig": "USA",
     "s": "wiki_navy",
     "c": "ت",
+    "cat": "sub",
     "gen": 2,
-    "cat": "amphib"
+    "note": "عدد الصفوف بالقائمة"
    },
    {
-    "m": "USS San Diego",
-    "n": 22,
-    "orig": "INT",
+    "m": "Los Angeles",
+    "n": 18,
+    "orig": "USA",
     "s": "wiki_navy",
     "c": "ت",
+    "cat": "sub",
     "gen": 2,
-    "cat": "amphib"
+    "note": "عدد الصفوف بالقائمة"
    },
    {
-    "m": "USS Seawolf",
-    "n": 21,
-    "orig": "INT",
+    "m": "America",
+    "n": 2,
+    "orig": "USA",
     "s": "wiki_navy",
     "c": "ت",
+    "cat": "amphib",
     "gen": 2,
-    "cat": "sub"
+    "note": "عدد الصفوف بالقائمة"
    },
    {
-    "m": "USS Shoup",
-    "n": 86,
-    "orig": "INT",
+    "m": "San Antonio",
+    "n": 13,
+    "orig": "USA",
     "s": "wiki_navy",
     "c": "ت",
+    "cat": "amphib",
     "gen": 2,
-    "cat": "destroyer"
+    "note": "عدد الصفوف بالقائمة"
    },
    {
-    "m": "USS Somerset",
-    "n": 25,
-    "orig": "INT",
+    "m": "Arleigh Burke",
+    "n": 76,
+    "orig": "USA",
     "s": "wiki_navy",
     "c": "ت",
+    "cat": "destroyer",
     "gen": 2,
-    "cat": "amphib"
+    "note": "عدد الصفوف بالقائمة"
    },
    {
-    "m": "USS Spruance",
-    "n": 111,
-    "orig": "INT",
+    "m": "Whidbey Island",
+    "n": 5,
+    "orig": "USA",
     "s": "wiki_navy",
     "c": "ت",
+    "cat": "amphib",
     "gen": 2,
-    "cat": "destroyer"
+    "note": "عدد الصفوف بالقائمة"
    },
    {
-    "m": "USS Sterett",
-    "n": 104,
-    "orig": "INT",
-    "s": "wiki_navy",
-    "c": "ت",
-    "gen": 2,
-    "cat": "destroyer"
-   },
-   {
-    "m": "USS Stethem",
-    "n": 63,
-    "orig": "INT",
-    "s": "wiki_navy",
-    "c": "ت",
-    "gen": 2,
-    "cat": "destroyer"
-   },
-   {
-    "m": "USS Stockdale",
-    "n": 106,
-    "orig": "INT",
-    "s": "wiki_navy",
-    "c": "ت",
-    "gen": 2,
-    "cat": "destroyer"
-   },
-   {
-    "m": "USS Stout",
-    "n": 55,
-    "orig": "INT",
-    "s": "wiki_navy",
-    "c": "ت",
-    "gen": 2,
-    "cat": "destroyer"
-   },
-   {
-    "m": "USS The Sullivans",
-    "n": 68,
-    "orig": "INT",
-    "s": "wiki_navy",
-    "c": "ت",
-    "gen": 2,
-    "cat": "destroyer"
-   },
-   {
-    "m": "USS Theodore Roosevelt",
-    "n": 71,
-    "orig": "INT",
-    "s": "wiki_navy",
-    "c": "ت",
-    "gen": 2,
-    "cat": "carrier"
-   },
-   {
-    "m": "USS Thomas Hudner",
-    "n": 116,
-    "orig": "INT",
-    "s": "wiki_navy",
-    "c": "ت",
-    "gen": 2,
-    "cat": "destroyer"
-   },
-   {
-    "m": "USS Tortuga",
-    "n": 46,
-    "orig": "INT",
-    "s": "wiki_navy",
-    "c": "ت",
-    "gen": 3,
-    "cat": "amphib"
-   },
-   {
-    "m": "USS Tripoli",
+    "m": "Wasp",
     "n": 7,
-    "orig": "INT",
+    "orig": "USA",
     "s": "wiki_navy",
     "c": "ت",
+    "cat": "amphib",
     "gen": 2,
-    "cat": "amphib"
+    "note": "عدد الصفوف بالقائمة"
    },
    {
-    "m": "USS Truxtun",
-    "n": 103,
-    "orig": "INT",
+    "m": "Blue Ridge",
+    "n": 2,
+    "orig": "USA",
     "s": "wiki_navy",
     "c": "ت",
+    "cat": "amphib",
     "gen": 2,
-    "cat": "destroyer"
+    "note": "عدد الصفوف بالقائمة"
    },
    {
-    "m": "USS Wasp",
+    "m": "Virginia",
+    "n": 26,
+    "orig": "USA",
+    "s": "wiki_navy",
+    "c": "ت",
+    "cat": "sub",
+    "gen": 2,
+    "note": "عدد الصفوف بالقائمة"
+   },
+   {
+    "m": "Harpers Ferry",
+    "n": 4,
+    "orig": "USA",
+    "s": "wiki_navy",
+    "c": "ت",
+    "cat": "amphib",
+    "gen": 2,
+    "note": "عدد الصفوف بالقائمة"
+   },
+   {
+    "m": "Seawolf",
+    "n": 3,
+    "orig": "USA",
+    "s": "wiki_navy",
+    "c": "ت",
+    "cat": "sub",
+    "gen": 2,
+    "note": "عدد الصفوف بالقائمة"
+   },
+   {
+    "m": "Original six frigates",
     "n": 1,
-    "orig": "INT",
+    "orig": "USA",
     "s": "wiki_navy",
     "c": "ت",
+    "cat": "frigate",
     "gen": 2,
-    "cat": "amphib"
+    "note": "عدد الصفوف بالقائمة"
    },
    {
-    "m": "USS Wayne E. Meyer",
-    "n": 108,
-    "orig": "INT",
+    "m": "Emory S. Land",
+    "n": 2,
+    "orig": "USA",
     "s": "wiki_navy",
     "c": "ت",
+    "cat": "sub",
     "gen": 2,
-    "cat": "destroyer"
+    "note": "عدد الصفوف بالقائمة"
    },
    {
-    "m": "USS William P. Lawrence",
-    "n": 110,
-    "orig": "INT",
+    "m": "Gerald R. Ford",
+    "n": 1,
+    "orig": "USA",
     "s": "wiki_navy",
     "c": "ت",
+    "cat": "carrier",
     "gen": 2,
-    "cat": "destroyer"
+    "note": "عدد الصفوف بالقائمة"
    },
    {
-    "m": "USS Winston S. Churchill",
-    "n": 81,
-    "orig": "INT",
+    "m": "Zumwalt",
+    "n": 2,
+    "orig": "USA",
     "s": "wiki_navy",
     "c": "ت",
+    "cat": "destroyer",
     "gen": 2,
-    "cat": "destroyer"
+    "note": "عدد الصفوف بالقائمة"
    }
-  ]
+  ],
+  "grp": {
+   "tank": {
+    "n": 2640,
+    "s": "iiss_eq",
+    "c": "ت",
+    "top": [
+     [
+      "M1 Abrams",
+      2640,
+      3,
+      "USA"
+     ],
+     [
+      "M10 Booker",
+      26,
+      2,
+      "USA"
+     ]
+    ],
+    "gen": 3.0
+   },
+   "afv": {
+    "n": 27148,
+    "s": "wiki_army",
+    "c": "ت",
+    "top": [
+     [
+      "M-ATV",
+      5651,
+      2,
+      "USA"
+     ],
+     [
+      "M113",
+      4700,
+      2,
+      "USA"
+     ],
+     [
+      "M1126 Stryker",
+      4383,
+      2,
+      "CAN"
+     ]
+    ],
+    "gen": 2.1
+   },
+   "art": {
+    "n": 3850,
+    "s": "wiki_army",
+    "c": "ت",
+    "top": [
+     [
+      "M777",
+      1000,
+      2,
+      "GBR"
+     ],
+     [
+      "M270",
+      991,
+      2,
+      "USA"
+     ],
+     [
+      "M119",
+      821,
+      2,
+      "GBR"
+     ]
+    ],
+    "gen": 2.0
+   },
+   "jet": {
+    "n": 3368,
+    "s": "iiss_eq",
+    "c": "ت",
+    "top": [
+     [
+      "F-16C/D Fighting Falcon",
+      762,
+      3,
+      "USA"
+     ],
+     [
+      "F-35A Lightning II",
+      302,
+      5,
+      "USA"
+     ],
+     [
+      "F-15E Strike Eagle",
+      218,
+      4,
+      "USA"
+     ]
+    ],
+    "gen": 3.4
+   },
+   "heli": {
+    "n": 4304,
+    "s": "wiki_air",
+    "c": "ت",
+    "top": [
+     [
+      "UH-60A/L/M Black Hawk",
+      1443,
+      2,
+      "USA"
+     ],
+     [
+      "AH-64D/E Apache Longbow, Guardian",
+      824,
+      3,
+      "USA"
+     ],
+     [
+      "CH-47D/F Chinook",
+      510,
+      3,
+      "USA"
+     ]
+    ],
+    "gen": 2.3
+   },
+   "uav": {
+    "n": 10608,
+    "s": "wiki_air",
+    "c": "ت",
+    "top": [
+     [
+      "RQ-11B Raven",
+      5000,
+      2,
+      "USA"
+     ],
+     [
+      "AeroVironment Switchblade",
+      4400,
+      2,
+      "USA"
+     ],
+     [
+      "RQ-7 Shadow",
+      500,
+      2,
+      "USA"
+     ]
+    ],
+    "gen": 2.1
+   },
+   "ad": {
+    "n": 515,
+    "s": "wiki_army",
+    "c": "ت",
+    "top": [
+     [
+      "AN/TWQ-1",
+      453,
+      2,
+      "USA"
+     ],
+     [
+      "MIM-104",
+      55,
+      2,
+      "USA"
+     ],
+     [
+      "THAAD",
+      7,
+      4,
+      "USA"
+     ]
+    ],
+    "gen": 2.0
+   },
+   "navy": {
+    "n": 231,
+    "s": "iiss_eq",
+    "c": "ت",
+    "top": [
+     [
+      "Arleigh Burke",
+      76,
+      2,
+      "USA"
+     ],
+     [
+      "Virginia",
+      26,
+      2,
+      "USA"
+     ],
+     [
+      "Los Angeles",
+      18,
+      2,
+      "USA"
+     ]
+    ],
+    "gen": 2.0
+   }
+  }
  },
  "ind": {
   "tech": {

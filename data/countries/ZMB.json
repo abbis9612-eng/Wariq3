@@ -5,6 +5,18 @@
  "tier": "C",
  "asOf": "2026-11",
  "src": {
+  "wiki_air": {
+   "t": "Wikipedia: Zambian Air Force",
+   "u": "https://en.wikipedia.org/wiki/Zambian_Air_Force?oldid=1364971517",
+   "y": 2026,
+   "note": "نسخة الصفحة بتاريخ السحب؛ أرقام ويكيبيديا تنراجع ويا مصادر ثانية"
+  },
+  "wiki_army": {
+   "t": "Wikipedia: Zambian Army",
+   "u": "https://en.wikipedia.org/wiki/Zambian_Army?oldid=1381248913",
+   "y": 2026,
+   "note": "نسخة الصفحة بتاريخ السحب؛ أرقام ويكيبيديا تنراجع ويا مصادر ثانية"
+  },
   "iiss_eq": {
    "t": "Wikipedia: List of countries by level of military equipment (من IISS Military Balance ومصادر ثانية)",
    "u": "https://en.wikipedia.org/wiki/List_of_countries_by_level_of_military_equipment?oldid=1384804191",
@@ -49,6 +61,11 @@
   "tierA": {
    "t": "تقدير المصمم (تشرين الثاني 2026) لصناعة السلاح والاستقرار: SIPRI Arms Transfers Database (أكبر المصدّرين 2020–24)، SIPRI Top 100 Arms-Producing Companies، Fragile States Index 2025، أخبار 2026",
    "u": "https://www.sipri.org/databases/armstransfers",
+   "y": 2026
+  },
+  "tpl": {
+   "t": "قالب منطقة (af): موديلات شائعة ونسب تقريبية من الدبابات (مدرعات ×2.5، مدفعية ×0.9، مروحيات ×0.25) — تقدير المصمم",
+   "u": "docs/features/world-plan.md",
    "y": 2026
   }
  },
@@ -216,11 +233,508 @@
     "c": "ت"
    }
   },
-  "land": [],
-  "air": [],
-  "ad": [],
+  "land": [
+   {
+    "m": "T-55",
+    "n": 25,
+    "orig": "SUN",
+    "s": "wiki_army",
+    "c": "ت",
+    "note": "Deliveries in 1976 and 1981.",
+    "gen": 1,
+    "cat": "tank"
+   },
+   {
+    "m": "PT-76",
+    "n": 30,
+    "orig": "SUN",
+    "s": "wiki_army",
+    "c": "ت",
+    "gen": 1,
+    "cat": "tank"
+   },
+   {
+    "m": "Type 59",
+    "n": 20,
+    "orig": "CHN",
+    "s": "wiki_army",
+    "c": "ت",
+    "gen": 1,
+    "cat": "tank"
+   },
+   {
+    "m": "BTR-60",
+    "n": 13,
+    "orig": "SUN",
+    "s": "wiki_army",
+    "c": "ت",
+    "gen": 2,
+    "cat": "apc"
+   },
+   {
+    "m": "BTR-70",
+    "n": 20,
+    "orig": "SUN",
+    "s": "wiki_army",
+    "c": "ت",
+    "gen": 2,
+    "cat": "apc"
+   },
+   {
+    "m": "BTR-80",
+    "n": 20,
+    "orig": "SUN",
+    "s": "wiki_army",
+    "c": "ت",
+    "gen": 3,
+    "cat": "apc"
+   },
+   {
+    "m": "BRDM-1",
+    "n": 44,
+    "orig": "SUN",
+    "s": "wiki_army",
+    "c": "ت",
+    "note": "Acquired in 1980.",
+    "gen": 2,
+    "cat": "apc"
+   },
+   {
+    "m": "BRDM-2",
+    "n": 44,
+    "orig": "SUN",
+    "s": "wiki_army",
+    "c": "ت",
+    "note": "Acquired in 1981.",
+    "gen": 2,
+    "cat": "apc"
+   },
+   {
+    "m": "GAZ Tigr",
+    "n": 35,
+    "orig": "RUS",
+    "s": "wiki_army",
+    "c": "ت",
+    "note": "GAZ-233014",
+    "gen": 2,
+    "cat": "apc"
+   },
+   {
+    "m": "WZ551",
+    "n": 20,
+    "orig": "CHN",
+    "s": "wiki_army",
+    "c": "ت",
+    "note": "6X6 WZ551B variant.",
+    "gen": 2,
+    "cat": "apc"
+   },
+   {
+    "m": "Ratel",
+    "n": 14,
+    "orig": "ZAF",
+    "s": "wiki_army",
+    "c": "ت",
+    "gen": 2,
+    "cat": "ifv"
+   },
+   {
+    "m": "Buffel",
+    "n": 1,
+    "orig": "ZAF",
+    "s": "wiki_army",
+    "c": "ت",
+    "note": "Rhino variant.",
+    "gen": 2,
+    "cat": "apc"
+   },
+   {
+    "m": "ATMOS 2000",
+    "n": 6,
+    "orig": "ISR",
+    "s": "wiki_army",
+    "c": "ت",
+    "note": "Mounted on a Czech 6×6 Tatra 10-tonne chassis.",
+    "gen": 2,
+    "cat": "spg"
+   },
+   {
+    "m": "Elbit Spear MK2 Cardom",
+    "n": 6,
+    "orig": "ISR",
+    "s": "wiki_army",
+    "c": "ت",
+    "note": "Mounted on an Indian Tata Trucks LPTA 713TC 4×4 chassis.",
+    "gen": 4,
+    "cat": "spg"
+   },
+   {
+    "m": "BM-21 Grad",
+    "n": 50,
+    "orig": "SUN",
+    "s": "wiki_army",
+    "c": "ت",
+    "gen": 2,
+    "cat": "mlrs"
+   },
+   {
+    "m": "Type 59",
+    "n": 18,
+    "orig": "SUN",
+    "s": "wiki_army",
+    "c": "ت",
+    "gen": 1,
+    "cat": "towed"
+   },
+   {
+    "m": "D-30",
+    "n": 24,
+    "orig": "SUN",
+    "s": "wiki_army",
+    "c": "ت",
+    "gen": 2,
+    "cat": "towed"
+   },
+   {
+    "m": "Mod.56",
+    "n": 18,
+    "orig": "ITA",
+    "s": "wiki_army",
+    "c": "ت",
+    "gen": 2,
+    "cat": "towed"
+   }
+  ],
+  "air": [
+   {
+    "m": "Beech 1900",
+    "n": 1,
+    "orig": "USA",
+    "s": "wiki_air",
+    "c": "ت",
+    "gen": 2,
+    "cat": "transport"
+   },
+   {
+    "m": "C-27J Spartan",
+    "n": 2,
+    "orig": "ITA",
+    "s": "wiki_air",
+    "c": "ت",
+    "gen": 2,
+    "cat": "transport"
+   },
+   {
+    "m": "Cessna 208",
+    "n": 2,
+    "orig": "USA",
+    "s": "wiki_air",
+    "c": "ت",
+    "gen": 2,
+    "cat": "transport"
+   },
+   {
+    "m": "Xi'an MA60",
+    "n": 1,
+    "orig": "CHN",
+    "s": "wiki_air",
+    "c": "ت",
+    "gen": 2,
+    "cat": "transport"
+   },
+   {
+    "m": "Harbin Y-12",
+    "n": 7,
+    "orig": "CHN",
+    "s": "wiki_air",
+    "c": "ت",
+    "gen": 2,
+    "cat": "transport"
+   },
+   {
+    "m": "Bell 205",
+    "n": 12,
+    "orig": "USA",
+    "s": "wiki_air",
+    "c": "ت",
+    "gen": 2,
+    "cat": "heli_util"
+   },
+   {
+    "m": "Bell 212/Bell 412",
+    "n": 7,
+    "orig": "USA",
+    "s": "wiki_air",
+    "c": "ت",
+    "gen": 2,
+    "cat": "heli_util"
+   },
+   {
+    "m": "Mil Mi-17 (Mi-171)",
+    "n": 5,
+    "orig": "SUN",
+    "s": "wiki_air",
+    "c": "ت",
+    "gen": 2,
+    "cat": "heli_util"
+   },
+   {
+    "m": "Harbin Z-9",
+    "n": 7,
+    "orig": "CHN",
+    "s": "wiki_air",
+    "c": "ت",
+    "gen": 2,
+    "cat": "heli_util"
+   },
+   {
+    "m": "Enstrom 480",
+    "n": 2,
+    "orig": "USA",
+    "s": "wiki_air",
+    "c": "ت",
+    "gen": 2,
+    "cat": "trainer"
+   },
+   {
+    "m": "Hongdu JL-8 (K-8)",
+    "n": 15,
+    "orig": "CHN",
+    "s": "wiki_air",
+    "c": "ت",
+    "gen": 2,
+    "cat": "trainer"
+   },
+   {
+    "m": "Hongdu JL-10 (L-15Z)",
+    "n": 6,
+    "orig": "CHN",
+    "s": "wiki_air",
+    "c": "ت",
+    "gen": 2,
+    "cat": "attack"
+   },
+   {
+    "m": "SIAI-Marchetti SF.260",
+    "n": 11,
+    "orig": "ITA",
+    "s": "wiki_air",
+    "c": "ت",
+    "gen": 2,
+    "cat": "trainer"
+   },
+   {
+    "m": "Elbit Hermes 450",
+    "n": 3,
+    "orig": "ISR",
+    "s": "wiki_air",
+    "c": "ت",
+    "gen": 2,
+    "cat": "uav_strike"
+   }
+  ],
+  "ad": [
+   {
+    "m": "KS-12",
+    "n": 16,
+    "orig": "SUN",
+    "s": "wiki_army",
+    "c": "ت",
+    "gen": 2,
+    "cat": "short"
+   },
+   {
+    "m": "61-K",
+    "n": 40,
+    "orig": "SUN",
+    "s": "wiki_army",
+    "c": "ت",
+    "gen": 2,
+    "cat": "short"
+   },
+   {
+    "m": "AZP S-60",
+    "n": 30,
+    "orig": "SUN",
+    "s": "wiki_army",
+    "c": "ت",
+    "gen": 2,
+    "cat": "short"
+   },
+   {
+    "m": "Zastava M55",
+    "n": 50,
+    "orig": "YUG",
+    "s": "wiki_army",
+    "c": "ت",
+    "gen": 2,
+    "cat": "short"
+   }
+  ],
   "msl": [],
-  "navy": []
+  "navy": [],
+  "grp": {
+   "tank": {
+    "n": 30,
+    "s": "iiss_eq",
+    "c": "ت",
+    "top": [
+     [
+      "PT-76",
+      30,
+      1,
+      "SUN"
+     ],
+     [
+      "T-55",
+      25,
+      1,
+      "SUN"
+     ],
+     [
+      "Type 59",
+      20,
+      1,
+      "CHN"
+     ]
+    ],
+    "gen": 1.0,
+    "note": "مجموع القوائم 75 يختلف عن الإجمالي؛ الإجمالي هو المعتمد"
+   },
+   "afv": {
+    "n": 211,
+    "s": "wiki_army",
+    "c": "ت",
+    "top": [
+     [
+      "BRDM-1",
+      44,
+      2,
+      "SUN"
+     ],
+     [
+      "BRDM-2",
+      44,
+      2,
+      "SUN"
+     ],
+     [
+      "GAZ Tigr",
+      35,
+      2,
+      "RUS"
+     ]
+    ],
+    "gen": 2.1
+   },
+   "art": {
+    "n": 122,
+    "s": "wiki_army",
+    "c": "ت",
+    "top": [
+     [
+      "BM-21 Grad",
+      50,
+      2,
+      "SUN"
+     ],
+     [
+      "D-30",
+      24,
+      2,
+      "SUN"
+     ],
+     [
+      "Type 59",
+      18,
+      1,
+      "SUN"
+     ]
+    ],
+    "gen": 2.0
+   },
+   "jet": {
+    "n": 32,
+    "s": "iiss_eq",
+    "c": "ت",
+    "top": [
+     [
+      "Hongdu JL-10 (L-15Z)",
+      6,
+      2,
+      "CHN"
+     ]
+    ],
+    "gen": 2.0,
+    "note": "مجموع القوائم 6 يختلف عن الإجمالي؛ الإجمالي هو المعتمد"
+   },
+   "heli": {
+    "n": 31,
+    "s": "wiki_air",
+    "c": "ت",
+    "top": [
+     [
+      "Bell 205",
+      12,
+      2,
+      "USA"
+     ],
+     [
+      "Bell 212/Bell 412",
+      7,
+      2,
+      "USA"
+     ],
+     [
+      "Harbin Z-9",
+      7,
+      2,
+      "CHN"
+     ]
+    ],
+    "gen": 2.0
+   },
+   "uav": {
+    "n": 3,
+    "s": "wiki_air",
+    "c": "ت",
+    "top": [
+     [
+      "Elbit Hermes 450",
+      3,
+      2,
+      "ISR"
+     ]
+    ],
+    "gen": 2.0
+   },
+   "ad": {
+    "n": 136,
+    "s": "wiki_army",
+    "c": "ت",
+    "top": [
+     [
+      "Zastava M55",
+      50,
+      2,
+      "YUG"
+     ],
+     [
+      "61-K",
+      40,
+      2,
+      "SUN"
+     ],
+     [
+      "AZP S-60",
+      30,
+      2,
+      "SUN"
+     ]
+    ],
+    "gen": 2.0
+   }
+  }
  },
  "ind": null,
  "pol": {

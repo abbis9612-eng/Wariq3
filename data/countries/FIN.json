@@ -5,6 +5,12 @@
  "tier": "B",
  "asOf": "2026-11",
  "src": {
+  "wiki_air": {
+   "t": "Wikipedia: List of aircraft of Finland in World War II",
+   "u": "https://en.wikipedia.org/wiki/List_of_aircraft_of_Finland_in_World_War_II?oldid=1341472196",
+   "y": 2026,
+   "note": "نسخة الصفحة بتاريخ السحب؛ أرقام ويكيبيديا تنراجع ويا مصادر ثانية"
+  },
   "iiss_eq": {
    "t": "Wikipedia: List of countries by level of military equipment (من IISS Military Balance ومصادر ثانية)",
    "u": "https://en.wikipedia.org/wiki/List_of_countries_by_level_of_military_equipment?oldid=1384804191",
@@ -49,6 +55,11 @@
   "tierA": {
    "t": "تقدير المصمم (تشرين الثاني 2026) لصناعة السلاح والاستقرار: SIPRI Arms Transfers Database (أكبر المصدّرين 2020–24)، SIPRI Top 100 Arms-Producing Companies، Fragile States Index 2025، أخبار 2026",
    "u": "https://www.sipri.org/databases/armstransfers",
+   "y": 2026
+  },
+  "tpl": {
+   "t": "قالب منطقة (eu): موديلات شائعة ونسب تقريبية من الدبابات (مدرعات ×2.5، مدفعية ×0.9، مروحيات ×0.25) — تقدير المصمم",
+   "u": "docs/features/world-plan.md",
    "y": 2026
   }
  },
@@ -223,7 +234,144 @@
   "air": [],
   "ad": [],
   "msl": [],
-  "navy": []
+  "navy": [],
+  "grp": {
+   "tank": {
+    "n": 200,
+    "s": "iiss_eq",
+    "c": "ت",
+    "top": [
+     [
+      "T-72",
+      null,
+      null,
+      null
+     ],
+     [
+      "Leopard 1",
+      null,
+      null,
+      null
+     ],
+     [
+      "Leopard 2A4",
+      null,
+      null,
+      null
+     ]
+    ],
+    "gen": 2.6,
+    "tpl": "eu"
+   },
+   "afv": {
+    "n": 500,
+    "s": "tpl",
+    "c": "ق",
+    "top": [
+     [
+      "BMP-2",
+      null,
+      null,
+      null
+     ],
+     [
+      "M113",
+      null,
+      null,
+      null
+     ],
+     [
+      "Patria AMV",
+      null,
+      null,
+      null
+     ]
+    ],
+    "gen": 2.4,
+    "tpl": "eu"
+   },
+   "art": {
+    "n": 180,
+    "s": "tpl",
+    "c": "ق",
+    "top": [
+     [
+      "2S1",
+      null,
+      null,
+      null
+     ],
+     [
+      "M109",
+      null,
+      null,
+      null
+     ],
+     [
+      "D-30",
+      null,
+      null,
+      null
+     ]
+    ],
+    "gen": 2.4,
+    "tpl": "eu"
+   },
+   "jet": {
+    "n": 55,
+    "s": "iiss_eq",
+    "c": "ت",
+    "top": [
+     [
+      "F-16",
+      null,
+      null,
+      null
+     ],
+     [
+      "MiG-29",
+      null,
+      null,
+      null
+     ],
+     [
+      "Gripen",
+      null,
+      null,
+      null
+     ]
+    ],
+    "gen": 2.8,
+    "tpl": "eu"
+   },
+   "heli": {
+    "n": 50,
+    "s": "tpl",
+    "c": "ق",
+    "top": [
+     [
+      "Mi-24",
+      null,
+      null,
+      null
+     ],
+     [
+      "AW139",
+      null,
+      null,
+      null
+     ],
+     [
+      "UH-60",
+      null,
+      null,
+      null
+     ]
+    ],
+    "gen": 2.6,
+    "tpl": "eu"
+   }
+  }
  },
  "ind": null,
  "pol": {

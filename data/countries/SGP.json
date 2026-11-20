@@ -5,6 +5,24 @@
  "tier": "B",
  "asOf": "2026-11",
  "src": {
+  "wiki_air": {
+   "t": "Wikipedia: Republic of Singapore Air Force",
+   "u": "https://en.wikipedia.org/wiki/Republic_of_Singapore_Air_Force?oldid=1382814702",
+   "y": 2026,
+   "note": "نسخة الصفحة بتاريخ السحب؛ أرقام ويكيبيديا تنراجع ويا مصادر ثانية"
+  },
+  "wiki_army": {
+   "t": "Wikipedia: List of equipment of the Singapore Army",
+   "u": "https://en.wikipedia.org/wiki/List_of_equipment_of_the_Singapore_Army?oldid=1384738920",
+   "y": 2026,
+   "note": "نسخة الصفحة بتاريخ السحب؛ أرقام ويكيبيديا تنراجع ويا مصادر ثانية"
+  },
+  "wiki_navy": {
+   "t": "Wikipedia: List of ships of the Republic of Singapore Navy",
+   "u": "https://en.wikipedia.org/wiki/List_of_ships_of_the_Republic_of_Singapore_Navy?oldid=1384503432",
+   "y": 2026,
+   "note": "نسخة الصفحة بتاريخ السحب؛ أرقام ويكيبيديا تنراجع ويا مصادر ثانية"
+  },
   "iiss_eq": {
    "t": "Wikipedia: List of countries by level of military equipment (من IISS Military Balance ومصادر ثانية)",
    "u": "https://en.wikipedia.org/wiki/List_of_countries_by_level_of_military_equipment?oldid=1384804191",
@@ -49,6 +67,11 @@
   "tierA": {
    "t": "تقدير المصمم (تشرين الثاني 2026) لصناعة السلاح والاستقرار: SIPRI Arms Transfers Database (أكبر المصدّرين 2020–24)، SIPRI Top 100 Arms-Producing Companies، Fragile States Index 2025، أخبار 2026",
    "u": "https://www.sipri.org/databases/armstransfers",
+   "y": 2026
+  },
+  "tpl": {
+   "t": "قالب منطقة (as): موديلات شائعة ونسب تقريبية من الدبابات (مدرعات ×2.5، مدفعية ×0.9، مروحيات ×0.25) — تقدير المصمم",
+   "u": "docs/features/world-plan.md",
    "y": 2026
   }
  },
@@ -219,11 +242,479 @@
     "c": "ت"
    }
   },
-  "land": [],
-  "air": [],
+  "land": [
+   {
+    "m": "Leopard 2SG",
+    "n": 170,
+    "orig": "DEU",
+    "s": "wiki_army",
+    "c": "ت",
+    "note": "Upgraded with AMAP Advanced Modular Armor Protection and AMAP-ADS active defence systems by IBD & ST Kinetics. Excludes 30 Leopard 2A4 as sp",
+    "gen": 3,
+    "cat": "tank"
+   },
+   {
+    "m": "Bionix II",
+    "n": 800,
+    "orig": "SGP",
+    "s": "wiki_army",
+    "c": "ت",
+    "note": "Variants include Bionix 40/50, Bionix 25.",
+    "gen": 2,
+    "cat": "ifv"
+   },
+   {
+    "m": "Terrex AV-81",
+    "n": 435,
+    "orig": "SGP",
+    "s": "wiki_army",
+    "c": "ت",
+    "gen": 2,
+    "cat": "apc"
+   },
+   {
+    "m": "Bronco All Terrain Tracked Carrier",
+    "n": 400,
+    "orig": "SGP",
+    "s": "wiki_army",
+    "c": "ت",
+    "gen": 2,
+    "cat": "apc"
+   },
+   {
+    "m": "Bandvagn 206",
+    "n": 300,
+    "orig": "SWE",
+    "s": "wiki_army",
+    "c": "ت",
+    "note": "Artillery versions mounted with ARTHUR.",
+    "gen": 2,
+    "cat": "apc"
+   },
+   {
+    "m": "Peacekeeper PRV",
+    "n": 110,
+    "orig": "FRA",
+    "s": "wiki_army",
+    "c": "ت",
+    "note": "Local modified version of the Renault Higuard (MRAP). Replaced Cadillac Gage V-100/150/200.",
+    "gen": 2,
+    "cat": "mrap"
+   },
+   {
+    "m": "International MaxxPro Dash",
+    "n": 15,
+    "orig": "USA",
+    "s": "wiki_army",
+    "c": "ت",
+    "note": "Deployed in Afghanistan as part of NATO-led International Security Assistance Force.",
+    "gen": 2,
+    "cat": "mrap"
+   },
+   {
+    "m": "Belrex",
+    "n": 122,
+    "orig": "ZAF",
+    "s": "wiki_army",
+    "c": "ت",
+    "note": "Successor of G-class MB290 and 5-ton trucks. Local design based on Marauder mine-resistant, ambush-protected vehicle platform developed by S",
+    "gen": 2,
+    "cat": "mrap"
+   },
+   {
+    "m": "M142 HIMARS",
+    "n": 24,
+    "orig": "USA",
+    "s": "wiki_army",
+    "c": "ت",
+    "note": "516 missiles purchased initially. Purchase of 45 pods M30A2 GMLRS-AW in 2026. Upgrade with Common Fire Control System upgrade kits in 2026.",
+    "gen": 2,
+    "cat": "mlrs"
+   },
+   {
+    "m": "SSPH-1 Primus",
+    "n": 48,
+    "orig": "SGP",
+    "s": "wiki_army",
+    "c": "ت",
+    "gen": 2,
+    "cat": "spg"
+   },
+   {
+    "m": "SLWH Pegasus",
+    "n": 60,
+    "orig": "SGP",
+    "s": "wiki_army",
+    "c": "ت",
+    "gen": 2,
+    "cat": "towed"
+   },
+   {
+    "m": "FH-2000",
+    "n": 17,
+    "orig": "SGP",
+    "s": "wiki_army",
+    "c": "ت",
+    "gen": 2,
+    "cat": "towed"
+   },
+   {
+    "m": "Ordnance QF 25-pounder",
+    "n": 12,
+    "orig": "GBR",
+    "s": "wiki_army",
+    "c": "ت",
+    "note": "Used in gun salutes.",
+    "gen": 2,
+    "cat": "towed"
+   }
+  ],
+  "air": [
+   {
+    "m": "F-15E Strike Eagle (F-15SG)",
+    "n": 40,
+    "orig": "USA",
+    "s": "wiki_air",
+    "c": "ت",
+    "gen": 4,
+    "cat": "fighter"
+   },
+   {
+    "m": "F-16 Fighting Falcon (F-16C / F-16D / F-16D+)",
+    "n": 59,
+    "orig": "USA",
+    "s": "wiki_air",
+    "c": "ت",
+    "note": "Modernised as of 2023.",
+    "gen": 3,
+    "cat": "fighter"
+   },
+   {
+    "m": "Gulfstream G550 AEW (EL/W-2085)",
+    "n": 4,
+    "orig": "ISR",
+    "s": "wiki_air",
+    "c": "ت",
+    "gen": 2,
+    "cat": "awacs"
+   },
+   {
+    "m": "Fokker 50 (Fokker-50 MPA)",
+    "n": 5,
+    "orig": "NLD",
+    "s": "wiki_air",
+    "c": "ت",
+    "note": "Replacement planned with: P-8A G550-MSA",
+    "gen": 2,
+    "cat": "isr"
+   },
+   {
+    "m": "Fokker 50 (Fokker-50 UTA)",
+    "n": 4,
+    "orig": "NLD",
+    "s": "wiki_air",
+    "c": "ت",
+    "gen": 2,
+    "cat": "transport"
+   },
+   {
+    "m": "Lockheed C-130 (C-130H)",
+    "n": 5,
+    "orig": "USA",
+    "s": "wiki_air",
+    "c": "ت",
+    "gen": 2,
+    "cat": "transport"
+   },
+   {
+    "m": "Boeing AH-64 Apache (AH-64D)",
+    "n": 19,
+    "orig": "USA",
+    "s": "wiki_air",
+    "c": "ت",
+    "gen": 3,
+    "cat": "heli_attack"
+   },
+   {
+    "m": "Boeing CH-47 Chinook (CH-47SD)",
+    "n": 10,
+    "orig": "USA",
+    "s": "wiki_air",
+    "c": "ت",
+    "note": "10 CH-47SD purchased in 1998. 16 CH-47F ordered in 2015 to replace the CH-47D (10 CH-47F based in Australia, 6 in Singapore).",
+    "gen": 3,
+    "cat": "heli_util"
+   },
+   {
+    "m": "Boeing CH-47 Chinook (CH-47F)",
+    "n": 16,
+    "orig": "USA",
+    "s": "wiki_air",
+    "c": "ت",
+    "note": "10 CH-47SD purchased in 1998. 16 CH-47F ordered in 2015 to replace the CH-47D (10 CH-47F based in Australia, 6 in Singapore).",
+    "gen": 3,
+    "cat": "heli_util"
+   },
+   {
+    "m": "Airbus Helicopters H225M (–)",
+    "n": 16,
+    "orig": "FRA",
+    "s": "wiki_air",
+    "c": "ت",
+    "note": "Successor of the AS332M Super Puma.",
+    "gen": 2,
+    "cat": "heli_util"
+   },
+   {
+    "m": "Sikorsky SH-60 Seahawk (S-70B)",
+    "n": 8,
+    "orig": "USA",
+    "s": "wiki_air",
+    "c": "ت",
+    "gen": 2,
+    "cat": "heli_util"
+   },
+   {
+    "m": "Alenia Aermacchi M-346 Master (–)",
+    "n": 12,
+    "orig": "ITA",
+    "s": "wiki_air",
+    "c": "ت",
+    "note": "Aircraft based in Cazaux (France) where the pilots are trained.",
+    "gen": 2,
+    "cat": "trainer"
+   },
+   {
+    "m": "Pilatus PC-21 (–)",
+    "n": 19,
+    "orig": "CHE",
+    "s": "wiki_air",
+    "c": "ت",
+    "gen": 2,
+    "cat": "trainer"
+   },
+   {
+    "m": "Eurocopter EC120 (–)",
+    "n": 5,
+    "orig": "FRA",
+    "s": "wiki_air",
+    "c": "ت",
+    "note": "Used in 2026 in a special operations role as well.",
+    "gen": 2,
+    "cat": "heli_util"
+   }
+  ],
   "ad": [],
   "msl": [],
-  "navy": []
+  "navy": [
+   {
+    "m": "Archer class Former Västergötland class",
+    "n": 2,
+    "orig": "SWE",
+    "s": "wiki_navy",
+    "c": "ت",
+    "note": "Purchased second hand from the Swedish Navy.",
+    "gen": 2,
+    "cat": "sub"
+   },
+   {
+    "m": "Formidable class Derived from La Fayette class",
+    "n": 6,
+    "orig": "FRA",
+    "s": "wiki_navy",
+    "c": "ت",
+    "note": "During the ship's voyage, it was Supported By S-70B Seahawk Naval Helicopter from 123 Sqadron RSAF",
+    "gen": 2,
+    "cat": "frigate"
+   },
+   {
+    "m": "Victory class Derived from MGB 62",
+    "n": 6,
+    "orig": "SGP",
+    "s": "wiki_navy",
+    "c": "ت",
+    "gen": 3,
+    "cat": "corvette"
+   },
+   {
+    "m": "Independence class",
+    "n": 8,
+    "orig": "SGP",
+    "s": "wiki_navy",
+    "c": "ت",
+    "gen": 2,
+    "cat": "patrol"
+   },
+   {
+    "m": "Sentinel class Former Fearless class",
+    "n": 4,
+    "orig": "SGP",
+    "s": "wiki_navy",
+    "c": "ت",
+    "note": "Refurbished ships.",
+    "gen": 2,
+    "cat": "patrol"
+   },
+   {
+    "m": "Endurance class",
+    "n": 4,
+    "orig": "SGP",
+    "s": "wiki_navy",
+    "c": "ت",
+    "gen": 2,
+    "cat": "amphib"
+   },
+   {
+    "m": "MV Swift Rescue",
+    "n": 1,
+    "orig": "SGP",
+    "s": "wiki_navy",
+    "c": "ت",
+    "gen": 2,
+    "cat": "sub"
+   }
+  ],
+  "grp": {
+   "tank": {
+    "n": 97,
+    "s": "iiss_eq",
+    "c": "ت",
+    "top": [
+     [
+      "Leopard 2SG",
+      170,
+      3,
+      "DEU"
+     ]
+    ],
+    "gen": 3.0,
+    "note": "مجموع القوائم 170 يختلف عن الإجمالي؛ الإجمالي هو المعتمد"
+   },
+   "afv": {
+    "n": 2182,
+    "s": "wiki_army",
+    "c": "ت",
+    "top": [
+     [
+      "Bionix II",
+      800,
+      2,
+      "SGP"
+     ],
+     [
+      "Terrex AV-81",
+      435,
+      2,
+      "SGP"
+     ],
+     [
+      "Bronco All Terrain Tracked Carrier",
+      400,
+      2,
+      "SGP"
+     ]
+    ],
+    "gen": 2.0
+   },
+   "art": {
+    "n": 161,
+    "s": "wiki_army",
+    "c": "ت",
+    "top": [
+     [
+      "SLWH Pegasus",
+      60,
+      2,
+      "SGP"
+     ],
+     [
+      "SSPH-1 Primus",
+      48,
+      2,
+      "SGP"
+     ],
+     [
+      "M142 HIMARS",
+      24,
+      2,
+      "USA"
+     ]
+    ],
+    "gen": 2.0
+   },
+   "jet": {
+    "n": 100,
+    "s": "iiss_eq",
+    "c": "ت",
+    "top": [
+     [
+      "F-16 Fighting Falcon (F-16C / F-16D / F-",
+      59,
+      3,
+      "USA"
+     ],
+     [
+      "F-15E Strike Eagle (F-15SG)",
+      40,
+      4,
+      "USA"
+     ]
+    ],
+    "gen": 3.4
+   },
+   "heli": {
+    "n": 74,
+    "s": "wiki_air",
+    "c": "ت",
+    "top": [
+     [
+      "Boeing AH-64 Apache (AH-64D)",
+      19,
+      3,
+      "USA"
+     ],
+     [
+      "Boeing CH-47 Chinook (CH-47F)",
+      16,
+      3,
+      "USA"
+     ],
+     [
+      "Airbus Helicopters H225M (–)",
+      16,
+      2,
+      "FRA"
+     ]
+    ],
+    "gen": 2.6
+   },
+   "navy": {
+    "n": 22,
+    "s": "iiss_eq",
+    "c": "ت",
+    "top": [
+     [
+      "Independence class",
+      8,
+      2,
+      "SGP"
+     ],
+     [
+      "Formidable class Derived from La Fayette",
+      6,
+      2,
+      "FRA"
+     ],
+     [
+      "Victory class Derived from MGB 62",
+      6,
+      3,
+      "SGP"
+     ]
+    ],
+    "gen": 2.2
+   }
+  }
  },
  "ind": null,
  "pol": {

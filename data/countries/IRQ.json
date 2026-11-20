@@ -108,6 +108,11 @@
    "t": "تقدير المصمم (تشرين الثاني 2026) لصناعة السلاح والاستقرار: SIPRI Arms Transfers Database (أكبر المصدّرين 2020–24)، SIPRI Top 100 Arms-Producing Companies، Fragile States Index 2025، أخبار 2026",
    "u": "https://www.sipri.org/databases/armstransfers",
    "y": 2026
+  },
+  "tpl": {
+   "t": "قالب منطقة (me): موديلات شائعة ونسب تقريبية من الدبابات (مدرعات ×2.5، مدفعية ×0.9، مروحيات ×0.25) — تقدير المصمم",
+   "u": "docs/features/world-plan.md",
+   "y": 2026
   }
  },
  "gov": {
@@ -1009,7 +1014,218 @@
     "gen": 2,
     "cat": "patrol"
    }
-  ]
+  ],
+  "grp": {
+   "tank": {
+    "n": 330,
+    "s": "iiss_eq",
+    "c": "ت",
+    "top": [
+     [
+      "T-72MLion of Babylon",
+      478,
+      3,
+      "SUN"
+     ],
+     [
+      "T-55",
+      150,
+      1,
+      "SUN"
+     ],
+     [
+      "M1A1 Abrams",
+      140,
+      3,
+      "USA"
+     ]
+    ],
+    "gen": 2.7,
+    "note": "مجموع القوائم 841 يختلف عن الإجمالي؛ الإجمالي هو المعتمد"
+   },
+   "afv": {
+    "n": 4002,
+    "s": "wiki_army",
+    "c": "ت",
+    "top": [
+     [
+      "Cougar/ILAV",
+      1243,
+      2,
+      "USA"
+     ],
+     [
+      "BMP-1",
+      600,
+      2,
+      "SUN"
+     ],
+     [
+      "M113",
+      500,
+      2,
+      "USA"
+     ]
+    ],
+    "gen": 2.3
+   },
+   "art": {
+    "n": 1616,
+    "s": "wiki_army",
+    "c": "ت",
+    "top": [
+     [
+      "BM-21 Grad",
+      300,
+      2,
+      "SUN"
+     ],
+     [
+      "M109",
+      220,
+      2,
+      "USA"
+     ],
+     [
+      "2A36 Giatsint-B",
+      200,
+      2,
+      "SUN"
+     ]
+    ],
+    "gen": 2.0
+   },
+   "jet": {
+    "n": 68,
+    "s": "iiss_eq",
+    "c": "ت",
+    "top": [
+     [
+      "F-16 Fighting Falcon (F-16C/D/IQ)",
+      34,
+      3,
+      "USA"
+     ],
+     [
+      "KAI T-50 (T-50IQ)",
+      24,
+      3,
+      "KOR"
+     ],
+     [
+      "Sukhoi Su-25",
+      19,
+      3,
+      "RUS"
+     ]
+    ],
+    "gen": 3.0
+   },
+   "heli": {
+    "n": 196,
+    "s": "wiki_air",
+    "c": "ت",
+    "top": [
+     [
+      "Mil Mi-8/Mil Mi-17",
+      41,
+      2,
+      "RUS"
+     ],
+     [
+      "Bell 407",
+      40,
+      2,
+      "USA"
+     ],
+     [
+      "Mil Mi-24 (Mi-35M)",
+      23,
+      3,
+      "RUS"
+     ]
+    ],
+    "gen": 2.3
+   },
+   "uav": {
+    "n": 56,
+    "s": "wiki_air",
+    "c": "ت",
+    "top": [
+     [
+      "محلي (بلا اسم)",
+      24,
+      2,
+      "IRQ"
+     ],
+     [
+      "CH-4",
+      12,
+      3,
+      "CHN"
+     ],
+     [
+      "CH-5 Rainbow",
+      10,
+      4,
+      "CHN"
+     ]
+    ],
+    "gen": 2.6
+   },
+   "ad": {
+    "n": 274,
+    "s": "wiki_army",
+    "c": "ت",
+    "top": [
+     [
+      "TWQ-1 Avenger",
+      100,
+      2,
+      "USA"
+     ],
+     [
+      "Bofors 40 mm",
+      100,
+      2,
+      "SWE"
+     ],
+     [
+      "MIM-23 Hawk",
+      50,
+      2,
+      "USA"
+     ]
+    ],
+    "gen": 2.1
+   },
+   "navy": {
+    "n": 54,
+    "s": "wiki_navy",
+    "c": "ت",
+    "top": [
+     [
+      "Fast Aluminum Boats",
+      24,
+      2,
+      "INT"
+     ],
+     [
+      "Swiftships Model 35PB1208 E-1455",
+      15,
+      2,
+      "INT"
+     ],
+     [
+      "Predator class",
+      10,
+      3,
+      "INT"
+     ]
+    ],
+    "gen": 2.2
+   }
+  }
  },
  "ind": {
   "tech": {

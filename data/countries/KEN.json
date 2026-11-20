@@ -5,6 +5,24 @@
  "tier": "B",
  "asOf": "2026-11",
  "src": {
+  "wiki_air": {
+   "t": "Wikipedia: Kenya Air Force",
+   "u": "https://en.wikipedia.org/wiki/Kenya_Air_Force?oldid=1366691158",
+   "y": 2026,
+   "note": "نسخة الصفحة بتاريخ السحب؛ أرقام ويكيبيديا تنراجع ويا مصادر ثانية"
+  },
+  "wiki_army": {
+   "t": "Wikipedia: Kenya Army",
+   "u": "https://en.wikipedia.org/wiki/Kenya_Army?oldid=1383571032",
+   "y": 2026,
+   "note": "نسخة الصفحة بتاريخ السحب؛ أرقام ويكيبيديا تنراجع ويا مصادر ثانية"
+  },
+  "wiki_navy": {
+   "t": "Wikipedia: Kenya Navy",
+   "u": "https://en.wikipedia.org/wiki/Kenya_Navy?oldid=1381074819",
+   "y": 2026,
+   "note": "نسخة الصفحة بتاريخ السحب؛ أرقام ويكيبيديا تنراجع ويا مصادر ثانية"
+  },
   "iiss_eq": {
    "t": "Wikipedia: List of countries by level of military equipment (من IISS Military Balance ومصادر ثانية)",
    "u": "https://en.wikipedia.org/wiki/List_of_countries_by_level_of_military_equipment?oldid=1384804191",
@@ -49,6 +67,11 @@
   "tierA": {
    "t": "تقدير المصمم (تشرين الثاني 2026) لصناعة السلاح والاستقرار: SIPRI Arms Transfers Database (أكبر المصدّرين 2020–24)، SIPRI Top 100 Arms-Producing Companies، Fragile States Index 2025، أخبار 2026",
    "u": "https://www.sipri.org/databases/armstransfers",
+   "y": 2026
+  },
+  "tpl": {
+   "t": "قالب منطقة (af): موديلات شائعة ونسب تقريبية من الدبابات (مدرعات ×2.5، مدفعية ×0.9، مروحيات ×0.25) — تقدير المصمم",
+   "u": "docs/features/world-plan.md",
    "y": 2026
   }
  },
@@ -216,11 +239,502 @@
     "c": "ت"
    }
   },
-  "land": [],
-  "air": [],
+  "land": [
+   {
+    "m": "Vickers Mk.3",
+    "n": 78,
+    "orig": "GBR",
+    "s": "wiki_army",
+    "c": "ت",
+    "gen": 2,
+    "cat": "tank"
+   },
+   {
+    "m": "T-72AV",
+    "n": 110,
+    "orig": "SUN",
+    "s": "wiki_army",
+    "c": "ت",
+    "note": "77 T-72AV from Ukraine in 2007. 33 delivered in Feb 2009 may bring total to 110.",
+    "gen": 3,
+    "cat": "tank"
+   },
+   {
+    "m": "Panhard AML-60/90",
+    "n": 72,
+    "orig": "FRA",
+    "s": "wiki_army",
+    "c": "ت",
+    "gen": 2,
+    "cat": "apc"
+   },
+   {
+    "m": "Alvis Saladin",
+    "n": 10,
+    "orig": "GBR",
+    "s": "wiki_army",
+    "c": "ت",
+    "gen": 2,
+    "cat": "apc"
+   },
+   {
+    "m": "Shorland S52",
+    "n": 8,
+    "orig": "GBR",
+    "s": "wiki_army",
+    "c": "ت",
+    "gen": 2,
+    "cat": "apc"
+   },
+   {
+    "m": "BOV M11",
+    "n": 20,
+    "orig": "SRB",
+    "s": "wiki_army",
+    "c": "ت",
+    "gen": 2,
+    "cat": "apc"
+   },
+   {
+    "m": "Daimler Ferret",
+    "n": 12,
+    "orig": "GBR",
+    "s": "wiki_army",
+    "c": "ت",
+    "gen": 2,
+    "cat": "apc"
+   },
+   {
+    "m": "BRDM-3",
+    "n": 8,
+    "orig": "RUS",
+    "s": "wiki_army",
+    "c": "ت",
+    "gen": 2,
+    "cat": "apc"
+   },
+   {
+    "m": "PUMA M26-15",
+    "n": 150,
+    "orig": "ZAF",
+    "s": "wiki_army",
+    "c": "ت",
+    "gen": 4,
+    "cat": "mrap"
+   },
+   {
+    "m": "Katmerciler Hızır",
+    "n": 118,
+    "orig": "TUR",
+    "s": "wiki_army",
+    "c": "ت",
+    "gen": 2,
+    "cat": "mrap"
+   },
+   {
+    "m": "Nora B-52",
+    "n": 18,
+    "orig": "SRB",
+    "s": "wiki_army",
+    "c": "ت",
+    "gen": 2,
+    "cat": "spg"
+   },
+   {
+    "m": "MO-120-RT-61",
+    "n": 12,
+    "orig": "FRA",
+    "s": "wiki_army",
+    "c": "ت",
+    "gen": 2,
+    "cat": "towed"
+   },
+   {
+    "m": "L118",
+    "n": 40,
+    "orig": "GBR",
+    "s": "wiki_army",
+    "c": "ت",
+    "note": "40 bought from United Kingdom during 1983-84.",
+    "gen": 2,
+    "cat": "towed"
+   },
+   {
+    "m": "M119",
+    "n": 6,
+    "orig": "USA",
+    "s": "wiki_army",
+    "c": "ت",
+    "note": "6 donated by the United States in 2019.",
+    "gen": 2,
+    "cat": "towed"
+   },
+   {
+    "m": "OTO Melara Mod 56",
+    "n": 7,
+    "orig": "ITA",
+    "s": "wiki_army",
+    "c": "ت",
+    "gen": 2,
+    "cat": "towed"
+   },
+   {
+    "m": "Bofors L/70",
+    "n": 13,
+    "orig": "SWE",
+    "s": "wiki_army",
+    "c": "ت",
+    "gen": 2,
+    "cat": "towed"
+   }
+  ],
+  "air": [
+   {
+    "m": "Northrop F-5 (F-5EM F-5FM)",
+    "n": 23,
+    "orig": "USA",
+    "s": "wiki_air",
+    "c": "ت",
+    "note": "Six F-5Fs provide conversion training. 18 F-5EM and 5 F-5FM in service at Laikipia Air Base.",
+    "gen": 2,
+    "cat": "fighter"
+   },
+   {
+    "m": "Harbin Y-12",
+    "n": 8,
+    "orig": "CHN",
+    "s": "wiki_air",
+    "c": "ت",
+    "gen": 2,
+    "cat": "transport"
+   },
+   {
+    "m": "C-27J Spartan",
+    "n": 3,
+    "orig": "ITA",
+    "s": "wiki_air",
+    "c": "ت",
+    "gen": 2,
+    "cat": "transport"
+   },
+   {
+    "m": "Cessna 208",
+    "n": 4,
+    "orig": "USA",
+    "s": "wiki_air",
+    "c": "ت",
+    "note": "2 aircraft used for reconnaissance",
+    "gen": 2,
+    "cat": "transport"
+   },
+   {
+    "m": "C-145A Skytruck",
+    "n": 3,
+    "orig": "POL",
+    "s": "wiki_air",
+    "c": "ت",
+    "gen": 2,
+    "cat": "transport"
+   },
+   {
+    "m": "Fokker 70",
+    "n": 1,
+    "orig": "NLD",
+    "s": "wiki_air",
+    "c": "ت",
+    "note": "Still in service as of 2026",
+    "gen": 2,
+    "cat": "transport"
+   },
+   {
+    "m": "Bombardier Dash 8",
+    "n": 3,
+    "orig": "CAN",
+    "s": "wiki_air",
+    "c": "ت",
+    "gen": 2,
+    "cat": "transport"
+   },
+   {
+    "m": "Bell UH-1 (UH-1H)",
+    "n": 5,
+    "orig": "USA",
+    "s": "wiki_air",
+    "c": "ت",
+    "note": "1 lost Apr 2024. 1 lost Feb 2025.",
+    "gen": 2,
+    "cat": "heli_util"
+   },
+   {
+    "m": "Bell AH-1 (AH-1F)",
+    "n": 2,
+    "orig": "USA",
+    "s": "wiki_air",
+    "c": "ت",
+    "note": "Donated by Jordan",
+    "gen": 2,
+    "cat": "heli_attack"
+   },
+   {
+    "m": "Mil Mi-17 (Mi-171)",
+    "n": 2,
+    "orig": "RUS",
+    "s": "wiki_air",
+    "c": "ت",
+    "gen": 2,
+    "cat": "heli_util"
+   },
+   {
+    "m": "Harbin Z-9",
+    "n": 6,
+    "orig": "CHN",
+    "s": "wiki_air",
+    "c": "ت",
+    "gen": 2,
+    "cat": "heli_util"
+   },
+   {
+    "m": "SA 330 PumaIAR 330",
+    "n": 13,
+    "orig": "FRA",
+    "s": "wiki_air",
+    "c": "ت",
+    "gen": 4,
+    "cat": "heli_util"
+   },
+   {
+    "m": "MD 500 Defender (530F)",
+    "n": 45,
+    "orig": "USA",
+    "s": "wiki_air",
+    "c": "ت",
+    "note": "Kenyan Army helicopters",
+    "gen": 2,
+    "cat": "heli_attack"
+   },
+   {
+    "m": "Eurocopter AS350",
+    "n": 8,
+    "orig": "FRA",
+    "s": "wiki_air",
+    "c": "ت",
+    "gen": 2,
+    "cat": "heli_util"
+   },
+   {
+    "m": "AgustaWestland AW139",
+    "n": 3,
+    "orig": "ITA",
+    "s": "wiki_air",
+    "c": "ت",
+    "gen": 2,
+    "cat": "heli_util"
+   },
+   {
+    "m": "Short Tucano (Tucano 51)",
+    "n": 11,
+    "orig": "GBR",
+    "s": "wiki_air",
+    "c": "ت",
+    "note": "Licence-built variant of the EMB-312",
+    "gen": 2,
+    "cat": "trainer"
+   },
+   {
+    "m": "Grob G 120 (G 120A & G 120TP)",
+    "n": 4,
+    "orig": "DEU",
+    "s": "wiki_air",
+    "c": "ت",
+    "note": "2 G 120TP’s on order as of late 2023. One G 120A crashed Jun 2025.",
+    "gen": 2,
+    "cat": "trainer"
+   },
+   {
+    "m": "MD 500 Defender",
+    "n": 47,
+    "orig": "USA",
+    "s": "wiki_army",
+    "c": "ت",
+    "note": "South Korea donated 8 refurbished ones in October 2026",
+    "gen": 2,
+    "cat": "heli_attack"
+   },
+   {
+    "m": "MD 530F Cayuse Warrior",
+    "n": 5,
+    "orig": "USA",
+    "s": "wiki_army",
+    "c": "ت",
+    "note": "6 delivered in 2020, one crashed later that year",
+    "gen": 3,
+    "cat": "heli_attack"
+   },
+   {
+    "m": "Z-9",
+    "n": 3,
+    "orig": "CHN",
+    "s": "wiki_army",
+    "c": "ت",
+    "gen": 2,
+    "cat": "heli_attack"
+   },
+   {
+    "m": "RQ-11 Raven",
+    "n": 8,
+    "orig": "USA",
+    "s": "wiki_army",
+    "c": "ت",
+    "gen": 2,
+    "cat": "uav_isr"
+   },
+   {
+    "m": "ScanEagle",
+    "n": 4,
+    "orig": "USA",
+    "s": "wiki_army",
+    "c": "ت",
+    "gen": 2,
+    "cat": "uav_isr"
+   }
+  ],
   "ad": [],
   "msl": [],
-  "navy": []
+  "navy": [],
+  "grp": {
+   "tank": {
+    "n": 188,
+    "s": "iiss_eq",
+    "c": "ت",
+    "top": [
+     [
+      "T-72AV",
+      110,
+      3,
+      "SUN"
+     ],
+     [
+      "Vickers Mk.3",
+      78,
+      2,
+      "GBR"
+     ]
+    ],
+    "gen": 2.6
+   },
+   "afv": {
+    "n": 398,
+    "s": "wiki_army",
+    "c": "ت",
+    "top": [
+     [
+      "PUMA M26-15",
+      150,
+      4,
+      "ZAF"
+     ],
+     [
+      "Katmerciler Hızır",
+      118,
+      2,
+      "TUR"
+     ],
+     [
+      "Panhard AML-60/90",
+      72,
+      2,
+      "FRA"
+     ]
+    ],
+    "gen": 2.8
+   },
+   "art": {
+    "n": 96,
+    "s": "wiki_army",
+    "c": "ت",
+    "top": [
+     [
+      "L118",
+      40,
+      2,
+      "GBR"
+     ],
+     [
+      "Nora B-52",
+      18,
+      2,
+      "SRB"
+     ],
+     [
+      "Bofors L/70",
+      13,
+      2,
+      "SWE"
+     ]
+    ],
+    "gen": 2.0
+   },
+   "jet": {
+    "n": 23,
+    "s": "iiss_eq",
+    "c": "ت",
+    "top": [
+     [
+      "Northrop F-5 (F-5EM F-5FM)",
+      23,
+      2,
+      "USA"
+     ]
+    ],
+    "gen": 2.0
+   },
+   "heli": {
+    "n": 139,
+    "s": "wiki_air",
+    "c": "ت",
+    "top": [
+     [
+      "MD 500 Defender",
+      47,
+      2,
+      "USA"
+     ],
+     [
+      "MD 500 Defender (530F)",
+      45,
+      2,
+      "USA"
+     ],
+     [
+      "SA 330 PumaIAR 330",
+      13,
+      4,
+      "FRA"
+     ]
+    ],
+    "gen": 2.2
+   },
+   "uav": {
+    "n": 12,
+    "s": "wiki_army",
+    "c": "ت",
+    "top": [
+     [
+      "RQ-11 Raven",
+      8,
+      2,
+      "USA"
+     ],
+     [
+      "ScanEagle",
+      4,
+      2,
+      "USA"
+     ]
+    ],
+    "gen": 2.0
+   }
+  }
  },
  "ind": null,
  "pol": {

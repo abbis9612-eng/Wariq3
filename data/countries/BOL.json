@@ -5,6 +5,24 @@
  "tier": "C",
  "asOf": "2026-11",
  "src": {
+  "wiki_air": {
+   "t": "Wikipedia: Bolivian Air Force",
+   "u": "https://en.wikipedia.org/wiki/Bolivian_Air_Force?oldid=1342929011",
+   "y": 2026,
+   "note": "نسخة الصفحة بتاريخ السحب؛ أرقام ويكيبيديا تنراجع ويا مصادر ثانية"
+  },
+  "wiki_army": {
+   "t": "Wikipedia: Bolivian Army",
+   "u": "https://en.wikipedia.org/wiki/Bolivian_Army?oldid=1378524945",
+   "y": 2026,
+   "note": "نسخة الصفحة بتاريخ السحب؛ أرقام ويكيبيديا تنراجع ويا مصادر ثانية"
+  },
+  "wiki_navy": {
+   "t": "Wikipedia: Bolivian Navy",
+   "u": "https://en.wikipedia.org/wiki/Bolivian_Navy?oldid=1381696383",
+   "y": 2026,
+   "note": "نسخة الصفحة بتاريخ السحب؛ أرقام ويكيبيديا تنراجع ويا مصادر ثانية"
+  },
   "iiss_eq": {
    "t": "Wikipedia: List of countries by level of military equipment (من IISS Military Balance ومصادر ثانية)",
    "u": "https://en.wikipedia.org/wiki/List_of_countries_by_level_of_military_equipment?oldid=1384804191",
@@ -49,6 +67,11 @@
   "tierA": {
    "t": "تقدير المصمم (تشرين الثاني 2026) لصناعة السلاح والاستقرار: SIPRI Arms Transfers Database (أكبر المصدّرين 2020–24)، SIPRI Top 100 Arms-Producing Companies، Fragile States Index 2025، أخبار 2026",
    "u": "https://www.sipri.org/databases/armstransfers",
+   "y": 2026
+  },
+  "tpl": {
+   "t": "قالب منطقة (la): موديلات شائعة ونسب تقريبية من الدبابات (مدرعات ×2.5، مدفعية ×0.9، مروحيات ×0.25) — تقدير المصمم",
+   "u": "docs/features/world-plan.md",
    "y": 2026
   }
  },
@@ -205,10 +228,332 @@
    }
   },
   "land": [],
-  "air": [],
+  "air": [
+   {
+    "m": "Learjet 35",
+    "n": 2,
+    "orig": "USA",
+    "s": "wiki_air",
+    "c": "ت",
+    "gen": 2,
+    "cat": "isr"
+   },
+   {
+    "m": "C-130 Hercules (C-130B/H)",
+    "n": 3,
+    "orig": "USA",
+    "s": "wiki_air",
+    "c": "ت",
+    "note": "One C-130H crashed on 27 February 2026",
+    "gen": 2,
+    "cat": "transport"
+   },
+   {
+    "m": "Cessna 402",
+    "n": 1,
+    "orig": "USA",
+    "s": "wiki_air",
+    "c": "ت",
+    "gen": 2,
+    "cat": "transport"
+   },
+   {
+    "m": "Fokker F27 Friendship",
+    "n": 1,
+    "orig": "NLD",
+    "s": "wiki_air",
+    "c": "ت",
+    "gen": 2,
+    "cat": "transport"
+   },
+   {
+    "m": "British Aerospace Jetstream (Jetstream 31)",
+    "n": 2,
+    "orig": "GBR",
+    "s": "wiki_air",
+    "c": "ت",
+    "gen": 2,
+    "cat": "transport"
+   },
+   {
+    "m": "Beechcraft King Air (90/200/250/350)",
+    "n": 5,
+    "orig": "USA",
+    "s": "wiki_air",
+    "c": "ت",
+    "gen": 2,
+    "cat": "transport"
+   },
+   {
+    "m": "Falcon 900",
+    "n": 1,
+    "orig": "FRA",
+    "s": "wiki_air",
+    "c": "ت",
+    "gen": 2,
+    "cat": "transport"
+   },
+   {
+    "m": "Falcon 50",
+    "n": 1,
+    "orig": "FRA",
+    "s": "wiki_air",
+    "c": "ت",
+    "gen": 2,
+    "cat": "transport"
+   },
+   {
+    "m": "Eurocopter AS350 (H125M/AS350)",
+    "n": 2,
+    "orig": "FRA",
+    "s": "wiki_air",
+    "c": "ت",
+    "note": "Called \"Écureuil\"/\"Squirrel\"",
+    "gen": 2,
+    "cat": "heli_util"
+   },
+   {
+    "m": "Eurocopter EC145 (H145)",
+    "n": 3,
+    "orig": "DEU",
+    "s": "wiki_air",
+    "c": "ت",
+    "gen": 2,
+    "cat": "heli_util"
+   },
+   {
+    "m": "Eurocopter AS332 (H215M/AS332)",
+    "n": 6,
+    "orig": "FRA",
+    "s": "wiki_air",
+    "c": "ت",
+    "note": "Called \"Super Puma\"",
+    "gen": 2,
+    "cat": "heli_util"
+   },
+   {
+    "m": "Robinson R66",
+    "n": 1,
+    "orig": "USA",
+    "s": "wiki_air",
+    "c": "ت",
+    "gen": 2,
+    "cat": "heli_util"
+   },
+   {
+    "m": "Aérospatiale SA316 (SE3160)",
+    "n": 1,
+    "orig": "FRA",
+    "s": "wiki_air",
+    "c": "ت",
+    "gen": 2,
+    "cat": "heli_util"
+   },
+   {
+    "m": "Bell UH-1 (UH-1H)",
+    "n": 11,
+    "orig": "USA",
+    "s": "wiki_air",
+    "c": "ت",
+    "gen": 2,
+    "cat": "heli_util"
+   },
+   {
+    "m": "Karakoram K-8",
+    "n": 4,
+    "orig": "CHN",
+    "s": "wiki_air",
+    "c": "ت",
+    "gen": 2,
+    "cat": "trainer"
+   },
+   {
+    "m": "Pilatus PC-7",
+    "n": 2,
+    "orig": "CHE",
+    "s": "wiki_air",
+    "c": "ت",
+    "gen": 2,
+    "cat": "trainer"
+   },
+   {
+    "m": "Robinson R44",
+    "n": 6,
+    "orig": "USA",
+    "s": "wiki_air",
+    "c": "ت",
+    "gen": 2,
+    "cat": "heli_util"
+   },
+   {
+    "m": "Zlín Z 42 (Z 242L)",
+    "n": 8,
+    "orig": "CZE",
+    "s": "wiki_air",
+    "c": "ت",
+    "gen": 2,
+    "cat": "trainer"
+   },
+   {
+    "m": "RemoEye-006",
+    "n": 2,
+    "orig": "KOR",
+    "s": "wiki_air",
+    "c": "ت",
+    "gen": 2,
+    "cat": "uav_isr"
+   }
+  ],
   "ad": [],
   "msl": [],
-  "navy": []
+  "navy": [
+   {
+    "m": "Cessna 340",
+    "n": 1,
+    "orig": "USA",
+    "s": "wiki_navy",
+    "c": "ت",
+    "gen": 2,
+    "cat": "sub_nuc"
+   }
+  ],
+  "grp": {
+   "tank": {
+    "n": 54,
+    "s": "iiss_eq",
+    "c": "ت",
+    "top": [
+     [
+      "AMX-13",
+      null,
+      null,
+      null
+     ],
+     [
+      "M41",
+      null,
+      null,
+      null
+     ],
+     [
+      "T-55",
+      null,
+      null,
+      null
+     ]
+    ],
+    "gen": 1.6,
+    "tpl": "la"
+   },
+   "afv": {
+    "n": 135,
+    "s": "tpl",
+    "c": "ق",
+    "top": [
+     [
+      "M113",
+      null,
+      null,
+      null
+     ],
+     [
+      "EE-11 Urutu",
+      null,
+      null,
+      null
+     ],
+     [
+      "BTR-80",
+      null,
+      null,
+      null
+     ]
+    ],
+    "gen": 1.8,
+    "tpl": "la"
+   },
+   "art": {
+    "n": 49,
+    "s": "tpl",
+    "c": "ق",
+    "top": [
+     [
+      "M101",
+      null,
+      null,
+      null
+     ],
+     [
+      "M114",
+      null,
+      null,
+      null
+     ],
+     [
+      "OTO Melara Mod 56",
+      null,
+      null,
+      null
+     ]
+    ],
+    "gen": 1.8,
+    "tpl": "la"
+   },
+   "heli": {
+    "n": 30,
+    "s": "wiki_air",
+    "c": "ت",
+    "top": [
+     [
+      "Bell UH-1 (UH-1H)",
+      11,
+      2,
+      "USA"
+     ],
+     [
+      "Eurocopter AS332 (H215M/AS332)",
+      6,
+      2,
+      "FRA"
+     ],
+     [
+      "Robinson R44",
+      6,
+      2,
+      "USA"
+     ]
+    ],
+    "gen": 2.0
+   },
+   "uav": {
+    "n": 2,
+    "s": "wiki_air",
+    "c": "ت",
+    "top": [
+     [
+      "RemoEye-006",
+      2,
+      2,
+      "KOR"
+     ]
+    ],
+    "gen": 2.0
+   },
+   "navy": {
+    "n": 1,
+    "s": "wiki_navy",
+    "c": "ت",
+    "top": [
+     [
+      "Cessna 340",
+      1,
+      2,
+      "USA"
+     ]
+    ],
+    "gen": 2.0
+   }
+  }
  },
  "ind": null,
  "pol": {

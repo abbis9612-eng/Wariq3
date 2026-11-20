@@ -5,6 +5,24 @@
  "tier": "C",
  "asOf": "2026-11",
  "src": {
+  "wiki_air": {
+   "t": "Wikipedia: Albanian Air Force",
+   "u": "https://en.wikipedia.org/wiki/Albanian_Air_Force?oldid=1386098569",
+   "y": 2026,
+   "note": "نسخة الصفحة بتاريخ السحب؛ أرقام ويكيبيديا تنراجع ويا مصادر ثانية"
+  },
+  "wiki_army": {
+   "t": "Wikipedia: List of equipment of the Albanian Armed Forces",
+   "u": "https://en.wikipedia.org/wiki/List_of_equipment_of_the_Albanian_Armed_Forces?oldid=1384499212",
+   "y": 2026,
+   "note": "نسخة الصفحة بتاريخ السحب؛ أرقام ويكيبيديا تنراجع ويا مصادر ثانية"
+  },
+  "wiki_navy": {
+   "t": "Wikipedia: Albanian Naval Force",
+   "u": "https://en.wikipedia.org/wiki/Albanian_Naval_Force?oldid=1386101427",
+   "y": 2026,
+   "note": "نسخة الصفحة بتاريخ السحب؛ أرقام ويكيبيديا تنراجع ويا مصادر ثانية"
+  },
   "iiss_eq": {
    "t": "Wikipedia: List of countries by level of military equipment (من IISS Military Balance ومصادر ثانية)",
    "u": "https://en.wikipedia.org/wiki/List_of_countries_by_level_of_military_equipment?oldid=1384804191",
@@ -49,6 +67,11 @@
   "tierA": {
    "t": "تقدير المصمم (تشرين الثاني 2026) لصناعة السلاح والاستقرار: SIPRI Arms Transfers Database (أكبر المصدّرين 2020–24)، SIPRI Top 100 Arms-Producing Companies، Fragile States Index 2025، أخبار 2026",
    "u": "https://www.sipri.org/databases/armstransfers",
+   "y": 2026
+  },
+  "tpl": {
+   "t": "قالب منطقة (eu): موديلات شائعة ونسب تقريبية من الدبابات (مدرعات ×2.5، مدفعية ×0.9، مروحيات ×0.25) — تقدير المصمم",
+   "u": "docs/features/world-plan.md",
    "y": 2026
   }
  },
@@ -220,10 +243,340 @@
    }
   },
   "land": [],
-  "air": [],
+  "air": [
+   {
+    "m": "Eurocopter AS532 Cougar",
+    "n": 4,
+    "orig": "FRA",
+    "s": "wiki_air",
+    "c": "ت",
+    "note": "On 17 December 2009, the Ministry of Defense signed a contract worth 78,633,288 Euros with Eurocopter for the purchase of 5 Eurocopter AS532",
+    "gen": 2,
+    "cat": "heli_util"
+   },
+   {
+    "m": "Airbus H145",
+    "n": 2,
+    "orig": "FRA",
+    "s": "wiki_air",
+    "c": "ت",
+    "note": "Initially, the Ministry of Defence decided in 2011 to buy 1 Eurocopter EC145 helicopter VIP variant that will serve as an air transport for ",
+    "gen": 2,
+    "cat": "heli_util"
+   },
+   {
+    "m": "AgustaWestland AW109C",
+    "n": 1,
+    "orig": "ITA",
+    "s": "wiki_air",
+    "c": "ت",
+    "note": "Used for VIP transport.",
+    "gen": 2,
+    "cat": "heli_util"
+   },
+   {
+    "m": "Bell 505 Jet Ranger X",
+    "n": 2,
+    "orig": "USA",
+    "s": "wiki_air",
+    "c": "ت",
+    "note": "Two Bell 505 Jet Ranger X helicopters were observed in Albanian Air Force markings while transiting through Graz, Austria, prior to delivery",
+    "gen": 2,
+    "cat": "heli_util"
+   },
+   {
+    "m": "MBB Bo 105E-4",
+    "n": 4,
+    "orig": "DEU",
+    "s": "wiki_air",
+    "c": "ت",
+    "note": "On 3 April 2006, the final contract for the delivery of 12 Bölkow-Blom MBB BO-105 lightweight twin-engine multi-role helicopters to the Repu",
+    "gen": 2,
+    "cat": "heli_util"
+   },
+   {
+    "m": "Agusta-Bell 205A",
+    "n": 3,
+    "orig": "USA",
+    "s": "wiki_air",
+    "c": "ت",
+    "note": "3 UH-1 received in 2004, with a further 4 ordered for delivery through 2006. And 7 second-hand Agusta Bell-205A1 were donated by Italy in 20",
+    "gen": 2,
+    "cat": "heli_util"
+   },
+   {
+    "m": "Agusta-Bell 206C",
+    "n": 3,
+    "orig": "USA",
+    "s": "wiki_air",
+    "c": "ت",
+    "gen": 2,
+    "cat": "heli_util"
+   },
+   {
+    "m": "RQ-20 Puma",
+    "n": 6,
+    "orig": "USA",
+    "s": "wiki_air",
+    "c": "ت",
+    "note": "In July 2020, Albania expressed interest in buying 6 RQ-20B Puma Block AE. The training and preparation began in early September 2021 and th",
+    "gen": 4,
+    "cat": "uav_isr"
+   }
+  ],
   "ad": [],
   "msl": [],
-  "navy": []
+  "navy": [
+   {
+    "m": "Cassiopea-class patrol vessel",
+    "n": 1,
+    "orig": "ALB",
+    "s": "wiki_navy",
+    "c": "ت",
+    "cat": "corvette",
+    "gen": 2,
+    "note": "عدد الصفوف بالقائمة"
+   },
+   {
+    "m": "Iliria-class",
+    "n": 1,
+    "orig": "ALB",
+    "s": "wiki_navy",
+    "c": "ت",
+    "cat": "patrol",
+    "gen": 2,
+    "note": "عدد الصفوف بالقائمة"
+   },
+   {
+    "m": "Cavallari-class patrol boat",
+    "n": 1,
+    "orig": "ALB",
+    "s": "wiki_navy",
+    "c": "ت",
+    "cat": "patrol",
+    "gen": 2,
+    "note": "عدد الصفوف بالقائمة"
+   },
+   {
+    "m": "Type 227",
+    "n": 1,
+    "orig": "ALB",
+    "s": "wiki_navy",
+    "c": "ت",
+    "cat": "patrol",
+    "gen": 2,
+    "note": "عدد الصفوف بالقائمة"
+   },
+   {
+    "m": "2000-class [it; fr]",
+    "n": 1,
+    "orig": "ALB",
+    "s": "wiki_navy",
+    "c": "ت",
+    "cat": "patrol",
+    "gen": 2,
+    "note": "عدد الصفوف بالقائمة"
+   },
+   {
+    "m": "5000-class",
+    "n": 1,
+    "orig": "ALB",
+    "s": "wiki_navy",
+    "c": "ت",
+    "cat": "patrol",
+    "gen": 2,
+    "note": "عدد الصفوف بالقائمة"
+   },
+   {
+    "m": "Sea Spectre [fr]",
+    "n": 1,
+    "orig": "ALB",
+    "s": "wiki_navy",
+    "c": "ت",
+    "cat": "patrol",
+    "gen": 2,
+    "note": "عدد الصفوف بالقائمة"
+   },
+   {
+    "m": "PCC-class",
+    "n": 1,
+    "orig": "ALB",
+    "s": "wiki_navy",
+    "c": "ت",
+    "cat": "patrol",
+    "gen": 2,
+    "note": "عدد الصفوف بالقائمة"
+   },
+   {
+    "m": "Rigid Inflatable Boat",
+    "n": 1,
+    "orig": "ALB",
+    "s": "wiki_navy",
+    "c": "ت",
+    "cat": "patrol",
+    "gen": 2,
+    "note": "عدد الصفوف بالقائمة"
+   },
+   {
+    "m": "Archangel Patrol Boat",
+    "n": 1,
+    "orig": "ALB",
+    "s": "wiki_navy",
+    "c": "ت",
+    "cat": "patrol",
+    "gen": 2,
+    "note": "عدد الصفوف بالقائمة"
+   }
+  ],
+  "grp": {
+   "tank": {
+    "n": 40,
+    "s": "iiss_eq",
+    "c": "ت",
+    "top": [
+     [
+      "T-72",
+      null,
+      null,
+      null
+     ],
+     [
+      "Leopard 1",
+      null,
+      null,
+      null
+     ],
+     [
+      "Leopard 2A4",
+      null,
+      null,
+      null
+     ]
+    ],
+    "gen": 2.6,
+    "tpl": "eu"
+   },
+   "afv": {
+    "n": 100,
+    "s": "tpl",
+    "c": "ق",
+    "top": [
+     [
+      "BMP-2",
+      null,
+      null,
+      null
+     ],
+     [
+      "M113",
+      null,
+      null,
+      null
+     ],
+     [
+      "Patria AMV",
+      null,
+      null,
+      null
+     ]
+    ],
+    "gen": 2.4,
+    "tpl": "eu"
+   },
+   "art": {
+    "n": 36,
+    "s": "tpl",
+    "c": "ق",
+    "top": [
+     [
+      "2S1",
+      null,
+      null,
+      null
+     ],
+     [
+      "M109",
+      null,
+      null,
+      null
+     ],
+     [
+      "D-30",
+      null,
+      null,
+      null
+     ]
+    ],
+    "gen": 2.4,
+    "tpl": "eu"
+   },
+   "heli": {
+    "n": 19,
+    "s": "wiki_air",
+    "c": "ت",
+    "top": [
+     [
+      "Eurocopter AS532 Cougar",
+      4,
+      2,
+      "FRA"
+     ],
+     [
+      "MBB Bo 105E-4",
+      4,
+      2,
+      "DEU"
+     ],
+     [
+      "Agusta-Bell 205A",
+      3,
+      2,
+      "USA"
+     ]
+    ],
+    "gen": 2.0
+   },
+   "uav": {
+    "n": 6,
+    "s": "wiki_air",
+    "c": "ت",
+    "top": [
+     [
+      "RQ-20 Puma",
+      6,
+      4,
+      "USA"
+     ]
+    ],
+    "gen": 4.0
+   },
+   "navy": {
+    "n": 10,
+    "s": "wiki_navy",
+    "c": "ت",
+    "top": [
+     [
+      "Cassiopea-class patrol vessel",
+      1,
+      2,
+      "ALB"
+     ],
+     [
+      "Iliria-class",
+      1,
+      2,
+      "ALB"
+     ],
+     [
+      "Cavallari-class patrol boat",
+      1,
+      2,
+      "ALB"
+     ]
+    ],
+    "gen": 2.0
+   }
+  }
  },
  "ind": null,
  "pol": {

@@ -5,6 +5,24 @@
  "tier": "B",
  "asOf": "2026-11",
  "src": {
+  "wiki_air": {
+   "t": "Wikipedia: Bangladesh Air Force",
+   "u": "https://en.wikipedia.org/wiki/Bangladesh_Air_Force?oldid=1385611316",
+   "y": 2026,
+   "note": "نسخة الصفحة بتاريخ السحب؛ أرقام ويكيبيديا تنراجع ويا مصادر ثانية"
+  },
+  "wiki_army": {
+   "t": "Wikipedia: List of equipment of the Bangladesh Army",
+   "u": "https://en.wikipedia.org/wiki/List_of_equipment_of_the_Bangladesh_Army?oldid=1386632134",
+   "y": 2026,
+   "note": "نسخة الصفحة بتاريخ السحب؛ أرقام ويكيبيديا تنراجع ويا مصادر ثانية"
+  },
+  "wiki_navy": {
+   "t": "Wikipedia: List of active Bangladesh Navy ships",
+   "u": "https://en.wikipedia.org/wiki/List_of_active_Bangladesh_Navy_ships?oldid=1385815212",
+   "y": 2026,
+   "note": "نسخة الصفحة بتاريخ السحب؛ أرقام ويكيبيديا تنراجع ويا مصادر ثانية"
+  },
   "iiss_eq": {
    "t": "Wikipedia: List of countries by level of military equipment (من IISS Military Balance ومصادر ثانية)",
    "u": "https://en.wikipedia.org/wiki/List_of_countries_by_level_of_military_equipment?oldid=1384804191",
@@ -49,6 +67,11 @@
   "tierA": {
    "t": "تقدير المصمم (تشرين الثاني 2026) لصناعة السلاح والاستقرار: SIPRI Arms Transfers Database (أكبر المصدّرين 2020–24)، SIPRI Top 100 Arms-Producing Companies، Fragile States Index 2025، أخبار 2026",
    "u": "https://www.sipri.org/databases/armstransfers",
+   "y": 2026
+  },
+  "tpl": {
+   "t": "قالب منطقة (as): موديلات شائعة ونسب تقريبية من الدبابات (مدرعات ×2.5، مدفعية ×0.9، مروحيات ×0.25) — تقدير المصمم",
+   "u": "docs/features/world-plan.md",
    "y": 2026
   }
  },
@@ -219,11 +242,790 @@
     "c": "ت"
    }
   },
-  "land": [],
-  "air": [],
-  "ad": [],
+  "land": [
+   {
+    "m": "T-59 G (Durjoy)",
+    "n": 174,
+    "orig": "BGD",
+    "s": "wiki_army",
+    "c": "ت",
+    "note": "174 Type 59 tanks were upgraded to T-59 G (Durjoy) with kits from China in 2014–2019.",
+    "gen": 2,
+    "cat": "tank"
+   },
+   {
+    "m": "T-69 II G",
+    "n": 58,
+    "orig": "CHN",
+    "s": "wiki_army",
+    "c": "ت",
+    "note": "58 T-69 IIM tanks upgraded to T-69 II G version with kits from China, first appeared in 2009.",
+    "gen": 2,
+    "cat": "tank"
+   },
+   {
+    "m": "MBT-2000",
+    "n": 44,
+    "orig": "CHN",
+    "s": "wiki_army",
+    "c": "ت",
+    "gen": 2,
+    "cat": "tank"
+   },
+   {
+    "m": "VT-5",
+    "n": 44,
+    "orig": "CHN",
+    "s": "wiki_army",
+    "c": "ت",
+    "gen": 2,
+    "cat": "tank"
+   },
+   {
+    "m": "BTR 80",
+    "n": 645,
+    "orig": "SUN",
+    "s": "wiki_army",
+    "c": "ت",
+    "gen": 2,
+    "cat": "apc"
+   },
+   {
+    "m": "MaxxPro",
+    "n": 81,
+    "orig": "USA",
+    "s": "wiki_army",
+    "c": "ت",
+    "gen": 2,
+    "cat": "mrap"
+   },
+   {
+    "m": "TATA MRAP",
+    "n": 11,
+    "orig": "IND",
+    "s": "wiki_army",
+    "c": "ت",
+    "gen": 2,
+    "cat": "mrap"
+   },
+   {
+    "m": "Otokar Cobra II",
+    "n": 152,
+    "orig": "TUR",
+    "s": "wiki_army",
+    "c": "ت",
+    "gen": 2,
+    "cat": "mrap"
+   },
+   {
+    "m": "Otokar Cobra",
+    "n": 36,
+    "orig": "TUR",
+    "s": "wiki_army",
+    "c": "ت",
+    "gen": 2,
+    "cat": "apc"
+   },
+   {
+    "m": "BOV M11",
+    "n": 8,
+    "orig": "SRB",
+    "s": "wiki_army",
+    "c": "ت",
+    "gen": 2,
+    "cat": "apc"
+   },
+   {
+    "m": "Type 85 AFV",
+    "n": 50,
+    "orig": "CHN",
+    "s": "wiki_army",
+    "c": "ت",
+    "gen": 2,
+    "cat": "apc"
+   },
+   {
+    "m": "WS-22",
+    "n": 49,
+    "orig": "CHN",
+    "s": "wiki_army",
+    "c": "ت",
+    "gen": 2,
+    "cat": "mlrs"
+   },
+   {
+    "m": "TRG-300 Tiger",
+    "n": 18,
+    "orig": "TUR",
+    "s": "wiki_army",
+    "c": "ت",
+    "gen": 2,
+    "cat": "mlrs"
+   },
+   {
+    "m": "TRG-230",
+    "n": 18,
+    "orig": "TUR",
+    "s": "wiki_army",
+    "c": "ت",
+    "gen": 2,
+    "cat": "mlrs"
+   },
+   {
+    "m": "Nora B-52",
+    "n": 18,
+    "orig": "SRB",
+    "s": "wiki_army",
+    "c": "ت",
+    "note": "Serbia reported that the 6 Nora B-52 exported in 2013 were the K1 variant.",
+    "gen": 2,
+    "cat": "spg"
+   },
+   {
+    "m": "Mod 56",
+    "n": 85,
+    "orig": "ITA",
+    "s": "wiki_army",
+    "c": "ت",
+    "gen": 2,
+    "cat": "towed"
+   },
+   {
+    "m": "M-56 Howitzer",
+    "n": 56,
+    "orig": "YUG",
+    "s": "wiki_army",
+    "c": "ت",
+    "note": "M56A1 variant.",
+    "gen": 2,
+    "cat": "towed"
+   },
+   {
+    "m": "Type 59-1",
+    "n": 62,
+    "orig": "CHN",
+    "s": "wiki_army",
+    "c": "ت",
+    "note": "Chinese version of Soviet M-46 gun.",
+    "gen": 1,
+    "cat": "towed"
+   },
+   {
+    "m": "Type 54",
+    "n": 57,
+    "orig": "CHN",
+    "s": "wiki_army",
+    "c": "ت",
+    "gen": 2,
+    "cat": "towed"
+   },
+   {
+    "m": "Type 96",
+    "n": 54,
+    "orig": "CHN",
+    "s": "wiki_army",
+    "c": "ت",
+    "note": "Chinese version of Soviet D-30 howitzer.",
+    "gen": 3,
+    "cat": "towed"
+   },
+   {
+    "m": "MKE Boran howitzer",
+    "n": 18,
+    "orig": "TUR",
+    "s": "wiki_army",
+    "c": "ت",
+    "note": "Turkish modernized version of L118 light gun.",
+    "gen": 2,
+    "cat": "towed"
+   },
+   {
+    "m": "M101",
+    "n": 50,
+    "orig": "USA",
+    "s": "wiki_army",
+    "c": "ت",
+    "note": "M101A1 variant. 50 delivered in 1982. Status uncertain.",
+    "gen": 2,
+    "cat": "towed"
+   },
+   {
+    "m": "Type 83",
+    "n": 20,
+    "orig": "CHN",
+    "s": "wiki_army",
+    "c": "ت",
+    "note": "Developed from Chinese Type 54 howitzer.",
+    "gen": 2,
+    "cat": "towed"
+   },
+   {
+    "m": "Metis-M1",
+    "n": 1200,
+    "orig": "RUS",
+    "s": "wiki_army",
+    "c": "ت",
+    "gen": 3,
+    "cat": "atgm"
+   },
+   {
+    "m": "HJ-8/Baktar-Shikan",
+    "n": 283,
+    "orig": "CHN",
+    "s": "wiki_army",
+    "c": "ت",
+    "note": "114 delivered by China in 2001, 169 more delivered by Pakistan in 2004 according to the Stockholm International Peace Research Institute.",
+    "gen": 2,
+    "cat": "atgm"
+   }
+  ],
+  "air": [
+   {
+    "m": "Chengdu F-7 (F/FT-7A/B/BG/BG1)",
+    "n": 32,
+    "orig": "CHN",
+    "s": "wiki_air",
+    "c": "ت",
+    "gen": 1,
+    "cat": "fighter"
+   },
+   {
+    "m": "MiG-29 (B/BM/UB/UBM)",
+    "n": 8,
+    "orig": "RUS",
+    "s": "wiki_air",
+    "c": "ت",
+    "gen": 3,
+    "cat": "fighter"
+   },
+   {
+    "m": "C-130J Super Hercules",
+    "n": 5,
+    "orig": "USA",
+    "s": "wiki_air",
+    "c": "ت",
+    "gen": 2,
+    "cat": "transport"
+   },
+   {
+    "m": "C-130 Hercules (C-130B)",
+    "n": 3,
+    "orig": "USA",
+    "s": "wiki_air",
+    "c": "ت",
+    "gen": 2,
+    "cat": "transport"
+   },
+   {
+    "m": "Antonov An-32",
+    "n": 3,
+    "orig": "UKR",
+    "s": "wiki_air",
+    "c": "ت",
+    "note": "Sometimes used as Bomber Aircraft.",
+    "gen": 2,
+    "cat": "bomber"
+   },
+   {
+    "m": "L-410 Turbolet",
+    "n": 3,
+    "orig": "CZE",
+    "s": "wiki_air",
+    "c": "ت",
+    "gen": 2,
+    "cat": "trainer"
+   },
+   {
+    "m": "Mil Mi-17 (Mi-17/171,Mi-171Sh)",
+    "n": 35,
+    "orig": "RUS",
+    "s": "wiki_air",
+    "c": "ت",
+    "note": "Sometimes the Sh variants are used to provide CAS with loadouts typically being forward mounted gun, back door gun, door guns, gun pods and ",
+    "gen": 2,
+    "cat": "heli_util"
+   },
+   {
+    "m": "Bell 212",
+    "n": 14,
+    "orig": "USA",
+    "s": "wiki_air",
+    "c": "ت",
+    "note": "Used to do CAS before with door guns and 2x gunpods mount under it's 2 pylons. Unsure about how many are active as of now.",
+    "gen": 2,
+    "cat": "heli_util"
+   },
+   {
+    "m": "AgustaWestland AW139",
+    "n": 4,
+    "orig": "ITA",
+    "s": "wiki_air",
+    "c": "ت",
+    "gen": 2,
+    "cat": "heli_util"
+   },
+   {
+    "m": "Grob G 115 (G-115BD)",
+    "n": 2,
+    "orig": "DEU",
+    "s": "wiki_air",
+    "c": "ت",
+    "gen": 2,
+    "cat": "trainer"
+   },
+   {
+    "m": "Grob G 120TP",
+    "n": 23,
+    "orig": "DEU",
+    "s": "wiki_air",
+    "c": "ت",
+    "gen": 2,
+    "cat": "trainer"
+   },
+   {
+    "m": "Nanchang PT-6",
+    "n": 9,
+    "orig": "CHN",
+    "s": "wiki_air",
+    "c": "ت",
+    "note": "Unknown number of active airframes actually. Could be more or less.",
+    "gen": 2,
+    "cat": "trainer"
+   },
+   {
+    "m": "Hongdu JL-8 (K-8W)",
+    "n": 14,
+    "orig": "CHN",
+    "s": "wiki_air",
+    "c": "ت",
+    "note": "Is used for CAS sometimes.",
+    "gen": 2,
+    "cat": "attack"
+   },
+   {
+    "m": "Yakovlev Yak-130",
+    "n": 12,
+    "orig": "RUS",
+    "s": "wiki_air",
+    "c": "ت",
+    "note": "Used as dedicated Attack Aircraft.",
+    "gen": 2,
+    "cat": "attack"
+   },
+   {
+    "m": "Bell 206 (206L)",
+    "n": 6,
+    "orig": "USA",
+    "s": "wiki_air",
+    "c": "ت",
+    "gen": 2,
+    "cat": "heli_util"
+   },
+   {
+    "m": "AgustaWestland AW119",
+    "n": 2,
+    "orig": "ITA",
+    "s": "wiki_air",
+    "c": "ت",
+    "gen": 2,
+    "cat": "heli_util"
+   },
+   {
+    "m": "Selex ES Falco",
+    "n": 4,
+    "orig": "ITA",
+    "s": "wiki_air",
+    "c": "ت",
+    "note": "Used for United Nations peacekeeping operations whilst abroad.",
+    "gen": 2,
+    "cat": "uav_isr"
+   },
+   {
+    "m": "DA40NG",
+    "n": 4,
+    "orig": "AUT",
+    "s": "wiki_army",
+    "c": "ت",
+    "note": "Two more on order.",
+    "gen": 2,
+    "cat": "trainer"
+   },
+   {
+    "m": "Airbus C-295W",
+    "n": 2,
+    "orig": "ESP",
+    "s": "wiki_army",
+    "c": "ت",
+    "gen": 2,
+    "cat": "transport"
+   },
+   {
+    "m": "Cessna 208B Grand Caravan",
+    "n": 1,
+    "orig": "USA",
+    "s": "wiki_army",
+    "c": "ت",
+    "gen": 2,
+    "cat": "transport"
+   },
+   {
+    "m": "Mi-171Sh",
+    "n": 5,
+    "orig": "RUS",
+    "s": "wiki_army",
+    "c": "ت",
+    "gen": 2,
+    "cat": "heli_util"
+   },
+   {
+    "m": "Eurocopter AS365 Dauphin",
+    "n": 2,
+    "orig": "FRA",
+    "s": "wiki_army",
+    "c": "ت",
+    "note": "AS365 N3+ variant",
+    "gen": 2,
+    "cat": "heli_util"
+   },
+   {
+    "m": "Bell 407 GXi",
+    "n": 2,
+    "orig": "USA",
+    "s": "wiki_army",
+    "c": "ت",
+    "note": "5 on order",
+    "gen": 2,
+    "cat": "heli_util"
+   },
+   {
+    "m": "Bell 206",
+    "n": 1,
+    "orig": "USA",
+    "s": "wiki_army",
+    "c": "ت",
+    "gen": 2,
+    "cat": "heli_util"
+   },
+   {
+    "m": "Bramor C4EYE",
+    "n": 36,
+    "orig": "SVN",
+    "s": "wiki_army",
+    "c": "ت",
+    "note": "Procured in 2017.",
+    "gen": 2,
+    "cat": "uav_isr"
+   },
+   {
+    "m": "Bayraktar TB2",
+    "n": 6,
+    "orig": "TUR",
+    "s": "wiki_army",
+    "c": "ت",
+    "gen": 4,
+    "cat": "uav_strike"
+   }
+  ],
+  "ad": [
+   {
+    "m": "FM-90",
+    "n": 6,
+    "orig": "CHN",
+    "s": "wiki_army",
+    "c": "ت",
+    "note": "6 SAM systems with 18-36 launcher vehicles, each with 4 missile launch tubes.",
+    "gen": 2,
+    "cat": "short"
+   },
+   {
+    "m": "Type 65",
+    "n": 132,
+    "orig": "CHN",
+    "s": "wiki_army",
+    "c": "ت",
+    "gen": 2,
+    "cat": "short"
+   },
+   {
+    "m": "Type 74",
+    "n": 132,
+    "orig": "CHN",
+    "s": "wiki_army",
+    "c": "ت",
+    "note": "Has fire-control radar stations.",
+    "gen": 2,
+    "cat": "short"
+   },
+   {
+    "m": "Type 59",
+    "n": 34,
+    "orig": "CHN",
+    "s": "wiki_army",
+    "c": "ت",
+    "gen": 1,
+    "cat": "short"
+   },
+   {
+    "m": "Oerlikon GDF",
+    "n": 4,
+    "orig": "CHE",
+    "s": "wiki_army",
+    "c": "ت",
+    "note": "GDF-009 variant.",
+    "gen": 2,
+    "cat": "short"
+   },
+   {
+    "m": "Type 56",
+    "n": 300,
+    "orig": "CHN",
+    "s": "wiki_army",
+    "c": "ت",
+    "gen": 2,
+    "cat": "short"
+   }
+  ],
   "msl": [],
-  "navy": []
+  "navy": [
+   {
+    "m": "X12 Fast patrol craft",
+    "n": 8,
+    "orig": "BGD",
+    "s": "wiki_navy",
+    "c": "ت",
+    "gen": 2,
+    "cat": "patrol"
+   },
+   {
+    "m": "LCT",
+    "n": 101,
+    "orig": "BGD",
+    "s": "wiki_navy",
+    "c": "ت",
+    "gen": 2,
+    "cat": "amphib"
+   },
+   {
+    "m": "Yuch'in class",
+    "n": 101,
+    "orig": "CHN",
+    "s": "wiki_navy",
+    "c": "ت",
+    "gen": 2,
+    "cat": "amphib"
+   }
+  ],
+  "grp": {
+   "tank": {
+    "n": 320,
+    "s": "iiss_eq",
+    "c": "ت",
+    "top": [
+     [
+      "T-59 G (Durjoy)",
+      174,
+      2,
+      "BGD"
+     ],
+     [
+      "T-69 II G",
+      58,
+      2,
+      "CHN"
+     ],
+     [
+      "MBT-2000",
+      44,
+      2,
+      "CHN"
+     ]
+    ],
+    "gen": 2.0
+   },
+   "afv": {
+    "n": 983,
+    "s": "wiki_army",
+    "c": "ت",
+    "top": [
+     [
+      "BTR 80",
+      645,
+      2,
+      "SUN"
+     ],
+     [
+      "Otokar Cobra II",
+      152,
+      2,
+      "TUR"
+     ],
+     [
+      "MaxxPro",
+      81,
+      2,
+      "USA"
+     ]
+    ],
+    "gen": 2.0
+   },
+   "art": {
+    "n": 505,
+    "s": "wiki_army",
+    "c": "ت",
+    "top": [
+     [
+      "Mod 56",
+      85,
+      2,
+      "ITA"
+     ],
+     [
+      "Type 59-1",
+      62,
+      1,
+      "CHN"
+     ],
+     [
+      "Type 54",
+      57,
+      2,
+      "CHN"
+     ]
+    ],
+    "gen": 2.0
+   },
+   "jet": {
+    "n": 58,
+    "s": "iiss_eq",
+    "c": "ت",
+    "top": [
+     [
+      "Chengdu F-7 (F/FT-7A/B/BG/BG1)",
+      32,
+      1,
+      "CHN"
+     ],
+     [
+      "Hongdu JL-8 (K-8W)",
+      14,
+      2,
+      "CHN"
+     ],
+     [
+      "Yakovlev Yak-130",
+      12,
+      2,
+      "RUS"
+     ]
+    ],
+    "gen": 1.7
+   },
+   "heli": {
+    "n": 71,
+    "s": "wiki_air",
+    "c": "ت",
+    "top": [
+     [
+      "Mil Mi-17 (Mi-17/171,Mi-171Sh)",
+      35,
+      2,
+      "RUS"
+     ],
+     [
+      "Bell 212",
+      14,
+      2,
+      "USA"
+     ],
+     [
+      "Bell 206 (206L)",
+      6,
+      2,
+      "USA"
+     ]
+    ],
+    "gen": 2.0
+   },
+   "uav": {
+    "n": 46,
+    "s": "wiki_air",
+    "c": "ت",
+    "top": [
+     [
+      "Bramor C4EYE",
+      36,
+      2,
+      "SVN"
+     ],
+     [
+      "Bayraktar TB2",
+      6,
+      4,
+      "TUR"
+     ],
+     [
+      "Selex ES Falco",
+      4,
+      2,
+      "ITA"
+     ]
+    ],
+    "gen": 2.3
+   },
+   "ad": {
+    "n": 608,
+    "s": "wiki_army",
+    "c": "ت",
+    "top": [
+     [
+      "Type 56",
+      300,
+      2,
+      "CHN"
+     ],
+     [
+      "Type 65",
+      132,
+      2,
+      "CHN"
+     ],
+     [
+      "Type 74",
+      132,
+      2,
+      "CHN"
+     ]
+    ],
+    "gen": 1.9
+   },
+   "navy": {
+    "n": 16,
+    "s": "iiss_eq",
+    "c": "ت",
+    "top": [
+     [
+      "LCT",
+      101,
+      2,
+      "BGD"
+     ],
+     [
+      "Yuch'in class",
+      101,
+      2,
+      "CHN"
+     ],
+     [
+      "X12 Fast patrol craft",
+      8,
+      2,
+      "BGD"
+     ]
+    ],
+    "gen": 2.0,
+    "note": "مجموع القوائم 210 يختلف عن الإجمالي؛ الإجمالي هو المعتمد"
+   }
+  }
  },
  "ind": null,
  "pol": {

@@ -68,6 +68,11 @@
    "t": "تقدير المصمم (تشرين الثاني 2026) لصناعة السلاح والاستقرار: SIPRI Arms Transfers Database (أكبر المصدّرين 2020–24)، SIPRI Top 100 Arms-Producing Companies، Fragile States Index 2025، أخبار 2026",
    "u": "https://www.sipri.org/databases/armstransfers",
    "y": 2026
+  },
+  "tpl": {
+   "t": "قالب منطقة (me): موديلات شائعة ونسب تقريبية من الدبابات (مدرعات ×2.5، مدفعية ×0.9، مروحيات ×0.25) — تقدير المصمم",
+   "u": "docs/features/world-plan.md",
+   "y": 2026
   }
  },
  "gov": {
@@ -426,35 +431,6 @@
     "note": "With 3 ground stations.",
     "gen": 4,
     "cat": "uav_isr"
-   },
-   {
-    "m": "Dassault Mirage 2000 (2000-5EDA)",
-    "n": 9,
-    "orig": "FRA",
-    "s": "wiki_air",
-    "c": "ت",
-    "note": "9 ordered in 1994.",
-    "gen": 3,
-    "cat": "fighter"
-   },
-   {
-    "m": "Alphajet (Alphajet E)",
-    "n": 6,
-    "orig": "FRA",
-    "s": "wiki_air",
-    "c": "ت",
-    "gen": 2,
-    "cat": "attack"
-   },
-   {
-    "m": "Dassault Mirage 2000 (2000-5DDA)",
-    "n": 3,
-    "orig": "FRA",
-    "s": "wiki_air",
-    "c": "ت",
-    "note": "3 ordered in 1994.",
-    "gen": 3,
-    "cat": "trainer"
    }
   ],
   "ad": [],
@@ -496,7 +472,182 @@
     "gen": 2,
     "cat": "amphib"
    }
-  ]
+  ],
+  "grp": {
+   "tank": {
+    "n": 62,
+    "s": "iiss_eq",
+    "c": "ت",
+    "top": [
+     [
+      "T-62",
+      null,
+      null,
+      null
+     ],
+     [
+      "T-55",
+      null,
+      null,
+      null
+     ],
+     [
+      "M60",
+      null,
+      null,
+      null
+     ]
+    ],
+    "gen": 2,
+    "tpl": "me"
+   },
+   "afv": {
+    "n": 155,
+    "s": "tpl",
+    "c": "ق",
+    "top": [
+     [
+      "BMP-1",
+      null,
+      null,
+      null
+     ],
+     [
+      "M113",
+      null,
+      null,
+      null
+     ],
+     [
+      "BTR-60",
+      null,
+      null,
+      null
+     ]
+    ],
+    "gen": 2,
+    "tpl": "me"
+   },
+   "art": {
+    "n": 56,
+    "s": "tpl",
+    "c": "ق",
+    "top": [
+     [
+      "D-30",
+      null,
+      null,
+      null
+     ],
+     [
+      "M109",
+      null,
+      null,
+      null
+     ],
+     [
+      "BM-21 Grad",
+      null,
+      null,
+      null
+     ]
+    ],
+    "gen": 2,
+    "tpl": "me"
+   },
+   "jet": {
+    "n": 74,
+    "s": "iiss_eq",
+    "c": "ت",
+    "top": [
+     [
+      "F-15 Advanced Eagle (F-15QA)",
+      48,
+      3,
+      "USA"
+     ],
+     [
+      "Dassault Rafale (EQ (F3-R))",
+      30,
+      4,
+      "FRA"
+     ],
+     [
+      "Eurofighter Typhoon (Tranche 3A)",
+      20,
+      4,
+      "DEU"
+     ]
+    ],
+    "gen": 3.3
+   },
+   "heli": {
+    "n": 89,
+    "s": "wiki_air",
+    "c": "ت",
+    "top": [
+     [
+      "AH-64 Apache (AH-64E)",
+      24,
+      4,
+      "USA"
+     ],
+     [
+      "AgustaWestland AW139 (–)",
+      19,
+      2,
+      "ITA"
+     ],
+     [
+      "NHIndustries NH90 (TTH)",
+      15,
+      2,
+      "FRA"
+     ]
+    ],
+    "gen": 2.5
+   },
+   "uav": {
+    "n": 6,
+    "s": "wiki_air",
+    "c": "ت",
+    "top": [
+     [
+      "Baykar Bayraktar TB2 (–)",
+      6,
+      4,
+      "TUR"
+     ]
+    ],
+    "gen": 4.0
+   },
+   "navy": {
+    "n": 86,
+    "s": "wiki_navy",
+    "c": "ت",
+    "top": [
+     [
+      "MRTP 16 class",
+      49,
+      2,
+      "INT"
+     ],
+     [
+      "MRTP 34 class",
+      31,
+      2,
+      "INT"
+     ],
+     [
+      "Al Fulk",
+      3,
+      2,
+      "INT"
+     ]
+    ],
+    "gen": 2.0
+   }
+  }
  },
  "ind": {
   "tech": {

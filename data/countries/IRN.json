@@ -88,6 +88,11 @@
    "t": "تقدير المصمم (تشرين الثاني 2026) لصناعة السلاح والاستقرار: SIPRI Arms Transfers Database (أكبر المصدّرين 2020–24)، SIPRI Top 100 Arms-Producing Companies، Fragile States Index 2025، أخبار 2026",
    "u": "https://www.sipri.org/databases/armstransfers",
    "y": 2026
+  },
+  "tpl": {
+   "t": "قالب منطقة (me): موديلات شائعة ونسب تقريبية من الدبابات (مدرعات ×2.5، مدفعية ×0.9، مروحيات ×0.25) — تقدير المصمم",
+   "u": "docs/features/world-plan.md",
+   "y": 2026
   }
  },
  "gov": {
@@ -355,7 +360,7 @@
   ],
   "navy": [
    {
-    "m": "Midget submarine",
+    "m": "Ghadir class",
     "n": 5,
     "orig": "INT",
     "s": "wiki_navy",
@@ -365,7 +370,7 @@
     "cat": "sub"
    },
    {
-    "m": "Patrol Craft Fast I (+AShM/SAM)",
+    "m": "Kaman class",
     "n": 10,
     "orig": "INT",
     "s": "wiki_navy",
@@ -375,7 +380,17 @@
     "cat": "patrol"
    },
    {
-    "m": "Patrol boat (+AShM)",
+    "m": "Sina class",
+    "n": 1,
+    "orig": "INT",
+    "s": "wiki_navy",
+    "c": "ت",
+    "note": "Jane's Fighting Ships considers this class of vessel fast attack craft (PGGF). Four were sunk in the 2026 Iran war.",
+    "gen": 2,
+    "cat": "patrol"
+   },
+   {
+    "m": "Kaivan class",
     "n": 3,
     "orig": "INT",
     "s": "wiki_navy",
@@ -384,16 +399,26 @@
     "cat": "patrol"
    },
    {
-    "m": "Patrol Boat Fast (+Torpedo)",
+    "m": "Parvin class",
     "n": 3,
     "orig": "INT",
     "s": "wiki_navy",
     "c": "ت",
-    "gen": 3,
+    "note": "Jane's Fighting Ships considers this class of vessel PC or Patrol Craft Fast.",
+    "gen": 2,
     "cat": "patrol"
    },
    {
-    "m": "Patrol Boat Fast",
+    "m": "Kajami class",
+    "n": 3,
+    "orig": "INT",
+    "s": "wiki_navy",
+    "c": "ت",
+    "gen": 2,
+    "cat": "patrol"
+   },
+   {
+    "m": "MIL 55 class",
     "n": 1,
     "orig": "INT",
     "s": "wiki_navy",
@@ -402,7 +427,34 @@
     "cat": "patrol"
    },
    {
-    "m": "Patrol boat",
+    "m": "C 14 class",
+    "n": 9,
+    "orig": "INT",
+    "s": "wiki_navy",
+    "c": "ت",
+    "gen": 2,
+    "cat": "patrol"
+   },
+   {
+    "m": "Hendijan class",
+    "n": 8,
+    "orig": "INT",
+    "s": "wiki_navy",
+    "c": "ت",
+    "gen": 2,
+    "cat": "patrol"
+   },
+   {
+    "m": "MkII class",
+    "n": 6,
+    "orig": "INT",
+    "s": "wiki_navy",
+    "c": "ت",
+    "gen": 2,
+    "cat": "patrol"
+   },
+   {
+    "m": "MkIII class",
     "n": 10,
     "orig": "INT",
     "s": "wiki_navy",
@@ -411,7 +463,7 @@
     "cat": "patrol"
    },
    {
-    "m": "Landing Ship Medium",
+    "m": "Farsi class",
     "n": 3,
     "orig": "INT",
     "s": "wiki_navy",
@@ -420,7 +472,7 @@
     "cat": "amphib"
    },
    {
-    "m": "Landing Ship Tank",
+    "m": "Hengam class",
     "n": 3,
     "orig": "INT",
     "s": "wiki_navy",
@@ -429,7 +481,7 @@
     "cat": "amphib"
    },
    {
-    "m": "Landing Ship Logistics",
+    "m": "Fouque class",
     "n": 6,
     "orig": "INT",
     "s": "wiki_navy",
@@ -438,7 +490,7 @@
     "cat": "amphib"
    },
    {
-    "m": "Landing Craft Tank",
+    "m": "Wellington Mk 4",
     "n": 2,
     "orig": "INT",
     "s": "wiki_navy",
@@ -447,7 +499,7 @@
     "cat": "amphib"
    },
    {
-    "m": "Landing Craft Air Cushion",
+    "m": "Wellington Mk 5",
     "n": 4,
     "orig": "INT",
     "s": "wiki_navy",
@@ -456,7 +508,16 @@
     "cat": "amphib"
    },
    {
-    "m": "Landing Craft Utility",
+    "m": "Tondar",
+    "n": 2,
+    "orig": "INT",
+    "s": "wiki_navy",
+    "c": "ت",
+    "gen": 2,
+    "cat": "amphib"
+   },
+   {
+    "m": "LIAN 110",
     "n": 1,
     "orig": "INT",
     "s": "wiki_navy",
@@ -465,7 +526,7 @@
     "cat": "amphib"
    },
    {
-    "m": "Auxiliary Submarine",
+    "m": "Nahang-class submarine",
     "n": 1,
     "orig": "INT",
     "s": "wiki_navy",
@@ -474,7 +535,7 @@
     "cat": "sub"
    },
    {
-    "m": "Ammunition carrier",
+    "m": "Delvar class",
     "n": 2,
     "orig": "INT",
     "s": "wiki_navy",
@@ -491,7 +552,146 @@
     "gen": 2,
     "cat": "sub"
    }
-  ]
+  ],
+  "grp": {
+   "tank": {
+    "n": 1500,
+    "s": "iiss_eq",
+    "c": "ت",
+    "top": [
+     [
+      "T-62",
+      null,
+      null,
+      null
+     ],
+     [
+      "T-55",
+      null,
+      null,
+      null
+     ],
+     [
+      "M60",
+      null,
+      null,
+      null
+     ]
+    ],
+    "gen": 2,
+    "tpl": "me"
+   },
+   "afv": {
+    "n": 3750,
+    "s": "tpl",
+    "c": "ق",
+    "top": [
+     [
+      "BMP-1",
+      null,
+      null,
+      null
+     ],
+     [
+      "M113",
+      null,
+      null,
+      null
+     ],
+     [
+      "BTR-60",
+      null,
+      null,
+      null
+     ]
+    ],
+    "gen": 2,
+    "tpl": "me"
+   },
+   "art": {
+    "n": 1350,
+    "s": "tpl",
+    "c": "ق",
+    "top": [
+     [
+      "D-30",
+      null,
+      null,
+      null
+     ],
+     [
+      "M109",
+      null,
+      null,
+      null
+     ],
+     [
+      "BM-21 Grad",
+      null,
+      null,
+      null
+     ]
+    ],
+    "gen": 2,
+    "tpl": "me"
+   },
+   "jet": {
+    "n": 90,
+    "s": "iiss_eq",
+    "c": "ت",
+    "top": [
+     [
+      "Sukhoi Su-22 (Su-22M4/Su-22UM3K)",
+      7,
+      2,
+      "SUN"
+     ]
+    ],
+    "gen": 2.0,
+    "note": "مجموع القوائم 7 يختلف عن الإجمالي؛ الإجمالي هو المعتمد"
+   },
+   "heli": {
+    "n": 17,
+    "s": "wiki_irgc",
+    "c": "ت",
+    "top": [
+     [
+      "Mil Mi-17",
+      17,
+      2,
+      "RUS"
+     ]
+    ],
+    "gen": 2.0
+   },
+   "navy": {
+    "n": 9,
+    "s": "iiss_eq",
+    "c": "ت",
+    "top": [
+     [
+      "Kaman class",
+      10,
+      2,
+      "INT"
+     ],
+     [
+      "MkIII class",
+      10,
+      2,
+      "INT"
+     ],
+     [
+      "C 14 class",
+      9,
+      2,
+      "INT"
+     ]
+    ],
+    "gen": 2.0,
+    "note": "مجموع القوائم 91 يختلف عن الإجمالي؛ الإجمالي هو المعتمد"
+   }
+  }
  },
  "ind": {
   "tech": {

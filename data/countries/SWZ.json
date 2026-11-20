@@ -5,6 +5,12 @@
  "tier": "C",
  "asOf": "2026-11",
  "src": {
+  "wiki_army": {
+   "t": "Wikipedia: Umbutfo Eswatini Defence Force",
+   "u": "https://en.wikipedia.org/wiki/Umbutfo_Eswatini_Defence_Force?oldid=1365579711",
+   "y": 2026,
+   "note": "نسخة الصفحة بتاريخ السحب؛ أرقام ويكيبيديا تنراجع ويا مصادر ثانية"
+  },
   "iiss_eq": {
    "t": "Wikipedia: List of countries by level of military equipment (من IISS Military Balance ومصادر ثانية)",
    "u": "https://en.wikipedia.org/wiki/List_of_countries_by_level_of_military_equipment?oldid=1384804191",
@@ -49,6 +55,11 @@
   "tierA": {
    "t": "تقدير المصمم (تشرين الثاني 2026) لصناعة السلاح والاستقرار: SIPRI Arms Transfers Database (أكبر المصدّرين 2020–24)، SIPRI Top 100 Arms-Producing Companies، Fragile States Index 2025، أخبار 2026",
    "u": "https://www.sipri.org/databases/armstransfers",
+   "y": 2026
+  },
+  "tpl": {
+   "t": "قالب منطقة (af): موديلات شائعة ونسب تقريبية من الدبابات (مدرعات ×2.5، مدفعية ×0.9، مروحيات ×0.25) — تقدير المصمم",
+   "u": "docs/features/world-plan.md",
    "y": 2026
   }
  },
@@ -160,10 +171,52 @@
    }
   },
   "land": [],
-  "air": [],
+  "air": [
+   {
+    "m": "Aérospatiale Alouette III",
+    "n": 3,
+    "orig": "FRA",
+    "s": "wiki_army",
+    "c": "ت",
+    "gen": 2,
+    "cat": "heli_util"
+   },
+   {
+    "m": "Bell UH-1 (UH-1H)",
+    "n": 2,
+    "orig": "USA",
+    "s": "wiki_army",
+    "c": "ت",
+    "note": "donated by the Government of Taiwan",
+    "gen": 2,
+    "cat": "heli_util"
+   }
+  ],
   "ad": [],
   "msl": [],
-  "navy": []
+  "navy": [],
+  "grp": {
+   "heli": {
+    "n": 5,
+    "s": "wiki_army",
+    "c": "ت",
+    "top": [
+     [
+      "Aérospatiale Alouette III",
+      3,
+      2,
+      "FRA"
+     ],
+     [
+      "Bell UH-1 (UH-1H)",
+      2,
+      2,
+      "USA"
+     ]
+    ],
+    "gen": 2.0
+   }
+  }
  },
  "ind": null,
  "pol": {

@@ -68,6 +68,11 @@
    "t": "تقدير المصمم (تشرين الثاني 2026) لصناعة السلاح والاستقرار: SIPRI Arms Transfers Database (أكبر المصدّرين 2020–24)، SIPRI Top 100 Arms-Producing Companies، Fragile States Index 2025، أخبار 2026",
    "u": "https://www.sipri.org/databases/armstransfers",
    "y": 2026
+  },
+  "tpl": {
+   "t": "قالب منطقة (eu): موديلات شائعة ونسب تقريبية من الدبابات (مدرعات ×2.5، مدفعية ×0.9، مروحيات ×0.25) — تقدير المصمم",
+   "u": "docs/features/world-plan.md",
+   "y": 2026
   }
  },
  "gov": {
@@ -382,17 +387,17 @@
   ],
   "air": [
    {
-    "m": "Eurofighter Typhoon",
+    "m": "Jet",
     "n": 111,
     "orig": "INT",
     "s": "wiki_air",
     "c": "ت",
     "note": "26 of 30 Tranche 1s have been retired as of 1 July 2025. The remaining Falklands-based Tranche 1s to be retired and replaced by four Tranche",
-    "gen": 4,
+    "gen": 2,
     "cat": "fighter"
    },
    {
-    "m": "Boeing E-7 Wedgetail AEW.1",
+    "m": "Jet",
     "n": 2,
     "orig": "USA",
     "s": "wiki_air",
@@ -402,7 +407,7 @@
     "cat": "awacs"
    },
    {
-    "m": "Beechcraft Shadow R.1",
+    "m": "Propeller",
     "n": 6,
     "orig": "USA",
     "s": "wiki_air",
@@ -412,17 +417,7 @@
     "cat": "isr"
    },
    {
-    "m": "Boeing RC-135W Rivet Joint",
-    "n": 3,
-    "orig": "USA",
-    "s": "wiki_air",
-    "c": "ت",
-    "note": "Formally known as Airseeker.",
-    "gen": 2,
-    "cat": "isr"
-   },
-   {
-    "m": "Boeing P-8 Poseidon MRA.1",
+    "m": "Jet",
     "n": 9,
     "orig": "USA",
     "s": "wiki_air",
@@ -431,7 +426,7 @@
     "cat": "isr"
    },
    {
-    "m": "Airbus Voyager",
+    "m": "Jet",
     "n": 14,
     "orig": "USA",
     "s": "wiki_air",
@@ -440,7 +435,7 @@
     "cat": "tanker"
    },
    {
-    "m": "Boeing C-17A Globemaster III",
+    "m": "Jet",
     "n": 8,
     "orig": "USA",
     "s": "wiki_air",
@@ -449,7 +444,7 @@
     "cat": "transport"
    },
    {
-    "m": "Airbus A400M Atlas C.1",
+    "m": "Propeller",
     "n": 22,
     "orig": "USA",
     "s": "wiki_air",
@@ -459,37 +454,17 @@
     "cat": "transport"
    },
    {
-    "m": "Dassault Envoy IV CC.1",
-    "n": 2,
-    "orig": "FRA",
-    "s": "wiki_air",
-    "c": "ت",
-    "note": "Two aircraft introduced in 2022. To be initially operated under civil contract until 2026.",
-    "gen": 2,
-    "cat": "transport"
-   },
-   {
-    "m": "Boeing Chinook",
+    "m": "Rotorcraft",
     "n": 36,
     "orig": "USA",
     "s": "wiki_air",
     "c": "ت",
     "note": "All HC.Mk 6A variants being withdrawn from service; 14 CH-47-ER variants being delivered from 2027; overall operational numbers to stabilize",
-    "gen": 2,
+    "gen": 3,
     "cat": "heli_util"
    },
    {
-    "m": "Airbus H145 Jupiter HC.2",
-    "n": 3,
-    "orig": "USA",
-    "s": "wiki_air",
-    "c": "ت",
-    "note": "Replaced former Puma HC2s & deployed with 84 Squadron on Cyprus from 2026; 3 additional helicopters acquired by the Army Air Corps.",
-    "gen": 2,
-    "cat": "heli_util"
-   },
-   {
-    "m": "BAE Systems Hawk T.2",
+    "m": "Jet",
     "n": 27,
     "orig": "GBR",
     "s": "wiki_air",
@@ -499,7 +474,7 @@
     "cat": "trainer"
    },
    {
-    "m": "Grob Viking T.1",
+    "m": "Glider",
     "n": 52,
     "orig": "DEU",
     "s": "wiki_air",
@@ -509,17 +484,17 @@
     "cat": "trainer"
    },
    {
-    "m": "Protector RG1",
+    "m": "UAV",
     "n": 10,
     "orig": "USA",
     "s": "wiki_air",
     "c": "ت",
     "note": "16 ordered; 10 aircraft delivered as of June 2025 with 4 in the UK and the other 6 in the US where they are used for testing and training; t",
-    "gen": 3,
+    "gen": 2,
     "cat": "uav_isr"
    },
    {
-    "m": "Avro Lancaster (PA474)",
+    "m": "Propeller",
     "n": 1,
     "orig": "GBR",
     "s": "wiki_air",
@@ -529,107 +504,47 @@
     "cat": "attack"
    },
    {
-    "m": "Boeing AH-64E Apache Guardian",
+    "m": "Helicopter",
     "n": 50,
     "orig": "USA",
     "s": "wiki_air",
     "c": "ت",
     "note": "50 Apache AH1 remanufactured to AH-64E specification. Armed with M230 cannon and JAGM, Hellfire K1 and Hellfire Romeo missiles.",
-    "gen": 4,
-    "cat": "heli_attack"
-   },
-   {
-    "m": "AgustaWestland Wildcat AH1",
-    "n": 25,
-    "orig": "GBR",
-    "s": "wiki_air",
-    "c": "ت",
-    "note": "To be withdrawn from service from 2027; up to 8 helicopters serve with the Fleet Air Arm's 847 Squadron in support of the Royal Marines. The",
-    "gen": 2,
-    "cat": "heli_util"
-   },
-   {
-    "m": "Eurocopter AS365 Dauphin II",
-    "n": 5,
-    "orig": "FRA",
-    "s": "wiki_air",
-    "c": "ت",
-    "note": "ZJ780, ZJ782, ZJ783; ZJ785; ZJ787 These are the helicopters of the No. 658 Squadron AAC (Army Air Corps).",
-    "gen": 2,
-    "cat": "heli_util"
-   },
-   {
-    "m": "AgustaWestland AW101 Merlin HM2",
-    "n": 23,
-    "orig": "GBR",
-    "s": "wiki_air",
-    "c": "ت",
-    "note": "Expected OSD 2040.",
     "gen": 2,
     "cat": "heli_attack"
    },
    {
-    "m": "AgustaWestland AW159 Wildcat AH1",
+    "m": "Rotorcraft",
     "n": 25,
     "orig": "GBR",
     "s": "wiki_air",
     "c": "ت",
     "note": "Up to 8 Army Air Corps aircraft tasked to 847 Naval Air Squadron in support of the Royal Marines; future with 847 NAS unclear once withdrawn",
-    "gen": 2,
+    "gen": 3,
     "cat": "heli_attack"
    },
    {
-    "m": "AgustaWestland AW101 Merlin Mk4/4A",
-    "n": 21,
-    "orig": "GBR",
-    "s": "wiki_air",
-    "c": "ت",
-    "note": "One aircraft crashed September 2024, second in June 2026; Expected OSD 2040.",
-    "gen": 2,
-    "cat": "heli_util"
-   },
-   {
-    "m": "Grob Tutor",
+    "m": "Propeller",
     "n": 5,
     "orig": "DEU",
     "s": "wiki_air",
     "c": "ت",
     "note": "Introductory fight training; operated by 727 Naval Air Squadron. These aircraft here are also listed above in the \"Royal Air Force\" table, a",
-    "gen": 3,
+    "gen": 2,
     "cat": "trainer"
    },
    {
-    "m": "Peregrine",
+    "m": "Rotorcraft UAV",
     "n": 2,
     "orig": "AUT",
     "s": "wiki_air",
     "c": "ت",
     "note": "Formerly deployed on HMS Lancaster; future tasking unclear.",
-    "gen": 2,
+    "gen": 3,
     "cat": "uav_isr"
    },
    {
-    "m": "Agusta AW109",
-    "n": 1,
-    "orig": "ITA",
-    "s": "wiki_air",
-    "c": "ت",
-    "note": "QinetiQ, Boscombe Down.",
-    "gen": 2,
-    "cat": "heli_util"
-   },
-   {
-    "m": "Eurocopter AS350 Écureuil",
-    "n": 3,
-    "orig": "FRA",
-    "s": "wiki_air",
-    "c": "ت",
-    "note": "Cobham Helicopter Academy, Newquay under CFAOS.",
-    "gen": 2,
-    "cat": "heli_util"
-   },
-   {
-    "m": "AgustaWestland AW159 Wildcat",
+    "m": "Helicopter",
     "n": 24,
     "orig": "GBR",
     "s": "wiki_army",
@@ -643,50 +558,246 @@
   "navy": [
    {
     "m": "Vanguard class",
-    "n": 31,
-    "orig": "INT",
+    "n": 4,
+    "orig": "GBR",
     "s": "wiki_navy",
     "c": "ت",
+    "cat": "sub",
     "gen": 2,
-    "cat": "sub"
+    "note": "عدد الصفوف بالقائمة"
    },
    {
     "m": "Astute class",
-    "n": 120,
-    "orig": "INT",
+    "n": 6,
+    "orig": "GBR",
     "s": "wiki_navy",
     "c": "ت",
+    "cat": "sub",
     "gen": 2,
-    "cat": "sub"
+    "note": "عدد الصفوف بالقائمة"
    },
    {
     "m": "Queen Elizabeth class",
-    "n": 9,
-    "orig": "INT",
+    "n": 2,
+    "orig": "GBR",
     "s": "wiki_navy",
     "c": "ت",
+    "cat": "carrier",
     "gen": 2,
-    "cat": "carrier"
+    "note": "عدد الصفوف بالقائمة"
    },
    {
     "m": "Type 45 destroyer (Daring class)",
-    "n": 37,
-    "orig": "INT",
+    "n": 6,
+    "orig": "GBR",
     "s": "wiki_navy",
     "c": "ت",
+    "cat": "destroyer",
     "gen": 2,
-    "cat": "destroyer"
+    "note": "عدد الصفوف بالقائمة"
    },
    {
     "m": "Type 23 frigate (Duke class)",
-    "n": 83,
-    "orig": "INT",
+    "n": 5,
+    "orig": "GBR",
     "s": "wiki_navy",
     "c": "ت",
+    "cat": "frigate",
     "gen": 2,
-    "cat": "frigate"
+    "note": "عدد الصفوف بالقائمة"
+   },
+   {
+    "m": "River class",
+    "n": 8,
+    "orig": "GBR",
+    "s": "wiki_navy",
+    "c": "ت",
+    "cat": "patrol",
+    "gen": 2,
+    "note": "عدد الصفوف بالقائمة"
+   },
+   {
+    "m": "Archer class",
+    "n": 16,
+    "orig": "GBR",
+    "s": "wiki_navy",
+    "c": "ت",
+    "cat": "patrol",
+    "gen": 2,
+    "note": "عدد الصفوف بالقائمة"
+   },
+   {
+    "m": "Cutlass class",
+    "n": 2,
+    "orig": "GBR",
+    "s": "wiki_navy",
+    "c": "ت",
+    "cat": "patrol",
+    "gen": 2,
+    "note": "عدد الصفوف بالقائمة"
    }
-  ]
+  ],
+  "grp": {
+   "tank": {
+    "n": 213,
+    "s": "iiss_eq",
+    "c": "ت",
+    "top": [
+     [
+      "Challenger 2 Challenger 3",
+      285,
+      4,
+      "GBR"
+     ]
+    ],
+    "gen": 4.0
+   },
+   "afv": {
+    "n": 3214,
+    "s": "wiki_army",
+    "c": "ت",
+    "top": [
+     [
+      "Bulldog",
+      723,
+      2,
+      "GBR"
+     ],
+     [
+      "Warrior",
+      526,
+      3,
+      "GBR"
+     ],
+     [
+      "Jackal 2",
+      480,
+      2,
+      "GBR"
+     ]
+    ],
+    "gen": 2.2
+   },
+   "art": {
+    "n": 166,
+    "s": "wiki_army",
+    "c": "ت",
+    "top": [
+     [
+      "L118 light gun",
+      126,
+      2,
+      "GBR"
+     ],
+     [
+      "M270 Multiple Launch Rocket System",
+      26,
+      2,
+      "USA"
+     ],
+     [
+      "Archer Artillery System",
+      14,
+      2,
+      "SWE"
+     ]
+    ],
+    "gen": 2.0
+   },
+   "jet": {
+    "n": 145,
+    "s": "iiss_eq",
+    "c": "ت",
+    "top": [
+     [
+      "Jet",
+      111,
+      2,
+      "INT"
+     ],
+     [
+      "Propeller",
+      1,
+      2,
+      "GBR"
+     ]
+    ],
+    "gen": 2.0
+   },
+   "heli": {
+    "n": 135,
+    "s": "wiki_air",
+    "c": "ت",
+    "top": [
+     [
+      "Helicopter",
+      50,
+      2,
+      "USA"
+     ],
+     [
+      "Rotorcraft",
+      36,
+      3,
+      "USA"
+     ],
+     [
+      "Rotorcraft",
+      25,
+      3,
+      "GBR"
+     ]
+    ],
+    "gen": 2.5
+   },
+   "uav": {
+    "n": 12,
+    "s": "wiki_air",
+    "c": "ت",
+    "top": [
+     [
+      "UAV",
+      10,
+      2,
+      "USA"
+     ],
+     [
+      "Rotorcraft UAV",
+      2,
+      3,
+      "AUT"
+     ]
+    ],
+    "gen": 2.2
+   },
+   "navy": {
+    "n": 28,
+    "s": "iiss_eq",
+    "c": "ت",
+    "top": [
+     [
+      "Archer class",
+      16,
+      2,
+      "GBR"
+     ],
+     [
+      "River class",
+      8,
+      2,
+      "GBR"
+     ],
+     [
+      "Astute class",
+      6,
+      2,
+      "GBR"
+     ]
+    ],
+    "gen": 2.0,
+    "note": "مجموع القوائم 49 يختلف عن الإجمالي؛ الإجمالي هو المعتمد"
+   }
+  }
  },
  "ind": {
   "tech": {

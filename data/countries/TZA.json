@@ -5,6 +5,24 @@
  "tier": "C",
  "asOf": "2026-11",
  "src": {
+  "wiki_air": {
+   "t": "Wikipedia: Tanzania Air Force Command",
+   "u": "https://en.wikipedia.org/wiki/Tanzania_Air_Force_Command?oldid=1377491921",
+   "y": 2026,
+   "note": "نسخة الصفحة بتاريخ السحب؛ أرقام ويكيبيديا تنراجع ويا مصادر ثانية"
+  },
+  "wiki_army": {
+   "t": "Wikipedia: List of equipment of the Tanzanian Army",
+   "u": "https://en.wikipedia.org/wiki/List_of_equipment_of_the_Tanzanian_Army?oldid=1364338036",
+   "y": 2026,
+   "note": "نسخة الصفحة بتاريخ السحب؛ أرقام ويكيبيديا تنراجع ويا مصادر ثانية"
+  },
+  "wiki_navy": {
+   "t": "Wikipedia: Tanzania Naval Command",
+   "u": "https://en.wikipedia.org/wiki/Tanzania_Naval_Command?oldid=1291607188",
+   "y": 2026,
+   "note": "نسخة الصفحة بتاريخ السحب؛ أرقام ويكيبيديا تنراجع ويا مصادر ثانية"
+  },
   "iiss_eq": {
    "t": "Wikipedia: List of countries by level of military equipment (من IISS Military Balance ومصادر ثانية)",
    "u": "https://en.wikipedia.org/wiki/List_of_countries_by_level_of_military_equipment?oldid=1384804191",
@@ -49,6 +67,11 @@
   "tierA": {
    "t": "تقدير المصمم (تشرين الثاني 2026) لصناعة السلاح والاستقرار: SIPRI Arms Transfers Database (أكبر المصدّرين 2020–24)، SIPRI Top 100 Arms-Producing Companies، Fragile States Index 2025، أخبار 2026",
    "u": "https://www.sipri.org/databases/armstransfers",
+   "y": 2026
+  },
+  "tpl": {
+   "t": "قالب منطقة (af): موديلات شائعة ونسب تقريبية من الدبابات (مدرعات ×2.5، مدفعية ×0.9، مروحيات ×0.25) — تقدير المصمم",
+   "u": "docs/features/world-plan.md",
    "y": 2026
   }
  },
@@ -216,11 +239,449 @@
     "c": "ت"
    }
   },
-  "land": [],
-  "air": [],
-  "ad": [],
+  "land": [
+   {
+    "m": "VT-2",
+    "n": 5,
+    "orig": "CHN",
+    "s": "wiki_army",
+    "c": "ت",
+    "note": "Delivered by China from 2021",
+    "gen": 2,
+    "cat": "tank"
+   },
+   {
+    "m": "Type 59G",
+    "n": 15,
+    "orig": "CHN",
+    "s": "wiki_army",
+    "c": "ت",
+    "note": "Delivered by China from 1971–1973; all rebuilt as Type 59Gs from 2011–2013 according to SIPRI",
+    "gen": 1,
+    "cat": "tank"
+   },
+   {
+    "m": "T-54",
+    "n": 32,
+    "orig": "SUN",
+    "s": "wiki_army",
+    "c": "ت",
+    "note": "Delivered by East Germany from 1979–1980",
+    "gen": 1,
+    "cat": "tank"
+   },
+   {
+    "m": "Type 62",
+    "n": 66,
+    "orig": "CHN",
+    "s": "wiki_army",
+    "c": "ت",
+    "note": "Delivered by China from 1970–1972",
+    "gen": 2,
+    "cat": "tank"
+   },
+   {
+    "m": "Type 63",
+    "n": 18,
+    "orig": "CHN",
+    "s": "wiki_army",
+    "c": "ت",
+    "note": "Delivered by China from 1977–1979",
+    "gen": 2,
+    "cat": "tank"
+   },
+   {
+    "m": "Type 63A",
+    "n": 24,
+    "orig": "CHN",
+    "s": "wiki_army",
+    "c": "ت",
+    "note": "Delivered by China from 2012–2013",
+    "gen": 2,
+    "cat": "tank"
+   },
+   {
+    "m": "FV101 Scorpion",
+    "n": 40,
+    "orig": "GBR",
+    "s": "wiki_army",
+    "c": "ت",
+    "note": "Delivered by United Kingdom in 1973",
+    "gen": 2,
+    "cat": "tank"
+   },
+   {
+    "m": "Type 07P",
+    "n": 12,
+    "orig": "CHN",
+    "s": "wiki_army",
+    "c": "ت",
+    "gen": 2,
+    "cat": "ifv"
+   },
+   {
+    "m": "BRDM-2",
+    "n": 10,
+    "orig": "SUN",
+    "s": "wiki_army",
+    "c": "ت",
+    "note": "Delivered by Soviet Union from 1978-1979",
+    "gen": 2,
+    "cat": "apc"
+   },
+   {
+    "m": "Casspir",
+    "n": 5,
+    "orig": "ZAF",
+    "s": "wiki_army",
+    "c": "ت",
+    "note": "Delivered in 2009",
+    "gen": 2,
+    "cat": "mrap"
+   },
+   {
+    "m": "BM-21 Grad",
+    "n": 58,
+    "orig": "SUN",
+    "s": "wiki_army",
+    "c": "ت",
+    "gen": 2,
+    "cat": "mlrs"
+   },
+   {
+    "m": "A-100",
+    "n": 12,
+    "orig": "CHN",
+    "s": "wiki_army",
+    "c": "ت",
+    "note": "Delivered by China in 2013",
+    "gen": 2,
+    "cat": "mlrs"
+   },
+   {
+    "m": "Type 54-1",
+    "n": 80,
+    "orig": "SUN",
+    "s": "wiki_army",
+    "c": "ت",
+    "gen": 2,
+    "cat": "towed"
+   },
+   {
+    "m": "Type 56",
+    "n": 75,
+    "orig": "SUN",
+    "s": "wiki_army",
+    "c": "ت",
+    "gen": 2,
+    "cat": "towed"
+   },
+   {
+    "m": "Type 59-I",
+    "n": 30,
+    "orig": "SUN",
+    "s": "wiki_army",
+    "c": "ت",
+    "gen": 1,
+    "cat": "towed"
+   },
+   {
+    "m": "D-30",
+    "n": 20,
+    "orig": "SUN",
+    "s": "wiki_army",
+    "c": "ت",
+    "gen": 2,
+    "cat": "towed"
+   },
+   {
+    "m": "ZU-23-2",
+    "n": 40,
+    "orig": "SUN",
+    "s": "wiki_army",
+    "c": "ت",
+    "gen": 2,
+    "cat": "towed"
+   },
+   {
+    "m": "61-K",
+    "n": 120,
+    "orig": "SUN",
+    "s": "wiki_army",
+    "c": "ت",
+    "gen": 2,
+    "cat": "towed"
+   }
+  ],
+  "air": [
+   {
+    "m": "Chengdu F-7 (B/N/TN)",
+    "n": 11,
+    "orig": "CHN",
+    "s": "wiki_air",
+    "c": "ت",
+    "note": "Licensed built MiG-21",
+    "gen": 1,
+    "cat": "fighter"
+   },
+   {
+    "m": "Cessna 402",
+    "n": 1,
+    "orig": "USA",
+    "s": "wiki_air",
+    "c": "ت",
+    "gen": 2,
+    "cat": "transport"
+   },
+   {
+    "m": "Shaanxi Y-8",
+    "n": 2,
+    "orig": "CHN",
+    "s": "wiki_air",
+    "c": "ت",
+    "gen": 2,
+    "cat": "transport"
+   },
+   {
+    "m": "Harbin Y-12",
+    "n": 2,
+    "orig": "CHN",
+    "s": "wiki_air",
+    "c": "ت",
+    "gen": 2,
+    "cat": "transport"
+   },
+   {
+    "m": "Alenia C-27J Spartan",
+    "n": 1,
+    "orig": "ITA",
+    "s": "wiki_air",
+    "c": "ت",
+    "note": "1 on order",
+    "gen": 2,
+    "cat": "transport"
+   },
+   {
+    "m": "CASA/IPTN CN-235 (CN-235M)",
+    "n": 1,
+    "orig": "ESP",
+    "s": "wiki_air",
+    "c": "ت",
+    "gen": 2,
+    "cat": "transport"
+   },
+   {
+    "m": "Bell 412",
+    "n": 2,
+    "orig": "USA",
+    "s": "wiki_air",
+    "c": "ت",
+    "gen": 2,
+    "cat": "heli_util"
+   },
+   {
+    "m": "Airbus H155",
+    "n": 2,
+    "orig": "FRA",
+    "s": "wiki_air",
+    "c": "ت",
+    "gen": 2,
+    "cat": "heli_util"
+   },
+   {
+    "m": "Airbus H225M",
+    "n": 2,
+    "orig": "FRA",
+    "s": "wiki_air",
+    "c": "ت",
+    "gen": 2,
+    "cat": "heli_util"
+   },
+   {
+    "m": "Airbus H215M",
+    "n": 4,
+    "orig": "FRA",
+    "s": "wiki_air",
+    "c": "ت",
+    "gen": 2,
+    "cat": "heli_util"
+   },
+   {
+    "m": "Airbus H125M",
+    "n": 5,
+    "orig": "FRA",
+    "s": "wiki_air",
+    "c": "ت",
+    "gen": 2,
+    "cat": "heli_util"
+   },
+   {
+    "m": "Hongdu JL-8 (K-8)",
+    "n": 4,
+    "orig": "CHN",
+    "s": "wiki_air",
+    "c": "ت",
+    "gen": 2,
+    "cat": "trainer"
+   },
+   {
+    "m": "Chengdu J-7 (FT-7)",
+    "n": 2,
+    "orig": "CHN",
+    "s": "wiki_air",
+    "c": "ت",
+    "gen": 1,
+    "cat": "trainer"
+   }
+  ],
+  "ad": [
+   {
+    "m": "ZPU",
+    "n": 21,
+    "orig": "SUN",
+    "s": "wiki_army",
+    "c": "ت",
+    "gen": 2,
+    "cat": "short"
+   }
+  ],
   "msl": [],
-  "navy": []
+  "navy": [],
+  "grp": {
+   "tank": {
+    "n": 45,
+    "s": "iiss_eq",
+    "c": "ت",
+    "top": [
+     [
+      "Type 62",
+      66,
+      2,
+      "CHN"
+     ],
+     [
+      "FV101 Scorpion",
+      40,
+      2,
+      "GBR"
+     ],
+     [
+      "T-54",
+      32,
+      1,
+      "SUN"
+     ]
+    ],
+    "gen": 1.8,
+    "note": "مجموع القوائم 200 يختلف عن الإجمالي؛ الإجمالي هو المعتمد"
+   },
+   "afv": {
+    "n": 27,
+    "s": "wiki_army",
+    "c": "ت",
+    "top": [
+     [
+      "Type 07P",
+      12,
+      2,
+      "CHN"
+     ],
+     [
+      "BRDM-2",
+      10,
+      2,
+      "SUN"
+     ],
+     [
+      "Casspir",
+      5,
+      2,
+      "ZAF"
+     ]
+    ],
+    "gen": 2.0
+   },
+   "art": {
+    "n": 435,
+    "s": "wiki_army",
+    "c": "ت",
+    "top": [
+     [
+      "61-K",
+      120,
+      2,
+      "SUN"
+     ],
+     [
+      "Type 54-1",
+      80,
+      2,
+      "SUN"
+     ],
+     [
+      "Type 56",
+      75,
+      2,
+      "SUN"
+     ]
+    ],
+    "gen": 1.9
+   },
+   "jet": {
+    "n": 14,
+    "s": "iiss_eq",
+    "c": "ت",
+    "top": [
+     [
+      "Chengdu F-7 (B/N/TN)",
+      11,
+      1,
+      "CHN"
+     ]
+    ],
+    "gen": 1.0
+   },
+   "heli": {
+    "n": 15,
+    "s": "wiki_air",
+    "c": "ت",
+    "top": [
+     [
+      "Airbus H125M",
+      5,
+      2,
+      "FRA"
+     ],
+     [
+      "Airbus H215M",
+      4,
+      2,
+      "FRA"
+     ],
+     [
+      "Bell 412",
+      2,
+      2,
+      "USA"
+     ]
+    ],
+    "gen": 2.0
+   },
+   "ad": {
+    "n": 21,
+    "s": "wiki_army",
+    "c": "ت",
+    "top": [
+     [
+      "ZPU",
+      21,
+      2,
+      "SUN"
+     ]
+    ],
+    "gen": 2.0
+   }
+  }
  },
  "ind": null,
  "pol": {

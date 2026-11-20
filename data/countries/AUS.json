@@ -62,6 +62,11 @@
    "t": "تقدير المصمم (تشرين الثاني 2026) لصناعة السلاح والاستقرار: SIPRI Arms Transfers Database (أكبر المصدّرين 2020–24)، SIPRI Top 100 Arms-Producing Companies، Fragile States Index 2025، أخبار 2026",
    "u": "https://www.sipri.org/databases/armstransfers",
    "y": 2026
+  },
+  "tpl": {
+   "t": "قالب منطقة (as): موديلات شائعة ونسب تقريبية من الدبابات (مدرعات ×2.5، مدفعية ×0.9، مروحيات ×0.25) — تقدير المصمم",
+   "u": "docs/features/world-plan.md",
+   "y": 2026
   }
  },
  "gov": {
@@ -324,7 +329,142 @@
    }
   ],
   "msl": [],
-  "navy": []
+  "navy": [],
+  "grp": {
+   "tank": {
+    "n": 59,
+    "s": "iiss_eq",
+    "c": "ت",
+    "top": [
+     [
+      "Type 59",
+      null,
+      null,
+      null
+     ],
+     [
+      "T-55",
+      null,
+      null,
+      null
+     ],
+     [
+      "T-72",
+      null,
+      null,
+      null
+     ]
+    ],
+    "gen": 1.8,
+    "tpl": "as"
+   },
+   "afv": {
+    "n": 688,
+    "s": "wiki_army",
+    "c": "ت",
+    "top": [
+     [
+      "M113",
+      431,
+      2,
+      "USA"
+     ],
+     [
+      "ASLAV",
+      257,
+      2,
+      "CAN"
+     ]
+    ],
+    "gen": 2.0
+   },
+   "art": {
+    "n": 48,
+    "s": "wiki_army",
+    "c": "ت",
+    "top": [
+     [
+      "M777 howitzer",
+      48,
+      2,
+      "GBR"
+     ]
+    ],
+    "gen": 2.0
+   },
+   "jet": {
+    "n": 84,
+    "s": "iiss_eq",
+    "c": "ت",
+    "top": [
+     [
+      "F-5",
+      null,
+      null,
+      null
+     ],
+     [
+      "MiG-21",
+      null,
+      null,
+      null
+     ],
+     [
+      "F-7",
+      null,
+      null,
+      null
+     ]
+    ],
+    "gen": 2,
+    "tpl": "as"
+   },
+   "heli": {
+    "n": 32,
+    "s": "wiki_army",
+    "c": "ت",
+    "top": [
+     [
+      "Eurocopter EC135",
+      15,
+      2,
+      "FRA"
+     ],
+     [
+      "Boeing CH-47F Chinook",
+      14,
+      3,
+      "USA"
+     ],
+     [
+      "Bell B412EP",
+      2,
+      2,
+      "USA"
+     ]
+    ],
+    "gen": 2.4
+   },
+   "ad": {
+    "n": 7,
+    "s": "wiki_army",
+    "c": "ت",
+    "top": [
+     [
+      "NASAMS-3",
+      7,
+      2,
+      "NOR"
+     ]
+    ],
+    "gen": 2.0
+   },
+   "navy": {
+    "n": 19,
+    "s": "iiss_eq",
+    "c": "ت"
+   }
+  }
  },
  "ind": {
   "tech": {

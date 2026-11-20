@@ -5,6 +5,24 @@
  "tier": "B",
  "asOf": "2026-11",
  "src": {
+  "wiki_air": {
+   "t": "Wikipedia: Lithuanian Air Force",
+   "u": "https://en.wikipedia.org/wiki/Lithuanian_Air_Force?oldid=1386095774",
+   "y": 2026,
+   "note": "نسخة الصفحة بتاريخ السحب؛ أرقام ويكيبيديا تنراجع ويا مصادر ثانية"
+  },
+  "wiki_army": {
+   "t": "Wikipedia: List of equipment of the Lithuanian Armed Forces",
+   "u": "https://en.wikipedia.org/wiki/List_of_equipment_of_the_Lithuanian_Armed_Forces?oldid=1384498925",
+   "y": 2026,
+   "note": "نسخة الصفحة بتاريخ السحب؛ أرقام ويكيبيديا تنراجع ويا مصادر ثانية"
+  },
+  "wiki_navy": {
+   "t": "Wikipedia: Lithuanian Navy",
+   "u": "https://en.wikipedia.org/wiki/Lithuanian_Navy?oldid=1385435420",
+   "y": 2026,
+   "note": "نسخة الصفحة بتاريخ السحب؛ أرقام ويكيبيديا تنراجع ويا مصادر ثانية"
+  },
   "iiss_eq": {
    "t": "Wikipedia: List of countries by level of military equipment (من IISS Military Balance ومصادر ثانية)",
    "u": "https://en.wikipedia.org/wiki/List_of_countries_by_level_of_military_equipment?oldid=1384804191",
@@ -49,6 +67,11 @@
   "tierA": {
    "t": "تقدير المصمم (تشرين الثاني 2026) لصناعة السلاح والاستقرار: SIPRI Arms Transfers Database (أكبر المصدّرين 2020–24)، SIPRI Top 100 Arms-Producing Companies، Fragile States Index 2025، أخبار 2026",
    "u": "https://www.sipri.org/databases/armstransfers",
+   "y": 2026
+  },
+  "tpl": {
+   "t": "قالب منطقة (eu): موديلات شائعة ونسب تقريبية من الدبابات (مدرعات ×2.5، مدفعية ×0.9، مروحيات ×0.25) — تقدير المصمم",
+   "u": "docs/features/world-plan.md",
    "y": 2026
   }
  },
@@ -219,11 +242,264 @@
     "c": "ت"
    }
   },
-  "land": [],
-  "air": [],
+  "land": [
+   {
+    "m": "Panzermörser M113 (—)",
+    "n": 30,
+    "orig": "USA",
+    "s": "wiki_army",
+    "c": "ت",
+    "note": "42 mortar carriers with Tampella 120 mm mortars. Acquired from Germany in 2005 and 2006. Modernised in cooperation with Israel in 2015. In N",
+    "gen": 2,
+    "cat": "spg"
+   },
+   {
+    "m": "M101 (M101A1)",
+    "n": 36,
+    "orig": "USA",
+    "s": "wiki_army",
+    "c": "ت",
+    "note": "Lithuania purchased 72 M101A1 (second-hand) from Denmark in 2002 (18 of them for spares only). At least 18 units were donated to Ukraine.",
+    "gen": 2,
+    "cat": "towed"
+   },
+   {
+    "m": "PzH 2000 (PzH 2000 A2)",
+    "n": 16,
+    "orig": "DEU",
+    "s": "wiki_army",
+    "c": "ت",
+    "note": "Lithuania purchased 21 howitzers (second-hand) from Germany in September 2015 (16 in active service, 2 are used for training, 3 for spare pa",
+    "gen": 2,
+    "cat": "spg"
+   },
+   {
+    "m": "M113 (M113A1 M113A2)",
+    "n": 240,
+    "orig": "USA",
+    "s": "wiki_army",
+    "c": "ت",
+    "note": "154 M113A1 and 200 M113A2 items acquired second-hand from Germany between 2000 and 2006, some of them non-operational (used as source for sp",
+    "gen": 2,
+    "cat": "apc"
+   },
+   {
+    "m": "M577",
+    "n": 178,
+    "orig": "USA",
+    "s": "wiki_army",
+    "c": "ت",
+    "note": "Over 180 acquired second-hand from Germany in 2015–16. The vehicles are used for command, indirect fire support, medical evacuation and trai",
+    "gen": 2,
+    "cat": "apc"
+   },
+   {
+    "m": "Oshkosh JLTV (M1278 A1)",
+    "n": 500,
+    "orig": "USA",
+    "s": "wiki_army",
+    "c": "ت",
+    "note": "200 ordered in 2019, delivered from 2021 to the end of 2023. 300 additional ordered in October 2022, delivered in 2025. The main variant in ",
+    "gen": 2,
+    "cat": "mrap"
+   },
+   {
+    "m": "Humvee (M1025 M1097 M1114 M1151)",
+    "n": 195,
+    "orig": "USA",
+    "s": "wiki_army",
+    "c": "ت",
+    "note": "Some are equipped with HK GMG, or M2 HB. Some donated to Ukraine.",
+    "gen": 2,
+    "cat": "apc"
+   },
+   {
+    "m": "Toyota Land Cruiser (Land Cruiser 200 AT42M)",
+    "n": 5,
+    "orig": "JPN",
+    "s": "wiki_army",
+    "c": "ت",
+    "note": "Bought for international missions, has protection from small arms and IEDs. From Arctic Truck company. 7 donated to Ukraine army.",
+    "gen": 2,
+    "cat": "apc"
+   }
+  ],
+  "air": [
+   {
+    "m": "Alenia C-27J Spartan",
+    "n": 3,
+    "orig": "ITA",
+    "s": "wiki_air",
+    "c": "ت",
+    "note": "3. To be modernised to extend service up to 2036.",
+    "gen": 2,
+    "cat": "transport"
+   },
+   {
+    "m": "Let L-410 Turbolet",
+    "n": 2,
+    "orig": "CSK",
+    "s": "wiki_air",
+    "c": "ت",
+    "note": "2",
+    "gen": 2,
+    "cat": "transport"
+   },
+   {
+    "m": "Eurocopter AS365 Dauphin (AS365 N3+)",
+    "n": 3,
+    "orig": "FRA",
+    "s": "wiki_air",
+    "c": "ت",
+    "note": "3",
+    "gen": 2,
+    "cat": "heli_util"
+   },
+   {
+    "m": "Mil Mi-8 (Mi-8MTV-1)",
+    "n": 1,
+    "orig": "RUS",
+    "s": "wiki_air",
+    "c": "ت",
+    "note": "1",
+    "gen": 2,
+    "cat": "heli_util"
+   },
+   {
+    "m": "Sikorsky UH-60 Black Hawk (UH-60M)",
+    "n": 4,
+    "orig": "USA",
+    "s": "wiki_air",
+    "c": "ت",
+    "note": "4 in service. Equipped with M240H machine guns.",
+    "gen": 2,
+    "cat": "heli_util"
+   }
+  ],
   "ad": [],
   "msl": [],
-  "navy": []
+  "navy": [
+   {
+    "m": "Flyvefisken-class (Standard Flex 300)",
+    "n": 4,
+    "orig": "DNK",
+    "s": "wiki_navy",
+    "c": "ت",
+    "note": "Purchased second-hand from Denmark.",
+    "gen": 2,
+    "cat": "patrol"
+   },
+   {
+    "m": "Storebro SB90E- class",
+    "n": 1,
+    "orig": "SWE",
+    "s": "wiki_navy",
+    "c": "ت",
+    "note": "Boats acquired from the Port of Klaipėda in 2023.",
+    "gen": 3,
+    "cat": "patrol"
+   }
+  ],
+  "grp": {
+   "afv": {
+    "n": 1118,
+    "s": "wiki_army",
+    "c": "ت",
+    "top": [
+     [
+      "Oshkosh JLTV (M1278 A1)",
+      500,
+      2,
+      "USA"
+     ],
+     [
+      "M113 (M113A1 M113A2)",
+      240,
+      2,
+      "USA"
+     ],
+     [
+      "Humvee (M1025 M1097 M1114 M1151)",
+      195,
+      2,
+      "USA"
+     ]
+    ],
+    "gen": 2.0
+   },
+   "art": {
+    "n": 82,
+    "s": "wiki_army",
+    "c": "ت",
+    "top": [
+     [
+      "M101 (M101A1)",
+      36,
+      2,
+      "USA"
+     ],
+     [
+      "Panzermörser M113 (—)",
+      30,
+      2,
+      "USA"
+     ],
+     [
+      "PzH 2000 (PzH 2000 A2)",
+      16,
+      2,
+      "DEU"
+     ]
+    ],
+    "gen": 2.0
+   },
+   "heli": {
+    "n": 8,
+    "s": "wiki_air",
+    "c": "ت",
+    "top": [
+     [
+      "Sikorsky UH-60 Black Hawk (UH-60M)",
+      4,
+      2,
+      "USA"
+     ],
+     [
+      "Eurocopter AS365 Dauphin (AS365 N3+)",
+      3,
+      2,
+      "FRA"
+     ],
+     [
+      "Mil Mi-8 (Mi-8MTV-1)",
+      1,
+      2,
+      "RUS"
+     ]
+    ],
+    "gen": 2.0
+   },
+   "navy": {
+    "n": 5,
+    "s": "wiki_navy",
+    "c": "ت",
+    "top": [
+     [
+      "Flyvefisken-class (Standard Flex 300)",
+      4,
+      2,
+      "DNK"
+     ],
+     [
+      "Storebro SB90E- class",
+      1,
+      3,
+      "SWE"
+     ]
+    ],
+    "gen": 2.2
+   }
+  }
  },
  "ind": null,
  "pol": {

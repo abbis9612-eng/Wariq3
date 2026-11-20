@@ -68,6 +68,11 @@
    "t": "تقدير المصمم (تشرين الثاني 2026) لصناعة السلاح والاستقرار: SIPRI Arms Transfers Database (أكبر المصدّرين 2020–24)، SIPRI Top 100 Arms-Producing Companies، Fragile States Index 2025، أخبار 2026",
    "u": "https://www.sipri.org/databases/armstransfers",
    "y": 2026
+  },
+  "tpl": {
+   "t": "قالب منطقة (me): موديلات شائعة ونسب تقريبية من الدبابات (مدرعات ×2.5، مدفعية ×0.9، مروحيات ×0.25) — تقدير المصمم",
+   "u": "docs/features/world-plan.md",
+   "y": 2026
   }
  },
  "gov": {
@@ -1052,7 +1057,185 @@
     "cat": "srbm"
    }
   ],
-  "navy": []
+  "navy": [],
+  "grp": {
+   "tank": {
+    "n": 2200,
+    "s": "iiss_eq",
+    "c": "ت",
+    "top": [
+     [
+      "T-62",
+      null,
+      null,
+      null
+     ],
+     [
+      "T-55",
+      null,
+      null,
+      null
+     ],
+     [
+      "M60",
+      null,
+      null,
+      null
+     ]
+    ],
+    "gen": 2,
+    "tpl": "me"
+   },
+   "afv": {
+    "n": 2834,
+    "s": "wiki_army",
+    "c": "ت",
+    "top": [
+     [
+      "Walid",
+      650,
+      2,
+      "EGY"
+     ],
+     [
+      "Caiman",
+      535,
+      2,
+      "USA"
+     ],
+     [
+      "BTR-50",
+      500,
+      2,
+      "SUN"
+     ]
+    ],
+    "gen": 2.0
+   },
+   "art": {
+    "n": 2447,
+    "s": "wiki_army",
+    "c": "ت",
+    "top": [
+     [
+      "M109",
+      325,
+      2,
+      "USA"
+     ],
+     [
+      "M-46",
+      320,
+      2,
+      "SUN"
+     ],
+     [
+      "ZU-23-2",
+      280,
+      2,
+      "SUN"
+     ]
+    ],
+    "gen": 2.0
+   },
+   "jet": {
+    "n": 426,
+    "s": "iiss_eq",
+    "c": "ت",
+    "top": [
+     [
+      "F-16 Fighting Falcon (C/D Block 40/52)",
+      220,
+      3,
+      "USA"
+     ],
+     [
+      "Dassault Rafale (DM/EM F4.2 Variant)",
+      46,
+      4,
+      "FRA"
+     ],
+     [
+      "MiG-29M (M/M2)",
+      45,
+      3,
+      "RUS"
+     ]
+    ],
+    "gen": 3.1
+   },
+   "heli": {
+    "n": 268,
+    "s": "wiki_air",
+    "c": "ت",
+    "top": [
+     [
+      "Kamov Ka-52",
+      46,
+      4,
+      "RUS"
+     ],
+     [
+      "Aérospatiale Gazelle (SA342K)",
+      45,
+      2,
+      "FRA"
+     ],
+     [
+      "AH-64 Apache (AH-64E)",
+      45,
+      4,
+      "USA"
+     ]
+    ],
+    "gen": 2.8
+   },
+   "uav": {
+    "n": 10,
+    "s": "wiki_air",
+    "c": "ت",
+    "top": [
+     [
+      "WJ-700",
+      10,
+      1,
+      "CHN"
+     ]
+    ],
+    "gen": 1.0
+   },
+   "ad": {
+    "n": 774,
+    "s": "wiki_army",
+    "c": "ت",
+    "top": [
+     [
+      "MIM-72 Chaparral (MIM-72C)",
+      280,
+      2,
+      "USA"
+     ],
+     [
+      "Volga (Tayer el-Sabah SA-2)",
+      100,
+      1,
+      "SUN"
+     ],
+     [
+      "AN/TWQ-1 Avenger",
+      75,
+      2,
+      "USA"
+     ]
+    ],
+    "gen": 2.1
+   },
+   "navy": {
+    "n": 34,
+    "s": "iiss_eq",
+    "c": "ت"
+   }
+  }
  },
  "ind": {
   "tech": {

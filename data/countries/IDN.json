@@ -68,6 +68,11 @@
    "t": "تقدير المصمم (تشرين الثاني 2026) لصناعة السلاح والاستقرار: SIPRI Arms Transfers Database (أكبر المصدّرين 2020–24)، SIPRI Top 100 Arms-Producing Companies، Fragile States Index 2025، أخبار 2026",
    "u": "https://www.sipri.org/databases/armstransfers",
    "y": 2026
+  },
+  "tpl": {
+   "t": "قالب منطقة (as): موديلات شائعة ونسب تقريبية من الدبابات (مدرعات ×2.5، مدفعية ×0.9، مروحيات ×0.25) — تقدير المصمم",
+   "u": "docs/features/world-plan.md",
+   "y": 2026
   }
  },
  "gov": {
@@ -794,6 +799,66 @@
   ],
   "navy": [
    {
+    "m": "Tbd",
+    "n": 2,
+    "orig": "IDN",
+    "s": "wiki_navy",
+    "c": "ت",
+    "cat": "sub",
+    "gen": 2,
+    "note": "عدد الصفوف بالقائمة"
+   },
+   {
+    "m": "Nagapasa class",
+    "n": 3,
+    "orig": "IDN",
+    "s": "wiki_navy",
+    "c": "ت",
+    "cat": "sub",
+    "gen": 2,
+    "note": "عدد الصفوف بالقائمة"
+   },
+   {
+    "m": "Cakra class",
+    "n": 1,
+    "orig": "IDN",
+    "s": "wiki_navy",
+    "c": "ت",
+    "cat": "sub",
+    "gen": 2,
+    "note": "عدد الصفوف بالقائمة"
+   },
+   {
+    "m": "Drass DGK",
+    "n": 1,
+    "orig": "IDN",
+    "s": "wiki_navy",
+    "c": "ت",
+    "cat": "sub",
+    "gen": 2,
+    "note": "عدد الصفوف بالقائمة"
+   },
+   {
+    "m": "PAL KSOT",
+    "n": 1,
+    "orig": "IDN",
+    "s": "wiki_navy",
+    "c": "ت",
+    "cat": "sub",
+    "gen": 2,
+    "note": "عدد الصفوف بالقائمة"
+   },
+   {
+    "m": "Drass DS8 SDV",
+    "n": 1,
+    "orig": "IDN",
+    "s": "wiki_navy",
+    "c": "ت",
+    "cat": "sub",
+    "gen": 2,
+    "note": "عدد الصفوف بالقائمة"
+   },
+   {
     "m": "FPB-57 class",
     "n": 57,
     "orig": "IDN",
@@ -801,8 +866,424 @@
     "c": "ت",
     "gen": 2,
     "cat": "missile_boat"
+   },
+   {
+    "m": "Dorang class",
+    "n": 1,
+    "orig": "IDN",
+    "s": "wiki_navy",
+    "c": "ت",
+    "cat": "patrol",
+    "gen": 2,
+    "note": "عدد الصفوف بالقائمة"
+   },
+   {
+    "m": "FPB-57 class",
+    "n": 1,
+    "orig": "IDN",
+    "s": "wiki_navy",
+    "c": "ت",
+    "cat": "patrol",
+    "gen": 2,
+    "note": "عدد الصفوف بالقائمة"
+   },
+   {
+    "m": "Pari class",
+    "n": 1,
+    "orig": "IDN",
+    "s": "wiki_navy",
+    "c": "ت",
+    "cat": "patrol",
+    "gen": 2,
+    "note": "عدد الصفوف بالقائمة"
+   },
+   {
+    "m": "Sibarau class",
+    "n": 1,
+    "orig": "IDN",
+    "s": "wiki_navy",
+    "c": "ت",
+    "cat": "patrol",
+    "gen": 2,
+    "note": "عدد الصفوف بالقائمة"
+   },
+   {
+    "m": "Badau class",
+    "n": 1,
+    "orig": "IDN",
+    "s": "wiki_navy",
+    "c": "ت",
+    "cat": "patrol",
+    "gen": 2,
+    "note": "عدد الصفوف بالقائمة"
+   },
+   {
+    "m": "Krait class",
+    "n": 1,
+    "orig": "IDN",
+    "s": "wiki_navy",
+    "c": "ت",
+    "cat": "patrol",
+    "gen": 2,
+    "note": "عدد الصفوف بالقائمة"
+   },
+   {
+    "m": "Cucut class",
+    "n": 1,
+    "orig": "IDN",
+    "s": "wiki_navy",
+    "c": "ت",
+    "cat": "patrol",
+    "gen": 2,
+    "note": "عدد الصفوف بالقائمة"
+   },
+   {
+    "m": "Boa class",
+    "n": 1,
+    "orig": "IDN",
+    "s": "wiki_navy",
+    "c": "ت",
+    "cat": "patrol",
+    "gen": 2,
+    "note": "عدد الصفوف بالقائمة"
+   },
+   {
+    "m": "Kudungga class",
+    "n": 1,
+    "orig": "IDN",
+    "s": "wiki_navy",
+    "c": "ت",
+    "cat": "patrol",
+    "gen": 2,
+    "note": "عدد الصفوف بالقائمة"
+   },
+   {
+    "m": "Mamuju class",
+    "n": 1,
+    "orig": "IDN",
+    "s": "wiki_navy",
+    "c": "ت",
+    "cat": "patrol",
+    "gen": 2,
+    "note": "عدد الصفوف بالقائمة"
+   },
+   {
+    "m": "PC-28m class",
+    "n": 1,
+    "orig": "IDN",
+    "s": "wiki_navy",
+    "c": "ت",
+    "cat": "patrol",
+    "gen": 2,
+    "note": "عدد الصفوف بالقائمة"
+   },
+   {
+    "m": "Bireuen class",
+    "n": 1,
+    "orig": "IDN",
+    "s": "wiki_navy",
+    "c": "ت",
+    "cat": "patrol",
+    "gen": 2,
+    "note": "عدد الصفوف بالقائمة"
+   },
+   {
+    "m": "KAL-28m class",
+    "n": 1,
+    "orig": "IDN",
+    "s": "wiki_navy",
+    "c": "ت",
+    "cat": "patrol",
+    "gen": 2,
+    "note": "عدد الصفوف بالقائمة"
+   },
+   {
+    "m": "Sinabang class",
+    "n": 1,
+    "orig": "IDN",
+    "s": "wiki_navy",
+    "c": "ت",
+    "cat": "patrol",
+    "gen": 2,
+    "note": "عدد الصفوف بالقائمة"
+   },
+   {
+    "m": "Tbd",
+    "n": 1,
+    "orig": "IDN",
+    "s": "wiki_navy",
+    "c": "ت",
+    "cat": "patrol",
+    "gen": 2,
+    "note": "عدد الصفوف بالقائمة"
+   },
+   {
+    "m": "Antasena class",
+    "n": 1,
+    "orig": "IDN",
+    "s": "wiki_navy",
+    "c": "ت",
+    "cat": "patrol",
+    "gen": 2,
+    "note": "عدد الصفوف بالقائمة"
+   },
+   {
+    "m": "Combat Boat 18m class",
+    "n": 1,
+    "orig": "IDN",
+    "s": "wiki_navy",
+    "c": "ت",
+    "cat": "patrol",
+    "gen": 2,
+    "note": "عدد الصفوف بالقائمة"
+   },
+   {
+    "m": "Samadar class",
+    "n": 1,
+    "orig": "IDN",
+    "s": "wiki_navy",
+    "c": "ت",
+    "cat": "patrol",
+    "gen": 2,
+    "note": "عدد الصفوف بالقائمة"
+   },
+   {
+    "m": "Pulau Ismoyo class",
+    "n": 1,
+    "orig": "IDN",
+    "s": "wiki_navy",
+    "c": "ت",
+    "cat": "patrol",
+    "gen": 2,
+    "note": "عدد الصفوف بالقائمة"
+   },
+   {
+    "m": "Pulau Ambo class",
+    "n": 1,
+    "orig": "IDN",
+    "s": "wiki_navy",
+    "c": "ت",
+    "cat": "patrol",
+    "gen": 2,
+    "note": "عدد الصفوف بالقائمة"
+   },
+   {
+    "m": "X-38 Combat Cat class",
+    "n": 1,
+    "orig": "IDN",
+    "s": "wiki_navy",
+    "c": "ت",
+    "cat": "patrol",
+    "gen": 2,
+    "note": "عدد الصفوف بالقائمة"
+   },
+   {
+    "m": "Pintar class",
+    "n": 1,
+    "orig": "IDN",
+    "s": "wiki_navy",
+    "c": "ت",
+    "cat": "patrol",
+    "gen": 2,
+    "note": "عدد الصفوف بالقائمة"
+   },
+   {
+    "m": "Nirwana class",
+    "n": 1,
+    "orig": "IDN",
+    "s": "wiki_navy",
+    "c": "ت",
+    "cat": "patrol",
+    "gen": 2,
+    "note": "عدد الصفوف بالقائمة"
    }
-  ]
+  ],
+  "grp": {
+   "tank": {
+    "n": 100,
+    "s": "iiss_eq",
+    "c": "ت",
+    "top": [
+     [
+      "AMX-13",
+      120,
+      2,
+      "FRA"
+     ],
+     [
+      "Leopard 2",
+      103,
+      3,
+      "DEU"
+     ],
+     [
+      "FV101 Scorpion",
+      90,
+      2,
+      "GBR"
+     ]
+    ],
+    "gen": 2.3,
+    "note": "مجموع القوائم 331 يختلف عن الإجمالي؛ الإجمالي هو المعتمد"
+   },
+   "afv": {
+    "n": 1543,
+    "s": "wiki_army",
+    "c": "ت",
+    "top": [
+     [
+      "Pindad Anoa",
+      500,
+      2,
+      "IDN"
+     ],
+     [
+      "M113",
+      160,
+      2,
+      "BEL"
+     ],
+     [
+      "Pindad Komodo",
+      100,
+      2,
+      "IDN"
+     ]
+    ],
+    "gen": 2.1
+   },
+   "art": {
+    "n": 612,
+    "s": "wiki_army",
+    "c": "ت",
+    "top": [
+     [
+      "M101",
+      180,
+      2,
+      "USA"
+     ],
+     [
+      "M48",
+      126,
+      1,
+      "YUG"
+     ],
+     [
+      "Avibras Astros II",
+      63,
+      2,
+      "BRA"
+     ]
+    ],
+    "gen": 1.8
+   },
+   "jet": {
+    "n": 97,
+    "s": "iiss_eq",
+    "c": "ت",
+    "top": [
+     [
+      "F-5",
+      null,
+      null,
+      null
+     ],
+     [
+      "MiG-21",
+      null,
+      null,
+      null
+     ],
+     [
+      "F-7",
+      null,
+      null,
+      null
+     ]
+    ],
+    "gen": 2,
+    "tpl": "as"
+   },
+   "heli": {
+    "n": 232,
+    "s": "wiki_army",
+    "c": "ت",
+    "top": [
+     [
+      "Eurocopter Fennec",
+      66,
+      2,
+      "FRA"
+     ],
+     [
+      "Bell 412",
+      60,
+      2,
+      "CAN"
+     ],
+     [
+      "Mil Mi-35",
+      52,
+      3,
+      "RUS"
+     ]
+    ],
+    "gen": 2.3
+   },
+   "ad": {
+    "n": 584,
+    "s": "wiki_army",
+    "c": "ت",
+    "top": [
+     [
+      "ZUR-23-2KG",
+      242,
+      2,
+      "POL"
+     ],
+     [
+      "Rh-202 Twin Gun",
+      121,
+      2,
+      "DEU"
+     ],
+     [
+      "Patriot I",
+      100,
+      4,
+      "CZE"
+     ]
+    ],
+    "gen": 2.3
+   },
+   "navy": {
+    "n": 64,
+    "s": "iiss_eq",
+    "c": "ت",
+    "top": [
+     [
+      "FPB-57 class",
+      57,
+      2,
+      "IDN"
+     ],
+     [
+      "Nagapasa class",
+      3,
+      2,
+      "IDN"
+     ],
+     [
+      "Tbd",
+      2,
+      2,
+      "IDN"
+     ]
+    ],
+    "gen": 2.0
+   }
+  }
  },
  "ind": {
   "tech": {

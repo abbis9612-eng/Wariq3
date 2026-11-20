@@ -5,6 +5,12 @@
  "tier": "C",
  "asOf": "2026-11",
  "src": {
+  "wiki_army": {
+   "t": "Wikipedia: Burundi National Defence Force",
+   "u": "https://en.wikipedia.org/wiki/Burundi_National_Defence_Force?oldid=1385542562",
+   "y": 2026,
+   "note": "نسخة الصفحة بتاريخ السحب؛ أرقام ويكيبيديا تنراجع ويا مصادر ثانية"
+  },
   "iiss_eq": {
    "t": "Wikipedia: List of countries by level of military equipment (من IISS Military Balance ومصادر ثانية)",
    "u": "https://en.wikipedia.org/wiki/List_of_countries_by_level_of_military_equipment?oldid=1384804191",
@@ -49,6 +55,11 @@
   "tierA": {
    "t": "تقدير المصمم (تشرين الثاني 2026) لصناعة السلاح والاستقرار: SIPRI Arms Transfers Database (أكبر المصدّرين 2020–24)، SIPRI Top 100 Arms-Producing Companies، Fragile States Index 2025، أخبار 2026",
    "u": "https://www.sipri.org/databases/armstransfers",
+   "y": 2026
+  },
+  "tpl": {
+   "t": "قالب منطقة (af): موديلات شائعة ونسب تقريبية من الدبابات (مدرعات ×2.5، مدفعية ×0.9، مروحيات ×0.25) — تقدير المصمم",
+   "u": "docs/features/world-plan.md",
    "y": 2026
   }
  },
@@ -213,11 +224,302 @@
     "c": "ت"
    }
   },
-  "land": [],
-  "air": [],
-  "ad": [],
+  "land": [
+   {
+    "m": "BRDM-2",
+    "n": 30,
+    "orig": "SUN",
+    "s": "wiki_army",
+    "c": "ت",
+    "note": "In service",
+    "gen": 2,
+    "cat": "apc"
+   },
+   {
+    "m": "Panhard AML",
+    "n": 18,
+    "orig": "FRA",
+    "s": "wiki_army",
+    "c": "ت",
+    "note": "In service 12 AML-90 06 AML-60",
+    "gen": 2,
+    "cat": "apc"
+   },
+   {
+    "m": "Shorland S52",
+    "n": 7,
+    "orig": "GBR",
+    "s": "wiki_army",
+    "c": "ت",
+    "note": "In service",
+    "gen": 2,
+    "cat": "apc"
+   },
+   {
+    "m": "RG-31 Nyala",
+    "n": 12,
+    "orig": "ZAF",
+    "s": "wiki_army",
+    "c": "ت",
+    "note": "In service",
+    "gen": 2,
+    "cat": "mrap"
+   },
+   {
+    "m": "RG-33L",
+    "n": 10,
+    "orig": "ZAF",
+    "s": "wiki_army",
+    "c": "ت",
+    "note": "In service",
+    "gen": 2,
+    "cat": "mrap"
+   },
+   {
+    "m": "Casspir",
+    "n": 27,
+    "orig": "ZAF",
+    "s": "wiki_army",
+    "c": "ت",
+    "note": "In service",
+    "gen": 2,
+    "cat": "mrap"
+   },
+   {
+    "m": "Cougar",
+    "n": 16,
+    "orig": "USA",
+    "s": "wiki_army",
+    "c": "ت",
+    "note": "In service",
+    "gen": 2,
+    "cat": "mrap"
+   },
+   {
+    "m": "DCD HD Springbuck",
+    "n": 10,
+    "orig": "ZAF",
+    "s": "wiki_army",
+    "c": "ت",
+    "note": "In service",
+    "gen": 2,
+    "cat": "mrap"
+   },
+   {
+    "m": "BM-21 Grad",
+    "n": 12,
+    "orig": "SUN",
+    "s": "wiki_army",
+    "c": "ت",
+    "gen": 2,
+    "cat": "mlrs"
+   },
+   {
+    "m": "D-30",
+    "n": 18,
+    "orig": "SUN",
+    "s": "wiki_army",
+    "c": "ت",
+    "gen": 2,
+    "cat": "towed"
+   }
+  ],
+  "air": [
+   {
+    "m": "Aérospatiale Alouette III",
+    "n": 3,
+    "orig": "FRA",
+    "s": "wiki_army",
+    "c": "ت",
+    "gen": 2,
+    "cat": "heli_util"
+   },
+   {
+    "m": "Aérospatiale SA 342 Gazelle",
+    "n": 6,
+    "orig": "FRA",
+    "s": "wiki_army",
+    "c": "ت",
+    "gen": 2,
+    "cat": "heli_util"
+   },
+   {
+    "m": "Mil Mi-24 Hind",
+    "n": 3,
+    "orig": "SUN",
+    "s": "wiki_army",
+    "c": "ت",
+    "gen": 3,
+    "cat": "heli_attack"
+   },
+   {
+    "m": "Mil Mi-8 Hip",
+    "n": 1,
+    "orig": "SUN",
+    "s": "wiki_army",
+    "c": "ت",
+    "gen": 2,
+    "cat": "heli_attack"
+   }
+  ],
+  "ad": [
+   {
+    "m": "Type 55",
+    "n": 135,
+    "orig": "SUN",
+    "s": "wiki_army",
+    "c": "ت",
+    "gen": 2,
+    "cat": "short"
+   },
+   {
+    "m": "ZU-23-2",
+    "n": 135,
+    "orig": "SUN",
+    "s": "wiki_army",
+    "c": "ت",
+    "gen": 2,
+    "cat": "short"
+   },
+   {
+    "m": "ZPU-4",
+    "n": 15,
+    "orig": "SUN",
+    "s": "wiki_army",
+    "c": "ت",
+    "gen": 2,
+    "cat": "short"
+   }
+  ],
   "msl": [],
-  "navy": []
+  "navy": [],
+  "grp": {
+   "tank": {
+    "n": 20,
+    "s": "iiss_eq",
+    "c": "ت",
+    "top": [
+     [
+      "T-55",
+      null,
+      null,
+      null
+     ],
+     [
+      "T-54",
+      null,
+      null,
+      null
+     ],
+     [
+      "Type 59",
+      null,
+      null,
+      null
+     ]
+    ],
+    "gen": 1.4,
+    "tpl": "af"
+   },
+   "afv": {
+    "n": 130,
+    "s": "wiki_army",
+    "c": "ت",
+    "top": [
+     [
+      "BRDM-2",
+      30,
+      2,
+      "SUN"
+     ],
+     [
+      "Casspir",
+      27,
+      2,
+      "ZAF"
+     ],
+     [
+      "Panhard AML",
+      18,
+      2,
+      "FRA"
+     ]
+    ],
+    "gen": 2.0
+   },
+   "art": {
+    "n": 30,
+    "s": "wiki_army",
+    "c": "ت",
+    "top": [
+     [
+      "D-30",
+      18,
+      2,
+      "SUN"
+     ],
+     [
+      "BM-21 Grad",
+      12,
+      2,
+      "SUN"
+     ]
+    ],
+    "gen": 2.0
+   },
+   "heli": {
+    "n": 13,
+    "s": "wiki_army",
+    "c": "ت",
+    "top": [
+     [
+      "Aérospatiale SA 342 Gazelle",
+      6,
+      2,
+      "FRA"
+     ],
+     [
+      "Aérospatiale Alouette III",
+      3,
+      2,
+      "FRA"
+     ],
+     [
+      "Mil Mi-24 Hind",
+      3,
+      3,
+      "SUN"
+     ]
+    ],
+    "gen": 2.2
+   },
+   "ad": {
+    "n": 285,
+    "s": "wiki_army",
+    "c": "ت",
+    "top": [
+     [
+      "Type 55",
+      135,
+      2,
+      "SUN"
+     ],
+     [
+      "ZU-23-2",
+      135,
+      2,
+      "SUN"
+     ],
+     [
+      "ZPU-4",
+      15,
+      2,
+      "SUN"
+     ]
+    ],
+    "gen": 2.0
+   }
+  }
  },
  "ind": null,
  "pol": {

@@ -68,6 +68,11 @@
    "t": "تقدير المصمم (تشرين الثاني 2026) لصناعة السلاح والاستقرار: SIPRI Arms Transfers Database (أكبر المصدّرين 2020–24)، SIPRI Top 100 Arms-Producing Companies، Fragile States Index 2025، أخبار 2026",
    "u": "https://www.sipri.org/databases/armstransfers",
    "y": 2026
+  },
+  "tpl": {
+   "t": "قالب منطقة (me): موديلات شائعة ونسب تقريبية من الدبابات (مدرعات ×2.5، مدفعية ×0.9، مروحيات ×0.25) — تقدير المصمم",
+   "u": "docs/features/world-plan.md",
+   "y": 2026
   }
  },
  "gov": {
@@ -1022,6 +1027,36 @@
     "cat": "short"
    },
    {
+    "m": "S-400",
+    "n": 16,
+    "orig": "RUS",
+    "s": "wiki_army",
+    "c": "ت",
+    "note": "A video showcasing the weapons in action during a test has been released online by the Algerian Defense Ministry.",
+    "gen": 4,
+    "cat": "long"
+   },
+   {
+    "m": "S-300PMU2",
+    "n": 14,
+    "orig": "RUS",
+    "s": "wiki_army",
+    "c": "ت",
+    "note": "Also known as S-300 Favorit with a range of 195 km is capable against not just short-range ballistic missiles, but also medium-range ballist",
+    "gen": 3,
+    "cat": "long"
+   },
+   {
+    "m": "S-350 Vityaz",
+    "n": 10,
+    "orig": "RUS",
+    "s": "wiki_army",
+    "c": "ت",
+    "note": "uses the 9M96 missile which is also used on the S-400 missile system",
+    "gen": 2,
+    "cat": "short"
+   },
+   {
     "m": "Buk-MK2",
     "n": 48,
     "orig": "RUS",
@@ -1171,7 +1206,219 @@
     "gen": 2,
     "cat": "patrol"
    }
-  ]
+  ],
+  "grp": {
+   "tank": {
+    "n": 1400,
+    "s": "iiss_eq",
+    "c": "ت",
+    "top": [
+     [
+      "T-90SA",
+      600,
+      4,
+      "SUN"
+     ],
+     [
+      "T-72M1",
+      325,
+      3,
+      "SUN"
+     ],
+     [
+      "T-62",
+      290,
+      2,
+      "SUN"
+     ]
+    ],
+    "gen": 2.8
+   },
+   "afv": {
+    "n": 2789,
+    "s": "wiki_army",
+    "c": "ت",
+    "top": [
+     [
+      "TPz Fuchs 2",
+      1034,
+      2,
+      "DEU"
+     ],
+     [
+      "BMP-2M",
+      760,
+      3,
+      "SUN"
+     ],
+     [
+      "BTR-60",
+      250,
+      2,
+      "SUN"
+     ]
+    ],
+    "gen": 2.4
+   },
+   "art": {
+    "n": 3805,
+    "s": "wiki_army",
+    "c": "ت",
+    "top": [
+     [
+      "Nimr II",
+      3000,
+      2,
+      "ARE"
+     ],
+     [
+      "D-30",
+      160,
+      2,
+      "SUN"
+     ],
+     [
+      "2S1 Gvozdika",
+      140,
+      2,
+      "SUN"
+     ]
+    ],
+    "gen": 2.0
+   },
+   "jet": {
+    "n": 102,
+    "s": "iiss_eq",
+    "c": "ت",
+    "top": [
+     [
+      "Sukhoi Su-30 (Su-30MKA)",
+      72,
+      4,
+      "RUS"
+     ],
+     [
+      "Aero L-39 Albatros (L-39ZA)",
+      54,
+      2,
+      "CZE"
+     ],
+     [
+      "Mikoyan MiG-29 (MiG 29C (9.13))",
+      46,
+      3,
+      "BLR"
+     ]
+    ],
+    "gen": 3.1,
+    "note": "مجموع القوائم 321 يختلف عن الإجمالي؛ الإجمالي هو المعتمد"
+   },
+   "heli": {
+    "n": 446,
+    "s": "wiki_air",
+    "c": "ت",
+    "top": [
+     [
+      "Mil Mi-8 (Mil Mi-8AMTSh)",
+      104,
+      2,
+      "SUN"
+     ],
+     [
+      "Mil Mi-17 (–)",
+      104,
+      2,
+      "SUN"
+     ],
+     [
+      "Mil Mi-28 (Mi-28NE Night Hunter)",
+      42,
+      4,
+      "RUS"
+     ]
+    ],
+    "gen": 2.4
+   },
+   "uav": {
+    "n": 48,
+    "s": "wiki_air",
+    "c": "ت",
+    "top": [
+     [
+      "CAIG Wing Loong II (–)",
+      24,
+      4,
+      "CHN"
+     ],
+     [
+      "Denel Seeker (–)",
+      10,
+      2,
+      "ZAF"
+     ],
+     [
+      "CASC Rainbow (CH-3)",
+      5,
+      2,
+      "CHN"
+     ]
+    ],
+    "gen": 3.0
+   },
+   "ad": {
+    "n": 621,
+    "s": "wiki_army",
+    "c": "ت",
+    "top": [
+     [
+      "ZSU-23-4 Shilka",
+      225,
+      2,
+      "SUN"
+     ],
+     [
+      "Pantsir-S1/SM",
+      108,
+      3,
+      "RUS"
+     ],
+     [
+      "ZPU-2/4",
+      100,
+      2,
+      "SUN"
+     ]
+    ],
+    "gen": 2.4
+   },
+   "navy": {
+    "n": 33,
+    "s": "iiss_eq",
+    "c": "ت",
+    "top": [
+     [
+      "FPB98 MKI Ocea-class patrol boat",
+      41,
+      2,
+      "FRA"
+     ],
+     [
+      "Kebir-class patrol boat [fr]",
+      14,
+      2,
+      "GBR"
+     ],
+     [
+      "Alusafe 2000 [es]",
+      12,
+      2,
+      "ESP"
+     ]
+    ],
+    "gen": 2.0,
+    "note": "مجموع القوائم 100 يختلف عن الإجمالي؛ الإجمالي هو المعتمد"
+   }
+  }
  },
  "ind": {
   "tech": {

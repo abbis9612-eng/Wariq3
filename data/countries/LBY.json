@@ -5,6 +5,24 @@
  "tier": "B",
  "asOf": "2026-11",
  "src": {
+  "wiki_air": {
+   "t": "Wikipedia: Libyan Air Force",
+   "u": "https://en.wikipedia.org/wiki/Libyan_Air_Force?oldid=1386619486",
+   "y": 2026,
+   "note": "نسخة الصفحة بتاريخ السحب؛ أرقام ويكيبيديا تنراجع ويا مصادر ثانية"
+  },
+  "wiki_army": {
+   "t": "Wikipedia: Libyan Arab Armed Forces",
+   "u": "https://en.wikipedia.org/wiki/Libyan_Arab_Armed_Forces?oldid=1385617195",
+   "y": 2026,
+   "note": "نسخة الصفحة بتاريخ السحب؛ أرقام ويكيبيديا تنراجع ويا مصادر ثانية"
+  },
+  "wiki_navy": {
+   "t": "Wikipedia: Libyan Navy",
+   "u": "https://en.wikipedia.org/wiki/Libyan_Navy?oldid=1380009250",
+   "y": 2026,
+   "note": "نسخة الصفحة بتاريخ السحب؛ أرقام ويكيبيديا تنراجع ويا مصادر ثانية"
+  },
   "iiss_eq": {
    "t": "Wikipedia: List of countries by level of military equipment (من IISS Military Balance ومصادر ثانية)",
    "u": "https://en.wikipedia.org/wiki/List_of_countries_by_level_of_military_equipment?oldid=1384804191",
@@ -49,6 +67,11 @@
   "tierA": {
    "t": "تقدير المصمم (تشرين الثاني 2026) لصناعة السلاح والاستقرار: SIPRI Arms Transfers Database (أكبر المصدّرين 2020–24)، SIPRI Top 100 Arms-Producing Companies، Fragile States Index 2025، أخبار 2026",
    "u": "https://www.sipri.org/databases/armstransfers",
+   "y": 2026
+  },
+  "tpl": {
+   "t": "قالب منطقة (me): موديلات شائعة ونسب تقريبية من الدبابات (مدرعات ×2.5، مدفعية ×0.9، مروحيات ×0.25) — تقدير المصمم",
+   "u": "docs/features/world-plan.md",
    "y": 2026
   }
  },
@@ -193,10 +216,576 @@
    }
   },
   "land": [],
-  "air": [],
+  "air": [
+   {
+    "m": "Mikoyan-Gurevich MiG-23 (BN)",
+    "n": 2,
+    "orig": "SUN",
+    "s": "wiki_air",
+    "c": "ت",
+    "gen": 2,
+    "cat": "bomber"
+   },
+   {
+    "m": "Mirage F1",
+    "n": 2,
+    "orig": "FRA",
+    "s": "wiki_air",
+    "c": "ت",
+    "note": "Updated to a high standard in 2021",
+    "gen": 2,
+    "cat": "attack"
+   },
+   {
+    "m": "Sukhoi Su-24 (MK)",
+    "n": 2,
+    "orig": "RUS",
+    "s": "wiki_air",
+    "c": "ت",
+    "gen": 3,
+    "cat": "bomber"
+   },
+   {
+    "m": "Soko J-21 Jastreb",
+    "n": 1,
+    "orig": "YUG",
+    "s": "wiki_air",
+    "c": "ت",
+    "note": "Serviceability doubtful.",
+    "gen": 2,
+    "cat": "attack"
+   },
+   {
+    "m": "TAI Hürkuş (C)",
+    "n": 12,
+    "orig": "TUR",
+    "s": "wiki_air",
+    "c": "ت",
+    "gen": 2,
+    "cat": "attack"
+   },
+   {
+    "m": "Aero L-39 Albatros (Tamenhant)",
+    "n": 10,
+    "orig": "CSK",
+    "s": "wiki_air",
+    "c": "ت",
+    "note": "Libyan upgraded variant of the L-39 incorporating local manufacturing parts and an Italian supervised engine.",
+    "gen": 2,
+    "cat": "fighter"
+   },
+   {
+    "m": "Mi-35 Hind-E",
+    "n": 2,
+    "orig": "RUS",
+    "s": "wiki_air",
+    "c": "ت",
+    "gen": 3,
+    "cat": "heli_attack"
+   },
+   {
+    "m": "AW101",
+    "n": 1,
+    "orig": "ITA",
+    "s": "wiki_air",
+    "c": "ت",
+    "gen": 2,
+    "cat": "heli_util"
+   },
+   {
+    "m": "Soko G-2 Galeb",
+    "n": 3,
+    "orig": "YUG",
+    "s": "wiki_air",
+    "c": "ت",
+    "gen": 2,
+    "cat": "attack"
+   },
+   {
+    "m": "Baykar Bayraktar Akıncı",
+    "n": 3,
+    "orig": "TUR",
+    "s": "wiki_air",
+    "c": "ت",
+    "note": "One crashed in January 2025.",
+    "gen": 4,
+    "cat": "uav_strike"
+   },
+   {
+    "m": "Baykar Bayraktar TB2",
+    "n": 30,
+    "orig": "TUR",
+    "s": "wiki_air",
+    "c": "ت",
+    "note": "Several were lost during the Libyan crisis.",
+    "gen": 4,
+    "cat": "uav_strike"
+   },
+   {
+    "m": "TAI Anka-S",
+    "n": 12,
+    "orig": "TUR",
+    "s": "wiki_air",
+    "c": "ت",
+    "gen": 2,
+    "cat": "uav_isr"
+   },
+   {
+    "m": "Kargu-2",
+    "n": 7,
+    "orig": "TUR",
+    "s": "wiki_air",
+    "c": "ت",
+    "gen": 2,
+    "cat": "uav_strike"
+   },
+   {
+    "m": "Mikoyan-Gurevich MiG-21 (MF)",
+    "n": 10,
+    "orig": "SUN",
+    "s": "wiki_air",
+    "c": "ت",
+    "gen": 1,
+    "cat": "fighter"
+   },
+   {
+    "m": "Mikoyan-Gurevich MiG-23 (ML/BN)",
+    "n": 2,
+    "orig": "SUN",
+    "s": "wiki_air",
+    "c": "ت",
+    "gen": 2,
+    "cat": "fighter"
+   },
+   {
+    "m": "Mirage F-1 (AD/ED)",
+    "n": 2,
+    "orig": "FRA",
+    "s": "wiki_air",
+    "c": "ت",
+    "gen": 2,
+    "cat": "bomber"
+   },
+   {
+    "m": "Sukhoi Su-22 (UM3)",
+    "n": 1,
+    "orig": "SUN",
+    "s": "wiki_air",
+    "c": "ت",
+    "gen": 2,
+    "cat": "bomber"
+   },
+   {
+    "m": "Aérospatiale Gazelle (SA 341)",
+    "n": 3,
+    "orig": "FRA",
+    "s": "wiki_air",
+    "c": "ت",
+    "gen": 2,
+    "cat": "heli_util"
+   },
+   {
+    "m": "Eurocopter AS332 Super Puma",
+    "n": 3,
+    "orig": "FRA",
+    "s": "wiki_air",
+    "c": "ت",
+    "gen": 4,
+    "cat": "heli_util"
+   },
+   {
+    "m": "Mikoyan-Gurevich MiG-21 (UM)",
+    "n": 1,
+    "orig": "SUN",
+    "s": "wiki_air",
+    "c": "ت",
+    "gen": 1,
+    "cat": "trainer"
+   },
+   {
+    "m": "Aero L-39 Albatros (ZO)",
+    "n": 10,
+    "orig": "CSK",
+    "s": "wiki_air",
+    "c": "ت",
+    "gen": 2,
+    "cat": "attack"
+   },
+   {
+    "m": "SIAI-Marchetti SF.260 (ML)",
+    "n": 8,
+    "orig": "ITA",
+    "s": "wiki_air",
+    "c": "ت",
+    "gen": 2,
+    "cat": "attack"
+   },
+   {
+    "m": "CAIG Wing Loong",
+    "n": 80,
+    "orig": "CHN",
+    "s": "wiki_air",
+    "c": "ت",
+    "gen": 4,
+    "cat": "uav_strike"
+   },
+   {
+    "m": "CAIG Wing Loong II",
+    "n": 10,
+    "orig": "CHN",
+    "s": "wiki_air",
+    "c": "ت",
+    "gen": 4,
+    "cat": "uav_strike"
+   },
+   {
+    "m": "Qods Mohajer (Mohajer-4)",
+    "n": 12,
+    "orig": "IRN",
+    "s": "wiki_air",
+    "c": "ت",
+    "gen": 2,
+    "cat": "uav_isr"
+   },
+   {
+    "m": "Orlan-10",
+    "n": 10,
+    "orig": "RUS",
+    "s": "wiki_air",
+    "c": "ت",
+    "gen": 2,
+    "cat": "uav_isr"
+   }
+  ],
   "ad": [],
   "msl": [],
-  "navy": []
+  "navy": [
+   {
+    "m": "Koni class",
+    "n": 1,
+    "orig": "SUN",
+    "s": "wiki_navy",
+    "c": "ت",
+    "note": "Flagship of the Libyan Navy. Stationed in Malta for refit from 2013 to 2025.",
+    "gen": 2,
+    "cat": "frigate"
+   },
+   {
+    "m": "Al karamah",
+    "n": 1,
+    "orig": "IRL",
+    "s": "wiki_navy",
+    "c": "ت",
+    "note": "in service from 2019. Mounted with one 40mm cannon and two 20mm secondary cannons",
+    "gen": 2,
+    "cat": "frigate"
+   },
+   {
+    "m": "Shafak class",
+    "n": 1,
+    "orig": "LBY",
+    "s": "wiki_navy",
+    "c": "ت",
+    "note": "heavily modified to serve as a corvette by Muammar Gaddafi equipped with one Bofors L70 and 4 OTO Melara 76 mm and Otomat MK2",
+    "gen": 2,
+    "cat": "frigate"
+   },
+   {
+    "m": "Type PV30-LS",
+    "n": 6,
+    "orig": "HRV",
+    "s": "wiki_navy",
+    "c": "ت",
+    "gen": 2,
+    "cat": "patrol"
+   },
+   {
+    "m": "Corrubia class",
+    "n": 4,
+    "orig": "ITA",
+    "s": "wiki_navy",
+    "c": "ت",
+    "note": "Sent by European Union",
+    "gen": 2,
+    "cat": "patrol"
+   },
+   {
+    "m": "FPB 110 MK2",
+    "n": 6,
+    "orig": "FRA",
+    "s": "wiki_navy",
+    "c": "ت",
+    "gen": 4,
+    "cat": "patrol"
+   },
+   {
+    "m": "Safe and rescue boats",
+    "n": 4,
+    "orig": "LBY",
+    "s": "wiki_navy",
+    "c": "ت",
+    "note": "naval boats introduced by son of Khalifa Haftar in 2025",
+    "gen": 2,
+    "cat": "patrol"
+   },
+   {
+    "m": "Bigliani-class",
+    "n": 4,
+    "orig": "ITA",
+    "s": "wiki_navy",
+    "c": "ت",
+    "note": "Added by 2022 from italy",
+    "gen": 2,
+    "cat": "patrol"
+   },
+   {
+    "m": "Rigid hull inflatable boat",
+    "n": 50,
+    "orig": "FRA",
+    "s": "wiki_navy",
+    "c": "ت",
+    "note": "operate under the 80th special amphibious assault battalion of 111th Brigade Majhfal further supported by their website",
+    "gen": 2,
+    "cat": "patrol"
+   },
+   {
+    "m": "Alqayid-class",
+    "n": 2,
+    "orig": "LBY",
+    "s": "wiki_navy",
+    "c": "ت",
+    "note": "SSA Modified civilian Turkish boat with 900HP capable of reaching 30Knot. Later given to Naval Special Forces (Libya)",
+    "gen": 2,
+    "cat": "patrol"
+   },
+   {
+    "m": "Flex fighter-class",
+    "n": 4,
+    "orig": "SGP",
+    "s": "wiki_navy",
+    "c": "ت",
+    "gen": 2,
+    "cat": "patrol"
+   },
+   {
+    "m": "Ibn ouf-class",
+    "n": 2,
+    "orig": "ITA",
+    "s": "wiki_navy",
+    "c": "ت",
+    "note": "Capacity: 11 tanks or 240 troops. Revised in croatia into independent class. With Twin MTU Friedrichshafen and Two DARDO Bofors L/70 and the",
+    "gen": 2,
+    "cat": "amphib"
+   },
+   {
+    "m": "Tariq ibn ziyad",
+    "n": 1,
+    "orig": "LBY",
+    "s": "wiki_navy",
+    "c": "ت",
+    "note": "Operated by the LNA.",
+    "gen": 2,
+    "cat": "amphib"
+   },
+   {
+    "m": "penguin landing craft",
+    "n": 1,
+    "orig": "SGP",
+    "s": "wiki_navy",
+    "c": "ت",
+    "gen": 2,
+    "cat": "amphib"
+   }
+  ],
+  "grp": {
+   "tank": {
+    "n": 300,
+    "s": "iiss_eq",
+    "c": "ت",
+    "top": [
+     [
+      "T-62",
+      null,
+      null,
+      null
+     ],
+     [
+      "T-55",
+      null,
+      null,
+      null
+     ],
+     [
+      "M60",
+      null,
+      null,
+      null
+     ]
+    ],
+    "gen": 2,
+    "tpl": "me"
+   },
+   "afv": {
+    "n": 750,
+    "s": "tpl",
+    "c": "ق",
+    "top": [
+     [
+      "BMP-1",
+      null,
+      null,
+      null
+     ],
+     [
+      "M113",
+      null,
+      null,
+      null
+     ],
+     [
+      "BTR-60",
+      null,
+      null,
+      null
+     ]
+    ],
+    "gen": 2,
+    "tpl": "me"
+   },
+   "art": {
+    "n": 270,
+    "s": "tpl",
+    "c": "ق",
+    "top": [
+     [
+      "D-30",
+      null,
+      null,
+      null
+     ],
+     [
+      "M109",
+      null,
+      null,
+      null
+     ],
+     [
+      "BM-21 Grad",
+      null,
+      null,
+      null
+     ]
+    ],
+    "gen": 2,
+    "tpl": "me"
+   },
+   "jet": {
+    "n": 20,
+    "s": "iiss_eq",
+    "c": "ت",
+    "top": [
+     [
+      "TAI Hürkuş (C)",
+      12,
+      2,
+      "TUR"
+     ],
+     [
+      "Aero L-39 Albatros (Tamenhant)",
+      10,
+      2,
+      "CSK"
+     ],
+     [
+      "Mikoyan-Gurevich MiG-21 (MF)",
+      10,
+      1,
+      "SUN"
+     ]
+    ],
+    "gen": 1.9,
+    "note": "مجموع القوائم 65 يختلف عن الإجمالي؛ الإجمالي هو المعتمد"
+   },
+   "heli": {
+    "n": 9,
+    "s": "wiki_air",
+    "c": "ت",
+    "top": [
+     [
+      "Aérospatiale Gazelle (SA 341)",
+      3,
+      2,
+      "FRA"
+     ],
+     [
+      "Eurocopter AS332 Super Puma",
+      3,
+      4,
+      "FRA"
+     ],
+     [
+      "Mi-35 Hind-E",
+      2,
+      3,
+      "RUS"
+     ]
+    ],
+    "gen": 2.9
+   },
+   "uav": {
+    "n": 164,
+    "s": "wiki_air",
+    "c": "ت",
+    "top": [
+     [
+      "CAIG Wing Loong",
+      80,
+      4,
+      "CHN"
+     ],
+     [
+      "Baykar Bayraktar TB2",
+      30,
+      4,
+      "TUR"
+     ],
+     [
+      "TAI Anka-S",
+      12,
+      2,
+      "TUR"
+     ]
+    ],
+    "gen": 3.5
+   },
+   "navy": {
+    "n": 2,
+    "s": "iiss_eq",
+    "c": "ت",
+    "top": [
+     [
+      "Rigid hull inflatable boat",
+      50,
+      2,
+      "FRA"
+     ],
+     [
+      "Type PV30-LS",
+      6,
+      2,
+      "HRV"
+     ],
+     [
+      "FPB 110 MK2",
+      6,
+      4,
+      "FRA"
+     ]
+    ],
+    "gen": 2.1,
+    "note": "مجموع القوائم 87 يختلف عن الإجمالي؛ الإجمالي هو المعتمد"
+   }
+  }
  },
  "ind": null,
  "pol": {

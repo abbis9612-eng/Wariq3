@@ -68,6 +68,11 @@
    "t": "تقدير المصمم (تشرين الثاني 2026) لصناعة السلاح والاستقرار: SIPRI Arms Transfers Database (أكبر المصدّرين 2020–24)، SIPRI Top 100 Arms-Producing Companies، Fragile States Index 2025، أخبار 2026",
    "u": "https://www.sipri.org/databases/armstransfers",
    "y": 2026
+  },
+  "tpl": {
+   "t": "قالب منطقة (as): موديلات شائعة ونسب تقريبية من الدبابات (مدرعات ×2.5، مدفعية ×0.9، مروحيات ×0.25) — تقدير المصمم",
+   "u": "docs/features/world-plan.md",
+   "y": 2026
   }
  },
  "gov": {
@@ -620,7 +625,158 @@
     "cat": "srbm"
    }
   ],
-  "navy": []
+  "navy": [],
+  "grp": {
+   "tank": {
+    "n": 3500,
+    "s": "iiss_eq",
+    "c": "ت",
+    "top": [
+     [
+      "T-54/55",
+      1000,
+      1,
+      "SUN"
+     ],
+     [
+      "Chonma-ho",
+      1000,
+      2,
+      "PRK"
+     ],
+     [
+      "T-62",
+      800,
+      2,
+      "SUN"
+     ]
+    ],
+    "gen": 1.6
+   },
+   "afv": {
+    "n": 1742,
+    "s": "wiki_army",
+    "c": "ت",
+    "top": [
+     [
+      "BTR-60",
+      1200,
+      2,
+      "SUN"
+     ],
+     [
+      "Type 63",
+      500,
+      2,
+      "CHN"
+     ],
+     [
+      "BTR-80A",
+      32,
+      3,
+      "RUS"
+     ]
+    ],
+    "gen": 2.0
+   },
+   "art": {
+    "n": 4122,
+    "s": "wiki_army",
+    "c": "ت",
+    "top": [
+     [
+      "ZU-23-2",
+      1500,
+      2,
+      "INT"
+     ],
+     [
+      "M1939",
+      1000,
+      2,
+      "INT"
+     ],
+     [
+      "AZP S-60",
+      600,
+      2,
+      "INT"
+     ]
+    ],
+    "gen": 2.0
+   },
+   "jet": {
+    "n": 572,
+    "s": "iiss_eq",
+    "c": "ت",
+    "top": [
+     [
+      "Shenyang F-5",
+      106,
+      2,
+      "CHN"
+     ],
+     [
+      "Shenyang J-6 (F-6C)",
+      97,
+      1,
+      "CHN"
+     ],
+     [
+      "Ilyushin Il-28 (H-5)",
+      80,
+      2,
+      "SUN"
+     ]
+    ],
+    "gen": 1.9
+   },
+   "heli": {
+    "n": 253,
+    "s": "wiki_air",
+    "c": "ت",
+    "top": [
+     [
+      "MD Helicopters MD 500",
+      84,
+      2,
+      "USA"
+     ],
+     [
+      "PZL Mi-2 (T)",
+      48,
+      2,
+      "INT"
+     ],
+     [
+      "Harbin Z-5",
+      48,
+      2,
+      "CHN"
+     ]
+    ],
+    "gen": 2.1
+   },
+   "uav": {
+    "n": 10,
+    "s": "wiki_air",
+    "c": "ت",
+    "top": [
+     [
+      "Yakovlev Pchela",
+      10,
+      2,
+      "RUS"
+     ]
+    ],
+    "gen": 2.0
+   },
+   "navy": {
+    "n": 88,
+    "s": "iiss_eq",
+    "c": "ت"
+   }
+  }
  },
  "ind": {
   "tech": {

@@ -68,6 +68,11 @@
    "t": "تقدير المصمم (تشرين الثاني 2026) لصناعة السلاح والاستقرار: SIPRI Arms Transfers Database (أكبر المصدّرين 2020–24)، SIPRI Top 100 Arms-Producing Companies، Fragile States Index 2025، أخبار 2026",
    "u": "https://www.sipri.org/databases/armstransfers",
    "y": 2026
+  },
+  "tpl": {
+   "t": "قالب منطقة (as): موديلات شائعة ونسب تقريبية من الدبابات (مدرعات ×2.5، مدفعية ×0.9، مروحيات ×0.25) — تقدير المصمم",
+   "u": "docs/features/world-plan.md",
+   "y": 2026
   }
  },
  "gov": {
@@ -1670,7 +1675,293 @@
    }
   ],
   "msl": [],
-  "navy": []
+  "navy": [
+   {
+    "m": "Type 094 submarine",
+    "n": 6,
+    "orig": "INT",
+    "s": "wiki_navy",
+    "c": "ت",
+    "note": "Nuclear-powered",
+    "gen": 2,
+    "cat": "sub"
+   },
+   {
+    "m": "Type 032 submarine",
+    "n": 1,
+    "orig": "INT",
+    "s": "wiki_navy",
+    "c": "ت",
+    "note": "Conventionally powered and used for missile testing",
+    "gen": 2,
+    "cat": "sub"
+   },
+   {
+    "m": "Type 022",
+    "n": 60,
+    "orig": "INT",
+    "s": "wiki_navy",
+    "c": "ت",
+    "gen": 2,
+    "cat": "missile_boat"
+   },
+   {
+    "m": "Type 037II",
+    "n": 22,
+    "orig": "INT",
+    "s": "wiki_navy",
+    "c": "ت",
+    "gen": 2,
+    "cat": "missile_boat"
+   },
+   {
+    "m": "Type 037IG",
+    "n": 22,
+    "orig": "INT",
+    "s": "wiki_navy",
+    "c": "ت",
+    "gen": 2,
+    "cat": "missile_boat"
+   },
+   {
+    "m": "Type 082I",
+    "n": 12,
+    "orig": "INT",
+    "s": "wiki_navy",
+    "c": "ت",
+    "gen": 2,
+    "cat": "patrol"
+   },
+   {
+    "m": "Type 082",
+    "n": 4,
+    "orig": "INT",
+    "s": "wiki_navy",
+    "c": "ت",
+    "gen": 2,
+    "cat": "patrol"
+   },
+   {
+    "m": "PLA Navy landing barges",
+    "n": 2,
+    "orig": "INT",
+    "s": "wiki_navy",
+    "c": "ت",
+    "note": "A set of three barges is used together.",
+    "gen": 2,
+    "cat": "amphib"
+   }
+  ],
+  "grp": {
+   "tank": {
+    "n": 4800,
+    "s": "iiss_eq",
+    "c": "ت",
+    "top": [
+     [
+      "Type 96",
+      2600,
+      3,
+      "CHN"
+     ],
+     [
+      "Type 99",
+      1400,
+      2,
+      "CHN"
+     ],
+     [
+      "Type 15 tank",
+      1000,
+      2,
+      "CHN"
+     ]
+    ],
+    "gen": 2.5
+   },
+   "afv": {
+    "n": 20350,
+    "s": "wiki_army",
+    "c": "ت",
+    "top": [
+     [
+      "ZSL-10",
+      5950,
+      2,
+      "CHN"
+     ],
+     [
+      "ZBL-08",
+      3250,
+      2,
+      "CHN"
+     ],
+     [
+      "ZBD-04A",
+      2600,
+      2,
+      "CHN"
+     ]
+    ],
+    "gen": 2.0
+   },
+   "art": {
+    "n": 32810,
+    "s": "wiki_army",
+    "c": "ت",
+    "top": [
+     [
+      "PG-99 (Type 90)",
+      7000,
+      2,
+      "CHN"
+     ],
+     [
+      "PG-87",
+      7000,
+      2,
+      "CHN"
+     ],
+     [
+      "PG-74",
+      7000,
+      2,
+      "CHN"
+     ]
+    ],
+    "gen": 2.0
+   },
+   "jet": {
+    "n": 1570,
+    "s": "iiss_eq",
+    "c": "ت",
+    "top": [
+     [
+      "Shenyang J-16 (J-16/D)",
+      330,
+      4,
+      "CHN"
+     ],
+     [
+      "Chengdu J-20 (J-20A/S)",
+      300,
+      5,
+      "CHN"
+     ],
+     [
+      "Shenyang J-11 (J-11/B/BS/BG)",
+      245,
+      2,
+      "CHN"
+     ]
+    ],
+    "gen": 3.2
+   },
+   "heli": {
+    "n": 1991,
+    "s": "wiki_air",
+    "c": "ت",
+    "top": [
+     [
+      "Changhe Z-10",
+      300,
+      2,
+      "CHN"
+     ],
+     [
+      "Harbin Z-19",
+      200,
+      2,
+      "CHN"
+     ],
+     [
+      "Harbin Z-20",
+      150,
+      2,
+      "CHN"
+     ]
+    ],
+    "gen": 2.0
+   },
+   "uav": {
+    "n": 53,
+    "s": "wiki_air",
+    "c": "ت",
+    "top": [
+     [
+      "Guizhou WZ-7",
+      24,
+      2,
+      "CHN"
+     ],
+     [
+      "Chengdu GJ-1",
+      12,
+      2,
+      "CHN"
+     ],
+     [
+      "Chengdu WZ-10",
+      8,
+      2,
+      "CHN"
+     ]
+    ],
+    "gen": 2.1
+   },
+   "ad": {
+    "n": 1150,
+    "s": "wiki_army",
+    "c": "ت",
+    "top": [
+     [
+      "PGZ-95 / PGZ-04",
+      270,
+      2,
+      "CHN"
+     ],
+     [
+      "HQ-16A/B",
+      250,
+      2,
+      "CHN"
+     ],
+     [
+      "HQ-17/A",
+      250,
+      2,
+      "CHN"
+     ]
+    ],
+    "gen": 2.0
+   },
+   "navy": {
+    "n": 307,
+    "s": "iiss_eq",
+    "c": "ت",
+    "top": [
+     [
+      "Type 022",
+      60,
+      2,
+      "INT"
+     ],
+     [
+      "Type 037II",
+      22,
+      2,
+      "INT"
+     ],
+     [
+      "Type 037IG",
+      22,
+      2,
+      "INT"
+     ]
+    ],
+    "gen": 2.0
+   }
+  }
  },
  "ind": {
   "tech": {

@@ -62,6 +62,11 @@
    "t": "تقدير المصمم (تشرين الثاني 2026) لصناعة السلاح والاستقرار: SIPRI Arms Transfers Database (أكبر المصدّرين 2020–24)، SIPRI Top 100 Arms-Producing Companies، Fragile States Index 2025، أخبار 2026",
    "u": "https://www.sipri.org/databases/armstransfers",
    "y": 2026
+  },
+  "tpl": {
+   "t": "قالب منطقة (me): موديلات شائعة ونسب تقريبية من الدبابات (مدرعات ×2.5، مدفعية ×0.9، مروحيات ×0.25) — تقدير المصمم",
+   "u": "docs/features/world-plan.md",
+   "y": 2026
   }
  },
  "gov": {
@@ -496,7 +501,136 @@
   ],
   "ad": [],
   "msl": [],
-  "navy": []
+  "navy": [],
+  "grp": {
+   "tank": {
+    "n": 450,
+    "s": "iiss_eq",
+    "c": "ت",
+    "top": [
+     [
+      "T-62",
+      null,
+      null,
+      null
+     ],
+     [
+      "T-55",
+      null,
+      null,
+      null
+     ],
+     [
+      "M60",
+      null,
+      null,
+      null
+     ]
+    ],
+    "gen": 2,
+    "tpl": "me"
+   },
+   "afv": {
+    "n": 1125,
+    "s": "tpl",
+    "c": "ق",
+    "top": [
+     [
+      "BMP-1",
+      null,
+      null,
+      null
+     ],
+     [
+      "M113",
+      null,
+      null,
+      null
+     ],
+     [
+      "BTR-60",
+      null,
+      null,
+      null
+     ]
+    ],
+    "gen": 2,
+    "tpl": "me"
+   },
+   "art": {
+    "n": 405,
+    "s": "tpl",
+    "c": "ق",
+    "top": [
+     [
+      "D-30",
+      null,
+      null,
+      null
+     ],
+     [
+      "M109",
+      null,
+      null,
+      null
+     ],
+     [
+      "BM-21 Grad",
+      null,
+      null,
+      null
+     ]
+    ],
+    "gen": 2,
+    "tpl": "me"
+   },
+   "jet": {
+    "n": 63,
+    "s": "iiss_eq",
+    "c": "ت",
+    "top": [
+     [
+      "F-16 Fighting Falcon (F-16AM Block 20 ML",
+      44,
+      3,
+      "USA"
+     ],
+     [
+      "F-16 Fighting Falcon (F-16BM Block 20 ML",
+      18,
+      3,
+      "USA"
+     ]
+    ],
+    "gen": 3.0
+   },
+   "heli": {
+    "n": 117,
+    "s": "wiki_air",
+    "c": "ت",
+    "top": [
+     [
+      "Bell AH-1 Cobra (AH-1F)",
+      32,
+      2,
+      "USA"
+     ],
+     [
+      "Robinson R44",
+      12,
+      2,
+      "USA"
+     ],
+     [
+      "Bell AH-1 Cobra (AH-1F (SES))",
+      11,
+      2,
+      "USA"
+     ]
+    ],
+    "gen": 2.1
+   }
+  }
  },
  "ind": {
   "tech": {

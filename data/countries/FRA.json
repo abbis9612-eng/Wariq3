@@ -68,6 +68,11 @@
    "t": "تقدير المصمم (تشرين الثاني 2026) لصناعة السلاح والاستقرار: SIPRI Arms Transfers Database (أكبر المصدّرين 2020–24)، SIPRI Top 100 Arms-Producing Companies، Fragile States Index 2025، أخبار 2026",
    "u": "https://www.sipri.org/databases/armstransfers",
    "y": 2026
+  },
+  "tpl": {
+   "t": "قالب منطقة (eu): موديلات شائعة ونسب تقريبية من الدبابات (مدرعات ×2.5، مدفعية ×0.9، مروحيات ×0.25) — تقدير المصمم",
+   "u": "docs/features/world-plan.md",
+   "y": 2026
   }
  },
  "gov": {
@@ -311,6 +316,16 @@
     "s": "wiki_army",
     "c": "ت",
     "note": "Successor of the AMX 10 RC, ERC 90 Sagaie and VAB Mephisto 300 units were ordered under the Scorpion program and will be delivered from 2021",
+    "gen": 2,
+    "cat": "apc"
+   },
+   {
+    "m": "EBRC Kiosque",
+    "n": 2,
+    "orig": "FRA",
+    "s": "wiki_army",
+    "c": "ت",
+    "note": "Ordered and delivered from 2022 Used for ABC training and practice on EBRC Jaguar",
     "gen": 2,
     "cat": "apc"
    },
@@ -795,6 +810,34 @@
   ],
   "ad": [
    {
+    "m": "Griffon VOA & Serval OA (Armoured artillery observation vehicle)",
+    "n": 64,
+    "orig": "FRA",
+    "s": "wiki_army",
+    "c": "ت",
+    "gen": 2,
+    "cat": "short"
+   },
+   {
+    "m": "MO 120 RT F1 (120 mm mortar)",
+    "n": 174,
+    "orig": "FRA",
+    "s": "wiki_army",
+    "c": "ت",
+    "note": "174 in service as of December 2025",
+    "gen": 2,
+    "cat": "short"
+   },
+   {
+    "m": "Griffon MEPAC & Serval 120 mm Mortar Carrier (120mm Mortar Carrier)",
+    "n": 39,
+    "orig": "FRA",
+    "s": "wiki_army",
+    "c": "ت",
+    "gen": 2,
+    "cat": "short"
+   },
+   {
     "m": "Mistral (Short-range surface-to-air missile system)",
     "n": 234,
     "orig": "FRA",
@@ -806,7 +849,173 @@
    }
   ],
   "msl": [],
-  "navy": []
+  "navy": [],
+  "grp": {
+   "tank": {
+    "n": 200,
+    "s": "iiss_eq",
+    "c": "ت",
+    "top": [
+     [
+      "Leclerc",
+      225,
+      4,
+      "FRA"
+     ],
+     [
+      "Leclerc XLR",
+      21,
+      4,
+      "FRA"
+     ]
+    ],
+    "gen": 4.0
+   },
+   "afv": {
+    "n": 10568,
+    "s": "wiki_army",
+    "c": "ت",
+    "top": [
+     [
+      "Arquus Trapper VT4 (Light utility vehicl",
+      3949,
+      2,
+      "FRA"
+     ],
+     [
+      "VBL",
+      1373,
+      2,
+      "FRA"
+     ],
+     [
+      "PVP",
+      1102,
+      2,
+      "FRA"
+     ]
+    ],
+    "gen": 2.0
+   },
+   "art": {
+    "n": 84,
+    "s": "wiki_army",
+    "c": "ت",
+    "top": [
+     [
+      "CAESAR (155 mm wheeled self-propelled ho",
+      75,
+      2,
+      "FRA"
+     ],
+     [
+      "LRU MLRS (227mm self-propelled multiple ",
+      9,
+      2,
+      "USA"
+     ]
+    ],
+    "gen": 2.0
+   },
+   "jet": {
+    "n": 282,
+    "s": "iiss_eq",
+    "c": "ت",
+    "top": [
+     [
+      "Dassault Mirage 2000 (Mirage 2000D - RMV",
+      50,
+      3,
+      "FRA"
+     ],
+     [
+      "Pilatus PC-21 (–)",
+      26,
+      2,
+      "CHE"
+     ],
+     [
+      "Dassault Mirage 2000 (Mirage 2000-5F)",
+      22,
+      3,
+      "FRA"
+     ]
+    ],
+    "gen": 2.7,
+    "note": "مجموع القوائم 98 يختلف عن الإجمالي؛ الإجمالي هو المعتمد"
+   },
+   "heli": {
+    "n": 382,
+    "s": "wiki_air",
+    "c": "ت",
+    "top": [
+     [
+      "Aérospatiale Gazelle",
+      80,
+      2,
+      "FRA"
+     ],
+     [
+      "Eurocopter Tiger HAP/HAD",
+      67,
+      2,
+      "INT"
+     ],
+     [
+      "NHIndustries NH90",
+      63,
+      2,
+      "INT"
+     ]
+    ],
+    "gen": 2.2
+   },
+   "uav": {
+    "n": 12,
+    "s": "wiki_air",
+    "c": "ت",
+    "top": [
+     [
+      "General Atomics MQ-9 Reaper (MQ-9 block ",
+      12,
+      4,
+      "USA"
+     ]
+    ],
+    "gen": 4.0
+   },
+   "ad": {
+    "n": 511,
+    "s": "wiki_army",
+    "c": "ت",
+    "top": [
+     [
+      "Mistral (Short-range surface-to-air miss",
+      234,
+      2,
+      "FRA"
+     ],
+     [
+      "MO 120 RT F1 (120 mm mortar)",
+      174,
+      2,
+      "FRA"
+     ],
+     [
+      "Griffon VOA & Serval OA (Armoured artill",
+      64,
+      2,
+      "FRA"
+     ]
+    ],
+    "gen": 2.0
+   },
+   "navy": {
+    "n": 33,
+    "s": "iiss_eq",
+    "c": "ت"
+   }
+  }
  },
  "ind": {
   "tech": {

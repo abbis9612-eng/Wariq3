@@ -68,6 +68,11 @@
    "t": "تقدير المصمم (تشرين الثاني 2026) لصناعة السلاح والاستقرار: SIPRI Arms Transfers Database (أكبر المصدّرين 2020–24)، SIPRI Top 100 Arms-Producing Companies، Fragile States Index 2025، أخبار 2026",
    "u": "https://www.sipri.org/databases/armstransfers",
    "y": 2026
+  },
+  "tpl": {
+   "t": "قالب منطقة (eu): موديلات شائعة ونسب تقريبية من الدبابات (مدرعات ×2.5، مدفعية ×0.9، مروحيات ×0.25) — تقدير المصمم",
+   "u": "docs/features/world-plan.md",
+   "y": 2026
   }
  },
  "gov": {
@@ -911,6 +916,15 @@
     "cat": "apc"
    },
    {
+    "m": "Terradyne Gurkha (LAPV)",
+    "n": 13,
+    "orig": "USA",
+    "s": "wiki_army",
+    "c": "ت",
+    "gen": 2,
+    "cat": "apc"
+   },
+   {
     "m": "T-12 (MT-12 Rapira)",
     "n": 200,
     "orig": "SUN",
@@ -918,6 +932,348 @@
     "c": "ت",
     "gen": 2,
     "cat": "atgm"
+   },
+   {
+    "m": "2B16 Nona-K [uk]",
+    "n": 2,
+    "orig": "SUN",
+    "s": "wiki_army",
+    "c": "ت",
+    "gen": 2,
+    "cat": "atgm"
+   },
+   {
+    "m": "2S9 Nona (2S9 Nona-SM 2S17-2 Nona-SV Captured: 2S23 Nona-SVK)",
+    "n": 20,
+    "orig": "SUN",
+    "s": "wiki_army",
+    "c": "ت",
+    "gen": 2,
+    "cat": "spg"
+   },
+   {
+    "m": "Panzermörser M113",
+    "n": 12,
+    "orig": "USA",
+    "s": "wiki_army",
+    "c": "ت",
+    "gen": 2,
+    "cat": "spg"
+   },
+   {
+    "m": "M120 Rak",
+    "n": 24,
+    "orig": "POL",
+    "s": "wiki_army",
+    "c": "ت",
+    "gen": 2,
+    "cat": "spg"
+   },
+   {
+    "m": "Mod 56",
+    "n": 8,
+    "orig": "ITA",
+    "s": "wiki_army",
+    "c": "ت",
+    "gen": 2,
+    "cat": "towed"
+   },
+   {
+    "m": "M101",
+    "n": 12,
+    "orig": "USA",
+    "s": "wiki_army",
+    "c": "ت",
+    "gen": 2,
+    "cat": "towed"
+   },
+   {
+    "m": "L118",
+    "n": 100,
+    "orig": "GBR",
+    "s": "wiki_army",
+    "c": "ت",
+    "gen": 2,
+    "cat": "towed"
+   },
+   {
+    "m": "D-30",
+    "n": 60,
+    "orig": "SUN",
+    "s": "wiki_army",
+    "c": "ت",
+    "gen": 2,
+    "cat": "towed"
+   },
+   {
+    "m": "M-46",
+    "n": 15,
+    "orig": "SUN",
+    "s": "wiki_army",
+    "c": "ت",
+    "gen": 2,
+    "cat": "towed"
+   },
+   {
+    "m": "D-20",
+    "n": 50,
+    "orig": "SUN",
+    "s": "wiki_army",
+    "c": "ت",
+    "gen": 2,
+    "cat": "towed"
+   },
+   {
+    "m": "2A36 Giatsint-B",
+    "n": 75,
+    "orig": "SUN",
+    "s": "wiki_army",
+    "c": "ت",
+    "gen": 2,
+    "cat": "towed"
+   },
+   {
+    "m": "2A65 Msta-B",
+    "n": 70,
+    "orig": "SUN",
+    "s": "wiki_army",
+    "c": "ت",
+    "gen": 2,
+    "cat": "towed"
+   },
+   {
+    "m": "TRF1",
+    "n": 14,
+    "orig": "FRA",
+    "s": "wiki_army",
+    "c": "ت",
+    "gen": 2,
+    "cat": "towed"
+   },
+   {
+    "m": "FH-70",
+    "n": 20,
+    "orig": "GBR",
+    "s": "wiki_army",
+    "c": "ت",
+    "gen": 2,
+    "cat": "towed"
+   },
+   {
+    "m": "M777",
+    "n": 130,
+    "orig": "GBR",
+    "s": "wiki_army",
+    "c": "ت",
+    "gen": 2,
+    "cat": "towed"
+   },
+   {
+    "m": "M114",
+    "n": 70,
+    "orig": "USA",
+    "s": "wiki_army",
+    "c": "ت",
+    "gen": 2,
+    "cat": "towed"
+   },
+   {
+    "m": "2P22 Bohdana",
+    "n": 1,
+    "orig": "UKR",
+    "s": "wiki_army",
+    "c": "ت",
+    "gen": 2,
+    "cat": "towed"
+   },
+   {
+    "m": "2S1 Gvozdika (2S1 Gvozdika 2S1 Goździks 122 PsH 74)",
+    "n": 125,
+    "orig": "SUN",
+    "s": "wiki_army",
+    "c": "ت",
+    "gen": 2,
+    "cat": "spg"
+   },
+   {
+    "m": "2S3 Akatsiya",
+    "n": 120,
+    "orig": "SUN",
+    "s": "wiki_army",
+    "c": "ت",
+    "gen": 2,
+    "cat": "spg"
+   },
+   {
+    "m": "2S19 Msta-S",
+    "n": 35,
+    "orig": "SUN",
+    "s": "wiki_army",
+    "c": "ت",
+    "gen": 2,
+    "cat": "spg"
+   },
+   {
+    "m": "ShKH vz. 77 DANA (vz. 77 DANADANA M2)",
+    "n": 12,
+    "orig": "CSK",
+    "s": "wiki_army",
+    "c": "ت",
+    "gen": 2,
+    "cat": "spg"
+   },
+   {
+    "m": "2S22 Bohdana",
+    "n": 30,
+    "orig": "UKR",
+    "s": "wiki_army",
+    "c": "ت",
+    "gen": 2,
+    "cat": "spg"
+   },
+   {
+    "m": "CAESAR (Caesar 6x6Caesar 8x8)",
+    "n": 2617,
+    "orig": "FRA",
+    "s": "wiki_army",
+    "c": "ت",
+    "gen": 2,
+    "cat": "spg"
+   },
+   {
+    "m": "Archer Artillery System (Self-propelled artillery)",
+    "n": 8,
+    "orig": "SWE",
+    "s": "wiki_army",
+    "c": "ت",
+    "gen": 2,
+    "cat": "spg"
+   },
+   {
+    "m": "PzH 2000",
+    "n": 28,
+    "orig": "DEU",
+    "s": "wiki_army",
+    "c": "ت",
+    "gen": 2,
+    "cat": "spg"
+   },
+   {
+    "m": "RCH 155",
+    "n": 36,
+    "orig": "DEU",
+    "s": "wiki_army",
+    "c": "ت",
+    "gen": 2,
+    "cat": "spg"
+   },
+   {
+    "m": "AHS Krab",
+    "n": 53,
+    "orig": "POL",
+    "s": "wiki_army",
+    "c": "ت",
+    "gen": 2,
+    "cat": "spg"
+   },
+   {
+    "m": "ShKH Zuzana (ShKH Zuzana 2)",
+    "n": 8,
+    "orig": "SVK",
+    "s": "wiki_army",
+    "c": "ت",
+    "gen": 2,
+    "cat": "spg"
+   },
+   {
+    "m": "M109 (M109A3GN M109A3DK M109A4BE M109A5Ö M109L M109A6 \"Paladin\")",
+    "n": 90,
+    "orig": "USA",
+    "s": "wiki_army",
+    "c": "ت",
+    "gen": 2,
+    "cat": "spg"
+   },
+   {
+    "m": "AS-90",
+    "n": 20,
+    "orig": "GBR",
+    "s": "wiki_army",
+    "c": "ت",
+    "gen": 2,
+    "cat": "spg"
+   },
+   {
+    "m": "2S7 Pion",
+    "n": 20,
+    "orig": "SUN",
+    "s": "wiki_army",
+    "c": "ت",
+    "gen": 2,
+    "cat": "spg"
+   },
+   {
+    "m": "BM-21 Grad (BM-21 Tornado-G)",
+    "n": 100,
+    "orig": "SUN",
+    "s": "wiki_army",
+    "c": "ت",
+    "gen": 3,
+    "cat": "mlrs"
+   },
+   {
+    "m": "RM-70 (RM-70RM-70 \"Vampire\")",
+    "n": 18,
+    "orig": "CSK",
+    "s": "wiki_army",
+    "c": "ت",
+    "gen": 2,
+    "cat": "mlrs"
+   },
+   {
+    "m": "APR-40",
+    "n": 4,
+    "orig": "ROU",
+    "s": "wiki_army",
+    "c": "ت",
+    "gen": 2,
+    "cat": "mlrs"
+   },
+   {
+    "m": "BM-27 Uragan (BM-27 Uragan BM-27 Bureviy)",
+    "n": 35,
+    "orig": "SUN",
+    "s": "wiki_army",
+    "c": "ت",
+    "gen": 2,
+    "cat": "mlrs"
+   },
+   {
+    "m": "M270 (M270B MARS II)",
+    "n": 23,
+    "orig": "USA",
+    "s": "wiki_army",
+    "c": "ت",
+    "gen": 2,
+    "cat": "mlrs"
+   },
+   {
+    "m": "M142 HIMARS",
+    "n": 38,
+    "orig": "USA",
+    "s": "wiki_army",
+    "c": "ت",
+    "gen": 2,
+    "cat": "mlrs"
+   },
+   {
+    "m": "BM-30 Smerch (BM-30 Smerch BM-30 Vilkha)",
+    "n": 40,
+    "orig": "SUN",
+    "s": "wiki_army",
+    "c": "ت",
+    "gen": 2,
+    "cat": "mlrs"
    },
    {
     "m": "RG-31 Nyala (Ambulance)",
@@ -1149,7 +1505,184 @@
     "cat": "srbm"
    }
   ],
-  "navy": []
+  "navy": [],
+  "grp": {
+   "tank": {
+    "n": 1000,
+    "s": "iiss_eq",
+    "c": "ت",
+    "top": [
+     [
+      "T-72 (T-72AMT T-72AV T-72AV mod. 2021 T-",
+      520,
+      3,
+      "SUN"
+     ],
+     [
+      "T-64 (T-64BV T-64BV mod. 2017 T-64BM \"Bu",
+      200,
+      2,
+      "SUN"
+     ],
+     [
+      "Leopard 1 (Leopard 1A5 Leopard 1A5BE)",
+      103,
+      2,
+      "DEU"
+     ]
+    ],
+    "gen": 2.7
+   },
+   "afv": {
+    "n": 13467,
+    "s": "wiki_army",
+    "c": "ت",
+    "top": [
+     [
+      "Humvee (Unknown)",
+      5000,
+      2,
+      "USA"
+     ],
+     [
+      "Roshel Senator",
+      1000,
+      3,
+      "CAN"
+     ],
+     [
+      "BTR-60 (BTR-60PB BTR-60МTAB-71M)",
+      620,
+      2,
+      "SUN"
+     ]
+    ],
+    "gen": 2.2
+   },
+   "art": {
+    "n": 4141,
+    "s": "wiki_army",
+    "c": "ت",
+    "top": [
+     [
+      "CAESAR (Caesar 6x6Caesar 8x8)",
+      2617,
+      2,
+      "FRA"
+     ],
+     [
+      "M777",
+      130,
+      2,
+      "GBR"
+     ],
+     [
+      "2S1 Gvozdika (2S1 Gvozdika 2S1 Goździks ",
+      125,
+      2,
+      "SUN"
+     ]
+    ],
+    "gen": 2.0
+   },
+   "jet": {
+    "n": 111,
+    "s": "iiss_eq",
+    "c": "ت",
+    "top": [
+     [
+      "Mikoyan MiG-29 (S/M1/M2/UB/G/AS)",
+      45,
+      3,
+      "SUN"
+     ],
+     [
+      "General Dynamics F-16 (A/AM)",
+      39,
+      3,
+      "USA"
+     ],
+     [
+      "Sukhoi Su-27 (S1M/P1M/UB1M/UP1M)",
+      23,
+      3,
+      "SUN"
+     ]
+    ],
+    "gen": 3.0
+   },
+   "heli": {
+    "n": 24,
+    "s": "wiki_air",
+    "c": "ت",
+    "top": [
+     [
+      "Mil Mi-8 (TB/MSB-V)",
+      15,
+      2,
+      "SUN"
+     ],
+     [
+      "Mil Mi-17 (E/M/V-5)",
+      7,
+      2,
+      "SUN"
+     ],
+     [
+      "Mil Mi-9",
+      2,
+      2,
+      "SUN"
+     ]
+    ],
+    "gen": 2.0
+   },
+   "uav": {
+    "n": 1124,
+    "s": "wiki_army",
+    "c": "ت",
+    "top": [
+     [
+      "Tencore Terrain Modular Infantry Transpo",
+      1000,
+      2,
+      "UKR"
+     ],
+     [
+      "EDM4S",
+      110,
+      2,
+      "LTU"
+     ],
+     [
+      "THeMIS (MEDEVAC role)",
+      14,
+      2,
+      "EST"
+     ]
+    ],
+    "gen": 2.0
+   },
+   "ad": {
+    "n": 1,
+    "s": "wiki_army",
+    "c": "ت",
+    "top": [
+     [
+      "Barnaul-T 9С932-1",
+      1,
+      2,
+      "RUS"
+     ]
+    ],
+    "gen": 2.0
+   },
+   "navy": {
+    "n": 3,
+    "s": "iiss_eq",
+    "c": "ت"
+   }
+  }
  },
  "ind": {
   "tech": {

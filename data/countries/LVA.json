@@ -5,6 +5,24 @@
  "tier": "B",
  "asOf": "2026-11",
  "src": {
+  "wiki_air": {
+   "t": "Wikipedia: Latvian Air Force",
+   "u": "https://en.wikipedia.org/wiki/Latvian_Air_Force?oldid=1386402752",
+   "y": 2026,
+   "note": "نسخة الصفحة بتاريخ السحب؛ أرقام ويكيبيديا تنراجع ويا مصادر ثانية"
+  },
+  "wiki_army": {
+   "t": "Wikipedia: List of equipment of the Latvian Land Forces",
+   "u": "https://en.wikipedia.org/wiki/List_of_equipment_of_the_Latvian_Land_Forces?oldid=1380124421",
+   "y": 2026,
+   "note": "نسخة الصفحة بتاريخ السحب؛ أرقام ويكيبيديا تنراجع ويا مصادر ثانية"
+  },
+  "wiki_navy": {
+   "t": "Wikipedia: Latvian Naval Forces",
+   "u": "https://en.wikipedia.org/wiki/Latvian_Naval_Forces?oldid=1379512355",
+   "y": 2026,
+   "note": "نسخة الصفحة بتاريخ السحب؛ أرقام ويكيبيديا تنراجع ويا مصادر ثانية"
+  },
   "iiss_eq": {
    "t": "Wikipedia: List of countries by level of military equipment (من IISS Military Balance ومصادر ثانية)",
    "u": "https://en.wikipedia.org/wiki/List_of_countries_by_level_of_military_equipment?oldid=1384804191",
@@ -49,6 +67,11 @@
   "tierA": {
    "t": "تقدير المصمم (تشرين الثاني 2026) لصناعة السلاح والاستقرار: SIPRI Arms Transfers Database (أكبر المصدّرين 2020–24)، SIPRI Top 100 Arms-Producing Companies، Fragile States Index 2025، أخبار 2026",
    "u": "https://www.sipri.org/databases/armstransfers",
+   "y": 2026
+  },
+  "tpl": {
+   "t": "قالب منطقة (eu): موديلات شائعة ونسب تقريبية من الدبابات (مدرعات ×2.5، مدفعية ×0.9، مروحيات ×0.25) — تقدير المصمم",
+   "u": "docs/features/world-plan.md",
    "y": 2026
   }
  },
@@ -219,11 +242,208 @@
     "c": "ت"
    }
   },
-  "land": [],
-  "air": [],
+  "land": [
+   {
+    "m": "CVR(T) (Scimitar Sultan Spartan Samson Samaritan)",
+    "n": 184,
+    "orig": "GBR",
+    "s": "wiki_army",
+    "c": "ت",
+    "note": "In 2020, 198 modernized vehicles in service, plus 7 used for training. Some are equipped with Spike anti-tank missiles. Some donated to Ukra",
+    "gen": 2,
+    "cat": "apc"
+   },
+   {
+    "m": "Humvee (M1043A2 M1113)",
+    "n": 30,
+    "orig": "USA",
+    "s": "wiki_army",
+    "c": "ت",
+    "note": "Ten vehicles donated by the United States in 2005. Possibly 28 more purchased later. Some equipped with HK GMG, M2 Browning and Spike anti-t",
+    "gen": 2,
+    "cat": "apc"
+   },
+   {
+    "m": "Mercedes-Benz G-Class (290GD)",
+    "n": 50,
+    "orig": "AUT",
+    "s": "wiki_army",
+    "c": "ت",
+    "note": "Second hand from Norway",
+    "gen": 2,
+    "cat": "apc"
+   },
+   {
+    "m": "M109A5Ö",
+    "n": 47,
+    "orig": "USA",
+    "s": "wiki_army",
+    "c": "ت",
+    "gen": 2,
+    "cat": "spg"
+   },
+   {
+    "m": "M109 Rechenstellenpanzer M109",
+    "n": 10,
+    "orig": "USA",
+    "s": "wiki_army",
+    "c": "ت",
+    "gen": 2,
+    "cat": "spg"
+   },
+   {
+    "m": "M109 driver training",
+    "n": 2,
+    "orig": "USA",
+    "s": "wiki_army",
+    "c": "ت",
+    "gen": 2,
+    "cat": "spg"
+   }
+  ],
+  "air": [
+   {
+    "m": "Antonov An-2",
+    "n": 4,
+    "orig": "SUN",
+    "s": "wiki_air",
+    "c": "ت",
+    "gen": 2,
+    "cat": "transport"
+   },
+   {
+    "m": "Pelegrin Tarragon",
+    "n": 2,
+    "orig": "LVA",
+    "s": "wiki_air",
+    "c": "ت",
+    "note": "Also used for reconnaissance",
+    "gen": 2,
+    "cat": "trainer"
+   },
+   {
+    "m": "Sikorsky UH-60 Black Hawk (UH-60M)",
+    "n": 4,
+    "orig": "USA",
+    "s": "wiki_air",
+    "c": "ت",
+    "note": "Used for medical evacuation, SOF transport and trainigs",
+    "gen": 2,
+    "cat": "heli_util"
+   }
+  ],
   "ad": [],
   "msl": [],
-  "navy": []
+  "navy": [
+   {
+    "m": "Skrunda",
+    "n": 5,
+    "orig": "LVA",
+    "s": "wiki_navy",
+    "c": "ت",
+    "cat": "patrol",
+    "gen": 2,
+    "note": "عدد الصفوف بالقائمة"
+   },
+   {
+    "m": "KBV",
+    "n": 6,
+    "orig": "LVA",
+    "s": "wiki_navy",
+    "c": "ت",
+    "cat": "patrol",
+    "gen": 2,
+    "note": "عدد الصفوف بالقائمة"
+   }
+  ],
+  "grp": {
+   "afv": {
+    "n": 264,
+    "s": "wiki_army",
+    "c": "ت",
+    "top": [
+     [
+      "CVR(T) (Scimitar Sultan Spartan Samson S",
+      184,
+      2,
+      "GBR"
+     ],
+     [
+      "Mercedes-Benz G-Class (290GD)",
+      50,
+      2,
+      "AUT"
+     ],
+     [
+      "Humvee (M1043A2 M1113)",
+      30,
+      2,
+      "USA"
+     ]
+    ],
+    "gen": 2.0
+   },
+   "art": {
+    "n": 59,
+    "s": "wiki_army",
+    "c": "ت",
+    "top": [
+     [
+      "M109A5Ö",
+      47,
+      2,
+      "USA"
+     ],
+     [
+      "M109 Rechenstellenpanzer M109",
+      10,
+      2,
+      "USA"
+     ],
+     [
+      "M109 driver training",
+      2,
+      2,
+      "USA"
+     ]
+    ],
+    "gen": 2.0
+   },
+   "heli": {
+    "n": 4,
+    "s": "wiki_air",
+    "c": "ت",
+    "top": [
+     [
+      "Sikorsky UH-60 Black Hawk (UH-60M)",
+      4,
+      2,
+      "USA"
+     ]
+    ],
+    "gen": 2.0
+   },
+   "navy": {
+    "n": 11,
+    "s": "wiki_navy",
+    "c": "ت",
+    "top": [
+     [
+      "KBV",
+      6,
+      2,
+      "LVA"
+     ],
+     [
+      "Skrunda",
+      5,
+      2,
+      "LVA"
+     ]
+    ],
+    "gen": 2.0
+   }
+  }
  },
  "ind": null,
  "pol": {

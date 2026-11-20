@@ -5,6 +5,24 @@
  "tier": "B",
  "asOf": "2026-11",
  "src": {
+  "wiki_air": {
+   "t": "Wikipedia: Royal Bahraini Air Force",
+   "u": "https://en.wikipedia.org/wiki/Royal_Bahraini_Air_Force?oldid=1383412247",
+   "y": 2026,
+   "note": "نسخة الصفحة بتاريخ السحب؛ أرقام ويكيبيديا تنراجع ويا مصادر ثانية"
+  },
+  "wiki_army": {
+   "t": "Wikipedia: Royal Bahraini Army",
+   "u": "https://en.wikipedia.org/wiki/Royal_Bahraini_Army?oldid=1368277882",
+   "y": 2026,
+   "note": "نسخة الصفحة بتاريخ السحب؛ أرقام ويكيبيديا تنراجع ويا مصادر ثانية"
+  },
+  "wiki_navy": {
+   "t": "Wikipedia: Royal Bahraini Naval Force",
+   "u": "https://en.wikipedia.org/wiki/Royal_Bahraini_Naval_Force?oldid=1371484286",
+   "y": 2026,
+   "note": "نسخة الصفحة بتاريخ السحب؛ أرقام ويكيبيديا تنراجع ويا مصادر ثانية"
+  },
   "iiss_eq": {
    "t": "Wikipedia: List of countries by level of military equipment (من IISS Military Balance ومصادر ثانية)",
    "u": "https://en.wikipedia.org/wiki/List_of_countries_by_level_of_military_equipment?oldid=1384804191",
@@ -49,6 +67,11 @@
   "tierA": {
    "t": "تقدير المصمم (تشرين الثاني 2026) لصناعة السلاح والاستقرار: SIPRI Arms Transfers Database (أكبر المصدّرين 2020–24)، SIPRI Top 100 Arms-Producing Companies، Fragile States Index 2025، أخبار 2026",
    "u": "https://www.sipri.org/databases/armstransfers",
+   "y": 2026
+  },
+  "tpl": {
+   "t": "قالب منطقة (me): موديلات شائعة ونسب تقريبية من الدبابات (مدرعات ×2.5، مدفعية ×0.9، مروحيات ×0.25) — تقدير المصمم",
+   "u": "docs/features/world-plan.md",
    "y": 2026
   }
  },
@@ -219,11 +242,409 @@
     "c": "ت"
    }
   },
-  "land": [],
-  "air": [],
-  "ad": [],
+  "land": [
+   {
+    "m": "M110A2 howitzer",
+    "n": 38,
+    "orig": "USA",
+    "s": "wiki_army",
+    "c": "ت",
+    "gen": 2,
+    "cat": "spg"
+   },
+   {
+    "m": "M198 howitzer",
+    "n": 18,
+    "orig": "USA",
+    "s": "wiki_army",
+    "c": "ت",
+    "gen": 2,
+    "cat": "towed"
+   },
+   {
+    "m": "L118",
+    "n": 8,
+    "orig": "GBR",
+    "s": "wiki_army",
+    "c": "ت",
+    "gen": 2,
+    "cat": "towed"
+   }
+  ],
+  "air": [
+   {
+    "m": "Lockheed Martin F-16 Fighting Falcon (F-16V Viper)",
+    "n": 16,
+    "orig": "USA",
+    "s": "wiki_air",
+    "c": "ت",
+    "gen": 4,
+    "cat": "fighter"
+   },
+   {
+    "m": "General Dynamics F-16 Fighting Falcon (F-16C/D)",
+    "n": 20,
+    "orig": "USA",
+    "s": "wiki_air",
+    "c": "ت",
+    "gen": 3,
+    "cat": "fighter"
+   },
+   {
+    "m": "Cessna 208",
+    "n": 1,
+    "orig": "USA",
+    "s": "wiki_air",
+    "c": "ت",
+    "gen": 2,
+    "cat": "transport"
+   },
+   {
+    "m": "C-130J Super Hercules (C-130J-30)",
+    "n": 2,
+    "orig": "USA",
+    "s": "wiki_air",
+    "c": "ت",
+    "note": "Former RAF aircraft",
+    "gen": 2,
+    "cat": "transport"
+   },
+   {
+    "m": "Bell 212 (Bell 212/412)",
+    "n": 22,
+    "orig": "USA",
+    "s": "wiki_air",
+    "c": "ت",
+    "gen": 2,
+    "cat": "heli_util"
+   },
+   {
+    "m": "Bell 505",
+    "n": 3,
+    "orig": "USA",
+    "s": "wiki_air",
+    "c": "ت",
+    "gen": 2,
+    "cat": "heli_util"
+   },
+   {
+    "m": "Sikorsky UH-60 (UH-60M)",
+    "n": 8,
+    "orig": "USA",
+    "s": "wiki_air",
+    "c": "ت",
+    "gen": 2,
+    "cat": "heli_util"
+   },
+   {
+    "m": "Bell AH-1Z Viper",
+    "n": 12,
+    "orig": "USA",
+    "s": "wiki_air",
+    "c": "ت",
+    "gen": 2,
+    "cat": "heli_attack"
+   },
+   {
+    "m": "Bell AH-1 Cobra (Bell AH-1E/F FB)",
+    "n": 22,
+    "orig": "USA",
+    "s": "wiki_air",
+    "c": "ت",
+    "gen": 2,
+    "cat": "heli_attack"
+   },
+   {
+    "m": "T67 Firefly",
+    "n": 3,
+    "orig": "GBR",
+    "s": "wiki_air",
+    "c": "ت",
+    "gen": 2,
+    "cat": "trainer"
+   },
+   {
+    "m": "BAE Hawk (Hawk 129)",
+    "n": 6,
+    "orig": "GBR",
+    "s": "wiki_air",
+    "c": "ت",
+    "gen": 2,
+    "cat": "trainer"
+   },
+   {
+    "m": "Northrop F-5 (F-5E/F)",
+    "n": 12,
+    "orig": "USA",
+    "s": "wiki_air",
+    "c": "ت",
+    "gen": 2,
+    "cat": "trainer"
+   },
+   {
+    "m": "F-16 Fighting Falcon (F-16D)",
+    "n": 4,
+    "orig": "USA",
+    "s": "wiki_air",
+    "c": "ت",
+    "gen": 3,
+    "cat": "trainer"
+   },
+   {
+    "m": "MBB Bo 105",
+    "n": 4,
+    "orig": "DEU",
+    "s": "wiki_air",
+    "c": "ت",
+    "gen": 2,
+    "cat": "heli_util"
+   },
+   {
+    "m": "Bell AH-1 Cobra (AH-1P)",
+    "n": 8,
+    "orig": "USA",
+    "s": "wiki_air",
+    "c": "ت",
+    "gen": 2,
+    "cat": "heli_util"
+   }
+  ],
+  "ad": [
+   {
+    "m": "MIM-104 Patriot",
+    "n": 1,
+    "orig": "USA",
+    "s": "wiki_army",
+    "c": "ت",
+    "gen": 4,
+    "cat": "long"
+   },
+   {
+    "m": "MIM-23 Hawk",
+    "n": 8,
+    "orig": "USA",
+    "s": "wiki_army",
+    "c": "ت",
+    "gen": 2,
+    "cat": "medium"
+   },
+   {
+    "m": "AN/TWQ-1 Avenger",
+    "n": 10,
+    "orig": "USA",
+    "s": "wiki_army",
+    "c": "ت",
+    "gen": 2,
+    "cat": "short"
+   },
+   {
+    "m": "Crotale",
+    "n": 7,
+    "orig": "FRA",
+    "s": "wiki_army",
+    "c": "ت",
+    "gen": 2,
+    "cat": "short"
+   },
+   {
+    "m": "FIM-92A",
+    "n": 14,
+    "orig": "USA",
+    "s": "wiki_army",
+    "c": "ت",
+    "gen": 2,
+    "cat": "short"
+   },
+   {
+    "m": "RBS 70",
+    "n": 14,
+    "orig": "SWE",
+    "s": "wiki_army",
+    "c": "ت",
+    "gen": 2,
+    "cat": "short"
+   },
+   {
+    "m": "Oerlikon 35 mm twin cannon",
+    "n": 15,
+    "orig": "CHE",
+    "s": "wiki_army",
+    "c": "ت",
+    "gen": 2,
+    "cat": "short"
+   },
+   {
+    "m": "Bofors 40 mm",
+    "n": 12,
+    "orig": "SWE",
+    "s": "wiki_army",
+    "c": "ت",
+    "gen": 2,
+    "cat": "short"
+   }
+  ],
   "msl": [],
-  "navy": []
+  "navy": [],
+  "grp": {
+   "tank": {
+    "n": 180,
+    "s": "iiss_eq",
+    "c": "ت",
+    "top": [
+     [
+      "T-62",
+      null,
+      null,
+      null
+     ],
+     [
+      "T-55",
+      null,
+      null,
+      null
+     ],
+     [
+      "M60",
+      null,
+      null,
+      null
+     ]
+    ],
+    "gen": 2,
+    "tpl": "me"
+   },
+   "afv": {
+    "n": 450,
+    "s": "tpl",
+    "c": "ق",
+    "top": [
+     [
+      "BMP-1",
+      null,
+      null,
+      null
+     ],
+     [
+      "M113",
+      null,
+      null,
+      null
+     ],
+     [
+      "BTR-60",
+      null,
+      null,
+      null
+     ]
+    ],
+    "gen": 2,
+    "tpl": "me"
+   },
+   "art": {
+    "n": 64,
+    "s": "wiki_army",
+    "c": "ت",
+    "top": [
+     [
+      "M110A2 howitzer",
+      38,
+      2,
+      "USA"
+     ],
+     [
+      "M198 howitzer",
+      18,
+      2,
+      "USA"
+     ],
+     [
+      "L118",
+      8,
+      2,
+      "GBR"
+     ]
+    ],
+    "gen": 2.0
+   },
+   "jet": {
+    "n": 17,
+    "s": "iiss_eq",
+    "c": "ت",
+    "top": [
+     [
+      "General Dynamics F-16 Fighting Falcon (F",
+      20,
+      3,
+      "USA"
+     ],
+     [
+      "Lockheed Martin F-16 Fighting Falcon (F-",
+      16,
+      4,
+      "USA"
+     ]
+    ],
+    "gen": 3.4,
+    "note": "مجموع القوائم 36 يختلف عن الإجمالي؛ الإجمالي هو المعتمد"
+   },
+   "heli": {
+    "n": 79,
+    "s": "wiki_air",
+    "c": "ت",
+    "top": [
+     [
+      "Bell 212 (Bell 212/412)",
+      22,
+      2,
+      "USA"
+     ],
+     [
+      "Bell AH-1 Cobra (Bell AH-1E/F FB)",
+      22,
+      2,
+      "USA"
+     ],
+     [
+      "Bell AH-1Z Viper",
+      12,
+      2,
+      "USA"
+     ]
+    ],
+    "gen": 2.0
+   },
+   "ad": {
+    "n": 81,
+    "s": "wiki_army",
+    "c": "ت",
+    "top": [
+     [
+      "Oerlikon 35 mm twin cannon",
+      15,
+      2,
+      "CHE"
+     ],
+     [
+      "FIM-92A",
+      14,
+      2,
+      "USA"
+     ],
+     [
+      "RBS 70",
+      14,
+      2,
+      "SWE"
+     ]
+    ],
+    "gen": 2.0
+   },
+   "navy": {
+    "n": 1,
+    "s": "iiss_eq",
+    "c": "ت"
+   }
+  }
  },
  "ind": null,
  "pol": {

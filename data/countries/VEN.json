@@ -5,6 +5,24 @@
  "tier": "B",
  "asOf": "2026-11",
  "src": {
+  "wiki_air": {
+   "t": "Wikipedia: Bolivarian Military Aviation of Venezuela",
+   "u": "https://en.wikipedia.org/wiki/Bolivarian_Military_Aviation_of_Venezuela?oldid=1366057873",
+   "y": 2026,
+   "note": "نسخة الصفحة بتاريخ السحب؛ أرقام ويكيبيديا تنراجع ويا مصادر ثانية"
+  },
+  "wiki_army": {
+   "t": "Wikipedia: List of equipment of the Venezuelan Armed Forces",
+   "u": "https://en.wikipedia.org/wiki/List_of_equipment_of_the_Venezuelan_Armed_Forces?oldid=1386084504",
+   "y": 2026,
+   "note": "نسخة الصفحة بتاريخ السحب؛ أرقام ويكيبيديا تنراجع ويا مصادر ثانية"
+  },
+  "wiki_navy": {
+   "t": "Wikipedia: Bolivarian Navy of Venezuela",
+   "u": "https://en.wikipedia.org/wiki/Bolivarian_Navy_of_Venezuela?oldid=1384041002",
+   "y": 2026,
+   "note": "نسخة الصفحة بتاريخ السحب؛ أرقام ويكيبيديا تنراجع ويا مصادر ثانية"
+  },
   "iiss_eq": {
    "t": "Wikipedia: List of countries by level of military equipment (من IISS Military Balance ومصادر ثانية)",
    "u": "https://en.wikipedia.org/wiki/List_of_countries_by_level_of_military_equipment?oldid=1384804191",
@@ -49,6 +67,11 @@
   "tierA": {
    "t": "تقدير المصمم (تشرين الثاني 2026) لصناعة السلاح والاستقرار: SIPRI Arms Transfers Database (أكبر المصدّرين 2020–24)، SIPRI Top 100 Arms-Producing Companies، Fragile States Index 2025، أخبار 2026",
    "u": "https://www.sipri.org/databases/armstransfers",
+   "y": 2026
+  },
+  "tpl": {
+   "t": "قالب منطقة (la): موديلات شائعة ونسب تقريبية من الدبابات (مدرعات ×2.5، مدفعية ×0.9، مروحيات ×0.25) — تقدير المصمم",
+   "u": "docs/features/world-plan.md",
    "y": 2026
   }
  },
@@ -204,11 +227,687 @@
     "c": "ت"
    }
   },
-  "land": [],
-  "air": [],
-  "ad": [],
+  "land": [
+   {
+    "m": "T-72B1",
+    "n": 92,
+    "orig": "SUN",
+    "s": "wiki_army",
+    "c": "ت",
+    "gen": 3,
+    "cat": "tank"
+   },
+   {
+    "m": "AMX-30V",
+    "n": 81,
+    "orig": "FRA",
+    "s": "wiki_army",
+    "c": "ت",
+    "gen": 2,
+    "cat": "tank"
+   },
+   {
+    "m": "AMX-13",
+    "n": 31,
+    "orig": "FRA",
+    "s": "wiki_army",
+    "c": "ت",
+    "gen": 2,
+    "cat": "tank"
+   },
+   {
+    "m": "BMP-3",
+    "n": 123,
+    "orig": "RUS",
+    "s": "wiki_army",
+    "c": "ت",
+    "gen": 4,
+    "cat": "ifv"
+   },
+   {
+    "m": "BTR-80A",
+    "n": 114,
+    "orig": "RUS",
+    "s": "wiki_army",
+    "c": "ت",
+    "gen": 3,
+    "cat": "ifv"
+   },
+   {
+    "m": "Dragoon 300",
+    "n": 36,
+    "orig": "USA",
+    "s": "wiki_army",
+    "c": "ت",
+    "gen": 2,
+    "cat": "apc"
+   },
+   {
+    "m": "2S19 Msta-S",
+    "n": 48,
+    "orig": "RUS",
+    "s": "wiki_army",
+    "c": "ت",
+    "gen": 2,
+    "cat": "spg"
+   },
+   {
+    "m": "M114A1",
+    "n": 12,
+    "orig": "USA",
+    "s": "wiki_army",
+    "c": "ت",
+    "gen": 2,
+    "cat": "towed"
+   },
+   {
+    "m": "M101A1",
+    "n": 40,
+    "orig": "USA",
+    "s": "wiki_army",
+    "c": "ت",
+    "gen": 2,
+    "cat": "towed"
+   },
+   {
+    "m": "Model 56",
+    "n": 40,
+    "orig": "ITA",
+    "s": "wiki_army",
+    "c": "ت",
+    "gen": 2,
+    "cat": "towed"
+   },
+   {
+    "m": "9A52 Smerch",
+    "n": 12,
+    "orig": "RUS",
+    "s": "wiki_army",
+    "c": "ت",
+    "gen": 2,
+    "cat": "mlrs"
+   },
+   {
+    "m": "LAR-160",
+    "n": 20,
+    "orig": "ISR",
+    "s": "wiki_army",
+    "c": "ت",
+    "gen": 2,
+    "cat": "mlrs"
+   },
+   {
+    "m": "BM-21 Grad",
+    "n": 24,
+    "orig": "RUS",
+    "s": "wiki_army",
+    "c": "ت",
+    "gen": 2,
+    "cat": "mlrs"
+   },
+   {
+    "m": "L/70",
+    "n": 114,
+    "orig": "SWE",
+    "s": "wiki_army",
+    "c": "ت",
+    "gen": 2,
+    "cat": "towed"
+   },
+   {
+    "m": "ZU23-2",
+    "n": 200,
+    "orig": "SUN",
+    "s": "wiki_army",
+    "c": "ت",
+    "gen": 2,
+    "cat": "towed"
+   },
+   {
+    "m": "TCM-20",
+    "n": 114,
+    "orig": "USA",
+    "s": "wiki_army",
+    "c": "ت",
+    "gen": 2,
+    "cat": "towed"
+   },
+   {
+    "m": "AMX-VCI",
+    "n": 25,
+    "orig": "FRA",
+    "s": "wiki_army",
+    "c": "ت",
+    "gen": 2,
+    "cat": "apc"
+   },
+   {
+    "m": "AMX-PC",
+    "n": 12,
+    "orig": "FRA",
+    "s": "wiki_army",
+    "c": "ت",
+    "note": "(CP).",
+    "gen": 2,
+    "cat": "apc"
+   },
+   {
+    "m": "AMX-VCTB",
+    "n": 8,
+    "orig": "FRA",
+    "s": "wiki_army",
+    "c": "ت",
+    "note": "(Amb).",
+    "gen": 2,
+    "cat": "apc"
+   },
+   {
+    "m": "Fiat 6614",
+    "n": 24,
+    "orig": "ITA",
+    "s": "wiki_army",
+    "c": "ت",
+    "gen": 2,
+    "cat": "apc"
+   },
+   {
+    "m": "UR-416",
+    "n": 20,
+    "orig": "DEU",
+    "s": "wiki_army",
+    "c": "ت",
+    "gen": 2,
+    "cat": "apc"
+   },
+   {
+    "m": "VN-1",
+    "n": 11,
+    "orig": "CHN",
+    "s": "wiki_army",
+    "c": "ت",
+    "gen": 2,
+    "cat": "ifv"
+   },
+   {
+    "m": "VN-18",
+    "n": 10,
+    "orig": "CHN",
+    "s": "wiki_army",
+    "c": "ت",
+    "gen": 2,
+    "cat": "ifv"
+   },
+   {
+    "m": "EE-11 Urutu",
+    "n": 37,
+    "orig": "BRA",
+    "s": "wiki_army",
+    "c": "ت",
+    "gen": 2,
+    "cat": "apc"
+   },
+   {
+    "m": "M-56",
+    "n": 18,
+    "orig": "YUG",
+    "s": "wiki_army",
+    "c": "ت",
+    "gen": 2,
+    "cat": "towed"
+   },
+   {
+    "m": "Fajr-1",
+    "n": 10,
+    "orig": "IRN",
+    "s": "wiki_army",
+    "c": "ت",
+    "gen": 2,
+    "cat": "mlrs"
+   }
+  ],
+  "air": [
+   {
+    "m": "F-16 Fighting Falcon (F-16A/B Block 15)",
+    "n": 3,
+    "orig": "USA",
+    "s": "wiki_air",
+    "c": "ت",
+    "note": "24 were originally purchased in 1982; only a small quantity may remain in service or potentially none at all, due to a lack of spare parts.",
+    "gen": 3,
+    "cat": "fighter"
+   },
+   {
+    "m": "Sukhoi Su-30 (Su-30MK2)",
+    "n": 14,
+    "orig": "RUS",
+    "s": "wiki_air",
+    "c": "ت",
+    "note": "24 were originally purchased, some were lost in accidents.",
+    "gen": 4,
+    "cat": "fighter"
+   },
+   {
+    "m": "Boeing 707 (KC-707)",
+    "n": 1,
+    "orig": "USA",
+    "s": "wiki_air",
+    "c": "ت",
+    "note": "Converted to support Aerial refueling",
+    "gen": 2,
+    "cat": "tanker"
+   },
+   {
+    "m": "Cessna 208",
+    "n": 2,
+    "orig": "USA",
+    "s": "wiki_air",
+    "c": "ت",
+    "note": "1 crashed in 2025",
+    "gen": 2,
+    "cat": "transport"
+   },
+   {
+    "m": "Dornier 228 (Do 228NG)",
+    "n": 3,
+    "orig": "DEU",
+    "s": "wiki_air",
+    "c": "ت",
+    "gen": 2,
+    "cat": "transport"
+   },
+   {
+    "m": "Beechcraft Super King Air (200/350)",
+    "n": 5,
+    "orig": "USA",
+    "s": "wiki_air",
+    "c": "ت",
+    "gen": 2,
+    "cat": "transport"
+   },
+   {
+    "m": "Fairchild Metroliner",
+    "n": 1,
+    "orig": "USA",
+    "s": "wiki_air",
+    "c": "ت",
+    "gen": 2,
+    "cat": "transport"
+   },
+   {
+    "m": "Lockheed C-130 (C-130H)",
+    "n": 3,
+    "orig": "USA",
+    "s": "wiki_air",
+    "c": "ت",
+    "gen": 2,
+    "cat": "transport"
+   },
+   {
+    "m": "Shaanxi Y-8",
+    "n": 8,
+    "orig": "CHN",
+    "s": "wiki_air",
+    "c": "ت",
+    "gen": 2,
+    "cat": "transport"
+   },
+   {
+    "m": "Short 360",
+    "n": 2,
+    "orig": "GBR",
+    "s": "wiki_air",
+    "c": "ت",
+    "gen": 2,
+    "cat": "transport"
+   },
+   {
+    "m": "Enstrom 280",
+    "n": 2,
+    "orig": "USA",
+    "s": "wiki_air",
+    "c": "ت",
+    "gen": 2,
+    "cat": "heli_util"
+   },
+   {
+    "m": "Enstrom 480",
+    "n": 11,
+    "orig": "USA",
+    "s": "wiki_air",
+    "c": "ت",
+    "note": "4 on order. 1 crashed in 2025.",
+    "gen": 2,
+    "cat": "heli_util"
+   },
+   {
+    "m": "Eurocopter AS532",
+    "n": 10,
+    "orig": "FRA",
+    "s": "wiki_air",
+    "c": "ت",
+    "gen": 2,
+    "cat": "heli_util"
+   },
+   {
+    "m": "Mil Mi-17",
+    "n": 6,
+    "orig": "RUS",
+    "s": "wiki_air",
+    "c": "ت",
+    "gen": 2,
+    "cat": "heli_util"
+   },
+   {
+    "m": "Diamond DA42",
+    "n": 6,
+    "orig": "AUT",
+    "s": "wiki_air",
+    "c": "ت",
+    "gen": 2,
+    "cat": "trainer"
+   },
+   {
+    "m": "Embraer EMB 312",
+    "n": 17,
+    "orig": "BRA",
+    "s": "wiki_air",
+    "c": "ت",
+    "gen": 2,
+    "cat": "trainer"
+   },
+   {
+    "m": "General Dynamics F-16 (F-16B)",
+    "n": 1,
+    "orig": "USA",
+    "s": "wiki_air",
+    "c": "ت",
+    "gen": 3,
+    "cat": "trainer"
+   },
+   {
+    "m": "Hongdu JL-8 (K-8W)",
+    "n": 23,
+    "orig": "CHN",
+    "s": "wiki_air",
+    "c": "ت",
+    "gen": 2,
+    "cat": "trainer"
+   },
+   {
+    "m": "SIAI-Marchetti SF.260",
+    "n": 11,
+    "orig": "ITA",
+    "s": "wiki_air",
+    "c": "ت",
+    "gen": 2,
+    "cat": "trainer"
+   },
+   {
+    "m": "Ghods Mohajer (SANT Arpía)",
+    "n": 12,
+    "orig": "IRN",
+    "s": "wiki_air",
+    "c": "ت",
+    "gen": 2,
+    "cat": "uav_strike"
+   }
+  ],
+  "ad": [
+   {
+    "m": "S-300VM",
+    "n": 12,
+    "orig": "RUS",
+    "s": "wiki_army",
+    "c": "ت",
+    "gen": 3,
+    "cat": "long"
+   },
+   {
+    "m": "9K317M2 Buk-M2E",
+    "n": 9,
+    "orig": "RUS",
+    "s": "wiki_army",
+    "c": "ت",
+    "gen": 2,
+    "cat": "medium"
+   },
+   {
+    "m": "S-125 Pechora-2M",
+    "n": 44,
+    "orig": "RUS",
+    "s": "wiki_army",
+    "c": "ت",
+    "gen": 2,
+    "cat": "medium"
+   },
+   {
+    "m": "AMX-13 Rafaga",
+    "n": 6,
+    "orig": "FRA",
+    "s": "wiki_army",
+    "c": "ت",
+    "gen": 2,
+    "cat": "short"
+   },
+   {
+    "m": "M42",
+    "n": 6,
+    "orig": "USA",
+    "s": "wiki_army",
+    "c": "ت",
+    "gen": 2,
+    "cat": "short"
+   }
+  ],
   "msl": [],
-  "navy": []
+  "navy": [
+   {
+    "m": "CASA C-212",
+    "n": 23,
+    "orig": "ESP",
+    "s": "wiki_navy",
+    "c": "ت",
+    "gen": 2,
+    "cat": "patrol"
+   },
+   {
+    "m": "Cessna 208 Caravan",
+    "n": 1,
+    "orig": "USA",
+    "s": "wiki_navy",
+    "c": "ت",
+    "gen": 2,
+    "cat": "sub_nuc"
+   }
+  ],
+  "grp": {
+   "tank": {
+    "n": 173,
+    "s": "iiss_eq",
+    "c": "ت",
+    "top": [
+     [
+      "T-72B1",
+      92,
+      3,
+      "SUN"
+     ],
+     [
+      "AMX-30V",
+      81,
+      2,
+      "FRA"
+     ],
+     [
+      "AMX-13",
+      31,
+      2,
+      "FRA"
+     ]
+    ],
+    "gen": 2.5
+   },
+   "afv": {
+    "n": 420,
+    "s": "wiki_army",
+    "c": "ت",
+    "top": [
+     [
+      "BMP-3",
+      123,
+      4,
+      "RUS"
+     ],
+     [
+      "BTR-80A",
+      114,
+      3,
+      "RUS"
+     ],
+     [
+      "EE-11 Urutu",
+      37,
+      2,
+      "BRA"
+     ]
+    ],
+    "gen": 2.9
+   },
+   "art": {
+    "n": 652,
+    "s": "wiki_army",
+    "c": "ت",
+    "top": [
+     [
+      "ZU23-2",
+      200,
+      2,
+      "SUN"
+     ],
+     [
+      "L/70",
+      114,
+      2,
+      "SWE"
+     ],
+     [
+      "TCM-20",
+      114,
+      2,
+      "USA"
+     ]
+    ],
+    "gen": 2.0
+   },
+   "jet": {
+    "n": 71,
+    "s": "iiss_eq",
+    "c": "ت",
+    "top": [
+     [
+      "Sukhoi Su-30 (Su-30MK2)",
+      14,
+      4,
+      "RUS"
+     ],
+     [
+      "F-16 Fighting Falcon (F-16A/B Block 15)",
+      3,
+      3,
+      "USA"
+     ]
+    ],
+    "gen": 3.8,
+    "note": "مجموع القوائم 17 يختلف عن الإجمالي؛ الإجمالي هو المعتمد"
+   },
+   "heli": {
+    "n": 29,
+    "s": "wiki_air",
+    "c": "ت",
+    "top": [
+     [
+      "Enstrom 480",
+      11,
+      2,
+      "USA"
+     ],
+     [
+      "Eurocopter AS532",
+      10,
+      2,
+      "FRA"
+     ],
+     [
+      "Mil Mi-17",
+      6,
+      2,
+      "RUS"
+     ]
+    ],
+    "gen": 2.0
+   },
+   "uav": {
+    "n": 12,
+    "s": "wiki_air",
+    "c": "ت",
+    "top": [
+     [
+      "Ghods Mohajer (SANT Arpía)",
+      12,
+      2,
+      "IRN"
+     ]
+    ],
+    "gen": 2.0
+   },
+   "ad": {
+    "n": 77,
+    "s": "wiki_army",
+    "c": "ت",
+    "top": [
+     [
+      "S-125 Pechora-2M",
+      44,
+      2,
+      "RUS"
+     ],
+     [
+      "S-300VM",
+      12,
+      3,
+      "RUS"
+     ],
+     [
+      "9K317M2 Buk-M2E",
+      9,
+      2,
+      "RUS"
+     ]
+    ],
+    "gen": 2.2
+   },
+   "navy": {
+    "n": 7,
+    "s": "iiss_eq",
+    "c": "ت",
+    "top": [
+     [
+      "CASA C-212",
+      23,
+      2,
+      "ESP"
+     ],
+     [
+      "Cessna 208 Caravan",
+      1,
+      2,
+      "USA"
+     ]
+    ],
+    "gen": 2.0,
+    "note": "مجموع القوائم 24 يختلف عن الإجمالي؛ الإجمالي هو المعتمد"
+   }
+  }
  },
  "ind": null,
  "pol": {

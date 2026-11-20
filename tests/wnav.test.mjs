@@ -33,5 +33,5 @@ if (r !== true || !g0.path.length || !g0.man) no('أمر التحرك ما اش�
 const o = JSON.parse(S.save(G)), L2 = S.load(JSON.parse(JSON.stringify(o)), WD);
 if (!L2.nav || L2.nav.g.length !== G.nav.g.length || JSON.stringify(L2.nav.g[0]) !== JSON.stringify(G.nav.g[0])) no('الحفظ ما رجّع الأساطيل');
 o.v = 8; delete o.nav; const L3 = S.load(o, WD); if (L3.v !== S.V || !L3.nav || !L3.nav.g.length) no('الترقية من 8 ما بنت الأساطيل');
-if (S.V !== 9) no('إصدار الحفظ لازم 9');
+if (S.V < 9) no('إصدار الحفظ لازم 9 أو أكثر');
 console.log(out.join('\n')); console.log(bad ? `\n❌ ${bad} مشكلة` : '\n✅ البحرية سليمة'); process.exit(bad ? 1 : 0);

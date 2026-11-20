@@ -15,7 +15,10 @@ for (let m = 0; m < months; m++) {
     return { t: WSIM.date(G.t).toISOString().slice(0, 10), over: G.over, gdp: Math.round(G.C[G.me].gdp), stab: Math.round(G.C[G.me].stab), T: !!__G.T, HT: !!__G.HT }; });
   if (res.over) break;
 }
-for (const t of ['me', 'army', 'dip', 'war', 'world', 'news']) { await p.click(`#tabs button[data-p=${t}]`); await p.waitForTimeout(150); }
+// v3 V1: 5 تبويبات، وكل الأقسام الفرعية
+for (const t of ['cmd', 'me', 'army', 'rd', 'dip']) { await p.click(`#tabs button[data-p=${t}]`); await p.waitForTimeout(150);
+  for (const g of await p.$$eval('#sheet [data-gp]', L => L.map(b => b.dataset.gp))) { await p.click(`#sheet [data-gp=${g}]`); await p.waitForTimeout(120); }
+  await p.click(`#tabs button[data-p=${t}]`); await p.waitForTimeout(80); }
 const saved = await p.evaluate(() => { const s = localStorage.getItem('wariq.world.v1'); return s ? s.length : 0; });
 console.log(JSON.stringify({ months, me, end: res, saveKB: Math.round(saved / 1024), ms: Date.now() - t0, errors }, null, 1));
 await b.close(); process.exit(errors.length ? 1 : 0);

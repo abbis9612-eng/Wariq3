@@ -157,6 +157,8 @@
   }
   function war(W, WD, w) {
     ix(W, WD); w.months++; const [fa, fb] = w._front = frontRegions(W, WD, w);
+    // W5: حرب اللاعب البرية تنحسم بمسرح الحرب (theater.js) بالساعات؛ هنا بس التعب وعروض السلام
+    if (w.detail) { for (const id of [...w.a, ...w.b]) { const mine = w.a.includes(id) ? w.score : -w.score; w.weary[id] = clamp((w.weary[id] || 0) + 1.5 + (mine < 0 ? 1.5 : 0), 0, 100); } return peaceTalk(W, WD, w); }
     // الدعم: الدول اللي تحب طرف (علاقة > 60) وتعادي الثاني (< −30) تعطيه 3٪ من قوتها (سلاح وذخيرة وتمويل) [تقدير]
     const aid = (side, oth) => { let p = 0; for (const x of W.ids) { if (side.includes(x) || oth.includes(x)) continue; const ok = side.some(s => rel(W, x, s) > 60) && oth.some(o => rel(W, x, o) < -30); if (ok) p += W.C[x].pw * .03; } return p; };
     const pa = sidePower(W, WD, w.a, fa) + aid(w.a, w.b), pb = sidePower(W, WD, w.b, fb) + aid(w.b, w.a), r = pa / pb;
@@ -178,7 +180,10 @@
     else if (fa.length && 1 / r / fort > 1.3) take(fa, w.b, 1 / r / fort);
     w.score = clamp(w.score + (r > 1 ? 1 : -1) * Math.min(3, Math.abs(Math.log(r)) * 2), -100, 100);
     for (const id of [...w.a, ...w.b]) { const mine = w.a.includes(id) ? w.score : -w.score; w.weary[id] = clamp((w.weary[id] || 0) + 1.5 + (mine < 0 ? 1.5 : 0), 0, 100); }
-    // السلام: الطرف الخسران والتعبان يطلب، والثاني يقبل إذا هو هم تعبان أو ربحان كفاية (اللاعب يقرر بنفسه)
+    return peaceTalk(W, WD, w);
+  }
+  // السلام: الطرف الخسران والتعبان يطلب، والثاني يقبل إذا هو هم تعبان أو ربحان كفاية (اللاعب يقرر بنفسه)
+  function peaceTalk(W, WD, w) {
     for (const [mine, other] of [[w.a, w.b], [w.b, w.a]]) {
       const lead = mine[0]; if (lead === W.me) continue;
       const s = mine === w.a ? w.score : -w.score, wr = w.weary[lead];
@@ -295,6 +300,6 @@
     // ترقيات مستقبلية: if (o.v < 2) {...}
     o.base = WD.rel; o.rnd = mulberry(o.rs); return o;
   }
-  const API = { V, K, START, init, step, month, act, can, offerPeace, declare, rank, save, load, date, rel, atWar, allied, COST, TAX, CIV };
+  const API = { V, K, START, init, step, month, act, can, offerPeace, declare, endWar, rank, save, load, date, rel, atWar, allied, COST, TAX, CIV };
   if (typeof module !== 'undefined') module.exports = API; else root.WSIM = API;
 })(this);

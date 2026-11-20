@@ -28,6 +28,11 @@ for (const t of ['me', 'dip', 'war', 'world', 'news']) { await p.click(`#tabs bu
 await p.click('#tabs button[data-p=me]'); await p.click('#sheet .seg[data-k=tax] button[data-v=high]');
 const st = await p.evaluate(() => ({ t: __G.G.t, tax: __G.G.C.IRQ.tax, saved: (() => { try { return !!localStorage.getItem('wariq.world.v1'); } catch (e) { return 'ممنوع'; } })() }));
 if (st.t < 400 || st.tax !== 'high') no('اللعب ما مشى: ' + JSON.stringify(st));
+// W5: حرب برية = مسرح بخلايا وفرق، ويمشي بلا أخطاء
+await p.evaluate(() => { __G.G.ap = 9; }); await p.evaluate(() => { const r = __W.R.find(r => r.ctl === 'SYR' && r.cap); __W.cam.x = r.ll[0] * Math.PI / 180; __W.cam.y = -Math.log(Math.tan(Math.PI / 4 + r.ll[1] * Math.PI / 360)); __W.cam.s = 3000; __W.tap(innerWidth / 2, innerHeight / 2); });
+await p.click('[data-act=war]'); await p.click('[data-act=war]');
+const th = await p.evaluate(() => __G.T && __G.T.cells.length); if (!th) no('إعلان الحرب على سوريا ما بنى مسرح');
+await p.evaluate(() => __G.step(30)); if (OUT) await p.screenshot({ path: `${OUT}/play_theater.png` });
 if (errs.length) no('أخطاء بالصفحة: ' + errs.join(' | '));
 console.log(`تحميل ${load}ms · معالج ×4: ${res.join(' · ')} · الضغط: ${sel}`);
 console.log(bad ? `\n❌ ${bad} مشكلة` : '\n✅ الخريطة سليمة'); await b.close(); process.exit(bad ? 1 : 0);

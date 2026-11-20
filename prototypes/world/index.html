@@ -607,7 +607,24 @@ body.play #modes{display:none}body.play.layers #modes{display:flex;flex-directio
   }
   // الرسم فوك الخريطة: الخلايا (لما نقرّب)، والفرق، والمعارك
   const KS = { inf: '✕', mec: '⊗', arm: '⬭' };
+  // ===== I-106/107: جيوش الدول الثانية بالسلم — قطعة بصورة دبابتها بعاصمتها وأكبر مدنها، بعدد فرقها (نفس حساب الجبهة)، وإطار حسب علاقتنا =====
+  const FA = new Map();
+  function foreignArmy(k) { if (FA.has(k)) return FA.get(k); const cs = CS[k] || {}, a = Math.floor((cs.tanks || 0) / 240), m = Math.floor(Math.max(0, (((cs.kit && cs.kit.afv && cs.kit.afv[0]) || (cs.tanks || 0) * 2.5) - a * 110)) / 220), i = Math.max(0, Math.round(((cs.act || 0) - (a + m) * 9000) / 12000));
+    const regs = R.filter(r => r.ctl === k && r.cities.length).sort((x, y) => (y.cap ? 1e9 : 0) + y.cities[0][1] - (x.cap ? 1e9 : 0) - x.cities[0][1]).slice(0, 3);
+    const o = { n: a + m + i, arm: a, mec: m, inf: i, regs }; FA.set(k, o); return o; }
+  function foreignArmies(cx) {
+    if (!G || cam.s < 700) return; const busy = new Set(T ? [...T.side[0], ...T.side[1]] : []), sz = Math.max(17, Math.min(26, cam.s / 95)), now = performance.now();
+    for (const k of G.ids) { if (k === me || busy.has(k)) continue; const L = LBL[k]; if (!L) continue; const [lx, ly] = toS(L.x, L.y); if (lx < -400 || lx > W0() + 400 || ly < -400 || ly > H0() + 400) continue;
+      const F = foreignArmy(k); if (!F.n || !F.regs.length) continue; const live = G.C[k] ? Math.min(1.5, G.C[k].pw / G.C[k].pw0) : 1, rel = S.rel(G, me, k), war = !!S.atWar(G, me, k), al = S.allied(G, me, k);
+      const shares = F.regs.length === 1 ? [1] : F.regs.length === 2 ? [.6, .4] : [.5, .3, .2];
+      F.regs.forEach((r, j) => { const n = Math.max(1, Math.round(F.n * live * shares[j])), [x, y] = toS(MX(r.ll[0]), MY(r.ll[1]) ); if (x < -40 || x > W0() + 40 || y < -40 || y > H0() + 40) return; const w = sz * 1.36, h = sz;
+        cx.save(); cx.shadowColor = 'rgba(0,0,0,.4)'; cx.shadowBlur = 4; cx.beginPath(); cx.roundRect(x - w / 2, y + 8 - h / 2, w, h, 6); cx.fillStyle = war ? '#7a2a20' : 'rgba(70,72,64,.92)'; cx.fill(); cx.shadowColor = 'transparent';
+        cx.lineWidth = war ? 2.4 : 1.8; cx.strokeStyle = war ? '#ff6b57' : al ? '#7ddc6a' : rel <= -40 ? '#e0715f' : rel >= 40 ? '#b6e0a0' : 'rgba(230,225,210,.6)'; if (war) { cx.globalAlpha = .7 + .3 * Math.sin(now / 250); dirty = true; } cx.stroke(); cx.globalAlpha = 1;
+        const im = IMG[F.arm || F.mec ? (F.arm ? tankOf(k) : 'bmp') : 'truck']; if (im && im.naturalWidth) cx.drawImage(im, x - w * .44, y + 8 - h * .58, w * .88, h * 1.16);
+        cx.font = '700 10px "IBM Plex Sans Arabic",Tahoma'; cx.textAlign = 'center'; cx.textBaseline = 'middle'; cx.beginPath(); cx.arc(x - w / 2 + 2, y + 8 - h / 2 + 2, 8, 0, 7); cx.fillStyle = '#ece6d3'; cx.fill(); cx.fillStyle = '#20241c'; cx.fillText(n, x - w / 2 + 2, y + 8 - h / 2 + 3); cx.textBaseline = 'alphabetic'; cx.restore(); }); }
+  }
   function overlay(cx, far) {
+    foreignArmies(cx);
     const T = VT();
     if (!T || cam.s < 600) return; const W = T.W, me0 = css('--me'), en = css('--neg');
     const r = Math.abs(toS(MX(T.lon0 + T.hs / T.KX), 0)[0] - toS(MX(T.lon0), 0)[0]) / 2;

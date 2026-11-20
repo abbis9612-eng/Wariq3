@@ -13,6 +13,7 @@
   const K = {
     oilBase: 65, oilDisrupt: 3.5,        // سعر النفط = 65$ × (1 + 3.5 × نسبة النفط المقطوع عالمياً)
     oilTake: .6,                          // حصة الحكومة من دخل النفط
+    aiWarP: .004, aiWarPw: 2,             // W9: حرب الذكاء (بالشهر لكل دولة، وشرط القوة) — قبلها .0015 و2.5 وطلعت ولا حرب بعشر سنين
     upkeep: 1 / 72,                       // الجيش يحتاج تمويل: بدون ميزانية يخسر ~1.4٪ بالشهر (يتآكل بـ6 سنين)
     apMonth: 2, apMax: 8,                 // نقاط القرار
     stabMove: .08,                        // الاستقرار يمشي 8٪ من الفرق كل شهر
@@ -308,21 +309,22 @@
     c.civ = dp > 130 && c.bal < 0 ? 'cut' : c.stab < 35 && dp < 90 ? 'more' : 'mid';
     c.tax = dp > 110 && c.bal < 0 ? 'high' : 'mid';
     // حرب جديدة؟ نادر كلش: عداء شديد + قوة ×2.5 + جار + ما محمي بتحالف أو نووي
-    if (W.rnd() < .0015 * (WD.cs[id].free === 2 ? .25 : 1) * (.5 + (W.ten || 40) / 50)) {   // التوتر العالمي يرفع احتمال الحرب
+    if (W.rnd() < K.aiWarP * (WD.cs[id].free === 2 ? .25 : 1) * (.5 + (W.ten || 40) / 50)) {   // التوتر العالمي يرفع احتمال الحرب
       for (const o in W.rel[id] || {}) {
-        const t = W.C[o]; if (!t || W.rel[id][o] > -70 || atWar(W, id, o) || t.nuke || allied(W, id, o) || napOf(W, id, o)) continue;
-        if (W.rel[id][o] > -85 && !TENSION.some(p => p.includes(id) && p.includes(o))) continue;   // يحتاج عداء شديد كلش أو نزاع حدودي معروف
+        const t = W.C[o], tens = TENSION.some(p => p.includes(id) && p.includes(o)); if (!t || W.rel[id][o] > (tens ? -50 : -85) || atWar(W, id, o) || t.nuke || allied(W, id, o) || napOf(W, id, o)) continue;   // W9: نزاع معروف (تايلند وكمبوديا، باكستان وأفغانستان...) يكفيه −50، غيره −85
         if (!neighbors(W, WD, id, o)) continue;
         const prot = W.ids.filter(x => allied(W, o, x)).reduce((s, x) => s + W.C[x].pw, 0);
-        if (c.pw > 2.5 * (t.pw + prot * .5) && c.stab > 40) { declare(W, WD, id, o, true); break; }
+        if (c.pw > K.aiWarPw * (t.pw + prot * .5) && c.stab >= 35) { declare(W, WD, id, o, true); break; }
       }
     }
   }
   const TENSION = [['IND', 'PAK'], ['PAK', 'AFG'], ['THA', 'KHM'], ['ARM', 'AZE'], ['ETH', 'ERI'], ['RWA', 'COD'], ['VEN', 'GUY'], ['CHN', 'TWN'], ['KOR', 'PRK'], ['MAR', 'DZA'], ['EGY', 'ETH']];   // نزاعات حدودية/وجودية معروفة
+  // الجيرة حسب السيطرة الحالية: جدول ينحسب مرة لكل يوم (قبلها كل سؤال يلف على 3803 منطقة — W9: أبطأ شي بالشهر)
   function neighbors(W, WD, a, b) {
     ix(W, WD);
-    for (let i = 0; i < WD.r.length; i++) if (W.ctl[i] === a) for (const n of WD.r[i][7]) if (W.ctl[W.idx.get(n)] === b) return true;
-    return false;
+    if (!W._nb || W._nbT !== W.t) { const m = {}; for (let i = 0; i < WD.r.length; i++) { const x = W.ctl[i]; if (!x) continue; for (const n of WD.r[i][7]) { const y = W.ctl[W.idx.get(n)]; if (y && y !== x) (m[x] ||= new Set()).add(y); } }
+      Object.defineProperty(W, '_nb', { value: m, writable: true, configurable: true, enumerable: false }); W._nbT = W.t; }
+    return !!(W._nb[a] && W._nb[a].has(b));
   }
   // ===== أفعال (اللاعب، ونفسها للذكاء) =====
   // ===== البحرية والحصار والمضائق (W5d) [تقدير] =====
@@ -457,14 +459,14 @@
     W.ap -= COST.peace;
     if (w.offer) { endWar(W, WD, w, 'peace'); return { ok: true }; }
     const mineA = w.a.includes(W.me), other = mineA ? w.b[0] : w.a[0], os = mineA ? -w.score : w.score, owr = w.weary[other] || 0;
-    if (owr > 50 || os < -20) { endWar(W, WD, w, 'peace'); return { ok: true }; }
+    if (owr > 50 || os < -20 || (w.months >= 12 && os < 30 && owr > 30)) { endWar(W, WD, w, 'peace'); return { ok: true }; }   // W9: بعد سنة حرب بلا حسم، الطرف التعبان شوية يقبل
     note(W, { k: 'dip', a: 'refuse', t: other, what: 'peace' });
     return { ok: false, why: `${WD.cs[other].ar} رفضت: مو تعبانة (${Math.round(owr)}) وتشوف نفسها رابحة`, spent: true };
   }
   // ===== ترتيب وحفظ =====
   function rank(W, k) { return W.ids.slice().sort((a, b) => W.C[b][k] - W.C[a][k]); }
   function save(W) {
-    const { rnd, idx, base, ...o } = W;
+    const { rnd, idx, base, _nbT, ...o } = W;
     o.wars = W.wars.map(({ _front, ...w }) => w);
     return JSON.stringify(o);
   }

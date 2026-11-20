@@ -73,8 +73,8 @@
   function daily(W, A, X) {
     ensure(W); const { SIM, ECON } = X;
     for (const s of [0, 1]) {
-      const I = W.ind[s], e = W.eco && W.eco[s], b = BUD[I.bud][0];
-      if (e && b && e.cash > -10) { e.cash -= b; I.rp += b; }
+      const I = W.ind[s], e = W.eco && W.eco[s], b = BUD[I.bud][0] * (I.k || 1);   // «العالم»: k = حجم الاقتصاد (الناتج/250)
+      if (e && b && e.cash > -10 * (I.k || 1)) { e.cash -= b; I.rp += b; }
       if (I.tech[I.rb] < 5 && I.rp >= need(I.tech[I.rb])) { I.rp -= need(I.tech[I.rb]); I.tech[I.rb]++; W.log.push({ t: W.t, side: s, k: 'tech', b: I.rb, l: I.tech[I.rb] });
         if (I.tech[I.rb] >= 5) { const nx = BRK.filter(k => I.tech[k] < 5).sort((a, c) => I.tech[a] - I.tech[c])[0]; if (nx) I.rb = nx; } }
       if (I.nat.run && --I.nat.run.left <= 0) { I.nat.run = null; I.nat.st++; W.log.push({ t: W.t, side: s, k: 'nat', st: I.nat.st }); }

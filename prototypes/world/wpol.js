@@ -50,9 +50,9 @@
     const c = W.C[id], me = W.me;
     if (id === me) {
       const H = W.nat && W.nat.home, F = H ? H.fac : {}, e = W.nat && W.nat.eco[0];
-      const sc = .35 * (F.street ?? c.stab) + .25 * (F.parties ?? c.stab) + .25 * (e ? e.mor : c.stab) + 3 * c.g + (W.campaign || 0) + (W.rnd() * 16 - 8);
-      W.campaign = 0; W.log.push({ t: W.t, k: 'elect', id, me: 1, win: sc >= 45, sc: Math.round(sc) });
-      if (sc >= 45) { c.stab = clamp(c.stab + 5, 0, 100); if (H) H.stab = clamp(H.stab + 5, 0, 100); }
+      const sc = .35 * (F.street ?? c.stab) + .25 * (F.parties ?? c.stab) + .25 * (e ? e.mor : c.stab) + 2 * Math.max(-5, Math.min(5, c.g)) + (W.campaign || 0) + (W.rnd() * 16 - 8);
+      W.campaign = 0; W.log.push({ t: W.t, k: 'elect', id, me: 1, win: sc >= 40, sc: Math.round(sc) });   // W9: 40 (قبلها 45: المدير الزين يخسر 1 من 2)
+      if (sc >= 40) { c.stab = clamp(c.stab + 5, 0, 100); if (H) H.stab = clamp(H.stab + 5, 0, 100); }
       else if (!W.over && (!W.cfg || W.cfg.diff !== 'ez')) W.over = { t: W.t, why: 'election' };
       return;
     }

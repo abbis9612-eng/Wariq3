@@ -37,12 +37,13 @@
     // الداخل: فئات نظام الحكم (العراق بفئاته الأصلية)، والبداية حول الاستقرار الحالي
     const fk = me === 'IRQ' ? HOME.FK : FACS[gt] || FACS.parl, base = Math.round(c.stab);
     HOME.init(NW, { fk, stab: base, fac: Object.fromEntries(fk.map((k, i) => [k, Math.max(15, Math.min(85, base + [6, -4, 2, -2, 0][i % 5]))])) });
-    NW.home.base = { ...NW.home.fac }; NW.home.revR = .01;   // سنين مو أشهر: الفئات ترجع لوضعها (نص الفرق بـ~70 يوم) [تقدير]
+    NW.home.base = { ...NW.home.fac }; NW.home.revR = .02; NW.home.gap = [18, 14];   // سنين مو أشهر: الفئات ترجع لوضعها، وقضية كل 18–31 يوم [تقدير]
+    NW.home.costK = Math.max(.1, Math.min(20, c.gdp / 250));   // سنين مو أشهر: الفئات ترجع لوضعها (نص الفرق بـ~70 يوم) [تقدير]
     // التصنيع والبحث: مستويات البداية من بيانات الدولة (W1/W4)، والطرف 1 من خصمها الرئيسي إذا بحرب
     IND.init(NW); const t0 = k => Math.max(0, Math.min(5, Math.round(k || 0)));
     NW.ind[0].tech = { arm: t0(tech.arm), uav: t0(tech.uav), msl: t0(tech.msl), ew: t0(tech.ew), ind: t0(tech.ind ?? 1) }; NW.ind[0].bud = 1; NW.ind[0].nat.name = '';
     NW.start0 = { ...NW.ind[0].tech };
-    G.nat = NW; catalog(G, WD); return NW;
+    G.nat = NW; catalog(G, WD); return NW;   // NW.g0 (لقطة البداية للتقييم) تنأخذ أول ما ينحسب التقييم
   }
   // كتالوج الطلبات لهالدولة (فوك كتالوج econ.js): الفرق والخطوط نفسها، والطيارات من أنواع قوتها الجوية، والصواريخ لبطارياتها
   function catalog(G, WD) {
@@ -87,7 +88,9 @@
   // X = { S: wsim، SIM: محرك الحرب، T: المسرح أو null، before: طول سجل العالم قبل اليوم }
   function daily(G, WD, X) {
     const NW = G.nat; if (!NW) return; const S = X.S, T = X.T, me = G.me, c = G.C[me], e = NW.eco[0];
-    if (!NW.home.base) { NW.home.base = Object.fromEntries(Object.keys(NW.home.fac).map(k => [k, 55])); NW.home.revR = .01; }
+    if (!NW.home.base) NW.home.base = Object.fromEntries(Object.keys(NW.home.fac).map(k => [k, 55]));
+    NW.home.revR = .02; NW.home.gap = NW.home.gap || [18, 14]; NW.home.costK = Math.max(.1, Math.min(20, c.gdp / 250)); NW.ind[0].k = NW.home.costK;
+    if (!NW.g0) NW.g0 = snap(G, WD, S);   // لقطة البداية للتقييم
     NW.t = G.t * 24; Object.defineProperty(NW, 'rnd', { value: G.rnd || Math.random, writable: true, enumerable: false, configurable: true });
     NW.lim = Math.max(2, c.gdp * .06); ECON.LAND[0].lim = NW.lim; dipShim(G, WD, S);
     // الواجهة بين المحاكاتين: الإنفاق المدني والأولوية من wsim
@@ -124,7 +127,8 @@
     const e = NW.eco[0], P = ECON.PRIO[e.prio], why = []; let dm = P.mor; if (P.mor) why.push([P.mor, P.n]);
     if (e.civL === 'cut') { dm -= .1; why.push([-.1, 'تقشف بالرواتب']); } else if (e.civL === 'more') { dm += .06; why.push([.06, 'زيادة رواتب وخدمات']); }
     if (atWar) { dm -= .04; why.push([-.04, 'الحرب']); } else { const back = (G.C[G.me].stab - e.mor) * .02; dm += back; if (Math.abs(back) > .01) why.push([back, 'الحياة الطبيعية']); }
-    if (e.cash < -NW.lim) { dm -= 1.5; why.push([-1.5, 'رواتب متأخرة']); } else if (e.cash < 0) { dm -= .4; why.push([-.4, 'الدولة بالدين']); }
+    // W9: العقوبة حسب عمق الدين (قبلها −0.4 باليوم من أول دولار سالب = انهيار بشهرين بلعبة سنين)
+    if (e.cash < -NW.lim) { dm -= 1.5; why.push([-1.5, 'رواتب متأخرة']); } else if (e.cash < 0) { const v = .05 + .35 * (-e.cash / NW.lim); dm -= v; why.push([-v, 'الدولة بالدين']); }
     for (let i = NW.log.length - 1; i >= 0 && NW.log[i].t > NW.t - 24; i--) { const l = NW.log[i];
       if (l.k === 'take' && l.vp) { if (l.side === 1) { dm -= l.vp * 1.2; why.push([-l.vp * 1.2, 'خسرنا ' + (l.city || 'مدينة')]); } else { dm += l.vp * .8; why.push([l.vp * .8, 'أخذنا ' + (l.city || 'مدينة')]); } }
       if (l.k === 'surrender') { if (l.side === 0) { dm -= 1.5; why.push([-1.5, 'فرقة استسلمت']); } else { dm += .8; why.push([.8, 'فرقة عدو استسلمت']); } }
@@ -158,22 +162,30 @@
       arrowTip: '➹ جرّب: اضغط فرقتك بالجبهة ← «➹ خطة بسهم» ← ارسم الطريق خلية خلية ← نفّذ. الدروع تصير رأس الحربة' }, 0);
   }
   // ===== التقييم (grade.js نفسه، بنفس الأوزان والدرجات S–D) — طرق الفوز من العالم [تقدير] =====
-  //  ⚔ عسكري: أرضنا الأصلية اللي باقية + أرض أخذناها + سير حروبنا
-  //  💰 اقتصادي: الخزينة فوق حد الدين + النمو + ماكو دين بالخزينة
-  //  🤝 سياسي: حلفاء دفاعيين + اتفاقيات تجارة + معدل علاقاتنا
-  //  🙂 الشعب: المعنويات + الاستقرار + أرضنا الباقية
+  // كل طريق = 50 إذا بقى الوضع مثل ما استلمته (W9: قبلها الدول الكبيرة تاخذ S بدون ما تسوي شي):
+  //  ⚔ عسكري: أرض أخذناها +25، أرض خسرناها −60×النسبة، قوة الجيش نسبةً للعالم ±20، سير حروبنا
+  //  💰 اقتصادي: نمونا ناقص نمو العالم (×8 لكل ٪ سنوي، ±25)، الخزينة نسبةً لحد الدين ±15، الدين ±10
+  //  🤝 سياسي: حلفاء جدد ×8، تجارة جديدة ×3، معدل العلاقات ×0.5
+  //  🙂 الشعب: الاستقرار ناقص البداية ×0.8، المعنويات فوك/تحت 50 ×0.3
   const cl = v => Math.max(0, Math.min(100, v));
+  const relAvg = (G, me) => { const v = Object.values(G.rel[me] || {}); return v.length ? v.reduce((t, x) => t + x, 0) / v.length : 0; };
+  const med = a => { const s = a.slice().sort((x, y) => x - y); return s[Math.floor(s.length / 2)] || 0; };
+  function snap(G, WD, S) { const me = G.me, c = G.C[me];
+    return { t: G.t, gdp: c.gdp, pw: c.pw, stab: c.stab, debt: c.debt / c.gdp, al: G.ids.filter(x => x !== me && S.allied(G, me, x)).length, tr: G.trade.filter(p => p.includes(me)).length, rel: relAvg(G, me),
+      wg: Object.fromEntries(G.ids.map(x => [x, [G.C[x].gdp, G.C[x].pw]])) }; }
   function paths(G, WD, S) {
-    const me = G.me, c = G.C[me], NW = G.nat, e = NW.eco[0]; let own = 0, kept = 0, held = 0;
+    const me = G.me, c = G.C[me], NW = G.nat, e = NW.eco[0], z = NW.g0 || (NW.g0 = snap(G, WD, S)); let own = 0, kept = 0, held = 0;
     WD.r.forEach((a, i) => { if (a[1] === me) { own++; if (G.ctl[i] === me) kept++; } else if (G.ctl[i] === me) held++; });
     const k = own ? kept / own : 1, wars = G.wars.filter(w => w.a.includes(me) || w.b.includes(me));
     const ws = wars.length ? wars.reduce((t, w) => t + (w.a.includes(me) ? w.score : -w.score), 0) / wars.length : 0;
-    const mil = cl(k * 45 + Math.min(1, held / Math.max(1, own) / .15) * 25 + (wars.length ? 15 + ws * .15 : 30) - (1 - k) * 40);
-    const eco = cl(Math.max(0, Math.min(1, (e.cash + NW.lim) / (NW.lim * 2))) * 50 + Math.max(0, Math.min(1, .5 + (c.g || 0) / 6)) * 30 + (e.cash >= 0 ? 20 : 0));
-    const rel = G.rel[me] || {}, rv = Object.values(rel), avg = rv.length ? rv.reduce((t, v) => t + v, 0) / rv.length : 0;
-    const allies = G.ids.filter(x => x !== me && S.allied(G, me, x)).length, trade = G.trade.filter(p => p.includes(me)).length;
-    const dip = cl(Math.min(3, allies) * 15 + Math.min(3, trade) * 5 + Math.max(0, Math.min(1, (avg + 30) / 80)) * 40);
-    const pop = cl(e.mor * .5 + NW.home.stab * .3 + k * 20);
+    const yrs = Math.max(.25, (G.t - z.t) / 365), ids = Object.keys(z.wg).filter(x => G.C[x]);
+    const pwR = (c.pw / z.pw) / Math.max(.01, med(ids.map(x => G.C[x].pw / z.wg[x][1])));
+    const gMe = (Math.pow(c.gdp / z.gdp, 1 / yrs) - 1) * 100, gW = med(ids.map(x => (Math.pow(G.C[x].gdp / z.wg[x][0], 1 / yrs) - 1) * 100));
+    const mil = cl(50 + Math.min(1, held / Math.max(1, own) / .15) * 25 - (1 - k) * 60 + Math.max(-20, Math.min(20, Math.log2(pwR) * 20)) + ws * .15);
+    const eco = cl(50 + Math.max(-25, Math.min(25, (gMe - gW) * 8)) + Math.max(-15, Math.min(15, e.cash / NW.lim * 7.5)) + Math.max(-10, Math.min(10, (z.debt - c.debt / c.gdp) * 50)));
+    const al = G.ids.filter(x => x !== me && S.allied(G, me, x)).length, tr = G.trade.filter(p => p.includes(me)).length;
+    const dip = cl(50 + (al - z.al) * 8 + (tr - z.tr) * 3 + (relAvg(G, me) - z.rel) * .5);
+    const pop = cl(50 + (NW.home.stab - z.stab) * .8 + (e.mor - 50) * .3);
     return { mil: Math.round(mil), eco: Math.round(eco), dip: Math.round(dip), pop: Math.round(pop) };
   }
   function grade(G, WD, S) { const p = paths(G, WD, S); return GRADE.grade(view(G, null), null, { paths: () => p }, 0); }

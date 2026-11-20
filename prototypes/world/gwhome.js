@@ -41,7 +41,7 @@
     factions: { t: 'الفصائل ترفض الدمج بالجيش', x: 'تريد تبقى بسلاحها وقيادتها.', o: [['وافق', W => { fac(W, 'factions', 13); fac(W, 'army', -8); }], ['ادمجهم بالقوة', W => { fac(W, 'factions', -14); fac(W, 'army', 6); }]] },
     parties: { t: 'البرلمان يهدد بحجب الثقة', x: 'الأحزاب تريد حصص وتعديل وزاري.', o: [['تعديل وزاري وحصص', W => { fac(W, 'parties', 14); fac(W, 'street', -3); fac(W, 'biz', -2); }], ['حل البرلمان وانتخابات', W => { fac(W, 'parties', -6); fac(W, 'street', 6); cash(W, -.3); }]] },
   });
-  const cash = (W, v) => { if (W.eco) W.eco[0].cash += v; };
+  const cash = (W, v) => { if (W.eco) W.eco[0].cash += v * (W.home && W.home.costK || 1); };   // «العالم»: الكلف بحجم اقتصاد الدولة (costK = الناتج/250)
   const mor = (W, v) => { if (W.eco) W.eco[0].mor = Math.max(0, Math.min(100, W.eco[0].mor + v)); };
   const fac = (W, k, v) => { const F = W.home.fac; F[k] = Math.max(0, Math.min(100, F[k] + v)); };
   const dipRel = (W, id, v) => { if (W.dipRel) return W.dipRel(id, v); if (W.dip && W.dip.c[id]) { const c = W.dip.c[id]; c.rel[0] = Math.max(-100, Math.min(100, c.rel[0] + v)); } };
@@ -55,7 +55,8 @@
     ensure(W); const H = W.home, F = H.fac, e = W.eco ? W.eco[0] : { cash: 5, mor: 55, prio: 'bal' }, why = [];
     const d = (k, v, r) => { if (!v) return; F[k] = Math.max(0, Math.min(100, F[k] + v)); if (Math.abs(v) >= .2) why.push([k, v, r]); };
     // ثابت كل يوم
-    if (e.cash < 0) { d('army', -.5, 'الرواتب'); d('biz', -.4, 'الدين'); d('street', -.3, 'الدين'); }
+    const dk = H.costK ? Math.min(1, .15 + -e.cash / (W.lim || 15)) : 1;   // «العالم»: حسب عمق الدين
+    if (e.cash < 0) { d('army', -.5 * dk, 'الرواتب'); d('biz', -.4 * dk, 'الدين'); d('street', -.3 * dk, 'الدين'); }
     if (e.prio === 'war') { d('street', -.15, 'اقتصاد الحرب'); d('army', .1, 'اقتصاد الحرب'); } else if (e.prio === 'civ') { d('street', .1, 'الأولوية مدنية'); d('biz', .1, 'الأولوية مدنية'); }
     if (W.dip && W.dip.hz && W.dip.hz.closed) { d('biz', -.3, 'هرمز مغلق'); d('street', -.2, 'هرمز مغلق'); }
     if (W.dip && W.dip.c && W.dip.c.us && W.dip.c.us.st === 'ally0' && F.mil != null) d('mil', -.25, 'التحالف ويا أمريكا');
@@ -78,9 +79,9 @@
     if (A && armed != null && armed < 25 && W.rnd() < .06) { const b = A.bases.find(x => x.side === 0 && x.n === 'عين الأسد') || A.bases.find(x => x.side === 0); if (b) { b.down = Math.max(b.down, 12); mor(W, -2); W.log.push({ t: W.t, side: 0, k: 'home', a: 'milhit', n: b.n }); } }
     // القضايا: كل 6–11 يوم، على أزعل فئة (أو عشوائي)
     if (W.t >= H.issT && H.iss.length < 2 && !W.over) { const k = W.rnd() < .7 ? K.slice().sort((a, b) => F[a] - F[b])[0] : K[Math.floor(W.rnd() * K.length)];
-      H.iss.push({ k, t: W.t, crit: F[k] < 25 }); H.issT = W.t + 24 * (6 + Math.floor(W.rnd() * 6)); W.log.push({ t: W.t, side: 0, k: 'home', a: 'issue', i: k }); }
+      H.iss.push({ k, t: W.t, crit: F[k] < 25 }); H.issT = W.t + 24 * ((H.gap || [6, 6])[0] + Math.floor(W.rnd() * (H.gap || [6, 6])[1])); W.log.push({ t: W.t, side: 0, k: 'home', a: 'issue', i: k }); }
     // قضية قديمة (أكثر من 5 أيام) والمستشارين يحلونها لحالهم: يدفعون إذا عندنا فلوس، وإلا الخيار الثاني
-    for (let i = H.iss.length - 1; i >= 0; i--) if (!H.iss[i].crit && W.t - H.iss[i].t > 24 * 5) { ISS[H.iss[i].k].o[e.cash > 5 ? 0 : 1][1](W); W.log.push({ t: W.t, side: 0, k: 'home', a: 'auto', i: H.iss[i].k }); H.iss.splice(i, 1); }
+    for (let i = H.iss.length - 1; i >= 0; i--) if (!H.iss[i].crit && W.t - H.iss[i].t > 24 * 5) { ISS[H.iss[i].k].o[e.cash > 5 * (H.costK || 1) ? 0 : 1][1](W); W.log.push({ t: W.t, side: 0, k: 'home', a: 'auto', i: H.iss[i].k }); H.iss.splice(i, 1); }
     // طرق الخسارة (للعراق): انقلاب، ثورة، إفلاس
     const L = W.lim ?? (X && X.ECON ? X.ECON.LAND[0].lim : 15), immune = W.cfg && W.cfg.ez && W.cfg.ez.on && W.cfg.ez.immune;
     const tick = (k, bad, days, why) => { if (bad) { H.warn[k]++; if (H.warn[k] === 1 || H.warn[k] === days - 3) W.log.push({ t: W.t, side: 0, k: 'home', a: 'warn', w: k, left: days - H.warn[k] }); if (H.warn[k] >= days && !W.over && !immune) { W.over = { t: W.t, loser: 0, why }; W.log.push({ t: W.t, side: 0, k: 'capitulate', why }); } } else H.warn[k] = 0; };

@@ -175,6 +175,7 @@
     g.dmg += r.dmg * .5; NV.last = { t: G.t, z: g.z, def: g.cc, gid: g.id, s0: { ...g.s }, att, by, seed, why, res: r.stat, sunk: r.sunk };
     for (const k of Object.keys(g.s)) if (g.s[k] <= 0) delete g.s[k];
     NV.last.s0 = Object.fromEntries(Object.entries(NV.last.s0).map(([k, v]) => [k, v + (r.sunk[k] || 0)]));
+    NV.seq = (NV.seq || 0) + 1; NV.rec = (NV.rec || []).concat([{ ...NV.last, seq: NV.seq }]).slice(-12);   // C0: آخر المعارك حتى الخريطة تعيدها كلها
     log.push({ t: G.t, k: 'navbattle', cc: by, on: g.cc, z: g.z, n: att.n, kill: r.stat.kill, hit: r.stat.hit, why });
   }
   // مخزون صواريخ ضد السفن لكل دولة: 30٪ من صواريخها (أقصى 400)، ويتعوّض 5٪ بالشهر [تقدير]

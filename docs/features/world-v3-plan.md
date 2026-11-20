@@ -298,3 +298,8 @@
 - الاقتصاد بالألعاب: [Paradox — Victoria 3 Dev Diary 36: Construction](https://admin-forum.paradoxplaza.com/forum/developer-diary/dev-diary-36-construction.1513612)
 - واجهات ألعاب الاستراتيجية على التلفون: [Game Developer — UI strategy game design dos and don'ts](https://www.gamedeveloper.com/design/ui-strategy-game-design-dos-and-don-ts)، [Unity — Mobile UI design best practices](https://blog.unity.com/en/games/mobile-ui-design-best-practices-part-1)، [Hypemasters — Mobile RTS interface](https://medium.com/hypemasters/mobile-rts-interface-the-story-of-how-hypemasters-rediscovered-the-genre-dc7fbaa5b05c)، [Google Play — UX insights from The Walking Dead: March to War](https://medium.com/googleplaydev/ux-game-design-insights-from-the-walking-dead-march-to-war-9ebdb3e23283)، [Conflict of Nations — آراء اللاعبين](https://completesports.com/comparison/browser-games/conflict-of-nations/)
 - إحساس القتال (game feel): [Wikipedia — Game feel](https://www.wikipedia.org/wiki/Game_feel)، [Game Developer — Squeezing more juice](https://gamedeveloper.com/design/squeezing-more-juice-out-of-your-game-design-)، [Mega Cat — Juice Guide](https://megacatstudios.com/blogs/game-development/mega-cat-developer-juice-guide-v1-0-08-23-17)، [itch.io — Making a game feel juicy](https://itch.io/blog/1059831/making-a-game-feel-juicy-with-simple-effects)
+
+
+## الحالة
+- ✅ **V0** (تاريخ الأخبار، التنبيهات والجرس، نصوص عامة).
+- ✅ **C0 أول نسخة** (`livefx.js`): البحر (إعادة المعركة بمكانها)، الضربات (أقواس، موجات، اعتراض، مدن تحترق)، الجبهات (ومضات)، أسهم الحواف، والتبطيء التلقائي. المشهد المنفصل `wnavview.js` انشال. **باقي لـC3–C6:** صور الصواريخ الباليستية والحطام (C7)، والطوربيد، والحاملة تطلّع طيارات.

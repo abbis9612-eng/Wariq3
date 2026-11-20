@@ -22,6 +22,12 @@ G.nat.eco[0].cash = 50; const dr = C.drill(G); if (dr.ok !== true) no('المن�
 const run = sk => { const H = S.init(WD, 'IRQ', { seed: 9 }); N.init(H, WD); H.cmd.c.sk = { atk: sk, def: sk, log: sk, plan: sk }; H.cmd.c.rank = sk ? 3 : 0; H.ap = 9; S.act(H, WD, 'war', 'SYR'); const w = H.wars[H.wars.length - 1];
   for (let d = 0; d < 300 && H.wars.includes(w); d++) { const b = H.log.length; S.step(H, WD, 1); N.daily(H, WD, { S, SIM: null, T: null, before: b }); } return Math.round(w.a.includes('IRQ') ? w.score : -w.score); };
 const weak = run(0), strong = run(5); if (!(strong >= weak)) no(`القائد القوي ما فاد (${weak} ← ${strong})`); out.push(`حرب العراق وسوريا 300 يوم: قائد ضعيف سير الحرب ${weak} · قائد مشير بمهارات كاملة ${strong}`);
+// قادة الدول الثانية: مهارات حتمية (نفس النتيجة كل مرة)، أقوى للجودة الأعلى، وتأثر على الحرب المختصرة (k)
+{ const a1 = C.aiSk(G, 'RUS'), a2 = C.aiSk(G, 'RUS'); if (JSON.stringify(a1.sk) !== JSON.stringify(a2.sk)) no('مهارات قائد روسيا مو ثابتة');
+  const byQ = [1, 2, 3, 4, 5].map(q => { const L = G.ids.filter(x => G.cmdq[x] === q && x !== G.me); return L.length ? +(L.reduce((t, x) => t + C.power(C.aiSk(G, x)), 0) / L.length).toFixed(3) : null; });
+  const qq = byQ.filter(x => x != null); if (qq.some((x, i) => i && x < qq[i - 1])) no('قوة القادة ما تكبر ويا الجودة ' + byQ);
+  const ks = G.ids.filter(x => x !== G.me).map(x => C.k(G, x)); if (ks.some(v => !(v >= 1 && v < 1.4))) no('k برّا المدى');
+  const ru = C.ai(G, WD, 'RUS'); out.push(`قادة الذكاء: قوة حسب الجودة 1–5 ${JSON.stringify(byQ)} · روسيا ${C.RANK[ru.rank]} ${ru.n} ${JSON.stringify(ru.sk)} k=${C.k(G, 'RUS').toFixed(2)}`); }
 // الحفظ والترقية
 const o = JSON.parse(S.save(G)); const L2 = S.load(JSON.parse(JSON.stringify(o)), WD); if (!L2.cmd || L2.cmd.c.n !== G.cmd.c.n) no('القائد ما انحفظ');
 o.v = 7; delete o.cmd; delete o.cmdq; const L3 = S.load(o, WD); if (L3.v !== S.V || !L3.cmd || !L3.cmdq) no('الترقية من V7 ما اشتغلت');

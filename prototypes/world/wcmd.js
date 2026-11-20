@@ -39,7 +39,7 @@
   // نِسب الزيادة (يقراها المسرح والمحاكاة والإنتاج والسوق)
   function mult(c) { const R = c.rank, s = c.sk; return { atk: 1 + .03 * R + .025 * s.atk, def: 1 + .03 * R + .025 * s.def, move: 1 + .12 * s.log, prod: 1 + .04 * s.log, deal: 1 - .05 * s.log, plan: 1 + .03 * s.plan + .03 * R }; }
   const power = c => { const m = mult(c); return +((m.atk + m.def) / 2).toFixed(3); };
-  const k = (G, id) => id === G.me && G.cmd ? mult(G.cmd.c).plan : 1 + .03 * (((G.cmdq || {})[id] || 3) - 3);   // للحرب المختصرة (wsim sidePower)
+  const k = (G, id) => id === G.me && G.cmd ? mult(G.cmd.c).plan : mult(aiSk(G, id)).plan;   // للحرب المختصرة (wsim sidePower): نفس المعادلة للاعب والذكاء
   // كل يوم: خبرة (الحرب أكثر) والترقية
   function daily(G, X) { const C = G.cmd; if (!C) return null; const c = C.c, war = G.wars.some(w => w.a.includes(G.me) || w.b.includes(G.me));
     c.xp += war ? 1 + (X && X.wins ? X.wins * 4 : 0) : .08; if (C.drill > G.t - 30) c.xp += .3;
@@ -52,8 +52,11 @@
   const drillCost = G => Math.max(.05, G.C[G.me].gdp * .001);
   function drill(G) { const C = G.cmd; if (!C) return 'ماكو قائد'; if (G.t - C.drill < 60) return 'مناورات قريبة، انتظر ' + Math.ceil((60 - G.t + C.drill) / 30) + ' شهر'; const v = drillCost(G); if (G.nat && G.nat.eco[0].cash < v) return 'الخزينة ما تكفي';
     if (G.nat) G.nat.eco[0].cash -= v; C.drill = G.t; C.c.xp += 15; G.log.push({ t: G.t, k: 'cmd', a: 'drill', v: +v.toFixed(2) }); return { ok: true }; }
-  // قائد دولة ثانية (للعرض): اسم ورتبة ثابتين من جودتها
-  const AIC = {}; function ai(G, WD, id) { if (AIC[id]) return AIC[id]; const q = (G.cmdq || {})[id] || quality(WD, id), c = cand(WD, id, hash(id) * 13 + 5, q, (WD.cs[id] || {}).cont); c.rank = clamp(q - 2, 0, 3); return AIC[id] = c; }
-  const API = { ai, RANK, STARS, XPN, SK, SKD, quality, ensure, cands, mult, power, k, daily, change, drill, drillCost };
+  // قائد دولة ثانية: اسم ورتبة ومهارات ثابتة من جودة قيادتها (حتمية من رمز الدولة، فما تحتاج حفظ)؛ مهاراته تأثر على حروبها مثل قائدك بالضبط
+  // الرتبة: من الجودة، و+1 إذا الدولة بحرب من سنة أو أكثر (خبرة) [تقدير]
+  const aiRank = (G, id, q) => { const w = (G.wars || []).find(x => x.a.includes(id) || x.b.includes(id)), long = w && (w.months || 0) + (w.weary0 >= 50 ? 12 : 0) >= 12 ? 1 : 0; return clamp(q - 2 + long, 0, 3); };   // حرب طويلة (أوكرانيا من 2022) = خبرة
+  const SKC = {}; function aiSk(G, id) { const q = (G.cmdq || {})[id] || 3, key = id + q; const c = SKC[key] || (SKC[key] = cand(null, id, hash(id) * 13 + 5, q)); return { ...c, rank: aiRank(G, id, q) }; }
+  const AIC = {}; function ai(G, WD, id) { const q = (G.cmdq || {})[id] || quality(WD, id), key = id + q; const c = AIC[key] || (AIC[key] = cand(WD, id, hash(id) * 13 + 5, q, (WD.cs[id] || {}).cont)); c.rank = aiRank(G, id, q); return c; }
+  const API = { ai, aiSk, RANK, STARS, XPN, SK, SKD, quality, ensure, cands, mult, power, k, daily, change, drill, drillCost };
   if (typeof module !== 'undefined') module.exports = API; else root.WCMD = API;
 })(this);

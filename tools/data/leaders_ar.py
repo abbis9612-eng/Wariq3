@@ -14,9 +14,9 @@ for href, txt in re.findall(r'<a [^>]*?href="(?:https://en\.wikipedia\.org)?/wik
 out = json.load(open(OUT)) if os.path.exists(OUT) else {}
 print('قادة', len(names), '· روابط', len(links), '· موجود', len(out))
 for n, href in sorted(links.items()):
-    if n in out: continue
+    if out.get(n): continue
     try:
-        p = get('https://en.wikipedia.org/wiki/' + href)
+        p = get('https://en.wikipedia.org/wiki/' + urllib.parse.quote(urllib.parse.unquote(href), safe='/()%,\'!'))
         m = re.search(r'<a href="https://ar\.wikipedia\.org/wiki/([^"]+)"[^>]*hreflang="ar"', p) or re.search(r'hreflang="ar"[^>]*href="https://ar\.wikipedia\.org/wiki/([^"]+)"', p)
         out[n] = H.unescape(urllib.parse.unquote(m.group(1))).replace('_', ' ') if m else None
     except Exception as e: out[n] = None; print('خطأ', n, e)

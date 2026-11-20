@@ -65,6 +65,8 @@ const bbox = rings => { let a = 1e9, b = 1e9, c = -1e9, d = -1e9; for (const f o
 
 // ===== البيانات =====
 const R = WD.r.map(a => ({ id: a[0], c: a[1], ctl: a[2], n: a[3], t: WD.T[a[4]], a: a[5], ll: a[6], nb: a[7], sea: a[8], cities: a[9], oil: a[10], gas: a[11], cap: a[12], metro: a[13], why: a[14], el: a[15], port: a[16], fields: a[17], nt: a[18] }));
+// اسم أوضح: المنطقة المدموجة أو المقسومة تاخذ اسم أكبر مدينة بيها (مثلاً «بابل، بغداد…» ← «بغداد (بابل، بغداد…)»)
+for (const r of R) { r.full = r.n; const m = /[،…]|\s\d+$/.test(r.n); if (m && r.cities.length && r.cities[0][1] >= 5e4) { const c = r.cities[0][0], p = r.n.replace(/\s\d+$/, '').replace('…', '').split('،')[0].trim(); r.n = r.full.includes(c) ? c : c + ' · ' + p; } }
 const byId = new Map(R.map(r => [r.id, r]));
 for (const r of R) { r.p = decode(WD.g[r.id]); r.bb = bbox(r.p); }
 const S = WD.s.map(a => ({ id: a[0], n: a[1], ll: a[2], nb: a[3], k: a[4] }));

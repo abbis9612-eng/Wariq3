@@ -93,7 +93,7 @@
       const mine = L.reduce((t, g) => t + pw(g, WD), 0), theirs = NV.g.filter(g => foes.includes(g.cc)).reduce((t, g) => t + pw(g, WD), 0);
       const targets = foes.flatMap(f => coastZones(G, WD, f)); if (!targets.length) continue;
       // البحريات الكبيرة توصل لأي مكان، بس نص مجموعاتها بالأكثر تروح بعيد (فوك 6000 كم)؛ الباقي يحمي البيت
-      const blue = L.length >= 5, farMax = Math.ceil(L.length / 2); let far = L.filter(o => KM(net(WD).c[o.z], net(WD).c[o.home]) > 6000 || (o.path.length && KM(net(WD).c[o.path[o.path.length - 1]], net(WD).c[o.home]) > 6000)).length;
+      const blue = L.some(o => o.s0.cv) || L.reduce((t, o) => t + (o.s0.dd || 0) + (o.s0.ff || 0), 0) >= 30, farMax = Math.ceil(L.length / 2); let far = L.filter(o => KM(net(WD).c[o.z], net(WD).c[o.home]) > 6000 || (o.path.length && KM(net(WD).c[o.path[o.path.length - 1]], net(WD).c[o.home]) > 6000)).length;
       for (const g of auto) {
         if (g.path.length) continue;
         if (mine < theirs * .35 && !sub(g)) { if (g.z !== g.home) g.path = path(WD, g.z, g.home) || []; g.mode = 'def'; continue; }   // الأضعف بكثير يحمي سواحله

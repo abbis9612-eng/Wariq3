@@ -172,7 +172,7 @@
     const B = root.WNAVB || (typeof require !== 'undefined' ? require('./wnavb.js') : null); if (!B) return;
     const seed = ((G.rs || 1) * 131 + (G.t || 0) * 977 + g.id * 31) | 0, r = B.resolve({ s: { ...g.s } }, att, seed, 1);   // بدون رسم: خطوة ثانية (فحصت: الإصابات ضمن ~10٪ من خطوة ربع ثانية)
     for (const k in r.sunk) { const n = Math.min(g.s[k] || 0, r.sunk[k]); g.s[k] -= n; for (let i = 0; i < n; i++) log.push({ t: G.t, k: 'navsink', cc: g.cc, ty: k, by, z: g.z, why }); }
-    g.dmg += r.dmg * .5; NV.last = { t: G.t, z: g.z, def: g.cc, gid: g.id, s0: { ...g.s }, att, by, seed, res: r.stat, sunk: r.sunk };
+    g.dmg += r.dmg * .5; NV.last = { t: G.t, z: g.z, def: g.cc, gid: g.id, s0: { ...g.s }, att, by, seed, why, res: r.stat, sunk: r.sunk };
     for (const k of Object.keys(g.s)) if (g.s[k] <= 0) delete g.s[k];
     NV.last.s0 = Object.fromEntries(Object.entries(NV.last.s0).map(([k, v]) => [k, v + (r.sunk[k] || 0)]));
     log.push({ t: G.t, k: 'navbattle', cc: by, on: g.cc, z: g.z, n: att.n, kill: r.stat.kill, hit: r.stat.hit, why });

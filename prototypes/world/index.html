@@ -565,9 +565,27 @@ body.play #modes{display:none}body.play.layers #modes{display:flex;flex-directio
   const IMG = {}, IMGB = location.protocol === 'file:' ? '../grandwar/img/' : 'img/';
   let imgP = null;
   // I-112/I-113: صور Grok لكل منظومة دفاع جوي (docs/art/out ← img/sam_<key>_v.webp)؛ اللي ما إلها صورة بعد ← باتريوت (غربي) أو S-400 (شرقي)
-  const SAMI = ['siper'], WSAM = /^(pac|nasams|thaad|sampt|irist|hawk|idome|arrow|dsling|barak8|cheong|crotale|akash|camm|siper|hisarO|hisarA|korkut)$/;
-  const samImg = k => SAMI.includes(k) ? 'sam_' + k + '_v' : k === 's400' ? 's400' : WSAM.test(k) ? 'patriot' : 's400';
-  const loadImgs = () => imgP || (imgP = Promise.all(['abrams', 'abrams_t', 't72', 't72_t', 'bmp', 'grad', 'truck', 'f16', 'su25', 'f14', 'fx_explo1', 'fx_explo2', 'fx_fire', 'fx_cloud', 'f16_sheet', 'su25_sheet', 'f14_sheet', 'base_me', 'base_south', 'patriot', 's400', ...SAMI.map(k => 'sam_' + k + '_v'), 'zolf',
+  // I-114/I-115: صور Grok المقصوصة (tools/art/cut.py): u_<key>_v مايلة (لوحات وشارات)، u_<key>_t من فوق (المطارات)
+  // الدفاع الجوي: صورة كل منظومة؛ اللي ما إلها صورة تاخذ أقرب منظومة شكلاً (مكتوب بـ docs/art/out/README.md)
+  const SAMK = { siper: 'siper', hisarO: 'hisar-o', hisarA: 'hisar-a', korkut: 'korkut', s400: 's400', s500: 's500', pac: 'patriot', thaad: 'thaad', arrow: 'arrow', dsling: 'dsling', idome: 'idome', bavar: 'bavar',
+    khordad: 'khordad', hq9: 'hq9', nasams: 'nasams', irist: 'irist', pantsir: 'pantsir', tor: 'tor', camm: 'camm', cheong: 'cheong',
+    s300: 's400', s125: 's400', s75: 's400', s200: 's400', hq19: 'thaad', hq16: 'hq9', sampt: 'camm', barak8: 'irist', akash: 'khordad', buk: 'tor', kub: 'tor', hawk: 'nasams', crotale: 'korkut' };
+  const samImg = k => 'u_' + (SAMK[k] || 'patriot') + '_v', SAMI = [...new Set(Object.values(SAMK))];
+  // الطيارات: الطراز الحقيقي من اسم الموديل (nm) أو نوع المحرك والدولة
+  const planeKey = (t, nm, cc) => { const n = nm || '';
+    if (/F-22/.test(n)) return 'f22'; if (/B-1B/.test(n)) return 'b1b'; if (/Rafale|رافال/.test(n)) return 'rafale'; if (/Typhoon|تايفون/.test(n)) return 'typhoon'; if (/Su-57|سو-57/.test(n)) return 'su57'; if (/MiG-29|ميغ-29/.test(n)) return 'mig29'; if (/Tornado|تورنادو/.test(n)) return 'su24';
+    return ({ f35: 'f35', f15: 'f15', f16: 'f16', f18: 'f18', f14: 'f14', su24: 'su24', su34: 'su34', tb2: 'tb2', ch4: 'tb2', m6: 'tb2', euro: cc === 'FRA' || cc === 'IND' || cc === 'EGY' || cc === 'QAT' ? 'rafale' : 'typhoon', flanker: 'su35', light: 'mig29', old: 'mig29',
+      j20: cc === 'USA' ? 'f22' : cc === 'RUS' || cc === 'DZA' ? 'su57' : 'j20' })[t] || null; };
+  const PLK = ['f35', 'f22', 'f15', 'f16', 'f18', 'b1b', 'rafale', 'typhoon', 'su35', 'su34', 'su57', 'j20', 'mig29', 'f14', 'su24'];
+  // الدبابات: من موديلات الدولة (kit.tank)
+  // يمشي على موديلات الدولة بالترتيب، وأول موديل إله صورة خاصة يفوز (روسيا: T-72 ثم T-90 ← T-90)؛ ما لكينا ← T-72
+  const TK_RX = [['abrams', /abrams|m1a/i], ['merkava', /merkava/i], ['leopard', /leopard|challenger|leclerc|ariete|stridsvagn|type 10|type 90/i], ['k2', /\bk2\b|black panther|\bk1/i], ['altay', /altay|m60|m48/i],
+    ['type99', /type[- ]?99|ztz|type[- ]?96|vt-?4|type[- ]?59|type[- ]?69|al-khalid|al-zarrar|type[- ]?15/i], ['t90', /t-90/i]];
+  const tankKey = k => { const L = [...(k === me && G && G.nat && G.nat.arms && G.nat.arms.tank ? [G.nat.arms.tank.n || ''] : []), ...((CS[k] && CS[k].kit && CS[k].kit.tank && CS[k].kit.tank[1]) || [])];
+    for (const m of L) for (const [key, rx] of TK_RX) if (rx.test(m)) return key; return 't72'; };
+  const mechKey = k => WEST.test(((CS[k] && CS[k].kit && CS[k].kit.tank && CS[k].kit.tank[1]) || []).join(' ')) ? 'bradley' : 'bmp3';
+  const TKK = ['abrams', 'merkava', 'leopard', 'k2', 'altay', 'type99', 't90', 't72', 'bradley', 'bmp3'];
+  const loadImgs = () => imgP || (imgP = Promise.all(['abrams', 'abrams_t', 't72', 't72_t', 'bmp', 'grad', 'truck', 'f16', 'su25', 'f14', 'fx_explo1', 'fx_explo2', 'fx_fire', 'fx_cloud', 'f16_sheet', 'su25_sheet', 'f14_sheet', 'base_me', 'base_south', 'patriot', 's400', ...SAMI.map(k => 'u_' + k + '_v'), ...TKK.map(k => 'u_' + k + '_v'), ...PLK.map(k => 'u_' + k + '_t'), 'zolf',
     ...['aerial_sand', 'dirt_aerial_02', 'rocky_terrain_02', 'aerial_mud_1', 'aerial_asphalt_01', 'aerial_grass_rock', 'palm', 'tree', 'acacia', 'h1', 'h2', 'h3', 'h4'].map(n => 'bv/' + n)]
     .map(n => new Promise(r => { const i = new Image(); i.onload = r; i.onerror = r; i.src = IMGB + n + '.webp'; IMG[n.replace('bv/', 'bv_')] = i; }))).then(() => window.BVIEW.init({ IMG, SND: null })));
   // نوع الدبابة بالمشهد حسب الدولة: غربية (أبرامز، ليوبارد، ميركافا...) أو سوفيتية/شرقية (T-72، T-90، Type...)
@@ -668,7 +686,7 @@ body.play #modes{display:none}body.play.layers #modes{display:flex;flex-directio
         const nl = [cur[0] + (tgt.ll[0] - cur[0]) * .08, cur[1] + (tgt.ll[1] - cur[1]) * .08]; if (Math.abs(nl[0] - tgt.ll[0]) + Math.abs(nl[1] - tgt.ll[1]) > .01) dirty = true; FD.set(key, nl); const [x, y] = toS(MX(nl[0]), MY(nl[1])); if (x < -40 || x > W0() + 40 || y < -40 || y > H0() + 40) return; const w = sz * 1.36, h = sz;
         cx.save(); cx.beginPath(); cx.roundRect(x - w / 2, y + 8 - h / 2, w, h, 6); cx.fillStyle = war ? '#7a2a20' : 'rgba(70,72,64,.92)'; cx.fill();
         cx.lineWidth = war ? 2.4 : 1.8; cx.strokeStyle = war ? '#ff6b57' : al ? '#7ddc6a' : rel <= -40 ? '#e0715f' : rel >= 40 ? '#b6e0a0' : 'rgba(230,225,210,.6)'; if (war) { cx.globalAlpha = .7 + .3 * Math.sin(now / 250); dirty = true; } cx.stroke(); cx.globalAlpha = 1;
-        const im = IMG[F.arm || F.mec ? (F.arm ? tankOf(k) : 'bmp') : 'truck']; if (im && im.naturalWidth) cx.drawImage(im, x - w * .44, y + 8 - h * .58, w * .88, h * 1.16);
+        const im = IMG[F.arm || F.mec ? 'u_' + (F.arm ? tankKey(k) : mechKey(k)) + '_v' : 'truck']; if (im && im.naturalWidth) { const dw = w * 1.02, dh = Math.min(h * 1.3, dw * im.naturalHeight / im.naturalWidth); cx.drawImage(im, x - dw / 2, y + 8 - dh * .6, dw, dh); }
         cx.font = '700 10px "IBM Plex Sans Arabic",Tahoma'; cx.textAlign = 'center'; cx.textBaseline = 'middle'; cx.beginPath(); cx.arc(x - w / 2 + 2, y + 8 - h / 2 + 2, 8, 0, 7); cx.fillStyle = '#ece6d3'; cx.fill(); cx.fillStyle = '#20241c'; cx.fillText(n, x - w / 2 + 2, y + 8 - h / 2 + 3); cx.textBaseline = 'alphabetic'; cx.restore(); }); }
   }
   // I-108: شحنات السلاح بالطريق: من عاصمة البايع لعاصمتنا، 🚢 بحراً، 🚚 برّاً، ✈ جواً
@@ -748,12 +766,12 @@ body.play #modes{display:none}body.play.layers #modes{display:flex;flex-directio
       for (const L of sams.values()) { const x0 = L[0], [x, y] = toS(MX(x0.ll[1]), MY(x0.ll[0])); if (x < -80 || x > W0() + 80 || y < -80 || y > H0() + 80) continue; const R0 = Math.max(...L.map(z => rng(z.sys))) * pxkm, dn = L.every(z => z.down);
         if (R0 > 100 * pxkm) { cx.beginPath(); cx.arc(x, y, R0, 0, 7); cx.fillStyle = 'rgba(70,130,220,.06)'; cx.fill(); } cx.beginPath(); cx.arc(x, y, Math.min(R0, 60 * pxkm), 0, 7); cx.setLineDash([4, 5]); cx.strokeStyle = 'rgba(70,130,220,.45)'; cx.lineWidth = 1; cx.stroke(); cx.setLineDash([]);
         cx.save(); cx.translate(x, y); cx.beginPath(); for (let k = 0; k < 6; k++) { const a = Math.PI / 6 + k * Math.PI / 3; cx.lineTo(10 * Math.cos(a), 10 * Math.sin(a)); } cx.closePath(); cx.fillStyle = dn ? '#5c5c5c' : '#20406e'; cx.fill(); cx.strokeStyle = '#cfe0ff'; cx.lineWidth = 1.4; cx.stroke();
-        const top = L.reduce((b, z) => rng(z.sys) > rng(b.sys) ? z : b, x0), ik = samImg(top.sys), im = IMG[ik]; if (im && im.naturalWidth) { if (ik.startsWith('sam_')) { const r = im.naturalHeight / im.naturalWidth; cx.drawImage(im, -13, -13 * r, 26, 26 * r); } else cx.drawImage(im, -9, -9, 18, 18); } cx.restore();
+        const top = L.reduce((b, z) => rng(z.sys) > rng(b.sys) ? z : b, x0), ik = samImg(top.sys), im = IMG[ik]; if (im && im.naturalWidth) { if (ik.startsWith('u_')) { const r = im.naturalHeight / im.naturalWidth; cx.drawImage(im, -13, -13 * r, 26, 26 * r); } else cx.drawImage(im, -9, -9, 18, 18); } cx.restore();
         if (L.length > 1) { cx.beginPath(); cx.arc(x + 9, y - 8, 6, 0, 7); cx.fillStyle = '#cfe0ff'; cx.fill(); cx.fillStyle = '#102a5a'; cx.font = '700 9px sans-serif'; cx.textAlign = 'center'; cx.fillText(L.length, x + 9, y - 5); } }
       const bases = new Map(); for (const b of T.A.bases) { if (b.side !== 0) continue; const k = b.ll.map(v => v.toFixed(2)).join(); if (!bases.has(k)) bases.set(k, []); bases.get(k).push(b); }
       for (const L of bases.values()) { const b0 = L[0], [x, y] = toS(MX(b0.ll[1]), MY(b0.ll[0])); if (x < -40 || x > W0() + 40 || y < -40 || y > H0() + 40) continue; const n = L.reduce((t, b) => t + b.ready, 0), n0 = L.reduce((t, b) => t + b.n0, 0);
         cx.save(); cx.beginPath(); cx.arc(x, y, 15, 0, 7); cx.fillStyle = '#f4efe0'; cx.fill(); cx.lineWidth = 2.2; cx.strokeStyle = '#1f4f9a'; cx.stroke();
-        const t = L.sort((a, c) => c.n0 - a.n0)[0].type, im = IMG[(AIR.PLANES[t] && AIR.PLANES[t].spr) || (['f16', 'su25', 'f14'].includes(t) ? t : 'f16')]; cx.translate(x, y); cx.rotate(-Math.PI / 4); if (im && im.naturalWidth) cx.drawImage(im, -12, -12, 24, 24); cx.restore();
+        const b1 = L.sort((a, c) => c.n0 - a.n0)[0], t = b1.type, pk = planeKey(t, b1.nm, b1.cc), im = (pk && IMG['u_' + pk + '_t'] && IMG['u_' + pk + '_t'].naturalWidth ? IMG['u_' + pk + '_t'] : null) || IMG[(AIR.PLANES[t] && AIR.PLANES[t].spr) || (['f16', 'su25', 'f14'].includes(t) ? t : 'f16')]; cx.translate(x, y); cx.rotate(-Math.PI / 4); if (im && im.naturalWidth) cx.drawImage(im, -12, -12, 24, 24); cx.restore();
         cx.font = '700 10px "IBM Plex Sans Arabic",Tahoma'; cx.textAlign = 'center'; const lb = n + '/' + n0 + ' ✈'; cx.lineWidth = 3; cx.strokeStyle = 'rgba(255,255,255,.85)'; cx.strokeText(lb, x, y + 26); cx.fillStyle = '#1f4f9a'; cx.fillText(lb, x, y + 26); }
     }
     // المكدسة بخلية (واقفة) قطعة وحدة؛ اللي تتحرك كل وحدة لحالها بمكانها بين الخليتين
@@ -965,7 +983,7 @@ body.play #modes{display:none}body.play.layers #modes{display:flex;flex-directio
   // ===== I-106: 🪖 الجيش — كل جيشنا بالصور (نفس صور «الحرب الكبرى»)، والفرق والقواعد والبطاريات اللي على الخريطة =====
   const WESTSAM = /^(pac|nasams|thaad|sampt|irist|hawk|idome|arrow|dsling|barak8|cheong|crotale|akash)$/;
   const imgOf = n => `<img src="${IMGB}${n}.webp" alt="" style="width:46px;height:34px;object-fit:contain;flex:none" onerror="this.style.visibility='hidden'">`;
-  const planeImg = t => imgOf((AIR.PLANES[t] && AIR.PLANES[t].spr) || (['f16', 'su25', 'f14'].includes(t) ? t : 'f16'));
+  const planeImg = (t, nm, cc) => planeKey(t, nm, cc) ? imgOf('u_' + planeKey(t, nm, cc) + '_v') : imgOf((AIR.PLANES[t] && AIR.PLANES[t].spr) || (['f16', 'su25', 'f14'].includes(t) ? t : 'f16'));
   function pArmy() {
     const V = VT(), cs = CS[me] || {}, c = G.C[me], kit = cs.kit || {}, K = k => (kit[k] || [0, []]);
     let h = `<h2>🪖 جيش ${CS[me].ar}</h2>`;
@@ -984,16 +1002,16 @@ body.play #modes{display:none}body.play.layers #modes{display:flex;flex-directio
     const sc = (V.ob && V.ob[0] && V.ob[0].scale) || 1;
     h += `<h3>القوات البرية: ${my.length} فرقة${sc > 1.05 ? ` <small class="note">(كل فرقة بالخريطة ≈ ${sc.toFixed(1)} فرقة حقيقية)</small>` : ''}</h3>`;
     const row = (img, t, n, d) => `<div style="display:flex;gap:8px;align-items:center;margin:5px 0">${img}<div style="flex:1"><b>${t}</b> <span class="note">${d || ''}</span></div><b>${n}</b></div>`;
-    h += row(imgOf(tankOf(me)), 'فرق مدرعة', kinds.arm.length, (K('tank')[1] || []).slice(0, 2).join('، '));
+    h += row(imgOf('u_' + tankKey(me) + '_v'), 'فرق مدرعة', kinds.arm.length, (K('tank')[1] || []).slice(0, 2).join('، '));
     h += row(imgOf('bmp'), 'فرق آلية', kinds.mec.length, (K('afv')[1] || []).slice(0, 2).join('، '));
     h += row(imgOf('truck'), 'فرق مشاة', kinds.inf.length, '');
     h += row(imgOf('grad'), 'مدفعية', fmt(K('art')[0]), (K('art')[1] || []).slice(0, 2).join('، '));
     h += `<div class="note" style="margin-top:4px">${my.slice(0, 40).map(d => { const cl = V.cells[d.cell]; return `<button class="pill" data-div="${d.id}">${KS[d.kind]} ${d.n.replace('الفرقة ', '')} · ${cl.city || byId.get(WD.r[cl.reg][0])?.n || ''} · ${Math.round(d.str * 100)}٪</button>`; }).join(' ')}${my.length > 40 ? ' …' : ''}</div>`;
     if (A) { const bs = A.bases.filter(b => b.side === 0), sm = A.sams.filter(x => x.side === 0);
-      h += `<h3>✈ القوة الجوية: ${bs.reduce((t, b) => t + b.n0, 0)} طيارة بـ${new Set(bs.map(b => b.ll.join())).size} مطار</h3>` + bs.map(b => row(planeImg(b.type), b.nm || (AIR.PLANES[b.type] || {}).n || b.type, b.n0, b.n)).join('');
+      h += `<h3>✈ القوة الجوية: ${bs.reduce((t, b) => t + b.n0, 0)} طيارة بـ${new Set(bs.map(b => b.ll.join())).size} مطار</h3>` + bs.map(b => row(planeImg(b.type, b.nm, b.cc), b.nm || (AIR.PLANES[b.type] || {}).n || b.type, b.n0, b.n)).join('');
       const g = {}; for (const x of sm) g[x.sys] = (g[x.sys] || 0) + 1;
       h += `<h3>🚀 الدفاع الجوي: ${sm.length} بطارية</h3>` + Object.entries(g).map(([k, n]) => row(imgOf(samImg(k)), (AIR.SYS[k] || {}).full || (AIR.SYS[k] || {}).n || k, n, [...new Set(sm.filter(x => x.sys === k).map(x => x.n.split('—')[1] || ''))].slice(0, 3).join('، '))).join('');
-      if ((cs.ships || 0) + (cs.subs || 0)) h += `<h3>⚓ البحرية</h3>` + row('<span style="font-size:28px;width:46px;text-align:center">🚢</span>', 'سفن', fmt(cs.ships || 0), (K('navy')[1] || []).slice(0, 2).join('، ')) + row('<span style="font-size:28px;width:46px;text-align:center">🛥</span>', 'غواصات', fmt(cs.subs || 0), '') + `<div class="note">قوة البحرية ${Math.round(c.nav)} (بالحرب: حصار سواحل العدو أو حماية سواحلنا من ⚔ الحروب)</div>`; }
+      if ((cs.ships || 0) + (cs.subs || 0)) h += `<h3>⚓ البحرية</h3>` + (cs.carriers ? row(imgOf('u_carrier_v'), 'حاملات طائرات', fmt(cs.carriers), '') : '') + row(imgOf('u_ddg_v'), 'سفن', fmt(cs.ships || 0), (K('navy')[1] || []).slice(0, 2).join('، ')) + row(imgOf('u_sub_v'), 'غواصات', fmt(cs.subs || 0), '') + `<div class="note">قوة البحرية ${Math.round(c.nav)} (بالحرب: حصار سواحل العدو أو حماية سواحلنا من ⚔ الحروب)</div>`; }
     h += `<div class="note" style="margin-top:6px">تشتري فرق وطيارات وصواريخ من 🏛 دولتي ← 🏭 الإنتاج، وسلاح جديد من 🛒 سوق السلاح.</div>`;
     return h;
   }

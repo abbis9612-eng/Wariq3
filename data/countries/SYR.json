@@ -84,6 +84,11 @@
    "u": "https://www.sipri.org/databases/armstransfers",
    "y": 2026
   },
+  "mdl": {
+   "t": "أهم موديلات كل فئة (تقدير المصمم من صفحات «List of equipment» و«Military of X» بويكيبيديا وأخبار التسليح 2024–26) — الأسماء بس، الأعداد من الإجمالي",
+   "u": "https://en.wikipedia.org/wiki/Lists_of_military_equipment",
+   "y": 2026
+  },
   "tpl": {
    "t": "قالب منطقة (me): موديلات شائعة ونسب تقريبية من الدبابات (مدرعات ×2.5، مدفعية ×0.9، مروحيات ×0.25) — تقدير المصمم",
    "u": "docs/features/world-plan.md",
@@ -253,26 +258,20 @@
     "c": "ت",
     "top": [
      [
-      "T-62",
+      "T-72",
       null,
-      null,
+      3,
       null
      ],
      [
       "T-55",
       null,
-      null,
-      null
-     ],
-     [
-      "M60",
-      null,
-      null,
+      1,
       null
      ]
     ],
-    "gen": 2,
-    "tpl": "me"
+    "gen": 2.0,
+    "mdl": 1
    },
    "afv": {
     "n": 100,
@@ -282,24 +281,18 @@
      [
       "BMP-1",
       null,
-      null,
+      2,
       null
      ],
      [
-      "M113",
+      "عجلات غير مدرعة",
       null,
-      null,
-      null
-     ],
-     [
-      "BTR-60",
-      null,
-      null,
+      2,
       null
      ]
     ],
-    "gen": 2,
-    "tpl": "me"
+    "gen": 2.0,
+    "mdl": 1
    },
    "art": {
     "n": 36,
@@ -309,24 +302,18 @@
      [
       "D-30",
       null,
-      null,
+      2,
       null
      ],
      [
-      "M109",
+      "BM-21",
       null,
-      null,
-      null
-     ],
-     [
-      "BM-21 Grad",
-      null,
-      null,
+      2,
       null
      ]
     ],
-    "gen": 2,
-    "tpl": "me"
+    "gen": 2.0,
+    "mdl": 1
    },
    "jet": {
     "n": 4,
@@ -334,26 +321,20 @@
     "c": "ت",
     "top": [
      [
-      "MiG-29",
+      "Su-22",
       null,
-      null,
+      2,
       null
      ],
      [
-      "F-5",
+      "L-39",
       null,
-      null,
-      null
-     ],
-     [
-      "Mirage F1",
-      null,
-      null,
+      2,
       null
      ]
     ],
-    "gen": 2.2,
-    "tpl": "me"
+    "gen": 2.0,
+    "mdl": 1
    },
    "heli": {
     "n": 10,
@@ -361,26 +342,14 @@
     "c": "ق",
     "top": [
      [
-      "Mi-24",
-      null,
-      null,
-      null
-     ],
-     [
       "Mi-8/17",
       null,
-      null,
-      null
-     ],
-     [
-      "Bell 412",
-      null,
-      null,
+      2,
       null
      ]
     ],
-    "gen": 2.2,
-    "tpl": "me"
+    "gen": 2.0,
+    "mdl": 1
    },
    "navy": {
     "n": 3,

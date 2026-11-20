@@ -5,6 +5,24 @@
  "tier": "C",
  "asOf": "2026-11",
  "src": {
+  "wiki_air": {
+   "t": "Wikipedia: Royal Cambodian Air Force",
+   "u": "https://en.wikipedia.org/wiki/Royal_Cambodian_Air_Force?oldid=1383740408",
+   "y": 2026,
+   "note": "نسخة الصفحة بتاريخ السحب؛ أرقام ويكيبيديا تنراجع ويا مصادر ثانية"
+  },
+  "wiki_army": {
+   "t": "Wikipedia: List of equipment of the Royal Cambodian Army",
+   "u": "https://en.wikipedia.org/wiki/List_of_equipment_of_the_Royal_Cambodian_Army?oldid=1386717756",
+   "y": 2026,
+   "note": "نسخة الصفحة بتاريخ السحب؛ أرقام ويكيبيديا تنراجع ويا مصادر ثانية"
+  },
+  "wiki_navy": {
+   "t": "Wikipedia: Royal Cambodian Navy",
+   "u": "https://en.wikipedia.org/wiki/Royal_Cambodian_Navy?oldid=1379438291",
+   "y": 2026,
+   "note": "نسخة الصفحة بتاريخ السحب؛ أرقام ويكيبيديا تنراجع ويا مصادر ثانية"
+  },
   "iiss_eq": {
    "t": "Wikipedia: List of countries by level of military equipment (من IISS Military Balance ومصادر ثانية)",
    "u": "https://en.wikipedia.org/wiki/List_of_countries_by_level_of_military_equipment?oldid=1384804191",
@@ -224,12 +242,241 @@
     "c": "ت"
    }
   },
-  "land": [],
+  "land": [
+   {
+    "m": "T-54/T-55",
+    "n": 100,
+    "orig": "SUN",
+    "s": "wiki_army",
+    "c": "ت",
+    "note": "Inherited from the KPRA/CPA.",
+    "gen": 1,
+    "cat": "tank"
+   },
+   {
+    "m": "BMP-1",
+    "n": 61,
+    "orig": "CSK",
+    "s": "wiki_army",
+    "c": "ت",
+    "note": "Acquired by the RCA in 2012.",
+    "gen": 2,
+    "cat": "ifv"
+   },
+   {
+    "m": "BB-60",
+    "n": 1,
+    "orig": "KHM",
+    "s": "wiki_army",
+    "c": "ت",
+    "note": "Built by a Vietnamese mechanic in 2014 for the E-70 as well as fixing Brigade's BRDM-2s and BTR-60PBs. The origins of the name \"BB-60\" given",
+    "gen": 2,
+    "cat": "apc"
+   },
+   {
+    "m": "BRDM-2",
+    "n": 30,
+    "orig": "SUN",
+    "s": "wiki_army",
+    "c": "ت",
+    "note": "Inherited from the KPRA/CPA.",
+    "gen": 2,
+    "cat": "apc"
+   },
+   {
+    "m": "BTR-60",
+    "n": 40,
+    "orig": "SUN",
+    "s": "wiki_army",
+    "c": "ت",
+    "note": "Inherited from the KPRA/CPA.",
+    "gen": 2,
+    "cat": "apc"
+   },
+   {
+    "m": "BTR-152",
+    "n": 2,
+    "orig": "SUN",
+    "s": "wiki_army",
+    "c": "ت",
+    "note": "Inherited from the KPRA/CPA.",
+    "gen": 2,
+    "cat": "apc"
+   },
+   {
+    "m": "OT-64",
+    "n": 26,
+    "orig": "CSK",
+    "s": "wiki_army",
+    "c": "ت",
+    "note": "Inherited from the GRK. in the 2000s. Mistaken for OT-64s.",
+    "gen": 2,
+    "cat": "apc"
+   },
+   {
+    "m": "Type 63",
+    "n": 4,
+    "orig": "CHN",
+    "s": "wiki_army",
+    "c": "ت",
+    "note": "Donated to the RCA in 2015. Training Vehicles.",
+    "gen": 2,
+    "cat": "apc"
+   },
+   {
+    "m": "ZFB-05",
+    "n": 15,
+    "orig": "CHN",
+    "s": "wiki_army",
+    "c": "ت",
+    "note": "Donated to the RCA in 2019. Mistaken for Tigr. Relegated to the E-70.",
+    "gen": 2,
+    "cat": "apc"
+   },
+   {
+    "m": "SH-1",
+    "n": 18,
+    "orig": "CHN",
+    "s": "wiki_army",
+    "c": "ت",
+    "note": "Acquired by the RCA in 2022.",
+    "gen": 2,
+    "cat": "spg"
+   },
+   {
+    "m": "BM-21",
+    "n": 20,
+    "orig": "CSK",
+    "s": "wiki_army",
+    "c": "ت",
+    "note": "Acquired by the RCA in 2012.",
+    "gen": 2,
+    "cat": "mlrs"
+   },
+   {
+    "m": "PHL-03",
+    "n": 6,
+    "orig": "CHN",
+    "s": "wiki_army",
+    "c": "ت",
+    "note": "Acquired by the RCA in 2022.",
+    "gen": 2,
+    "cat": "mlrs"
+   }
+  ],
   "air": [],
   "ad": [],
   "msl": [],
-  "navy": [],
-  "grp": {}
+  "navy": [
+   {
+    "m": "LCM-6 Landing Craft",
+    "n": 1,
+    "orig": "KHM",
+    "s": "wiki_navy",
+    "c": "ت",
+    "cat": "amphib",
+    "gen": 2,
+    "note": "عدد الصفوف بالقائمة"
+   },
+   {
+    "m": "LCM-8 Landing Craft",
+    "n": 1,
+    "orig": "KHM",
+    "s": "wiki_navy",
+    "c": "ت",
+    "cat": "amphib",
+    "gen": 2,
+    "note": "عدد الصفوف بالقائمة"
+   }
+  ],
+  "grp": {
+   "tank": {
+    "n": 0,
+    "s": "iiss_eq",
+    "c": "ت",
+    "top": [
+     [
+      "T-54/T-55",
+      100,
+      1,
+      "SUN"
+     ]
+    ],
+    "gen": 1.0
+   },
+   "afv": {
+    "n": 179,
+    "s": "wiki_army",
+    "c": "ت",
+    "top": [
+     [
+      "BMP-1",
+      61,
+      2,
+      "CSK"
+     ],
+     [
+      "BTR-60",
+      40,
+      2,
+      "SUN"
+     ],
+     [
+      "BRDM-2",
+      30,
+      2,
+      "SUN"
+     ]
+    ],
+    "gen": 2.0
+   },
+   "art": {
+    "n": 44,
+    "s": "wiki_army",
+    "c": "ت",
+    "top": [
+     [
+      "BM-21",
+      20,
+      2,
+      "CSK"
+     ],
+     [
+      "SH-1",
+      18,
+      2,
+      "CHN"
+     ],
+     [
+      "PHL-03",
+      6,
+      2,
+      "CHN"
+     ]
+    ],
+    "gen": 2.0
+   },
+   "navy": {
+    "n": 2,
+    "s": "wiki_navy",
+    "c": "ت",
+    "top": [
+     [
+      "LCM-6 Landing Craft",
+      1,
+      2,
+      "KHM"
+     ],
+     [
+      "LCM-8 Landing Craft",
+      1,
+      2,
+      "KHM"
+     ]
+    ],
+    "gen": 2.0
+   }
+  }
  },
  "ind": null,
  "pol": {

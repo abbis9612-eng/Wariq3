@@ -69,6 +69,11 @@
    "u": "https://www.sipri.org/databases/armstransfers",
    "y": 2026
   },
+  "mdl": {
+   "t": "أهم موديلات كل فئة (تقدير المصمم من صفحات «List of equipment» و«Military of X» بويكيبيديا وأخبار التسليح 2024–26) — الأسماء بس، الأعداد من الإجمالي",
+   "u": "https://en.wikipedia.org/wiki/Lists_of_military_equipment",
+   "y": 2026
+  },
   "tpl": {
    "t": "قالب منطقة (as): موديلات شائعة ونسب تقريبية من الدبابات (مدرعات ×2.5، مدفعية ×0.9، مروحيات ×0.25) — تقدير المصمم",
    "u": "docs/features/world-plan.md",
@@ -529,7 +534,7 @@
     "s": "wiki_army",
     "c": "ت",
     "note": "37 units have been purchased in 2012 and another 18 equipped with Nexter FINDART artillery firing control system have been ordered in 2017 f",
-    "gen": 2,
+    "gen": 4,
     "cat": "spg"
    },
    {
@@ -1176,7 +1181,7 @@
       "BRA"
      ]
     ],
-    "gen": 1.8
+    "gen": 2.0
    },
    "jet": {
     "n": 97,
@@ -1184,26 +1189,32 @@
     "c": "ت",
     "top": [
      [
-      "F-5",
+      "Su-27/30",
       null,
-      null,
+      3,
       null
      ],
      [
-      "MiG-21",
+      "F-16C/D",
       null,
-      null,
+      3,
       null
      ],
      [
-      "F-7",
+      "Hawk 209",
       null,
+      2,
+      null
+     ],
+     [
+      "Rafale (طلب)",
       null,
+      4,
       null
      ]
     ],
-    "gen": 2,
-    "tpl": "as"
+    "gen": 2.7,
+    "mdl": 1
    },
    "heli": {
     "n": 232,

@@ -58,7 +58,7 @@ def cat_of(rules, *txt):
     return None
 
 # ===== الجيل 1–5 (تقدير حسب الموديل) =====
-GEN = [(r'f-35|j-20|su-57|t-14|j-35|kf-21|f-22', 5), (r't-90|m1a2|leopard 2a[67]|k2\b|merkava (mk ?)?iv|challenger 3|type 99a|altay|leclerc|rafale|typhoon|su-35|su-30|j-16|j-10c|f-15e|f-15ex|f-16v|f-16 block (60|70|72)|gripen|f/a-18e|kaan|zulfiqar|bmp-3|puma|cv90|k21|ah-64e|mi-28|ka-52|t129|bayraktar|tb2|akinci|wing loong|ch-5|mq-9|s-400|patriot|thaad', 4),
+GEN = [(r'f-35|j-20|su-57|t-14|j-35|kf-21|f-22', 5), (r'archer|caesar|\bk9\b|pzh 2000|atmos|cv90|strf 90|patria amv|boxer|lynx|kf41|nh90|uh-60m|leopard 2a5|leopard 2a8|stridsvagn 122|f-16 block 7|f-16v|gripen e|m1a2|t-90m|t-72b3|su-34|himars|m270|zuzana 2|dita|vt-4|centauro ii|rch 155|j-10ce|m-346|fa-50|t-84 oplot|puma|ah-1z|h225m|aw101|mh-60r|lav 6|m777|k239|krab|rooivalk|piranha v|leclerc|t-80u|bmp-3|polonez|semser|arlan|t-90s', 4), (r't-90|m1a2|leopard 2a[67]|k2\b|merkava (mk ?)?iv|challenger 3|type 99a|altay|leclerc|rafale|typhoon|su-35|su-30|j-16|j-10c|f-15e|f-15ex|f-16v|f-16 block (60|70|72)|gripen|f/a-18e|kaan|zulfiqar|bmp-3|puma|cv90|k21|ah-64e|mi-28|ka-52|t129|bayraktar|tb2|akinci|wing loong|ch-5|mq-9|s-400|patriot|thaad', 4),
   (r't-72|t-80|m1a1|m1\b|leopard 2|merkava|challenger|type 96|chieftain|mig-29|su-27|su-24|su-25|f-16|f-15|f/a-18|f-18|f-14|mirage 2000|j-10|jf-17|bmp-2|m2 bradley|warrior|marder|btr-80|btr-4|vn22|ah-64|mi-35|mi-24|s-300|pantsir|tor|hq-9|t-50|l-159|ch-4|karrar', 3),
   (r't-62|t-64|m60|amx-30|mig-23|mig-25|mirage f1|f-4|f-5|su-22|bmp-1|btr-70|btr-60|m113|amx-10|hawk|buk|kub|s-125|m109|m198|2s1|2s3|bm-21|d-30|d-20|m-46|type 63|mi-8|mi-17|uh-1|bell 412|c-130|an-32|l-39', 2),
   (r't-55|t-54|type 59|type 69|mig-21|f-7|j-7|mig-19|j-6|s-75|sa-2|m48|centurion|pt-76', 1)]
@@ -219,6 +219,7 @@ TPL = {   # قوالب تقريبية لما ما عدنا قائمة (ق): ال
   'eu': {'tank': (2.6, ['T-72', 'Leopard 1', 'Leopard 2A4']), 'afv': (2.4, ['BMP-2', 'M113', 'Patria AMV']), 'art': (2.4, ['2S1', 'M109', 'D-30']), 'jet': (2.8, ['F-16', 'MiG-29', 'Gripen']), 'heli': (2.6, ['Mi-24', 'AW139', 'UH-60'])},
   'as': {'tank': (1.8, ['Type 59', 'T-55', 'T-72']), 'afv': (1.8, ['M113', 'BTR-70', 'Type 63']), 'art': (1.8, ['M101', 'D-30', 'Type 54']), 'jet': (2, ['F-5', 'MiG-21', 'F-7']), 'heli': (2, ['Mi-8/17', 'Bell 412', 'UH-1'])},
   'la': {'tank': (1.6, ['AMX-13', 'M41', 'T-55']), 'afv': (1.8, ['M113', 'EE-11 Urutu', 'BTR-80']), 'art': (1.8, ['M101', 'M114', 'OTO Melara Mod 56']), 'jet': (1.8, ['A-29 Super Tucano', 'F-5', 'Mirage 5']), 'heli': (2, ['Bell 412', 'UH-1H', 'Mi-17'])}}[reg]
+_M = json.load(open(f'{R}/curation/models.json')); MD = _M['c'].get(ID, {}); MDS = _M['src']['mdl']
 GR = {'tank': (land, ('tank',)), 'afv': (land, ('ifv', 'apc', 'mrap')), 'art': (land, ('spg', 'towed', 'mlrs')), 'jet': (air, ('fighter', 'attack', 'bomber')), 'heli': (air, ('heli_attack', 'heli_util')),
   'uav': (air, ('uav_isr', 'uav_strike')), 'ad': (ad, ('long', 'medium', 'short')), 'navy': (navy, None)}
 sv0 = lambda k: (sumo.get(k) or {}).get('v') if sumo else None
@@ -235,6 +236,7 @@ for g, (L, cats) in GR.items():
     if not n and not nP: continue
     o = {'n': n or 0, 's': sk, 'c': cf}
     if top: o['top'] = [[x['m'][:40], x['n'], x['gen'], x['orig']] for x in top]; o['gen'] = gen
+    elif MD.get(g): o['top'] = [[m, None, gen_of(m)[0], None] for m in MD[g][:4]]; o['gen'] = round(sum(gen_of(m)[0] for m in MD[g][:3]) / min(3, len(MD[g])), 1); o['mdl'] = 1; src['mdl'] = MDS
     elif g in TPL: o['top'] = [[m, None, None, None] for m in TPL[g][1]]; o['gen'] = TPL[g][0]; o['tpl'] = reg
     if nP and n and abs(nP - n) / max(n, 1) > .6: o['note'] = f'مجموع القوائم {nP} يختلف عن الإجمالي؛ الإجمالي هو المعتمد'
     grp[g] = o

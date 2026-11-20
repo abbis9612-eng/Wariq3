@@ -309,7 +309,7 @@
     "s": "wiki_air",
     "c": "ت",
     "note": "Aircraft delivered in 2014.",
-    "gen": 2,
+    "gen": 4,
     "cat": "heli_util"
    },
    {
@@ -439,7 +439,7 @@
      [
       "NHIndustries NH90 (NH90 TTH)",
       8,
-      2,
+      4,
       "FRA"
      ],
      [
@@ -455,7 +455,7 @@
       "USA"
      ]
     ],
-    "gen": 2.0
+    "gen": 2.9
    },
    "uav": {
     "n": 1,

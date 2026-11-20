@@ -287,7 +287,7 @@
     "s": "wiki_army",
     "c": "ت",
     "note": "Used for \"aggressor\" training. T-80U delivered between 1995 and 1997. 2 T-80UK delivered in 2005. These tanks were transferred as a partial ",
-    "gen": 3,
+    "gen": 4,
     "cat": "tank"
    },
    {
@@ -485,7 +485,7 @@
     "orig": "KOR",
     "s": "wiki_air",
     "c": "ت",
-    "gen": 3,
+    "gen": 4,
     "cat": "fighter"
    },
    {
@@ -707,7 +707,7 @@
     "orig": "INT",
     "s": "wiki_army",
     "c": "ت",
-    "gen": 2,
+    "gen": 4,
     "cat": "uav_isr"
    }
   ],
@@ -812,7 +812,7 @@
      [
       "T-80UT-80UK",
       33,
-      3,
+      4,
       "SUN"
      ]
     ],
@@ -894,7 +894,7 @@
       "USA"
      ]
     ],
-    "gen": 3.0
+    "gen": 3.1
    },
    "heli": {
     "n": 85,
@@ -942,11 +942,11 @@
      [
       "IAI Searcher",
       2,
-      2,
+      4,
       "INT"
      ]
     ],
-    "gen": 2.0
+    "gen": 2.4
    },
    "ad": {
     "n": 1052,

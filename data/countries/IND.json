@@ -356,7 +356,7 @@
     "s": "wiki_army",
     "c": "ت",
     "note": "Status: In service. 1st batch of 100 units ordered in 2016. Delivered by 2021. 2nd batch for 100 units ordered in December 2024. Additional ",
-    "gen": 2,
+    "gen": 4,
     "cat": "spg"
    },
    {
@@ -366,7 +366,7 @@
     "s": "wiki_army",
     "c": "ت",
     "note": "Status: In service. Total 145 ordered. Assembled in India by Mahindra Defense",
-    "gen": 2,
+    "gen": 4,
     "cat": "towed"
    },
    {
@@ -1013,7 +1013,7 @@
     "orig": "ISR",
     "s": "wiki_air",
     "c": "ت",
-    "gen": 2,
+    "gen": 4,
     "cat": "uav_isr"
    },
    {
@@ -1135,7 +1135,7 @@
     "s": "wiki_air",
     "c": "ت",
     "note": "2 on order",
-    "gen": 2,
+    "gen": 4,
     "cat": "heli_util"
    },
    {
@@ -1429,7 +1429,7 @@
       "IND"
      ]
     ],
-    "gen": 1.9
+    "gen": 2.0
    },
    "jet": {
     "n": 926,

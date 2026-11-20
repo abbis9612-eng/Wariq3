@@ -482,7 +482,7 @@
     "s": "wiki_air",
     "c": "ت",
     "note": "9 in service and 15 more ordered. 3 ex-Royal Jordanian Air Force S-70A and 12 new UH-60M on order.",
-    "gen": 2,
+    "gen": 4,
     "cat": "heli_util"
    },
    {
@@ -648,7 +648,7 @@
       "ITA"
      ]
     ],
-    "gen": 2.0
+    "gen": 2.2
    },
    "ad": {
     "n": 59,

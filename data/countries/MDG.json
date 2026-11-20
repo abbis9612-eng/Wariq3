@@ -5,6 +5,12 @@
  "tier": "C",
  "asOf": "2026-11",
  "src": {
+  "wiki_army": {
+   "t": "Wikipedia: Madagascar Armed Forces",
+   "u": "https://en.wikipedia.org/wiki/Madagascar_Armed_Forces?oldid=1383045676",
+   "y": 2026,
+   "note": "نسخة الصفحة بتاريخ السحب؛ أرقام ويكيبيديا تنراجع ويا مصادر ثانية"
+  },
   "iiss_eq": {
    "t": "Wikipedia: List of countries by level of military equipment (من IISS Military Balance ومصادر ثانية)",
    "u": "https://en.wikipedia.org/wiki/List_of_countries_by_level_of_military_equipment?oldid=1384804191",
@@ -221,12 +227,200 @@
     "c": "ت"
    }
   },
-  "land": [],
-  "air": [],
+  "land": [
+   {
+    "m": "PT-76",
+    "n": 12,
+    "orig": "SUN",
+    "s": "wiki_army",
+    "c": "ت",
+    "gen": 1,
+    "cat": "tank"
+   },
+   {
+    "m": "BMP-3",
+    "n": 2,
+    "orig": "SUN",
+    "s": "wiki_army",
+    "c": "ت",
+    "gen": 4,
+    "cat": "tank"
+   },
+   {
+    "m": "Panthera T4",
+    "n": 6,
+    "orig": "ARE",
+    "s": "wiki_army",
+    "c": "ت",
+    "gen": 2,
+    "cat": "apc"
+   },
+   {
+    "m": "M101",
+    "n": 5,
+    "orig": "USA",
+    "s": "wiki_army",
+    "c": "ت",
+    "gen": 2,
+    "cat": "towed"
+   },
+   {
+    "m": "D-30",
+    "n": 12,
+    "orig": "SUN",
+    "s": "wiki_army",
+    "c": "ت",
+    "gen": 2,
+    "cat": "towed"
+   },
+   {
+    "m": "ZPU-4",
+    "n": 50,
+    "orig": "SUN",
+    "s": "wiki_army",
+    "c": "ت",
+    "gen": 2,
+    "cat": "towed"
+   },
+   {
+    "m": "PG-55",
+    "n": 20,
+    "orig": "SUN",
+    "s": "wiki_army",
+    "c": "ت",
+    "gen": 2,
+    "cat": "towed"
+   }
+  ],
+  "air": [
+   {
+    "m": "SA318C",
+    "n": 3,
+    "orig": "FRA",
+    "s": "wiki_army",
+    "c": "ت",
+    "gen": 2,
+    "cat": "heli_util"
+   },
+   {
+    "m": "AS350",
+    "n": 3,
+    "orig": "FRA",
+    "s": "wiki_army",
+    "c": "ت",
+    "gen": 2,
+    "cat": "heli_util"
+   },
+   {
+    "m": "Mi-8",
+    "n": 2,
+    "orig": "RUS",
+    "s": "wiki_army",
+    "c": "ت",
+    "gen": 2,
+    "cat": "heli_util"
+   },
+   {
+    "m": "BK117",
+    "n": 1,
+    "orig": "DEU",
+    "s": "wiki_army",
+    "c": "ت",
+    "gen": 2,
+    "cat": "heli_util"
+   }
+  ],
   "ad": [],
   "msl": [],
   "navy": [],
-  "grp": {}
+  "grp": {
+   "tank": {
+    "n": 0,
+    "s": "iiss_eq",
+    "c": "ت",
+    "top": [
+     [
+      "PT-76",
+      12,
+      1,
+      "SUN"
+     ],
+     [
+      "BMP-3",
+      2,
+      4,
+      "SUN"
+     ]
+    ],
+    "gen": 1.4
+   },
+   "afv": {
+    "n": 6,
+    "s": "wiki_army",
+    "c": "ت",
+    "top": [
+     [
+      "Panthera T4",
+      6,
+      2,
+      "ARE"
+     ]
+    ],
+    "gen": 2.0
+   },
+   "art": {
+    "n": 87,
+    "s": "wiki_army",
+    "c": "ت",
+    "top": [
+     [
+      "ZPU-4",
+      50,
+      2,
+      "SUN"
+     ],
+     [
+      "PG-55",
+      20,
+      2,
+      "SUN"
+     ],
+     [
+      "D-30",
+      12,
+      2,
+      "SUN"
+     ]
+    ],
+    "gen": 2.0
+   },
+   "heli": {
+    "n": 9,
+    "s": "wiki_army",
+    "c": "ت",
+    "top": [
+     [
+      "SA318C",
+      3,
+      2,
+      "FRA"
+     ],
+     [
+      "AS350",
+      3,
+      2,
+      "FRA"
+     ],
+     [
+      "Mi-8",
+      2,
+      2,
+      "RUS"
+     ]
+    ],
+    "gen": 2.0
+   }
+  }
  },
  "ind": null,
  "pol": {

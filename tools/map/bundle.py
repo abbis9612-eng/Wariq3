@@ -42,7 +42,7 @@ for f in glob.glob(f'{R}/countries/*.json'):
       'g': v((d.get('eco') or {}).get('growth')), 'debt': v((d.get('eco') or {}).get('debtPct')), 'rev': v((d.get('eco') or {}).get('revPct')), 'spend': v((d.get('eco') or {}).get('spendPct')),
       'milPct': v(m.get('budgetPctGdp')), 'gt': g.get('type'), 'res': v(s.get('reserve')), 'heli': v(s.get('attackHeli')),
       'ships': sum(v(s.get(k)) or 0 for k in ('carriers', 'cruisers', 'destroyers', 'frigates', 'corvettes', 'subNuc', 'subs', 'amphib')), 'carriers': v(s.get('carriers')), 'subs': (v(s.get('subs')) or 0) + (v(s.get('subNuc')) or 0),
-      'tech': ((d.get('ind') or {}).get('tech') or {}),
+      'tech': ((d.get('ind') or {}).get('tech') or {}), 'gen': {k: v.get('gen') for k, v in (m.get('grp') or {}).items() if v.get('gen')}, 'kit': {k: [v.get('n'), [t[0] for t in (v.get('top') or [])[:2]], 1 if v.get('tpl') else 0] for k, v in (m.get('grp') or {}).items() if k in ('tank', 'afv', 'art', 'jet', 'heli', 'ad', 'navy')},
       'nuke': None, 'stab': v((d.get('pol') or {}).get('stab')), 'tr': d.get('treaties', []), 'war': (d.get('pol') or {}).get('warHome', []), 'conf': d.get('conflicts', [])}
 SN = json.load(open(f'{R}/world/sanctions.json'))
 for x in SN['list']:

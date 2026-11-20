@@ -57,6 +57,11 @@
    "u": "https://www.sipri.org/databases/armstransfers",
    "y": 2026
   },
+  "mdl": {
+   "t": "أهم موديلات كل فئة (تقدير المصمم من صفحات «List of equipment» و«Military of X» بويكيبيديا وأخبار التسليح 2024–26) — الأسماء بس، الأعداد من الإجمالي",
+   "u": "https://en.wikipedia.org/wiki/Lists_of_military_equipment",
+   "y": 2026
+  },
   "tpl": {
    "t": "قالب منطقة (eu): موديلات شائعة ونسب تقريبية من الدبابات (مدرعات ×2.5، مدفعية ×0.9، مروحيات ×0.25) — تقدير المصمم",
    "u": "docs/features/world-plan.md",
@@ -242,26 +247,20 @@
     "c": "ت",
     "top": [
      [
-      "T-72",
-      null,
-      null,
-      null
-     ],
-     [
-      "Leopard 1",
-      null,
-      null,
-      null
-     ],
-     [
       "Leopard 2A4",
       null,
+      3,
+      null
+     ],
+     [
+      "K2NO (طلب)",
       null,
+      2,
       null
      ]
     ],
-    "gen": 2.6,
-    "tpl": "eu"
+    "gen": 2.5,
+    "mdl": 1
    },
    "afv": {
     "n": 130,
@@ -269,26 +268,26 @@
     "c": "ق",
     "top": [
      [
-      "BMP-2",
+      "CV9030N",
       null,
-      null,
+      4,
       null
      ],
      [
       "M113",
       null,
-      null,
+      2,
       null
      ],
      [
       "Patria AMV",
       null,
-      null,
+      4,
       null
      ]
     ],
-    "gen": 2.4,
-    "tpl": "eu"
+    "gen": 3.3,
+    "mdl": 1
    },
    "art": {
     "n": 47,
@@ -296,26 +295,20 @@
     "c": "ق",
     "top": [
      [
-      "2S1",
+      "K9 Thunder",
       null,
-      null,
+      4,
       null
      ],
      [
-      "M109",
+      "M270",
       null,
-      null,
-      null
-     ],
-     [
-      "D-30",
-      null,
-      null,
+      4,
       null
      ]
     ],
-    "gen": 2.4,
-    "tpl": "eu"
+    "gen": 4.0,
+    "mdl": 1
    },
    "jet": {
     "n": 40,
@@ -323,26 +316,14 @@
     "c": "ت",
     "top": [
      [
-      "F-16",
+      "F-35A",
       null,
-      null,
-      null
-     ],
-     [
-      "MiG-29",
-      null,
-      null,
-      null
-     ],
-     [
-      "Gripen",
-      null,
-      null,
+      5,
       null
      ]
     ],
-    "gen": 2.8,
-    "tpl": "eu"
+    "gen": 5.0,
+    "mdl": 1
    },
    "heli": {
     "n": 13,
@@ -350,26 +331,26 @@
     "c": "ق",
     "top": [
      [
-      "Mi-24",
+      "NH90",
       null,
-      null,
+      4,
       null
      ],
      [
-      "AW139",
+      "AW101",
       null,
-      null,
+      4,
       null
      ],
      [
-      "UH-60",
+      "Bell 412",
       null,
-      null,
+      2,
       null
      ]
     ],
-    "gen": 2.6,
-    "tpl": "eu"
+    "gen": 3.3,
+    "mdl": 1
    },
    "navy": {
     "n": 10,

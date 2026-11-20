@@ -69,6 +69,11 @@
    "u": "https://www.sipri.org/databases/armstransfers",
    "y": 2026
   },
+  "mdl": {
+   "t": "أهم موديلات كل فئة (تقدير المصمم من صفحات «List of equipment» و«Military of X» بويكيبيديا وأخبار التسليح 2024–26) — الأسماء بس، الأعداد من الإجمالي",
+   "u": "https://en.wikipedia.org/wiki/Lists_of_military_equipment",
+   "y": 2026
+  },
   "tpl": {
    "t": "قالب منطقة (af): موديلات شائعة ونسب تقريبية من الدبابات (مدرعات ×2.5، مدفعية ×0.9، مروحيات ×0.25) — تقدير المصمم",
    "u": "docs/features/world-plan.md",
@@ -228,7 +233,7 @@
     "orig": "CHN",
     "s": "wiki_army",
     "c": "ت",
-    "gen": 2,
+    "gen": 4,
     "cat": "tank"
    },
    {
@@ -785,11 +790,11 @@
      [
       "VT-4",
       17,
-      2,
+      4,
       "CHN"
      ]
     ],
-    "gen": 1.7
+    "gen": 1.8
    },
    "afv": {
     "n": 1460,
@@ -849,26 +854,32 @@
     "c": "ت",
     "top": [
      [
-      "MiG-21",
+      "JF-17",
       null,
-      null,
+      3,
       null
      ],
      [
-      "Su-25",
+      "A-29 Super Tucano",
       null,
-      null,
+      2,
       null
      ],
      [
-      "L-39",
+      "Alpha Jet",
       null,
+      2,
+      null
+     ],
+     [
+      "M-346 (طلب)",
       null,
+      4,
       null
      ]
     ],
-    "gen": 1.6,
-    "tpl": "af"
+    "gen": 2.3,
+    "mdl": 1
    },
    "heli": {
     "n": 79,
@@ -876,20 +887,26 @@
     "c": "ق",
     "top": [
      [
-      "Mi-24",
+      "Mi-35",
       null,
-      null,
+      3,
       null
      ],
      [
-      "Mi-8/17",
+      "AW109",
       null,
+      2,
+      null
+     ],
+     [
+      "T129 (طلب)",
       null,
+      4,
       null
      ]
     ],
-    "gen": 2,
-    "tpl": "af"
+    "gen": 3.0,
+    "mdl": 1
    },
    "uav": {
     "n": 6,

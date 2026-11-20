@@ -69,6 +69,11 @@
    "u": "https://www.sipri.org/databases/armstransfers",
    "y": 2026
   },
+  "mdl": {
+   "t": "أهم موديلات كل فئة (تقدير المصمم من صفحات «List of equipment» و«Military of X» بويكيبيديا وأخبار التسليح 2024–26) — الأسماء بس، الأعداد من الإجمالي",
+   "u": "https://en.wikipedia.org/wiki/Lists_of_military_equipment",
+   "y": 2026
+  },
   "tpl": {
    "t": "قالب منطقة (as): موديلات شائعة ونسب تقريبية من الدبابات (مدرعات ×2.5، مدفعية ×0.9، مروحيات ×0.25) — تقدير المصمم",
    "u": "docs/features/world-plan.md",
@@ -254,7 +259,7 @@
     "s": "wiki_army",
     "c": "ت",
     "note": "Total 679 planned.",
-    "gen": 2,
+    "gen": 4,
     "cat": "tank"
    },
    {
@@ -290,7 +295,7 @@
     "orig": "UKR",
     "s": "wiki_army",
     "c": "ت",
-    "gen": 3,
+    "gen": 4,
     "cat": "tank"
    },
    {
@@ -1021,7 +1026,7 @@
       "CHN"
      ]
     ],
-    "gen": 1.9
+    "gen": 2.1
    },
    "afv": {
     "n": 8476,
@@ -1081,26 +1086,32 @@
     "c": "ت",
     "top": [
      [
-      "F-5",
+      "JF-17 Thunder",
       null,
-      null,
+      3,
       null
      ],
      [
-      "MiG-21",
+      "F-16A/B/C/D",
       null,
-      null,
+      3,
       null
      ],
      [
-      "F-7",
+      "J-10CE",
       null,
+      4,
+      null
+     ],
+     [
+      "Mirage III/5",
       null,
+      2,
       null
      ]
     ],
-    "gen": 2,
-    "tpl": "as"
+    "gen": 3.3,
+    "mdl": 1
    },
    "heli": {
     "n": 323,

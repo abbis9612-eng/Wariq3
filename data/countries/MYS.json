@@ -69,6 +69,11 @@
    "u": "https://www.sipri.org/databases/armstransfers",
    "y": 2026
   },
+  "mdl": {
+   "t": "أهم موديلات كل فئة (تقدير المصمم من صفحات «List of equipment» و«Military of X» بويكيبيديا وأخبار التسليح 2024–26) — الأسماء بس، الأعداد من الإجمالي",
+   "u": "https://en.wikipedia.org/wiki/Lists_of_military_equipment",
+   "y": 2026
+  },
   "tpl": {
    "t": "قالب منطقة (as): موديلات شائعة ونسب تقريبية من الدبابات (مدرعات ×2.5، مدفعية ×0.9، مروحيات ×0.25) — تقدير المصمم",
    "u": "docs/features/world-plan.md",
@@ -527,26 +532,32 @@
     "c": "ت",
     "top": [
      [
-      "F-5",
+      "Su-30MKM",
       null,
-      null,
+      4,
       null
      ],
      [
-      "MiG-21",
+      "F/A-18D",
       null,
-      null,
+      3,
       null
      ],
      [
-      "F-7",
+      "Hawk 208",
       null,
+      2,
+      null
+     ],
+     [
+      "FA-50M (طلب)",
       null,
+      4,
       null
      ]
     ],
-    "gen": 2,
-    "tpl": "as"
+    "gen": 3.0,
+    "mdl": 1
    },
    "heli": {
     "n": 16,

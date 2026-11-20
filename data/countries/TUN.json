@@ -583,7 +583,7 @@
     "orig": "USA",
     "s": "wiki_air",
     "c": "ت",
-    "gen": 2,
+    "gen": 4,
     "cat": "heli_util"
    },
    {
@@ -880,7 +880,7 @@
       "USA"
      ]
     ],
-    "gen": 2.0
+    "gen": 2.1
    },
    "uav": {
     "n": 6,

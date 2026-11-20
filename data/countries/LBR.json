@@ -5,6 +5,18 @@
  "tier": "C",
  "asOf": "2026-11",
  "src": {
+  "wiki_army": {
+   "t": "Wikipedia: Armed Forces of Liberia",
+   "u": "https://en.wikipedia.org/wiki/Armed_Forces_of_Liberia?oldid=1386567798",
+   "y": 2026,
+   "note": "نسخة الصفحة بتاريخ السحب؛ أرقام ويكيبيديا تنراجع ويا مصادر ثانية"
+  },
+  "wiki_navy": {
+   "t": "Wikipedia: Liberian National Coast Guard",
+   "u": "https://en.wikipedia.org/wiki/Liberian_National_Coast_Guard?oldid=1376050927",
+   "y": 2026,
+   "note": "نسخة الصفحة بتاريخ السحب؛ أرقام ويكيبيديا تنراجع ويا مصادر ثانية"
+  },
   "iiss_eq": {
    "t": "Wikipedia: List of countries by level of military equipment (من IISS Military Balance ومصادر ثانية)",
    "u": "https://en.wikipedia.org/wiki/List_of_countries_by_level_of_military_equipment?oldid=1384804191",
@@ -204,11 +216,52 @@
    }
   },
   "land": [],
-  "air": [],
+  "air": [
+   {
+    "m": "Mil Mi-24",
+    "n": 1,
+    "orig": "RUS",
+    "s": "wiki_army",
+    "c": "ت",
+    "gen": 3,
+    "cat": "heli_attack"
+   },
+   {
+    "m": "Mil Mi-2",
+    "n": 1,
+    "orig": "POL",
+    "s": "wiki_army",
+    "c": "ت",
+    "note": "Operated by the Justice Air Wing",
+    "gen": 2,
+    "cat": "heli_util"
+   }
+  ],
   "ad": [],
   "msl": [],
   "navy": [],
-  "grp": {}
+  "grp": {
+   "heli": {
+    "n": 2,
+    "s": "wiki_army",
+    "c": "ت",
+    "top": [
+     [
+      "Mil Mi-24",
+      1,
+      3,
+      "RUS"
+     ],
+     [
+      "Mil Mi-2",
+      1,
+      2,
+      "POL"
+     ]
+    ],
+    "gen": 2.5
+   }
+  }
  },
  "ind": null,
  "pol": {

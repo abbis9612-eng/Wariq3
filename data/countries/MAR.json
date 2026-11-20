@@ -51,6 +51,11 @@
    "u": "https://www.sipri.org/databases/armstransfers",
    "y": 2026
   },
+  "mdl": {
+   "t": "أهم موديلات كل فئة (تقدير المصمم من صفحات «List of equipment» و«Military of X» بويكيبيديا وأخبار التسليح 2024–26) — الأسماء بس، الأعداد من الإجمالي",
+   "u": "https://en.wikipedia.org/wiki/Lists_of_military_equipment",
+   "y": 2026
+  },
   "tpl": {
    "t": "قالب منطقة (me): موديلات شائعة ونسب تقريبية من الدبابات (مدرعات ×2.5، مدفعية ×0.9، مروحيات ×0.25) — تقدير المصمم",
    "u": "docs/features/world-plan.md",
@@ -236,26 +241,32 @@
     "c": "ت",
     "top": [
      [
-      "T-62",
+      "M1A1 Abrams",
       null,
-      null,
+      3,
       null
      ],
      [
-      "T-55",
+      "M60A3",
       null,
-      null,
+      2,
       null
      ],
      [
-      "M60",
+      "VT-1A",
       null,
+      2,
+      null
+     ],
+     [
+      "T-72B",
       null,
+      3,
       null
      ]
     ],
-    "gen": 2,
-    "tpl": "me"
+    "gen": 2.3,
+    "mdl": 1
    },
    "afv": {
     "n": 2290,
@@ -263,26 +274,26 @@
     "c": "ق",
     "top": [
      [
-      "BMP-1",
-      null,
-      null,
-      null
-     ],
-     [
       "M113",
       null,
-      null,
+      2,
       null
      ],
      [
-      "BTR-60",
+      "VAB",
       null,
+      2,
+      null
+     ],
+     [
+      "Ratel",
       null,
+      2,
       null
      ]
     ],
-    "gen": 2,
-    "tpl": "me"
+    "gen": 2.0,
+    "mdl": 1
    },
    "art": {
     "n": 824,
@@ -290,26 +301,26 @@
     "c": "ق",
     "top": [
      [
-      "D-30",
+      "M109A5",
       null,
-      null,
+      2,
       null
      ],
      [
-      "M109",
+      "CAESAR",
       null,
-      null,
+      4,
       null
      ],
      [
-      "BM-21 Grad",
+      "PHL-03",
       null,
-      null,
+      2,
       null
      ]
     ],
-    "gen": 2,
-    "tpl": "me"
+    "gen": 2.7,
+    "mdl": 1
    },
    "jet": {
     "n": 117,
@@ -317,26 +328,26 @@
     "c": "ت",
     "top": [
      [
-      "MiG-29",
+      "F-16C/D Block 72",
       null,
-      null,
+      3,
       null
      ],
      [
-      "F-5",
+      "F-5E",
       null,
-      null,
+      2,
       null
      ],
      [
       "Mirage F1",
       null,
-      null,
+      2,
       null
      ]
     ],
-    "gen": 2.2,
-    "tpl": "me"
+    "gen": 2.3,
+    "mdl": 1
    },
    "heli": {
     "n": 229,
@@ -344,26 +355,26 @@
     "c": "ق",
     "top": [
      [
-      "Mi-24",
+      "AH-64E",
       null,
-      null,
+      4,
       null
      ],
      [
-      "Mi-8/17",
+      "CH-47D",
       null,
-      null,
+      3,
       null
      ],
      [
-      "Bell 412",
+      "SA342 Gazelle",
       null,
-      null,
+      2,
       null
      ]
     ],
-    "gen": 2.2,
-    "tpl": "me"
+    "gen": 3.0,
+    "mdl": 1
    },
    "navy": {
     "n": 10,

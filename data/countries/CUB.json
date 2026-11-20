@@ -63,6 +63,11 @@
    "u": "https://www.sipri.org/databases/armstransfers",
    "y": 2026
   },
+  "mdl": {
+   "t": "أهم موديلات كل فئة (تقدير المصمم من صفحات «List of equipment» و«Military of X» بويكيبيديا وأخبار التسليح 2024–26) — الأسماء بس، الأعداد من الإجمالي",
+   "u": "https://en.wikipedia.org/wiki/Lists_of_military_equipment",
+   "y": 2026
+  },
   "tpl": {
    "t": "قالب منطقة (la): موديلات شائعة ونسب تقريبية من الدبابات (مدرعات ×2.5، مدفعية ×0.9، مروحيات ×0.25) — تقدير المصمم",
    "u": "docs/features/world-plan.md",
@@ -363,26 +368,26 @@
     "c": "ق",
     "top": [
      [
-      "M101",
+      "2S1",
       null,
-      null,
+      2,
       null
      ],
      [
-      "M114",
+      "D-30",
       null,
-      null,
+      2,
       null
      ],
      [
-      "OTO Melara Mod 56",
+      "BM-21",
       null,
-      null,
+      2,
       null
      ]
     ],
-    "gen": 1.8,
-    "tpl": "la"
+    "gen": 2.0,
+    "mdl": 1
    },
    "jet": {
     "n": 38,
@@ -390,26 +395,26 @@
     "c": "ت",
     "top": [
      [
-      "A-29 Super Tucano",
+      "MiG-29",
       null,
-      null,
+      3,
       null
      ],
      [
-      "F-5",
+      "MiG-23",
       null,
-      null,
+      2,
       null
      ],
      [
-      "Mirage 5",
+      "MiG-21",
       null,
-      null,
+      1,
       null
      ]
     ],
-    "gen": 1.8,
-    "tpl": "la"
+    "gen": 2.0,
+    "mdl": 1
    },
    "heli": {
     "n": 56,
@@ -417,26 +422,20 @@
     "c": "ق",
     "top": [
      [
-      "Bell 412",
+      "Mi-8/17",
       null,
-      null,
+      2,
       null
      ],
      [
-      "UH-1H",
+      "Mi-24",
       null,
-      null,
-      null
-     ],
-     [
-      "Mi-17",
-      null,
-      null,
+      3,
       null
      ]
     ],
-    "gen": 2,
-    "tpl": "la"
+    "gen": 2.5,
+    "mdl": 1
    },
    "ad": {
     "n": 200,

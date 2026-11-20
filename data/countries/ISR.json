@@ -316,7 +316,7 @@
     "s": "wiki_army",
     "c": "ت",
     "note": "18 in store.",
-    "gen": 2,
+    "gen": 4,
     "cat": "mlrs"
    }
   ],
@@ -462,7 +462,7 @@
     "orig": "ITA",
     "s": "wiki_air",
     "c": "ت",
-    "gen": 2,
+    "gen": 4,
     "cat": "trainer"
    },
    {
@@ -636,11 +636,11 @@
      [
       "M270 \"Menatetz\"",
       30,
-      2,
+      4,
       "USA"
      ]
     ],
-    "gen": 2.0
+    "gen": 2.2
    },
    "jet": {
     "n": 340,

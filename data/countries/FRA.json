@@ -375,7 +375,7 @@
     "s": "wiki_army",
     "c": "ت",
     "note": "Delivered from 2008 onwards several units + ordered donated to Ukraine The CAESAR Nouvelle Génération (CAESAR New Generation) or CAESAR NG i",
-    "gen": 2,
+    "gen": 4,
     "cat": "spg"
    },
    {
@@ -664,7 +664,7 @@
     "s": "wiki_air",
     "c": "ت",
     "note": "Orders: Early years 2000: 6 × H225M for the CSAR mission, delivered between February 2005 and May 2007 April 2009: 5 × H225M ordered",
-    "gen": 2,
+    "gen": 4,
     "cat": "heli_util"
    },
    {
@@ -744,7 +744,7 @@
     "s": "wiki_army",
     "c": "ت",
     "note": "The total of 63 NH90 Tactical Transport Helicopter (TTH) Standard 1 helicopters delivered in February 2025. Another 18 NH90 TTH Standard 2 h",
-    "gen": 2,
+    "gen": 4,
     "cat": "heli_util"
    },
    {
@@ -905,7 +905,7 @@
      [
       "CAESAR (155 mm wheeled self-propelled ho",
       75,
-      2,
+      4,
       "FRA"
      ],
      [
@@ -915,7 +915,7 @@
       "USA"
      ]
     ],
-    "gen": 2.0
+    "gen": 3.8
    },
    "jet": {
     "n": 282,
@@ -964,11 +964,11 @@
      [
       "NHIndustries NH90",
       63,
-      2,
+      4,
       "INT"
      ]
     ],
-    "gen": 2.2
+    "gen": 2.6
    },
    "uav": {
     "n": 12,

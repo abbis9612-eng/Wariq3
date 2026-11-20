@@ -5,6 +5,18 @@
  "tier": "C",
  "asOf": "2026-11",
  "src": {
+  "wiki_air": {
+   "t": "Wikipedia: Mozambique Air Force",
+   "u": "https://en.wikipedia.org/wiki/Mozambique_Air_Force?oldid=1361945887",
+   "y": 2026,
+   "note": "نسخة الصفحة بتاريخ السحب؛ أرقام ويكيبيديا تنراجع ويا مصادر ثانية"
+  },
+  "wiki_army": {
+   "t": "Wikipedia: Mozambique Defence Armed Forces",
+   "u": "https://en.wikipedia.org/wiki/Mozambique_Defence_Armed_Forces?oldid=1384372240",
+   "y": 2026,
+   "note": "نسخة الصفحة بتاريخ السحب؛ أرقام ويكيبيديا تنراجع ويا مصادر ثانية"
+  },
   "iiss_eq": {
    "t": "Wikipedia: List of countries by level of military equipment (من IISS Military Balance ومصادر ثانية)",
    "u": "https://en.wikipedia.org/wiki/List_of_countries_by_level_of_military_equipment?oldid=1384804191",
@@ -221,9 +233,257 @@
     "c": "ت"
    }
   },
-  "land": [],
-  "air": [],
-  "ad": [],
+  "land": [
+   {
+    "m": "T-54",
+    "n": 60,
+    "orig": "SUN",
+    "s": "wiki_army",
+    "c": "ت",
+    "gen": 1,
+    "cat": "tank"
+   },
+   {
+    "m": "BRDM-2",
+    "n": 28,
+    "orig": "SUN",
+    "s": "wiki_army",
+    "c": "ت",
+    "gen": 2,
+    "cat": "apc"
+   },
+   {
+    "m": "BRDM-1",
+    "n": 28,
+    "orig": "SUN",
+    "s": "wiki_army",
+    "c": "ت",
+    "gen": 2,
+    "cat": "apc"
+   },
+   {
+    "m": "BMP-1",
+    "n": 40,
+    "orig": "SUN",
+    "s": "wiki_army",
+    "c": "ت",
+    "gen": 2,
+    "cat": "ifv"
+   },
+   {
+    "m": "BM-21 Grad",
+    "n": 12,
+    "orig": "SUN",
+    "s": "wiki_army",
+    "c": "ت",
+    "gen": 2,
+    "cat": "mlrs"
+   },
+   {
+    "m": "BS-3",
+    "n": 20,
+    "orig": "SUN",
+    "s": "wiki_army",
+    "c": "ت",
+    "gen": 2,
+    "cat": "towed"
+   },
+   {
+    "m": "Type 56",
+    "n": 12,
+    "orig": "SUN",
+    "s": "wiki_army",
+    "c": "ت",
+    "gen": 2,
+    "cat": "towed"
+   },
+   {
+    "m": "M-46",
+    "n": 6,
+    "orig": "SUN",
+    "s": "wiki_army",
+    "c": "ت",
+    "gen": 2,
+    "cat": "towed"
+   },
+   {
+    "m": "M-30",
+    "n": 24,
+    "orig": "SUN",
+    "s": "wiki_army",
+    "c": "ت",
+    "gen": 2,
+    "cat": "towed"
+   },
+   {
+    "m": "D-1",
+    "n": 12,
+    "orig": "SUN",
+    "s": "wiki_army",
+    "c": "ت",
+    "gen": 2,
+    "cat": "towed"
+   },
+   {
+    "m": "D-30",
+    "n": 12,
+    "orig": "SUN",
+    "s": "wiki_army",
+    "c": "ت",
+    "gen": 2,
+    "cat": "towed"
+   },
+   {
+    "m": "M101",
+    "n": 12,
+    "orig": "USA",
+    "s": "wiki_army",
+    "c": "ت",
+    "gen": 2,
+    "cat": "towed"
+   },
+   {
+    "m": "D-48",
+    "n": 6,
+    "orig": "SUN",
+    "s": "wiki_army",
+    "c": "ت",
+    "gen": 2,
+    "cat": "atgm"
+   }
+  ],
+  "air": [
+   {
+    "m": "MiG-21",
+    "n": 8,
+    "orig": "SUN",
+    "s": "wiki_air",
+    "c": "ت",
+    "gen": 1,
+    "cat": "fighter"
+   },
+   {
+    "m": "Paramount Mwari",
+    "n": 1,
+    "orig": "ZAF",
+    "s": "wiki_air",
+    "c": "ت",
+    "gen": 2,
+    "cat": "isr"
+   },
+   {
+    "m": "Antonov An-26",
+    "n": 1,
+    "orig": "UKR",
+    "s": "wiki_air",
+    "c": "ت",
+    "gen": 2,
+    "cat": "transport"
+   },
+   {
+    "m": "CASA CN-235",
+    "n": 1,
+    "orig": "ESP",
+    "s": "wiki_air",
+    "c": "ت",
+    "gen": 2,
+    "cat": "transport"
+   },
+   {
+    "m": "L-410 Turbolet",
+    "n": 1,
+    "orig": "CZE",
+    "s": "wiki_air",
+    "c": "ت",
+    "gen": 2,
+    "cat": "transport"
+   },
+   {
+    "m": "Mil Mi-17 (Mi-8/17)",
+    "n": 4,
+    "orig": "RUS",
+    "s": "wiki_air",
+    "c": "ت",
+    "gen": 2,
+    "cat": "heli_util"
+   },
+   {
+    "m": "Aérospatiale Gazelle (SA341)",
+    "n": 2,
+    "orig": "FRA",
+    "s": "wiki_air",
+    "c": "ت",
+    "gen": 2,
+    "cat": "heli_util"
+   },
+   {
+    "m": "Mil Mi-24 (Mi-25)",
+    "n": 2,
+    "orig": "RUS",
+    "s": "wiki_air",
+    "c": "ت",
+    "gen": 3,
+    "cat": "heli_attack"
+   },
+   {
+    "m": "Aero L-39",
+    "n": 1,
+    "orig": "CZE",
+    "s": "wiki_air",
+    "c": "ت",
+    "gen": 2,
+    "cat": "trainer"
+   }
+  ],
+  "ad": [
+   {
+    "m": "ZU-23-2",
+    "n": 120,
+    "orig": "SUN",
+    "s": "wiki_army",
+    "c": "ت",
+    "gen": 2,
+    "cat": "short"
+   },
+   {
+    "m": "61-K",
+    "n": 90,
+    "orig": "SUN",
+    "s": "wiki_army",
+    "c": "ت",
+    "note": "10 in storage.",
+    "gen": 2,
+    "cat": "short"
+   },
+   {
+    "m": "ZSU-57-2",
+    "n": 20,
+    "orig": "SUN",
+    "s": "wiki_army",
+    "c": "ت",
+    "gen": 5,
+    "cat": "short"
+   },
+   {
+    "m": "S-125 Neva",
+    "n": 103,
+    "orig": "SUN",
+    "s": "wiki_army",
+    "c": "ت",
+    "gen": 2,
+    "cat": "medium"
+   },
+   {
+    "m": "9K32 Strela-2",
+    "n": 20,
+    "orig": "SUN",
+    "s": "wiki_army",
+    "c": "ت",
+    "note": "250 in storage.",
+    "gen": 2,
+    "cat": "short"
+   }
+  ],
   "msl": [],
   "navy": [],
   "grp": {
@@ -233,80 +493,65 @@
     "c": "ت",
     "top": [
      [
-      "T-55",
-      null,
-      null,
-      null
-     ],
-     [
       "T-54",
-      null,
-      null,
-      null
-     ],
-     [
-      "Type 59",
-      null,
-      null,
-      null
+      60,
+      1,
+      "SUN"
      ]
     ],
-    "gen": 1.4,
-    "tpl": "af"
+    "gen": 1.0
    },
    "afv": {
-    "n": 150,
-    "s": "tpl",
-    "c": "ق",
+    "n": 96,
+    "s": "wiki_army",
+    "c": "ت",
     "top": [
      [
-      "BTR-60",
-      null,
-      null,
-      null
+      "BMP-1",
+      40,
+      2,
+      "SUN"
      ],
      [
       "BRDM-2",
-      null,
-      null,
-      null
+      28,
+      2,
+      "SUN"
      ],
      [
-      "Panhard AML",
-      null,
-      null,
-      null
+      "BRDM-1",
+      28,
+      2,
+      "SUN"
      ]
     ],
-    "gen": 1.6,
-    "tpl": "af"
+    "gen": 2.0
    },
    "art": {
-    "n": 54,
-    "s": "tpl",
-    "c": "ق",
+    "n": 110,
+    "s": "wiki_army",
+    "c": "ت",
     "top": [
      [
-      "D-30",
-      null,
-      null,
-      null
+      "M-30",
+      24,
+      2,
+      "SUN"
+     ],
+     [
+      "BS-3",
+      20,
+      2,
+      "SUN"
      ],
      [
       "BM-21 Grad",
-      null,
-      null,
-      null
-     ],
-     [
-      "M-46",
-      null,
-      null,
-      null
+      12,
+      2,
+      "SUN"
      ]
     ],
-    "gen": 1.8,
-    "tpl": "af"
+    "gen": 2.0
    },
    "jet": {
     "n": 8,
@@ -315,46 +560,64 @@
     "top": [
      [
       "MiG-21",
-      null,
-      null,
-      null
-     ],
-     [
-      "Su-25",
-      null,
-      null,
-      null
-     ],
-     [
-      "L-39",
-      null,
-      null,
-      null
+      8,
+      1,
+      "SUN"
      ]
     ],
-    "gen": 1.6,
-    "tpl": "af"
+    "gen": 1.0
    },
    "heli": {
-    "n": 15,
-    "s": "tpl",
-    "c": "ق",
+    "n": 8,
+    "s": "wiki_air",
+    "c": "ت",
     "top": [
      [
-      "Mi-24",
-      null,
-      null,
-      null
+      "Mil Mi-17 (Mi-8/17)",
+      4,
+      2,
+      "RUS"
      ],
      [
-      "Mi-8/17",
-      null,
-      null,
-      null
+      "Aérospatiale Gazelle (SA341)",
+      2,
+      2,
+      "FRA"
+     ],
+     [
+      "Mil Mi-24 (Mi-25)",
+      2,
+      3,
+      "RUS"
      ]
     ],
-    "gen": 2,
-    "tpl": "af"
+    "gen": 2.2
+   },
+   "ad": {
+    "n": 353,
+    "s": "wiki_army",
+    "c": "ت",
+    "top": [
+     [
+      "ZU-23-2",
+      120,
+      2,
+      "SUN"
+     ],
+     [
+      "S-125 Neva",
+      103,
+      2,
+      "SUN"
+     ],
+     [
+      "61-K",
+      90,
+      2,
+      "SUN"
+     ]
+    ],
+    "gen": 2.2
    }
   }
  },

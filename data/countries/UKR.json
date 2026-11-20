@@ -273,7 +273,7 @@
     "orig": "SUN",
     "s": "wiki_army",
     "c": "ت",
-    "gen": 3,
+    "gen": 4,
     "cat": "tank"
    },
    {
@@ -282,7 +282,7 @@
     "orig": "SUN",
     "s": "wiki_army",
     "c": "ت",
-    "gen": 3,
+    "gen": 4,
     "cat": "tank"
    },
    {
@@ -300,7 +300,7 @@
     "orig": "UKR",
     "s": "wiki_army",
     "c": "ت",
-    "gen": 2,
+    "gen": 4,
     "cat": "tank"
    },
    {
@@ -615,7 +615,7 @@
     "orig": "CAN",
     "s": "wiki_army",
     "c": "ت",
-    "gen": 2,
+    "gen": 4,
     "cat": "apc"
    },
    {
@@ -1065,7 +1065,7 @@
     "orig": "GBR",
     "s": "wiki_army",
     "c": "ت",
-    "gen": 2,
+    "gen": 4,
     "cat": "towed"
    },
    {
@@ -1137,7 +1137,7 @@
     "orig": "FRA",
     "s": "wiki_army",
     "c": "ت",
-    "gen": 2,
+    "gen": 4,
     "cat": "spg"
    },
    {
@@ -1146,7 +1146,7 @@
     "orig": "SWE",
     "s": "wiki_army",
     "c": "ت",
-    "gen": 2,
+    "gen": 4,
     "cat": "spg"
    },
    {
@@ -1155,7 +1155,7 @@
     "orig": "DEU",
     "s": "wiki_army",
     "c": "ت",
-    "gen": 2,
+    "gen": 4,
     "cat": "spg"
    },
    {
@@ -1164,7 +1164,7 @@
     "orig": "DEU",
     "s": "wiki_army",
     "c": "ت",
-    "gen": 2,
+    "gen": 4,
     "cat": "spg"
    },
    {
@@ -1173,7 +1173,7 @@
     "orig": "POL",
     "s": "wiki_army",
     "c": "ت",
-    "gen": 2,
+    "gen": 4,
     "cat": "spg"
    },
    {
@@ -1182,7 +1182,7 @@
     "orig": "SVK",
     "s": "wiki_army",
     "c": "ت",
-    "gen": 2,
+    "gen": 4,
     "cat": "spg"
    },
    {
@@ -1254,7 +1254,7 @@
     "orig": "USA",
     "s": "wiki_army",
     "c": "ت",
-    "gen": 2,
+    "gen": 4,
     "cat": "mlrs"
    },
    {
@@ -1263,7 +1263,7 @@
     "orig": "USA",
     "s": "wiki_army",
     "c": "ت",
-    "gen": 2,
+    "gen": 4,
     "cat": "mlrs"
    },
    {
@@ -1515,7 +1515,7 @@
      [
       "T-72 (T-72AMT T-72AV T-72AV mod. 2021 T-",
       520,
-      3,
+      4,
       "SUN"
      ],
      [
@@ -1531,7 +1531,7 @@
       "DEU"
      ]
     ],
-    "gen": 2.7
+    "gen": 3.2
    },
    "afv": {
     "n": 13467,
@@ -1567,13 +1567,13 @@
      [
       "CAESAR (Caesar 6x6Caesar 8x8)",
       2617,
-      2,
+      4,
       "FRA"
      ],
      [
       "M777",
       130,
-      2,
+      4,
       "GBR"
      ],
      [
@@ -1583,7 +1583,7 @@
       "SUN"
      ]
     ],
-    "gen": 2.0
+    "gen": 3.4
    },
    "jet": {
     "n": 111,

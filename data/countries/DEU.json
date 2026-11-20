@@ -63,6 +63,11 @@
    "u": "https://www.sipri.org/databases/armstransfers",
    "y": 2026
   },
+  "mdl": {
+   "t": "أهم موديلات كل فئة (تقدير المصمم من صفحات «List of equipment» و«Military of X» بويكيبيديا وأخبار التسليح 2024–26) — الأسماء بس، الأعداد من الإجمالي",
+   "u": "https://en.wikipedia.org/wiki/Lists_of_military_equipment",
+   "y": 2026
+  },
   "tpl": {
    "t": "قالب منطقة (eu): موديلات شائعة ونسب تقريبية من الدبابات (مدرعات ×2.5، مدفعية ×0.9، مروحيات ×0.25) — تقدير المصمم",
    "u": "docs/features/world-plan.md",
@@ -467,26 +472,26 @@
     "c": "ت",
     "top": [
      [
-      "T-72",
+      "Leopard 2A7V",
       null,
-      null,
+      4,
       null
      ],
      [
-      "Leopard 1",
+      "Leopard 2A6",
       null,
-      null,
+      4,
       null
      ],
      [
-      "Leopard 2A4",
+      "Leopard 2A8 (طلب)",
       null,
-      null,
+      4,
       null
      ]
     ],
-    "gen": 2.6,
-    "tpl": "eu"
+    "gen": 4.0,
+    "mdl": 1
    },
    "afv": {
     "n": 750,
@@ -494,26 +499,26 @@
     "c": "ق",
     "top": [
      [
-      "BMP-2",
+      "Puma",
       null,
-      null,
+      4,
       null
      ],
      [
-      "M113",
+      "Marder 1A5",
       null,
-      null,
+      3,
       null
      ],
      [
-      "Patria AMV",
+      "Boxer",
       null,
-      null,
+      4,
       null
      ]
     ],
-    "gen": 2.4,
-    "tpl": "eu"
+    "gen": 3.7,
+    "mdl": 1
    },
    "art": {
     "n": 270,
@@ -521,26 +526,26 @@
     "c": "ق",
     "top": [
      [
-      "2S1",
+      "PzH 2000",
       null,
-      null,
+      4,
       null
      ],
      [
-      "M109",
+      "MARS II",
       null,
-      null,
+      2,
       null
      ],
      [
-      "D-30",
+      "RCH 155 (طلب)",
       null,
-      null,
+      4,
       null
      ]
     ],
-    "gen": 2.4,
-    "tpl": "eu"
+    "gen": 3.3,
+    "mdl": 1
    },
    "jet": {
     "n": 209,

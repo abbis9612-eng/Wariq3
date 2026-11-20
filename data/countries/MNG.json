@@ -5,6 +5,18 @@
  "tier": "C",
  "asOf": "2026-11",
  "src": {
+  "wiki_air": {
+   "t": "Wikipedia: Mongolian Air Force",
+   "u": "https://en.wikipedia.org/wiki/Mongolian_Air_Force?oldid=1383688446",
+   "y": 2026,
+   "note": "نسخة الصفحة بتاريخ السحب؛ أرقام ويكيبيديا تنراجع ويا مصادر ثانية"
+  },
+  "wiki_army": {
+   "t": "Wikipedia: List of equipment of the Mongolian Armed Forces",
+   "u": "https://en.wikipedia.org/wiki/List_of_equipment_of_the_Mongolian_Armed_Forces?oldid=1386238342",
+   "y": 2026,
+   "note": "نسخة الصفحة بتاريخ السحب؛ أرقام ويكيبيديا تنراجع ويا مصادر ثانية"
+  },
   "iiss_eq": {
    "t": "Wikipedia: List of countries by level of military equipment (من IISS Military Balance ومصادر ثانية)",
    "u": "https://en.wikipedia.org/wiki/List_of_countries_by_level_of_military_equipment?oldid=1384804191",
@@ -224,9 +236,266 @@
     "c": "ت"
    }
   },
-  "land": [],
-  "air": [],
-  "ad": [],
+  "land": [
+   {
+    "m": "T-55",
+    "n": 370,
+    "orig": "SUN",
+    "s": "wiki_army",
+    "c": "ت",
+    "gen": 1,
+    "cat": "tank"
+   },
+   {
+    "m": "T-72",
+    "n": 100,
+    "orig": "SUN",
+    "s": "wiki_army",
+    "c": "ت",
+    "note": "T-72A modernized by Russia.",
+    "gen": 3,
+    "cat": "tank"
+   },
+   {
+    "m": "BRDM-2",
+    "n": 120,
+    "orig": "SUN",
+    "s": "wiki_army",
+    "c": "ت",
+    "gen": 2,
+    "cat": "apc"
+   },
+   {
+    "m": "9P148 \"Konkurs\"",
+    "n": 24,
+    "orig": "SUN",
+    "s": "wiki_army",
+    "c": "ت",
+    "note": "Seen in military parades.",
+    "gen": 2,
+    "cat": "atgm"
+   },
+   {
+    "m": "BMP-1",
+    "n": 310,
+    "orig": "SUN",
+    "s": "wiki_army",
+    "c": "ت",
+    "gen": 2,
+    "cat": "ifv"
+   },
+   {
+    "m": "BMP-2",
+    "n": 40,
+    "orig": "SUN",
+    "s": "wiki_army",
+    "c": "ت",
+    "note": "40 units officially imported from Ukraine in 2004–2005 according to UN weapon registries. (Seen in military exercises)",
+    "gen": 3,
+    "cat": "ifv"
+   },
+   {
+    "m": "BTR-60",
+    "n": 150,
+    "orig": "SUN",
+    "s": "wiki_army",
+    "c": "ت",
+    "note": "BTR-60PB variant.",
+    "gen": 2,
+    "cat": "apc"
+   },
+   {
+    "m": "BTR-70",
+    "n": 85,
+    "orig": "SUN",
+    "s": "wiki_army",
+    "c": "ت",
+    "note": "Rebuilt to the BTR-70M standard.",
+    "gen": 2,
+    "cat": "apc"
+   },
+   {
+    "m": "BTR-80",
+    "n": 35,
+    "orig": "SUN",
+    "s": "wiki_army",
+    "c": "ت",
+    "note": "Russian military aid.",
+    "gen": 3,
+    "cat": "apc"
+   },
+   {
+    "m": "ZPU-4",
+    "n": 150,
+    "orig": "SUN",
+    "s": "wiki_army",
+    "c": "ت",
+    "note": "Seen in military exercises.",
+    "gen": 2,
+    "cat": "towed"
+   },
+   {
+    "m": "ZU-23-2",
+    "n": 150,
+    "orig": "SUN",
+    "s": "wiki_army",
+    "c": "ت",
+    "note": "Seen in military exercises.",
+    "gen": 2,
+    "cat": "towed"
+   },
+   {
+    "m": "AZP S-60",
+    "n": 150,
+    "orig": "SUN",
+    "s": "wiki_army",
+    "c": "ت",
+    "gen": 2,
+    "cat": "towed"
+   },
+   {
+    "m": "BM-21 Grad",
+    "n": 130,
+    "orig": "SUN",
+    "s": "wiki_army",
+    "c": "ت",
+    "gen": 2,
+    "cat": "mlrs"
+   },
+   {
+    "m": "D-44",
+    "n": 200,
+    "orig": "SUN",
+    "s": "wiki_army",
+    "c": "ت",
+    "gen": 2,
+    "cat": "atgm"
+   },
+   {
+    "m": "D-48",
+    "n": 200,
+    "orig": "SUN",
+    "s": "wiki_army",
+    "c": "ت",
+    "gen": 2,
+    "cat": "atgm"
+   },
+   {
+    "m": "BS-3",
+    "n": 200,
+    "orig": "SUN",
+    "s": "wiki_army",
+    "c": "ت",
+    "gen": 2,
+    "cat": "atgm"
+   },
+   {
+    "m": "MT-12",
+    "n": 200,
+    "orig": "SUN",
+    "s": "wiki_army",
+    "c": "ت",
+    "gen": 2,
+    "cat": "atgm"
+   },
+   {
+    "m": "D-30",
+    "n": 300,
+    "orig": "SUN",
+    "s": "wiki_army",
+    "c": "ت",
+    "gen": 2,
+    "cat": "towed"
+   },
+   {
+    "m": "M-30",
+    "n": 300,
+    "orig": "SUN",
+    "s": "wiki_army",
+    "c": "ت",
+    "gen": 2,
+    "cat": "towed"
+   },
+   {
+    "m": "M-46",
+    "n": 300,
+    "orig": "SUN",
+    "s": "wiki_army",
+    "c": "ت",
+    "gen": 2,
+    "cat": "towed"
+   },
+   {
+    "m": "ML-20",
+    "n": 300,
+    "orig": "SUN",
+    "s": "wiki_army",
+    "c": "ت",
+    "gen": 2,
+    "cat": "towed"
+   }
+  ],
+  "air": [
+   {
+    "m": "Sukhoi Su-30 (Su-30SM)",
+    "n": 4,
+    "orig": "RUS",
+    "s": "wiki_air",
+    "c": "ت",
+    "gen": 4,
+    "cat": "fighter"
+   },
+   {
+    "m": "Mikoyan MiG-29 (MiG-29UB)",
+    "n": 6,
+    "orig": "RUS",
+    "s": "wiki_air",
+    "c": "ت",
+    "gen": 3,
+    "cat": "trainer"
+   },
+   {
+    "m": "Mil Mi-17 (Mi-171E/Sh)",
+    "n": 11,
+    "orig": "SUN",
+    "s": "wiki_air",
+    "c": "ت",
+    "gen": 2,
+    "cat": "heli_util"
+   },
+   {
+    "m": "Mil Mi-8",
+    "n": 7,
+    "orig": "RUS",
+    "s": "wiki_army",
+    "c": "ت",
+    "note": "The Mi-171E variant is also used.",
+    "gen": 2,
+    "cat": "heli_util"
+   }
+  ],
+  "ad": [
+   {
+    "m": "S-125 Neva/Pechora",
+    "n": 2,
+    "orig": "RUS",
+    "s": "wiki_army",
+    "c": "ت",
+    "note": "Upgraded to the Pechora 2M standard",
+    "gen": 2,
+    "cat": "medium"
+   },
+   {
+    "m": "9K31 Strela-1",
+    "n": 8,
+    "orig": "SUN",
+    "s": "wiki_army",
+    "c": "ت",
+    "note": "Seen in military parades.",
+    "gen": 2,
+    "cat": "short"
+   }
+  ],
   "msl": [],
   "navy": [],
   "grp": {
@@ -236,80 +505,71 @@
     "c": "ت",
     "top": [
      [
-      "Type 59",
-      null,
-      null,
-      null
-     ],
-     [
       "T-55",
-      null,
-      null,
-      null
+      370,
+      1,
+      "SUN"
      ],
      [
       "T-72",
-      null,
-      null,
-      null
+      100,
+      3,
+      "SUN"
      ]
     ],
-    "gen": 1.8,
-    "tpl": "as"
+    "gen": 1.4
    },
    "afv": {
-    "n": 1050,
-    "s": "tpl",
-    "c": "ق",
+    "n": 740,
+    "s": "wiki_army",
+    "c": "ت",
     "top": [
      [
-      "M113",
-      null,
-      null,
-      null
+      "BMP-1",
+      310,
+      2,
+      "SUN"
      ],
      [
-      "BTR-70",
-      null,
-      null,
-      null
+      "BTR-60",
+      150,
+      2,
+      "SUN"
      ],
      [
-      "Type 63",
-      null,
-      null,
-      null
+      "BRDM-2",
+      120,
+      2,
+      "SUN"
      ]
     ],
-    "gen": 1.8,
-    "tpl": "as"
+    "gen": 2.1
    },
    "art": {
-    "n": 378,
-    "s": "tpl",
-    "c": "ق",
+    "n": 1780,
+    "s": "wiki_army",
+    "c": "ت",
     "top": [
      [
-      "M101",
-      null,
-      null,
-      null
-     ],
-     [
       "D-30",
-      null,
-      null,
-      null
+      300,
+      2,
+      "SUN"
      ],
      [
-      "Type 54",
-      null,
-      null,
-      null
+      "M-30",
+      300,
+      2,
+      "SUN"
+     ],
+     [
+      "M-46",
+      300,
+      2,
+      "SUN"
      ]
     ],
-    "gen": 1.8,
-    "tpl": "as"
+    "gen": 2.0
    },
    "jet": {
     "n": 2,
@@ -317,53 +577,54 @@
     "c": "ت",
     "top": [
      [
-      "F-5",
-      null,
-      null,
-      null
-     ],
-     [
-      "MiG-21",
-      null,
-      null,
-      null
-     ],
-     [
-      "F-7",
-      null,
-      null,
-      null
+      "Sukhoi Su-30 (Su-30SM)",
+      4,
+      4,
+      "RUS"
      ]
     ],
-    "gen": 2,
-    "tpl": "as"
+    "gen": 4.0,
+    "note": "مجموع القوائم 4 يختلف عن الإجمالي؛ الإجمالي هو المعتمد"
    },
    "heli": {
-    "n": 105,
-    "s": "tpl",
-    "c": "ق",
+    "n": 18,
+    "s": "wiki_air",
+    "c": "ت",
     "top": [
      [
-      "Mi-8/17",
-      null,
-      null,
-      null
+      "Mil Mi-17 (Mi-171E/Sh)",
+      11,
+      2,
+      "SUN"
      ],
      [
-      "Bell 412",
-      null,
-      null,
-      null
-     ],
-     [
-      "UH-1",
-      null,
-      null,
-      null
+      "Mil Mi-8",
+      7,
+      2,
+      "RUS"
      ]
     ],
-    "gen": 2,
-    "tpl": "as"
+    "gen": 2.0
+   },
+   "ad": {
+    "n": 10,
+    "s": "wiki_army",
+    "c": "ت",
+    "top": [
+     [
+      "9K31 Strela-1",
+      8,
+      2,
+      "SUN"
+     ],
+     [
+      "S-125 Neva/Pechora",
+      2,
+      2,
+      "RUS"
+     ]
+    ],
+    "gen": 2.0
    }
   }
  },

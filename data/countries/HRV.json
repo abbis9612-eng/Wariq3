@@ -69,6 +69,11 @@
    "u": "https://www.sipri.org/databases/armstransfers",
    "y": 2026
   },
+  "mdl": {
+   "t": "أهم موديلات كل فئة (تقدير المصمم من صفحات «List of equipment» و«Military of X» بويكيبيديا وأخبار التسليح 2024–26) — الأسماء بس، الأعداد من الإجمالي",
+   "u": "https://en.wikipedia.org/wiki/Lists_of_military_equipment",
+   "y": 2026
+  },
   "tpl": {
    "t": "قالب منطقة (eu): موديلات شائعة ونسب تقريبية من الدبابات (مدرعات ×2.5، مدفعية ×0.9، مروحيات ×0.25) — تقدير المصمم",
    "u": "docs/features/world-plan.md",
@@ -270,7 +275,7 @@
     "s": "wiki_army",
     "c": "ت",
     "note": "System purchased second-hand from the German Army (€55 million). Among the 16 howitzers: 12 in service and were modernised 1 used for traini",
-    "gen": 2,
+    "gen": 4,
     "cat": "spg"
    },
    {
@@ -340,7 +345,7 @@
     "s": "wiki_army",
     "c": "ت",
     "note": "Part of the two first batches ordered in 2007 / 2009, but the 8 turrets were ordered in 2017 (USD $14.9 million). The vehicles were all deli",
-    "gen": 2,
+    "gen": 4,
     "cat": "ifv"
    },
    {
@@ -360,7 +365,7 @@
     "s": "wiki_army",
     "c": "ت",
     "note": "8 are in service. Spike LR2 ordered in 2023 for the existing Patria AMV fleet. The firing systems are transported in the vehicle, and the ve",
-    "gen": 2,
+    "gen": 4,
     "cat": "atgm"
    },
    {
@@ -629,11 +634,11 @@
      [
       "PzH 2000",
       16,
-      2,
+      4,
       "DEU"
      ]
     ],
-    "gen": 2.0
+    "gen": 2.3
    },
    "jet": {
     "n": 11,
@@ -641,26 +646,14 @@
     "c": "ت",
     "top": [
      [
-      "F-16",
+      "Rafale F3R",
       null,
-      null,
-      null
-     ],
-     [
-      "MiG-29",
-      null,
-      null,
-      null
-     ],
-     [
-      "Gripen",
-      null,
-      null,
+      4,
       null
      ]
     ],
-    "gen": 2.8,
-    "tpl": "eu"
+    "gen": 4.0,
+    "mdl": 1
    },
    "heli": {
     "n": 20,
@@ -668,26 +661,26 @@
     "c": "ق",
     "top": [
      [
-      "Mi-24",
+      "UH-60M",
       null,
-      null,
+      4,
       null
      ],
      [
-      "AW139",
+      "Mi-8MTV",
       null,
-      null,
+      2,
       null
      ],
      [
-      "UH-60",
+      "OH-58D",
       null,
-      null,
+      2,
       null
      ]
     ],
-    "gen": 2.6,
-    "tpl": "eu"
+    "gen": 2.7,
+    "mdl": 1
    },
    "uav": {
     "n": 6,

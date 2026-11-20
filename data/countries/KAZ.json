@@ -57,6 +57,11 @@
    "u": "https://www.sipri.org/databases/armstransfers",
    "y": 2026
   },
+  "mdl": {
+   "t": "أهم موديلات كل فئة (تقدير المصمم من صفحات «List of equipment» و«Military of X» بويكيبيديا وأخبار التسليح 2024–26) — الأسماء بس، الأعداد من الإجمالي",
+   "u": "https://en.wikipedia.org/wiki/Lists_of_military_equipment",
+   "y": 2026
+  },
   "tpl": {
    "t": "قالب منطقة (as): موديلات شائعة ونسب تقريبية من الدبابات (مدرعات ×2.5، مدفعية ×0.9، مروحيات ×0.25) — تقدير المصمم",
    "u": "docs/features/world-plan.md",
@@ -242,26 +247,20 @@
     "c": "ت",
     "top": [
      [
-      "Type 59",
+      "T-72B",
       null,
-      null,
+      3,
       null
      ],
      [
-      "T-55",
+      "T-72BA",
       null,
-      null,
-      null
-     ],
-     [
-      "T-72",
-      null,
-      null,
+      3,
       null
      ]
     ],
-    "gen": 1.8,
-    "tpl": "as"
+    "gen": 3.0,
+    "mdl": 1
    },
    "afv": {
     "n": 750,
@@ -269,26 +268,26 @@
     "c": "ق",
     "top": [
      [
-      "M113",
+      "BTR-82A",
       null,
-      null,
+      2,
       null
      ],
      [
-      "BTR-70",
+      "BMP-2",
       null,
-      null,
+      3,
       null
      ],
      [
-      "Type 63",
+      "Arlan",
       null,
-      null,
+      4,
       null
      ]
     ],
-    "gen": 1.8,
-    "tpl": "as"
+    "gen": 3.0,
+    "mdl": 1
    },
    "art": {
     "n": 270,
@@ -296,26 +295,32 @@
     "c": "ق",
     "top": [
      [
-      "M101",
+      "2S1",
       null,
-      null,
+      2,
       null
      ],
      [
       "D-30",
       null,
-      null,
+      2,
       null
      ],
      [
-      "Type 54",
+      "BM-21",
       null,
+      2,
+      null
+     ],
+     [
+      "Semser",
       null,
+      4,
       null
      ]
     ],
-    "gen": 1.8,
-    "tpl": "as"
+    "gen": 2.0,
+    "mdl": 1
    },
    "jet": {
     "n": 126,
@@ -323,26 +328,32 @@
     "c": "ت",
     "top": [
      [
-      "F-5",
+      "Su-30SM",
       null,
-      null,
+      4,
       null
      ],
      [
-      "MiG-21",
+      "Su-27",
       null,
-      null,
+      3,
       null
      ],
      [
-      "F-7",
+      "MiG-31",
       null,
+      2,
+      null
+     ],
+     [
+      "Su-25",
       null,
+      3,
       null
      ]
     ],
-    "gen": 2,
-    "tpl": "as"
+    "gen": 3.0,
+    "mdl": 1
    },
    "heli": {
     "n": 75,
@@ -350,26 +361,26 @@
     "c": "ق",
     "top": [
      [
-      "Mi-8/17",
+      "Mi-35M",
       null,
-      null,
+      3,
       null
      ],
      [
-      "Bell 412",
+      "Mi-17",
       null,
-      null,
+      2,
       null
      ],
      [
-      "UH-1",
+      "H145",
       null,
-      null,
+      2,
       null
      ]
     ],
-    "gen": 2,
-    "tpl": "as"
+    "gen": 2.3,
+    "mdl": 1
    }
   }
  },

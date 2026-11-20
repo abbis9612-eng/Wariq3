@@ -57,6 +57,11 @@
    "u": "https://www.sipri.org/databases/armstransfers",
    "y": 2026
   },
+  "mdl": {
+   "t": "أهم موديلات كل فئة (تقدير المصمم من صفحات «List of equipment» و«Military of X» بويكيبيديا وأخبار التسليح 2024–26) — الأسماء بس، الأعداد من الإجمالي",
+   "u": "https://en.wikipedia.org/wiki/Lists_of_military_equipment",
+   "y": 2026
+  },
   "tpl": {
    "t": "قالب منطقة (as): موديلات شائعة ونسب تقريبية من الدبابات (مدرعات ×2.5، مدفعية ×0.9، مروحيات ×0.25) — تقدير المصمم",
    "u": "docs/features/world-plan.md",
@@ -290,26 +295,20 @@
     "c": "ت",
     "top": [
      [
-      "Type 59",
+      "T-80U",
       null,
-      null,
+      4,
       null
      ],
      [
-      "T-55",
+      "AMX-30B2",
       null,
-      null,
-      null
-     ],
-     [
-      "T-72",
-      null,
-      null,
+      2,
       null
      ]
     ],
-    "gen": 1.8,
-    "tpl": "as"
+    "gen": 3.0,
+    "mdl": 1
    },
    "afv": {
     "n": 102,
@@ -317,26 +316,26 @@
     "c": "ق",
     "top": [
      [
-      "M113",
+      "BMP-3",
       null,
-      null,
+      4,
       null
      ],
      [
-      "BTR-70",
+      "VAB",
       null,
-      null,
+      2,
       null
      ],
      [
-      "Type 63",
+      "Leonidas",
       null,
-      null,
+      2,
       null
      ]
     ],
-    "gen": 1.8,
-    "tpl": "as"
+    "gen": 2.7,
+    "mdl": 1
    },
    "art": {
     "n": 37,
@@ -344,26 +343,26 @@
     "c": "ق",
     "top": [
      [
-      "M101",
+      "Zuzana",
       null,
-      null,
+      2,
       null
      ],
      [
-      "D-30",
+      "BM-21",
       null,
-      null,
+      2,
       null
      ],
      [
-      "Type 54",
+      "M114",
       null,
-      null,
+      2,
       null
      ]
     ],
-    "gen": 1.8,
-    "tpl": "as"
+    "gen": 2.0,
+    "mdl": 1
    },
    "heli": {
     "n": 10,
@@ -371,26 +370,26 @@
     "c": "ق",
     "top": [
      [
-      "Mi-8/17",
+      "Mi-35P",
       null,
-      null,
+      3,
       null
      ],
      [
-      "Bell 412",
+      "AW139",
       null,
-      null,
+      2,
       null
      ],
      [
-      "UH-1",
+      "H145M",
       null,
-      null,
+      2,
       null
      ]
     ],
-    "gen": 2,
-    "tpl": "as"
+    "gen": 2.3,
+    "mdl": 1
    },
    "navy": {
     "n": 9,

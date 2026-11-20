@@ -5,6 +5,12 @@
  "tier": "C",
  "asOf": "2026-11",
  "src": {
+  "wiki_army": {
+   "t": "Wikipedia: Armed Forces of Honduras",
+   "u": "https://en.wikipedia.org/wiki/Armed_Forces_of_Honduras?oldid=1385503899",
+   "y": 2026,
+   "note": "نسخة الصفحة بتاريخ السحب؛ أرقام ويكيبيديا تنراجع ويا مصادر ثانية"
+  },
   "iiss_eq": {
    "t": "Wikipedia: List of countries by level of military equipment (من IISS Military Balance ومصادر ثانية)",
    "u": "https://en.wikipedia.org/wiki/List_of_countries_by_level_of_military_equipment?oldid=1384804191",
@@ -221,12 +227,162 @@
     "c": "ت"
    }
   },
-  "land": [],
+  "land": [
+   {
+    "m": "FV101 Scorpion",
+    "n": 8,
+    "orig": "GBR",
+    "s": "wiki_army",
+    "c": "ت",
+    "gen": 2,
+    "cat": "tank"
+   },
+   {
+    "m": "FV107 Scimitar",
+    "n": 1,
+    "orig": "GBR",
+    "s": "wiki_army",
+    "c": "ت",
+    "gen": 2,
+    "cat": "tank"
+   },
+   {
+    "m": "RBY Mk 1",
+    "n": 6,
+    "orig": "ISR",
+    "s": "wiki_army",
+    "c": "ت",
+    "gen": 2,
+    "cat": "apc"
+   },
+   {
+    "m": "Alvis Saladin",
+    "n": 22,
+    "orig": "GBR",
+    "s": "wiki_army",
+    "c": "ت",
+    "note": "Purchased from Germany in 1984",
+    "gen": 2,
+    "cat": "apc"
+   },
+   {
+    "m": "M198",
+    "n": 4,
+    "orig": "USA",
+    "s": "wiki_army",
+    "c": "ت",
+    "gen": 2,
+    "cat": "towed"
+   },
+   {
+    "m": "M102",
+    "n": 24,
+    "orig": "USA",
+    "s": "wiki_army",
+    "c": "ت",
+    "gen": 2,
+    "cat": "towed"
+   },
+   {
+    "m": "M101",
+    "n": 20,
+    "orig": "USA",
+    "s": "wiki_army",
+    "c": "ت",
+    "gen": 2,
+    "cat": "towed"
+   }
+  ],
   "air": [],
-  "ad": [],
+  "ad": [
+   {
+    "m": "Zastava M55 A2",
+    "n": 24,
+    "orig": "YUG",
+    "s": "wiki_army",
+    "c": "ت",
+    "gen": 2,
+    "cat": "short"
+   },
+   {
+    "m": "M167 VADS",
+    "n": 30,
+    "orig": "USA",
+    "s": "wiki_army",
+    "c": "ت",
+    "gen": 2,
+    "cat": "short"
+   }
+  ],
   "msl": [],
   "navy": [],
   "grp": {
+   "tank": {
+    "n": 0,
+    "s": "iiss_eq",
+    "c": "ت",
+    "top": [
+     [
+      "FV101 Scorpion",
+      8,
+      2,
+      "GBR"
+     ],
+     [
+      "FV107 Scimitar",
+      1,
+      2,
+      "GBR"
+     ]
+    ],
+    "gen": 2.0
+   },
+   "afv": {
+    "n": 28,
+    "s": "wiki_army",
+    "c": "ت",
+    "top": [
+     [
+      "Alvis Saladin",
+      22,
+      2,
+      "GBR"
+     ],
+     [
+      "RBY Mk 1",
+      6,
+      2,
+      "ISR"
+     ]
+    ],
+    "gen": 2.0
+   },
+   "art": {
+    "n": 48,
+    "s": "wiki_army",
+    "c": "ت",
+    "top": [
+     [
+      "M102",
+      24,
+      2,
+      "USA"
+     ],
+     [
+      "M101",
+      20,
+      2,
+      "USA"
+     ],
+     [
+      "M198",
+      4,
+      2,
+      "USA"
+     ]
+    ],
+    "gen": 2.0
+   },
    "jet": {
     "n": 15,
     "s": "iiss_eq",
@@ -253,6 +409,26 @@
     ],
     "gen": 1.8,
     "tpl": "la"
+   },
+   "ad": {
+    "n": 54,
+    "s": "wiki_army",
+    "c": "ت",
+    "top": [
+     [
+      "M167 VADS",
+      30,
+      2,
+      "USA"
+     ],
+     [
+      "Zastava M55 A2",
+      24,
+      2,
+      "YUG"
+     ]
+    ],
+    "gen": 2.0
    }
   }
  },

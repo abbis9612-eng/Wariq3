@@ -530,6 +530,108 @@
 "navy": "Navy of Equatorial Guinea"
 },
 "GNQ": {
-"army": "Armed Forces of Equatorial Guinea"
+"army": "Armed Forces of Equatorial Guinea",
+"air": null,
+"navy": "Navy of Equatorial Guinea"
+},
+"GNB": {
+"army": "List of equipment of the Guinea-Bissau Army",
+"air": "Guinea-Bissau Air Force",
+"navy": null
+},
+"KGZ": {
+"army": "Day of the Armed Forces (Kyrgyzstan)",
+"air": null,
+"navy": null
+},
+"KHM": {
+"army": "List of equipment of the Royal Cambodian Army",
+"air": "Royal Cambodian Air Force",
+"navy": "Royal Cambodian Navy"
+},
+"CRI": {
+"army": null,
+"air": null,
+"navy": null
+},
+"LAO": {
+"army": null,
+"air": null,
+"navy": null
+},
+"LBR": {
+"army": "Armed Forces of Liberia",
+"air": null,
+"navy": "Liberian National Coast Guard"
+},
+"LSO": {
+"army": "Lesotho Defence Force",
+"air": null,
+"navy": null
+},
+"MWI": {
+"army": null,
+"air": null,
+"navy": null
+},
+"MLI": {
+"army": "Malian Armed Forces",
+"air": "Malian Air Force",
+"navy": null
+},
+"MDG": {
+"army": "Madagascar Armed Forces",
+"air": null,
+"navy": null
+},
+"MKD": {
+"army": "List of equipment of the Army of North Macedonia",
+"air": null,
+"navy": null
+},
+"MNG": {
+"army": "List of equipment of the Mongolian Armed Forces",
+"air": "Mongolian Air Force",
+"navy": null
+},
+"MRT": {
+"army": "Armed Forces of Mauritania",
+"air": "Mauritania Islamic Air Force",
+"navy": null
+},
+"MOZ": {
+"army": "Mozambique Defence Armed Forces",
+"air": "Mozambique Air Force",
+"navy": null
+},
+"MDA": {
+"army": "Moldovan Ground Forces",
+"air": "Moldovan Air Force",
+"navy": null
+},
+"NAM": {
+"army": "Namibian Army",
+"air": "Namibian Air Force",
+"navy": "Namibian Navy"
+},
+"NPL": {
+"army": "Nepali Army",
+"air": null,
+"navy": null
+},
+"NIC": {
+"army": "List of equipment of the Nicaraguan Armed Forces",
+"air": "Nicaraguan Air Force",
+"navy": "Nicaraguan Navy"
+},
+"HTI": {
+"army": "List of current equipment of the Haitian Army",
+"air": "Haitian Aviation Corps",
+"navy": "Haitian Navy"
+},
+"HND": {
+"army": "Armed Forces of Honduras",
+"air": null,
+"navy": null
 }
 }

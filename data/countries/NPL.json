@@ -5,6 +5,12 @@
  "tier": "C",
  "asOf": "2026-11",
  "src": {
+  "wiki_army": {
+   "t": "Wikipedia: Nepali Army",
+   "u": "https://en.wikipedia.org/wiki/Nepali_Army?oldid=1386060271",
+   "y": 2026,
+   "note": "نسخة الصفحة بتاريخ السحب؛ أرقام ويكيبيديا تنراجع ويا مصادر ثانية"
+  },
   "iiss_eq": {
    "t": "Wikipedia: List of countries by level of military equipment (من IISS Military Balance ومصادر ثانية)",
    "u": "https://en.wikipedia.org/wiki/List_of_countries_by_level_of_military_equipment?oldid=1384804191",
@@ -224,12 +230,96 @@
     "c": "ت"
    }
   },
-  "land": [],
+  "land": [
+   {
+    "m": "Daimler Ferret",
+    "n": 85,
+    "orig": "GBR",
+    "s": "wiki_army",
+    "c": "ت",
+    "note": "Ferret Mk4 variant.",
+    "gen": 2,
+    "cat": "apc"
+   },
+   {
+    "m": "Casspir",
+    "n": 37,
+    "orig": "ZAF",
+    "s": "wiki_army",
+    "c": "ت",
+    "gen": 2,
+    "cat": "mrap"
+   },
+   {
+    "m": "Aditya",
+    "n": 500,
+    "orig": "IND",
+    "s": "wiki_army",
+    "c": "ت",
+    "gen": 2,
+    "cat": "mrap"
+   },
+   {
+    "m": "VN-4",
+    "n": 63,
+    "orig": "CHN",
+    "s": "wiki_army",
+    "c": "ت",
+    "gen": 2,
+    "cat": "mrap"
+   },
+   {
+    "m": "OT-64",
+    "n": 8,
+    "orig": "CSK",
+    "s": "wiki_army",
+    "c": "ت",
+    "gen": 2,
+    "cat": "apc"
+   },
+   {
+    "m": "WZ551",
+    "n": 175,
+    "orig": "CHN",
+    "s": "wiki_army",
+    "c": "ت",
+    "note": "Acquired from China in 2005.",
+    "gen": 2,
+    "cat": "ifv"
+   }
+  ],
   "air": [],
   "ad": [],
   "msl": [],
   "navy": [],
-  "grp": {}
+  "grp": {
+   "afv": {
+    "n": 868,
+    "s": "wiki_army",
+    "c": "ت",
+    "top": [
+     [
+      "Aditya",
+      500,
+      2,
+      "IND"
+     ],
+     [
+      "WZ551",
+      175,
+      2,
+      "CHN"
+     ],
+     [
+      "Daimler Ferret",
+      85,
+      2,
+      "GBR"
+     ]
+    ],
+    "gen": 2.0
+   }
+  }
  },
  "ind": null,
  "pol": {

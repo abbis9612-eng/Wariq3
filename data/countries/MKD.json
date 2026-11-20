@@ -5,6 +5,12 @@
  "tier": "C",
  "asOf": "2026-11",
  "src": {
+  "wiki_army": {
+   "t": "Wikipedia: List of equipment of the Army of North Macedonia",
+   "u": "https://en.wikipedia.org/wiki/List_of_equipment_of_the_Army_of_North_Macedonia?oldid=1367424876",
+   "y": 2026,
+   "note": "نسخة الصفحة بتاريخ السحب؛ أرقام ويكيبيديا تنراجع ويا مصادر ثانية"
+  },
   "iiss_eq": {
    "t": "Wikipedia: List of countries by level of military equipment (من IISS Military Balance ومصادر ثانية)",
    "u": "https://en.wikipedia.org/wiki/List_of_countries_by_level_of_military_equipment?oldid=1384804191",
@@ -224,9 +230,211 @@
     "c": "ت"
    }
   },
-  "land": [],
-  "air": [],
-  "ad": [],
+  "land": [
+   {
+    "m": "BMP-2",
+    "n": 11,
+    "orig": "SUN",
+    "s": "wiki_army",
+    "c": "ت",
+    "gen": 3,
+    "cat": "ifv"
+   },
+   {
+    "m": "Leonidas",
+    "n": 10,
+    "orig": "GRC",
+    "s": "wiki_army",
+    "c": "ت",
+    "gen": 2,
+    "cat": "apc"
+   },
+   {
+    "m": "M113",
+    "n": 30,
+    "orig": "USA",
+    "s": "wiki_army",
+    "c": "ت",
+    "gen": 2,
+    "cat": "apc"
+   },
+   {
+    "m": "MT-LB",
+    "n": 10,
+    "orig": "SUN",
+    "s": "wiki_army",
+    "c": "ت",
+    "gen": 2,
+    "cat": "apc"
+   },
+   {
+    "m": "TM-170",
+    "n": 84,
+    "orig": "DEU",
+    "s": "wiki_army",
+    "c": "ت",
+    "gen": 2,
+    "cat": "apc"
+   },
+   {
+    "m": "BTR-80",
+    "n": 12,
+    "orig": "SUN",
+    "s": "wiki_army",
+    "c": "ت",
+    "gen": 3,
+    "cat": "apc"
+   },
+   {
+    "m": "BTR-70",
+    "n": 56,
+    "orig": "SUN",
+    "s": "wiki_army",
+    "c": "ت",
+    "gen": 2,
+    "cat": "apc"
+   },
+   {
+    "m": "Cobra",
+    "n": 2,
+    "orig": "TUR",
+    "s": "wiki_army",
+    "c": "ت",
+    "gen": 2,
+    "cat": "apc"
+   },
+   {
+    "m": "Humvee",
+    "n": 100,
+    "orig": "USA",
+    "s": "wiki_army",
+    "c": "ت",
+    "note": "Variants: Armoured Semi Armored Communications Тransport",
+    "gen": 2,
+    "cat": "apc"
+   },
+   {
+    "m": "Husky VMMD",
+    "n": 2,
+    "orig": "ZAF",
+    "s": "wiki_army",
+    "c": "ت",
+    "gen": 2,
+    "cat": "mrap"
+   },
+   {
+    "m": "105mm howitzer",
+    "n": 36,
+    "orig": "USA",
+    "s": "wiki_army",
+    "c": "ت",
+    "gen": 2,
+    "cat": "towed"
+   },
+   {
+    "m": "122mm howitzer",
+    "n": 100,
+    "orig": "SUN",
+    "s": "wiki_army",
+    "c": "ت",
+    "gen": 2,
+    "cat": "towed"
+   },
+   {
+    "m": "128mm MLRS",
+    "n": 12,
+    "orig": "YUG",
+    "s": "wiki_army",
+    "c": "ت",
+    "gen": 2,
+    "cat": "mlrs"
+   },
+   {
+    "m": "122mm MLRS",
+    "n": 6,
+    "orig": "SUN",
+    "s": "wiki_army",
+    "c": "ت",
+    "gen": 2,
+    "cat": "mlrs"
+   }
+  ],
+  "air": [
+   {
+    "m": "Mil Mi-17",
+    "n": 2,
+    "orig": "SUN",
+    "s": "wiki_army",
+    "c": "ت",
+    "gen": 2,
+    "cat": "heli_util"
+   },
+   {
+    "m": "Mil Mi-8 (Mi-8MTV)",
+    "n": 4,
+    "orig": "SUN",
+    "s": "wiki_army",
+    "c": "ت",
+    "gen": 2,
+    "cat": "heli_util"
+   },
+   {
+    "m": "Bell 206",
+    "n": 4,
+    "orig": "USA",
+    "s": "wiki_army",
+    "c": "ت",
+    "gen": 2,
+    "cat": "heli_util"
+   }
+  ],
+  "ad": [
+   {
+    "m": "9K32 Strela-2",
+    "n": 30,
+    "orig": "SUN",
+    "s": "wiki_army",
+    "c": "ت",
+    "gen": 2,
+    "cat": "short"
+   },
+   {
+    "m": "9K35 Strela-10",
+    "n": 8,
+    "orig": "SUN",
+    "s": "wiki_army",
+    "c": "ت",
+    "gen": 2,
+    "cat": "short"
+   },
+   {
+    "m": "9K38 Igla",
+    "n": 10,
+    "orig": "SUN",
+    "s": "wiki_army",
+    "c": "ت",
+    "gen": 2,
+    "cat": "short"
+   },
+   {
+    "m": "Zastava M55 20 mm",
+    "n": 30,
+    "orig": "YUG",
+    "s": "wiki_army",
+    "c": "ت",
+    "gen": 2,
+    "cat": "short"
+   },
+   {
+    "m": "Bofors 40 mm",
+    "n": 30,
+    "orig": "SWE",
+    "s": "wiki_army",
+    "c": "ت",
+    "gen": 2,
+    "cat": "short"
+   }
+  ],
   "msl": [],
   "navy": [],
   "grp": {
@@ -258,85 +466,108 @@
     "tpl": "eu"
    },
    "afv": {
-    "n": 78,
-    "s": "tpl",
-    "c": "ق",
+    "n": 317,
+    "s": "wiki_army",
+    "c": "ت",
     "top": [
      [
-      "BMP-2",
-      null,
-      null,
-      null
+      "Humvee",
+      100,
+      2,
+      "USA"
      ],
      [
-      "M113",
-      null,
-      null,
-      null
+      "TM-170",
+      84,
+      2,
+      "DEU"
      ],
      [
-      "Patria AMV",
-      null,
-      null,
-      null
+      "BTR-70",
+      56,
+      2,
+      "SUN"
      ]
     ],
-    "gen": 2.4,
-    "tpl": "eu"
+    "gen": 2.1
    },
    "art": {
-    "n": 28,
-    "s": "tpl",
-    "c": "ق",
+    "n": 154,
+    "s": "wiki_army",
+    "c": "ت",
     "top": [
      [
-      "2S1",
-      null,
-      null,
-      null
+      "122mm howitzer",
+      100,
+      2,
+      "SUN"
      ],
      [
-      "M109",
-      null,
-      null,
-      null
+      "105mm howitzer",
+      36,
+      2,
+      "USA"
      ],
      [
-      "D-30",
-      null,
-      null,
-      null
+      "128mm MLRS",
+      12,
+      2,
+      "YUG"
      ]
     ],
-    "gen": 2.4,
-    "tpl": "eu"
+    "gen": 2.0
    },
    "heli": {
-    "n": 8,
-    "s": "tpl",
-    "c": "ق",
+    "n": 10,
+    "s": "wiki_army",
+    "c": "ت",
     "top": [
      [
-      "Mi-24",
-      null,
-      null,
-      null
+      "Mil Mi-8 (Mi-8MTV)",
+      4,
+      2,
+      "SUN"
      ],
      [
-      "AW139",
-      null,
-      null,
-      null
+      "Bell 206",
+      4,
+      2,
+      "USA"
      ],
      [
-      "UH-60",
-      null,
-      null,
-      null
+      "Mil Mi-17",
+      2,
+      2,
+      "SUN"
      ]
     ],
-    "gen": 2.6,
-    "tpl": "eu"
+    "gen": 2.0
+   },
+   "ad": {
+    "n": 108,
+    "s": "wiki_army",
+    "c": "ت",
+    "top": [
+     [
+      "9K32 Strela-2",
+      30,
+      2,
+      "SUN"
+     ],
+     [
+      "Zastava M55 20 mm",
+      30,
+      2,
+      "YUG"
+     ],
+     [
+      "Bofors 40 mm",
+      30,
+      2,
+      "SWE"
+     ]
+    ],
+    "gen": 2.0
    }
   }
  },

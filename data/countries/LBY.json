@@ -69,6 +69,11 @@
    "u": "https://www.sipri.org/databases/armstransfers",
    "y": 2026
   },
+  "mdl": {
+   "t": "أهم موديلات كل فئة (تقدير المصمم من صفحات «List of equipment» و«Military of X» بويكيبيديا وأخبار التسليح 2024–26) — الأسماء بس، الأعداد من الإجمالي",
+   "u": "https://en.wikipedia.org/wiki/Lists_of_military_equipment",
+   "y": 2026
+  },
   "tpl": {
    "t": "قالب منطقة (me): موديلات شائعة ونسب تقريبية من الدبابات (مدرعات ×2.5، مدفعية ×0.9، مروحيات ×0.25) — تقدير المصمم",
    "u": "docs/features/world-plan.md",
@@ -289,7 +294,7 @@
     "orig": "ITA",
     "s": "wiki_air",
     "c": "ت",
-    "gen": 2,
+    "gen": 4,
     "cat": "heli_util"
    },
    {
@@ -604,26 +609,26 @@
     "c": "ت",
     "top": [
      [
+      "T-72",
+      null,
+      3,
+      null
+     ],
+     [
       "T-62",
       null,
-      null,
+      2,
       null
      ],
      [
       "T-55",
       null,
-      null,
-      null
-     ],
-     [
-      "M60",
-      null,
-      null,
+      1,
       null
      ]
     ],
-    "gen": 2,
-    "tpl": "me"
+    "gen": 2.0,
+    "mdl": 1
    },
    "afv": {
     "n": 750,
@@ -633,24 +638,24 @@
      [
       "BMP-1",
       null,
-      null,
-      null
-     ],
-     [
-      "M113",
-      null,
-      null,
+      2,
       null
      ],
      [
       "BTR-60",
       null,
+      2,
+      null
+     ],
+     [
+      "Puma",
       null,
+      4,
       null
      ]
     ],
-    "gen": 2,
-    "tpl": "me"
+    "gen": 2.7,
+    "mdl": 1
    },
    "art": {
     "n": 270,
@@ -658,26 +663,26 @@
     "c": "ق",
     "top": [
      [
+      "BM-21",
+      null,
+      2,
+      null
+     ],
+     [
       "D-30",
       null,
-      null,
+      2,
       null
      ],
      [
-      "M109",
+      "2S1",
       null,
-      null,
-      null
-     ],
-     [
-      "BM-21 Grad",
-      null,
-      null,
+      2,
       null
      ]
     ],
-    "gen": 2,
-    "tpl": "me"
+    "gen": 2.0,
+    "mdl": 1
    },
    "jet": {
     "n": 20,
@@ -730,7 +735,7 @@
       "RUS"
      ]
     ],
-    "gen": 2.9
+    "gen": 3.1
    },
    "uav": {
     "n": 164,

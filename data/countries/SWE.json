@@ -57,6 +57,11 @@
    "u": "https://www.sipri.org/databases/armstransfers",
    "y": 2026
   },
+  "mdl": {
+   "t": "أهم موديلات كل فئة (تقدير المصمم من صفحات «List of equipment» و«Military of X» بويكيبيديا وأخبار التسليح 2024–26) — الأسماء بس، الأعداد من الإجمالي",
+   "u": "https://en.wikipedia.org/wiki/Lists_of_military_equipment",
+   "y": 2026
+  },
   "tpl": {
    "t": "قالب منطقة (eu): موديلات شائعة ونسب تقريبية من الدبابات (مدرعات ×2.5، مدفعية ×0.9، مروحيات ×0.25) — تقدير المصمم",
    "u": "docs/features/world-plan.md",
@@ -242,26 +247,14 @@
     "c": "ت",
     "top": [
      [
-      "T-72",
+      "Stridsvagn 122 (Leopard 2A5)",
       null,
-      null,
-      null
-     ],
-     [
-      "Leopard 1",
-      null,
-      null,
-      null
-     ],
-     [
-      "Leopard 2A4",
-      null,
-      null,
+      4,
       null
      ]
     ],
-    "gen": 2.6,
-    "tpl": "eu"
+    "gen": 4.0,
+    "mdl": 1
    },
    "afv": {
     "n": 300,
@@ -269,26 +262,26 @@
     "c": "ق",
     "top": [
      [
-      "BMP-2",
+      "CV9040 (Strf 9040)",
       null,
-      null,
-      null
-     ],
-     [
-      "M113",
-      null,
-      null,
+      4,
       null
      ],
      [
       "Patria AMV",
       null,
+      4,
+      null
+     ],
+     [
+      "Pbv 302",
       null,
+      2,
       null
      ]
     ],
-    "gen": 2.4,
-    "tpl": "eu"
+    "gen": 3.3,
+    "mdl": 1
    },
    "art": {
     "n": 108,
@@ -296,26 +289,14 @@
     "c": "ق",
     "top": [
      [
-      "2S1",
+      "Archer",
       null,
-      null,
-      null
-     ],
-     [
-      "M109",
-      null,
-      null,
-      null
-     ],
-     [
-      "D-30",
-      null,
-      null,
+      4,
       null
      ]
     ],
-    "gen": 2.4,
-    "tpl": "eu"
+    "gen": 4.0,
+    "mdl": 1
    },
    "jet": {
     "n": 94,
@@ -323,26 +304,20 @@
     "c": "ت",
     "top": [
      [
-      "F-16",
+      "JAS 39 Gripen C/D",
       null,
-      null,
+      4,
       null
      ],
      [
-      "MiG-29",
+      "JAS 39 Gripen E",
       null,
-      null,
-      null
-     ],
-     [
-      "Gripen",
-      null,
-      null,
+      4,
       null
      ]
     ],
-    "gen": 2.8,
-    "tpl": "eu"
+    "gen": 4.0,
+    "mdl": 1
    },
    "heli": {
     "n": 30,
@@ -350,26 +325,26 @@
     "c": "ق",
     "top": [
      [
-      "Mi-24",
+      "NH90 (Hkp 14)",
       null,
-      null,
+      4,
       null
      ],
      [
-      "AW139",
+      "UH-60M (Hkp 16)",
       null,
-      null,
+      4,
       null
      ],
      [
-      "UH-60",
+      "AW109",
       null,
-      null,
+      2,
       null
      ]
     ],
-    "gen": 2.6,
-    "tpl": "eu"
+    "gen": 3.3,
+    "mdl": 1
    },
    "navy": {
     "n": 10,

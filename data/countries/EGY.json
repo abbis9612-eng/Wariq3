@@ -69,6 +69,11 @@
    "u": "https://www.sipri.org/databases/armstransfers",
    "y": 2026
   },
+  "mdl": {
+   "t": "أهم موديلات كل فئة (تقدير المصمم من صفحات «List of equipment» و«Military of X» بويكيبيديا وأخبار التسليح 2024–26) — الأسماء بس، الأعداد من الإجمالي",
+   "u": "https://en.wikipedia.org/wiki/Lists_of_military_equipment",
+   "y": 2026
+  },
   "tpl": {
    "t": "قالب منطقة (me): موديلات شائعة ونسب تقريبية من الدبابات (مدرعات ×2.5، مدفعية ×0.9، مروحيات ×0.25) — تقدير المصمم",
    "u": "docs/features/world-plan.md",
@@ -435,7 +440,7 @@
     "orig": "USA",
     "s": "wiki_army",
     "c": "ت",
-    "gen": 2,
+    "gen": 4,
     "cat": "mlrs"
    },
    {
@@ -1065,26 +1070,32 @@
     "c": "ت",
     "top": [
      [
+      "M1A1 Abrams",
+      null,
+      3,
+      null
+     ],
+     [
+      "M60A3",
+      null,
+      2,
+      null
+     ],
+     [
       "T-62",
       null,
-      null,
+      2,
       null
      ],
      [
       "T-55",
       null,
-      null,
-      null
-     ],
-     [
-      "M60",
-      null,
-      null,
+      1,
       null
      ]
     ],
-    "gen": 2,
-    "tpl": "me"
+    "gen": 2.3,
+    "mdl": 1
    },
    "afv": {
     "n": 2834,

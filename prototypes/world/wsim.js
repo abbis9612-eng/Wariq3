@@ -58,7 +58,8 @@
   function initCountry(WD, id) {
     const s = WD.cs[id], gdp = s.gdp || 5, mil = s.milPct ?? (s.mb && s.gdp ? s.mb / s.gdp * 100 : 1.5), t = s.tech || {};
     // القوة [تقدير]: بري (دبابات بجيلها، طيران، مروحيات، أفراد) × المسيّرات، + بحري (سفن، غواصات)
-    const land = ((s.tanks || 0) * .5 * (1 + (t.arm || 1) / 5) + (s.air || 0) * 1.5 * (1 + (t.air || 1) / 5) + (s.heli || 0) + (s.act || 0) / 800) * (1 + (t.uav || 1) / 10);
+    const gq = (k, d) => 1 + (((s.gen || {})[k] ?? d) - 2) / 4;   // جيل السلاح (W4): الجيل 2 = ×1، الجيل 4 = ×1.5
+    const land = ((s.tanks || 0) * .5 * gq('tank', 1 + (t.arm || 1) / 2) + (s.air || 0) * 1.5 * gq('jet', 1 + (t.air || 1) / 2) + (s.heli || 0) * gq('heli', 2) + (s.act || 0) / 800) * (1 + (t.uav || 1) / 10);
     const sea = (s.ships || 0) * 6 + (s.subs || 0) * 4, pw = land + sea;
     // النمو الأساسي: 30٪ من آخر سنة حقيقية + 70٪ «لحاق» (الدول الفقيرة تنمو أسرع) [تقدير]
     const pc = gdp * 1e9 / (s.pop || 1e6), conv = 1.8 + 2.4 * (1 - Math.min(1, pc / 40000));

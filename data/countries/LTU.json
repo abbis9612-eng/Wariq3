@@ -270,7 +270,7 @@
     "s": "wiki_army",
     "c": "ت",
     "note": "Lithuania purchased 21 howitzers (second-hand) from Germany in September 2015 (16 in active service, 2 are used for training, 3 for spare pa",
-    "gen": 2,
+    "gen": 4,
     "cat": "spg"
    },
    {
@@ -372,7 +372,7 @@
     "s": "wiki_air",
     "c": "ت",
     "note": "4 in service. Equipped with M240H machine guns.",
-    "gen": 2,
+    "gen": 4,
     "cat": "heli_util"
    }
   ],
@@ -447,11 +447,11 @@
      [
       "PzH 2000 (PzH 2000 A2)",
       16,
-      2,
+      4,
       "DEU"
      ]
     ],
-    "gen": 2.0
+    "gen": 2.4
    },
    "heli": {
     "n": 8,
@@ -461,7 +461,7 @@
      [
       "Sikorsky UH-60 Black Hawk (UH-60M)",
       4,
-      2,
+      4,
       "USA"
      ],
      [
@@ -477,7 +477,7 @@
       "RUS"
      ]
     ],
-    "gen": 2.0
+    "gen": 3.0
    },
    "navy": {
     "n": 5,

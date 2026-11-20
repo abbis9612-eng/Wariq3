@@ -63,6 +63,11 @@
    "u": "https://www.sipri.org/databases/armstransfers",
    "y": 2026
   },
+  "mdl": {
+   "t": "أهم موديلات كل فئة (تقدير المصمم من صفحات «List of equipment» و«Military of X» بويكيبيديا وأخبار التسليح 2024–26) — الأسماء بس، الأعداد من الإجمالي",
+   "u": "https://en.wikipedia.org/wiki/Lists_of_military_equipment",
+   "y": 2026
+  },
   "tpl": {
    "t": "قالب منطقة (me): موديلات شائعة ونسب تقريبية من الدبابات (مدرعات ×2.5، مدفعية ×0.9، مروحيات ×0.25) — تقدير المصمم",
    "u": "docs/features/world-plan.md",
@@ -509,26 +514,26 @@
     "c": "ت",
     "top": [
      [
-      "T-62",
+      "M60 Phoenix",
       null,
-      null,
+      2,
       null
      ],
      [
-      "T-55",
+      "Challenger 1 (Al-Hussein)",
       null,
-      null,
+      3,
       null
      ],
      [
-      "M60",
+      "Leclerc",
       null,
-      null,
+      4,
       null
      ]
     ],
-    "gen": 2,
-    "tpl": "me"
+    "gen": 3.0,
+    "mdl": 1
    },
    "afv": {
     "n": 1125,
@@ -536,26 +541,26 @@
     "c": "ق",
     "top": [
      [
-      "BMP-1",
-      null,
-      null,
-      null
-     ],
-     [
       "M113",
       null,
-      null,
+      2,
       null
      ],
      [
-      "BTR-60",
+      "YPR-765",
       null,
+      2,
+      null
+     ],
+     [
+      "Tarantula",
       null,
+      2,
       null
      ]
     ],
-    "gen": 2,
-    "tpl": "me"
+    "gen": 2.0,
+    "mdl": 1
    },
    "art": {
     "n": 405,
@@ -563,26 +568,32 @@
     "c": "ق",
     "top": [
      [
-      "D-30",
+      "M109A5",
       null,
-      null,
+      2,
       null
      ],
      [
-      "M109",
+      "M110",
       null,
-      null,
+      2,
       null
      ],
      [
-      "BM-21 Grad",
+      "M102",
       null,
+      2,
+      null
+     ],
+     [
+      "HIMARS",
       null,
+      4,
       null
      ]
     ],
-    "gen": 2,
-    "tpl": "me"
+    "gen": 2.0,
+    "mdl": 1
    },
    "jet": {
     "n": 63,

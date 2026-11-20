@@ -5,6 +5,24 @@
  "tier": "C",
  "asOf": "2026-11",
  "src": {
+  "wiki_air": {
+   "t": "Wikipedia: Namibian Air Force",
+   "u": "https://en.wikipedia.org/wiki/Namibian_Air_Force?oldid=1372114990",
+   "y": 2026,
+   "note": "نسخة الصفحة بتاريخ السحب؛ أرقام ويكيبيديا تنراجع ويا مصادر ثانية"
+  },
+  "wiki_army": {
+   "t": "Wikipedia: Namibian Army",
+   "u": "https://en.wikipedia.org/wiki/Namibian_Army?oldid=1361593065",
+   "y": 2026,
+   "note": "نسخة الصفحة بتاريخ السحب؛ أرقام ويكيبيديا تنراجع ويا مصادر ثانية"
+  },
+  "wiki_navy": {
+   "t": "Wikipedia: Namibian Navy",
+   "u": "https://en.wikipedia.org/wiki/Namibian_Navy?oldid=1386332259",
+   "y": 2026,
+   "note": "نسخة الصفحة بتاريخ السحب؛ أرقام ويكيبيديا تنراجع ويا مصادر ثانية"
+  },
   "iiss_eq": {
    "t": "Wikipedia: List of countries by level of military equipment (من IISS Military Balance ومصادر ثانية)",
    "u": "https://en.wikipedia.org/wiki/List_of_countries_by_level_of_military_equipment?oldid=1384804191",
@@ -221,11 +239,285 @@
     "c": "ت"
    }
   },
-  "land": [],
-  "air": [],
-  "ad": [],
+  "land": [
+   {
+    "m": "T-54",
+    "n": 7,
+    "orig": "SUN",
+    "s": "wiki_army",
+    "c": "ت",
+    "gen": 1,
+    "cat": "tank"
+   },
+   {
+    "m": "BRDM-2",
+    "n": 12,
+    "orig": "SUN",
+    "s": "wiki_army",
+    "c": "ت",
+    "gen": 2,
+    "cat": "apc"
+   },
+   {
+    "m": "Wer'wolf MKII",
+    "n": 400,
+    "orig": "NAM",
+    "s": "wiki_army",
+    "c": "ت",
+    "note": "Versions include APC,Command, Freight, Recovery, Ambulance and Anti Aircraft Zu-23-2 and IFV versions armed with a 2A28 Grom",
+    "gen": 2,
+    "cat": "mrap"
+   },
+   {
+    "m": "Casspir",
+    "n": 20,
+    "orig": "ZAF",
+    "s": "wiki_army",
+    "c": "ت",
+    "note": "Variants include, APC, Recovery (Gemsbok), Tanker (Duiker) and Logistics (Blesbok)",
+    "gen": 2,
+    "cat": "mrap"
+   },
+   {
+    "m": "BM-21 Grad",
+    "n": 5,
+    "orig": "SUN",
+    "s": "wiki_army",
+    "c": "ت",
+    "note": "-",
+    "gen": 2,
+    "cat": "mlrs"
+   },
+   {
+    "m": "9P138 \"Grad-1",
+    "n": 3,
+    "orig": "SUN",
+    "s": "wiki_army",
+    "c": "ت",
+    "gen": 2,
+    "cat": "mlrs"
+   },
+   {
+    "m": "ZiS-2",
+    "n": 6,
+    "orig": "SUN",
+    "s": "wiki_army",
+    "c": "ت",
+    "gen": 2,
+    "cat": "atgm"
+   },
+   {
+    "m": "ZiS-3",
+    "n": 12,
+    "orig": "SUN",
+    "s": "wiki_army",
+    "c": "ت",
+    "gen": 2,
+    "cat": "towed"
+   },
+   {
+    "m": "QF-25",
+    "n": 8,
+    "orig": "GBR",
+    "s": "wiki_army",
+    "c": "ت",
+    "gen": 2,
+    "cat": "towed"
+   },
+   {
+    "m": "G2",
+    "n": 24,
+    "orig": "GBR",
+    "s": "wiki_army",
+    "c": "ت",
+    "gen": 2,
+    "cat": "towed"
+   }
+  ],
+  "air": [
+   {
+    "m": "Chengdu F-7 (F-7NM)",
+    "n": 9,
+    "orig": "CHN",
+    "s": "wiki_air",
+    "c": "ت",
+    "gen": 1,
+    "cat": "fighter"
+   },
+   {
+    "m": "Antonov An-26",
+    "n": 1,
+    "orig": "SUN",
+    "s": "wiki_air",
+    "c": "ت",
+    "gen": 2,
+    "cat": "transport"
+   },
+   {
+    "m": "Shaanxi Y-9",
+    "n": 2,
+    "orig": "CHN",
+    "s": "wiki_air",
+    "c": "ت",
+    "gen": 2,
+    "cat": "transport"
+   },
+   {
+    "m": "Harbin Y-12",
+    "n": 2,
+    "orig": "CHN",
+    "s": "wiki_air",
+    "c": "ت",
+    "gen": 2,
+    "cat": "transport"
+   },
+   {
+    "m": "Mil Mi-8",
+    "n": 2,
+    "orig": "SUN",
+    "s": "wiki_air",
+    "c": "ت",
+    "gen": 2,
+    "cat": "heli_util"
+   },
+   {
+    "m": "Mil Mi-24",
+    "n": 2,
+    "orig": "SUN",
+    "s": "wiki_air",
+    "c": "ت",
+    "gen": 3,
+    "cat": "heli_attack"
+   },
+   {
+    "m": "HAL Cheetah",
+    "n": 1,
+    "orig": "FRA",
+    "s": "wiki_air",
+    "c": "ت",
+    "gen": 2,
+    "cat": "heli_util"
+   },
+   {
+    "m": "Harbin Z-9",
+    "n": 1,
+    "orig": "CHN",
+    "s": "wiki_air",
+    "c": "ت",
+    "gen": 2,
+    "cat": "heli_util"
+   },
+   {
+    "m": "HAL Chetak",
+    "n": 3,
+    "orig": "FRA",
+    "s": "wiki_air",
+    "c": "ت",
+    "gen": 2,
+    "cat": "heli_util"
+   },
+   {
+    "m": "Hongdu JL-8 (K-8)",
+    "n": 11,
+    "orig": "CHN",
+    "s": "wiki_air",
+    "c": "ت",
+    "gen": 2,
+    "cat": "trainer"
+   },
+   {
+    "m": "Chengdu F-7 (FT-7)",
+    "n": 2,
+    "orig": "CHN",
+    "s": "wiki_air",
+    "c": "ت",
+    "gen": 1,
+    "cat": "trainer"
+   }
+  ],
+  "ad": [
+   {
+    "m": "ZPU-4",
+    "n": 40,
+    "orig": "SUN",
+    "s": "wiki_army",
+    "c": "ت",
+    "gen": 2,
+    "cat": "short"
+   },
+   {
+    "m": "ZU-23-2",
+    "n": 12,
+    "orig": "SUN",
+    "s": "wiki_army",
+    "c": "ت",
+    "gen": 2,
+    "cat": "short"
+   }
+  ],
   "msl": [],
-  "navy": [],
+  "navy": [
+   {
+    "m": "Grajaú-class patrol boat",
+    "n": 1,
+    "orig": "NAM",
+    "s": "wiki_navy",
+    "c": "ت",
+    "cat": "patrol",
+    "gen": 2,
+    "note": "عدد الصفوف بالقائمة"
+   },
+   {
+    "m": "Oryx Class",
+    "n": 1,
+    "orig": "NAM",
+    "s": "wiki_navy",
+    "c": "ت",
+    "cat": "patrol",
+    "gen": 2,
+    "note": "عدد الصفوف بالقائمة"
+   },
+   {
+    "m": "Type 037 corvette Class",
+    "n": 1,
+    "orig": "NAM",
+    "s": "wiki_navy",
+    "c": "ت",
+    "cat": "corvette",
+    "gen": 2,
+    "note": "عدد الصفوف بالقائمة"
+   },
+   {
+    "m": "Type 037 corvette",
+    "n": 1,
+    "orig": "NAM",
+    "s": "wiki_navy",
+    "c": "ت",
+    "cat": "corvette",
+    "gen": 2,
+    "note": "عدد الصفوف بالقائمة"
+   },
+   {
+    "m": "Marlim Class",
+    "n": 2,
+    "orig": "NAM",
+    "s": "wiki_navy",
+    "c": "ت",
+    "cat": "patrol",
+    "gen": 2,
+    "note": "عدد الصفوف بالقائمة"
+   },
+   {
+    "m": "Namacurra class",
+    "n": 1,
+    "orig": "NAM",
+    "s": "wiki_navy",
+    "c": "ت",
+    "cat": "patrol",
+    "gen": 2,
+    "note": "عدد الصفوف بالقائمة"
+   }
+  ],
   "grp": {
    "tank": {
     "n": 2,
@@ -233,80 +525,66 @@
     "c": "ت",
     "top": [
      [
-      "T-55",
-      null,
-      null,
-      null
-     ],
-     [
       "T-54",
-      null,
-      null,
-      null
-     ],
-     [
-      "Type 59",
-      null,
-      null,
-      null
+      7,
+      1,
+      "SUN"
      ]
     ],
-    "gen": 1.4,
-    "tpl": "af"
+    "gen": 1.0,
+    "note": "مجموع القوائم 7 يختلف عن الإجمالي؛ الإجمالي هو المعتمد"
    },
    "afv": {
-    "n": 5,
-    "s": "tpl",
-    "c": "ق",
+    "n": 432,
+    "s": "wiki_army",
+    "c": "ت",
     "top": [
      [
-      "BTR-60",
-      null,
-      null,
-      null
+      "Wer'wolf MKII",
+      400,
+      2,
+      "NAM"
+     ],
+     [
+      "Casspir",
+      20,
+      2,
+      "ZAF"
      ],
      [
       "BRDM-2",
-      null,
-      null,
-      null
-     ],
-     [
-      "Panhard AML",
-      null,
-      null,
-      null
+      12,
+      2,
+      "SUN"
      ]
     ],
-    "gen": 1.6,
-    "tpl": "af"
+    "gen": 2.0
    },
    "art": {
-    "n": 2,
-    "s": "tpl",
-    "c": "ق",
+    "n": 52,
+    "s": "wiki_army",
+    "c": "ت",
     "top": [
      [
-      "D-30",
-      null,
-      null,
-      null
+      "G2",
+      24,
+      2,
+      "GBR"
      ],
      [
-      "BM-21 Grad",
-      null,
-      null,
-      null
+      "ZiS-3",
+      12,
+      2,
+      "SUN"
      ],
      [
-      "M-46",
-      null,
-      null,
-      null
+      "QF-25",
+      8,
+      2,
+      "GBR"
      ]
     ],
-    "gen": 1.8,
-    "tpl": "af"
+    "gen": 2.0
    },
    "jet": {
     "n": 9,
@@ -314,26 +592,85 @@
     "c": "ت",
     "top": [
      [
-      "MiG-21",
-      null,
-      null,
-      null
-     ],
-     [
-      "Su-25",
-      null,
-      null,
-      null
-     ],
-     [
-      "L-39",
-      null,
-      null,
-      null
+      "Chengdu F-7 (F-7NM)",
+      9,
+      1,
+      "CHN"
      ]
     ],
-    "gen": 1.6,
-    "tpl": "af"
+    "gen": 1.0
+   },
+   "heli": {
+    "n": 9,
+    "s": "wiki_air",
+    "c": "ت",
+    "top": [
+     [
+      "HAL Chetak",
+      3,
+      2,
+      "FRA"
+     ],
+     [
+      "Mil Mi-8",
+      2,
+      2,
+      "SUN"
+     ],
+     [
+      "Mil Mi-24",
+      2,
+      3,
+      "SUN"
+     ]
+    ],
+    "gen": 2.2
+   },
+   "ad": {
+    "n": 52,
+    "s": "wiki_army",
+    "c": "ت",
+    "top": [
+     [
+      "ZPU-4",
+      40,
+      2,
+      "SUN"
+     ],
+     [
+      "ZU-23-2",
+      12,
+      2,
+      "SUN"
+     ]
+    ],
+    "gen": 2.0
+   },
+   "navy": {
+    "n": 7,
+    "s": "wiki_navy",
+    "c": "ت",
+    "top": [
+     [
+      "Marlim Class",
+      2,
+      2,
+      "NAM"
+     ],
+     [
+      "Grajaú-class patrol boat",
+      1,
+      2,
+      "NAM"
+     ],
+     [
+      "Oryx Class",
+      1,
+      2,
+      "NAM"
+     ]
+    ],
+    "gen": 2.0
    }
   }
  },

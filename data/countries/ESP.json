@@ -521,7 +521,7 @@
     "s": "wiki_air",
     "c": "ت",
     "note": "Orders: Batch 1: 6 purchased and in service Batch 2: 6 purchased and in service Batch 3: 12 ordered",
-    "gen": 2,
+    "gen": 4,
     "cat": "heli_util"
    },
    {
@@ -853,7 +853,7 @@
       "USA"
      ]
     ],
-    "gen": 2.4
+    "gen": 2.5
    },
    "uav": {
     "n": 4,

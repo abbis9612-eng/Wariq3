@@ -5,6 +5,18 @@
  "tier": "C",
  "asOf": "2026-11",
  "src": {
+  "wiki_air": {
+   "t": "Wikipedia: Guinea-Bissau Air Force",
+   "u": "https://en.wikipedia.org/wiki/Guinea-Bissau_Air_Force?oldid=1383531503",
+   "y": 2026,
+   "note": "نسخة الصفحة بتاريخ السحب؛ أرقام ويكيبيديا تنراجع ويا مصادر ثانية"
+  },
+  "wiki_army": {
+   "t": "Wikipedia: List of equipment of the Guinea-Bissau Army",
+   "u": "https://en.wikipedia.org/wiki/List_of_equipment_of_the_Guinea-Bissau_Army?oldid=1354112904",
+   "y": 2026,
+   "note": "نسخة الصفحة بتاريخ السحب؛ أرقام ويكيبيديا تنراجع ويا مصادر ثانية"
+  },
   "iiss_eq": {
    "t": "Wikipedia: List of countries by level of military equipment (من IISS Military Balance ومصادر ثانية)",
    "u": "https://en.wikipedia.org/wiki/List_of_countries_by_level_of_military_equipment?oldid=1384804191",
@@ -221,9 +233,101 @@
     "c": "ت"
    }
   },
-  "land": [],
+  "land": [
+   {
+    "m": "PT-76",
+    "n": 15,
+    "orig": "SUN",
+    "s": "wiki_army",
+    "c": "ت",
+    "gen": 1,
+    "cat": "tank"
+   },
+   {
+    "m": "T-55",
+    "n": 10,
+    "orig": "SUN",
+    "s": "wiki_army",
+    "c": "ت",
+    "gen": 1,
+    "cat": "tank"
+   },
+   {
+    "m": "BRDM-2",
+    "n": 10,
+    "orig": "SUN",
+    "s": "wiki_army",
+    "c": "ت",
+    "gen": 2,
+    "cat": "apc"
+   },
+   {
+    "m": "BM-21",
+    "n": 9,
+    "orig": "SUN",
+    "s": "wiki_army",
+    "c": "ت",
+    "gen": 2,
+    "cat": "mlrs"
+   },
+   {
+    "m": "D-44",
+    "n": 8,
+    "orig": "SUN",
+    "s": "wiki_army",
+    "c": "ت",
+    "gen": 2,
+    "cat": "towed"
+   },
+   {
+    "m": "M-30",
+    "n": 18,
+    "orig": "SUN",
+    "s": "wiki_army",
+    "c": "ت",
+    "gen": 2,
+    "cat": "towed"
+   },
+   {
+    "m": "D-30",
+    "n": 18,
+    "orig": "SUN",
+    "s": "wiki_army",
+    "c": "ت",
+    "gen": 2,
+    "cat": "towed"
+   }
+  ],
   "air": [],
-  "ad": [],
+  "ad": [
+   {
+    "m": "61-K",
+    "n": 6,
+    "orig": "SUN",
+    "s": "wiki_army",
+    "c": "ت",
+    "gen": 2,
+    "cat": "short"
+   },
+   {
+    "m": "S-60",
+    "n": 10,
+    "orig": "SUN",
+    "s": "wiki_army",
+    "c": "ت",
+    "gen": 2,
+    "cat": "short"
+   },
+   {
+    "m": "ZU-23-2",
+    "n": 18,
+    "orig": "SUN",
+    "s": "wiki_army",
+    "c": "ت",
+    "gen": 2,
+    "cat": "short"
+   }
+  ],
   "msl": [],
   "navy": [],
   "grp": {
@@ -233,80 +337,60 @@
     "c": "ت",
     "top": [
      [
+      "PT-76",
+      15,
+      1,
+      "SUN"
+     ],
+     [
       "T-55",
-      null,
-      null,
-      null
-     ],
-     [
-      "T-54",
-      null,
-      null,
-      null
-     ],
-     [
-      "Type 59",
-      null,
-      null,
-      null
+      10,
+      1,
+      "SUN"
      ]
     ],
-    "gen": 1.4,
-    "tpl": "af"
+    "gen": 1.0,
+    "note": "مجموع القوائم 25 يختلف عن الإجمالي؛ الإجمالي هو المعتمد"
    },
    "afv": {
-    "n": 25,
-    "s": "tpl",
-    "c": "ق",
+    "n": 10,
+    "s": "wiki_army",
+    "c": "ت",
     "top": [
-     [
-      "BTR-60",
-      null,
-      null,
-      null
-     ],
      [
       "BRDM-2",
-      null,
-      null,
-      null
-     ],
-     [
-      "Panhard AML",
-      null,
-      null,
-      null
+      10,
+      2,
+      "SUN"
      ]
     ],
-    "gen": 1.6,
-    "tpl": "af"
+    "gen": 2.0
    },
    "art": {
-    "n": 9,
-    "s": "tpl",
-    "c": "ق",
+    "n": 53,
+    "s": "wiki_army",
+    "c": "ت",
     "top": [
      [
+      "M-30",
+      18,
+      2,
+      "SUN"
+     ],
+     [
       "D-30",
-      null,
-      null,
-      null
+      18,
+      2,
+      "SUN"
      ],
      [
-      "BM-21 Grad",
-      null,
-      null,
-      null
-     ],
-     [
-      "M-46",
-      null,
-      null,
-      null
+      "BM-21",
+      9,
+      2,
+      "SUN"
      ]
     ],
-    "gen": 1.8,
-    "tpl": "af"
+    "gen": 2.0
    },
    "heli": {
     "n": 2,
@@ -328,6 +412,32 @@
     ],
     "gen": 2,
     "tpl": "af"
+   },
+   "ad": {
+    "n": 34,
+    "s": "wiki_army",
+    "c": "ت",
+    "top": [
+     [
+      "ZU-23-2",
+      18,
+      2,
+      "SUN"
+     ],
+     [
+      "S-60",
+      10,
+      2,
+      "SUN"
+     ],
+     [
+      "61-K",
+      6,
+      2,
+      "SUN"
+     ]
+    ],
+    "gen": 2.0
    }
   }
  },

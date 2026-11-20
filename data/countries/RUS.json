@@ -69,6 +69,11 @@
    "u": "https://www.sipri.org/databases/armstransfers",
    "y": 2026
   },
+  "mdl": {
+   "t": "أهم موديلات كل فئة (تقدير المصمم من صفحات «List of equipment» و«Military of X» بويكيبيديا وأخبار التسليح 2024–26) — الأسماء بس، الأعداد من الإجمالي",
+   "u": "https://en.wikipedia.org/wiki/Lists_of_military_equipment",
+   "y": 2026
+  },
   "tpl": {
    "t": "قالب منطقة (eu): موديلات شائعة ونسب تقريبية من الدبابات (مدرعات ×2.5، مدفعية ×0.9، مروحيات ×0.25) — تقدير المصمم",
    "u": "docs/features/world-plan.md",
@@ -1457,26 +1462,32 @@
     "c": "ت",
     "top": [
      [
-      "F-16",
+      "Su-34",
       null,
-      null,
+      4,
       null
      ],
      [
-      "MiG-29",
+      "Su-35S",
       null,
-      null,
+      4,
       null
      ],
      [
-      "Gripen",
+      "Su-30SM",
       null,
+      4,
+      null
+     ],
+     [
+      "Su-25",
       null,
+      3,
       null
      ]
     ],
-    "gen": 2.8,
-    "tpl": "eu"
+    "gen": 4.0,
+    "mdl": 1
    },
    "heli": {
     "n": 500,
@@ -1484,26 +1495,32 @@
     "c": "ق",
     "top": [
      [
-      "Mi-24",
+      "Ka-52",
       null,
-      null,
+      4,
       null
      ],
      [
-      "AW139",
+      "Mi-28N",
       null,
-      null,
+      4,
       null
      ],
      [
-      "UH-60",
+      "Mi-8/17",
       null,
+      2,
+      null
+     ],
+     [
+      "Mi-35",
       null,
+      3,
       null
      ]
     ],
-    "gen": 2.6,
-    "tpl": "eu"
+    "gen": 3.3,
+    "mdl": 1
    },
    "uav": {
     "n": 3314,

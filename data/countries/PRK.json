@@ -318,7 +318,7 @@
     "s": "wiki_army",
     "c": "ت",
     "note": "Maximum range of 240mm rocket stated at 100 for ballistic trajectory and 115 kilometers for glided.",
-    "gen": 2,
+    "gen": 4,
     "cat": "mlrs"
    },
    {
@@ -703,7 +703,7 @@
       "INT"
      ]
     ],
-    "gen": 2.0
+    "gen": 2.1
    },
    "jet": {
     "n": 572,

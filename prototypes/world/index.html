@@ -189,6 +189,9 @@ function card() {
     h += `<h3>${c.ar}</h3><div class="note">${c.gov || ''}${c.hos ? ` · ${role(c.hosR)}: ${c.hos}` : ''}${c.hog ? ` · ${role(c.hogR)}: ${c.hog}` : ''}</div><div class="grid" style="margin-top:6px">`;
     const st = (i, b) => `<div class="st"><i>${i}</i><b>${b}</b></div>`;
     h += st('السكان', fmt(c.pop)) + st('الناتج', c.gdp ? Math.round(c.gdp) + ' مليار $' : '–') + st('ميزانية الجيش', c.mb ? c.mb.toFixed(1) + ' مليار $' : '–') + st('الجيش العامل', fmt(c.act)) + st('دبابات', fmt(c.tanks)) + st('طائرات قتال', fmt(c.air)) + (c.nuke ? st('رؤوس نووية', fmt(c.nuke)) : '') + st('الاستقرار', c.stab ?? '–') + '</div>';
+    if (c.kit) { const KN = { tank: 'دبابات', afv: 'مدرعات', art: 'مدفعية', jet: 'طائرات قتال', heli: 'مروحيات', ad: 'دفاع جوي', navy: 'قطع بحرية' };
+      const rows = Object.entries(c.kit).filter(([, v]) => v[1].length).map(([k, v]) => `<div class="line"><span>${KN[k]}${v[0] ? ' · ' + fmt(v[0]) : ''}</span><b style="font-weight:500;text-align:left;direction:ltr">${v[1].join(' · ')}${v[2] ? ' <i class="note">(قالب)</i>' : ''}</b></div>`).join('');
+      if (rows) h += `<h3>أهم الأسلحة</h3>${rows}`; }
     if (c.tr && c.tr.length) h += `<div class="note">تحالفات واتفاقيات: ${c.tr.map(trName).join('، ')}</div>`;
     if (c.conf && c.conf.length) h += `<div class="row">${c.conf.map(x => pill('⚔ ' + cfName(x), 'warn')).join('')}</div>`;
     if (!window.GAME) h += `<div class="row"><button id="asme">${me === k ? '✓ هاي دولتي (للعلاقات)' : 'شوف العالم من عيون ' + c.ar}</button></div>`;

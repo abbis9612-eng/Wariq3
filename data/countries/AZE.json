@@ -563,7 +563,7 @@
     "orig": "ISR",
     "s": "wiki_army",
     "c": "ت",
-    "gen": 2,
+    "gen": 4,
     "cat": "spg"
    },
    {
@@ -631,7 +631,7 @@
     "orig": "ISR",
     "s": "wiki_army",
     "c": "ت",
-    "gen": 2,
+    "gen": 4,
     "cat": "towed"
    },
    {
@@ -721,7 +721,7 @@
     "s": "wiki_army",
     "c": "ت",
     "note": "[Range: 200 km], [CEP: 30m].",
-    "gen": 2,
+    "gen": 4,
     "cat": "towed"
    },
    {
@@ -1119,7 +1119,7 @@
     "orig": "ISR",
     "s": "wiki_air",
     "c": "ت",
-    "gen": 2,
+    "gen": 4,
     "cat": "uav_isr"
    },
    {
@@ -1527,7 +1527,7 @@
       "ISR"
      ]
     ],
-    "gen": 2.0
+    "gen": 2.3
    },
    "ad": {
     "n": 388,

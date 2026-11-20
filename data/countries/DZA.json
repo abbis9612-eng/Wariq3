@@ -916,7 +916,7 @@
     "orig": "ITA",
     "s": "wiki_air",
     "c": "ت",
-    "gen": 2,
+    "gen": 4,
     "cat": "heli_util"
    },
    {
@@ -1337,7 +1337,7 @@
       "RUS"
      ]
     ],
-    "gen": 2.4
+    "gen": 2.5
    },
    "uav": {
     "n": 48,

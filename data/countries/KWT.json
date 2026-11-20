@@ -469,7 +469,7 @@
     "s": "wiki_air",
     "c": "ت",
     "note": "4 used by the Kuwait Naval Force , and 6 by the Kuwait National Guard",
-    "gen": 2,
+    "gen": 4,
     "cat": "heli_util"
    },
    {
@@ -589,7 +589,7 @@
      [
       "Airbus H225M",
       30,
-      2,
+      4,
       "FRA"
      ],
      [
@@ -605,7 +605,7 @@
       "FRA"
      ]
     ],
-    "gen": 2.2
+    "gen": 3.0
    }
   }
  },

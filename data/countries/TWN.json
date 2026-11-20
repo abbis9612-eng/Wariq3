@@ -75,6 +75,11 @@
    "u": "https://www.sipri.org/databases/armstransfers",
    "y": 2026
   },
+  "mdl": {
+   "t": "أهم موديلات كل فئة (تقدير المصمم من صفحات «List of equipment» و«Military of X» بويكيبيديا وأخبار التسليح 2024–26) — الأسماء بس، الأعداد من الإجمالي",
+   "u": "https://en.wikipedia.org/wiki/Lists_of_military_equipment",
+   "y": 2026
+  },
   "tpl": {
    "t": "قالب منطقة (as): موديلات شائعة ونسب تقريبية من الدبابات (مدرعات ×2.5، مدفعية ×0.9، مروحيات ×0.25) — تقدير المصمم",
    "u": "docs/features/world-plan.md",
@@ -370,7 +375,7 @@
     "s": "wiki_army",
     "c": "ت",
     "note": "On 21 October 2020, the United States government approved the sale of 11 HIMARS to Taiwan. Another 18 are ordered since the cancellation of ",
-    "gen": 2,
+    "gen": 4,
     "cat": "mlrs"
    },
    {
@@ -436,7 +441,7 @@
     "orig": "USA",
     "s": "wiki_army",
     "c": "ت",
-    "gen": 2,
+    "gen": 4,
     "cat": "heli_util"
    },
    {
@@ -694,26 +699,26 @@
     "c": "ت",
     "top": [
      [
-      "F-5",
+      "F-16V",
       null,
-      null,
+      4,
       null
      ],
      [
-      "MiG-21",
+      "F-CK-1",
       null,
-      null,
+      2,
       null
      ],
      [
-      "F-7",
+      "Mirage 2000-5",
       null,
-      null,
+      3,
       null
      ]
     ],
-    "gen": 2,
-    "tpl": "as"
+    "gen": 3.0,
+    "mdl": 1
    },
    "heli": {
     "n": 195,
@@ -735,11 +740,11 @@
      [
       "UH-60 Black Hawk (UH-60M)",
       30,
-      2,
+      4,
       "USA"
      ]
     ],
-    "gen": 2.3
+    "gen": 2.6
    },
    "uav": {
     "n": 653,

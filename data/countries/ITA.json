@@ -69,6 +69,11 @@
    "u": "https://www.sipri.org/databases/armstransfers",
    "y": 2026
   },
+  "mdl": {
+   "t": "أهم موديلات كل فئة (تقدير المصمم من صفحات «List of equipment» و«Military of X» بويكيبيديا وأخبار التسليح 2024–26) — الأسماء بس، الأعداد من الإجمالي",
+   "u": "https://en.wikipedia.org/wiki/Lists_of_military_equipment",
+   "y": 2026
+  },
   "tpl": {
    "t": "قالب منطقة (eu): موديلات شائعة ونسب تقريبية من الدبابات (مدرعات ×2.5، مدفعية ×0.9، مروحيات ×0.25) — تقدير المصمم",
    "u": "docs/features/world-plan.md",
@@ -356,7 +361,7 @@
     "s": "wiki_army",
     "c": "ت",
     "note": "22 M270A1 received in 1988. 21 of which upgraded to M270A1 MLRS-I by 2012. All 21 being upgraded to M270A2.",
-    "gen": 2,
+    "gen": 4,
     "cat": "mlrs"
    },
    {
@@ -396,7 +401,7 @@
     "s": "wiki_army",
     "c": "ت",
     "note": "Total Lynx planned: 1050 developed with indigenous variations such as the HITFIST 30 tower 679 KF41 Infantry Fighting Vehicle, (IFV) (~) KF4",
-    "gen": 2,
+    "gen": 4,
     "cat": "ifv"
    },
    {
@@ -568,7 +573,7 @@
     "s": "wiki_army",
     "c": "ت",
     "note": "Among the 60 helicopters received, 1 was lost in 2008.",
-    "gen": 2,
+    "gen": 4,
     "cat": "heli_util"
    },
    {
@@ -997,7 +1002,7 @@
       "DEU"
      ]
     ],
-    "gen": 2.0
+    "gen": 2.1
    },
    "jet": {
     "n": 221,
@@ -1005,26 +1010,32 @@
     "c": "ت",
     "top": [
      [
-      "F-16",
+      "Eurofighter Typhoon",
       null,
-      null,
+      4,
       null
      ],
      [
-      "MiG-29",
+      "F-35A/B",
       null,
-      null,
+      5,
       null
      ],
      [
-      "Gripen",
+      "AMX",
       null,
+      2,
+      null
+     ],
+     [
+      "Tornado",
       null,
+      3,
       null
      ]
     ],
-    "gen": 2.8,
-    "tpl": "eu"
+    "gen": 3.7,
+    "mdl": 1
    },
    "heli": {
     "n": 222,
@@ -1034,7 +1045,7 @@
      [
       "NH90 TTH",
       59,
-      2,
+      4,
       "FRA"
      ],
      [
@@ -1050,7 +1061,7 @@
       "USA"
      ]
     ],
-    "gen": 2.1
+    "gen": 2.6
    },
    "uav": {
     "n": 66,

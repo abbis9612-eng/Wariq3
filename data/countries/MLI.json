@@ -5,6 +5,18 @@
  "tier": "C",
  "asOf": "2026-11",
  "src": {
+  "wiki_air": {
+   "t": "Wikipedia: Malian Air Force",
+   "u": "https://en.wikipedia.org/wiki/Malian_Air_Force?oldid=1386400347",
+   "y": 2026,
+   "note": "نسخة الصفحة بتاريخ السحب؛ أرقام ويكيبيديا تنراجع ويا مصادر ثانية"
+  },
+  "wiki_army": {
+   "t": "Wikipedia: Malian Armed Forces",
+   "u": "https://en.wikipedia.org/wiki/Malian_Armed_Forces?oldid=1384363781",
+   "y": 2026,
+   "note": "نسخة الصفحة بتاريخ السحب؛ أرقام ويكيبيديا تنراجع ويا مصادر ثانية"
+  },
   "iiss_eq": {
    "t": "Wikipedia: List of countries by level of military equipment (من IISS Military Balance ومصادر ثانية)",
    "u": "https://en.wikipedia.org/wiki/List_of_countries_by_level_of_military_equipment?oldid=1384804191",
@@ -222,7 +234,148 @@
    }
   },
   "land": [],
-  "air": [],
+  "air": [
+   {
+    "m": "Aero L-39 Albatros (L-39C)",
+    "n": 12,
+    "orig": "CZE",
+    "s": "wiki_air",
+    "c": "ت",
+    "note": "2 lost in 2023, 1 shot down in 2024.",
+    "gen": 2,
+    "cat": "attack"
+   },
+   {
+    "m": "Mikoyan-Gurevich MiG-21",
+    "n": 9,
+    "orig": "SUN",
+    "s": "wiki_air",
+    "c": "ت",
+    "note": "Out of operation for many years, as of 2026.",
+    "gen": 1,
+    "cat": "fighter"
+   },
+   {
+    "m": "Cessna 208",
+    "n": 1,
+    "orig": "USA",
+    "s": "wiki_air",
+    "c": "ت",
+    "gen": 2,
+    "cat": "isr"
+   },
+   {
+    "m": "Antonov An-26",
+    "n": 1,
+    "orig": "SUN",
+    "s": "wiki_air",
+    "c": "ت",
+    "gen": 2,
+    "cat": "transport"
+   },
+   {
+    "m": "Antonov An-28",
+    "n": 1,
+    "orig": "SUN",
+    "s": "wiki_air",
+    "c": "ت",
+    "gen": 2,
+    "cat": "transport"
+   },
+   {
+    "m": "Basler BT-67",
+    "n": 1,
+    "orig": "USA",
+    "s": "wiki_air",
+    "c": "ت",
+    "gen": 2,
+    "cat": "transport"
+   },
+   {
+    "m": "CASA C-295",
+    "n": 2,
+    "orig": "ESP",
+    "s": "wiki_air",
+    "c": "ت",
+    "gen": 2,
+    "cat": "transport"
+   },
+   {
+    "m": "Harbin Y-12",
+    "n": 2,
+    "orig": "CHN",
+    "s": "wiki_air",
+    "c": "ت",
+    "gen": 2,
+    "cat": "transport"
+   },
+   {
+    "m": "Ilyushin Il-76",
+    "n": 1,
+    "orig": "RUS",
+    "s": "wiki_air",
+    "c": "ت",
+    "gen": 2,
+    "cat": "transport"
+   },
+   {
+    "m": "Airbus Helicopters H215 (H215M/AS332)",
+    "n": 2,
+    "orig": "FRA",
+    "s": "wiki_air",
+    "c": "ت",
+    "gen": 2,
+    "cat": "heli_util"
+   },
+   {
+    "m": "Mil Mi-24 (Mi-35M)",
+    "n": 7,
+    "orig": "RUS",
+    "s": "wiki_air",
+    "c": "ت",
+    "note": "1 lost in 2023, 1 in 2024, and 2 in 2026. An additional aircraft was shot down by JNIM fighters on 19 July 2026.",
+    "gen": 3,
+    "cat": "heli_attack"
+   },
+   {
+    "m": "Embraer EMB 314 Super Tucano",
+    "n": 3,
+    "orig": "BRA",
+    "s": "wiki_air",
+    "c": "ت",
+    "gen": 2,
+    "cat": "trainer"
+   },
+   {
+    "m": "SIAI-Marchetti SF.260",
+    "n": 1,
+    "orig": "ITA",
+    "s": "wiki_air",
+    "c": "ت",
+    "gen": 2,
+    "cat": "trainer"
+   },
+   {
+    "m": "Bayraktar TB2",
+    "n": 20,
+    "orig": "TUR",
+    "s": "wiki_air",
+    "c": "ت",
+    "note": "TB2 drone station lost in April 2026.",
+    "gen": 4,
+    "cat": "uav_strike"
+   },
+   {
+    "m": "Bayraktar Akıncı (AKINCI-A)",
+    "n": 4,
+    "orig": "TUR",
+    "s": "wiki_air",
+    "c": "ت",
+    "note": "1 crash on 10 January 2025 and 1 destroyed on 31 March 2025. 2 more delivered in 2026.",
+    "gen": 4,
+    "cat": "uav_strike"
+   }
+  ],
   "ad": [],
   "msl": [],
   "navy": [],
@@ -233,26 +386,60 @@
     "c": "ت",
     "top": [
      [
-      "MiG-21",
-      null,
-      null,
-      null
+      "Aero L-39 Albatros (L-39C)",
+      12,
+      2,
+      "CZE"
      ],
      [
-      "Su-25",
-      null,
-      null,
-      null
-     ],
-     [
-      "L-39",
-      null,
-      null,
-      null
+      "Mikoyan-Gurevich MiG-21",
+      9,
+      1,
+      "SUN"
      ]
     ],
     "gen": 1.6,
-    "tpl": "af"
+    "note": "مجموع القوائم 21 يختلف عن الإجمالي؛ الإجمالي هو المعتمد"
+   },
+   "heli": {
+    "n": 9,
+    "s": "wiki_air",
+    "c": "ت",
+    "top": [
+     [
+      "Mil Mi-24 (Mi-35M)",
+      7,
+      3,
+      "RUS"
+     ],
+     [
+      "Airbus Helicopters H215 (H215M/AS332)",
+      2,
+      2,
+      "FRA"
+     ]
+    ],
+    "gen": 2.8
+   },
+   "uav": {
+    "n": 24,
+    "s": "wiki_air",
+    "c": "ت",
+    "top": [
+     [
+      "Bayraktar TB2",
+      20,
+      4,
+      "TUR"
+     ],
+     [
+      "Bayraktar Akıncı (AKINCI-A)",
+      4,
+      4,
+      "TUR"
+     ]
+    ],
+    "gen": 4.0
    }
   }
  },

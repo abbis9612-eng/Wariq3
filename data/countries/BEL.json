@@ -51,6 +51,11 @@
    "u": "https://www.sipri.org/databases/armstransfers",
    "y": 2026
   },
+  "mdl": {
+   "t": "أهم موديلات كل فئة (تقدير المصمم من صفحات «List of equipment» و«Military of X» بويكيبيديا وأخبار التسليح 2024–26) — الأسماء بس، الأعداد من الإجمالي",
+   "u": "https://en.wikipedia.org/wiki/Lists_of_military_equipment",
+   "y": 2026
+  },
   "tpl": {
    "t": "قالب منطقة (eu): موديلات شائعة ونسب تقريبية من الدبابات (مدرعات ×2.5، مدفعية ×0.9، مروحيات ×0.25) — تقدير المصمم",
    "u": "docs/features/world-plan.md",
@@ -236,26 +241,20 @@
     "c": "ت",
     "top": [
      [
-      "F-16",
+      "F-16AM/BM",
       null,
-      null,
+      3,
       null
      ],
      [
-      "MiG-29",
+      "F-35A (يوصل 2025)",
       null,
-      null,
-      null
-     ],
-     [
-      "Gripen",
-      null,
-      null,
+      5,
       null
      ]
     ],
-    "gen": 2.8,
-    "tpl": "eu"
+    "gen": 4.0,
+    "mdl": 1
    },
    "navy": {
     "n": 2,

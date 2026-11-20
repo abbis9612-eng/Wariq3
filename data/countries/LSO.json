@@ -5,6 +5,12 @@
  "tier": "C",
  "asOf": "2026-11",
  "src": {
+  "wiki_army": {
+   "t": "Wikipedia: Lesotho Defence Force",
+   "u": "https://en.wikipedia.org/wiki/Lesotho_Defence_Force?oldid=1359676423",
+   "y": 2026,
+   "note": "نسخة الصفحة بتاريخ السحب؛ أرقام ويكيبيديا تنراجع ويا مصادر ثانية"
+  },
   "iiss_eq": {
    "t": "Wikipedia: List of countries by level of military equipment (من IISS Military Balance ومصادر ثانية)",
    "u": "https://en.wikipedia.org/wiki/List_of_countries_by_level_of_military_equipment?oldid=1384804191",
@@ -219,12 +225,147 @@
     "c": "ت"
    }
   },
-  "land": [],
-  "air": [],
+  "land": [
+   {
+    "m": "T-55",
+    "n": 1,
+    "orig": "SUN",
+    "s": "wiki_army",
+    "c": "ت",
+    "gen": 1,
+    "cat": "tank"
+   },
+   {
+    "m": "BRDM-2",
+    "n": 2,
+    "orig": "SUN",
+    "s": "wiki_army",
+    "c": "ت",
+    "gen": 2,
+    "cat": "apc"
+   },
+   {
+    "m": "Panhard AML",
+    "n": 6,
+    "orig": "FRA",
+    "s": "wiki_army",
+    "c": "ت",
+    "gen": 2,
+    "cat": "apc"
+   },
+   {
+    "m": "RAM MK3",
+    "n": 6,
+    "orig": "ISR",
+    "s": "wiki_army",
+    "c": "ت",
+    "gen": 2,
+    "cat": "apc"
+   },
+   {
+    "m": "RBY Mk 1",
+    "n": 10,
+    "orig": "ISR",
+    "s": "wiki_army",
+    "c": "ت",
+    "gen": 2,
+    "cat": "apc"
+   },
+   {
+    "m": "Shorland S52",
+    "n": 8,
+    "orig": "GBR",
+    "s": "wiki_army",
+    "c": "ت",
+    "gen": 2,
+    "cat": "apc"
+   }
+  ],
+  "air": [
+   {
+    "m": "Bell 412",
+    "n": 3,
+    "orig": "USA",
+    "s": "wiki_army",
+    "c": "ت",
+    "gen": 2,
+    "cat": "heli_util"
+   },
+   {
+    "m": "Eurocopter AS350",
+    "n": 3,
+    "orig": "FRA",
+    "s": "wiki_army",
+    "c": "ت",
+    "gen": 2,
+    "cat": "heli_util"
+   }
+  ],
   "ad": [],
   "msl": [],
   "navy": [],
-  "grp": {}
+  "grp": {
+   "tank": {
+    "n": 1,
+    "s": "wiki_army",
+    "c": "ت",
+    "top": [
+     [
+      "T-55",
+      1,
+      1,
+      "SUN"
+     ]
+    ],
+    "gen": 1.0
+   },
+   "afv": {
+    "n": 32,
+    "s": "wiki_army",
+    "c": "ت",
+    "top": [
+     [
+      "RBY Mk 1",
+      10,
+      2,
+      "ISR"
+     ],
+     [
+      "Shorland S52",
+      8,
+      2,
+      "GBR"
+     ],
+     [
+      "Panhard AML",
+      6,
+      2,
+      "FRA"
+     ]
+    ],
+    "gen": 2.0
+   },
+   "heli": {
+    "n": 6,
+    "s": "wiki_army",
+    "c": "ت",
+    "top": [
+     [
+      "Bell 412",
+      3,
+      2,
+      "USA"
+     ],
+     [
+      "Eurocopter AS350",
+      3,
+      2,
+      "FRA"
+     ]
+    ],
+    "gen": 2.0
+   }
+  }
  },
  "ind": null,
  "pol": {

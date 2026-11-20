@@ -256,7 +256,7 @@
     "s": "wiki_army",
     "c": "ت",
     "note": "Ordered in September 2014.",
-    "gen": 2,
+    "gen": 4,
     "cat": "mlrs"
    },
    {
@@ -275,7 +275,7 @@
     "s": "wiki_army",
     "c": "ت",
     "note": "Purchased in 2021. 12 Chunmoo multiple rocket launchers, 12 ammunition supply vehicles, and Korean GPS guided missiles and logistics support",
-    "gen": 2,
+    "gen": 4,
     "cat": "mlrs"
    },
    {
@@ -358,7 +358,7 @@
     "orig": "FIN",
     "s": "wiki_army",
     "c": "ت",
-    "gen": 2,
+    "gen": 4,
     "cat": "apc"
    },
    {
@@ -1067,7 +1067,7 @@
       "GBR"
      ]
     ],
-    "gen": 1.9
+    "gen": 2.1
    },
    "jet": {
     "n": 155,

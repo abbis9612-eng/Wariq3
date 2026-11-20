@@ -270,7 +270,7 @@
     "s": "wiki_army",
     "c": "ت",
     "note": "Made under licence by IHI. M270 [ja] purchased between 1992 and 2004. Expected to be retired in 2029.",
-    "gen": 2,
+    "gen": 4,
     "cat": "mlrs"
    },
    {
@@ -969,11 +969,11 @@
      [
       "M270 MLRS",
       99,
-      2,
+      4,
       "USA"
      ]
     ],
-    "gen": 2.0
+    "gen": 2.3
    },
    "jet": {
     "n": 313,

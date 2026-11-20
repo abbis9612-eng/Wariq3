@@ -5,6 +5,18 @@
  "tier": "C",
  "asOf": "2026-11",
  "src": {
+  "wiki_army": {
+   "t": "Wikipedia: Armed Forces of Equatorial Guinea",
+   "u": "https://en.wikipedia.org/wiki/Armed_Forces_of_Equatorial_Guinea?oldid=1376581184",
+   "y": 2026,
+   "note": "نسخة الصفحة بتاريخ السحب؛ أرقام ويكيبيديا تنراجع ويا مصادر ثانية"
+  },
+  "wiki_navy": {
+   "t": "Wikipedia: Navy of Equatorial Guinea",
+   "u": "https://en.wikipedia.org/wiki/Navy_of_Equatorial_Guinea?oldid=1371510972",
+   "y": 2026,
+   "note": "نسخة الصفحة بتاريخ السحب؛ أرقام ويكيبيديا تنراجع ويا مصادر ثانية"
+  },
   "iiss_eq": {
    "t": "Wikipedia: List of countries by level of military equipment (من IISS Military Balance ومصادر ثانية)",
    "u": "https://en.wikipedia.org/wiki/List_of_countries_by_level_of_military_equipment?oldid=1384804191",
@@ -224,12 +236,173 @@
     "c": "ت"
    }
   },
-  "land": [],
-  "air": [],
-  "ad": [],
+  "land": [
+   {
+    "m": "T-55",
+    "n": 3,
+    "orig": "SUN",
+    "s": "wiki_army",
+    "c": "ت",
+    "gen": 1,
+    "cat": "tank"
+   },
+   {
+    "m": "BRDM-2",
+    "n": 6,
+    "orig": "SUN",
+    "s": "wiki_army",
+    "c": "ت",
+    "gen": 2,
+    "cat": "apc"
+   },
+   {
+    "m": "BMP-1",
+    "n": 20,
+    "orig": "SUN",
+    "s": "wiki_army",
+    "c": "ت",
+    "note": "Acquired from the Czech Republic in 2007.",
+    "gen": 2,
+    "cat": "ifv"
+   },
+   {
+    "m": "BTR-152",
+    "n": 10,
+    "orig": "SUN",
+    "s": "wiki_army",
+    "c": "ت",
+    "gen": 2,
+    "cat": "apc"
+   },
+   {
+    "m": "Reva",
+    "n": 25,
+    "orig": "ZAF",
+    "s": "wiki_army",
+    "c": "ت",
+    "gen": 2,
+    "cat": "mrap"
+   }
+  ],
+  "air": [
+   {
+    "m": "Mil Mi-24 (Mi-24P/V)",
+    "n": 7,
+    "orig": "SUN",
+    "s": "wiki_army",
+    "c": "ت",
+    "gen": 3,
+    "cat": "heli_attack"
+   },
+   {
+    "m": "Kamov Ka-27 (Ka-29)",
+    "n": 1,
+    "orig": "RUS",
+    "s": "wiki_army",
+    "c": "ت",
+    "gen": 2,
+    "cat": "heli_util"
+   },
+   {
+    "m": "Mil Mi-26",
+    "n": 1,
+    "orig": "RUS",
+    "s": "wiki_army",
+    "c": "ت",
+    "gen": 2,
+    "cat": "heli_util"
+   },
+   {
+    "m": "Mil Mi-17",
+    "n": 1,
+    "orig": "SUN",
+    "s": "wiki_army",
+    "c": "ت",
+    "gen": 2,
+    "cat": "heli_util"
+   },
+   {
+    "m": "Harbin Z-9 (Z-9WE)",
+    "n": 2,
+    "orig": "CHN",
+    "s": "wiki_army",
+    "c": "ت",
+    "gen": 2,
+    "cat": "heli_util"
+   },
+   {
+    "m": "Bell 206",
+    "n": 1,
+    "orig": "USA",
+    "s": "wiki_army",
+    "c": "ت",
+    "gen": 2,
+    "cat": "heli_util"
+   },
+   {
+    "m": "Enstrom 480",
+    "n": 1,
+    "orig": "USA",
+    "s": "wiki_army",
+    "c": "ت",
+    "gen": 2,
+    "cat": "heli_util"
+   }
+  ],
+  "ad": [
+   {
+    "m": "Pantsir-S1",
+    "n": 2,
+    "orig": "RUS",
+    "s": "wiki_army",
+    "c": "ت",
+    "gen": 3,
+    "cat": "short"
+   }
+  ],
   "msl": [],
   "navy": [],
   "grp": {
+   "tank": {
+    "n": 0,
+    "s": "iiss_eq",
+    "c": "ت",
+    "top": [
+     [
+      "T-55",
+      3,
+      1,
+      "SUN"
+     ]
+    ],
+    "gen": 1.0
+   },
+   "afv": {
+    "n": 61,
+    "s": "wiki_army",
+    "c": "ت",
+    "top": [
+     [
+      "Reva",
+      25,
+      2,
+      "ZAF"
+     ],
+     [
+      "BMP-1",
+      20,
+      2,
+      "SUN"
+     ],
+     [
+      "BTR-152",
+      10,
+      2,
+      "SUN"
+     ]
+    ],
+    "gen": 2.0
+   },
    "jet": {
     "n": 4,
     "s": "iiss_eq",
@@ -256,6 +429,46 @@
     ],
     "gen": 1.6,
     "tpl": "af"
+   },
+   "heli": {
+    "n": 14,
+    "s": "wiki_army",
+    "c": "ت",
+    "top": [
+     [
+      "Mil Mi-24 (Mi-24P/V)",
+      7,
+      3,
+      "SUN"
+     ],
+     [
+      "Harbin Z-9 (Z-9WE)",
+      2,
+      2,
+      "CHN"
+     ],
+     [
+      "Kamov Ka-27 (Ka-29)",
+      1,
+      2,
+      "RUS"
+     ]
+    ],
+    "gen": 2.5
+   },
+   "ad": {
+    "n": 2,
+    "s": "wiki_army",
+    "c": "ت",
+    "top": [
+     [
+      "Pantsir-S1",
+      2,
+      3,
+      "RUS"
+     ]
+    ],
+    "gen": 3.0
    },
    "navy": {
     "n": 2,

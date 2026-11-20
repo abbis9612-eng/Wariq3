@@ -5,6 +5,18 @@
  "tier": "C",
  "asOf": "2026-11",
  "src": {
+  "wiki_air": {
+   "t": "Wikipedia: Mauritania Islamic Air Force",
+   "u": "https://en.wikipedia.org/wiki/Mauritania_Islamic_Air_Force?oldid=1367496583",
+   "y": 2026,
+   "note": "نسخة الصفحة بتاريخ السحب؛ أرقام ويكيبيديا تنراجع ويا مصادر ثانية"
+  },
+  "wiki_army": {
+   "t": "Wikipedia: Armed Forces of Mauritania",
+   "u": "https://en.wikipedia.org/wiki/Armed_Forces_of_Mauritania?oldid=1381050819",
+   "y": 2026,
+   "note": "نسخة الصفحة بتاريخ السحب؛ أرقام ويكيبيديا تنراجع ويا مصادر ثانية"
+  },
   "iiss_eq": {
    "t": "Wikipedia: List of countries by level of military equipment (من IISS Military Balance ومصادر ثانية)",
    "u": "https://en.wikipedia.org/wiki/List_of_countries_by_level_of_military_equipment?oldid=1384804191",
@@ -213,7 +225,109 @@
    }
   },
   "land": [],
-  "air": [],
+  "air": [
+   {
+    "m": "EMB 314 Super Tucano",
+    "n": 4,
+    "orig": "BRA",
+    "s": "wiki_air",
+    "c": "ت",
+    "gen": 2,
+    "cat": "attack"
+   },
+   {
+    "m": "Cessna 208",
+    "n": 2,
+    "orig": "USA",
+    "s": "wiki_air",
+    "c": "ت",
+    "gen": 2,
+    "cat": "isr"
+   },
+   {
+    "m": "Basler BT-67",
+    "n": 1,
+    "orig": "USA",
+    "s": "wiki_air",
+    "c": "ت",
+    "note": "Modified DC-3 with P&W PT6A turboprop engines",
+    "gen": 2,
+    "cat": "transport"
+   },
+   {
+    "m": "Cessna 441",
+    "n": 1,
+    "orig": "USA",
+    "s": "wiki_air",
+    "c": "ت",
+    "gen": 2,
+    "cat": "transport"
+   },
+   {
+    "m": "Pilatus PC-6",
+    "n": 1,
+    "orig": "CHE",
+    "s": "wiki_air",
+    "c": "ت",
+    "note": "STOL capable aircraft",
+    "gen": 2,
+    "cat": "transport"
+   },
+   {
+    "m": "CASA/IPTN CN-235",
+    "n": 2,
+    "orig": "IDN",
+    "s": "wiki_air",
+    "c": "ت",
+    "gen": 2,
+    "cat": "transport"
+   },
+   {
+    "m": "Beechcraft Super King Air (King Air 350)",
+    "n": 2,
+    "orig": "USA",
+    "s": "wiki_air",
+    "c": "ت",
+    "gen": 2,
+    "cat": "transport"
+   },
+   {
+    "m": "Harbin Z-9",
+    "n": 2,
+    "orig": "CHN",
+    "s": "wiki_air",
+    "c": "ت",
+    "gen": 2,
+    "cat": "heli_util"
+   },
+   {
+    "m": "AgustaWestland AW109",
+    "n": 2,
+    "orig": "ITA",
+    "s": "wiki_air",
+    "c": "ت",
+    "gen": 2,
+    "cat": "heli_util"
+   },
+   {
+    "m": "EMB-312",
+    "n": 5,
+    "orig": "BRA",
+    "s": "wiki_air",
+    "c": "ت",
+    "gen": 2,
+    "cat": "trainer"
+   },
+   {
+    "m": "SIAI-Marchetti SF.260",
+    "n": 1,
+    "orig": "ITA",
+    "s": "wiki_air",
+    "c": "ت",
+    "gen": 2,
+    "cat": "trainer"
+   }
+  ],
   "ad": [],
   "msl": [],
   "navy": [],
@@ -305,47 +419,33 @@
     "c": "ت",
     "top": [
      [
-      "MiG-21",
-      null,
-      null,
-      null
-     ],
-     [
-      "Su-25",
-      null,
-      null,
-      null
-     ],
-     [
-      "L-39",
-      null,
-      null,
-      null
+      "EMB 314 Super Tucano",
+      4,
+      2,
+      "BRA"
      ]
     ],
-    "gen": 1.6,
-    "tpl": "af"
+    "gen": 2.0
    },
    "heli": {
-    "n": 9,
-    "s": "tpl",
-    "c": "ق",
+    "n": 4,
+    "s": "wiki_air",
+    "c": "ت",
     "top": [
      [
-      "Mi-24",
-      null,
-      null,
-      null
+      "Harbin Z-9",
+      2,
+      2,
+      "CHN"
      ],
      [
-      "Mi-8/17",
-      null,
-      null,
-      null
+      "AgustaWestland AW109",
+      2,
+      2,
+      "ITA"
      ]
     ],
-    "gen": 2,
-    "tpl": "af"
+    "gen": 2.0
    },
    "navy": {
     "n": 1,

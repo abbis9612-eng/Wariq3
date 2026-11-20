@@ -63,6 +63,11 @@
    "u": "https://www.sipri.org/databases/armstransfers",
    "y": 2026
   },
+  "mdl": {
+   "t": "أهم موديلات كل فئة (تقدير المصمم من صفحات «List of equipment» و«Military of X» بويكيبيديا وأخبار التسليح 2024–26) — الأسماء بس، الأعداد من الإجمالي",
+   "u": "https://en.wikipedia.org/wiki/Lists_of_military_equipment",
+   "y": 2026
+  },
   "tpl": {
    "t": "قالب منطقة (la): موديلات شائعة ونسب تقريبية من الدبابات (مدرعات ×2.5، مدفعية ×0.9، مروحيات ×0.25) — تقدير المصمم",
    "u": "docs/features/world-plan.md",
@@ -378,26 +383,26 @@
     "c": "ت",
     "top": [
      [
-      "AMX-13",
+      "Leopard 1A5",
       null,
-      null,
+      2,
       null
      ],
      [
-      "M41",
+      "M60A3",
       null,
-      null,
+      2,
       null
      ],
      [
-      "T-55",
+      "Centauro II (طلب)",
       null,
-      null,
+      4,
       null
      ]
     ],
-    "gen": 1.6,
-    "tpl": "la"
+    "gen": 2.7,
+    "mdl": 1
    },
    "afv": {
     "n": 750,
@@ -405,26 +410,26 @@
     "c": "ق",
     "top": [
      [
+      "VBTP-MR Guarani",
+      null,
+      2,
+      null
+     ],
+     [
       "M113",
       null,
-      null,
+      2,
       null
      ],
      [
-      "EE-11 Urutu",
+      "EE-9 Cascavel",
       null,
-      null,
-      null
-     ],
-     [
-      "BTR-80",
-      null,
-      null,
+      2,
       null
      ]
     ],
-    "gen": 1.8,
-    "tpl": "la"
+    "gen": 2.0,
+    "mdl": 1
    },
    "art": {
     "n": 270,
@@ -432,26 +437,26 @@
     "c": "ق",
     "top": [
      [
-      "M101",
+      "M109A5",
       null,
-      null,
+      2,
       null
      ],
      [
-      "M114",
+      "Astros II",
       null,
-      null,
+      2,
       null
      ],
      [
-      "OTO Melara Mod 56",
+      "L118",
       null,
-      null,
+      2,
       null
      ]
     ],
-    "gen": 1.8,
-    "tpl": "la"
+    "gen": 2.0,
+    "mdl": 1
    },
    "jet": {
     "n": 128,
@@ -459,26 +464,32 @@
     "c": "ت",
     "top": [
      [
+      "F-39 Gripen E",
+      null,
+      4,
+      null
+     ],
+     [
+      "F-5EM",
+      null,
+      2,
+      null
+     ],
+     [
       "A-29 Super Tucano",
       null,
-      null,
+      2,
       null
      ],
      [
-      "F-5",
+      "AMX",
       null,
-      null,
-      null
-     ],
-     [
-      "Mirage 5",
-      null,
-      null,
+      2,
       null
      ]
     ],
-    "gen": 1.8,
-    "tpl": "la"
+    "gen": 2.7,
+    "mdl": 1
    },
    "heli": {
     "n": 75,
@@ -486,26 +497,26 @@
     "c": "ق",
     "top": [
      [
-      "Bell 412",
+      "H225M",
       null,
-      null,
+      4,
       null
      ],
      [
-      "UH-1H",
+      "AS565 Panther",
       null,
-      null,
+      2,
       null
      ],
      [
-      "Mi-17",
+      "UH-60L",
       null,
-      null,
+      2,
       null
      ]
     ],
-    "gen": 2,
-    "tpl": "la"
+    "gen": 2.7,
+    "mdl": 1
    },
    "navy": {
     "n": 18,

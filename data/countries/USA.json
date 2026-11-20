@@ -282,7 +282,7 @@
     "s": "wiki_army",
     "c": "ت",
     "note": "M777A2.",
-    "gen": 2,
+    "gen": 4,
     "cat": "towed"
    },
    {
@@ -292,7 +292,7 @@
     "s": "wiki_army",
     "c": "ت",
     "note": "M270 pod mounted on a standard Army Medium Tactical Vehicle (MTV) truck frame.",
-    "gen": 2,
+    "gen": 4,
     "cat": "mlrs"
    },
    {
@@ -302,7 +302,7 @@
     "s": "wiki_army",
     "c": "ت",
     "note": "M270A1/A2. Armored, self-propelled, multiple rocket launcher.",
-    "gen": 2,
+    "gen": 4,
     "cat": "mlrs"
    },
    {
@@ -1031,7 +1031,7 @@
     "s": "wiki_air",
     "c": "ت",
     "note": "The Marine Corps plans to divest 10 AH-1Z in FY2025.",
-    "gen": 2,
+    "gen": 4,
     "cat": "heli_util"
    },
    {
@@ -1418,13 +1418,13 @@
      [
       "M777",
       1000,
-      2,
+      4,
       "GBR"
      ],
      [
       "M270",
       991,
-      2,
+      4,
       "USA"
      ],
      [
@@ -1434,7 +1434,7 @@
       "GBR"
      ]
     ],
-    "gen": 2.0
+    "gen": 3.2
    },
    "jet": {
     "n": 3368,
@@ -1486,7 +1486,7 @@
       "USA"
      ]
     ],
-    "gen": 2.3
+    "gen": 2.4
    },
    "uav": {
     "n": 10608,

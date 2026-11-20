@@ -69,6 +69,11 @@
    "u": "https://www.sipri.org/databases/armstransfers",
    "y": 2026
   },
+  "mdl": {
+   "t": "أهم موديلات كل فئة (تقدير المصمم من صفحات «List of equipment» و«Military of X» بويكيبيديا وأخبار التسليح 2024–26) — الأسماء بس، الأعداد من الإجمالي",
+   "u": "https://en.wikipedia.org/wiki/Lists_of_military_equipment",
+   "y": 2026
+  },
   "tpl": {
    "t": "قالب منطقة (me): موديلات شائعة ونسب تقريبية من الدبابات (مدرعات ×2.5، مدفعية ×0.9، مروحيات ×0.25) — تقدير المصمم",
    "u": "docs/features/world-plan.md",
@@ -552,7 +557,7 @@
     "orig": "USA",
     "s": "wiki_army",
     "c": "ت",
-    "gen": 2,
+    "gen": 4,
     "cat": "heli_util"
    },
    {
@@ -709,26 +714,32 @@
     "c": "ق",
     "top": [
      [
-      "D-30",
+      "CAESAR",
       null,
-      null,
+      4,
       null
      ],
      [
-      "M109",
+      "M109A5",
       null,
-      null,
+      2,
       null
      ],
      [
-      "BM-21 Grad",
+      "Astros II",
       null,
+      2,
+      null
+     ],
+     [
+      "PLZ-45",
       null,
+      2,
       null
      ]
     ],
-    "gen": 2,
-    "tpl": "me"
+    "gen": 2.7,
+    "mdl": 1
    },
    "jet": {
     "n": 364,
@@ -765,7 +776,7 @@
      [
       "Sikorsky UH-60 Black Hawk (UH-60L UH-60M",
       100,
-      2,
+      4,
       "USA"
      ],
      [
@@ -781,7 +792,7 @@
       "USA"
      ]
     ],
-    "gen": 2.5
+    "gen": 3.3
    },
    "uav": {
     "n": 540,

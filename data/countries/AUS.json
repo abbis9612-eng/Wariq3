@@ -63,6 +63,11 @@
    "u": "https://www.sipri.org/databases/armstransfers",
    "y": 2026
   },
+  "mdl": {
+   "t": "أهم موديلات كل فئة (تقدير المصمم من صفحات «List of equipment» و«Military of X» بويكيبيديا وأخبار التسليح 2024–26) — الأسماء بس، الأعداد من الإجمالي",
+   "u": "https://en.wikipedia.org/wiki/Lists_of_military_equipment",
+   "y": 2026
+  },
   "tpl": {
    "t": "قالب منطقة (as): موديلات شائعة ونسب تقريبية من الدبابات (مدرعات ×2.5، مدفعية ×0.9، مروحيات ×0.25) — تقدير المصمم",
    "u": "docs/features/world-plan.md",
@@ -270,7 +275,7 @@
     "s": "wiki_army",
     "c": "ت",
     "note": "35 155mm M777A2s were ordered as part of the first phase of the Land 17 project to replace the Army's inventory of towed artillery, with ini",
-    "gen": 2,
+    "gen": 4,
     "cat": "towed"
    }
   ],
@@ -337,26 +342,14 @@
     "c": "ت",
     "top": [
      [
-      "Type 59",
+      "M1A2 SEPv3",
       null,
-      null,
-      null
-     ],
-     [
-      "T-55",
-      null,
-      null,
-      null
-     ],
-     [
-      "T-72",
-      null,
-      null,
+      4,
       null
      ]
     ],
-    "gen": 1.8,
-    "tpl": "as"
+    "gen": 4.0,
+    "mdl": 1
    },
    "afv": {
     "n": 688,
@@ -386,11 +379,11 @@
      [
       "M777 howitzer",
       48,
-      2,
+      4,
       "GBR"
      ]
     ],
-    "gen": 2.0
+    "gen": 4.0
    },
    "jet": {
     "n": 84,
@@ -398,26 +391,26 @@
     "c": "ت",
     "top": [
      [
-      "F-5",
+      "F-35A",
       null,
-      null,
+      5,
       null
      ],
      [
-      "MiG-21",
+      "F/A-18F Super Hornet",
       null,
-      null,
+      3,
       null
      ],
      [
-      "F-7",
+      "EA-18G Growler",
       null,
-      null,
+      2,
       null
      ]
     ],
-    "gen": 2,
-    "tpl": "as"
+    "gen": 3.3,
+    "mdl": 1
    },
    "heli": {
     "n": 32,

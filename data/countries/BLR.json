@@ -63,6 +63,11 @@
    "u": "https://www.sipri.org/databases/armstransfers",
    "y": 2026
   },
+  "mdl": {
+   "t": "أهم موديلات كل فئة (تقدير المصمم من صفحات «List of equipment» و«Military of X» بويكيبيديا وأخبار التسليح 2024–26) — الأسماء بس، الأعداد من الإجمالي",
+   "u": "https://en.wikipedia.org/wiki/Lists_of_military_equipment",
+   "y": 2026
+  },
   "tpl": {
    "t": "قالب منطقة (eu): موديلات شائعة ونسب تقريبية من الدبابات (مدرعات ×2.5، مدفعية ×0.9، مروحيات ×0.25) — تقدير المصمم",
    "u": "docs/features/world-plan.md",
@@ -357,26 +362,20 @@
     "c": "ت",
     "top": [
      [
-      "T-72",
+      "T-72B3",
       null,
-      null,
+      4,
       null
      ],
      [
-      "Leopard 1",
+      "T-72B",
       null,
-      null,
-      null
-     ],
-     [
-      "Leopard 2A4",
-      null,
-      null,
+      3,
       null
      ]
     ],
-    "gen": 2.6,
-    "tpl": "eu"
+    "gen": 3.5,
+    "mdl": 1
    },
    "afv": {
     "n": 1292,
@@ -384,26 +383,26 @@
     "c": "ق",
     "top": [
      [
+      "BTR-82A",
+      null,
+      2,
+      null
+     ],
+     [
       "BMP-2",
       null,
-      null,
+      3,
       null
      ],
      [
-      "M113",
+      "BRDM-2",
       null,
-      null,
-      null
-     ],
-     [
-      "Patria AMV",
-      null,
-      null,
+      2,
       null
      ]
     ],
-    "gen": 2.4,
-    "tpl": "eu"
+    "gen": 2.3,
+    "mdl": 1
    },
    "art": {
     "n": 465,
@@ -411,26 +410,26 @@
     "c": "ق",
     "top": [
      [
-      "2S1",
+      "2S19 Msta-S",
       null,
-      null,
+      2,
       null
      ],
      [
-      "M109",
+      "Polonez",
       null,
-      null,
+      4,
       null
      ],
      [
-      "D-30",
+      "BM-21",
       null,
-      null,
+      2,
       null
      ]
     ],
-    "gen": 2.4,
-    "tpl": "eu"
+    "gen": 2.7,
+    "mdl": 1
    },
    "jet": {
     "n": 105,

@@ -69,6 +69,11 @@
    "u": "https://www.sipri.org/databases/armstransfers",
    "y": 2026
   },
+  "mdl": {
+   "t": "أهم موديلات كل فئة (تقدير المصمم من صفحات «List of equipment» و«Military of X» بويكيبيديا وأخبار التسليح 2024–26) — الأسماء بس، الأعداد من الإجمالي",
+   "u": "https://en.wikipedia.org/wiki/Lists_of_military_equipment",
+   "y": 2026
+  },
   "tpl": {
    "t": "قالب منطقة (me): موديلات شائعة ونسب تقريبية من الدبابات (مدرعات ×2.5، مدفعية ×0.9، مروحيات ×0.25) — تقدير المصمم",
    "u": "docs/features/world-plan.md",
@@ -333,7 +338,7 @@
     "orig": "USA",
     "s": "wiki_air",
     "c": "ت",
-    "gen": 2,
+    "gen": 4,
     "cat": "heli_util"
    },
    {
@@ -342,7 +347,7 @@
     "orig": "USA",
     "s": "wiki_air",
     "c": "ت",
-    "gen": 2,
+    "gen": 4,
     "cat": "heli_attack"
    },
    {
@@ -492,26 +497,14 @@
     "c": "ت",
     "top": [
      [
-      "T-62",
+      "M60A3",
       null,
-      null,
-      null
-     ],
-     [
-      "T-55",
-      null,
-      null,
-      null
-     ],
-     [
-      "M60",
-      null,
-      null,
+      2,
       null
      ]
     ],
-    "gen": 2,
-    "tpl": "me"
+    "gen": 2.0,
+    "mdl": 1
    },
    "afv": {
     "n": 450,
@@ -519,26 +512,26 @@
     "c": "ق",
     "top": [
      [
-      "BMP-1",
-      null,
-      null,
-      null
-     ],
-     [
       "M113",
       null,
-      null,
+      2,
       null
      ],
      [
-      "BTR-60",
+      "AIFV",
       null,
+      2,
+      null
+     ],
+     [
+      "Arma 6x6",
       null,
+      2,
       null
      ]
     ],
-    "gen": 2,
-    "tpl": "me"
+    "gen": 2.0,
+    "mdl": 1
    },
    "art": {
     "n": 64,
@@ -607,11 +600,11 @@
      [
       "Bell AH-1Z Viper",
       12,
-      2,
+      4,
       "USA"
      ]
     ],
-    "gen": 2.0
+    "gen": 2.5
    },
    "ad": {
     "n": 81,

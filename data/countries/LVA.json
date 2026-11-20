@@ -328,7 +328,7 @@
     "s": "wiki_air",
     "c": "ت",
     "note": "Used for medical evacuation, SOF transport and trainigs",
-    "gen": 2,
+    "gen": 4,
     "cat": "heli_util"
    }
   ],
@@ -417,11 +417,11 @@
      [
       "Sikorsky UH-60 Black Hawk (UH-60M)",
       4,
-      2,
+      4,
       "USA"
      ]
     ],
-    "gen": 2.0
+    "gen": 4.0
    },
    "navy": {
     "n": 11,

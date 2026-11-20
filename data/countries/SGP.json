@@ -328,7 +328,7 @@
     "s": "wiki_army",
     "c": "ت",
     "note": "516 missiles purchased initially. Purchase of 45 pods M30A2 GMLRS-AW in 2026. Upgrade with Common Fire Control System upgrade kits in 2026.",
-    "gen": 2,
+    "gen": 4,
     "cat": "mlrs"
    },
    {
@@ -462,7 +462,7 @@
     "s": "wiki_air",
     "c": "ت",
     "note": "Successor of the AS332M Super Puma.",
-    "gen": 2,
+    "gen": 4,
     "cat": "heli_util"
    },
    {
@@ -481,7 +481,7 @@
     "s": "wiki_air",
     "c": "ت",
     "note": "Aircraft based in Cazaux (France) where the pilots are trained.",
-    "gen": 2,
+    "gen": 4,
     "cat": "trainer"
    },
    {
@@ -514,7 +514,7 @@
     "s": "wiki_navy",
     "c": "ت",
     "note": "Purchased second hand from the Swedish Navy.",
-    "gen": 2,
+    "gen": 4,
     "cat": "sub"
    },
    {
@@ -636,11 +636,11 @@
      [
       "M142 HIMARS",
       24,
-      2,
+      4,
       "USA"
      ]
     ],
-    "gen": 2.0
+    "gen": 2.3
    },
    "jet": {
     "n": 100,
@@ -682,11 +682,11 @@
      [
       "Airbus Helicopters H225M (–)",
       16,
-      2,
+      4,
       "FRA"
      ]
     ],
-    "gen": 2.6
+    "gen": 3.0
    },
    "navy": {
     "n": 22,
@@ -712,7 +712,7 @@
       "SGP"
      ]
     ],
-    "gen": 2.2
+    "gen": 2.3
    }
   }
  },

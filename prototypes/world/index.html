@@ -264,13 +264,16 @@ input[type=range]{width:100%;accent-color:var(--gold)}
 <script src="wsim.js"></script>
 <script src="gwsim.js"></script>
 <script src="theater.js"></script>
+<script src="gwair.js"></script>
+<script src="aircat.js"></script>
+<script src="airworld.js"></script>
 <script>
 'use strict';
 // ===== اللعبة (W3) =====
 (function () {
   const S = window.WSIM, KEY = 'wariq.world.v1';
   let G = null, speed = 0, acc = 0, lastT = 0, panel = null, sp = null, tier = '', T = null, selD = null;
-  const TH = window.THEATER, SM = window.SIM;
+  const TH = window.THEATER, SM = window.SIM, AWLD = window.AIRWORLD;
   const SPD = [0, 1, 4, 12];   // أيام بالثانية
   const store = { get() { try { return localStorage.getItem(KEY); } catch (e) { return null; } }, set(v) { try { localStorage.setItem(KEY, v); return true; } catch (e) { return false; } } };
   const toast = (m, cls = '') => { const d = document.createElement('div'); d.textContent = m; d.className = cls; $('#toast').prepend(d); while ($('#toast').children.length > 3) $('#toast').lastChild.remove(); setTimeout(() => d.remove(), 3200); };
@@ -305,7 +308,7 @@ input[type=range]{width:100%;accent-color:var(--gold)}
     $('#start').hidden = true; $('#tabs').hidden = false;
     $('#top h1').innerHTML = `${CS[me].ar} <small></small>`;
     if (!$('#bar')) { const b = document.createElement('div'); b.id = 'bar'; $('#top').append(b); }
-    if (G.th) { const w = G.wars.find(x => x.id === G.th.war); T = w ? TH.restore(G.th, G, WD, w, me) : null; if (T) w.detail = true; }
+    if (G.th) { const w = G.wars.find(x => x.id === G.th.war); T = w ? TH.restore(G.th, G, WD, w, me) : null; if (T) { w.detail = true; T.A = AWLD.restore(AWLD.build(T, G, WD), G.th.airR); } }
     theater(); syncMap(); setMode('pol'); bar(); sel = null; card();
     const cap = R.find(r => r.ctl === me && r.cap) || R.find(r => r.ctl === me); if (cap) { cam.x = MX(cap.ll[0]); cam.y = MY(cap.ll[1]); cam.s = Math.max(cam.s, 900); }
     lastT = performance.now(); requestAnimationFrame(tick);
@@ -321,36 +324,58 @@ input[type=range]{width:100%;accent-color:var(--gold)}
   // ===== الوقت =====
   function tick(t) {
     if (!G) return; const dt = Math.min(.25, (t - lastT) / 1000); lastT = t;
-    if (speed && !G.over) { acc += dt * SPD[speed]; let n = Math.floor(acc); if (n) { acc -= n; const m0 = G.log.length; const t0 = G.t; advance(n); after(m0, t0); } }
+    if (speed && !G.over) { if (T) warTick(dt); else { acc += dt * SPD[speed]; let n = Math.floor(acc); if (n) { acc -= n; const m0 = G.log.length; const t0 = G.t; advance(n); after(m0, t0); } } }
     requestAnimationFrame(tick);
   }
   // ===== W5: مسرح الحرب =====
-  function save() { G.th = T ? TH.save(T) : null; return store.set(S.save(G)); }
+  function save() { G.th = T ? { ...TH.save(T), airR: T.A ? AWLD.save(T.A) : null } : null; return store.set(S.save(G)); }
   function myWar() { return G.wars.find(w => w.a.includes(me) || w.b.includes(me)); }
   function theater() {
     if (T && !G.wars.some(w => w.id === T.war)) { T = null; selD = null; }
     if (T) return;
     for (const w of G.wars) { if (!(w.a.includes(me) || w.b.includes(me)) || w.noLand) continue;
       const t = TH.build(G, WD, w, me); if (!t) { w.noLand = true; continue; }
-      T = t; w.detail = true; T.vp0 = TH.score(T).vp.slice(); T.aggr0 = 1.6;
+      T = t; w.detail = true; T.vp0 = TH.score(T).vp.slice(); T.aggr0 = 1.6; T.A = AWLD.build(T, G, WD);
       toast(`🗺 ${w.n}: الجبهة انقسمت لـ${T.cells.length} خلية، و${SM.alive(T.W).filter(d => d.side === 0).length} فرقة إلنا ضد ${SM.alive(T.W).filter(d => d.side === 1).length}`, 'bad');
       const c = T.cells[Math.floor(T.cells.length / 2)]; cam.x = MX(c.ll[0]); cam.y = MY(c.ll[1]); cam.s = Math.max(cam.s, 1400); speed = 0; bar(); break; }
   }
+  // نهاية يوم بالمسرح: السيطرة ترجع للخريطة، سير الحرب، والاستسلام
+  function theaterDay() {
+    const ch = TH.sync(T, G, WD), w = G.wars.find(x => x.id === T.war);
+    for (const [r, by, from] of ch) G.log.push({ t: G.t, k: 'take', war: T.war, r, by, from });
+    if (ch.length) syncMap();
+    if (w) { const v = TH.score(T).vp, tot = v[0] + v[1] || 1, mine = (v[0] - T.vp0[0]) / tot * 300; w.score = Math.max(-100, Math.min(100, w.a.includes(me) ? mine : -mine)); }
+    const ov = T.W.over;
+    if (ov && w) { const iLost = ov.loser === 0; S.endWar(G, WD, w, 'capitulate'); if (iLost) { G.C[me].stab = Math.max(0, G.C[me].stab - 20); } G.log.push({ t: G.t, k: 'cap', who: iLost ? me : (T.side[1][0]), war: w.n }); T = null; selD = null; syncMap(); }
+  }
+  // بلا حرب: أيام كاملة. بالحرب: نفس سرعات «الحرب الكبرى» (ساعات) والجو مربوط بالساعة مثلها بالضبط
   function advance(n) {
     for (let d = 0; d < n && !G.over; d++) {
-      if (T) {
-        TH.step(T, 24);
-        const ch = TH.sync(T, G, WD), w = G.wars.find(x => x.id === T.war);
-        for (const [r, by, from] of ch) G.log.push({ t: G.t, k: 'take', war: T.war, r, by, from });
-        if (ch.length) syncMap();
-        if (w) { const v = TH.score(T).vp, tot = v[0] + v[1] || 1, mine = (v[0] - T.vp0[0]) / tot * 300; w.score = Math.max(-100, Math.min(100, w.a.includes(me) ? mine : -mine)); }
-        const ov = T.W.over;
-        if (ov && w) { const iLost = ov.loser === 0; S.endWar(G, WD, w, 'capitulate'); if (iLost) { G.C[me].stab = Math.max(0, G.C[me].stab - 20); } G.log.push({ t: G.t, k: 'cap', who: iLost ? me : (T.side[1][0]), war: w.n }); T = null; selD = null; syncMap(); }
-      }
+      if (T) { TH.step(T, 24); theaterDay(); }
       S.step(G, WD, 1);
       theater();
     }
     dirty = true;
+  }
+  const HPS = [0, 1 / 6, 1, 6];   // ساعات بالثانية بالحرب (نفس «الحرب الكبرى»)
+  let accH = 0;
+  function warTick(dt) {
+    const rate = HPS[speed]; accH += dt * rate; let n = 0; const m0 = G.log.length, t0 = G.t;
+    while (accH >= 1 && n < 40 && T && !G.over) { TH.step(T, 1); accH -= 1; n++;
+      if (T.W.t % 24 === 0) { theaterDay(); S.step(G, WD, 1); theater(); save(); } }   // بالحرب نحفظ كل يوم (مثل «الحرب الكبرى»)
+    if (T && T.A) { const af = Math.min(1.6, Math.max(.3, .25 * rate * 3600 / 38)); AIR.step(T.A, T.W, SM, dt * af); airEvents(); }
+    if (G.t > t0) after(m0, t0);
+    if (n) { dirty = true; if (selD) divBar(); }
+  }
+  const BOOMS = [];   // انفجارات قصيرة للرسم
+  function airEvents() {
+    const A = T.A;
+    for (const e of A.ev) {
+      if (e.k === 'bomb' || e.k === 'intercept') BOOMS.push([e.x, e.y, performance.now(), e.k === 'intercept' ? 1 : 0]);
+      if (e.k === 'raid' && e.side === 1) toast(`🚀 ضربة مركّبة جاية على ${e.tgt}: ${e.n.uav} مسيّرة، ${e.n.cm} كروز، ${e.n.bm} باليستي`, 'bad');
+      if (e.k === 'raidEnd') toast(`${e.side === 1 ? '🛡 ضربتهم على ' : '🚀 ضربتنا على '}${e.tgt}: انعترض ${e.down} من ${e.total}`, e.side === 1 ? (e.down >= e.hit ? 'good' : 'bad') : (e.hit > e.down ? 'good' : ''));
+    }
+    A.ev.length = 0; if (BOOMS.length > 60) BOOMS.splice(0, BOOMS.length - 60);
   }
   // الرسم فوك الخريطة: الخلايا (لما نقرّب)، والفرق، والمعارك
   const KS = { inf: '✕', mec: '⊗', arm: '⬭' };
@@ -364,7 +389,19 @@ input[type=range]{width:100%;accent-color:var(--gold)}
         if (T.cells[i].t === 'fort' && r > 6) { cx.fillStyle = 'rgba(0,0,0,.35)'; cx.fillText('⩚', x, y + 3); } } }
     // المعارك
     for (const b of W.battles.values()) { const c = T.cells[b.tg], [x, y] = toS(MX(c.ll[0]), MY(c.ll[1])); cx.beginPath(); cx.arc(x, y, Math.max(4, r * .7), 0, 7); cx.strokeStyle = '#ff3b1f'; cx.lineWidth = 2; cx.stroke(); }
-    // الضربات الجوية (آخر يومين): ✈ صغيرة بلون الطرف اللي ضرب
+    // ===== الجو الحقيقي (air.js): القواعد، البطاريات بمداها، الطيارات، الصواريخ، الانفجارات =====
+    if (T.A) { const A = T.A, K = (x, y) => toS(MX(T.lon0 + x / T.KX), MY(T.lat1 - y / T.KY)), kmPx = Math.abs(toS(MX(T.lon0 + 100 / T.KX), 0)[0] - toS(MX(T.lon0), 0)[0]) / 100;
+      cx.textAlign = 'center';
+      for (const s of A.sams) { const [x, y] = K(s.p[0], s.p[1]); const col = s.side === 0 ? '#2f7d2a' : '#b3261e';
+        if (cam.s > 1200 && !s.down) { const r = Math.max(...s.mags.map(m => m.r.air || 0)) * kmPx; cx.beginPath(); cx.arc(x, y, r, 0, 7); cx.strokeStyle = col + '55'; cx.lineWidth = 1; cx.setLineDash([3, 4]); cx.stroke(); cx.setLineDash([]); }
+        cx.fillStyle = s.down ? '#777' : col; cx.beginPath(); cx.moveTo(x, y - 6); cx.lineTo(x + 5, y); cx.lineTo(x, y + 6); cx.lineTo(x - 5, y); cx.fill(); }
+      cx.font = '700 13px sans-serif';
+      for (const b of A.bases) { const [x, y] = K(b.p[0], b.p[1]); cx.fillStyle = b.side === 0 ? '#2f7d2a' : '#b3261e'; cx.fillText(b.down > 0 ? '✖' : '✈', x, y + 4); }
+      for (const p of A.planes) { if (p.t < 0) continue; const [x, y] = K(p.x, p.y), h = p.h || 0; cx.save(); cx.translate(x, y); cx.rotate(h); cx.beginPath(); cx.moveTo(6, 0); cx.lineTo(-4, -3.5); cx.lineTo(-2, 0); cx.lineTo(-4, 3.5); cx.closePath(); cx.fillStyle = p.st === 'fall' ? '#ff9d00' : p.side === 0 ? '#1f5c1a' : '#8a1b14'; cx.fill(); cx.restore(); }
+      for (const m of A.msls) { if (m.done || m.t < 0) continue; const [x, y] = K(m.x, m.y); cx.beginPath(); cx.arc(x, y, m.kind === 'sam' ? 1.6 : 2.4, 0, 7); cx.fillStyle = m.kind === 'sam' ? '#fff' : m.kind === 'bm' ? '#ff2d1a' : m.kind === 'uav' ? '#ff9d00' : m.kind === 'cm' ? '#ffd166' : '#ddd'; cx.fill(); }
+      const now = performance.now(); for (const [bx, by, t0, ic] of BOOMS) { const a = (now - t0) / 900; if (a > 1) continue; const [x, y] = K(bx, by); cx.beginPath(); cx.arc(x, y, 3 + a * 10, 0, 7); cx.fillStyle = ic ? `rgba(255,255,255,${.6 - a * .6})` : `rgba(255,120,30,${.75 - a * .75})`; cx.fill(); }
+      if (A.planes.length || A.msls.length || BOOMS.length) dirty = true; }
+    // الضربات الجوية البسيطة (حفظ قديم بلا جو حقيقي): ✈ صغيرة بلون الطرف اللي ضرب
     if (T.air) { cx.font = '700 12px sans-serif'; cx.textAlign = 'center'; for (const [c, s] of T.air.hits) { const cl = T.cells[c], [x, y] = toS(MX(cl.ll[0]), MY(cl.ll[1])); cx.fillStyle = s === 0 ? '#2f7d2a' : '#b3261e'; cx.fillText('✈', x + 10, y - 9); } }
     // الفرق: مربع لكل خلية بيها فرق (العدد ونوع الأقوى)
     const by = new Map(); for (const d of W.divs) if (!d.dead) { const k = d.cell * 2 + d.side; if (!by.has(k)) by.set(k, []); by.get(k).push(d); }
@@ -481,12 +518,23 @@ input[type=range]{width:100%;accent-color:var(--gold)}
       h += `<div class="st" style="margin:6px 0"><b>🗺 مسرح الحرب</b>${line('الفرق', my.length + ' إلنا · ' + en.length + ' إلهم')}${line('الخلايا', sc.cells[0] + ' إلنا · ' + sc.cells[1] + ' إلهم')}${line('مدن (نقاط نصر)', sc.vp[0] + ' · ' + sc.vp[1])}${line('استسلموا', sc.lost[0] + ' منا · ' + sc.lost[1] + ' منهم')}
         <h3>جيشنا بالمسرح</h3><div class="seg" id="tmode">${[['atk', 'هجوم'], ['bal', 'متوازن'], ['def', 'دفاع بس'], ['manual', 'يدوي (أنا أأمر)']].map(([k, t]) => `<button data-tm="${k}" class="${mode === k ? 'on' : ''}">${t}</button>`).join('')}</div>
         <div class="note">قرّب الخريطة على الجبهة: اضغط فرقتك (المربع الأخضر) وبعدين الخلية اللي تريدها تروح لها. ⩚ = خطوط محصنة.</div>
-        ${T.air ? `<h3>✈ الجو</h3>${line('طيارات قتال', Math.round(T.air.A[0]) + ' إلنا · ' + Math.round(T.air.A[1]) + ' إلهم')}${line('السيطرة الجوية', Math.round(T.air.sup[0] * 100) + '٪ إلنا · ' + Math.round(T.air.sup[1] * 100) + '٪ إلهم')}${line('دفاع جوي (مؤشر)', Math.round(T.air.AD[0]) + ' · ' + Math.round(T.air.AD[1]))}${line('طيارات انخسرت', Math.round(T.air.lost[0]) + ' منا · ' + Math.round(T.air.lost[1]) + ' منهم')}
+        ${T.A ? airPanel() : T.air ? `<h3>✈ الجو</h3>${line('طيارات قتال', Math.round(T.air.A[0]) + ' إلنا · ' + Math.round(T.air.A[1]) + ' إلهم')}${line('السيطرة الجوية', Math.round(T.air.sup[0] * 100) + '٪ إلنا · ' + Math.round(T.air.sup[1] * 100) + '٪ إلهم')}${line('دفاع جوي (مؤشر)', Math.round(T.air.AD[0]) + ' · ' + Math.round(T.air.AD[1]))}${line('طيارات انخسرت', Math.round(T.air.lost[0]) + ' منا · ' + Math.round(T.air.lost[1]) + ' منهم')}
         <div class="seg" id="amode">${[['cas', 'دعم الجبهة'], ['deep', 'ضرب العمق'], ['cap', 'حماية الأجواء']].map(([k, t]) => `<button data-am="${k}" class="${T.air.mode[0] === k ? 'on' : ''}">${t}</button>`).join('')}</div>
         <div class="note">دعم الجبهة: يضرب فرق العدو بالمعارك. ضرب العمق: الاحتياط والتعزيزات والاقتصاد والدفاع الجوي. حماية الأجواء: خسائر أقل وسيطرة أكثر، وضربات أقل.</div>` : ''}</div>`; }
     h += mine.length ? mine.map(row).join('') : '<div class="note">إحنا بسلام. الحرب قرار: تضغط دولة بالخريطة وتختار «أعلن الحرب».</div>';
     if (oth.length) h += `<h3>حروب بالعالم</h3>` + oth.map(row).join('');
     return h;
+  }
+  function airPanel() {
+    const A = T.A, side = s => A.bases.filter(b => b.side === s), ready = s => side(s).reduce((t, b) => t + b.ready, 0), tot = s => side(s).reduce((t, b) => t + b.n0, 0), sm = s => A.sams.filter(x => x.side === s), ok = s => sm(s).filter(x => !x.down).length;
+    const grounded = side(0).every(b => b.mission && b.mission.kind === 'idle'), raidsOn = A.raidSides.includes(0), myMB = A.mbases.filter(m => m.side === 0);
+    const st = A.stat, pct = (a) => a[0] + a[1] ? Math.round(a[0] / (a[0] + a[1]) * 100) + '٪' : '–';
+    return `<h3>✈ الجو (محرك «الحرب الكبرى»)</h3>${line('طيارات (جاهزة/الكل)', ready(0) + '/' + tot(0) + ' إلنا · ' + ready(1) + '/' + tot(1) + ' إلهم')}${line('بطاريات دفاع جوي شغالة', ok(0) + '/' + sm(0).length + ' · ' + ok(1) + '/' + sm(1).length)}
+      ${line('طيارات انخسرت', A.lostPlanes[0] + ' منا · ' + A.lostPlanes[1] + ' منهم')}${line('اعترضنا (باليستي/مسيّرات/كروز)', pct(st.tbm) + ' · ' + pct(st.uav) + ' · ' + pct(st.cm))}
+      <div class="note">قواعدنا: ${side(0).map(b => b.n + ' ' + b.ready + '✈').join('، ')}</div><div class="note">دفاعنا: ${[...new Set(sm(0).map(x => AIR.SYS[x.sys].n))].join('، ') || 'ما عدنا'}</div>
+      <div class="seg"><button data-air="auto" class="${grounded ? '' : 'on'}">✈ طيراننا يقاتل (تلقائي)</button><button data-air="idle" class="${grounded ? 'on' : ''}">🅿 طيراننا بالأرض</button></div>
+      ${myMB.length ? `<div class="seg"><button data-raid="1" class="${raidsOn ? 'on' : ''}">🚀 ضربات مركّبة شغالة</button><button data-raid="0" class="${raidsOn ? '' : 'on'}">⏸ وقّف الضربات</button></div><div class="note">مخزوننا بالمواقع: ${myMB.map(m => m.n + ': ' + m.bm + ' باليستي، ' + m.cm + ' كروز، ' + m.uav + ' مسيّرة').join(' · ')}</div>` : ''}
+      <div class="note">قرّب الخريطة: ✈ قواعد، ◆ بطاريات (الدائرة = مداها)، الطيارات والصواريخ تتحرك بالسرعة الحقيقية.</div>`;
   }
   function pWorld() {
     const top = (k, f, n = 10) => S.rank(G, k).slice(0, n).map((x, i) => `<div class="line"><span>${i + 1}. ${x === me ? '<b style="color:var(--gold)">' + nameOf(x) + '</b>' : nameOf(x)}</span><b>${f(G.C[x])}</b></div>`).join('');
@@ -510,6 +558,8 @@ input[type=range]{width:100%;accent-color:var(--gold)}
       if (!r.ok) { toast(r.why, 'bad'); return; }
       if (k === 'mil' && T && r.r) { const W = T.W, en = W.divs.filter(d => !d.dead && d.side === 1); const cells = [...new Set(en.filter(d => W.cells[d.cell].nb.some(j => W.ctrl[j] === 0)).map(d => d.cell))].slice(0, 6); for (const c of cells) { SM.airHit(W, 0, c, r.r.hits * .05 / cells.length + .5); T.air && T.air.hits.push([c, 0, W.t]); } }
       toast(msg(G.log[G.log.length - 1])[0], 'good'); bar(); openPanel('war', true); save(); dirty = true; });
+    root.querySelectorAll('[data-air]').forEach(b => b.onclick = () => { for (const x of T.A.bases) if (x.side === 0) x.mission = { kind: b.dataset.air }; openPanel('war', true); save(); });
+    root.querySelectorAll('[data-raid]').forEach(b => b.onclick = () => { AWLD.setPlayerRaids(T.A, b.dataset.raid === '1'); openPanel('war', true); save(); });
     root.querySelectorAll('[data-am]').forEach(b => b.onclick = () => { T.air.mode[0] = b.dataset.am; openPanel('war', true); save(); });
     root.querySelectorAll('[data-tm]').forEach(b => b.onclick = () => { const m = b.dataset.tm; T.auto0 = m !== 'manual'; T.aggr0 = m === 'atk' ? 1.3 : m === 'def' ? 99 : 1.6; openPanel('war', true); save(); });
   }

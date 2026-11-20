@@ -104,7 +104,7 @@
     const W = T.W;
     for (let h = 0; h < hours && !W.over; h++) {
       SIM.step(W); T.t++;
-      if (W.t % 24 === 12 && T.air) airDay(T, T._G, T._WD);
+      if (W.t % 24 === 12 && T.air && !T.A) airDay(T, T._G, T._WD);   // الجو البسيط بس إذا الجو الحقيقي ما موجود (حفظ قديم)
       if (W.t % 6 === 0) { SIM.ai(W, 1); if (T.auto0 !== false) SIM.ai(W, 0, { aggr: T.aggr0 || 1.6 }); fill(T, 1); if (T.auto0 !== false) fill(T, 0); }
     }
     return T;

@@ -33,6 +33,14 @@ for k, ps in by.items():
     for p in (g.geoms if hasattr(g, 'geoms') else [g]):
         if p.geom_type == 'Polygon' and p.area > .02: rings.append([[int(round(x * 100)), int(round(y * 100))] for x, y in p.exterior.coords])
     if rings: lod[k] = delta(rings)
+# I-107: حدود الدول الدقيقة للتقريب (نفس حواف المناطق تقريباً، حتى ما يصير خطين متداخلين ويا المبسطة)
+cb = {}
+for k, ps in by.items():
+    if k.startswith('~'): continue
+    g = unary_union(ps).buffer(.015).buffer(-.015).simplify(.015, preserve_topology=True); rings = []
+    for p in (g.geoms if hasattr(g, 'geoms') else [g]):
+        if p.geom_type == 'Polygon' and p.area > .002: rings.append([[int(round(x * 100)), int(round(y * 100))] for x, y in p.exterior.coords])
+    if rings: cb[k] = delta(rings)
 cs = {}
 for f in glob.glob(f'{R}/countries/*.json'):
     d = json.load(open(f)); m = d.get('mil', {}); s = m.get('sum') or {}; v = lambda o: (o or {}).get('v')
@@ -61,7 +69,7 @@ TRN = {k: b['ar'] for k, b in BL['blocs'].items()}; TRN.update({'OIC': 'منظم
 CFN = {c['id']: c['ar'] for c in CF['conflicts']}
 AW = json.load(open(f'{R}/curation/airwar.json'))
 W = {'asOf': '2026-11', 'T': T, 'r': regs, 'g': {r['id']: delta(RG[r['id']]) for r in RJ['r']}, 's': [[z['id'], z['n'], z['ll'], z['nb'], z['k']] for z in SJ['s']], 'sg': {k: delta(v) for k, v in SG.items()},
-  'st': SJ['straits'], 'lod': lod, 'cs': cs, 'ent': RJ['entities'], 'trn': TRN, 'cfn': CFN, 'aw': AW['c'], 'bl': {k: {'ar': v['ar'], 'kind': v['kind'], 'art5': 1 if v.get('art5') else 0, 'm': v['m']} for k, v in BL['blocs'].items()}, 'rel': {a: {b: v[0] for b, v in m.items()} for a, m in REL.items()}}
+  'st': SJ['straits'], 'lod': lod, 'cb': cb, 'cs': cs, 'ent': RJ['entities'], 'trn': TRN, 'cfn': CFN, 'aw': AW['c'], 'bl': {k: {'ar': v['ar'], 'kind': v['kind'], 'art5': 1 if v.get('art5') else 0, 'm': v['m']} for k, v in BL['blocs'].items()}, 'rel': {a: {b: v[0] for b, v in m.items()} for a, m in REL.items()}}
 s = json.dumps(W, ensure_ascii=False, separators=(',', ':'))
 open(OUT, 'w').write('// مولّد بـ tools/map/bundle.py من data/world — لا تعدّله باليد\nwindow.WD=' + s + ';\n')
 print('حجم', round(len(s.encode()) / 1e6, 2), 'ميغا · مناطق', len(regs), '· دول بالحدود المبسطة', len(lod), '· نقاط المبسطة', sum(len(f) // 2 for v in lod.values() for f in v))

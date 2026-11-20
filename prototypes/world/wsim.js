@@ -4,7 +4,7 @@
 (function (root) {
   'use strict';
   const START = Date.UTC(2026, 10, 20);   // 20 تشرين الثاني 2026: الوضع الحقيقي (D-048)
-  const V = 2;                              // إصدار حفظ «العالم» (2: مخزون الصواريخ والمسيّرات والدفاع الجوي)
+  const V = 3;                              // إصدار حفظ «العالم» (2: الصواريخ والدفاع الجوي؛ 3: البحرية والمضائق)
   const mulberry = a => () => { a |= 0; a = a + 0x6D2B79F5 | 0; let t = Math.imul(a ^ a >>> 15, 1 | a); t = t + Math.imul(t ^ t >>> 7, 61 | t) ^ t; return ((t ^ t >>> 14) >>> 0) / 4294967296; };
   const clamp = (v, a, b) => v < a ? a : v > b ? b : v;
   // ===== ثوابت [تقدير] =====
@@ -41,7 +41,8 @@
     W.sanc = [];    // [by, on, level]  (العقوبات الحقيقية تنحسب من الـ cs: نخزن بس اللي يضيفها اللاعب أو الذكاء)
     W.wars = [];
     for (const w of opt.wars || START_WARS) W.wars.push({ ...w, since: 0, months: 0, weary: Object.fromEntries([...w.a, ...w.b].map(x => [x, w.weary0 || 30])), score: w.score0 || 0, taken: {} });
-    W.hormuz = .65;   // نسبة نفط هرمز المقطوعة (حقيقي: يشتغل ~35٪ من الطبيعي)
+    W.stx = { hormuz: .65 };   // W5d: نسبة القطع بكل مضيق (هرمز حقيقي: يشتغل ~35٪ من الطبيعي)
+    W.hormuz = .65;
     price(W, WD);
     for (const id of W.ids) { const c = W.C[id]; c.oil = oilOf(W, WD, id); c.oil0 = c.oil; c.core = Math.max(c.gdp * .2, c.gdp - oilGDP(c.oil, W.oilP)); c.revCore = clamp((c.rev0 * c.gdp - K.oilTake * oilGDP(c.oil, W.oilP)) / c.core, .06, .45);
       // نثبّت العجز الأولي على الحقيقي تقريباً (بيانات الإيرادات والمصاريف من سنين مختلفة، فنحصره بين فائض 3٪ وعجز 5٪)
@@ -70,14 +71,17 @@
       // W5c: الصواريخ والمسيّرات بعيدة المدى والدفاع الجوي [تقدير]: المخزون حسب مستوى صناعة الصواريخ/المسيّرات، والإنتاج الشهري كذلك
       msl: [0, 20, 80, 300, 1000, 2500][t.msl || 0], drn: [0, 30, 150, 600, 2000, 4000][t.uav || 0],
       mslP: [0, 1, 3, 10, 35, 80][t.msl || 0], drnP: [0, 5, 25, 100, 300, 600][t.uav || 0],
+      nav: Math.max(0, sea * gq('navy', 2)), navMode: 'block', blk: 0,
       adI: Math.round((Math.sqrt(((s.kit && s.kit.ad && s.kit.ad[0]) || 0)) * 4 + Math.sqrt(s.mb || 0) * 5) * (.6 + .2 * ((s.gen || {}).ad || 3))), oilDmg: 0 };
   }
   // الفائدة: الدول الغنية تقترض أرخص؛ والدين فوك 90٪ يرفعها [تقدير]
   const rate = (c, dp) => (c.gdp / c.pop * 1e9 > 30000 ? .012 : .035) + .0002 * Math.max(0, dp - 90);
   // ===== النفط =====
   const oilGDP = (kbd, P) => kbd * 1000 * 365 * P / 1e9;   // مليار $ بالسنة
-  function oilOf(W, WD, id) { let o = 0; for (let i = 0; i < WD.r.length; i++) if (W.ctl[i] === id) o += WD.r[i][10] || 0; return o * (id === 'IRN' && W.wars.some(w => w.id === 'iran_war') ? .45 : 1) * (1 - ((W.C && W.C[id] && W.C[id].oilDmg) || 0)); }
-  function price(W) { const disrupt = .2 * W.hormuz; W.oilP = K.oilBase * (1 + K.oilDisrupt * disrupt); return W.oilP; }
+  function oilOf(W, WD, id) { let o = 0; for (let i = 0; i < WD.r.length; i++) if (W.ctl[i] === id) o += WD.r[i][10] || 0; return o * (1 - ((W.C && W.C[id] && W.C[id].oilDmg) || 0)) * (1 - .6 * ((W.C && W.C[id] && W.C[id].blk) || 0)); }
+  function price(W, WD) { let disrupt = 0; const ST = (WD && WD.st) || [];
+    for (const k in W.stx || {}) { const st = ST.find(x => x.id === k); disrupt += (st ? st.oilPct / 100 : .2) * W.stx[k]; }
+    W.hormuz = (W.stx || {}).hormuz || 0; W.oilP = K.oilBase * (1 + K.oilDisrupt * disrupt); return W.oilP; }
   // ===== أدوات =====
   const ix = (W, WD) => W.idx || (W.idx = new Map(WD.r.map((a, i) => [a[0], i])));
   const rel = (W, a, b) => (W.rel[a] && W.rel[a][b]) || 0;
@@ -100,7 +104,7 @@
   // ===== شهر =====
   function month(W, WD) {
     W.rnd = mulberry(W.rs = (W.rs + 7919 * W.t) | 0);
-    W.hormuz = W.wars.some(w => w.id === 'iran_war') ? W.hormuz : Math.max(0, W.hormuz - .2);
+    navy(W, WD); straits(W, WD);
     price(W, WD);
     for (const id of W.ids) econ(W, WD, id);
     for (const w of W.wars.slice()) war(W, WD, w);
@@ -128,6 +132,7 @@
     const ws = W.wars.filter(w => w.a.includes(id) || w.b.includes(id));
     for (const w of ws) { const home = homeFront(W, WD, w, id); g += add(home ? K.warHomeG : K.warAwayG, w.n); }
     const sl = sancOn(WD, W, id); if (sl) g += add(K.sancG[sl], 'العقوبات');
+    if (c.blk) g += add(-2.5 * c.blk, 'الحصار البحري');
     const tr = W.trade.filter(p => p[0] === id || p[1] === id).length; if (tr) g += add(Math.min(K.tradeMax, tr * K.tradeG), 'اتفاقيات التجارة');
     const dp = c.debt / c.gdp * 100; if (dp > 110) g += add(-.01 * (dp - 110), 'الدين');
     g += add(clamp((c.stab - c.stab0) * .02, -1.5, .4), 'الاستقرار');
@@ -148,7 +153,7 @@
     // الاستقرار
     let tgt = c.stab0 + tx.s + cv.s + clamp((g - c.g0) * 1.5, -10, 4);
     for (const w of ws) { const home = homeFront(W, WD, w, id); tgt += home ? K.warHomeStab : -2; tgt -= Math.max(0, (w.weary[id] || 0) - 50) / 5; }
-    if (sl === 'heavy') tgt -= 5; if (c.crisis) tgt -= 8;
+    if (sl === 'heavy') tgt -= 5; if (c.crisis) tgt -= 8; if (c.blk > .3) tgt -= 4;
     c.stab = clamp(c.stab + (tgt - c.stab) * K.stabMove, 0, 100);
     c.why = why;
     if (id === W.me) {
@@ -209,7 +214,7 @@
   }
   function endWar(W, WD, w, how) {
     W.wars = W.wars.filter(x => x !== w);
-    if (w.id === 'iran_war') W.hormuz = Math.min(W.hormuz, .3);
+    if (w.id === 'iran_war' && W.stx) W.stx.hormuz = Math.min(W.stx.hormuz || 0, .3);
     for (const a of w.a) for (const b of w.b) addRel(W, a, b, 20);
     note(W, { k: 'peace', war: w.id, n: w.n, how, kept: Object.keys(w.taken).length });
   }
@@ -244,6 +249,48 @@
     return false;
   }
   // ===== أفعال (اللاعب، ونفسها للذكاء) =====
+  // ===== البحرية والحصار والمضائق (W5d) [تقدير] =====
+  // كل حرب: بحرية كل طرف (السفن والغواصات بجيلها) بالبحار اللي يوصلها (بحار سواحله وجيرانها؛ البحريات الكبيرة فوك 1500 توصل لكل مكان).
+  // الطرف الأقوى ×2 بالبحار المشتركة يحاصر سواحل الخصم (إذا مهمته «حصار»): نسبة الحصار = حصة سواحل الخصم بهالبحار.
+  // الحصار: −2.5٪ نمو، −60٪ تصدير نفط (×النسبة)، والاستقرار ينزل. الخسائر 1.5٪ بالشهر × نسبة القوة.
+  function seasOf(W, WD, id) { const S = new Set(); for (let i = 0; i < WD.r.length; i++) if (W.ctl[i] === id) for (const z of WD.r[i][8] || []) S.add(z); return S; }
+  function reach(W, WD, id) { const S = seasOf(W, WD, id), R = new Set(S); const nb = new Map((WD.s || []).map(z => [z[0], z[3]])); for (const z of S) for (const n of nb.get(z) || []) R.add(n); return R; }
+  function navy(W, WD) {
+    for (const id of W.ids) if (W.C[id].nav != null) W.C[id].blk = 0;
+    for (const w of W.wars) {
+      const side = L => L.filter(x => W.C[x] && W.C[x].nav > 0);
+      const A = side(w.a), B = side(w.b); if (!A.length || !B.length) continue;
+      const sea = L => { const all = new Set(); for (const x of L) { if (W.C[x].nav > 1500) return null; for (const z of reach(W, WD, x)) all.add(z); } return all; };
+      const RA = sea(A), RB = sea(B);
+      for (const [M, O, RM] of [[A, B, RA], [B, A, RB]]) {
+        const nm = M.reduce((t, x) => t + W.C[x].nav, 0), no = O.reduce((t, x) => t + W.C[x].nav, 0) + 1;
+        // الاشتباك: خسائر للطرفين (الأضعف يخسر أكثر)
+        for (const x of O) W.C[x].nav *= 1 - Math.min(.05, .015 * nm / no * .5);
+        // الحصار: المهاجم لازم مهمته «حصار» وأقوى ×2
+        if (nm < 2 * no) continue;
+        for (const x of O) { if (M.every(m => (W.C[m].navMode || 'block') !== 'block')) continue;
+          const S = seasOf(W, WD, x); if (!S.size) continue; let k = 0; for (const z of S) if (!RM || RM.has(z)) k++;
+          const def = (W.C[x].navMode === 'def' ? .6 : 1) / (1 + (W.C[x].drn || 0) / 4000); W.C[x].blk = Math.max(W.C[x].blk, Math.min(1, k / S.size) * def);
+          if (W.C[x].blk > .2 && !w._blkNoted) { w._blkNoted = 1; note(W, { k: 'blockade', on: x, by: M[0], f: Math.round(W.C[x].blk * 100) }); } }
+      }
+    }
+  }
+  function straits(W, WD) {
+    W.stx = W.stx || {};
+    for (const st of WD.st || []) {
+      let tgt = 0;
+      for (const w of W.wars) for (const [M, O] of [[w.a, w.b], [w.b, w.a]]) {
+        // دولة على الساحل بحرب وعندها صواريخ أو بحرية تقطع المضيق؛ إذا بحرية خصمها أقوى ×3 (مرافقة) القطع أقل
+        const shore = st.shore.map(r => W.ctl[ix(W, WD).get(r)]).filter(x => M.includes(x));
+        if (!shore.length) continue; const x = W.C[shore[0]]; if (!x || (x.msl + x.drn < 10 && x.nav < 20)) continue;
+        const esc = O.reduce((t, o) => t + (W.C[o] ? W.C[o].nav : 0), 0) > 3 * x.nav;
+        tgt = Math.max(tgt, esc ? (x.msl + x.drn > 500 ? .6 : .35) : .65);   // الصواريخ والمسيّرات تخلي القطع مستمر حتى ويا المرافقة
+      }
+      const cur = W.stx[st.id] || 0, nx = tgt > cur ? Math.min(tgt, cur + .3) : Math.max(tgt, cur - .2);
+      if (nx > .05 && cur <= .05) note(W, { k: 'strait', id: st.id, n: st.n, f: Math.round(nx * 100) });
+      if (nx > 0) W.stx[st.id] = +nx.toFixed(2); else delete W.stx[st.id];
+    }
+  }
   // ===== الضربات بعيدة المدى (W5c) =====
   // الاعتراض: الدفاع الجوي يعترض أكثر لما الرشقة صغيرة (يتشبّع بالكثرة)؛ المسيّرات تنعترض أسهل من الباليستي.
   // الأثر لكل إصابة [تقدير]: «جيش» −0.04٪ قوة، «مدن» −0.05 استقرار و−0.005٪ اقتصاد (والعالم يزعل شوية)، «نفط» −0.2٪ من الإنتاج (يتصلح 10٪ بالشهر).
@@ -331,8 +378,9 @@
     if (!o || !o.v) return null;
     // ترقيات: 1 ← 2 (W5c): نضيف المخزون والدفاع الجوي لكل دولة من بياناتها
     if (o.v < 2) { for (const id of o.ids) { const f = initCountry(WD, id), c = o.C[id]; for (const k of ['msl', 'drn', 'mslP', 'drnP', 'adI', 'oilDmg']) if (c[k] == null) c[k] = f[k]; } o.v = 2; }
+    if (o.v < 3) { for (const id of o.ids) { const f = initCountry(WD, id), c = o.C[id]; for (const k of ['nav', 'navMode', 'blk']) if (c[k] == null) c[k] = f[k]; } o.stx = { hormuz: o.hormuz ?? 0 }; o.v = 3; }
     o.base = WD.rel; o.rnd = mulberry(o.rs); return o;
   }
-  const API = { V, K, START, init, step, month, act, can, offerPeace, declare, endWar, strike, playerStrike, rank, save, load, date, rel, atWar, allied, COST, TAX, CIV };
+  const API = { V, K, START, init, navy, straits, step, month, act, can, offerPeace, declare, endWar, strike, playerStrike, rank, save, load, date, rel, atWar, allied, COST, TAX, CIV };
   if (typeof module !== 'undefined') module.exports = API; else root.WSIM = API;
 })(this);

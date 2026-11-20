@@ -495,14 +495,14 @@
  },
  "rel": {
   "IDN": 15,
-  "LAO": 15,
+  "LAO": 20,
   "MMR": 15,
   "MYS": 15,
   "PHL": 15,
   "SGP": 15,
   "THA": -55,
   "TLS": 15,
-  "VNM": 15
+  "VNM": 20
  },
  "treaties": [
   "ASEAN"

@@ -391,7 +391,7 @@
     "tpl": "eu"
    },
    "heli": {
-    "n": 25,
+    "n": 38,
     "s": "wiki_air",
     "c": "ت",
     "top": [
@@ -414,7 +414,8 @@
       "SUN"
      ]
     ],
-    "gen": 2.0
+    "gen": 2.0,
+    "note": "الهجومية من IISS (القوائم ناقصة)"
    },
    "uav": {
     "n": 2,
@@ -447,7 +448,10 @@
   },
   "warHome": []
  },
- "rel": {},
+ "rel": {
+  "HRV": 5,
+  "SRB": 5
+ },
  "treaties": [],
  "sanctions": [],
  "conflicts": [],

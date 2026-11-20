@@ -23,6 +23,11 @@
    "y": 2026,
    "note": "نسخة الصفحة بتاريخ السحب؛ أرقام ويكيبيديا تنراجع ويا مصادر ثانية"
   },
+  "k2ord": {
+   "t": "عقد K2PL الثاني (2025): 180 دبابة تُسلَّم من 2026 والإنتاج المحلي بعدها؛ اللي بالخدمة نهاية 2025 ~180–240 K2 (أخبار وزارة الدفاع البولندية/Defense News)",
+   "u": "https://en.wikipedia.org/wiki/K2_Black_Panther",
+   "y": 2026
+  },
   "iiss_eq": {
    "t": "Wikipedia: List of countries by level of military equipment (من IISS Military Balance ومصادر ثانية)",
    "u": "https://en.wikipedia.org/wiki/List_of_countries_by_level_of_military_equipment?oldid=1384804191",
@@ -565,15 +570,6 @@
     "cat": "apc"
    },
    {
-    "m": "K2 Black Panther (K2PL)",
-    "n": 820,
-    "orig": "KOR",
-    "s": "wiki_army",
-    "c": "ت",
-    "gen": 4,
-    "cat": "tank"
-   },
-   {
     "m": "Ratel (Heavy Infantry Fighting Vehicle)",
     "n": 700,
     "orig": "POL",
@@ -866,7 +862,7 @@
     "s": "wiki_army",
     "c": "ت",
     "gen": 2,
-    "cat": "uav_isr"
+    "cat": "loiter"
    },
    {
     "m": "WB Electronics Warmate (Warmate 3)",
@@ -875,7 +871,7 @@
     "s": "wiki_army",
     "c": "ت",
     "gen": 2,
-    "cat": "uav_isr"
+    "cat": "loiter"
    },
    {
     "m": "AH-64 (AH-64E)",
@@ -981,12 +977,6 @@
     "c": "ت",
     "top": [
      [
-      "K2 Black Panther (K2PL)",
-      820,
-      4,
-      "KOR"
-     ],
-     [
       "K2 Black Panther (K2 (batch IV))",
       238,
       4,
@@ -997,10 +987,15 @@
       217,
       4,
       "USA"
+     ],
+     [
+      "M1 Abrams (M1A1 FEP)",
+      116,
+      3,
+      "USA"
      ]
     ],
-    "gen": 3.6,
-    "note": "مجموع القوائم 1776 يختلف عن الإجمالي؛ الإجمالي هو المعتمد"
+    "gen": 3.3
    },
    "afv": {
     "n": 2803,
@@ -1107,30 +1102,30 @@
     "gen": 2.9
    },
    "uav": {
-    "n": 633,
+    "n": 173,
     "s": "wiki_air",
     "c": "ت",
     "top": [
-     [
-      "WB Electronics Warmate (Warmate 3)",
-      360,
-      2,
-      "POL"
-     ],
-     [
-      "WB Electronics Warmate",
-      100,
-      2,
-      "POL"
-     ],
      [
       "Wizjer (NeoX 2)",
       76,
       2,
       "POL"
+     ],
+     [
+      "Balsa (Engineering robot 1507)",
+      53,
+      2,
+      "POL"
+     ],
+     [
+      "Bayraktar TB2",
+      24,
+      4,
+      "TUR"
      ]
     ],
-    "gen": 2.1
+    "gen": 2.3
    },
    "ad": {
     "n": 1794,
@@ -1218,11 +1213,11 @@
   "AUT": 25,
   "BEL": 65,
   "BGR": 65,
-  "BLR": -25,
+  "BLR": -20,
   "CAN": 40,
   "CYP": 25,
-  "CZE": 65,
-  "DEU": 65,
+  "CZE": 70,
+  "DEU": 70,
   "DNK": 65,
   "ESP": 65,
   "EST": 65,
@@ -1235,7 +1230,7 @@
   "IRL": 25,
   "IRN": -40,
   "ITA": 65,
-  "LTU": 65,
+  "LTU": 70,
   "LVA": 65,
   "MKD": 40,
   "MMR": -25,
@@ -1245,7 +1240,7 @@
   "PRT": 65,
   "ROU": 65,
   "RUS": -75,
-  "SVK": 65,
+  "SVK": 70,
   "SVN": 65,
   "SWE": 65,
   "SYR": -10,

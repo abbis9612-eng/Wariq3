@@ -316,7 +316,10 @@
   },
   "warHome": []
  },
- "rel": {},
+ "rel": {
+  "ROU": 5,
+  "UKR": 5
+ },
  "treaties": [],
  "sanctions": [],
  "conflicts": [],

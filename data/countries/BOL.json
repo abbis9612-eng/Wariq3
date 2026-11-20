@@ -500,7 +500,7 @@
     "tpl": "la"
    },
    "heli": {
-    "n": 30,
+    "n": 37,
     "s": "wiki_air",
     "c": "ت",
     "top": [
@@ -523,7 +523,8 @@
       "USA"
      ]
     ],
-    "gen": 2.0
+    "gen": 2.0,
+    "note": "الهجومية من IISS (القوائم ناقصة)"
    },
    "uav": {
     "n": 2,
@@ -570,8 +571,32 @@
   },
   "warHome": []
  },
- "rel": {},
- "treaties": [],
+ "rel": {
+  "ARG": 26,
+  "BRA": 26,
+  "CAN": 6,
+  "CHL": 11,
+  "COL": 6,
+  "CRI": 6,
+  "DOM": 6,
+  "ECU": 6,
+  "GTM": 6,
+  "HND": 6,
+  "HTI": 6,
+  "JAM": 6,
+  "MEX": 6,
+  "PAN": 6,
+  "PER": 11,
+  "PRY": 26,
+  "SLV": 6,
+  "TTO": 6,
+  "URY": 21,
+  "USA": 6
+ },
+ "treaties": [
+  "MERCOSUR",
+  "OAS"
+ ],
  "sanctions": [],
  "conflicts": [],
  "notes": ""

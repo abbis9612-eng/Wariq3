@@ -643,7 +643,10 @@
   },
   "warHome": []
  },
- "rel": {},
+ "rel": {
+  "CHN": 5,
+  "RUS": 5
+ },
  "treaties": [],
  "sanctions": [],
  "conflicts": [],

@@ -147,6 +147,9 @@ for nm, L in (('land', land), ('air', air), ('ad', ad), ('msl', msl), ('navy', n
             else: L.remove(x)
         else: seen[k] = x
 land = [x for x in land if x['cat'] != 'atgm' or x['n'] <= 3000]
+# W10 تدقيق: الذخائر الجوّالة (سويتشبليد، لانسيت، هاروب، شاهد...) ذخيرة مو طيارات: تنعزل عن عدد المسيّرات
+for x in air:
+    if re.search(r'switchblade|lancet|warmate|harop|harpy|\bhero\b|kub-bla|shahed|geran', x['m'], re.I): x['cat'] = 'loiter'
 
 # ===== التصحيح اليدوي =====
 src.update(cur.get('src', {}))
@@ -239,6 +242,9 @@ for g, (L, cats) in GR.items():
     elif MD.get(g): o['top'] = [[m, None, gen_of(m)[0], None] for m in MD[g][:4]]; o['gen'] = round(sum(gen_of(m)[0] for m in MD[g][:3]) / min(3, len(MD[g])), 1); o['mdl'] = 1; src['mdl'] = MDS
     elif g in TPL: o['top'] = [[m, None, None, None] for m in TPL[g][1]]; o['gen'] = TPL[g][0]; o['tpl'] = reg
     if nP and n and abs(nP - n) / max(n, 1) > .6: o['note'] = f'مجموع القوائم {nP} يختلف عن الإجمالي؛ الإجمالي هو المعتمد'
+    # W10 تدقيق: قوائم ويكيبيديا ناقصها مروحيات هجومية (مثلاً أمريكا 47 بدل ~860 أباتشي): إذا IISS أكبر ناخذه للهجومية
+    if g == 'heli' and (sv0('attackHeli') or 0) > sum(x['n'] for x in its if x['cat'] == 'heli_attack'):
+        o['n'] = sum(x['n'] for x in its if x['cat'] != 'heli_attack') + sv0('attackHeli'); o['note'] = 'الهجومية من IISS (القوائم ناقصة)'
     grp[g] = o
 src['tpl'] = {'t': f'قالب منطقة ({reg}): موديلات شائعة ونسب تقريبية من الدبابات (مدرعات ×2.5، مدفعية ×0.9، مروحيات ×0.25) — تقدير المصمم', 'u': 'docs/features/world-plan.md', 'y': 2026}
 out['mil']['grp'] = grp

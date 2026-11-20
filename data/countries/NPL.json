@@ -336,7 +336,10 @@
   },
   "warHome": []
  },
- "rel": {},
+ "rel": {
+  "CHN": 5,
+  "IND": 5
+ },
  "treaties": [],
  "sanctions": [],
  "conflicts": [],

@@ -447,8 +447,32 @@
   },
   "warHome": []
  },
- "rel": {},
- "treaties": [],
+ "rel": {
+  "ARG": 6,
+  "BOL": 6,
+  "BRA": 6,
+  "CAN": 6,
+  "CHL": 6,
+  "COL": 6,
+  "CRI": 6,
+  "DOM": 6,
+  "ECU": 6,
+  "GTM": 11,
+  "HTI": 6,
+  "JAM": 6,
+  "MEX": 6,
+  "NIC": 5,
+  "PAN": 6,
+  "PER": 6,
+  "PRY": 6,
+  "SLV": 11,
+  "TTO": 6,
+  "URY": 6,
+  "USA": 6
+ },
+ "treaties": [
+  "OAS"
+ ],
  "sanctions": [],
  "conflicts": [],
  "notes": ""

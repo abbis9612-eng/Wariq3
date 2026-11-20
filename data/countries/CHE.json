@@ -363,7 +363,12 @@
   },
   "warHome": []
  },
- "rel": {},
+ "rel": {
+  "AUT": 5,
+  "DEU": 5,
+  "FRA": 5,
+  "ITA": 5
+ },
  "treaties": [],
  "sanctions": [],
  "conflicts": [],

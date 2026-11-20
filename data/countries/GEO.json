@@ -542,7 +542,7 @@
     "s": "wiki_air",
     "c": "ت",
     "gen": 2,
-    "cat": "uav_isr"
+    "cat": "loiter"
    },
    {
     "m": "Aerostar",
@@ -902,16 +902,10 @@
     "gen": 2.3
    },
    "uav": {
-    "n": 114,
+    "n": 14,
     "s": "wiki_air",
     "c": "ت",
     "top": [
-     [
-      "WB Electronics Warmate (In production)",
-      100,
-      2,
-      "GEO"
-     ],
      [
       "Elbit Hermes 450",
       10,
@@ -997,7 +991,10 @@
   "warHome": []
  },
  "rel": {
-  "RUS": -40
+  "ARM": 5,
+  "AZE": 5,
+  "RUS": -40,
+  "TUR": 5
  },
  "treaties": [],
  "sanctions": [],

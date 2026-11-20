@@ -380,15 +380,16 @@
   "warHome": []
  },
  "rel": {
+  "CHN": 5,
   "IDN": 15,
-  "KHM": 15,
-  "MMR": 15,
+  "KHM": 20,
+  "MMR": 20,
   "MYS": 15,
   "PHL": 15,
   "SGP": 15,
-  "THA": 15,
+  "THA": 20,
   "TLS": 15,
-  "VNM": 15
+  "VNM": 20
  },
  "treaties": [
   "ASEAN"

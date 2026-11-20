@@ -679,8 +679,32 @@
   },
   "warHome": []
  },
- "rel": {},
- "treaties": [],
+ "rel": {
+  "ARG": 26,
+  "BOL": 26,
+  "BRA": 26,
+  "CAN": 6,
+  "CHL": 6,
+  "COL": 6,
+  "CRI": 6,
+  "DOM": 6,
+  "ECU": 6,
+  "GTM": 6,
+  "HND": 6,
+  "HTI": 6,
+  "JAM": 6,
+  "MEX": 6,
+  "PAN": 6,
+  "PER": 6,
+  "SLV": 6,
+  "TTO": 6,
+  "URY": 21,
+  "USA": 6
+ },
+ "treaties": [
+  "MERCOSUR",
+  "OAS"
+ ],
  "sanctions": [],
  "conflicts": [],
  "notes": ""

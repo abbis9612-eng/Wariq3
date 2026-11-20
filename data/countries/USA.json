@@ -1095,7 +1095,7 @@
     "s": "wiki_army",
     "c": "ت",
     "gen": 2,
-    "cat": "uav_strike"
+    "cat": "loiter"
    },
    {
     "m": "RQ-11B Raven",
@@ -1463,7 +1463,7 @@
     "gen": 3.4
    },
    "heli": {
-    "n": 4304,
+    "n": 5124,
     "s": "wiki_air",
     "c": "ت",
     "top": [
@@ -1486,10 +1486,11 @@
       "USA"
      ]
     ],
-    "gen": 2.4
+    "gen": 2.4,
+    "note": "الهجومية من IISS (القوائم ناقصة)"
    },
    "uav": {
-    "n": 10608,
+    "n": 6208,
     "s": "wiki_air",
     "c": "ت",
     "top": [
@@ -1500,15 +1501,15 @@
       "USA"
      ],
      [
-      "AeroVironment Switchblade",
-      4400,
+      "RQ-7 Shadow",
+      500,
       2,
       "USA"
      ],
      [
-      "RQ-7 Shadow",
-      500,
-      2,
+      "RQ-20A Puma",
+      325,
+      4,
       "USA"
      ]
     ],
@@ -1603,17 +1604,24 @@
   "AFG": -25,
   "ALB": 40,
   "ARE": 60,
+  "ARG": 6,
   "AUS": 80,
   "BEL": 40,
   "BGR": 40,
   "BLR": -25,
+  "BOL": 6,
   "BRA": 15,
   "CAN": 55,
+  "CHL": 6,
   "CHN": -40,
+  "COL": 6,
+  "CRI": 6,
   "CUB": -70,
   "CZE": 40,
   "DEU": 40,
   "DNK": 40,
+  "DOM": 6,
+  "ECU": 6,
   "EGY": 45,
   "ESP": 40,
   "EST": 40,
@@ -1621,13 +1629,17 @@
   "FRA": 40,
   "GBR": 80,
   "GRC": 40,
+  "GTM": 6,
+  "HND": 6,
   "HRV": 40,
+  "HTI": 6,
   "HUN": 40,
   "IND": 40,
   "IRN": -95,
   "IRQ": 25,
   "ISR": 90,
   "ITA": 40,
+  "JAM": 6,
   "JOR": 65,
   "JPN": 80,
   "KOR": 75,
@@ -1639,26 +1651,33 @@
   "NLD": 40,
   "NOR": 40,
   "PAK": 25,
+  "PAN": 6,
+  "PER": 6,
   "PHL": 50,
   "POL": 40,
   "PRK": -85,
   "PRT": 40,
+  "PRY": 6,
   "QAT": 60,
   "ROU": 40,
   "RUS": -45,
   "SAU": 60,
+  "SLV": 6,
   "SVK": 40,
   "SVN": 40,
   "SWE": 40,
   "SYR": 20,
+  "TTO": 6,
   "TUR": 30,
   "TWN": 70,
   "UKR": 45,
+  "URY": 6,
   "VEN": 35,
   "ZAF": -10
  },
  "treaties": [
   "NATO",
+  "OAS",
   "PACT_AUS",
   "PACT_JPN",
   "PACT_KOR",

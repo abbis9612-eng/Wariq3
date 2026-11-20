@@ -343,7 +343,9 @@
   },
   "warHome": []
  },
- "rel": {},
+ "rel": {
+  "IDN": 5
+ },
  "treaties": [],
  "sanctions": [],
  "conflicts": [],

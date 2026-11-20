@@ -327,7 +327,7 @@
     "gen": 2.0
    },
    "heli": {
-    "n": 3,
+    "n": 4,
     "s": "wiki_army",
     "c": "ت",
     "top": [
@@ -344,7 +344,8 @@
       "INT"
      ]
     ],
-    "gen": 2.0
+    "gen": 2.0,
+    "note": "الهجومية من IISS (القوائم ناقصة)"
    }
   }
  },
@@ -363,8 +364,59 @@
   },
   "warHome": []
  },
- "rel": {},
- "treaties": [],
+ "rel": {
+  "AGO": 6,
+  "BDI": 6,
+  "BEN": 6,
+  "BFA": 6,
+  "BWA": 6,
+  "CIV": 6,
+  "CMR": 11,
+  "COD": 11,
+  "COG": 11,
+  "DJI": 6,
+  "DZA": 6,
+  "EGY": 6,
+  "ERI": 6,
+  "ETH": 6,
+  "GAB": 6,
+  "GHA": 6,
+  "GIN": 6,
+  "GMB": 6,
+  "GNB": 6,
+  "GNQ": 6,
+  "KEN": 6,
+  "LBR": 6,
+  "LBY": 6,
+  "LSO": 6,
+  "MAR": 6,
+  "MDG": 6,
+  "MLI": 6,
+  "MOZ": 6,
+  "MRT": 6,
+  "MWI": 6,
+  "NAM": 6,
+  "NER": 6,
+  "NGA": 6,
+  "RWA": 6,
+  "SDN": 11,
+  "SDS": 11,
+  "SEN": 6,
+  "SLE": 6,
+  "SOM": 6,
+  "SWZ": 6,
+  "TCD": 11,
+  "TGO": 6,
+  "TUN": 6,
+  "TZA": 6,
+  "UGA": 6,
+  "ZAF": 6,
+  "ZMB": 6,
+  "ZWE": 6
+ },
+ "treaties": [
+  "AU"
+ ],
  "sanctions": [],
  "conflicts": [],
  "notes": ""

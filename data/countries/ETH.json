@@ -775,7 +775,7 @@
     "gen": 3.2
    },
    "heli": {
-    "n": 25,
+    "n": 36,
     "s": "wiki_air",
     "c": "ت",
     "top": [
@@ -798,7 +798,8 @@
       "FRA"
      ]
     ],
-    "gen": 2.3
+    "gen": 2.3,
+    "note": "الهجومية من IISS (القوائم ناقصة)"
    },
    "uav": {
     "n": 6,
@@ -864,12 +865,66 @@
   "warHome": []
  },
  "rel": {
+  "AGO": 6,
+  "ARE": 12,
+  "BDI": 6,
+  "BEN": 6,
+  "BFA": 6,
+  "BRA": 12,
+  "BWA": 6,
+  "CAF": 6,
+  "CHN": 12,
+  "CIV": 6,
+  "CMR": 6,
+  "COD": 6,
+  "COG": 6,
+  "DJI": 11,
+  "DZA": 6,
   "EGY": -50,
   "ERI": -55,
+  "GAB": 6,
+  "GHA": 6,
+  "GIN": 6,
+  "GMB": 6,
+  "GNB": 6,
+  "GNQ": 6,
+  "IDN": 12,
+  "IND": 12,
+  "IRN": 12,
+  "KEN": 11,
+  "LBR": 6,
+  "LBY": 6,
+  "LSO": 6,
+  "MAR": 6,
+  "MDG": 6,
+  "MLI": 6,
+  "MOZ": 6,
+  "MRT": 6,
+  "MWI": 6,
+  "NAM": 6,
+  "NER": 6,
+  "NGA": 6,
+  "RUS": 12,
+  "RWA": 6,
   "SDN": -20,
-  "SOM": -10
+  "SDS": 11,
+  "SEN": 6,
+  "SLE": 6,
+  "SOM": -10,
+  "SWZ": 6,
+  "TCD": 6,
+  "TGO": 6,
+  "TUN": 6,
+  "TZA": 6,
+  "UGA": 6,
+  "ZAF": 18,
+  "ZMB": 6,
+  "ZWE": 6
  },
- "treaties": [],
+ "treaties": [
+  "AU",
+  "BRICS"
+ ],
  "sanctions": [],
  "conflicts": [],
  "notes": ""

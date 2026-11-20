@@ -34,8 +34,14 @@ for f in json.load(open(f'{NE}/ne_10m_admin_1_states_provinces.geojson'))['featu
     if c is None: continue
     g = shape(f['geometry']).buffer(0)
     if g.is_empty: continue
-    prov.append({'c': c, 'src': a, 'code': p.get('adm1_code') or p.get('iso_3166_2'), 'n': nm(p), 'en': p.get('name') or '', 'g': g, 'a': km2(g)})
+    prov.append({'c': c, 'ctl': c, 'src': a, 'code': p.get('adm1_code') or p.get('iso_3166_2'), 'n': nm(p), 'en': p.get('name') or '', 'g': g, 'a': km2(g)})
 print('محافظات', len(prov))
+# السيطرة الفعلية (data/curation/control.json): قواعد بالاسم قبل الدمج، ومناطق (zones) بعد التقسيم
+CT = json.load(open(f'{R}/curation/control.json'))
+for x in prov:
+    for rule in CT['byName']:
+        if ('src' in rule and rule['src'] == x['src']) or ('c0' in rule and rule['c0'] == x['src'] and x['en'] in rule['en']):
+            x['ctl'] = rule['ctl']; x['c'] = rule.get('own', x['c']); x['why'] = {k: rule[k] for k in ('note', 's', 'c') if k in rule}
 # كثافة تقريبية لكل محافظة: نص سكان الدولة حسب المساحة ونص حسب سكان المدن (Natural Earth populated places) — الصحاري والقطب مناطق أكبر
 PP = [(f['geometry']['coordinates'], f['properties'].get('pop_max') or 0) for f in json.load(open(f'{NE}/ne_10m_populated_places_simple.geojson'))['features']]
 PT = STRtree([Point(*c) for c, _ in PP])
@@ -60,10 +66,10 @@ def merge_small(L):
             for x in P:
                 lat = x['g'].representative_point().y; mn = tgt(c, lat, x['pop'] / max(1, x['a'])) * .33
                 if x['a'] >= mn: continue
-                nb = [y for y in P if y is not x and y['src'] == x['src'] and y['g'].distance(x['g']) < .02]
+                nb = [y for y in P if y is not x and y['src'] == x['src'] and y['ctl'] == x['ctl'] and y['g'].distance(x['g']) < .02]
                 if not nb:
                     if x['a'] < 300 and len(P) > 1:   # جزيرة صغيرة: تنضم لأقرب منطقة
-                        nb = [min((y for y in P if y is not x and y['src'] == x['src']), key=lambda y: y['g'].distance(x['g']), default=None)]
+                        nb = [min((y for y in P if y is not x and y['src'] == x['src'] and y['ctl'] == x['ctl']), key=lambda y: y['g'].distance(x['g']), default=None)]
                         nb = [y for y in nb if y]
                     else: continue
                 if not nb: continue
@@ -109,6 +115,22 @@ for c in CL:
         reg.remove(big); reg += new
 print('مناطق', len(reg))
 
+# 3ب) مناطق السيطرة الجزئية (جبهة أوكرانيا، غزة، الجولان، شرق الجدار): المنطقة تنقسم إذا الخط يقطعها
+for z in CT['zones']:
+    Z = Polygon(z['poly']).buffer(0); out = []
+    for r in reg:
+        if r['c'] not in z['only'] or not r['g'].intersects(Z): out.append(r); continue
+        ins = r['g'].intersection(Z); fr = km2(ins) / max(1, r['a'])
+        why = {k: z[k] for k in ('note', 's', 'c') if k in z}; why['zone'] = z['id']
+        if fr > .85: r['ctl'] = z['ctl']; r['why'] = why; out.append(r)
+        elif fr < .12 and km2(ins) < 400: out.append(r)
+        else:
+            dif = r['g'].difference(Z)
+            out.append(dict(r, g=ins, a=km2(ins), ctl=z['ctl'], why=why, names=[r['names'][0] + ' (' + CT['entities'].get(z['ctl'], {}).get('ar', CL.get(z['ctl'], {}).get('ar', z['ctl'])) + ')']))
+            out.append(dict(r, g=dif, a=km2(dif)))
+    reg = out
+print('بعد الجبهات', len(reg))
+
 # 4) الأرقام والأسماء والجيران
 reg.sort(key=lambda r: (r['c'], -r['g'].representative_point().y))
 cnt = {}
@@ -133,12 +155,13 @@ def rings(g):
         if p.geom_type != 'Polygon' or p.area < 2e-4 and len(out): continue
         out.append([[Q(x), Q(y)] for x, y in p.exterior.coords])
     return out
-props = [{'id': r['id'], 'c': None if r['c'].startswith('~') else r['c'], 'nt': r['c'][1:] if r['c'].startswith('~') else None, 'n': r['name'], 'en': r['en'],
+props = [{'id': r['id'], 'c': None if r['c'].startswith('~') else r['c'], 'ctl': None if r['ctl'].startswith('~') else r['ctl'], **({'why': r['why']} if r.get('why') else {}), 'nt': r['c'][1:] if r['c'].startswith('~') else None, 'n': r['name'], 'en': r['en'],
   'adm': r['code'], 'src': r['src'], 'a': round(r['a']), 'll': [round(c, 3) for c in r['g'].representative_point().coords[0]], 'nb': r['nb']} for r in reg]
 json.dump({'src': {'ne': {'t': 'Natural Earth 1:10m Admin-1 States, Provinces (v5.1)', 'u': 'https://www.naturalearthdata.com/downloads/10m-cultural-vectors/10m-admin-1-states-provinces/', 'y': 2024}},
-  'note': 'مناطق اللعب: c = الدولة صاحبة الأرض (مالكة)، nt = أرض محايدة مو باللعبة. السيطرة الفعلية 2026 بـ control.json', 'r': props}, open(f'{R}/world/regions.json', 'w'), ensure_ascii=False, separators=(',', ':'))
+  'note': 'مناطق اللعب: c = صاحب الأرض، ctl = منو يسيطر فعلياً تشرين الثاني 2026 (دولة أو كيان من control.json entities)، why = ليش ومصدره، nt = أرض محايدة مو باللعبة', 'entities': CT['entities'], 'srcCtl': CT['src'], 'r': props}, open(f'{R}/world/regions.json', 'w'), ensure_ascii=False, separators=(',', ':'))
 json.dump({r['id']: rings(r['g']) for r in reg}, open(f'{R}/world/regions_geo.json', 'w'), separators=(',', ':'))
 from collections import Counter
 cc = Counter(p['c'] for p in props if p['c'])
+print('سيطرة مختلفة عن المالك', sum(1 for p in props if p['ctl'] != p['c']), Counter(p['ctl'] for p in props if p['ctl'] != p['c']).most_common(12))
 print('دول', len(cc), '· محايدة', sum(1 for p in props if not p['c']), '· بلا جيران', sum(1 for p in props if not p['nb']))
 print('أكثر', cc.most_common(10)); print('العراق', cc['IRQ'], 'إيران', cc['IRN'], 'أمريكا', cc['USA'], 'قطر', cc['QAT'], 'لبنان', cc['LBN'])

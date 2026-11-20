@@ -364,6 +364,8 @@ input[type=range]{width:100%;accent-color:var(--gold)}
         if (T.cells[i].t === 'fort' && r > 6) { cx.fillStyle = 'rgba(0,0,0,.35)'; cx.fillText('⩚', x, y + 3); } } }
     // المعارك
     for (const b of W.battles.values()) { const c = T.cells[b.tg], [x, y] = toS(MX(c.ll[0]), MY(c.ll[1])); cx.beginPath(); cx.arc(x, y, Math.max(4, r * .7), 0, 7); cx.strokeStyle = '#ff3b1f'; cx.lineWidth = 2; cx.stroke(); }
+    // الضربات الجوية (آخر يومين): ✈ صغيرة بلون الطرف اللي ضرب
+    if (T.air) { cx.font = '700 12px sans-serif'; cx.textAlign = 'center'; for (const [c, s] of T.air.hits) { const cl = T.cells[c], [x, y] = toS(MX(cl.ll[0]), MY(cl.ll[1])); cx.fillStyle = s === 0 ? '#2f7d2a' : '#b3261e'; cx.fillText('✈', x + 10, y - 9); } }
     // الفرق: مربع لكل خلية بيها فرق (العدد ونوع الأقوى)
     const by = new Map(); for (const d of W.divs) if (!d.dead) { const k = d.cell * 2 + d.side; if (!by.has(k)) by.set(k, []); by.get(k).push(d); }
     cx.textAlign = 'center'; cx.font = '700 10px "IBM Plex Sans Arabic",Tahoma';
@@ -472,7 +474,10 @@ input[type=range]{width:100%;accent-color:var(--gold)}
     if (T) { const sc = TH.score(T), A = SM.alive(T.W), my = A.filter(d => d.side === 0), en = A.filter(d => d.side === 1), mode = T.auto0 === false ? 'manual' : T.aggr0 <= 1.3 ? 'atk' : T.aggr0 > 50 ? 'def' : 'bal';
       h += `<div class="st" style="margin:6px 0"><b>🗺 مسرح الحرب</b>${line('الفرق', my.length + ' إلنا · ' + en.length + ' إلهم')}${line('الخلايا', sc.cells[0] + ' إلنا · ' + sc.cells[1] + ' إلهم')}${line('مدن (نقاط نصر)', sc.vp[0] + ' · ' + sc.vp[1])}${line('استسلموا', sc.lost[0] + ' منا · ' + sc.lost[1] + ' منهم')}
         <h3>جيشنا بالمسرح</h3><div class="seg" id="tmode">${[['atk', 'هجوم'], ['bal', 'متوازن'], ['def', 'دفاع بس'], ['manual', 'يدوي (أنا أأمر)']].map(([k, t]) => `<button data-tm="${k}" class="${mode === k ? 'on' : ''}">${t}</button>`).join('')}</div>
-        <div class="note">قرّب الخريطة على الجبهة: اضغط فرقتك (المربع الأخضر) وبعدين الخلية اللي تريدها تروح لها. ⩚ = خطوط محصنة.</div></div>`; }
+        <div class="note">قرّب الخريطة على الجبهة: اضغط فرقتك (المربع الأخضر) وبعدين الخلية اللي تريدها تروح لها. ⩚ = خطوط محصنة.</div>
+        ${T.air ? `<h3>✈ الجو</h3>${line('طيارات قتال', Math.round(T.air.A[0]) + ' إلنا · ' + Math.round(T.air.A[1]) + ' إلهم')}${line('السيطرة الجوية', Math.round(T.air.sup[0] * 100) + '٪ إلنا · ' + Math.round(T.air.sup[1] * 100) + '٪ إلهم')}${line('دفاع جوي (مؤشر)', Math.round(T.air.AD[0]) + ' · ' + Math.round(T.air.AD[1]))}${line('طيارات انخسرت', Math.round(T.air.lost[0]) + ' منا · ' + Math.round(T.air.lost[1]) + ' منهم')}
+        <div class="seg" id="amode">${[['cas', 'دعم الجبهة'], ['deep', 'ضرب العمق'], ['cap', 'حماية الأجواء']].map(([k, t]) => `<button data-am="${k}" class="${T.air.mode[0] === k ? 'on' : ''}">${t}</button>`).join('')}</div>
+        <div class="note">دعم الجبهة: يضرب فرق العدو بالمعارك. ضرب العمق: الاحتياط والتعزيزات والاقتصاد والدفاع الجوي. حماية الأجواء: خسائر أقل وسيطرة أكثر، وضربات أقل.</div>` : ''}</div>`; }
     h += mine.length ? mine.map(row).join('') : '<div class="note">إحنا بسلام. الحرب قرار: تضغط دولة بالخريطة وتختار «أعلن الحرب».</div>';
     if (oth.length) h += `<h3>حروب بالعالم</h3>` + oth.map(row).join('');
     return h;
@@ -494,6 +499,7 @@ input[type=range]{width:100%;accent-color:var(--gold)}
     root.querySelectorAll('[data-go]').forEach(b => b.onclick = () => { const r = R.find(x => x.ctl === b.dataset.go && x.cap) || R.find(x => x.ctl === b.dataset.go); if (r) { closePanel(); sel = r; cam.x = MX(r.ll[0]); cam.y = MY(r.ll[1]); dirty = true; card(); } });
     root.querySelectorAll('[data-peace]').forEach(b => b.onclick = () => { const r = S.offerPeace(G, WD, b.dataset.peace); r.ok ? toast('🕊 انتهت الحرب', 'good') : toast(r.why, 'bad'); syncMap(); openPanel('war', true); bar(); save(); });
     const ng = root.querySelector('#newg'); if (ng) ng.onclick = () => location.reload();
+    root.querySelectorAll('[data-am]').forEach(b => b.onclick = () => { T.air.mode[0] = b.dataset.am; openPanel('war', true); save(); });
     root.querySelectorAll('[data-tm]').forEach(b => b.onclick = () => { const m = b.dataset.tm; T.auto0 = m !== 'manual'; T.aggr0 = m === 'atk' ? 1.3 : m === 'def' ? 99 : 1.6; openPanel('war', true); save(); });
   }
   // ===== بطاقة دولة ثانية: الأفعال =====

@@ -1307,6 +1307,18 @@ body.sheeton #toast{top:calc(var(--toph, 100px) + 4px) !important;bottom:auto !i
   }
   // ===== R (I-121): 🔬 شجرة البحث الموحّدة — 4 أقسام، كل بحث بطاقة (يفتح شنو، الكلفة، المدة، شنو يحتاج قبله) =====
   let rdSec = 'mil';
+  // R2: شجرة البحث بخطوط — كل عمود مستوى (اللي يحتاج قبله يجي بعده)، والخط من الشرط للبحث. الألوان: ✅ أخضر خلص، بنفسجي شغّال، ذهبي متاح، رمادي مقفول
+  function rdTree(keys) {
+    const R = WRES.ensure(G), T = WRES.T, dep = {}, D = k => dep[k] ?? (dep[k] = 1 + Math.max(-1, ...(T[k].req || []).filter(r => keys.includes(r)).map(D)));
+    keys.forEach(D); const cols = {}; for (const k of keys) (cols[dep[k]] = cols[dep[k]] || []).push(k);
+    const nC = Object.keys(cols).length, maxR = Math.max(...Object.values(cols).map(c => c.length)), W = 340, H = Math.max(70, maxR * 46 + 10), cw = W / nC, pos = {};
+    for (const d in cols) cols[d].forEach((k, i) => { pos[k] = [W - cw * (+d + .5), (i + .5) * (H / cols[d].length)]; });
+    const col = k => R.done[k] ? '#46a758' : R.slots.some(q => q.k === k) ? '#8a6fd1' : T[k].lock ? '#77776f' : WRES.can(G, WD, k) ? '#77776f' : '#c9a227';
+    let svg = `<svg viewBox="0 0 ${W} ${H}" style="width:100%;height:auto;margin:6px 0;background:var(--chip);border-radius:10px">`;
+    for (const k of keys) for (const r of (T[k].req || [])) if (pos[r]) svg += `<line x1="${pos[r][0]}" y1="${pos[r][1]}" x2="${pos[k][0]}" y2="${pos[k][1]}" stroke="${R.done[r] ? '#46a758' : '#9a9a90'}" stroke-width="2" stroke-dasharray="${R.done[r] ? '' : '4 3'}"/>`;
+    for (const k of keys) { const [x, y] = pos[k], c = col(k); svg += `<g data-rsnode="${k}" style="cursor:pointer"><circle cx="${x}" cy="${y}" r="15" fill="${c}" stroke="#fff" stroke-width="2"/><text x="${x}" y="${y + 5}" text-anchor="middle" font-size="14">${T[k].ic}</text><text x="${x}" y="${y + 27}" text-anchor="middle" font-size="8.5" fill="currentColor">${T[k].n.split(' ').slice(0, 2).join(' ')}</text></g>`; }
+    return svg + '</svg><div class="note">🟢 خلص · 🟣 شغّال · 🟡 متاح · ⚪ مقفول — اضغط دائرة حتى تروح لبطاقتها</div>';
+  }
   function pRd() {
     const NW = G.nat, I = NW.ind[0], N = I.nat, nx = IND.NAT[N.st], R = WRES.ensure(G), c = G.C[me], sp = WRES.speed(G, me), pp = G.pop3 && G.pop3[me];
     const bud = IND.BUD[I.bud][0] * (I.k || 1), mx = WRES.slotsMax(G);
@@ -1319,11 +1331,11 @@ body.sheeton #toast{top:calc(var(--toph, 100px) + 4px) !important;bottom:auto !i
     if (R.slots.length < mx) h += `<button data-rfill="1" class="big">⚡ شغّل كل الخانات الفاضية (الأوطى أول)</button>`;
     h += `<div class="seg gnav">${Object.entries(WRES.SEC).map(([k, [ic, n]]) => `<button data-rsec="${k}" class="${rdSec === k ? 'on' : ''}">${ic} ${n}</button>`).join('')}<button data-rsec="ars" class="${rdSec === 'ars' ? 'on' : ''}">🏆 الترسانة</button></div>`;
     const node = k => { const t = WRES.T[k], done = R.done[k], on = R.slots.some(q => q.k === k), err = WRES.can(G, WD, k), dd = WRES.days(G, k);
-      return `<div class="pj" style="${on ? 'border-color:var(--gold)' : done ? 'opacity:.75' : ''}">${done || !ART.has(t.img) ? '' : `<img class="cimg" src="${IMGB}${t.img}.webp" alt="">`}<div class="line"><span style="font-size:15px">${t.ic} <b>${t.n}</b></span><b>${done ? '✅' : t.lock ? '🔒' : on ? '▶' : C$(WRES.costOf(G, k)) + ' $'}</b></div><div class="note">${t.d}</div>${t.req ? `<div class="note">يحتاج قبله: ${t.req.map(r => (R.done[r] ? '✅ ' : '· ') + WRES.T[r].n).join('، ')}</div>` : ''}${done || on || t.lock ? (on ? '<div class="note">🔬 شغّال بخانة</div>' : '') : err ? `<div class="note">⛔ ${err}</div>` : `<button data-rs="${k}">ابحث هنا${dd ? ' (~' + dd + ' يوم)' : ''}</button>`}</div>`; };
+      return `<div class="pj" id="rs-${k}" style="${on ? 'border-color:var(--gold)' : done ? 'opacity:.75' : ''}">${done || !ART.has(t.img) ? '' : `<img class="cimg" src="${IMGB}${t.img}.webp" alt="">`}<div class="line"><span style="font-size:15px">${t.ic} <b>${t.n}</b></span><b>${done ? '✅' : t.lock ? '🔒' : on ? '▶' : C$(WRES.costOf(G, k)) + ' $'}</b></div><div class="note">${t.d}</div>${t.req ? `<div class="note">يحتاج قبله: ${t.req.map(r => (R.done[r] ? '✅ ' : '· ') + WRES.T[r].n).join('، ')}</div>` : ''}${done || on || t.lock ? (on ? '<div class="note">🔬 شغّال بخانة</div>' : '') : err ? `<div class="note">⛔ ${err}</div>` : `<button data-rs="${k}">ابحث هنا${dd ? ' (~' + dd + ' يوم)' : ''}</button>`}</div>`; };
     if (rdSec === 'ars') h += pArs();
     else if (rdSec === 'mil') {
       h += `<div class="note">الفروع 6 مستويات (الجيل السادس = المستقبل). كل مستوى إله أثر بالحرب ويفتح منتجات محلية (🏭 الإنتاج).</div>` + IND.BRK.map(k => { const Bk = IND.BR[k], l = I.tech[k] || 0, on = R.slots.some(q => q.k === 'm:' + k), nd = IND.need(l); const im = ({ arm: 'rs_armor', uav: 'rs_uav', msl: 'rs_missile', ew: 'rs_ew', ind: 'rs_ind', air: 'rs_air', navy: 'rs_navy' })[k]; return `<div class="pj" style="${on ? 'border-color:var(--c-rd)' : ''}">${ART.has(im) ? `<img class="cimg" src="${IMGB}${im}.webp" alt="">` : ''}<div class="line"><span style="font-size:15px">${Bk.ic} <b>${Bk.n}</b></span><b>${'■'.repeat(l)}${'□'.repeat(WRES.MAXL - l)} ${l}/${WRES.MAXL}</b></div><div class="note">${Bk.d}</div>${l >= WRES.MAXL ? '<div class="note pos">✅ أعلى مستوى</div>' : on ? '<div class="note">🔬 شغّال بخانة</div>' : `<button data-rb="${k}">ابحث هنا (المستوى ${l + 1}: ${WRES.costOf(G, 'm:' + k)} مليار، ~${WRES.days(G, 'm:' + k) || '–'} يوم)</button>`}</div>`; }).join('');
-      h += `<h3>🚀 المستقبل</h3>` + Object.keys(WRES.T).filter(k => WRES.T[k].s === 'mil').map(node).join('');
+      { const ks = Object.keys(WRES.T).filter(k => WRES.T[k].s === 'mil'); h += `<h3>🚀 المستقبل</h3>` + rdTree(ks) + ks.map(node).join(''); }
       // I-131/I-133: شكل السلاح الوطني حسب المرحلة (صور Grok بتمويه صحراوي على أخضر، D-056): المرحلة = الجيل
       // I-134: إذا وصلت صور «صورة حرب حقيقية» (v5_nt_*) تطلع كبيرة بعرض البطاقة ويا الاسم والجيل والضربة فوقها
       { const gN = Math.max(1, Math.min(4, N.st || 1)), hero = 'v5_nt_tank_g' + gN, HIT = [0, 4, 9, 15, 20][Math.min(4, N.st | 0)];
@@ -1334,7 +1346,7 @@ body.sheeton #toast{top:calc(var(--toph, 100px) + 4px) !important;bottom:auto !i
       ${N.st >= 2 ? `<div class="row"><input id="natName" maxlength="16" placeholder="اسم السلاح" value="${(N.name || '').replace(/"/g, '')}" style="flex:1;min-height:36px"><button id="natSave">احفظ الاسم</button></div>` : ''}`;
       h += `<h3>🛡 مشاريع حربية</h3>${Object.entries(IND.MEGA).map(([k, M]) => { const done = I.mega && I.mega[k], run = I.megaRun && I.megaRun.k === k, d = me === 'IRQ' ? M.d : ({ pipe: 'أنابيب وموانئ بديلة: إذا انغلق المضيق أو انضرب الميناء يطلع جزء أكبر من نفطنا', fort: 'ضربات العدو على مدننا وقواتنا بالمدن أضعف 25٪، والمعنويات أثبت' })[k] || M.d; return `<div class="pj"><div class="line"><b>${M.n}</b><span>${done ? 'مكتمل ✓' : run ? 'باقي ' + I.megaRun.left + ' يوم' : M.cost + ' مليار · ' + M.days + ' يوم'}</span></div><div class="note">${d}</div>${done || run ? '' : `<button data-mega="${k}" ${I.megaRun ? 'disabled' : ''}>ابدأ</button>`}</div>`; }).join('')}`;
     } else {
-      h += Object.keys(WRES.T).filter(k => WRES.T[k].s === rdSec).map(node).join('');
+      { const ks = Object.keys(WRES.T).filter(k => WRES.T[k].s === rdSec); h += rdTree(ks) + ks.map(node).join(''); }
       if (rdSec === 'eco') h += `<h3>🏭 تطوير الصناعة</h3>${Object.entries(IND.SEC).map(([k, Sc]) => `<div class="pj"><div class="line"><span>${Sc.ic} <b>${Sc.n}</b></span><b>${I.sec[k]}/5</b></div><div class="note">${Sc.d}</div>${I.secRun && I.secRun.k === k ? `<div class="note">⏳ يتطوّر: باقي ${I.secRun.left} يوم</div>` : I.sec[k] < 5 ? `<button data-sec="${k}" ${I.secRun ? 'disabled' : ''}>طوّر (${IND.secCost(I.sec[k])} مليار، ${IND.SEC_DAYS} يوم)</button>` : ''}</div>`).join('')}`;
       if (rdSec === 'str') h += '<div class="note">النووي العسكري ينتظر قرارك. النووي السلمي تحت رقابة الوكالة الدولية وما يجيب عقوبات.</div>';
     }
@@ -1569,6 +1581,7 @@ body.sheeton #toast{top:calc(var(--toph, 100px) + 4px) !important;bottom:auto !i
     root.querySelectorAll('[data-can]').forEach(b => b.onclick = () => { const back = NT.cancel(G, +b.dataset.can); re(0, `↩ ألغينا الطلب ورجع ${C$(back || 0)}`); });
     root.querySelectorAll('[data-bud]').forEach(b => b.onclick = () => { IND.setBudget(NW, 0, +b.dataset.bud); re(0); });
     root.querySelectorAll('[data-rsec]').forEach(b => b.onclick = () => { rdSec = b.dataset.rsec; openPanel('rd', true); });
+    root.querySelectorAll('[data-rsnode]').forEach(g => g.onclick = () => { const el = root.querySelector('#rs-' + g.dataset.rsnode); if (el) { el.scrollIntoView({ behavior: 'smooth', block: 'center' }); el.style.outline = '2px solid var(--gold)'; setTimeout(() => el.style.outline = '', 1500); } });
     root.querySelectorAll('[data-buy5]').forEach(b => b.onclick = () => { const k = b.dataset.buy5; let n = 0, err = null; for (let i = 0; i < 5; i++) { const r = NT.buy(G, k); if (typeof r === 'string') { err = r; break; } n++; } toast(n ? `🏭 طلبنا ${n} × ${ECON.ITEMS[k].n}` : '❌ ' + err, n ? 'good' : 'bad'); bar(); openPanel(panel, true); save(); });
     root.querySelectorAll('[data-rep]').forEach(b => b.onclick = () => { const e = G.nat.eco[0], k = b.dataset.rep; e.rep = e.rep || {}; e.rep[k] = !e.rep[k]; toast(e.rep[k] ? `🔁 ${ECON.ITEMS[k].n}: يتكرر لحاله` : '⏹ وقّفنا التكرار'); openPanel(panel, true); save(); });
     root.querySelectorAll('[data-mcat]').forEach(b => b.onclick = () => { mktCat = b.dataset.mcat; openPanel('mkt', true); });

@@ -25,7 +25,10 @@
       if (id === me) { if (W.nat) Object.assign(T, W.nat.ind[0].tech); }
       else { W.rp[id] += c.gdp * c.milPct / 100 * .005 / 12; const ind = c.gdp * .0002 / 12;
         const k = BR.filter(b => T[b] < 5).sort((a, b) => T[a] - T[b])[0];
-        if (k && W.rp[id] >= need(T[k])) { W.rp[id] -= need(T[k]); T[k]++; if (c.gdp > 300) W.log.push({ t: W.t, k: 'atech', id, b: k, l: T[k] }); }
+        if (k && W.rp[id] >= need(T[k])) { W.rp[id] -= need(T[k]); T[k]++; if (c.gdp > 300) W.log.push({ t: W.t, k: 'atech', id, b: k, l: T[k] });
+          // I-162: التحديث — كل مستوى بحث جديد يرفع جيل سلاحهم (الدبابات، الدفاع الجوي، الطيران) اللي يحاربون بيه
+          const ag = (W.agen ||= {})[id] ||= {}, cs = (WD.cs[id] || {}).gen || {}, up = (f, v) => { ag[f] = +Math.min(5, (ag[f] ?? cs[f] ?? 2) + v).toFixed(2); };
+          if (k === 'arm') { up('tank', .3); up('afv', .3); } else if (k === 'msl') { up('ad', .25); up('art', .2); } else if (k === 'ew') up('jet', .2); else if (k === 'uav') up('uav', .3); }
         if (T.ind < 5 && W.rnd() < ind / need(T.ind)) T.ind++; }
       // الصواريخ والمسيّرات حسب المستوى الحالي (ما ينزل عن البداية)
       c.mslP = Math.max(c.mslP || 0, MSLP[T.msl]); c.drnP = Math.max(c.drnP || 0, DRNP[T.uav]);

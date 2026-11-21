@@ -1393,6 +1393,7 @@ html[data-skin] .hero b{color:var(--act)}
       case 'nocause': return ['⚠ أعلنا حرب بدون سبب: العالم زعل (−10 ويا الكل)، استقرارنا −8، والتوتر صعد', 'bad'];
       case 'pchose': return [`🏛 ${l.r}`, 'good'];
       case 'arms': if (l.a === 'tt') return [`🔧 نقل تقنية من ${n(l.x)}: بحثنا بـ«${(IND.BR[l.b] || {}).n || l.b}» صار مستوى ${l.l}`, 'good']; return l.a === 'buy' ? [`🛒 وقّعنا عقد ${l.n} ويا ${n(l.x)}: يوصل ${l.route ? l.route.n + ' ' : ''}بعد ${Math.round(l.d / 30)} شهر`, 'good'] : l.a === 'got' ? [`✅ وصل ${l.n} من ${n(l.x)}`, 'good'] : l.a === 'ask' ? [`📦 ${n(l.x)} تريد تشتري سلاح منا (${l.v} مليار) — 🏛 دولتي ← سوق السلاح`, 'good'] : l.a === 'sold' ? [`📦 بعنا سلاح لـ${n(l.x)} بـ${l.v} مليار`, 'good'] : null;
+      case 'armsrace': return [`📈 سباق تسلح: ${n(l.id)} ترفع ميزانية جيشها — خايفة من صعودك`, 'bad'];
       case 'atech': return [`🔬 ${n(l.id)} طوّرت ${({ arm: 'الدروع', uav: 'المسيّرات', msl: 'الصواريخ', ew: 'الإلكترونيات' })[l.b]} لمستوى ${l.l}`, ''];
       case 'cmd': return l.a === 'promo' ? [`🎖 ترقية: القائد ${l.n} صار ${l.r}`, 'good'] : l.a === 'new' ? [`🎖 قائد جديد للقوات المسلحة: ${l.n}${l.often ? ' (الجيش زعلان من كثرة التبديل)' : ''}`, l.often ? 'bad' : 'good'] : l.a === 'drill' ? [`🎯 مناورات عسكرية (${l.v} مليار): خبرة القائد +15`, 'good'] : null;
       case 'joinus': return [`🤝 ${n(l.who)} دخلت ${l.war} ويانا`, 'good'];

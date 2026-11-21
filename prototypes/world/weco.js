@@ -81,11 +81,12 @@
     E.spend = spend; return spend;
   }
   function apply(G, WD, q) {
-    const c = G.C[q.id], p = P[q.k], E = G.eco3, sc = p.kbd || p.gw ? 1 : scale(c);
-    if (p.kbd) E.oilAdd[q.r] = (E.oilAdd[q.r] || 0) + p.kbd;
+    // q.share: حصة الشركة الأجنبية (E4) من الأثر
+    const c = G.C[q.id], p = P[q.k], E = G.eco3, sc = (p.kbd || p.gw ? 1 : scale(c)) * (1 - (q.share || 0));
+    if (p.kbd) E.oilAdd[q.r] = (E.oilAdd[q.r] || 0) + p.kbd * (1 - (q.share || 0));
     if (p.core) c.core += p.core * sc;
-    if (p.g) c.g0 += p.g;
-    if (p.gw) E.elec[q.id].cap += p.gw;
+    if (p.g) c.g0 += p.g * (1 - (q.share || 0));
+    if (p.gw) E.elec[q.id].cap += p.gw * (1 - (q.share || 0));
     if (p.stab && q.id === G.me && G.nat) { const b = G.nat.home.base || (G.nat.home.base = {}); b.street = Math.min(80, (b.street || 55) + p.stab); }
     else if (p.stab) c.stab = Math.min(100, c.stab + p.stab);
     if (p.lines && q.id === G.me && G.nat) G.nat.eco[0].lines += p.lines;

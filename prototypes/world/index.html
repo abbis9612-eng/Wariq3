@@ -344,6 +344,7 @@ body.sheeton #toast{top:calc(var(--toph, 100px) + 4px) !important;bottom:auto !i
 <script src="weco.js"></script>
 <script src="wpop.js"></script>
 <script src="wres.js"></script>
+<script src="wfund.js"></script>
 <script src="wsim.js"></script>
 <script src="gwsim.js"></script>
 <script src="theater.js"></script>
@@ -928,6 +929,7 @@ body.sheeton #toast{top:calc(var(--toph, 100px) + 4px) !important;bottom:auto !i
     const n = k => nameOf(k);
     switch (l.k) {
       case 'res': return [`🔬 خلص بحث «${(WRES.T[l.r] || {}).n || l.r}»: ${(WRES.T[l.r] || {}).d || ''}`, 'good'];
+      case 'fund': { const A = WFUND.ABROAD[l.pk] || WECO.P[l.pk] || {}; return ({ put: [`🏦 حطينا ${l.v} مليار بـ${l.w === 'bonds' ? 'السندات' : 'الأسهم'}`, 'good'], take: [`🏦 سحبنا ${l.v.toFixed ? l.v.toFixed(1) : l.v} مليار من الصندوق`, ''], inv: [`🌍 استثمرنا ${l.v} مليار بـ${A.n} عند ${n(l.x)}`, 'good'], loan: [`🤝 قرضنا ${n(l.x)} ${l.v} مليار`, 'good'], lost: [`💸 خسرنا استثمارنا (${A.n}) عند ${n(l.x)} بسبب ${l.why}: ${l.v} مليار راحت`, 'bad'], default: [`💸 ${n(l.x)} تعثرت بالقرض: خسرنا ${l.v} مليار`, 'bad'], repaid: [`✅ ${n(l.x)} رجّعت القرض كامل`, 'good'], offer: [`📨 ${n(l.x)}: شركة تعرض تبني ${A.n} (${l.v.toFixed(1)} مليار) — شوف 🏦 الاستثمار`, 'good'], accept: [`🤝 قبلنا عرض ${n(l.x)}: ${A.n} ينبني على حسابهم`, 'good'], reject: [`✋ رفضنا عرض ${n(l.x)}`, ''] })[l.a] || ['🏦', '']; }
       case 'proj': { const P = WECO.P[l.pk] || {}, w = byId.get(l.r)?.n || ''; return l.a === 'done' ? [`${P.ic || '🏗'} كمل مشروع «${P.n}»${l.id === me ? '' : ' عند ' + n(l.id)}${w ? ' بـ' + w : ''}`, l.id === me ? 'good' : ''] : [`${P.ic || '🏗'} ${l.id === me ? 'بدينا' : n(l.id) + ' بدت'} مشروع «${P.n}»${w ? ' بـ' + w : ''} (${(l.cost.toFixed(1))} مليار، ${(l.mo)} شهر)`, l.id === me ? 'good' : '']; }
       case 'war': return [`⚔ ${n(l.a)} أعلنت الحرب على ${n(l.b)}${l.join && l.join.length ? ' — ودخلت وياها ' + l.join.map(n).join('، ') : ''}`, 'bad'];
       case 'peace': return [`🕊 انتهت ${l.n}${l.kept ? ` (تغيرت السيطرة على ${l.kept} منطقة)` : ''}`, 'good'];
@@ -989,13 +991,13 @@ body.sheeton #toast{top:calc(var(--toph, 100px) + 4px) !important;bottom:auto !i
   // ===== الألواح =====
   $('#tabs').querySelectorAll('button').forEach(b => b.onclick = () => TABOF[panel] === b.dataset.p ? closePanel() : openPanel(b.dataset.p));
   function closePanel() { document.body.classList.remove('sheeton'); panel = null; $('#sheet').hidden = true; $('#tabs').querySelectorAll('button').forEach(x => x.classList.remove('on')); }
-  const TABOF = { cmd: 'cmd', me: 'me', flow: 'me', build: 'me', pop: 'me', homep: 'me', army: 'army', prod: 'army', mkt: 'army', rd: 'rd', dip: 'dip', war: 'dip', world: 'dip', news: 'dip' };
-  const GROUPS = { me: [['me', '💰 الاقتصاد'], ['flow', '💸 الفلوس'], ['build', '🏗 المشاريع'], ['pop', '👥 السكان'], ['homep', '🏛 الداخل']], army: [['army', '🪖 الجيش'], ['prod', '🏭 الإنتاج'], ['mkt', '🛒 السوق']], dip: [['dip', '🤝 العلاقات'], ['war', '⚔ الحروب'], ['world', '🌍 الترتيب'], ['news', '📜 الأخبار']] };
+  const TABOF = { cmd: 'cmd', me: 'me', flow: 'me', build: 'me', pop: 'me', fund: 'me', homep: 'me', army: 'army', prod: 'army', mkt: 'army', rd: 'rd', dip: 'dip', war: 'dip', world: 'dip', news: 'dip' };
+  const GROUPS = { me: [['me', '💰 الاقتصاد'], ['flow', '💸 الفلوس'], ['build', '🏗 المشاريع'], ['fund', '🏦 الاستثمار'], ['pop', '👥 السكان'], ['homep', '🏛 الداخل']], army: [['army', '🪖 الجيش'], ['prod', '🏭 الإنتاج'], ['mkt', '🛒 السوق']], dip: [['dip', '🤝 العلاقات'], ['war', '⚔ الحروب'], ['world', '🌍 الترتيب'], ['news', '📜 الأخبار']] };
   function openPanel(p, refresh) {
     const sh = $('#sheet'), keep = refresh ? sh.scrollTop : 0; panel = p; sel = null; $('#card').hidden = true;
     $('#tabs').querySelectorAll('button').forEach(x => x.classList.toggle('on', x.dataset.p === TABOF[p]));
     // V1 (I-117): 5 تبويبات؛ كل تبويب إله أقسام بشريط فوق (الاقتصاد/الداخل، الجيش/الإنتاج/السوق، الدبلوماسية/الحروب/الترتيب/الأخبار)
-    const PN = { cmd: pCmd, me: pMe, flow: pFlow, build: pBuild, pop: pPop, homep: () => '<h2>🏛 الداخل والشعب</h2>' + pHome(), army: pArmy, prod: () => '<h2>🏭 الإنتاج الحربي</h2>' + pProd(), mkt: () => '<h2>🛒 سوق السلاح</h2>' + pMkt(), rd: () => '<h2>🔬 البحث والصناعة</h2>' + pRd(), dip: pDip, war: pWar, world: pWorld, news: pNews };
+    const PN = { cmd: pCmd, me: pMe, flow: pFlow, build: pBuild, pop: pPop, fund: pFund, homep: () => '<h2>🏛 الداخل والشعب</h2>' + pHome(), army: pArmy, prod: () => '<h2>🏭 الإنتاج الحربي</h2>' + pProd(), mkt: () => '<h2>🛒 سوق السلاح</h2>' + pMkt(), rd: () => '<h2>🔬 البحث والصناعة</h2>' + pRd(), dip: pDip, war: pWar, world: pWorld, news: pNews };
     let html = (PN[p] || pCmd)(); const grp = GROUPS[TABOF[p]];
     if (grp) html = html.replace(/(<\/h2>)/, `$1<div class="seg gnav">${grp.map(([k, t]) => `<button data-gp="${k}" class="${k === p ? 'on' : ''}">${t}</button>`).join('')}</div>`);
     sh.innerHTML = html; sh.hidden = false; sh.scrollTop = keep;
@@ -1041,6 +1043,22 @@ body.sheeton #toast{top:calc(var(--toph, 100px) + 4px) !important;bottom:auto !i
     h += `<h3>💼 الشغل</h3><div class="line"><span>البطالة</span><b class="${p.un > p.un0 + .01 ? 'neg' : ''}">${pct(p.un)}</b></div><div class="line"><span>بطالة الشباب (تقريباً الضعف)</span><b class="${p.un * 2 > .3 ? 'neg' : ''}">${pct(Math.min(.7, p.un * 2))}</b></div><div class="note">النمو الضعيف يزيد البطالة، والبطالة تزعّل الشارع. الشباب العاطلين = خطر احتجاجات. التعبئة العامة تسحب عاطلين للجيش.</div>`;
     h += `<h3>🏥 الخدمات</h3><div class="line"><span>🎓 التعليم</span><b>${Math.round(p.edu * 100)}/100</b></div>${barV(p.edu * 100, 'var(--gold)')}<div class="line"><span>🏥 الصحة</span><b>${Math.round(p.hea * 100)}/100</b></div>${barV(p.hea * 100, 'var(--me)')}<div class="line"><span>⚡ الكهرباء</span><b>${100 - Math.round(WECO.elecDef(G, me) * 100)}/100</b></div>`;
     h += `<div class="note">🎓 <b>تعليم المرأة أقوى شي ينزّل الخصوبة</b>، وبعده الدخل والمدن. الجامعات والمستشفيات من <a href="#" data-go="build">🏗 المشاريع</a> ترفع التعليم والصحة، والصحة ترفع العمر المتوقع. الأرقام: الأمم المتحدة 2024 للدول الكبيرة، والباقي تقدير.</div>`;
+    return h;
+  }
+  // ===== E3+E4 (I-119): 🏦 الاستثمار — الصندوق السيادي برّا، وعروض الشركات عندنا =====
+  function pFund() {
+    const F = WFUND.ensure(G), cash = G.nat ? G.nat.eco[0].cash : 0, tot = WFUND.total(G);
+    let h = `<h2>🏦 الاستثمار والصندوق السيادي</h2><div class="grid"><div class="st"><i>الصندوق كله</i><b>${money(tot)}</b></div><div class="st"><i>الربح هالشهر</i><b class="${F.inc >= 0 ? 'pos' : 'neg'}">${money(F.inc)}</b></div></div><div class="note">حط فائض الخزينة (${money(cash)}) يشتغل بدل ما يبقى نايم. الربح يرجع للخزينة كل شهر.</div>`;
+    if (F.offers.length) h += '<h3>📨 عروض شركات تستثمر عندنا</h3>' + F.offers.map(o => { const P = WECO.P[o.k]; return `<div class="pj" style="border-color:var(--gold)"><div class="line"><span style="font-size:15px">${P.ic} <b>${WFUND.FIRMS[o.from][0]}</b></span><b>${money(o.v)}</b></div><div class="note">تبني لنا «${P.n}» على حسابها، مقابل <b>${o.terms}</b>. يعني: ما ندفع شي، بس ناخذ 60٪ من الأثر، والعلاقة ويا ${nameOf(o.from)} +8. ${o.from === 'CHN' ? 'وتصير إلها كلمة بالبلد (نفوذ صيني).' : ''}</div><div class="seg"><button data-fo="${o.id}:1">✔ نقبل</button><button data-fo="${o.id}:0">✖ نرفض</button></div></div>`; }).join('');
+    else h += `<div class="note">📨 الشركات الأجنبية تعرض تستثمر عندنا أكثر إذا الاستقرار عالي، ماكو عقوبات، والحوكمة زينة (🔬 بحث الحوكمة).</div>`;
+    h += `<h3>💵 السندات والأسهم</h3><div class="pj"><div class="line"><span>🏛 <b>سندات آمنة</b> · ~3.5٪ بالسنة · خطر قليل</span><b>${money(F.bonds)}</b></div><div class="seg"><button data-fp="bonds:1">+1</button><button data-fp="bonds:5">+5</button><button data-fp="bonds:20">+20</button><button data-ft="bonds">سحب الكل</button></div></div>
+    <div class="pj"><div class="line"><span>📈 <b>أسهم عالمية</b> · ~7٪ بالمعدل · تنزل بالأزمات</span><b>${money(F.stocks)}</b></div><div class="note">المؤشر ${F.idx.toFixed(0)} (بدا من 100)</div><div class="seg"><button data-fp="stocks:1">+1</button><button data-fp="stocks:5">+5</button><button data-fp="stocks:20">+20</button><button data-ft="stocks">سحب الكل</button></div></div>`;
+    if (F.inv.length || F.loans.length) h += '<h3>🌍 استثماراتنا برّا</h3>' + F.inv.map(i => { const A = WFUND.ABROAD[i.k]; return `<div class="line"><span>${A.ic} ${A.n} · ${nameOf(i.x)}</span><b>${money(i.amt)} · ${Math.round(i.yr * 100)}٪</b></div>`; }).join('') + F.loans.map(l => `<div class="line"><span>🤝 قرض لـ${nameOf(l.x)} · فائدة ${(l.rate * 100).toFixed(1)}٪</span><b>باقي ${money(l.left)}</b></div>`).join('');
+    const fr = G.ids.filter(x => x !== me && !WFUND.okAbroad(G, WD, S, x)).sort((a, b) => S.rel(G, me, b) - S.rel(G, me, a)).slice(0, 6);
+    h += `<h3>🏗 مشاريع بدول صديقة</h3><div class="note">ربح + نفوذ + علاقة أحسن. <b class="neg">تخسرها كلها</b> إذا العلاقة خربت (تحت −20)، أو صارت حرب، أو عاقبناها.</div>`;
+    h += fr.length ? fr.map(x => `<div class="pj"><div class="line"><b>${nameOf(x)}</b><span class="note">العلاقة ${S.rel(G, me, x)}</span></div><div class="acts">${Object.entries(WFUND.ABROAD).map(([k, A]) => `<button data-fi="${x}:${k}" style="text-align:right">${A.ic} ${A.n}<small>${A.amt} مليار · ${Math.round(A.yr * 100)}٪/سنة · خطر ${A.risk} · علاقة +${A.rel}</small></button>`).join('')}</div></div>`).join('') : '<div class="note">ماكو دول علاقتها ويانا 30+ نگدر نستثمر بيها.</div>';
+    const poor = G.ids.filter(x => x !== me && G.C[x].gdp * 1e9 / G.C[x].pop < 15000 && S.rel(G, me, x) >= 10 && !S.atWar(G, me, x) && !F.loans.some(l => l.x === x)).sort((a, b) => S.rel(G, me, b) - S.rel(G, me, a)).slice(0, 4);
+    h += `<h3>🤝 قروض للدول</h3><div class="note">فائدة ونفوذ وعلاقة +10 (وصوتهم ويانا بالأمم المتحدة أقرب). إذا الدولة انهارت أو صارت عندها أزمة دين، ممكن تتعثر ونخسر 60٪.</div>` + (poor.length ? `<div class="acts">${poor.map(x => { const L = WFUND.loanTerms(G, x); return `<button data-fl="${x}" style="text-align:right">🤝 ${nameOf(x)}<small>${L.amt} مليار · فائدة ${(L.rate * 100).toFixed(1)}٪ · ${L.mo / 12} سنين · استقرارها ${Math.round(G.C[x].stab)}</small></button>`; }).join('')}</div>` : '<div class="note">ماكو دول فقيرة صديقة تحتاج قرض.</div>');
     return h;
   }
   // ===== E (I-119): 💸 تدفق الفلوس — منين تجي ووين تروح، بالشهر =====
@@ -1321,6 +1339,11 @@ body.sheeton #toast{top:calc(var(--toph, 100px) + 4px) !important;bottom:auto !i
       else if (T && (a.startsWith('cell:') || a.startsWith('div:'))) { const i = a.startsWith('cell:') ? +a.slice(5) : (T.W.divs.find(d => d.id === +a.slice(4)) || {}).cell; const c = T.cells[i]; if (c) { closePanel(); cam.x = MX(c.ll[0]); cam.y = MY(c.ll[1]); cam.s = Math.max(cam.s, 1400); dirty = true; } }
       else if (a === 'arrow') { closePanel(); toast(ADVL[+b.dataset.adv].t); } });
     root.querySelectorAll('[data-sub]').forEach(b => b.onclick = () => { meSub = b.dataset.sub; openPanel('me'); });
+    root.querySelectorAll('[data-fp]').forEach(b => b.onclick = () => { const [w, v] = b.dataset.fp.split(':'); re(WFUND.put(G, w, +v), `🏦 حطينا ${v} مليار`); });
+    root.querySelectorAll('[data-ft]').forEach(b => b.onclick = () => re(WFUND.take(G, b.dataset.ft, 1e9), '🏦 سحبنا الفلوس للخزينة'));
+    root.querySelectorAll('[data-fi]').forEach(b => b.onclick = () => { const [x, k] = b.dataset.fi.split(':'); re(WFUND.invest(G, WD, S, x, k), `🌍 استثمرنا بـ${nameOf(x)}`); });
+    root.querySelectorAll('[data-fl]').forEach(b => b.onclick = () => re(WFUND.lend(G, WD, S, b.dataset.fl), `🤝 قرضنا ${nameOf(b.dataset.fl)}`));
+    root.querySelectorAll('[data-fo]').forEach(b => b.onclick = () => { const [id, y] = b.dataset.fo.split(':'); re(WFUND.answer(G, WD, S, +id, y === '1'), y === '1' ? '🤝 قبلنا العرض' : '✋ رفضنا العرض'); });
     root.querySelectorAll('[data-proj]').forEach(b => b.onclick = () => { const k = b.dataset.proj; re(WECO.start(G, WD, me, k), `🏗 بدينا: ${WECO.P[k].n}`); });
     root.querySelectorAll('[data-prio]').forEach(b => b.onclick = () => { NW.eco[0].prio = b.dataset.prio; re(0, `⚙️ أولوية الاقتصاد: ${ECON.PRIO[b.dataset.prio].n}`); });
     root.querySelectorAll('[data-iss]').forEach(b => b.onclick = () => { const [i, j] = b.dataset.iss.split(':').map(Number); const r = HOME.choose(NW, i, j); G.C[me].stab = NW.home.stab; re(0, `🏛 قررنا: ${kLab(r)}`); bar(); });

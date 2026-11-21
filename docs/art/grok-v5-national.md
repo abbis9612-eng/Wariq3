@@ -9,13 +9,28 @@
 
 وحط الصور بمجلد `docs/art/out/v5-national/`. إذا صورة طلعت مثل لعبة أو رسم، ارجعها وقله: «make it look like a real military press photograph, not a 3D render».
 
+
+## 🛡 هوية التصميم الوطنية (I-136) — قرار المالك
+- **التمويه:** رمل وأخضر زيتوني **واقعي** (مو بقع لعبة).
+- **التوقيع اللي يتكرر بكل سلاح:** ① **مقدمة حادة بشكل رأس رمح** وزوايا حادة (شبحي)، و② **خط حساسات مضيء أخضر** بالمقدمة.
+- **الشعار:** رمز ذهبي صغير: **هلال يحضن رأس رمح**، بلا كتابة.
+- **الأسماء** (تطلع باللعبة، مو بالصورة): إسلامية من السلف الصالح ومعاركهم، قصيرة وقوية.
+
+## DESIGN BIBLE — NATIONAL DESIGN IDENTITY (apply to EVERY image, this is the most important part)
+All these weapons belong to ONE nation and must look like ONE family, recognizable from far away:
+1. **Spearhead front:** every vehicle, aircraft, missile and ship has a **sharp spearhead / arrowhead-shaped front** and crisp angular stealth facets.
+2. **Glowing green sensor strip:** a thin **emerald-green glowing sensor/light strip across the front** (like eyes), visible in every image, stronger at night.
+3. **Camouflage:** realistic military **desert sand with olive-green disruptive camouflage**, weathered, dusty, with real paint wear. Ships: dark naval grey with a subtle sand-olive band.
+4. **Emblem:** one **small gold emblem: a crescent embracing a spearhead**, painted on the side. No text, no letters, no numbers, no flags.
+5. Look: **massive, intimidating, majestic, cutting-edge, but engineered and believable** — a real defense-ministry reveal photograph, never a toy or a 3D render.
+
 ---
 
 ## INSTRUCTIONS FOR GROK (apply to every image)
 
 - **A real military photograph**, like official army press photos or a defense-expo photo shoot: shot on a professional camera with a telephoto lens, natural light, real dust, mud, scratches, exhaust smoke, heat haze. **Absolutely NOT a 3D render, NOT a toy, NOT clean CGI, NOT cartoon.**
 - The weapon must look **heavy, powerful and modern for its generation**, inspired by real-world vehicles of that era (we name the real reference in each prompt) but **with no real markings**.
-- **Camouflage:** realistic military **desert sand with olive-green disruptive pattern** (like real Middle East armies), weathered and dusty. Not cartoon blobs.
+- **Camouflage:** see DESIGN BIBLE above (sand + olive, spearhead front, green sensor strip, gold crescent-spearhead emblem).
 - **No text, no letters, no numbers, no flags, no logos, no watermark. No people's faces close up, no blood.**
 - **Wide cinematic 1536×864 (16:9).** The weapon is big and fills most of the frame, clearly visible, sharp focus, 3/4 front angle unless said otherwise.
 - Generation 1 = 1970s–80s · Generation 2 = 1990s · Generation 3 = 2010s · Generation 4 = 2020s cutting-edge. Each generation must look clearly more advanced and more powerful.

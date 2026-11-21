@@ -7,6 +7,21 @@
 
 وحط الصور بمجلد `docs/art/out/v6-flagship/`. إذا صورة طلعت مثل رسم أو لعبة، ارجعها وقله: «make it look like a real military press photograph, not a 3D render».
 
+
+## 🛡 هوية التصميم الوطنية (I-136) — قرار المالك
+- **التمويه:** رمل وأخضر زيتوني **واقعي** (مو بقع لعبة).
+- **التوقيع اللي يتكرر بكل سلاح:** ① **مقدمة حادة بشكل رأس رمح** وزوايا حادة (شبحي)، و② **خط حساسات مضيء أخضر** بالمقدمة.
+- **الشعار:** رمز ذهبي صغير: **هلال يحضن رأس رمح**، بلا كتابة.
+- **الأسماء** (تطلع باللعبة، مو بالصورة): إسلامية من السلف الصالح ومعاركهم، قصيرة وقوية.
+
+## DESIGN BIBLE — NATIONAL DESIGN IDENTITY (apply to EVERY image, this is the most important part)
+All these weapons belong to ONE nation and must look like ONE family, recognizable from far away:
+1. **Spearhead front:** every vehicle, aircraft, missile and ship has a **sharp spearhead / arrowhead-shaped front** and crisp angular stealth facets.
+2. **Glowing green sensor strip:** a thin **emerald-green glowing sensor/light strip across the front** (like eyes), visible in every image, stronger at night.
+3. **Camouflage:** realistic military **desert sand with olive-green disruptive camouflage**, weathered, dusty, with real paint wear. Ships: dark naval grey with a subtle sand-olive band.
+4. **Emblem:** one **small gold emblem: a crescent embracing a spearhead**, painted on the side. No text, no letters, no numbers, no flags.
+5. Look: **massive, intimidating, majestic, cutting-edge, but engineered and believable** — a real defense-ministry reveal photograph, never a toy or a 3D render.
+
 ---
 
 ## INSTRUCTIONS FOR GROK (apply to every image)

@@ -588,7 +588,7 @@ body.sheeton #toast{top:calc(var(--toph, 100px) + 4px) !important;bottom:auto !i
   }
   // ===== مشهد المعركة 1:1 (bv.js وbview.js من «الحرب الكبرى») =====
   // V3: صور بطاقات المشاريع والبحث (pj_*، rs_*) — تنضاف هنا لما توصل صور Grok (docs/art/grok-v3.md)
-  const ART = new Set([]);
+  const ART = new Set(['pj_arms', 'pj_dam', 'pj_factory', 'pj_hospital', 'pj_housing', 'pj_oil', 'pj_port', 'pj_power', 'pj_rail', 'pj_refinery', 'pj_university', 'rs_agri', 'rs_edu', 'rs_girls', 'rs_gov', 'rs_manuf', 'rs_med', 'rs_med2', 'rs_nuclear', 'rs_oil', 'rs_oil2', 'rs_refinery', 'rs_solar', 'rs_space', 'rs_telecom']);
   const IMG = {}, IMGB = location.protocol === 'file:' ? '../grandwar/img/' : 'img/';
   let imgP = null;
   // I-112/I-113: صور Grok لكل منظومة دفاع جوي (docs/art/out ← img/sam_<key>_v.webp)؛ اللي ما إلها صورة بعد ← باتريوت (غربي) أو S-400 (شرقي)
@@ -612,7 +612,7 @@ body.sheeton #toast{top:calc(var(--toph, 100px) + 4px) !important;bottom:auto !i
     for (const m of L) for (const [key, rx] of TK_RX) if (rx.test(m)) return key; return 't72'; };
   const mechKey = k => WEST.test(((CS[k] && CS[k].kit && CS[k].kit.tank && CS[k].kit.tank[1]) || []).join(' ')) ? 'bradley' : 'bmp3';
   const TKK = ['abrams', 'merkava', 'leopard', 'k2', 'altay', 'type99', 't90', 't72', 'bradley', 'bmp3'];
-  const loadImgs = () => imgP || (imgP = Promise.all(['abrams', 'abrams_t', 't72', 't72_t', 'bmp', 'grad', 'truck', 'f16', 'su25', 'f14', 'fx_explo1', 'fx_explo2', 'fx_fire', 'fx_cloud', 'f16_sheet', 'su25_sheet', 'f14_sheet', 'base_me', 'base_south', 'patriot', 's400', ...SAMI.map(k => 'u_' + k + '_v'), ...TKK.map(k => 'u_' + k + '_v'), ...PLK.map(k => 'u_' + k + '_t'), ...['carrier', 'ddg', 't055', 'kirov', 'frigate', 'sub', 'fac'].map(k => 'u_' + k + '_v'), ...['carrier', 'cv-china', 'ddg', 't055', 'kirov', 'frigate', 'moudge', 'fac', 'sub', 'amphib', 'c802', 'harpoon', 'sm2', 'tomahawk', 'explosion', 'ship-fire', 'smoke-trail', 'splash', 'wake', 'oil-slick', 'ocean'].map(k => 'nv_' + k), 'zolf',
+  const loadImgs = () => imgP || (imgP = Promise.all(['v3_m_arrow', 'v3_m_atacms', 'v3_m_fattah', 'v3_m_iskander', 'v3_m_kinzhal', 'v3_m_patriot', 'v3_m_shahab3', 'v3_m_shahed', 'v3_m_thaad', 'v3_m_tomahawk', 'v3_w_crater', 'v3_w_launch', 'v3_w_plane', 'v3_w_rubble', 'v3_w_tank', 'v3_x_big', 'v3_x_dust', 'v3_x_flash', 'v3_x_icpt', 'v3_x_smoke', 'v3_x_tank', 'abrams', 'abrams_t', 't72', 't72_t', 'bmp', 'grad', 'truck', 'f16', 'su25', 'f14', 'fx_explo1', 'fx_explo2', 'fx_fire', 'fx_cloud', 'f16_sheet', 'su25_sheet', 'f14_sheet', 'base_me', 'base_south', 'patriot', 's400', ...SAMI.map(k => 'u_' + k + '_v'), ...TKK.map(k => 'u_' + k + '_v'), ...PLK.map(k => 'u_' + k + '_t'), ...['carrier', 'ddg', 't055', 'kirov', 'frigate', 'sub', 'fac'].map(k => 'u_' + k + '_v'), ...['carrier', 'cv-china', 'ddg', 't055', 'kirov', 'frigate', 'moudge', 'fac', 'sub', 'amphib', 'c802', 'harpoon', 'sm2', 'tomahawk', 'explosion', 'ship-fire', 'smoke-trail', 'splash', 'wake', 'oil-slick', 'ocean'].map(k => 'nv_' + k), 'zolf',
     ...['aerial_sand', 'dirt_aerial_02', 'rocky_terrain_02', 'aerial_mud_1', 'aerial_asphalt_01', 'aerial_grass_rock', 'palm', 'tree', 'acacia', 'h1', 'h2', 'h3', 'h4'].map(n => 'bv/' + n)]
     .map(n => new Promise(r => { const i = new Image(); i.onload = r; i.onerror = r; i.src = IMGB + n + '.webp'; IMG[n.replace('bv/', 'bv_')] = i; }))).then(() => (window.BVIEW.init({ IMG, SND: window.VIEW ? VIEW.SND : null }), 0)));
   // نوع الدبابة بالمشهد حسب الدولة: غربية (أبرامز، ليوبارد، ميركافا...) أو سوفيتية/شرقية (T-72، T-90، Type...)

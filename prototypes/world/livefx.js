@@ -32,6 +32,11 @@
   const night = () => { const t = document.documentElement.getAttribute('data-theme'); return t ? t === 'dark' : matchMedia && matchMedia('(prefers-color-scheme: dark)').matches; };
   // عشوائية بالبذرة: إعادة الضربة (🎬) تطلع نفسها بالضبط
   const rngS = a => () => { a = a + 0x6D2B79F5 | 0; let t = Math.imul(a ^ a >>> 15, 1 | a); t = t + Math.imul(t ^ t >>> 7, 61 | t) ^ t; return ((t ^ t >>> 14) >>> 0) / 4294967296; };
+  // صور Grok (v3): صاروخ المهاجم والاعتراض حسب الدولة
+  const BMS = { IRN: ['v3_m_shahab3', 'v3_m_fattah'], RUS: ['v3_m_iskander', 'v3_m_kinzhal'], USA: ['v3_m_atacms'], ISR: ['v3_m_atacms'], UKR: ['v3_m_atacms'], PRK: ['v3_m_shahab3'], YEM: ['v3_m_shahab3'] };
+  const bmImg = (by, i) => { const L = BMS[by] || ['v3_m_shahab3', 'v3_m_iskander']; return L[i % L.length]; };
+  const ICP = { ISR: 'v3_m_arrow', USA: 'v3_m_thaad' };
+  const has = n => A.IMG[n] && A.IMG[n].naturalWidth;
   const boom = (x, y, w, a = 1) => { img(R() < .5 ? 'fx_explo1' : 'fx_explo2', x, y, w, R() * 6, a, 'lighter'); };
 
   // ================= البحر =================
@@ -102,7 +107,7 @@
     // موجات: المسيّرات تطلع أول (بطيئة)، بعدين الباليستي، والكل يوصل تقريباً سوا
     for (let i = 0; i < nD; i++) { const a = o.from[i % o.from.length], t = o.to[i % o.to.length]; items.push({ k: 'uav', a: jit(a, .3), b: jit(t, .25), t0: T + i * 120, d: dur * 1.15, kill: i < kD, kf: .55 + Rs() * .35, dp: jit(t, .35) }); }
     for (let i = 0; i < nM; i++) { const a = o.from[i % o.from.length], t = o.to[i % o.to.length]; items.push({ k: 'bm', a: jit(a, .2), b: jit(t, .15), t0: T + 2600 + i * 160, d: dur * .55, kill: i < kM, kf: .6 + Rs() * .3, dp: jit(t, .35) }); }
-    L.list.push({ k: 'strike', items, mine: o.mine, by: o.by, tgt: o.tgt, label: (replay ? '🎬 ' : '') + o.label, t0: T, ll: o.to[0], day: o.day, rep: !!replay });
+    L.list.push({ k: 'strike', city: !!o.city, items, mine: o.mine, by: o.by, tgt: o.tgt, label: (replay ? '🎬 ' : '') + o.label, t0: T, ll: o.to[0], day: o.day, rep: !!replay });
     if (o.city && !replay) for (const t of o.to.slice(0, 2)) if (nM - kM + nD - kD > 0) L.fires.push({ ll: t, t: T + dur, until: o.days || 5, day0: o.day });
   };
   L.replay = i => { const o = L.hist[i]; if (!o) return null; L.addStrike(o, true); return o.to[0]; };
@@ -113,25 +118,27 @@
       const H = it.k === 'bm' ? Math.min(160, Math.hypot(x2 - x1, y2 - y1) * .35) : 0, gx = x1 + (x2 - x1) * uu, gy = y1 + (y2 - y1) * uu, h = 4 * H * uu * (1 - uu), x = gx, y = gy - h;
       if (!it.l) { it.l = 1; snd(it.k === 'bm' ? 'launch' : 'woosh', x1, y1, .8); }
       // C4: الإطلاق: وميض ودخان عند المنصة أول ثانية
-      if (it.k === 'bm' && u < .12 && !far) { const a0 = 1 - u / .12; c.save(); c.globalCompositeOperation = 'lighter'; c.fillStyle = `rgba(255,220,150,${a0})`; c.beginPath(); c.arc(x1, y1, 3 + 6 * a0, 0, 7); c.fill(); c.restore(); c.fillStyle = `rgba(200,195,185,${a0 * .5})`; c.beginPath(); c.arc(x1 + 3, y1 - 6 * (1 - a0), 5 + 8 * (1 - a0), 0, 7); c.fill(); }
+      if (it.k === 'bm' && u < .12 && !far) { const a0 = 1 - u / .12; if (cam.s > 2500) img('v3_w_launch', x1, y1, Math.min(60, cam.s / 90), 0, a0); c.save(); c.globalCompositeOperation = 'lighter'; c.fillStyle = `rgba(255,220,150,${a0})`; c.beginPath(); c.arc(x1, y1, 3 + 6 * a0, 0, 7); c.fill(); c.restore(); c.fillStyle = `rgba(200,195,185,${a0 * .5})`; c.beginPath(); c.arc(x1 + 3, y1 - 6 * (1 - a0), 5 + 8 * (1 - a0), 0, 7); c.fill(); }
       // C4: الرادار يكشف (دائرة تنبض عند الهدف) لما الباليستي يكون بنص الطريق
       if (it.k === 'bm' && u > .3 && u < .55 && !far) { const q = (u - .3) / .25; c.save(); c.strokeStyle = `rgba(120,255,160,${(1 - q) * .7})`; c.lineWidth = 1.5; c.beginPath(); c.arc(x2, y2, 10 + q * 40, 0, 7); c.stroke(); c.restore(); }
       // C4: صاروخ الاعتراض يطلع من موقع الدفاع ويلاقيه بالسما
       if (it.kill && !it.done && u > end - .22 && !far) { const q = (u - (end - .22)) / .22, [dx, dy] = A.toS(it.dp[0], it.dp[1]), ix = dx + (x - dx) * q, iy = dy + (y - dy) * q - 30 * Math.sin(q * Math.PI);
-        c.save(); c.strokeStyle = 'rgba(255,255,255,.55)'; c.lineWidth = 1.3; c.beginPath(); c.moveTo(dx, dy); c.quadraticCurveTo((dx + x) / 2, Math.min(dy, y) - 30, ix, iy); c.stroke(); c.globalCompositeOperation = 'lighter'; c.fillStyle = 'rgba(200,230,255,.95)'; c.beginPath(); c.arc(ix, iy, 2.5, 0, 7); c.fill(); c.restore(); if (!it.il) { it.il = 1; snd('launch', dx, dy, .5); } }
-      if (u >= end && !it.done) { it.done = T; if (it.kill) { snd('boom_mid', x, y, .7); } else { if (it.k === 'bm') bigSnd(gx, gy, 1); else snd('boom_bomb', x, y, 1); if (b.tgt === A.me() && onScr(gx, gy)) L.kick(it.k === 'bm' ? .3 : .12); if (!b.rep) scar(it.b, 'crater', b.day); } }
+        c.save(); c.strokeStyle = 'rgba(255,255,255,.55)'; c.lineWidth = 1.3; c.beginPath(); c.moveTo(dx, dy); c.quadraticCurveTo((dx + x) / 2, Math.min(dy, y) - 30, ix, iy); c.stroke(); c.globalCompositeOperation = 'lighter'; c.fillStyle = 'rgba(200,230,255,.95)'; c.beginPath(); c.arc(ix, iy, 2.5, 0, 7); c.fill(); c.restore(); img(ICP[b.tgt] || 'v3_m_patriot', ix, iy, Math.min(34, 12 + cam.s / 300), Math.atan2(y - iy, x - ix) + .2); if (!it.il) { it.il = 1; snd('launch', dx, dy, .5); } }
+      if (u >= end && !it.done) { it.done = T; if (it.kill) { snd('boom_mid', x, y, .7); } else { if (it.k === 'bm') bigSnd(gx, gy, 1); else snd('boom_bomb', x, y, 1); if (b.tgt === A.me() && onScr(gx, gy)) L.kick(it.k === 'bm' ? .3 : .12); if (!b.rep) scar(it.b, b.city && it.k === 'bm' ? 'rubble' : 'crater', b.day); } }
       // الأثر
       c.save(); c.lineCap = 'round';
       if (it.k === 'bm') { c.strokeStyle = b.tgt === A.me() ? 'rgba(255,120,90,.6)' : b.by === A.me() ? 'rgba(140,200,255,.55)' : 'rgba(255,200,140,.45)'; c.lineWidth = far ? 1.6 : 2.4; c.beginPath(); for (let s = 0; s <= 24; s++) { const q = uu * s / 24, qx = x1 + (x2 - x1) * q, qy = y1 + (y2 - y1) * q - 4 * H * q * (1 - q); s ? c.lineTo(qx, qy) : c.moveTo(qx, qy); } c.stroke();
         if (!far && !it.done) { c.fillStyle = 'rgba(0,0,0,.25)'; c.beginPath(); c.ellipse(gx, gy, 3, 1.5, 0, 0, 7); c.fill(); } }
       else { c.strokeStyle = 'rgba(230,230,220,.35)'; c.lineWidth = 1.2; c.setLineDash([2, 4]); c.beginPath(); c.moveTo(x1, y1); c.lineTo(gx, gy); c.stroke(); c.setLineDash([]); }
       c.restore();
-      if (!it.done) { if (it.k === 'bm') { c.save(); c.globalCompositeOperation = 'lighter'; const gr = c.createRadialGradient(x, y, 0, x, y, 9); gr.addColorStop(0, 'rgba(255,240,200,1)'); gr.addColorStop(1, 'rgba(255,140,40,0)'); c.fillStyle = gr; c.beginPath(); c.arc(x, y, 9, 0, 7); c.fill(); c.restore(); }
+      if (!it.done) { if (it.k === 'bm') { c.save(); c.globalCompositeOperation = 'lighter'; const gr = c.createRadialGradient(x, y, 0, x, y, 9); gr.addColorStop(0, 'rgba(255,240,200,1)'); gr.addColorStop(1, 'rgba(255,140,40,0)'); c.fillStyle = gr; c.beginPath(); c.arc(x, y, 9, 0, 7); c.fill(); c.restore();
+          // الصاروخ نفسه (صورة) باتجاه القوس لما نقرّب
+          if (!far) { const u2 = Math.min(1, uu + .01), nx = x1 + (x2 - x1) * u2, ny = y1 + (y2 - y1) * u2 - 4 * H * u2 * (1 - u2), im = bmImg(b.by, b.items.indexOf(it)); img(im, x, y, Math.min(44, 16 + cam.s / 250), Math.atan2(ny - y, nx - x)); } }
         else img('u_shahed_t', x, y, far ? 10 : 16, Math.atan2(y2 - y1, x2 - x1)); }
-      else { const a = 1 - (T - it.done) / 2500; if (it.kill) { boom(x, y, 22, a);
+      else { const a = 1 - (T - it.done) / 2500; if (it.kill) { if (has('v3_x_icpt')) img('v3_x_icpt', x, y, 40 * (1.2 - a * .3), 0, a, 'lighter'); else boom(x, y, 22, a);
           // C4: شظايا الاعتراض تنزل بدخان
           const q = 1 - a; c.save(); for (let k = 0; k < 5; k++) { const sx = x + (k - 2) * 5 * (1 + q * 2), sy = y + q * q * 70 * (1 + k * .15); c.fillStyle = `rgba(80,75,70,${a * .5})`; c.beginPath(); c.arc(sx, sy - 6, 2 + q * 4, 0, 7); c.fill(); c.fillStyle = `rgba(255,170,80,${a})`; c.fillRect(sx - 1, sy - 1, 2, 2); } c.restore(); }
-        else boom(gx, gy, it.k === 'bm' ? 46 : 28, a); }
+        else if (has('v3_x_big')) { const q = 1 - a; img('v3_x_smoke', gx, gy - 18 - q * 20, (it.k === 'bm' ? 50 : 32) * (1 + q * .6), 0, Math.min(1, a * 1.4) * .9); img(b.city ? 'v3_x_big' : 'v3_x_tank', gx, gy, (it.k === 'bm' ? 58 : 34) * (1.25 - a * .35), 0, a, 'lighter'); } else boom(gx, gy, it.k === 'bm' ? 46 : 28, a); }
     }
     if (far) { const [x, y] = A.toS(b.ll[0], b.ll[1]); c.save(); c.font = '700 11px "IBM Plex Sans Arabic",Tahoma'; c.textAlign = 'center'; c.lineWidth = 3; c.strokeStyle = 'rgba(0,0,0,.6)'; c.strokeText(b.label, x, y - 22); c.fillStyle = b.mine ? '#cfe6ff' : '#ffd9d2'; c.fillText(b.label, x, y - 22); c.restore(); }
     return !alive;
@@ -141,12 +148,14 @@
     const T = now(), cam = A.cam(); if (cam.s < 600) return;
     L.fires = L.fires.filter(f => day == null || f.day0 == null || day - f.day0 <= f.until);
     for (const f of L.fires) { if (T < f.t) continue; const [x, y] = A.toS(f.ll[0], f.ll[1]); if (x < -60 || x > innerWidth + 60 || y < -60 || y > innerHeight + 60) continue; const w = Math.max(14, Math.min(40, cam.s / 160));
-      img('fx_fire', x, y, w, 0, .7 + .3 * Math.sin(T / 120 + x), 'lighter'); smoke(c, x, y, w, T, .9); }
+      if (has('v3_x_smoke')) img('v3_x_smoke', x + 3, y - w * .9, w * 1.8, Math.sin(T / 3000 + x) * .05, .85); else smoke(c, x, y, w, T, .9);
+      img('fx_fire', x, y, w, 0, .7 + .3 * Math.sin(T / 120 + x), 'lighter'); }
   }
   // ===== C3: الحفر والحطام (تبقى ~10 أيام، تبين بالتقريب) =====
   function scarsDraw(c, day) {
     const cam = A.cam(); L.scars = L.scars.filter(s => day == null || s.day0 == null || day - s.day0 <= 10); if (cam.s < 1500) return; const w = Math.max(5, Math.min(18, cam.s / 500));
     for (const s of L.scars) { const [x, y] = A.toS(s.ll[0], s.ll[1]); if (!onScr(x, y)) continue; c.save(); c.translate(x, y); c.rotate(s.rot);
+      const SC = { crater: 'v3_w_crater', wreck: 'v3_w_tank', rubble: 'v3_w_rubble', plane: 'v3_w_plane' }[s.k]; if (has(SC)) { c.restore(); img(SC, x, y, w * 2.2 * s.s, s.rot, .95); continue; }
       if (s.k === 'crater') { c.fillStyle = 'rgba(30,25,20,.55)'; c.beginPath(); c.ellipse(0, 0, w * s.s, w * s.s * .7, 0, 0, 7); c.fill(); c.strokeStyle = 'rgba(120,105,85,.5)'; c.lineWidth = 1.5; c.stroke(); }
       else { c.fillStyle = 'rgba(28,26,24,.85)'; c.fillRect(-w * .5 * s.s, -w * .25 * s.s, w * s.s, w * .5 * s.s); c.fillRect(0, -w * .08, w * .55 * s.s, w * .16); c.fillStyle = 'rgba(60,55,50,.25)'; c.beginPath(); c.arc(w * .2, -w * .6 - ((now() / 50 + s.rot * 100) % 20), w * .45, 0, 7); c.fill(); }
       c.restore(); }
@@ -158,9 +167,10 @@
     const cam = A.cam(); if (!L.bpts || !L.bpts.length || cam.s < 900) return; const T = now(), w = Math.max(8, Math.min(30, cam.s / 200)), N = night(); let vis = [];
     for (const [lon, lat, k] of L.bpts) { const [x, y] = A.toS(lon, lat); if (!onScr(x, y)) continue; vis.push([x, y, k]); const h = lon * 31 + lat * 17;
       // غبار ودخان فوق الخلية
-      for (let i = 0; i < 3; i++) { const f = ((T / 3000) + i / 3 + h) % 1; c.fillStyle = `rgba(${N ? 60 : 120},${N ? 55 : 105},${N ? 50 : 85},${(1 - f) * .22 * k})`; c.beginPath(); c.arc(x + Math.sin(h + i) * w * .6 + f * w * .5, y - f * w * .8, w * (.3 + f * .5), 0, 7); c.fill(); }
+      if (has('v3_x_dust')) for (let i = 0; i < 2; i++) { const f = ((T / 4000) + i / 2 + h) % 1; img('v3_x_dust', x + Math.sin(h + i) * w * .5 + f * w * .6, y - f * w * .5, w * (1.4 + f), Math.sin(h) * .4, (1 - f) * .55 * k); }
+      else for (let i = 0; i < 3; i++) { const f = ((T / 3000) + i / 3 + h) % 1; c.fillStyle = `rgba(${N ? 60 : 120},${N ? 55 : 105},${N ? 50 : 85},${(1 - f) * .22 * k})`; c.beginPath(); c.arc(x + Math.sin(h + i) * w * .6 + f * w * .5, y - f * w * .8, w * (.3 + f * .5), 0, 7); c.fill(); }
       // ومضات مدفعية وانفجارات
-      for (let i = 0; i < 2 + Math.round(4 * k); i++) { const ph = (T / 900 + i * .37 + h) % 1; if (ph < .18) { const ex = x + Math.sin(h * 3 + i * 2.1) * w, ey = y + Math.cos(h * 5 + i * 1.7) * w * .6; boom(ex, ey, w * (.5 + k * .5) * (1 - ph * 2), 1 - ph / .18); } }
+      for (let i = 0; i < 2 + Math.round(4 * k); i++) { const ph = (T / 900 + i * .37 + h) % 1; if (ph < .18) { const ex = x + Math.sin(h * 3 + i * 2.1) * w, ey = y + Math.cos(h * 5 + i * 1.7) * w * .6; if (i % 2 && has('v3_x_flash')) img('v3_x_flash', ex, ey, w * .9, h + i, 1 - ph / .18, 'lighter'); else if (has('v3_x_tank') && i === 0) img('v3_x_tank', ex, ey, w * (.8 + k * .6), h, 1 - ph / .18, 'lighter'); else boom(ex, ey, w * (.5 + k * .5) * (1 - ph * 2), 1 - ph / .18); } }
       // راجمات: صواريخ صغيرة بقوس من ورا الخط
       const rp = (T / 1600 + h) % 1; if (k > .4) { c.save(); c.globalCompositeOperation = 'lighter'; for (let i = 0; i < 6; i++) { const q = rp - i * .03; if (q < 0 || q > 1) continue; const rx = x - w * 1.6 + q * w * 1.6 + i, ry = y + w * .4 - Math.sin(q * Math.PI) * w * 1.1; c.fillStyle = 'rgba(255,200,120,.9)'; c.fillRect(rx, ry, 2, 2); } c.restore(); }
       // مسيّرة FPV تنقض
@@ -178,7 +188,7 @@
     if (!b.s) { b.s = 1; bigSnd(x0, y0, .6); }
     const fx = x0 + q * 40, fy = y0 - 60 + q * q * 60; c.save(); c.strokeStyle = 'rgba(40,38,35,.55)'; c.lineWidth = 3; c.beginPath(); c.moveTo(x0, y0 - 60); c.quadraticCurveTo(x0 + q * 25, y0 - 60, fx, fy); c.stroke();
     c.globalCompositeOperation = 'lighter'; c.fillStyle = 'rgba(255,150,60,.9)'; c.beginPath(); c.arc(fx, fy, 3, 0, 7); c.fill(); c.restore();
-    if (q > .97) boom(fx, fy, 30, 1);
+    if (q > .97) { boom(fx, fy, 30, 1); if (!b.sc) { b.sc = 1; const k2 = A.cam(); L.scars.push({ ll: b.ll, k: 'plane', day0: null, rot: R() * 6, s: 1, t: now() }); } }
     // البراشوت: قبة بيضة تنزل ببطء
     const px = x0 - 10 - q * 6, py = y0 - 70 + q * 45; c.save(); c.fillStyle = 'rgba(245,245,240,.95)'; c.beginPath(); c.arc(px, py, 6, Math.PI, 0); c.fill(); c.strokeStyle = 'rgba(80,80,80,.8)'; c.lineWidth = .8; c.beginPath(); c.moveTo(px - 6, py); c.lineTo(px, py + 8); c.lineTo(px + 6, py); c.stroke(); c.fillStyle = '#333'; c.fillRect(px - 1, py + 8, 2, 3); c.restore();
     return false;

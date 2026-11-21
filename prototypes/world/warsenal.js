@@ -100,10 +100,20 @@
     UQ: [9, 9, 6, 10], MJ: [7, 7, 7, 8], AS: [6, 5, 8, 6], TR: [8, 8, 5, 7], JS: [3, 6, 5, 4], NZ: [10, 0, 9, 10], SH: [8, 0, 7, 9], QS: [9, 0, 8, 8], DR: [5, 8, 6, 3] };
   const stats = (code, g) => (STAT[code] || [5, 5, 5, 5]).map(v => Math.min(10, +(v * (.55 + .15 * g)).toFixed(1)));
   // الجيل من مستوى البحث: 1 ← جيل 1، 2–3 ← 2، 4 ← 3، 5–6 ← 4
-  const genOf = (G, br) => { const t = (G.nat && G.nat.ind[0].tech[br]) || 0; return t >= 5 ? 4 : t >= 4 ? 3 : t >= 2 ? 2 : t >= 1 ? 1 : 0; };
+  // I-143: الصنع الوطني ينفتح بمجال كامل (بري/جوي/بحري/صواريخ) بعد بحث «المصنع الوطني»؛ الدول اللي تصنع فعلاً تبدي مفتوحة
+  const domOf = code => { const P = PROD[code]; return P.cat === 'div' ? 'land' : P.cat === 'plane' || code === 'QD' ? 'air' : P.cat === 'nav' ? 'sea' : 'msl'; };
+  const DOMBR = { land: 'arm', air: 'uav', sea: 'ind', msl: 'msl' };
+  function natOpen(G) { const N = G.nat; if (!N) return {}; if (N.natOpen) return N.natOpen;
+    const t = N.ind[0].tech, O = {}, ind = t.ind || 0; for (const d in DOMBR) if (ind >= 2 && (t[DOMBR[d]] || 0) >= 2 && (d !== 'sea' || (t.msl || 0) >= 2)) O[d] = 2;   // البحر: صناعة + صواريخ (إيران تبني فرقاطاتها، السعودية تشتري)
+    // حفظ قديم: اللي صنعناه أو بخط الإنتاج يبقى مفتوح
+    for (const c in N.natHave || {}) if (PROD[c]) O[domOf(c)] = 1; for (const o of (N.eco && N.eco[0].q) || []) { const m = /^nf_([A-Z]{2})/.exec(o.k || ''); if (m && PROD[m[1]]) O[domOf(m[1])] = 2; }
+    for (const d in O) if (O[d] === 1) O[d] = 2;
+    return N.natOpen = O; }
+  // الجيل: natOpen[مجال] = مستوى الفرع يوم الفتح (الدول المصنّعة من البداية = 2). يوم الفتح الجيل الأول (10)، وكل مستوى بعده جيل (20، 30، 40)
+  const genOf = (G, br, code) => { const t = (G.nat && G.nat.ind[0].tech[br]) || 0; if (!code) return Math.max(0, Math.min(4, t - 1)); const d = domOf(code), b = natOpen(G)[d]; if (!b) return 0; const bt = G.nat.ind[0].tech[DOMBR[d]] || 0; return Math.max(1, Math.min(4, 1 + bt - b)); };   // الجيل يمشي ويا فرع المجال (الدروع للبري...)
   function register(G, WD, ECON) {
     registerStock(G, ECON);
-    for (const code in PROD) { const P = PROD[code], f = FAM.find(x => x.code === code), g = genOf(G, P.br), key = 'nf_' + code;
+    for (const code in PROD) { const P = PROD[code], f = FAM.find(x => x.code === code), g = genOf(G, P.br, code), key = 'nf_' + code;
       if (g < 1 || (P.cat === 'nav' && !coast(G, WD))) { delete ECON.ITEMS[key]; continue; }
       const k = .7 + .15 * g;
       ECON.ITEMS[key] = { n: `${code}-${g * 10} ${f.kind} ${f.name}`, ic: ({ land: '🛡', air: '✈', sea: '⚓', msl: '🚀' })[f.dom] || '⭐', cat: P.cat, kind: P.kind, plane: P.plane, q: P.q, pool: P.pool, side: 0,
@@ -158,6 +168,6 @@
   function indF(G, F) { if (F) { const k = stockK(G); F.armAtk *= k; F.samPk *= k; } const A = G.ars; if (!A || !F) return; if (A.done.tank) F.armAtk *= 1 + FL.tank.fx.armAtk; if (A.done.ad) F.samPk *= 1 + FL.ad.fx.samPk; }
   // الخسائر: الروبوتات تنقص خسائرنا البشرية
   const casK = G => (G.ars && G.ars.done.ugv ? 1 - FL.ugv.fx.cas : 1);
-  const API = { stockK, spy, FL, FAM, DOM, PROD, STAT, stats, addShips, genOf, register, deliver, title, MAXRUN, ensure, costOf, can, start, month, apply, indF, casK };
+  const API = { natOpen, domOf, stockK, spy, FL, FAM, DOM, PROD, STAT, stats, addShips, genOf, register, deliver, title, MAXRUN, ensure, costOf, can, start, month, apply, indF, casK };
   if (typeof module !== 'undefined') module.exports = API; else root.WARS = API;
 })(typeof window !== 'undefined' ? window : globalThis);

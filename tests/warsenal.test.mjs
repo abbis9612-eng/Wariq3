@@ -58,6 +58,14 @@ if (!Z.log.some(l => l.k === 'arms' && l.a === 'tt')) no('نقل التقنية 
 const R2 = S.init(WD, 'TUR', { seed: 8 }); N.init(R2, WD); day(R2); R2.nat.eco[0].cash = 90; const e2 = R2.nat.eco[0]; e2.rep = { nf_SK: true }; N.buy(R2, 'nf_SK');
 let built = 0, maxF = 1; for (let i = 0; i < 120; i++) { day(R2); built = R2.nat.log.filter(l => l.k === 'built' && l.it === 'nf_SK').length; if (e2.le && e2.le[0]) maxF = Math.max(maxF, e2.le[0].f); }
 if (built < 2) no(`التكرار ما رجّع الطلب (${built})`); if (!(maxF > 1.1)) no('كفاءة الخط ما زادت ' + maxF);
+// I-143: الصنع الوطني ينفتح بالبحث — العراق مقفول من البداية، تركيا وإيران مفتوحة؛ يوم الفتح الجيل الأول
+{ const Q = S.init(WD, 'IRQ', { seed: 2 }); N.init(Q, WD); day(Q); const E0 = require('../prototypes/world/gwecon.js');
+  if (Object.keys(A.natOpen(Q)).length || E0.ITEMS.nf_ZR) no('العراق عنده صنع وطني من أول يوم'); if (typeof R.can(Q, WD, 'natL') !== 'string') no('مصنع الدبابات مفتوح بدون دروع 3');
+  Q.nat.ind[0].tech.arm = 3; Q.nat.ind[0].tech.ind = 2; if (R.can(Q, WD, 'natL')) no('مصنع الدبابات: ' + R.can(Q, WD, 'natL')); R.finish(Q, WD, 'natL'); day(Q);
+  if (!E0.ITEMS.nf_ZR || E0.ITEMS.nf_ZR.gen !== 1) no('بعد المصنع المفروض ZR-10: ' + (E0.ITEMS.nf_ZR && E0.ITEMS.nf_ZR.n)); if (E0.ITEMS.nf_SF) no('المصنع البري فتح الطيران');
+  Q.nat.ind[0].tech.arm = 4; day(Q); if (E0.ITEMS.nf_ZR.gen !== 2) no('مستوى دروع بعد الفتح ما رفع الجيل');
+  const T2 = S.init(WD, 'TUR', { seed: 2 }); N.init(T2, WD); if (!A.natOpen(T2).land || !A.natOpen(T2).air) no('تركيا تصنع فعلاً ومقفولة');
+  const old = JSON.parse(S.save(Q)); old.v = 21; delete old.nat.natOpen; const L2 = S.load(JSON.stringify(old), WD); if (L2.v < 22) no('ترقية V21'); }
 // القسم 6: المخزون، المعرض، التجسس، حوض السفن
 const F6 = S.init(WD, 'TUR', { seed: 9 }); N.init(F6, WD); day(F6); F6.nat.eco[0].cash = 50; F6.nat.natHave = { ZR: 2 };
 F6.wars.push({ id: 'tst', n: 'تجربة', a: ['TUR'], b: ['GRC'], t0: F6.t, weary: {}, score: 0, months: 0, taken: {} });

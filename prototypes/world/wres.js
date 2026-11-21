@@ -29,6 +29,11 @@
     anticorr:{ s: 'soc', ic: '⚖', img: 'rs_anticorr', n: 'مكافحة الفساد', cost: 2, d: 'المشاريع أرخص وأسرع −10٪ ثاني، والإيرادات +1٪', fx: { effK: .1, rev: .01 }, req: ['gov'] },
     softpower:{ s: 'soc', ic: '🎭', img: 'rs_softpower', n: 'الإعلام والقوة الناعمة', cost: 1.5, d: 'صورتنا بالعالم أحسن: العلاقة ويا كل الدول اللي تحبنا +5', fx: { soft: 5 } },
     gov:   { s: 'soc', ic: '🏛', img: 'rs_gov', n: 'إدارة وحوكمة إلكترونية', cost: 1.5, d: 'فساد أقل: المشاريع أرخص وأسرع −10٪، والإيرادات +1٪', fx: { effK: .1, rev: .01 } },
+    // 🏭 الصنع الوطني (I-143): أول شي نشتري ونطوّر، وبعدين نبني مصنعنا — يحتاج مستوى 3 بالفرع و2 بالصناعة (~سنة وشوية بالعراق)
+    natL: { s: 'mil', ic: '🛡', img: 'rs_armor', n: 'مصنع الدبابات الوطني', cost: 5, d: 'نصنع دباباتنا ومدرعاتنا بنفسنا: يفتح زئير وضرار والليث والصخرة وحطين والوابل (الجيل الأول، وكل مستوى دروع بعده يرفع الجيل)', fx: { natOpen: 'land', natBr: 'arm' }, reqT: ['arm', 3], reqI: 2 },
+    natA: { s: 'mil', ic: '✈', img: 'rs_air', n: 'مصنع الطيران الوطني', cost: 6, d: 'نصنع طياراتنا ومسيّراتنا: يفتح سيف الله ونسر والزبير والعاصفة والظل والقادسية (الجيل الأول)', fx: { natOpen: 'air', natBr: 'uav' }, reqT: ['uav', 3], reqI: 2 },
+    natS: { s: 'mil', ic: '⚓', img: 'rs_navy', n: 'حوض السفن الحربية', cost: 6, d: 'نبني سفننا الحربية: يفتح عقبة والموج والإعصار وطارق والجسر (الجيل الأول)', fx: { natOpen: 'sea', natBr: 'ind' }, reqT: ['ind', 3], need: 'sea' },
+    natM: { s: 'mil', ic: '🚀', img: 'rs_missile', n: 'مصنع الصواريخ الوطني', cost: 5, d: 'نصنع صواريخنا: يفتح النيزك والسهم والقرش والدرع (الجيل الأول)', fx: { natOpen: 'msl', natBr: 'msl' }, reqT: ['msl', 3], reqI: 2 },
     // 🧪 استراتيجي
     nucp:  { s: 'str', ic: '⚛', img: 'rs_nuclear', n: 'طاقة نووية سلمية', cost: 4, d: 'مفاعل كهرباء: قدرة الشبكة +15٪ من الطلب. تحت رقابة الوكالة الدولية (بدون عقوبات)', fx: { elec: .15 }, req: ['edu', 'solar'] },
     space: { s: 'str', ic: '🛰', img: 'rs_space', n: 'أقمار صناعية', cost: 3, d: 'اتصالات وملاحة وصور: النمو +0.1٪ دائم', fx: { g: .1 }, req: ['tele'] },
@@ -80,6 +85,8 @@
     if (t.need === 'oil' && !(G.C[G.me].oil > 0)) return 'ماكو نفط عدنا';
     if (t.need === 'sea' && WD && !WD.r.some((r, i) => G.ctl[i] === G.me && (r[8] || []).length)) return 'ماكو ساحل';
     if (t.reqT && G.nat && (G.nat.ind[0].tech[t.reqT[0]] || 0) < t.reqT[1]) { const IND = root.IND || require('./gwind.js'); return `يحتاج «${IND.BR[t.reqT[0]].n}» مستوى ${t.reqT[1]}`; }
+    if (t.reqI && G.nat && (G.nat.ind[0].tech.ind || 0) < t.reqI) return `يحتاج «الصناعة» مستوى ${t.reqI}`;
+    if (t.fx && t.fx.natOpen && G.nat && G.nat.natOpen && G.nat.natOpen[t.fx.natOpen]) return 'عدنا هالمصنع من البداية';
     const miss = (t.req || []).filter(r => !R.done[r]); if (miss.length) return 'يحتاج قبله: ' + miss.map(r => T[r].n).join('، ');
     return null;
   }
@@ -114,6 +121,7 @@
   }
   function finish(G, WD, k) {
     const R = ensure(G), t = T[k], f = t.fx || {}, c = G.C[G.me]; R.done[k] = G.t;
+    if (f.natOpen && G.nat) { const W = root.WARS || require('./warsenal.js'); W.natOpen(G)[f.natOpen] = G.nat.ind[0].tech[f.natBr] || 1; }   // الرقم = مستوى الفرع يوم الفتح (الجيل الأول)
     if (f.oilK) c.oilK = (c.oilK || 1) + f.oilK;
     if (f.core) c.core *= 1 + f.core;
     if (f.g) c.g0 += f.g;

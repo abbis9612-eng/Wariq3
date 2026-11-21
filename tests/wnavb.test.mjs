@@ -27,4 +27,9 @@ if (!(kal.hit >= c12.hit)) no(`كاليبر لازم أصعب (${kal.hit} مقا
 out.push(`8 كاليبر مقابل 8 نور على فرقاطتين: أصاب ${kal.hit} مقابل ${c12.hit}`);
 // 7) حتمية: نفس البذرة = نفس النتيجة
 const a = JSON.stringify(B.resolve({ s: { dd: 2 } }, { from: [50, 0], n: 8 }, 5)), b = JSON.stringify(B.resolve({ s: { dd: 2 } }, { from: [50, 0], n: 8 }, 5)); if (a !== b) no('مو حتمية');
+// الطوربيدات (I-140): غواصتين ضد مجموعة حراسة تغرق شي وتخسر غواصة تقريباً، والرادار ما يشوف الطوربيد، والسونار يكشف
+{ let sunk = 0, lost = 0, sam = 0; for (let i = 1; i <= 100; i++) { const r = B.resolve({ s: { dd: 2, ff: 1 } }, { from: [40, 0], n: 0, subs: 2, kind: 'torp' }, i, 1); sunk += Object.values(r.sunk).reduce((a, b) => a + b, 0); lost += r.subLost; sam += r.stat.sam; }
+  if (!(sunk / 100 > .3 && sunk / 100 < 1.5)) no('الطوربيدات: غرق ' + sunk / 100); if (!(lost / 100 > .4)) no('السونار ما يصيد غواصات ' + lost / 100); if (sam) no('الرادار اعترض طوربيد');
+  const r = B.resolve({ s: { amp: 2 } }, { from: [40, 0], n: 0, subs: 2, kind: 'torp' }, 5, 1); if (r.subLost) no('سفن الإنزال ما عدها سونار'); console.log(`طوربيدات: غرق ${sunk / 100} · غواصات خسرت ${lost / 100}`); }
+
 console.log(out.join('\n')); console.log(bad ? `\n❌ ${bad} مشكلة` : '\n✅ المعركة البحرية سليمة'); process.exit(bad ? 1 : 0);

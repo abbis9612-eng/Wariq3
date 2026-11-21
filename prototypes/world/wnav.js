@@ -118,7 +118,7 @@
       while (g.path.length) { const nx = g.path[0], d = KM(N.c[g.z], N.c[nx]); if (g.prog < d) break; g.prog -= d; g.z = g.path.shift(); }
       if (!g.path.length) g.prog = 0; }
     // تصليح وتعويض بالميناء (كل 30 يوم) من الاحتياط
-    if (G.t % 30 === 0) for (const g of NV.g) if (g.z === g.home && !g.path.length) { g.dmg = 0; g.fired = 0; const R = NV.res[g.cc] || {}; for (const k of T) { const need = (g.s0[k] || 0) - (g.s[k] || 0); if (need > 0 && R[k] > 0) { const m = Math.min(need, R[k]); R[k] -= m; g.s[k] = (g.s[k] || 0) + m; } } }
+    if (G.t % 30 === 0) for (const g of NV.g) if (g.z === g.home && !g.path.length) { g.dmg = 0; g.fired = 0; g.tf = 0; const R = NV.res[g.cc] || {}; for (const k of T) { const need = (g.s0[k] || 0) - (g.s[k] || 0); if (need > 0 && R[k] > 0) { const m = Math.min(need, R[k]); R[k] -= m; g.s[k] = (g.s[k] || 0) + m; } } }
     if (!(G.wars || []).length) return log;
     const byZ = new Map(); for (const g of NV.g) { if (!byZ.has(g.z)) byZ.set(g.z, []); byZ.get(g.z).push(g); }
     const hit = (g, dmg, by, why) => { g.dmg += dmg; while (count(g) && g.dmg >= PW[SINK.find(k => g.s[k] > 0)] * 1.6) { const k = SINK.find(q => g.s[q] > 0); g.dmg -= PW[k] * 1.6; g.s[k]--; log.push({ t: G.t, k: 'navsink', cc: g.cc, ty: k, by, z: g.z, why }); if (CASN()) CASN().sink(G, g.cc, k, g.z); } };
@@ -141,6 +141,11 @@
     // 2ب) زوارق الصواريخ تهاجم سفن العدو بنفس البحر (كل زورق صاروخين، مرة وحدة لحد ما يرجع للميناء)
     for (const [z, L] of byZ) for (const f of L) { if (!f.s.fac || f.fired || !inWar.has(f.cc)) continue; const tg = L.find(g => g !== f && atWar(G, f.cc, g.cc) && count(g) && !sub(g)); if (!tg) continue;
       f.fired = 1; battle(G, WD, NV, tg, f.cc, { from: [25, (rnd() - .5) * 10], n: Math.min(30, f.s.fac * 2), kind: mslOf(f.cc), gap: .6, spread: 8 }, 'fac', log); }
+    // 2ج) كمين الغواصات: غواصات بحرب تهاجم سفن سطح العدو بنفس البحر بطوربيدات (مرة وحدة لحد ما ترجع للميناء)؛ السونار يدافع
+    for (const [z, L] of byZ) for (const f of L) { const ns = (f.s.ss || 0) + (f.s.ssn || 0); if (!ns || f.tf || !inWar.has(f.cc)) continue;
+      const tg = L.find(g => g !== f && atWar(G, f.cc, g.cc) && count(g) && !sub(g)); if (!tg) continue;
+      f.tf = 1; const n = Math.min(4, ns), r = battle(G, WD, NV, tg, f.cc, { from: [12, (rnd() - .5) * 6], n: 0, subs: n, kind: 'torp' }, 'sub', log);
+      for (let i = 0; r && i < r.subLost; i++) { const k = f.s.ssn ? 'ssn' : 'ss'; if (!f.s[k]) break; f.s[k]--; log.push({ t: G.t, k: 'navsink', cc: f.cc, ty: k, by: tg.cc, z, why: 'asw' }); if (CASN()) CASN().sink(G, f.cc, k, z); } }
     // 3) ضربات الحاملات على ساحل العدو (البحر نفسه أو جاره)
     for (const g of NV.g) { if (!g.s.cv || !inWar.has(g.cc)) continue; const near = [g.z, ...N.adj[g.z]];
       for (const w of G.wars) { const side = w.a.includes(g.cc) ? 'a' : w.b.includes(g.cc) ? 'b' : null; if (!side) continue; const foes = side === 'a' ? w.b : w.a;
@@ -178,7 +183,8 @@
     for (const k of Object.keys(g.s)) if (g.s[k] <= 0) delete g.s[k];
     NV.last.s0 = Object.fromEntries(Object.entries(NV.last.s0).map(([k, v]) => [k, v + (r.sunk[k] || 0)]));
     NV.seq = (NV.seq || 0) + 1; NV.rec = (NV.rec || []).concat([{ ...NV.last, seq: NV.seq }]).slice(-12);   // C0: آخر المعارك حتى الخريطة تعيدها كلها
-    log.push({ t: G.t, k: 'navbattle', cc: by, on: g.cc, z: g.z, n: att.n, kill: r.stat.kill, hit: r.stat.hit, why });
+    log.push({ t: G.t, k: 'navbattle', cc: by, on: g.cc, z: g.z, n: att.n, subs: att.subs || 0, kill: r.stat.kill, hit: r.stat.hit, why });
+    return r;
   }
   // مخزون صواريخ ضد السفن لكل دولة: 30٪ من صواريخها (أقصى 400)، ويتعوّض 5٪ بالشهر [تقدير]
   function asmOf(G, NV, cc) { NV.asm = NV.asm || {}; if (NV.asm[cc] == null) { const C = G.C[cc] || {}; NV.asm[cc] = Math.min(400, Math.round((C.msl || 0) * .3)); } return NV.asm[cc]; }

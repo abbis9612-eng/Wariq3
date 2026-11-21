@@ -1083,7 +1083,7 @@ body.sheeton #toast{top:calc(var(--toph, 100px) + 4px) !important;bottom:auto !i
       case 'over': return [`💥 ${OVER[l.why] || OVER.collapse}`, 'bad'];
       case 'strike': return [`🚀 ${n(l.by)} ضربت ${({ mil: 'جيش', oil: 'نفط', city: 'مدن' })[l.kind]} ${n(l.t)}: ${l.nm ? l.nm + ' صاروخ (اعترضوا ' + l.im + ')' : ''}${l.nm && l.nd ? ' و' : ''}${l.nd ? l.nd + ' مسيّرة (اعترضوا ' + l.id + ')' : ''}`, l.t === me ? 'bad' : l.by === me ? 'good' : ''];
       case 'navbattle': return null;
-      case 'navsink': return l.cc === me || (l.by === me && !['fac', 'amp'].includes(l.ty)) ? [`⚓ غرقت ${WNAV.TN[l.ty]} لـ${n(l.cc)} ${({ sea: 'بمعركة بحرية', sub: 'بطوربيد غواصة', coast: 'بصاروخ من الساحل' })[l.why] || ''} (${WD.s[l.z][1]})`, l.cc === me ? 'bad' : 'good'] : null;
+      case 'navsink': return l.cc === me || (l.by === me && !['fac', 'amp'].includes(l.ty)) ? [`⚓ غرقت ${WNAV.TN[l.ty]} لـ${n(l.cc)} ${({ sea: 'بمعركة بحرية', sub: 'بطوربيد غواصة', coast: 'بصاروخ من الساحل', asw: 'بطوربيد مضاد للغواصات', fac: 'بزوارق صواريخ' })[l.why] || ''} (${WD.s[l.z][1]})`, l.cc === me ? 'bad' : 'good'] : null;
       case 'navsalvo': return l.on === me && l.h ? [`🚀 ${n(l.cc)} رمت ${l.n} صواريخ على سفننا (${l.h} أصابت)`, 'bad'] : null;
       case 'blockade': return [`⚓ ${n(l.by)} تحاصر سواحل ${n(l.on)} (${l.f}٪)`, l.on === me ? 'bad' : l.by === me ? 'good' : ''];
       case 'strait': return [`🚢 ${l.n} انقطع ${l.f}٪ — النفط يغلى`, ''];

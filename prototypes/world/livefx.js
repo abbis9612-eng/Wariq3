@@ -42,11 +42,11 @@
   // ================= البحر =================
   // last = G.nav.last، fleetLL = [lon,lat] الأسطول، fromLL = [lon,lat] مصدر الهجوم (ساحل أو زوارق)
   L.addNaval = (B, last, fleetLL, fromLL, mine) => {
-    const S = B.create({ s: last.s0 }, last.att, last.seed), b = { k: 'naval', B, S, ll: fleetLL, from: fromLL, t0: now(), acc: 0, P: new Map(), trails: [], fx: [], tracers: [], gid: last.gid, mine, label: last.att.n + ' ' + B.MSL[last.att.kind].n };
+    const S = B.create({ s: last.s0 }, last.att, last.seed), b = { k: 'naval', B, S, ll: fleetLL, from: fromLL, t0: now(), acc: 0, P: new Map(), trails: [], fx: [], tracers: [], gid: last.gid, mine, label: last.att.subs ? `🌊 ${last.att.subs} غواصة، طوربيدات` : last.att.n + ' ' + B.MSL[last.att.kind].n };
     L.list.push(b); return b;
   };
   function navalFrame(b, dt) {
-    b.acc += dt * 7;   // 7 ثواني محاكاة بكل ثانية: معركة ~150 ث تخلص بـ ~20 ث
+    b.acc += dt * (b.S.subs && b.S.subs.length ? 20 : 7);   // 7 ثواني محاكاة بكل ثانية (~20 ث)، والطوربيدات أبطأ فـ20 (~40 ث)
     while (b.acc >= 1 && !b.S.done) { b.acc -= 1; for (const m of b.S.msl) b.P.set(m.id, [m.x, m.y]); const n0 = b.S.ev.length; b.B.step(b.S, 1);
       for (const e of b.S.ev.slice(n0)) b.fx.push({ ...e, at: now() }); }
     if (b.S.done) { b.acc = Math.min(1, b.acc); if (!b.end) b.end = now(); }
@@ -74,20 +74,30 @@
     if (far) return;
     // خيوط الدخان والصواريخ
     const f = Math.min(1, b.acc);
-    for (const m of b.S.msl) { const p0 = b.P.get(m.id) || [m.x, m.y], px = p0[0] + (m.x - p0[0]) * f, py = p0[1] + (m.y - p0[1]) * f, [x, y] = P(px, py);
+    // الغواصات: ظل غامق تحت الماء ومنظار يسحب أثر؛ لما السونار يكشفها حلقة زرقة
+    for (const u of b.S.subs || []) { if (u.st === 'gone') continue; const [x, y] = P(u.x, u.y); c.save();
+      img('nv_sub', x, y, 18 * zf, Math.PI, u.st === 'dead' ? .25 : .7);
+      if (u.det && u.st !== 'dead') { const pr = (T / 700) % 1; c.strokeStyle = `rgba(90,190,255,${1 - pr})`; c.lineWidth = 1.6; c.beginPath(); c.arc(x, y, 8 + pr * 22, 0, 7); c.stroke(); }
+      c.restore(); }
+    for (const m of b.S.msl) { if (b.B.MSL[m.kind] && b.B.MSL[m.kind].uw) {   // طوربيد: خط فقاعات تحت الماء
+        const p0 = b.P.get(m.id) || [m.x, m.y], px = p0[0] + (m.x - p0[0]) * f, py = p0[1] + (m.y - p0[1]) * f, [x, y] = P(px, py);
+        let tr = b.trails.find(q => q.id === m.id); if (!tr) b.trails.push(tr = { id: m.id, uw: 1, pts: [] }); const q = tr.pts[tr.pts.length - 1]; if (!q || Math.hypot(q[0] - px, q[1] - py) > .05) tr.pts.push([px, py, T]);
+        c.save(); c.fillStyle = m.side ? 'rgba(255,120,90,.95)' : 'rgba(140,220,255,.95)'; c.beginPath(); c.arc(x, y, 2.4, 0, 7); c.fill(); c.restore(); continue; } const p0 = b.P.get(m.id) || [m.x, m.y], px = p0[0] + (m.x - p0[0]) * f, py = p0[1] + (m.y - p0[1]) * f, [x, y] = P(px, py);
       let tr = b.trails.find(q => q.id === m.id); if (!tr) b.trails.push(tr = { id: m.id, sam: m.side === 0, pts: [] }); const q = tr.pts[tr.pts.length - 1]; if (!q || Math.hypot(q[0] - px, q[1] - py) > .1) tr.pts.push([px, py, T]);
       const ang = Math.atan2(P(m.x + Math.cos(m.h || 0), m.y + Math.sin(m.h || 0))[1] - y, P(m.x + Math.cos(m.h || 0), m.y + Math.sin(m.h || 0))[0] - x);
       c.save(); c.globalCompositeOperation = 'lighter'; c.fillStyle = m.side ? 'rgba(255,170,90,.9)' : 'rgba(220,240,255,.95)'; c.beginPath(); c.arc(x - Math.cos(ang) * 6, y - Math.sin(ang) * 6, m.side ? 3.5 : 2.5, 0, 7); c.fill(); c.restore();
       img(m.side ? 'nv_c802' : 'nv_sm2', x, y, m.side ? 16 : 13, ang); }
     const life = q => q.sam ? 2500 : 5000; c.save(); c.lineCap = 'round';
     for (const tr of b.trails) { tr.pts = tr.pts.filter(p => T - p[2] < life(tr)); for (let i = 1; i < tr.pts.length; i++) { const a = 1 - (T - tr.pts[i][2]) / life(tr), [x1, y1] = P(tr.pts[i - 1][0], tr.pts[i - 1][1]), [x2, y2] = P(tr.pts[i][0], tr.pts[i][1]);
-      c.strokeStyle = tr.sam ? `rgba(255,255,255,${a * .5})` : `rgba(215,210,200,${a * .45})`; c.lineWidth = (tr.sam ? 1.4 : 2) + (1 - a) * (tr.sam ? 5 : 9); c.beginPath(); c.moveTo(x1, y1); c.lineTo(x2, y2); c.stroke(); } }
+      c.strokeStyle = tr.uw ? `rgba(200,240,255,${a * .55})` : tr.sam ? `rgba(255,255,255,${a * .5})` : `rgba(215,210,200,${a * .45})`; c.lineWidth = (tr.sam ? 1.4 : 2) + (1 - a) * (tr.sam ? 5 : 9); c.beginPath(); c.moveTo(x1, y1); c.lineTo(x2, y2); c.stroke(); } }
     c.restore(); b.trails = b.trails.filter(q => q.pts.length);
     // الأحداث: انفجارات، فالانكس، تشويش، رشّات، إطلاق
     b.fx = b.fx.filter(e => T - e.at < (e.k === 'sink' ? 4000 : 2200));
     for (const e of b.fx) { const a = 1 - (T - e.at) / 2200, [x, y] = P(e.x, e.y); if (!e.snd) { e.snd = 1;
-        if (e.k === 'hit') { bigSnd(x, y, 1); if (b.mine && onScr(x, y)) L.kick(.22); } else snd(({ launch: 'launch', samlaunch: 'launch', kill: 'boom_mid', sink: 'boom_far', ciws: 'mg', splash: 'boom_far', chaff: 'rocket' })[e.k] || 'whiz', x, y, .7); }
+        if (e.k === 'hit') { bigSnd(x, y, 1); if (b.mine && onScr(x, y)) L.kick(.22); } else snd(({ tlaunch: 'whiz', asw: 'whiz', subkill: 'boom_far', sonar: 'whiz', launch: 'launch', samlaunch: 'launch', kill: 'boom_mid', sink: 'boom_far', ciws: 'mg', splash: 'boom_far', chaff: 'rocket' })[e.k] || 'whiz', x, y, .7); }
       if (e.k === 'kill') boom(x, y, 26 * (1.3 - a * .4), Math.min(1, a * 1.5));
+      if (e.k === 'subkill' || (e.k === 'hit' && e.torp)) { c.save(); c.fillStyle = `rgba(235,248,255,${a * .8})`; c.beginPath(); c.ellipse(x, y - 14 * (1 - a), 7 + 10 * (1 - a), 18 * (1 - a) + 4, 0, 0, 7); c.fill(); c.restore(); }   // عمود ماء
+      if (e.k === 'sonar' || e.k === 'nixie') { c.save(); c.strokeStyle = `rgba(90,190,255,${a})`; c.lineWidth = 1.5; c.beginPath(); c.arc(x, y, 6 + (1 - a) * 30, 0, 7); c.stroke(); c.restore(); }
       if (e.k === 'hit') { boom(x, y, 52 * (1.3 - a * .4), Math.min(1, a * 1.6)); }
       if (e.k === 'splash') img('nv_splash', x, y, 22, 0, a);
       if (e.k === 'launch' || e.k === 'samlaunch') { c.save(); c.globalCompositeOperation = 'lighter'; c.fillStyle = `rgba(255,210,140,${a * .7})`; c.beginPath(); c.arc(x, y, 1.5 + 3.5 * a, 0, 7); c.fill(); c.restore(); }

@@ -41,5 +41,11 @@ const cashE = Q.nat.eco[0].cash, pwKk = Q.C.TUR.pwK || 1;
 for (const k of ['nf_ZR_E', 'nf_ZR_K']) { const r = N.buy(Q, k); if (typeof r === 'string') no(k + ': ' + r); }
 for (let i = 0; i < 70; i++) day(Q);
 if (!Q.log.some(l => l.k === 'natsell')) no('نسخة التصدير ما انباعت'); if (!((Q.C.TUR.pwK || 1) > pwKk)) no('نسخة القيادة ما رفعت القوة');
+// K2: منتجات السوق الجديدة (سفن ومدفعية ومسيّرات) تتسلّم
+const M = require('../prototypes/world/wmkt.js'), K = S.init(WD, 'SAU', { seed: 3 }); N.init(K, WD); K.nat.eco[0].cash = 60; for (const x of ['USA', 'TUR']) S.addRel(K, 'SAU', x, 60);
+const kss = () => K.nav.g.filter(g => g.cc === 'SAU').reduce((t, g) => t + (g.s.ff || 0), 0), kf0 = kss();
+for (const [x, k] of [['TUR', 'ada'], ['USA', 'm109']]) { const r = M.buy(K, WD, S, x, k); if (typeof r === 'string') no(`السوق ${k}: ${r}`); }
+for (let i = 0; i < 560; i++) day(K);
+if (kss() < kf0 + 2) no(`الكورفيتات ما انضافت ${kf0} → ${kss()}`); if (K.log.filter(l => l.k === 'arms' && l.a === 'got').length < 2) no('منتجات السوق ما وصلت');
 console.log(`زئير وعُقبة دخلوا الخدمة · قوة الجيش ×${pw0} → ×${G.C.USA.pwK.toFixed(2)} · مدمرات ${dd0} → ${dd1} · رموز ${codes.length} بلا تكرار`);
 console.log(bad ? `❌ ${bad} مشاكل` : '✅ الترسانة الوطنية تمام'); process.exit(bad ? 1 : 0);

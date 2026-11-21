@@ -127,6 +127,6 @@
   function indF(G, F) { const A = G.ars; if (!A || !F) return; if (A.done.tank) F.armAtk *= 1 + FL.tank.fx.armAtk; if (A.done.ad) F.samPk *= 1 + FL.ad.fx.samPk; }
   // الخسائر: الروبوتات تنقص خسائرنا البشرية
   const casK = G => (G.ars && G.ars.done.ugv ? 1 - FL.ugv.fx.cas : 1);
-  const API = { FL, FAM, DOM, PROD, genOf, register, deliver, title, MAXRUN, ensure, costOf, can, start, month, apply, indF, casK };
+  const API = { FL, FAM, DOM, PROD, addShips, genOf, register, deliver, title, MAXRUN, ensure, costOf, can, start, month, apply, indF, casK };
   if (typeof module !== 'undefined') module.exports = API; else root.WARS = API;
 })(typeof window !== 'undefined' ? window : globalThis);

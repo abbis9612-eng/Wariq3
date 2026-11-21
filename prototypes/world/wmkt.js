@@ -63,6 +63,16 @@
     if (land) return { by: 'land', n: 'برّاً عبر الحدود' };
     const ports = WD.r.map((a, i) => [a, i]).filter(([a, i]) => W.ctl[i] === me && a[8] && a[8].length && a[9] && a[9].length).sort((p, q) => (q[0][9][0][1] || 0) - (p[0][9][0][1] || 0));
     return ports.length ? { by: 'sea', n: 'بحراً لميناء ' + ports[0][0][9][0][0], r: ports[0][0][0] } : { by: 'air', n: 'جواً (ماكو بحر)' }; }
+  // K2 (I-129): منتجات وبايعين أكثر بصور حقيقية (grd = مدفعية/آليات تقوّي الجيش، nav = سفن تنضاف لأسطولنا) [أسعار تقريبية]
+  SELL.USA.push(P('mq9', 'MQ-9B ريبر ×6 (مسيّرات)', 'plane', { t: 'ch4', q: 6, price: .7, days: 300, rel: 55, img: 'v4_p_mq9' }), P('m109', 'مدافع M109A7 (كتيبة)', 'grd', { q: 1, price: .5, days: 360, rel: 45, img: 'v4_p_m109' }), P('stryker', 'مدرعات سترايكر (لواء)', 'grd', { q: 1, price: .6, days: 300, rel: 45, img: 'v4_p_stryker' }));
+  SELL.TUR.push(P('akinci', 'أقنجي ×6 (مسيّرات)', 'plane', { t: 'ch4', q: 6, price: .45, days: 240, rel: 30, img: 'v4_p_akinci' }), P('ada', 'كورفيت «أدا» ×2', 'nav', { ships: { ff: 2 }, price: .8, days: 540, rel: 40, img: 'v4_p_corvette' }));
+  SELL.KOR.push(P('k9', 'مدافع K9 ثاندر (كتيبة)', 'grd', { q: 1, price: .4, days: 300, rel: 30, img: 'v4_p_k9' }));
+  SELL.FRA.push(P('caesar', 'مدافع قيصر (كتيبة)', 'grd', { q: 1, price: .3, days: 300, rel: 35, img: 'v4_p_caesar' }));
+  SELL.RUS.push(P('kilo', 'غواصة كيلو ×1', 'nav', { ships: { ss: 1 }, price: .4, days: 720, rel: 30, rival: 'USA', img: 'v4_p_kilo' }), P('tos', 'راجمة TOS-1A (كتيبة)', 'grd', { q: 1, price: .2, days: 240, rel: 15, rival: 'USA', img: 'v4_p_tos1' }));
+  SELL.CHN.forEach(p => { if (p.k === 'wl') p.img = 'v4_p_wingloong'; });
+  SELL.PAK = [P('jf17', 'JF-17 ثندر بلوك 3 ×12', 'plane', { t: 'f16', q: 12, price: .45, days: 400, rel: 20 })];
+  // صور من الجنب للمعروفة
+  for (const x in SELL) for (const p of SELL[x]) p.img = p.img || ({ f35: 'v4_ps_f35', tb2: 'v4_ps_tb2', s400: 'v4_ps_s400', pac: 'v4_ps_patriot', abrams: 'v4_ps_abrams' })[p.k];
   const sellers = W => Object.keys(SELL).filter(x => W.C[x]);
   // هل نقدر نشتري؟ (نص السبب أو null)
   function can(W, S, x, p) {
@@ -90,6 +100,8 @@
     for (const d of W.mkt.deals) { if (d.done || d.at > W.t) continue; d.done = 1; const p = SELL[d.x].find(o => o.k === d.k), c = W.C[W.me]; NW.arms = NW.arms || { jets: {}, sam: {}, tank: null };
       if (p.cat === 'plane') { NW.arms.jets[p.t] = (NW.arms.jets[p.t] || 0) + p.q; c.pw += p.q * 3 * (AIR.PLANES[p.t] && AIR.PLANES[p.t].aa > .6 ? 1.5 : 1); unlock(W, WD, X, d.x, p); }
       else if (p.cat === 'sam') { NW.arms.sam[p.t] = (NW.arms.sam[p.t] || 0) + p.q; c.adI += AIR.SYS[p.t] && Math.max(...AIR.SYS[p.t].mags.map(m => Math.max(...Object.values(m.r)))) > 100 ? 6 * p.q : 3 * p.q; unlock(W, WD, X, d.x, p); }
+      else if (p.cat === 'grd') { c.pw += 25 * (p.q || 1); NW.arms.grd = (NW.arms.grd || 0) + (p.q || 1); }
+      else if (p.cat === 'nav') { const A = (typeof window !== 'undefined' && window.WARS) || require('./warsenal.js'); A.addShips(W, WD, p.ships); }
       else if (p.cat === 'tank') { NW.arms.tank = { x: d.x, gen: p.gen, n: p.n }; ECON.SUPPLY[0].arm = d.x; ECON.SUP_N[d.x] = WD.cs[d.x].ar; }
       W.log.push({ t: W.t, k: 'arms', a: 'got', x: d.x, n: p.n }); }
   }

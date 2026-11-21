@@ -29,6 +29,8 @@
   }
   function ensure(G, WD) {
     if (!G.pop3) { G.pop3 = {}; for (const id of G.ids) G.pop3[id] = make(G, WD, id); }
+    // مؤشر التنمية من أول يوم (قبل أول شهر)
+    for (const id in G.pop3) if (G.pop3[id].hdi == null && G.C[id]) G.pop3[id].hdi = hdi(G, id);
     return G.pop3;
   }
   // كل شهر لكل دولة: ينادى من wsim.econ (war = حرب على أرضنا)

@@ -4,7 +4,7 @@
 (function (root) {
   'use strict';
   const START = Date.UTC(2026, 10, 20);   // 20 تشرين الثاني 2026: الوضع الحقيقي (D-048)
-  const V = 15;                              // إصدار حفظ «العالم» (9: البحرية الحقيقية W12؛ 2: الصواريخ والدفاع الجوي؛ 3: البحرية والمضائق؛ 4: طبقة الدولة؛ 5: التكتلات والتوتر والعروض والأمم المتحدة؛ 6: الانتخابات والانقلابات والاحتلال والأحداث؛ 7: البحث لكل الدول وسوق السلاح؛ 8: قائد القوات المسلحة)
+  const V = 16;                              // إصدار حفظ «العالم» (9: البحرية الحقيقية W12؛ 2: الصواريخ والدفاع الجوي؛ 3: البحرية والمضائق؛ 4: طبقة الدولة؛ 5: التكتلات والتوتر والعروض والأمم المتحدة؛ 6: الانتخابات والانقلابات والاحتلال والأحداث؛ 7: البحث لكل الدول وسوق السلاح؛ 8: قائد القوات المسلحة)
   const mulberry = a => () => { a |= 0; a = a + 0x6D2B79F5 | 0; let t = Math.imul(a ^ a >>> 15, 1 | a); t = t + Math.imul(t ^ t >>> 7, 61 | t) ^ t; return ((t ^ t >>> 14) >>> 0) / 4294967296; };
   const clamp = (v, a, b) => v < a ? a : v > b ? b : v;
   const POL = root.WPOL || (typeof require !== 'undefined' ? require('./wpol.js') : null);   // W7: السياسة والأحداث
@@ -34,7 +34,7 @@
 
   // ===== البداية =====
   function init(WD, me, opt = {}) {
-    const seed = opt.seed ?? 20261120, W = { v: V, seed, rs: seed, t: 0, me, ap: 4, log: [], over: null, cfg: { diff: opt.diff || 'normal' } };
+    const seed = opt.seed ?? 20261120, W = { v: V, seed, rs: seed, t: 0, me, ap: 4, log: [], over: null, cfg: { diff: opt.diff || 'normal' }, tut: { s: 0 } };
     W.ids = Object.keys(WD.cs).sort();
     W.ctl = WD.r.map(a => a[2] || '');               // المسيطر على كل منطقة (يتغير بالحرب)
     W.C = {};
@@ -518,6 +518,8 @@
     if (o.v < 14) o.v = 14;
     // 14 ← 15 (v3 C1+C2): الخسائر (CAS.ensure يبنيها فاضية)
     if (o.v < 15) o.v = 15;
+    // 15 ← 16 (v3 V4): التعليم بأول 10 دقايق — الألعاب القديمة ما تحتاجه
+    if (o.v < 16) { o.tut = o.tut || { done: 1 }; o.v = 16; }
     o.base = WD.rel; o.rnd = mulberry(o.rs); dipInit(o, WD); if (POL) POL.ensure(o, WD); if (MKT) MKT.ensure(o, WD); if (CMD) CMD.ensure(o, WD); if (ECO) ECO.ensure(o, WD); if (POP) POP.ensure(o, WD); if (NAV) NAV.ensure(o, WD); return o;
   }
   const API = { V, K, START, TENSION, POL, MKT, CMD, NAV, ECO, init, addRel, answerOffer, unSummit, unVote, council, tenTarget, napOf, blocsOf, P5, navy, straits, step, month, act, can, offerPeace, declare, endWar, strike, playerStrike, rank, save, load, date, rel, atWar, allied, sancOf: (W, WD, id) => sancOn(WD, W, id), COST, TAX, CIV };

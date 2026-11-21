@@ -37,9 +37,24 @@ button.on{background:var(--chip2);border-color:var(--gold-l);color:var(--gold)}
 #legend{position:fixed;right:10px;top:calc(60px + env(safe-area-inset-top));background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:6px 9px;font-size:11px;z-index:4;max-width:44vw}
 #legend div{display:flex;align-items:center;gap:5px;margin:2px 0}#legend span{width:12px;height:12px;border-radius:3px;display:inline-block;flex:none}
 #load{position:fixed;inset:0;display:grid;place-items:center;background:var(--bg);z-index:20;font-size:15px}
+
+/* V3 (I-117): أيقونات SVG موحّدة + ألوان بمعنى ثابت (أخضر زين، أحمر خطر، ذهبي فلوس، أزرق جيش، بنفسجي بحث) */
+:root{--c-money:#c9a227;--c-army:#4a7fc1;--c-rd:#8a6fd1;--c-world:#3f9a6b}
+#tabs button i svg{width:23px;height:23px;fill:none;stroke:currentColor;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round;display:block;margin:0 auto}
+#tabs button[data-p=me].on{color:var(--c-money)}#tabs button[data-p=army].on{color:var(--c-army)}#tabs button[data-p=rd].on{color:var(--c-rd)}#tabs button[data-p=dip].on{color:var(--c-world)}
+#sheet .cimg{display:block;width:100%;height:96px;object-fit:cover;border-radius:8px;margin-bottom:6px}
+/* V4: التعليم */
+#tut{position:fixed;left:62px;right:10px;top:calc(128px + env(safe-area-inset-top));z-index:8;background:var(--panel);border:2px solid var(--gold);border-radius:14px;padding:10px 12px;box-shadow:0 6px 22px rgba(0,0,0,.25);font-size:13.5px}
+#tut[hidden]{display:none}#tut b.k{color:var(--gold)}#tut .row{display:flex;gap:8px;justify-content:space-between;align-items:center;margin-top:6px}
+body.sheeton #tut{display:none}
+/* V5 (الإمكانية): أزرار 44 بكسل، خط كبير، ألوان لعمى الألوان */
+#sheet button,#tabs button,.spd button,#sheet .seg button{min-height:44px}
+:root.big #sheet{zoom:1.15}:root.big #tabs{zoom:1.1}:root.big #top{zoom:1.08}
+:root.cb{--me:#2b83ba !important;--neg:#e66101 !important}
 </style>
 </head>
 <body>
+<svg width="0" height="0" style="position:absolute" aria-hidden="true"><symbol id="i-cmd" viewBox="0 0 24 24"><path d="M3 21h18M5 21V10l7-5 7 5v11M9 21v-6h6v6"/></symbol><symbol id="i-me" viewBox="0 0 24 24"><circle cx="12" cy="12" r="8.5"/><path d="M14.8 9.2c-.5-1-1.6-1.6-2.8-1.6-1.6 0-2.8.9-2.8 2.2 0 3 5.6 1.5 5.6 4.4 0 1.3-1.2 2.2-2.8 2.2-1.3 0-2.4-.6-2.9-1.7M12 6v1.6M12 16.4V18"/></symbol><symbol id="i-army" viewBox="0 0 24 24"><path d="M12 3l8 3v6c0 4.5-3.4 7.9-8 9-4.6-1.1-8-4.5-8-9V6z"/><path d="M8.5 12l2.5 2.5 4.5-5"/></symbol><symbol id="i-rd" viewBox="0 0 24 24"><path d="M9 3h6M10 3v6l-5 9a2 2 0 0 0 1.8 3h10.4a2 2 0 0 0 1.8-3l-5-9V3"/><path d="M7.5 15h9"/></symbol><symbol id="i-dip" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3c2.5 2.7 3.8 5.7 3.8 9s-1.3 6.3-3.8 9c-2.5-2.7-3.8-5.7-3.8-9S9.5 5.7 12 3z"/></symbol></svg>
 <div id="load">جاي أحمّل العالم…</div>
 <canvas id="cv"></canvas>
 <div id="vig"></div>
@@ -325,7 +340,8 @@ body.sheeton #toast{top:calc(var(--toph, 100px) + 4px) !important;bottom:auto !i
   <div id="clist"></div>
   <div id="pick" hidden></div>
 </div>
-<div id="tabs" hidden><button data-p="cmd"><i>🏛</i>القيادة</button><button data-p="me"><i>💰</i>الاقتصاد</button><button data-p="army"><i>🪖</i>القوات</button><button data-p="rd"><i>🔬</i>البحث</button><button data-p="dip"><i>🌍</i>العالم</button></div><button id="warroom" hidden>⚔ غرفة العمليات</button>
+<div id="tut" hidden></div>
+<div id="tabs" hidden><button data-p="cmd"><i><svg><use href="#i-cmd"/></svg></i>القيادة</button><button data-p="me"><i><svg><use href="#i-me"/></svg></i>الاقتصاد</button><button data-p="army"><i><svg><use href="#i-army"/></svg></i>القوات</button><button data-p="rd"><i><svg><use href="#i-rd"/></svg></i>البحث</button><button data-p="dip"><i><svg><use href="#i-dip"/></svg></i>العالم</button></div><button id="warroom" hidden>⚔ غرفة العمليات</button>
 <div id="sheet" hidden></div>
 <div id="toast"></div>
 <div id="bv" hidden><canvas id="bvc"></canvas>
@@ -571,6 +587,8 @@ body.sheeton #toast{top:calc(var(--toph, 100px) + 4px) !important;bottom:auto !i
     if (n) { dirty = true; if (selD) divBar(); }
   }
   // ===== مشهد المعركة 1:1 (bv.js وbview.js من «الحرب الكبرى») =====
+  // V3: صور بطاقات المشاريع والبحث (pj_*، rs_*) — تنضاف هنا لما توصل صور Grok (docs/art/grok-v3.md)
+  const ART = new Set([]);
   const IMG = {}, IMGB = location.protocol === 'file:' ? '../grandwar/img/' : 'img/';
   let imgP = null;
   // I-112/I-113: صور Grok لكل منظومة دفاع جوي (docs/art/out ← img/sam_<key>_v.webp)؛ اللي ما إلها صورة بعد ← باتريوت (غربي) أو S-400 (شرقي)
@@ -988,6 +1006,7 @@ body.sheeton #toast{top:calc(var(--toph, 100px) + 4px) !important;bottom:auto !i
     return null;
   }
   function bar() {
+    tutTick();
     const b = $('#bar'); if (!b) return; const c = G.C[me];
     const NW = G.nat, cash = NW ? NW.eco[0].cash : null, st = Math.round(c.stab), stc = st >= 60 ? 'var(--me)' : st >= 35 ? 'var(--gold)' : 'var(--neg)';
     b.innerHTML = `<span class="chip date">📅 ${ar(S.date(G.t))}${speed ? ' <i class="live"></i>' : ''}</span><span class="chip ap" title="نقاط القرار">⭐ ${G.ap}</span>
@@ -1013,11 +1032,33 @@ body.sheeton #toast{top:calc(var(--toph, 100px) + 4px) !important;bottom:auto !i
     sh.innerHTML = html; sh.hidden = false; sh.scrollTop = keep;
     sh.querySelectorAll('[data-gp]').forEach(b => b.onclick = () => openPanel(b.dataset.gp)); document.body.classList.add('sheeton');
     const x = document.createElement('button'); x.className = 'x'; x.textContent = '✕'; x.setAttribute('aria-label', 'سدّ'); x.onclick = closePanel; sh.querySelector('h2').append(x);
-    wire(sh);
+    wire(sh); tutTick();
   }
   // ===== V2 (I-117): 🏛 القيادة — 6 بطاقات كبيرة (رقم + سهم + خط صغير + تفسير)، «شنو أسوي هسه؟»، والقرارات المعلقة =====
   const spark = (L, col) => { if (!L || L.length < 2) return ''; const mn = Math.min(...L), mx = Math.max(...L), w = 84, h = 22, d = L.map((v, i) => `${(i / (L.length - 1) * w).toFixed(1)},${(h - (mx > mn ? (v - mn) / (mx - mn) : .5) * h).toFixed(1)}`).join(' ');
     return `<svg class="spk" viewBox="0 0 ${w} ${h}" width="${w}" height="${h}" aria-hidden="true"><polyline points="${d}" fill="none" stroke="${col}" stroke-width="2" stroke-linejoin="round"/></svg>`; };
+
+  // ===== V4 (I-117): التعليم بأول 10 دقايق — مستشار بخمس خطوات، كل خطوة هدف صغير =====
+  const TUT = [
+    ['💰 شوف خزينتك', 'افتح تبويب <b>💰 الاقتصاد</b> تحت: هناك الخزينة ومنين تجي الفلوس.', () => panel === 'me' || panel === 'flow'],
+    ['🏗 ابني أول مشروع', 'بالاقتصاد روح لـ<b>🏗 المشاريع</b> واضغط «ابدأ البناء» على مشروع يرجع فلوسه بسرعة.', () => G.eco3 && G.eco3.proj.some(q => q.id === me)],
+    ['🪖 رتّب جيشك', 'افتح <b>🪖 القوات</b>: جيشك، والإنتاج المحلي، وسوق السلاح.', () => panel === 'army' || panel === 'prod'],
+    ['🤝 اعقد اتفاقية', 'روح لـ<b>🌍 العالم ← العلاقات</b>، اختار دولة صديقة واعقد «اتفاقية تجارة» (تزيد النمو).', () => G.trade.some(p => p[0] === me || p[1] === me)],
+    ['⏩ سرّع الوقت', 'اضغط <b>⏩</b> فوق حتى الأيام تمشي أسرع. اللعبة توقف لحالها إذا صار شي مهم.', () => speed > 1],
+  ];
+  function tutTick() {
+    const el = $('#tut'); if (!el || !G || !G.tut || G.tut.done) { if (el) el.hidden = true; return; }
+    const st = TUT[G.tut.s]; if (!st) { G.tut.done = 1; el.hidden = true; return; }
+    if (st[2]()) { toast(`✅ ${st[0]} — تمام!`, 'good'); if (window.VIEW && VIEW.SND && VIEW.SND.play) try { VIEW.SND.play('woosh'); } catch (e) {} G.tut.s++; save(); if (G.tut.s >= TUT.length) { G.tut.done = 1; toast('🎓 خلصت التعليم. الباقي عليك، يا قائد.', 'good'); el.hidden = true; return; } }
+    const q = TUT[G.tut.s], k = G.tut.s + 1, html = `<div>🧭 <b class="k">المستشار (${k}/${TUT.length}): ${q[0]}</b></div><div>${q[1]}</div><div class="row"><span class="note">${'●'.repeat(k)}${'○'.repeat(TUT.length - k)}</span><button id="tutSkip">تخطّي التعليم</button></div>`;
+    if (el.dataset.k !== String(k)) { el.innerHTML = html; el.dataset.k = k; el.querySelector('#tutSkip').onclick = () => { G.tut.done = 1; el.hidden = true; save(); }; }
+    el.hidden = false;
+  }
+  // ===== V5 (I-117): الإمكانية — حجم الخط وألوان لعمى الألوان (تفضيل للجهاز، مو للحفظ) =====
+  const A11Y_KEY = 'wariq.world.a11y';
+  let a11y = (() => { try { return JSON.parse(localStorage.getItem(A11Y_KEY)) || {}; } catch (e) { return {}; } })();
+  const a11yApply = () => { document.documentElement.classList.toggle('big', !!a11y.big); document.documentElement.classList.toggle('cb', !!a11y.cb); dirty = true; };
+  a11yApply();
   function pCmd() {
     const c = G.C[me], NW = G.nat, e = NW ? NW.eco[0] : { cash: 0, hist: [] }, H = NW ? NW.home : { stab: c.stab }, kh = G.kh || [];
     const hc = e.hist || [], c30 = hc.length > 30 ? e.cash - hc[hc.length - 31][1] : null, months = c30 != null && c30 < 0 ? Math.max(0, e.cash / -c30) : null;
@@ -1040,6 +1081,7 @@ body.sheeton #toast{top:calc(var(--toph, 100px) + 4px) !important;bottom:auto !i
     if (NW && NW.home.iss.length) h += `<div class="todo"><span>🏛 ${NW.home.iss.length} قضية داخلية تنتظر قرارك</span><button data-go="homep">روح ←</button></div>`;
     if (G.elec && G.elec[me] != null) h += `<div class="note">🗳 الانتخابات الجاية: ${ar(S.date(G.elec[me]))} — تعتمد على الشارع والأحزاب ومعنويات الناس والنمو. إذا خسرت تخلص اللعبة.</div>`;
     if (c.occN) h += `<div class="note">✊ نحتل ${c.occN} منطقة: تكلّف نمو واستقرار، وبعد سنة ممكن تثور.</div>`;
+    h += `<h3>⚙ الإعدادات</h3><div class="line"><span>حجم الخط</span><span class="seg"><button data-a11y="big:0" class="${a11y.big ? '' : 'on'}">عادي</button><button data-a11y="big:1" class="${a11y.big ? 'on' : ''}">كبير</button></span></div><div class="line"><span>ألوان لعمى الألوان (أزرق/برتقالي بدل أخضر/أحمر)</span><span class="seg"><button data-a11y="cb:0" class="${a11y.cb ? '' : 'on'}">لا</button><button data-a11y="cb:1" class="${a11y.cb ? 'on' : ''}">نعم</button></span></div>${G.tut && G.tut.done ? '<div class="line"><span>التعليم</span><button id="tutAgain">عيده من الأول</button></div>' : ''}`;
     return h;
   }
   const line = (a, b, cls = '') => `<div class="line"><span>${a}</span><b class="${cls}">${b}</b></div>`;
@@ -1097,7 +1139,7 @@ body.sheeton #toast{top:calc(var(--toph, 100px) + 4px) !important;bottom:auto !i
     const done = run.filter(q => q.done); if (done.length) h += `<div class="note">✅ كملت: ${done.map(q => WECO.P[q.k].ic + ' ' + WECO.P[q.k].n).join('، ')}</div>`;
     h += '<h3>➕ مشروع جديد</h3>';
     for (const k in WECO.P) { const P = WECO.P[k], cd = WECO.card(G, WD, me, k), err = WECO.can(G, WD, me, k);
-      h += `<div class="pj"><div class="line"><span style="font-size:15px">${P.ic} <b>${P.n}</b></span><b>${money(cd.cost)}</b></div><div class="note">${P.d}</div><div class="note">⏱ ${(cd.mo)} شهر · قسط ${money(cd.cost / cd.mo)}/شهر${cd.gdp ? ` · الناتج +${money(cd.gdp)}/سنة` : ''}${cd.back ? ` · <b>الاقتصاد يرجع الكلفة بـ${cd.back} سنة</b>` : ''}${cd.tback ? ` · الخزينة (الضرايب) بـ${cd.tback} سنة` : ''}</div>${err ? `<div class="note">⛔ ${err}</div>` : `<button data-proj="${k}">ابدأ البناء</button>`}</div>`; }
+      h += `<div class="pj">${ART.has(P.img) ? `<img class="cimg" src="${IMGB}${P.img}.webp" alt="">` : ''}<div class="line"><span style="font-size:15px">${P.ic} <b>${P.n}</b></span><b>${money(cd.cost)}</b></div><div class="note">${P.d}</div><div class="note">⏱ ${(cd.mo)} شهر · قسط ${money(cd.cost / cd.mo)}/شهر${cd.gdp ? ` · الناتج +${money(cd.gdp)}/سنة` : ''}${cd.back ? ` · <b>الاقتصاد يرجع الكلفة بـ${cd.back} سنة</b>` : ''}${cd.tback ? ` · الخزينة (الضرايب) بـ${cd.tback} سنة` : ''}</div>${err ? `<div class="note">⛔ ${err}</div>` : `<button data-proj="${k}">ابدأ البناء</button>`}</div>`; }
     h += '<div class="note">الأرقام تقدير: الدول الأفقر تكلّف وتتأخر أكثر (فساد وبيروقراطية)، والمشروع يكبر ويصغر حسب حجم الاقتصاد.</div>';
     return h;
   }
@@ -1170,7 +1212,7 @@ body.sheeton #toast{top:calc(var(--toph, 100px) + 4px) !important;bottom:auto !i
     else if (IND.BR[I.rb] && I.tech[I.rb] < 5) { const Bk = IND.BR[I.rb], nd = IND.need(I.tech[I.rb]); h += `<div class="pj" style="border-color:var(--gold)"><div class="line"><span>🔬 يشتغل هسه: ${Bk.ic} <b>${Bk.n}</b> (المستوى ${I.tech[I.rb] + 1})</span><b>${Math.round(I.rp / nd * 100)}٪</b></div>${barV(I.rp / nd * 100, 'var(--gold)')}<div class="note">${bud ? 'يخلص بعد ~' + Math.ceil((nd - I.rp) / (bud * sp)) + ' يوم' : '⛔ الميزانية متوقفة'}</div></div>`; }
     h += `<div class="seg gnav">${Object.entries(WRES.SEC).map(([k, [ic, n]]) => `<button data-rsec="${k}" class="${rdSec === k ? 'on' : ''}">${ic} ${n}</button>`).join('')}</div>`;
     const node = k => { const t = WRES.T[k], done = R.done[k], on = R.cur === k && I.rb === 'civ', err = WRES.can(G, WD, k), dd = WRES.days(G, k);
-      return `<div class="pj" style="${on ? 'border-color:var(--gold)' : done ? 'opacity:.75' : ''}"><div class="line"><span style="font-size:15px">${t.ic} <b>${t.n}</b></span><b>${done ? '✅' : t.lock ? '🔒' : on ? '▶' : C$(WRES.costOf(G, k)) + ' $'}</b></div><div class="note">${t.d}</div>${t.req ? `<div class="note">يحتاج قبله: ${t.req.map(r => (R.done[r] ? '✅ ' : '· ') + WRES.T[r].n).join('، ')}</div>` : ''}${done || on || t.lock ? '' : err ? (t.req && err.startsWith('يحتاج') ? '' : `<div class="note">⛔ ${err}</div>`) : `<button data-rs="${k}">ابحث هنا${dd ? ' (~' + dd + ' يوم)' : ''}</button>`}</div>`; };
+      return `<div class="pj" style="${on ? 'border-color:var(--gold)' : done ? 'opacity:.75' : ''}">${done || !ART.has(t.img) ? '' : `<img class="cimg" src="${IMGB}${t.img}.webp" alt="">`}<div class="line"><span style="font-size:15px">${t.ic} <b>${t.n}</b></span><b>${done ? '✅' : t.lock ? '🔒' : on ? '▶' : C$(WRES.costOf(G, k)) + ' $'}</b></div><div class="note">${t.d}</div>${t.req ? `<div class="note">يحتاج قبله: ${t.req.map(r => (R.done[r] ? '✅ ' : '· ') + WRES.T[r].n).join('، ')}</div>` : ''}${done || on || t.lock ? '' : err ? (t.req && err.startsWith('يحتاج') ? '' : `<div class="note">⛔ ${err}</div>`) : `<button data-rs="${k}">ابحث هنا${dd ? ' (~' + dd + ' يوم)' : ''}</button>`}</div>`; };
     if (rdSec === 'mil') {
       h += `<div class="note">كل مستوى إله أثر بالحرب، ويفتح منتجات محلية (🏭 الإنتاج).</div>` + IND.BRK.map(k => { const Bk = IND.BR[k], l = I.tech[k], on = I.rb === k, nd = IND.need(l); return `<div class="pj" style="${on ? 'border-color:var(--gold)' : ''}"><div class="line"><span style="font-size:15px">${Bk.ic} <b>${Bk.n}</b></span><b>${'■'.repeat(l)}${'□'.repeat(5 - l)} ${l}/5</b></div><div class="note">${Bk.d}</div>${l >= 5 ? '<div class="note pos">✅ أعلى مستوى</div>' : on ? '' : `<button data-rb="${k}">ابحث هنا (المستوى ${l + 1}: ${nd} مليار)</button>`}</div>`; }).join('');
       h += `<h3>⭐ السلاح الوطني ${N.st >= 3 && N.name ? '«' + N.name + '»' : '(المرحلة ' + N.st + ' من 4)'}</h3><div class="note">${IND.NAT.map((x, i) => `${i < N.st ? '✅' : i === N.st ? '▶' : '·'} ${x.n}: ${x.d.replace('سلاح عراقي', me === 'IRQ' ? 'سلاح عراقي' : 'سلاح وطني')}`).join('<br>')}</div>
@@ -1372,6 +1414,8 @@ body.sheeton #toast{top:calc(var(--toph, 100px) + 4px) !important;bottom:auto !i
       else if (T && (a.startsWith('cell:') || a.startsWith('div:'))) { const i = a.startsWith('cell:') ? +a.slice(5) : (T.W.divs.find(d => d.id === +a.slice(4)) || {}).cell; const c = T.cells[i]; if (c) { closePanel(); cam.x = MX(c.ll[0]); cam.y = MY(c.ll[1]); cam.s = Math.max(cam.s, 1400); dirty = true; } }
       else if (a === 'arrow') { closePanel(); toast(ADVL[+b.dataset.adv].t); } });
     root.querySelectorAll('[data-sub]').forEach(b => b.onclick = () => { meSub = b.dataset.sub; openPanel('me'); });
+    root.querySelectorAll('[data-a11y]').forEach(b => b.onclick = () => { const [k, v] = b.dataset.a11y.split(':'); a11y[k] = v === '1'; try { localStorage.setItem(A11Y_KEY, JSON.stringify(a11y)); } catch (e) {} a11yApply(); openPanel(panel || 'cmd', true); });
+    const ta = root.querySelector('#tutAgain'); if (ta) ta.onclick = () => { G.tut = { s: 0 }; save(); closePanel(); tutTick(); };
     root.querySelectorAll('[data-replay]').forEach(b => b.onclick = () => { const ll = LIVEFX.replay(+b.dataset.replay); if (!ll) return; closePanel(); cam.x = MX(ll[0]); cam.y = MY(ll[1]); cam.s = Math.max(cam.s, 1100); if (speed > 1) { slowPrev = slowPrev ?? speed; speed = 1; bar(); } dirty = true; });
     root.querySelectorAll('[data-hot]').forEach(b => b.onclick = () => { const [lo, la] = b.dataset.hot.split(',').map(Number); closePanel(); cam.x = MX(lo); cam.y = MY(la); cam.s = Math.max(cam.s, 900); dirty = true; });
     root.querySelectorAll('[data-acam]').forEach(b => b.onclick = () => { G.cfg = G.cfg || {}; G.cfg.autocam = b.dataset.acam === '1'; re(0); });

@@ -47,5 +47,12 @@ const kss = () => K.nav.g.filter(g => g.cc === 'SAU').reduce((t, g) => t + (g.s.
 for (const [x, k] of [['TUR', 'ada'], ['USA', 'm109']]) { const r = M.buy(K, WD, S, x, k); if (typeof r === 'string') no(`السوق ${k}: ${r}`); }
 for (let i = 0; i < 560; i++) day(K);
 if (kss() < kf0 + 2) no(`الكورفيتات ما انضافت ${kf0} → ${kss()}`); if (K.log.filter(l => l.k === 'arms' && l.a === 'got').length < 2) no('منتجات السوق ما وصلت');
+// K2: الأقساط ونقل التقنية والمستعمل
+const Z = S.init(WD, 'SAU', { seed: 6 }); N.init(Z, WD); Z.nat.eco[0].cash = 60; for (const x of ['USA', 'KOR']) S.addRel(Z, 'SAU', x, 60);
+const zc = Z.nat.eco[0].cash; if (typeof M.buy(Z, WD, S, 'KOR', 'k2', 'tt') === 'string') no('نقل تقنية'); if (typeof M.buy(Z, WD, S, 'USA', 'f16', 'inst') === 'string') no('أقساط');
+if (typeof M.buy(Z, WD, S, 'TUR', 'ada', 'used') !== 'string') no('سفينة مستعملة انقبلت');
+if (Math.abs((zc - Z.nat.eco[0].cash) - (1.2 * 1.6 + 1.6 * 1.1 * .3)) > .01) no('الدفعة الأولى غلط');
+for (let i = 0; i < 400; i++) day(Z);
+if (!Z.log.some(l => l.k === 'arms' && l.a === 'tt')) no('نقل التقنية ما رفع البحث'); if (Z.mkt.deals.find(d => d.inst).inst.n !== 0) no('الأقساط ما خلصت');
 console.log(`زئير وعُقبة دخلوا الخدمة · قوة الجيش ×${pw0} → ×${G.C.USA.pwK.toFixed(2)} · مدمرات ${dd0} → ${dd1} · رموز ${codes.length} بلا تكرار`);
 console.log(bad ? `❌ ${bad} مشاكل` : '✅ الترسانة الوطنية تمام'); process.exit(bad ? 1 : 0);

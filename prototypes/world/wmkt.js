@@ -32,6 +32,8 @@
     }
     exportOffers(W, WD, S);
     W.mkt.offers = W.mkt.offers.filter(o => W.t - o.t < 60);
+    // الأقساط الشهرية
+    if (W.nat) for (const d of W.mkt.deals) if (d.inst && d.inst.n > 0) { W.nat.eco[0].cash -= d.inst.per; d.inst.n--; }
   }
   // ===== سوق السلاح: المنتجات بشروطها [تقدير] =====
   // cat: plane (q طيارة، النوع من aircat)، sam (n بطارية، النظام من aircat)، tank (رخصة الدروع: المورّد + جيل)
@@ -87,22 +89,32 @@
     if (W.mkt.deals.some(d => d.k === p.k && d.at > W.t)) return 'العقد شغال';
     return null;
   }
-  function buy(W, WD, S, x, k) {
-    ensure(W, WD); const p = (SELL[x] || []).find(o => o.k === k); if (!p) return 'غلط'; const no = can(W, S, x, p); if (no) return no;
+  // K2 (I-129): طرق الشراء — نقد، أقساط (30٪ هسه و12 قسط، +10٪)، نقل تقنية (×1.6: يرفع بحثنا مستوى بالفرع)، مستعمل (×0.55، أسرع، أضعف 30٪)
+  const MODES = { cash: [1, 1], inst: [1.1, 1], tt: [1.6, 1.15], used: [.55, .5] };
+  const ttBr = p => p.cat === 'tank' || p.cat === 'grd' ? 'arm' : p.cat === 'sam' ? 'msl' : p.cat === 'nav' ? 'ind' : (p.t === 'tb2' || p.t === 'ch4') ? 'uav' : 'ind';
+  const modeOk = (p, m) => m === 'cash' || m === 'inst' || (m === 'tt' && p.cat !== 'nav') || (m === 'used' && (p.cat === 'plane' || p.cat === 'tank'));
+  function buy(W, WD, S, x, k, mode = 'cash') {
+    ensure(W, WD); const p0 = (SELL[x] || []).find(o => o.k === k); if (!p0) return 'غلط'; if (!MODES[mode] || !modeOk(p0, mode)) return 'هالطريقة ما تصير لهالمنتج';
+    const [pk, dk] = MODES[mode], p = { ...p0, price: +(p0.price * pk).toFixed(3), days: Math.round(p0.days * dk) };
+    const no = can(W, S, x, mode === 'inst' ? { ...p, price: p.price * .3 } : p); if (no) return no;
     const CM = root.WCMD || (typeof require !== 'undefined' ? require('./wcmd.js') : null), days = Math.round(p.days * (W.cmd && CM ? CM.mult(W.cmd.c).deal : 1));   // القائد: اللوجستيك يقصّر التوصيل
-    W.nat.eco[0].cash -= p.price; const d = { x, k, at: W.t + days, t: W.t, route: route(W, WD, S, x) }; W.mkt.deals.push(d);
+    const now = mode === 'inst' ? p.price * .3 : p.price; W.nat.eco[0].cash -= now; const d = { x, k, at: W.t + days, t: W.t, route: route(W, WD, S, x), mode };
+    if (mode === 'inst') d.inst = { per: +(p.price * .7 / 12).toFixed(3), n: 12 };
+    W.mkt.deals.push(d);
     S.addRel(W, W.me, x, 5); if (p.rival && W.C[p.rival] && S.rel(W, p.rival, W.me) > -50) S.addRel(W, W.me, p.rival, -12);
-    W.log.push({ t: W.t, k: 'arms', a: 'buy', x, n: p.n, d: days, route: d.route }); return d;
+    W.log.push({ t: W.t, k: 'arms', a: 'buy', x, n: p.n + ({ inst: ' (أقساط)', tt: ' + نقل تقنية', used: ' (مستعمل)' }[mode] || ''), d: days, route: d.route }); return d;
   }
   // التوصيل (يومي من nation.daily): يفتح المنتج بالكتالوج، والطيارات/البطاريات تنضاف لقوتنا (G.nat.arms تدخل بالمسرح الجاي)
   function deliver(W, WD, X) {
     if (!W.mkt) return; const NW = W.nat, ECON = X.ECON, AIR = X.AIR;
     for (const d of W.mkt.deals) { if (d.done || d.at > W.t) continue; d.done = 1; const p = SELL[d.x].find(o => o.k === d.k), c = W.C[W.me]; NW.arms = NW.arms || { jets: {}, sam: {}, tank: null };
-      if (p.cat === 'plane') { NW.arms.jets[p.t] = (NW.arms.jets[p.t] || 0) + p.q; c.pw += p.q * 3 * (AIR.PLANES[p.t] && AIR.PLANES[p.t].aa > .6 ? 1.5 : 1); unlock(W, WD, X, d.x, p); }
+      const uk = d.mode === 'used' ? .7 : 1;
+      if (d.mode === 'tt' && NW.ind) { const b = ttBr(p), I = NW.ind[0]; I.tech[b] = Math.min(6, (I.tech[b] || 0) + 1); W.log.push({ t: W.t, k: 'arms', a: 'tt', x: d.x, b, l: I.tech[b] }); }
+      if (p.cat === 'plane') { NW.arms.jets[p.t] = (NW.arms.jets[p.t] || 0) + p.q; c.pw += p.q * 3 * uk * (AIR.PLANES[p.t] && AIR.PLANES[p.t].aa > .6 ? 1.5 : 1); unlock(W, WD, X, d.x, p); }
       else if (p.cat === 'sam') { NW.arms.sam[p.t] = (NW.arms.sam[p.t] || 0) + p.q; c.adI += AIR.SYS[p.t] && Math.max(...AIR.SYS[p.t].mags.map(m => Math.max(...Object.values(m.r)))) > 100 ? 6 * p.q : 3 * p.q; unlock(W, WD, X, d.x, p); }
       else if (p.cat === 'grd') { c.pw += 25 * (p.q || 1); NW.arms.grd = (NW.arms.grd || 0) + (p.q || 1); }
       else if (p.cat === 'nav') { const A = (typeof window !== 'undefined' && window.WARS) || require('./warsenal.js'); A.addShips(W, WD, p.ships); }
-      else if (p.cat === 'tank') { NW.arms.tank = { x: d.x, gen: p.gen, n: p.n }; ECON.SUPPLY[0].arm = d.x; ECON.SUP_N[d.x] = WD.cs[d.x].ar; }
+      else if (p.cat === 'tank') { NW.arms.tank = { x: d.x, gen: p.gen - (d.mode === 'used' ? 1 : 0), n: p.n }; ECON.SUPPLY[0].arm = d.x; ECON.SUP_N[d.x] = WD.cs[d.x].ar; }
       W.log.push({ t: W.t, k: 'arms', a: 'got', x: d.x, n: p.n }); }
   }
   // يفتح طلبات الإنتاج للسلاح الجديد (نفس شكل كتالوج nation.js)
@@ -133,6 +145,6 @@
     W.ten = clamp((W.ten || 0) + (en.length ? 1 : 0), 0, 100);
     W.log.push({ t: W.t, k: 'arms', a: 'sold', x, kind: o.kind, v: o.v }); return `بعنا ${o.kind === 'nat' ? 'سلاحنا الوطني' : EXP[o.kind]} لـ${WD.cs[x].ar} بـ${o.v} مليار${en.length ? '، وأعداءهم زعلوا' : ''}`;
   }
-  const API = { route, eff, ensure, month, techK, need, SELL, sellers, can, buy, deliver, relink, canExport, answer, EXP, BR };
+  const API = { MODES, modeOk, ttBr, route, eff, ensure, month, techK, need, SELL, sellers, can, buy, deliver, relink, canExport, answer, EXP, BR };
   if (typeof module !== 'undefined') module.exports = API; else root.WMKT = API;
 })(this);

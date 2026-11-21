@@ -9,6 +9,9 @@ const cp = (src, rel) => { const d = path.join(OUT, rel); fs.mkdirSync(path.dirn
 const html = fs.readFileSync(path.join(W, 'index.html'), 'utf8');
 const scripts = [...html.matchAll(/<script src="([^"]+)"/g)].map(m => m[1]).filter(s => !/^https?:/.test(s));
 for (const s of scripts) cp(path.join(W, s), s);
+const styles = [...html.matchAll(/<link[^>]+rel="stylesheet"[^>]+href="([^"]+)"/g)].map(m => m[1]).filter(s => !/^https?:/.test(s));
+for (const s of styles) cp(path.join(W, s), s);
+if (fs.existsSync(path.join(W, 'fonts'))) for (const f of fs.readdirSync(path.join(W, 'fonts'))) if (/\.(woff2|woff|ttf|css)$/i.test(f) && !files.includes('fonts/' + f)) cp(path.join(W, 'fonts', f), 'fonts/' + f);
 cp(path.join(W, 'index.html'), 'index.html'); cp(path.join(W, 'manifest.webmanifest'), 'manifest.webmanifest');
 for (const f of fs.readdirSync(path.join(W, 'icons'))) cp(path.join(W, 'icons', f), 'icons/' + f);
 if (fs.existsSync(path.join(W, 'map'))) for (const f of fs.readdirSync(path.join(W, 'map'))) if (/\.(webp|png|jpg)$/i.test(f)) cp(path.join(W, 'map', f), 'map/' + f);

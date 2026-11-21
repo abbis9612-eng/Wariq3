@@ -7,6 +7,8 @@
 
 وحط الصور بمجلد `docs/art/out/v8-units/`. إذا صورة طلعت مثل رسم أو لعبة، ارجعها وقله: «make it look like a real military press photograph, not a 3D render».
 
+**وصلت (2026-11-21):** 10 صور بـ `docs/art/out/v8-units/`. الجنب 1280×720 والمقدمة لليسار، ومن فوق 1024×1024 والمقدمة لليمين. التركيب على كلاين.
+
 ---
 
 ## INSTRUCTIONS FOR GROK (apply to every image)

@@ -520,6 +520,15 @@ html[data-skin] #bar .spn{font:500 11px/1 var(--f-body);color:var(--dim);margin-
 .flg{display:inline-block;width:20px;height:15px;border-radius:3px;vertical-align:-2px;margin-inline-end:5px;box-shadow:0 0 0 1px rgba(0,0,0,.12)}
 .emb.femb{background-color:var(--chip)!important;overflow:hidden;padding:0;border:0}
 html[data-skin] body.play #top .emb.femb{width:44px;height:33px;border-radius:7px;box-shadow:0 0 0 1px rgba(0,0,0,.15)}
+/* v5-8: المخزن */
+.asum{display:grid;grid-template-columns:repeat(4,1fr);gap:6px;margin:8px 0}.asum div{background:var(--card);box-shadow:var(--cardsh);border-radius:12px;padding:8px 4px;text-align:center}.asum b{display:block;font:800 18px/1.1 var(--f-head);font-variant-numeric:tabular-nums}.asum small{font-size:10.5px;color:var(--dim)}
+.aweak{font-size:12.5px;padding:8px 10px;border-radius:10px;background:color-mix(in srgb,var(--warn) 16%,transparent);margin:6px 0}
+.agrid{display:grid;grid-template-columns:repeat(2,1fr);gap:8px}
+.atile{background:var(--card);box-shadow:var(--cardsh);border-radius:var(--r);padding:8px 10px 10px;display:flex;flex-direction:column;gap:1px;min-width:0}
+.atile img,.atile .anoimg{height:54px;width:100%;object-fit:contain;margin-bottom:4px}.atile .anoimg{display:block;border-radius:8px;background:var(--chip)}
+.atile b{font:800 20px/1.1 var(--f-head);font-variant-numeric:tabular-nums}.atile span{font-weight:700;font-size:12.5px}.atile em{font-style:normal;font-size:10px;padding:1px 6px;border-radius:5px;background:color-mix(in srgb,var(--good) 18%,transparent);color:var(--good)}
+.atile small{font-size:11px;color:var(--dim);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+html[data-skin="news"] .atile,html[data-skin="news"] .asum div{background:transparent;box-shadow:none;border-top:3px solid var(--ink);border-radius:0}
 html[data-skin] #start{background:var(--bg)}
 html[data-skin] #start h1,html[data-skin] .sth{font-family:var(--f-head)}
 html[data-skin] .sth{color:var(--ink)}
@@ -1662,7 +1671,27 @@ const HIC = {'💵':'money','💰':'money','🏥':'health','📊':'chart','📈'
         <div class="note">بالجبهة: الهجوم ×${m.atk.toFixed(2)} · الدفاع ×${m.def.toFixed(2)} · الانتشار ${Math.round(250 * m.move)} كم/يوم · الإنتاج ×${m.prod.toFixed(2)} · عقود السلاح ×${m.deal.toFixed(2)} من المدة</div>
         <div class="seg"><button id="cmdDrill">🎯 مناورات (${C$(WCMD.drillCost(G))})</button><button id="cmdShow">🔁 مرشحين بدله</button></div>
         <div id="cmdC" hidden>${L.map((n, i) => `<div class="st" style="margin:5px 0"><div class="line"><b>${WCMD.RANK[n.rank]} ${n.n}</b><span>قوة ×${WCMD.power(n).toFixed(2)}</span></div><div class="note">${Object.entries(WCMD.SK).map(([k, nm]) => nm + ' ' + n.sk[k]).join(' · ')}</div><button data-cmd="${i}">عيّنه ⭐1${G.t - C.chg < 365 ? ' (الجيش يزعل −5)' : ''}</button></div>`).join('')}</div></div>`; }
-    h += `<div class="grid">${st('أفراد عاملين', fmt(cs.act || 0))}${st('احتياط', fmt(cs.res || 0))}${st('دبابات', fmt(cs.tanks || K('tank')[0]))}${st('مدرعات', fmt(K('afv')[0]))}${st('مدفعية', fmt(K('art')[0]))}${st('طائرات قتال', fmt(cs.air || K('jet')[0]))}${st('مروحيات', fmt(cs.heli || K('heli')[0]))}${st('سفن / غواصات', fmt(cs.ships || 0) + ' / ' + fmt(cs.subs || 0))}${st('صواريخ بعيدة', fmt(Math.floor(c.msl || 0)))}${st('مسيّرات هجومية', fmt(Math.floor(c.drn || 0)))}${st('قوة الجيش (تقدير)', Math.round(c.pw))}${st('ميزانية الجيش', c.milPct.toFixed(1) + '٪ من الناتج')}</div>`;
+    // v5-8 (I-151): «المخزن» — كل شي نملكه بصورته وعدده، وأضعف نقطة مقابل أشد خصم
+    { const A0 = VT() && VT().A, sams = A0 ? A0.sams.filter(x => x.side === 0) : [], sm0 = sams[0], NH = (G.nat && G.nat.natHave) || {};
+      const jk = planeKey('', (K('jet')[1] || [])[0] || '', me), my = SM && VT() ? SM.alive(VT().W).filter(d => d.side === 0) : [], rd = my.length ? my.reduce((a, d) => a + d.str, 0) / my.length : 1;
+      const tile = (img, t, n, sub, nat) => `<div class="atile">${img ? `<img src="${IMGB}${img}.webp" alt="" loading="lazy" onerror="this.style.visibility='hidden'">` : '<span class="anoimg"></span>'}<b>${n}</b><span>${t}${nat ? ' <em>وطني</em>' : ''}</span>${sub ? `<small>${sub}</small>` : ''}</div>`;
+      const m2 = L => (L || []).slice(0, 2).join('، ');
+      const riv = G.ids.filter(x => x !== me && G.C[x]).sort((a, b) => S.rel(G, me, a) - S.rel(G, me, b))[0], rc = riv && CS[riv] || {};
+      const cmp = [['دبابات', cs.tanks || K('tank')[0], rc.tanks || 0], ['طائرات قتال', cs.air || K('jet')[0], rc.air || 0], ['صواريخ', c.msl || 0, (G.C[riv] || {}).msl || 0], ['سفن', cs.ships || 0, rc.ships || 0]].filter(x => x[2] > 0).map(x => [x[0], x[1] / x[2]]).sort((a, b) => a[1] - b[1])[0];
+      h += `<div class="asum"><div><b>${Math.round(c.pw)}</b><small>قوة الجيش</small></div><div><b>${S.rank(G, 'pw').indexOf(me) + 1}</b><small>الترتيب</small></div><div><b>${Math.round(rd * 100)}٪</b><small>الجاهزية</small></div><div><b>${c.milPct.toFixed(1)}٪</b><small>من الناتج</small></div></div>`;
+      if (cmp && riv) h += `<div class="aweak">⚠ أضعف نقطة مقابل ${nmF(riv)}: <b>${cmp[0]}</b> — عدنا ${cmp[1] < .1 ? 'أقل من عُشر' : Math.round(cmp[1] * 100) + '٪ من'} اللي عدهم</div>`;
+      h += `<h3>📦 المخزن</h3><div class="agrid">
+        ${tile(unitImg(me, 'inf'), 'أفراد عاملين', fmt(cs.act || 0), 'احتياط ' + fmt(cs.res || 0))}
+        ${tile(unitImg(me, 'arm'), 'دبابات', fmt(cs.tanks || K('tank')[0]), m2(K('tank')[1]), NH.ZR)}
+        ${tile(unitImg(me, 'mec'), 'مدرعات', fmt(K('afv')[0]), m2(K('afv')[1]), NH.LT)}
+        ${tile('v8_howitzer_t', 'مدفعية', fmt(K('art')[0]), m2(K('art')[1]))}
+        ${tile(jk ? 'u_' + jk + '_v' : 'u_f16_v', 'طائرات قتال', fmt(cs.air || K('jet')[0]), m2(K('jet')[1]), NH.SF || NH.NS)}
+        ${tile('v4_s_heli', 'مروحيات', fmt(cs.heli || K('heli')[0]), m2(K('heli')[1]))}
+        ${tile(sm0 ? samImg(sm0.sys) : 'u_patriot_v', 'بطاريات دفاع جوي', fmt(sams.length), sm0 ? ((AIR.SYS[sm0.sys] || {}).n || '') : '')}
+        ${tile('u_iskander_v', 'صواريخ بعيدة', fmt(Math.floor(c.msl || 0)), '')}
+        ${tile('u_tb2_v', 'مسيّرات هجومية', fmt(Math.floor(c.drn || 0)), '')}
+        ${tile('u_frigate_v', 'سفن', fmt(cs.ships || 0), cs.subs ? 'غواصات ' + fmt(cs.subs) : '')}
+      </div>`; }
     if (!V) return h + '<div class="note">أرضنا ما انقسمت خلايا (ماكو عاصمة؟)</div>';
     const war = !!T, A = V.A, W = V.W, my = SM.alive(W).filter(d => d.side === 0), kinds = { arm: my.filter(d => d.kind === 'arm'), mec: my.filter(d => d.kind === 'mec'), inf: my.filter(d => d.kind === 'inf') };
     h += `<div class="row" style="margin:8px 0"><button class="big" id="armyMap">🗺 شوف الجيش على الخريطة</button></div><div class="note">${war ? '⚔ بالحرب: هذا جيشنا بالجبهة.' : 'بالسلم: أرضنا مقسومة خلايا مثل «الحرب الكبرى». قرّب الخريطة: ⬭ مدرعة، ⊗ آلية، ✕ مشاة؛ ✈ مطاراتنا بطياراتها، ◆ بطاريات الدفاع الجوي ودائرة مداها. اضغط فرقة وبعدين خلية حتى تتحرك. لما تصير حرب، الجبهة تنبني من نفس الجيش.'}</div>`;

@@ -25,7 +25,7 @@ const day = (W, A) => { for (let h = 0; h < 24; h++) SIM.step(W); ECON.daily(W, 
 { const { W } = mk(); W.eco[0].cash = 50; W.eco[0].auto = false; check(typeof IND.natGo(W, 0) === 'object', 'مرحلة 1 تبدي (ترخيص) ببحث 1'); for (let d = 0; d < 31; d++) day(W, null);
   check(W.ind[0].nat.st === 1, 'خلصت مرحلة الترخيص'); check(typeof IND.natGo(W, 0) === 'string', 'المرحلة 2 تحتاج بحث 3');
   W.ind[0].tech.arm = 5; for (let k = 0; k < 3; k++) { IND.natGo(W, 0); for (let d = 0; d < 61; d++) day(W, null); }
-  check(W.ind[0].nat.st === 4, 'وصلنا التصدير (4)'); IND.effects(W); check(W.indF[0].armAtk >= 1.1 + .03 * 4 - 1e-9, 'التصميم الوطني يقوّي الدروع'); }
+  check(W.ind[0].nat.st === 4, 'وصلنا التصدير (4)'); IND.effects(W); check(W.indF[0].armAtk >= 1.20 + .03 * 4 - 1e-9, 'السلاح الوطني الناضج يقوّي الضربة'); }
 // C5: القطاعات
 { const { W, A } = mk(); W.eco[0].cash = 50; W.eco[0].auto = false; W.eco[1].auto = false; const o0 = ECON.oilOf(W, 0).prod; IND.secGo(W, 0, 'oil'); for (let d = 0; d < 21; d++) day(W, A);
   check(W.ind[0].sec.oil === 1 && ECON.oilOf(W, 0).prod > o0 * 1.02, 'قطاع النفط 1 ← إنتاج أعلى');

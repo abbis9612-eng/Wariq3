@@ -4,7 +4,7 @@
 (function (root) {
   'use strict';
   const START = Date.UTC(2026, 10, 20);   // 20 تشرين الثاني 2026: الوضع الحقيقي (D-048)
-  const V = 17;                              // إصدار حفظ «العالم» (9: البحرية الحقيقية W12؛ 2: الصواريخ والدفاع الجوي؛ 3: البحرية والمضائق؛ 4: طبقة الدولة؛ 5: التكتلات والتوتر والعروض والأمم المتحدة؛ 6: الانتخابات والانقلابات والاحتلال والأحداث؛ 7: البحث لكل الدول وسوق السلاح؛ 8: قائد القوات المسلحة)
+  const V = 18;                              // إصدار حفظ «العالم» (9: البحرية الحقيقية W12؛ 2: الصواريخ والدفاع الجوي؛ 3: البحرية والمضائق؛ 4: طبقة الدولة؛ 5: التكتلات والتوتر والعروض والأمم المتحدة؛ 6: الانتخابات والانقلابات والاحتلال والأحداث؛ 7: البحث لكل الدول وسوق السلاح؛ 8: قائد القوات المسلحة)
   const mulberry = a => () => { a |= 0; a = a + 0x6D2B79F5 | 0; let t = Math.imul(a ^ a >>> 15, 1 | a); t = t + Math.imul(t ^ t >>> 7, 61 | t) ^ t; return ((t ^ t >>> 14) >>> 0) / 4294967296; };
   const clamp = (v, a, b) => v < a ? a : v > b ? b : v;
   const POL = root.WPOL || (typeof require !== 'undefined' ? require('./wpol.js') : null);   // W7: السياسة والأحداث
@@ -13,6 +13,7 @@
   const ECO = root.WECO || (typeof require !== 'undefined' ? require('./weco.js') : null);   // v3 E: المشاريع والكهرباء
   const FUND = root.WFUND || (typeof require !== 'undefined' ? require('./wfund.js') : null);   // v3 E3+E4: الصندوق السيادي
   const CAS = root.WCAS || (typeof require !== 'undefined' ? require('./wcas.js') : null);   // v3 C1: القتلى والجرحى
+  const ARS = root.WARS || (typeof require !== 'undefined' ? require('./warsenal.js') : null);   // v4 I-135: الترسانة الوطنية
   const POP = root.WPOP || (typeof require !== 'undefined' ? require('./wpop.js') : null);   // v3 P (I-120): السكان
   const NAV = root.WNAV || (typeof require !== 'undefined' ? require('./wnav.js') : null);   // W12 (D-053): البحرية الحقيقية
   // ===== ثوابت [تقدير] =====
@@ -196,6 +197,7 @@
     for (const id of W.ids) if (id !== W.me) ai(W, WD, id);
     dipMonth(W, WD);
     if (FUND && W.nat) FUND.month(W, WD, API);
+    if (ARS && W.nat) ARS.month(W, WD);
     if (POL) POL.month(W, WD, API);
     if (MKT) MKT.month(W, WD, API);
     // العلاقات ترجع ببطء للأساس (الذاكرة الدبلوماسية)
@@ -397,7 +399,7 @@
     a.msl -= nm; a.drn -= nd;
     const sat = x => c.adI / (c.adI + x * .3 + 1);   // التشبّع
     // R2: الصواريخ فرط الصوتية (بحث المهاجم) ينعترض منها أقل
-    const im = Math.round(nm * Math.min(.9, sat(nm) * 1.1) * (1 - (a.hyp || 0))), id = Math.round(nd * Math.min(.97, sat(nd) * 1.5)), hits = (nm - im) + (nd - id) * .25;
+    const im = Math.round(nm * Math.min(.9, sat(nm) * 1.1) * (1 - (a.hyp || 0))), id = Math.round(nd * Math.min(.97, sat(nd) * 1.5)), hits = ((nm - im) + (nd - id) * .25) * (a.strk || 1);
     if (kind === 'mil') c.pw *= 1 - Math.min(.15, hits * .0004);
     else if (kind === 'city') { c.stab = clamp(c.stab - hits * .05, 0, 100); c.core *= 1 - Math.min(.05, hits * .00005); for (const x of W.ids) if (x !== by && x !== t && rel(W, x, t) > 20) addRel(W, by, x, -Math.min(5, hits / 50)); }
     else if (kind === 'oil') c.oilDmg = Math.min(.7, (c.oilDmg || 0) + hits * .002);
@@ -523,6 +525,8 @@
     if (o.v < 16) { o.tut = o.tut || { done: 1 }; o.v = 16; }
     // 16 ← 17 (v4 R2): خانات البحث — WRES.ensure يحوّل البحث الواحد والفرع العسكري لخانات أول ما ينفتح
     if (o.v < 17) o.v = 17;
+    // 17 ← 18 (v4 I-135): الترسانة الوطنية (ARS.ensure يبنيها فاضية)
+    if (o.v < 18) o.v = 18;
     o.base = WD.rel; o.rnd = mulberry(o.rs); dipInit(o, WD); if (POL) POL.ensure(o, WD); if (MKT) MKT.ensure(o, WD); if (CMD) CMD.ensure(o, WD); if (ECO) ECO.ensure(o, WD); if (POP) POP.ensure(o, WD); if (NAV) NAV.ensure(o, WD); return o;
   }
   const API = { V, K, START, TENSION, POL, MKT, CMD, NAV, ECO, init, addRel, answerOffer, unSummit, unVote, council, tenTarget, napOf, blocsOf, P5, navy, straits, step, month, act, can, offerPeace, declare, endWar, strike, playerStrike, rank, save, load, date, rel, atWar, allied, sancOf: (W, WD, id) => sancOn(WD, W, id), COST, TAX, CIV };

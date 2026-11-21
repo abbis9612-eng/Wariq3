@@ -8,6 +8,7 @@
   'use strict';
   const req = typeof require !== 'undefined' ? require : null;
   const CAS = root.WCAS || (req ? req('./wcas.js') : null);   // v3 C1: الخسائر من المسرح
+  const ARS = root.WARS || (req ? req('./warsenal.js') : null);   // I-135: الترسانة الوطنية
   const RES = root.WRES || (req ? req('./wres.js') : null);   // v3 R: شجرة البحث الموحّدة
   const HOME = root.HOME || req('./gwhome.js'), IND = root.IND || req('./gwind.js'), ECON = root.ECON || req('./gwecon.js'), AIR = root.AIR || req('./gwair.js');
   const CAT = root.AIRCAT || req('./aircat.js'), ADV = root.ADV || req('./gwadvise.js'), GRADE = root.GRADE || req('./gwgrade.js'), MKT = root.WMKT || req('./wmkt.js'), CMD = root.WCMD || req('./wcmd.js');
@@ -121,6 +122,7 @@
     HOME.daily(NW, T ? T.A : null, { ECON });
     IND.daily(NW, T ? T.A : null, { SIM: X.SIM, ECON });
     if (RES) RES.daily(G, WD);
+    if (ARS && NW.indF) ARS.indF(G, NW.indF[0]);
     // آثار على المسرح: التصنيع (W.indF) والداخل (W.homeF) — sim.js وair.js يقرونها مثل «الحرب الكبرى»
     if (T) { T.W.indF = [NW.indF[0], { armAtk: 1, eye: 1, samPk: 1, ewDef: 1, prod: 1, fort: 1, locCost: 1, oil: 1, fix: 1, sup: 0, br: 1 }]; T.W.homeF = NW.homeF; T.W.eco = undefined; }
     // آثار على اقتصاد العالم: أولوية الاقتصاد على النمو، والسلاح الوطني المصدّر دخل

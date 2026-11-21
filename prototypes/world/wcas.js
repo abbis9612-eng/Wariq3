@@ -16,6 +16,8 @@
   // يضيف خسائر لدولة: o = { kia, wia, pow, civ, tk, pl, sh }، where = مكان (للنقاط الساخنة)
   function add(G, id, o, where) {
     if (!G.C[id]) return; const C = ensure(G), T = tot(G, id);
+    // I-135: الروبوتات القتالية تنقص خسائرنا البشرية
+    if (id === G.me && G.ars && G.ars.done.ugv && (root.WARS || (typeof require !== 'undefined' && require('./warsenal.js')))) { const k = (root.WARS || require('./warsenal.js')).casK(G); o = { ...o, kia: (o.kia || 0) * k, wia: (o.wia || 0) * k, pow: (o.pow || 0) * k }; }
     if (C.day.t !== Math.floor(G.t)) { C.day = { t: Math.floor(G.t), me: Z(), en: Z() }; }
     const bucket = id === G.me ? C.day.me : foeOfMe(G, id) ? C.day.en : null;
     for (const k in o) { const v = Math.max(0, Math.round(o[k] || 0)); T[k] += v; if (bucket) bucket[k] += v; }

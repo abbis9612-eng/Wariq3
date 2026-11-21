@@ -51,6 +51,9 @@ body.sheeton #tut{display:none}
 #sheet button,#tabs button,.spd button,#sheet .seg button{min-height:44px}
 :root.big #sheet{zoom:1.15}:root.big #tabs{zoom:1.1}:root.big #top{zoom:1.08}
 :root.cb{--me:#2b83ba !important;--neg:#e66101 !important}
+
+/* N4: لما بطاقة الأسطول مفتوحة، التنبيهات تصعد فوك */
+body.fcard #toast{top:calc(var(--toph, 100px) + 4px) !important;bottom:auto !important}
 </style>
 </head>
 <body>
@@ -831,17 +834,30 @@ body.sheeton #toast{top:calc(var(--toph, 100px) + 4px) !important;bottom:auto !i
     const near = FLT.filter(o => Math.hypot(o.x - sx, o.y - sy) < 28).sort((a, b) => Math.hypot(a.x - sx, a.y - sy) - Math.hypot(b.x - sx, b.y - sy)), hit = near.find(o => o.g.cc === me) || near[0];   // أساطيلنا أولاً
     if (hit && hit.g.cc === me) { selF = hit.g; navBar(); return true; }
     if (hit) { const g = hit.g, en = S.atWar(G, me, g.cc), MD = { block: '⚓ حصار', def: '🛡 حماية', patrol: '🧭 دورية', strike: '🎯 هجوم' }; if (en && !seen(g.z)) { toast('❓ تماس مجهول: سفن عدو بهالمكان بس ما نعرف شنو. قرّب أسطولك حتى ينكشف.', 'bad'); return true; }
-      toast(`${FLAG(g.cc)} ${WNAV.name(WD, g)} · ${WNAV.T.filter(k => g.s[k]).map(k => g.s[k] + ' ' + WNAV.TN[k]).join('، ')} · ${MD[g.mode] || ''} · ببحر ${WD.s[g.z][1]}${g.dmg ? ' · متضرر' : ''}`, en ? 'bad' : ''); return true; }
+      selF = null; viewF = g; navBar(); return true; }
     if (selF) { const [wx, wy] = toW(sx, sy); let best = -1, bd = 1e9; WD.s.forEach((z, i) => { const d = (MX(z[2][0]) - wx) ** 2 + (MY(z[2][1]) - wy) ** 2; if (d < bd) { bd = d; best = i; } });
       const r = R.find(r => wx >= r.bb[0] && wx <= r.bb[2] && wy >= r.bb[1] && wy <= r.bb[3] && inPoly(r.p, wx, wy)); if (r) { toast('اضغط على البحر مو اليابسة', 'bad'); return true; }
       const res = WNAV.order(G, WD, selF, { go: best }); toast(res === true ? `⚓ ${WNAV.name(WD, selF)} يتحرك لـ${WD.s[best][1]} (${selF.path.length} بحر)` : res, res === true ? 'good' : 'bad'); navBar(); save(); return true; }
     return false;
   }
+  // N4: بطاقة الأسطول بصور سفنه (لأساطيلنا ويا الأوامر، وللأجنبي للقراية بس)
+  const FSPK = cc => ({ cv: cc === 'CHN' ? 'nv_cv-china' : 'nv_carrier', amp: 'nv_amphib', dd: cc === 'CHN' ? 'nv_t055' : cc === 'RUS' ? 'nv_kirov' : 'nv_ddg', ff: cc === 'IRN' ? 'nv_moudge' : 'nv_frigate', fac: 'nv_fac', ss: 'nv_sub', ssn: 'nv_sub' });
+  function fleetInfo(g) {
+    const SP = FSPK(g.cc), NS = g.cc === me && G.nat && G.nat.natShips, NSP = { dd: 'v6_flt_destroyer', ff: 'v7_fmt_mj', fac: 'v7_fmt_as', cv: 'v6_flt_dronecarrier', amp: 'v7_fmt_js' }, n = WNAV.count(g), hp = Math.max(0, Math.min(1, 1 - (g.dmg || 0) / Math.max(1, n * 2))), asm = (G.nav.asm || {})[g.cc];
+    return `<div style="display:flex;gap:6px;overflow-x:auto;padding:4px 0">${WNAV.T.filter(k => g.s[k]).map(k => `<div style="flex:none;text-align:center;min-width:70px;background:rgba(40,70,100,.18);border-radius:8px;padding:3px"><img src="${IMGB}${NS && NS[k] && NSP[k] ? NSP[k] : SP[k]}.webp" alt="" style="width:66px;height:30px;object-fit:contain" onerror="this.style.visibility='hidden'"><div style="font-size:11px"><b>${g.s[k]}</b> ${WNAV.TN[k]}</div></div>`).join('')}</div>
+      <div class="line"><span>💪 الحالة</span><b>${Math.round(hp * 100)}٪</b></div>${barV(hp * 100, hp > .6 ? 'var(--me)' : hp > .3 ? 'var(--gold)' : 'var(--neg)')}${asm != null ? `<div class="note">🚀 صواريخ ضد السفن بالمخزون: ${Math.round(asm)}</div>` : ''}`;
+  }
+  let viewF = null;
   function navBar() {
     let el = $('#navbar'); if (!el) { el = document.createElement('div'); el.id = 'navbar'; el.className = 'divbar'; document.body.append(el); }
-    if (!selF || !G.nav.g.includes(selF)) { selF = null; el.hidden = true; dirty = true; return; }
+    if (viewF && G.nav.g.includes(viewF) && !selF) { const g = viewF, MD = { block: '⚓ حصار', def: '🛡 حماية', patrol: '🧭 دورية', strike: '🎯 هجوم' };
+      el.innerHTML = `<div class="line"><b>${FLAG(g.cc)} ${WNAV.name(WD, g)}</b><button id="fx">✕</button></div><div class="note">${nameOf(g.cc)} · ${MD[g.mode] || ''} · ببحر ${WD.s[g.z][1]}${S.atWar(G, me, g.cc) ? ' · <b class="neg">عدو</b>' : ''}</div>${fleetInfo(g)}`;
+      el.hidden = false; dirty = true; document.body.classList.add('fcard'); el.querySelector('#fx').onclick = () => { viewF = null; navBar(); }; return; }
+    viewF = null;
+    if (!selF || !G.nav.g.includes(selF)) { selF = null; el.hidden = true; dirty = true; document.body.classList.remove('fcard'); return; }
+    document.body.classList.add('fcard');
     const g = selF, MD = { block: '⚓ حصار', def: '🛡 حماية', patrol: '🧭 دورية' };
-    el.innerHTML = `<b>${WNAV.name(WD, g)}</b> · ${WNAV.T.filter(k => g.s[k]).map(k => g.s[k] + ' ' + WNAV.TN[k]).join('، ')} · ${WD.s[g.z][1]}${g.path.length ? ' ← ' + WD.s[g.path[g.path.length - 1]][1] : ''} · ${MD[g.mode] || g.mode}
+    el.innerHTML = `${fleetInfo(g)}<b>${WNAV.name(WD, g)}</b> · ${WNAV.T.filter(k => g.s[k]).map(k => g.s[k] + ' ' + WNAV.TN[k]).join('، ')} · ${WD.s[g.z][1]}${g.path.length ? ' ← ' + WD.s[g.path[g.path.length - 1]][1] : ''} · ${MD[g.mode] || g.mode}
       <div class="row"><span class="note">اضغط بحر حتى يروح له</span>${Object.entries(MD).map(([k, t]) => `<button data-fm="${k}" class="${g.mode === k ? 'on' : ''}">${t}</button>`).join('')}<button id="fhome">🏠 للميناء</button><button id="fauto">🤖 تلقائي</button><button id="fx">✕</button></div>`;
     el.hidden = false; dirty = true;
     el.querySelectorAll('[data-fm]').forEach(b => b.onclick = () => { WNAV.order(G, WD, g, { mode: b.dataset.fm }); navBar(); save(); });

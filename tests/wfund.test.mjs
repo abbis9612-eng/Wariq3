@@ -24,6 +24,6 @@ G.fund3.offers.push({ id: 999, from: 'CHN', k: 'power', v: 2, terms: 'x', until:
 if (!r.ok) no('قبول العرض: ' + r); else { const q = G.eco3.proj.find(q => q.fx === 'CHN'); if (!q || q.share !== .4 || q.cost !== 0) no('مشروع الشركة'); }
 let offers = G.log.filter(l => l.k === 'fund' && l.a === 'offer').length;
 const H = S.load(S.save(G), WD); if (!H.fund3 || H.fund3.bonds !== G.fund3.bonds) no('الحفظ');
-const old = JSON.parse(S.save(S.init(WD, 'IRQ', { seed: 1 }))); old.v = 13; const G3 = S.load(JSON.stringify(old), WD); if (G3.v !== 14 && G3.v != null) no('ترقية V13');
+const old = JSON.parse(S.save(S.init(WD, 'IRQ', { seed: 1 }))); old.v = 13; const G3 = S.load(JSON.stringify(old), WD); if (G3.v != null && G3.v < 14) no('ترقية V13');
 console.log(`ربح سنتين ${inc.toFixed(2)} مليار · مؤشر الأسهم ${G.fund3.idx} · عروض شركات ${offers} · الصندوق ${tot0.toFixed(1)} → ${F.total(G).toFixed(1)}`);
 console.log(bad ? `❌ ${bad} مشاكل` : '✅ الصندوق السيادي تمام'); process.exit(bad ? 1 : 0);

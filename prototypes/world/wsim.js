@@ -4,7 +4,7 @@
 (function (root) {
   'use strict';
   const START = Date.UTC(2026, 10, 20);   // 20 تشرين الثاني 2026: الوضع الحقيقي (D-048)
-  const V = 14;                              // إصدار حفظ «العالم» (9: البحرية الحقيقية W12؛ 2: الصواريخ والدفاع الجوي؛ 3: البحرية والمضائق؛ 4: طبقة الدولة؛ 5: التكتلات والتوتر والعروض والأمم المتحدة؛ 6: الانتخابات والانقلابات والاحتلال والأحداث؛ 7: البحث لكل الدول وسوق السلاح؛ 8: قائد القوات المسلحة)
+  const V = 15;                              // إصدار حفظ «العالم» (9: البحرية الحقيقية W12؛ 2: الصواريخ والدفاع الجوي؛ 3: البحرية والمضائق؛ 4: طبقة الدولة؛ 5: التكتلات والتوتر والعروض والأمم المتحدة؛ 6: الانتخابات والانقلابات والاحتلال والأحداث؛ 7: البحث لكل الدول وسوق السلاح؛ 8: قائد القوات المسلحة)
   const mulberry = a => () => { a |= 0; a = a + 0x6D2B79F5 | 0; let t = Math.imul(a ^ a >>> 15, 1 | a); t = t + Math.imul(t ^ t >>> 7, 61 | t) ^ t; return ((t ^ t >>> 14) >>> 0) / 4294967296; };
   const clamp = (v, a, b) => v < a ? a : v > b ? b : v;
   const POL = root.WPOL || (typeof require !== 'undefined' ? require('./wpol.js') : null);   // W7: السياسة والأحداث
@@ -12,6 +12,7 @@
   const CMD = root.WCMD || (typeof require !== 'undefined' ? require('./wcmd.js') : null);   // I-108: قائد القوات المسلحة
   const ECO = root.WECO || (typeof require !== 'undefined' ? require('./weco.js') : null);   // v3 E: المشاريع والكهرباء
   const FUND = root.WFUND || (typeof require !== 'undefined' ? require('./wfund.js') : null);   // v3 E3+E4: الصندوق السيادي
+  const CAS = root.WCAS || (typeof require !== 'undefined' ? require('./wcas.js') : null);   // v3 C1: القتلى والجرحى
   const POP = root.WPOP || (typeof require !== 'undefined' ? require('./wpop.js') : null);   // v3 P (I-120): السكان
   const NAV = root.WNAV || (typeof require !== 'undefined' ? require('./wnav.js') : null);   // W12 (D-053): البحرية الحقيقية
   // ===== ثوابت [تقدير] =====
@@ -182,6 +183,7 @@
     price(W, WD);
     for (const id of W.ids) econ(W, WD, id);
     for (const w of W.wars.slice()) war(W, WD, w);
+    if (CAS) { for (const w of W.wars) CAS.warMonth(W, WD, w); CAS.month(W); }
     // الصواريخ: إنتاج شهري، تصليح النفط المضروب، والذكاء بالحرب يرمي 15٪ من مخزونه على الخصم
     for (const id of W.ids) { const c = W.C[id]; if (c.msl == null) continue; c.msl += c.mslP; c.drn += c.drnP; c.oilDmg = Math.max(0, (c.oilDmg || 0) * .9 - .01); }
     for (const w of W.wars) for (const [mine, oth] of [[w.a, w.b], [w.b, w.a]]) for (const id of mine.slice(0, 2)) {
@@ -398,7 +400,7 @@
     if (kind === 'mil') c.pw *= 1 - Math.min(.15, hits * .0004);
     else if (kind === 'city') { c.stab = clamp(c.stab - hits * .05, 0, 100); c.core *= 1 - Math.min(.05, hits * .00005); for (const x of W.ids) if (x !== by && x !== t && rel(W, x, t) > 20) addRel(W, by, x, -Math.min(5, hits / 50)); }
     else if (kind === 'oil') c.oilDmg = Math.min(.7, (c.oilDmg || 0) + hits * .002);
-    const r = { by, t, kind, nm, nd, im, id, hits: Math.round(hits) }; note(W, { k: 'strike', ...r }); return r;
+    const r = { by, t, kind, nm, nd, im, id, hits: Math.round(hits) }; note(W, { k: 'strike', ...r }); if (CAS) CAS.strike(W, r); return r;
   }
   function playerStrike(W, WD, t, kind, share = .25) {
     if (W.ap < 1) return { ok: false, why: 'نقاط القرار ما تكفي' }; if (!atWar(W, W.me, t)) return { ok: false, why: 'مو بحرب وياها' };
@@ -514,6 +516,8 @@
     if (o.v < 13) o.v = 13;
     // 13 ← 14 (v3 E3+E4): الصندوق السيادي (FUND.ensure يبنيه فاضي)
     if (o.v < 14) o.v = 14;
+    // 14 ← 15 (v3 C1+C2): الخسائر (CAS.ensure يبنيها فاضية)
+    if (o.v < 15) o.v = 15;
     o.base = WD.rel; o.rnd = mulberry(o.rs); dipInit(o, WD); if (POL) POL.ensure(o, WD); if (MKT) MKT.ensure(o, WD); if (CMD) CMD.ensure(o, WD); if (ECO) ECO.ensure(o, WD); if (POP) POP.ensure(o, WD); if (NAV) NAV.ensure(o, WD); return o;
   }
   const API = { V, K, START, TENSION, POL, MKT, CMD, NAV, ECO, init, addRel, answerOffer, unSummit, unVote, council, tenTarget, napOf, blocsOf, P5, navy, straits, step, month, act, can, offerPeace, declare, endWar, strike, playerStrike, rank, save, load, date, rel, atWar, allied, sancOf: (W, WD, id) => sancOn(WD, W, id), COST, TAX, CIV };

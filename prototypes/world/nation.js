@@ -7,6 +7,7 @@
 (function (root) {
   'use strict';
   const req = typeof require !== 'undefined' ? require : null;
+  const CAS = root.WCAS || (req ? req('./wcas.js') : null);   // v3 C1: الخسائر من المسرح
   const RES = root.WRES || (req ? req('./wres.js') : null);   // v3 R: شجرة البحث الموحّدة
   const HOME = root.HOME || req('./gwhome.js'), IND = root.IND || req('./gwind.js'), ECON = root.ECON || req('./gwecon.js'), AIR = root.AIR || req('./gwair.js');
   const CAT = root.AIRCAT || req('./aircat.js'), ADV = root.ADV || req('./gwadvise.js'), GRADE = root.GRADE || req('./gwgrade.js'), MKT = root.WMKT || req('./wmkt.js'), CMD = root.WCMD || req('./wcmd.js');
@@ -104,7 +105,10 @@
       if (l.k === 'peace') NW.log.push({ t: NW.t, k: 'dip', a: 'peace' });
       if (l.k === 'strike' && l.t === me && l.kind === 'city') NW.log.push({ t: NW.t, k: 'oilhit', vs: 0, side: 1, n: 'مدننا' });
     }
-    if (T) for (const l of T.W.log.slice(T.natN ?? T.W.log.length)) if (l.k === 'surrender') NW.log.push({ t: NW.t, k: 'surrender', side: l.side });
+    if (T) for (const l of T.W.log.slice(T.natN ?? T.W.log.length)) { if (l.k === 'surrender') NW.log.push({ t: NW.t, k: 'surrender', side: l.side });
+      // C2: تقرير معركة لما مدينة/هدف مهم ينسقط (ويا خسائر الطرفين آخر 3 أيام)
+      if (l.k === 'take' && CAS) { const C = CAS.ensure(G), h = C.hot.filter(x => x.cell === l.cell && G.t - x.t <= 3); CAS.report(G, { k: 'take', war: T.war, us: l.side === 0, cell: l.cell, n: (T.W.cells[l.cell] || {}).n || '', loss: h.reduce((s, x) => s + x.n, 0) }); } }
+    if (T && CAS) CAS.theater(G, T, X.SIM.TEMPL);
     if (T) T.natN = T.W.log.length;
     // الإنتاج (نفس econ.js daily): الخطوط تشتغل على أول الطلبات، والسرعة حسب الأولوية والصناعة والمعنويات
     const P = ECON.PRIO[e.prio], sp = P.prod * (NW.indF ? NW.indF[0].prod : 1) * (e.mor < 30 ? .75 : 1) * (G.cmd ? CMD.mult(G.cmd.c).prod : 1) * (1 + (c.prodK || 0));   // القائد: اللوجستيك يسرّع الإنتاج

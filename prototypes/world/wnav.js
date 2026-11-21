@@ -2,6 +2,8 @@
 // التصميم: docs/features/world-navy.md · فحص: node tests/wnav.test.mjs
 // الأرقام [تقدير] إلا أعداد السفن (IISS، `cs.nv` = [حاملات، مدمرات/طرادات، فرقاطات/كورفيتات، غواصات نووية، غواصات، إنزال، زوارق صواريخ])
 (function (root) {
+  // v3 C1: طاقم السفن الغارقة ينحسب بالخسائر (wcas.js)
+  const CASN = () => root.WCAS || (typeof require !== 'undefined' ? require('./wcas.js') : null);
   'use strict';
   const T = ['cv', 'dd', 'ff', 'ssn', 'ss', 'amp', 'fac'];
   const TN = { cv: 'حاملة طائرات', dd: 'مدمرة', ff: 'فرقاطة', ssn: 'غواصة نووية', ss: 'غواصة', amp: 'سفينة إنزال', fac: 'زورق صواريخ' };
@@ -119,7 +121,7 @@
     if (G.t % 30 === 0) for (const g of NV.g) if (g.z === g.home && !g.path.length) { g.dmg = 0; g.fired = 0; const R = NV.res[g.cc] || {}; for (const k of T) { const need = (g.s0[k] || 0) - (g.s[k] || 0); if (need > 0 && R[k] > 0) { const m = Math.min(need, R[k]); R[k] -= m; g.s[k] = (g.s[k] || 0) + m; } } }
     if (!(G.wars || []).length) return log;
     const byZ = new Map(); for (const g of NV.g) { if (!byZ.has(g.z)) byZ.set(g.z, []); byZ.get(g.z).push(g); }
-    const hit = (g, dmg, by, why) => { g.dmg += dmg; while (count(g) && g.dmg >= PW[SINK.find(k => g.s[k] > 0)] * 1.6) { const k = SINK.find(q => g.s[q] > 0); g.dmg -= PW[k] * 1.6; g.s[k]--; log.push({ t: G.t, k: 'navsink', cc: g.cc, ty: k, by, z: g.z, why }); } };
+    const hit = (g, dmg, by, why) => { g.dmg += dmg; while (count(g) && g.dmg >= PW[SINK.find(k => g.s[k] > 0)] * 1.6) { const k = SINK.find(q => g.s[q] > 0); g.dmg -= PW[k] * 1.6; g.s[k]--; log.push({ t: G.t, k: 'navsink', cc: g.cc, ty: k, by, z: g.z, why }); if (CASN()) CASN().sink(G, g.cc, k, g.z); } };
     // 1) سطح وغواصات بنفس البحر
     for (const [z, L] of byZ) { if (L.length < 2 || !L.some(g => inWar.has(g.cc))) continue;
       for (const g of L) { const E = L.filter(e => e !== g && atWar(G, g.cc, e.cc) && count(e)); if (!E.length || !count(g)) continue;
@@ -171,7 +173,7 @@
   function battle(G, WD, NV, g, by, att, why, log) {
     const B = root.WNAVB || (typeof require !== 'undefined' ? require('./wnavb.js') : null); if (!B) return;
     const seed = ((G.rs || 1) * 131 + (G.t || 0) * 977 + g.id * 31) | 0, r = B.resolve({ s: { ...g.s } }, att, seed, 1);   // بدون رسم: خطوة ثانية (فحصت: الإصابات ضمن ~10٪ من خطوة ربع ثانية)
-    for (const k in r.sunk) { const n = Math.min(g.s[k] || 0, r.sunk[k]); g.s[k] -= n; for (let i = 0; i < n; i++) log.push({ t: G.t, k: 'navsink', cc: g.cc, ty: k, by, z: g.z, why }); }
+    for (const k in r.sunk) { const n = Math.min(g.s[k] || 0, r.sunk[k]); g.s[k] -= n; for (let i = 0; i < n; i++) { log.push({ t: G.t, k: 'navsink', cc: g.cc, ty: k, by, z: g.z, why }); if (CASN()) CASN().sink(G, g.cc, k, g.z); } }
     g.dmg += r.dmg * .5; NV.last = { t: G.t, z: g.z, def: g.cc, gid: g.id, s0: { ...g.s }, att, by, seed, why, res: r.stat, sunk: r.sunk };
     for (const k of Object.keys(g.s)) if (g.s[k] <= 0) delete g.s[k];
     NV.last.s0 = Object.fromEntries(Object.entries(NV.last.s0).map(([k, v]) => [k, v + (r.sunk[k] || 0)]));

@@ -451,7 +451,7 @@ html[data-skin] .note{font-size:12.5px;color:var(--dim);line-height:1.55}
 html[data-skin] .line{font-size:13px;border-color:var(--line);padding:6px 0}
 html[data-skin] .line b{font-family:var(--f-head);font-weight:700}
 /* الأقسام الفرعية: شرائح سطر وحد تنسحب */
-html[data-skin] #sheet .seg.gnav{flex-wrap:nowrap;overflow-x:auto;scrollbar-width:none;gap:6px;margin:2px 0 10px;padding-bottom:2px}
+html[data-skin] #sheet .seg.gnav{flex-wrap:wrap;overflow-x:visible;scrollbar-width:none;gap:6px;margin:2px 0 10px;padding-bottom:2px}
 html[data-skin] #sheet .seg.gnav::-webkit-scrollbar{display:none}
 html[data-skin] #sheet .seg.gnav button{flex:none;min-width:0;min-height:38px;border-radius:999px;padding:0 14px;background:var(--chip);border:0;color:var(--dim);white-space:nowrap}
 html[data-skin="news"] #sheet .seg.gnav button{border-radius:3px;background:transparent;box-shadow:inset 0 0 0 1px var(--line2)}
@@ -1389,7 +1389,7 @@ html[data-skin] .hero b{color:var(--act)}
   $('#tabs').querySelectorAll('button').forEach(b => b.onclick = () => TABOF[panel] === b.dataset.p ? closePanel() : openPanel(b.dataset.p));
   function closePanel() { document.body.classList.remove('sheeton'); panel = null; $('#sheet').hidden = true; $('#tabs').querySelectorAll('button').forEach(x => x.classList.remove('on')); }
   const TABOF = { cmd: 'cmd', cab: 'cmd', rise: 'cmd', me: 'me', flow: 'me', build: 'me', pop: 'me', fund: 'me', homep: 'me', army: 'army', prod: 'army', mkt: 'army', rd: 'rd', dip: 'dip', war: 'dip', ops: 'dip', world: 'dip', news: 'dip' };
-  const GROUPS = { me: [['me', '💰 الاقتصاد'], ['flow', '💸 الفلوس'], ['build', '🏗 المشاريع'], ['fund', '🏦 الاستثمار'], ['pop', '👥 السكان'], ['homep', '🏛 الداخل']], army: [['army', '🪖 الجيش'], ['prod', '🏭 الإنتاج'], ['mkt', '🛒 السوق']], dip: [['dip', '🤝 العلاقات'], ['war', '⚔ الحروب'], ['ops', '🎖 العمليات'], ['world', '🌍 الترتيب'], ['news', '📜 الأخبار']] };
+  const GROUPS = { me: [['me', '💰 الاقتصاد'], ['homep', '🏛 الداخل والحكم'], ['flow', '💸 الفلوس'], ['build', '🏗 المشاريع'], ['fund', '🏦 الاستثمار'], ['pop', '👥 السكان']], army: [['army', '🪖 الجيش'], ['prod', '🏭 الإنتاج'], ['mkt', '🛒 السوق']], dip: [['dip', '🤝 العلاقات'], ['war', '⚔ الحروب'], ['ops', '🎖 العمليات'], ['world', '🌍 الترتيب'], ['news', '📜 الأخبار']] };
 const HIC = {'💵':'money','💰':'money','🏥':'health','📊':'chart','📈':'chart','🏆':'trophy','🚀':'rocket','📦':'box','⚓':'anchor','✈':'plane','⚙':'gear','⏳':'hour','🌍':'globe','📨':'mail','🏭':'factory','🛒':'cart','🗳':'vote','🏗':'crane','⚡':'bolt','🌡':'temp','🧭':'compass','⭐':'star','💼':'case','🗂':'folder','🧑‍🤝‍🧑':'people','🤝':'@i-dip','🛡':'@i-army','🧪':'@i-rd','⚔':'swords','🎖':'medal','🏛':'@i-cmd','🏦':'bank','👥':'people','💸':'money','📜':'scroll','🔬':'@i-rd','🪖':'@i-army','📅':'cal','✅':'check','❌':'xmark','✖':'xmark','⚠':'warn','⛔':'warn','🔒':'lock','🔧':'wrench','🎯':'target','🔁':'repeat','🕵':'spy','🛢':'oil','💳':'cardp','♻':'recycle','🔔':'bell','📤':'upl','📥':'dnl','🎓':'edu','🗺':'layers','📍':'target','🧑‍🎓':'edu','🇺🇳':'globe','🚙':'@i-army','🏴':'flag','🏳':'flag','👑':'crown','⚖':'scale','🕌':'dome','💥':'boom','🕊':'dove','🎙':'vote','⛓':'lock','✊':'people','🔗':'repeat','🎪':'trophy','🗡':'swords'}, HRE = new RegExp('<(h[23])>(' + Object.keys(HIC).sort((a, b) => b.length - a.length).join('|') + ')\\uFE0F?\\s*', 'g'), ERE = new RegExp('>(' + Object.keys(HIC).sort((a, b) => b.length - a.length).join('|') + ')\\uFE0F?\\s*', 'g');
   // V5 (I-140): رموز العناوين بأيقونات SVG بخط واحد (الإيموجي يختلف من تلفون لتلفون)
   const icoOf = e => { const v = HIC[e]; return `<svg class="hic" aria-hidden="true"><use href="#${v[0] === '@' ? v.slice(1) : 'h-' + v}"/></svg>`; };
@@ -1469,6 +1469,12 @@ const HIC = {'💵':'money','💰':'money','🏥':'health','📊':'chart','📈'
         <div class="seg"><button data-gov="${k}:reform" ${eR ? 'disabled' : ''} title="${eR || ''}">إصلاح ⭐3 · ${WGOV.monthsOf(G, WD, k)} شهر</button><button data-gov="${k}:coup" class="dang" ${eC ? 'disabled' : ''}>${k === 'mil' ? 'انقلاب' : 'تغيير سريع'} ⭐2 · نجاح ${Math.round(WGOV.coupP(G, k) * 100)}٪</button></div>${eR && !/نقاط/.test(eR) ? `<div class="note neg">الإصلاح: ${eR}</div>` : ''}</div>`; }).join('')}</div></details>`;
     return h; }
   let govOpen = false;
+  // بطاقة بالقيادة: الحكم والجماعات والتحالف الإسلامي بضغطة وحدة (I-155)
+  function govCard() { if (!G.nat || !window.WGOV || !window.WINS) return ''; const I = WINS.ensure(G, WD), gv = WGOV.ensure(G), b = WGOV.inBloc(G, me), hot = I.g.filter(g => g.hit > G.t - 60).length, isOIC = ((WD.bl || {}).OIC || { m: [] }).m.includes(me);
+    return `<h3>🏛 الحكم والداخل</h3><div class="pj"><div class="line"><span>🏛 النظام: <b>${WGOV.nameOf(G, WD, me)}</b>${gv.tr ? ` <small class="note">(إصلاح نحو ${WGOV.GOV[gv.tr.to].n})</small>` : ''}</span></div>
+      <div class="line"><span>🏴 الجماعات المسلحة: <b>${I.g.length}</b>${hot ? ` · <b class="neg">${hot} تضرب</b>` : ''}${I.cap.length ? ` · <b class="neg">أسرى ينتظرون قرارك</b>` : ''}</span></div>
+      ${isOIC || b ? `<div class="line"><span>🕌 التحالف الإسلامي: <b>${b ? b.n + ' (' + b.m.length + ')' : 'مو عضو'}</b></span></div>` : ''}
+      <div class="seg"><button data-go="homep" class="big">غيّر النظام والجماعات</button>${isOIC || b ? `<button data-goib="1">التحالف الإسلامي</button>` : ''}</div></div>`; }
   // v5-4: التحالف الإسلامي (بالدبلوماسية)
   function iblocHtml() { if (!window.WGOV) return ''; WGOV.ensure(G); const b = WGOV.inBloc(G, me), O = ((WD.bl || {}).OIC || { m: [] }).m; if (!O.includes(me) && !G.iblocs.length) return '';
     let h = `<h3>🕌 التحالف الإسلامي</h3>`;
@@ -1530,7 +1536,7 @@ const HIC = {'💵':'money','💰':'money','🏥':'health','📊':'chart','📈'
     let h = `<h2>🏛 ${CS[me].ar}</h2>`;
     if (G.over) h += `<div class="pill warn">💥 ${OVER[G.over.why] || OVER.collapse} (${ar(S.date(G.over.t))}). ابدأ لعبة جديدة من شاشة البداية.</div><div class="row"><button class="big" id="newg">لعبة جديدة</button></div>`;
     { const L = inbox(); h += `<h3>📥 يحتاجك هسه${L.length ? ` <span class="ibn">${L.length}</span>` : ''}</h3>` + inboxHtml(L); }
-    h += cabCard() + riseCard();
+    h += govCard() + cabCard() + riseCard();
     h += `<div class="kpis">
       ${tile('me', '💰', 'الخزينة', money(e.cash), e.cash < 0 ? 'bad' : c30 != null && c30 < 0 ? 'warn' : 'good', c30 == null ? 'بالشهر الجاي يبين الاتجاه' : (c30 >= 0 ? '↑ +' : '↓ −') + money(Math.abs(c30)) + ' بالشهر' + (months != null && months < 36 ? ` · تكفي ~${Math.max(1, Math.round(months))} شهر` : ''), spark(hc.slice(-120).map(x => x[1]), '#d6a54a'))}
       ${tile('me', '📈', 'النمو', sgn(c.g) + '٪', c.g >= 2 ? 'good' : c.g >= 0 ? 'warn' : 'bad', (c.why || []).slice().sort((a, b) => Math.abs(b[1]) - Math.abs(a[1]))[0] ? 'أكبر سبب: ' + c.why.slice().sort((a, b) => Math.abs(b[1]) - Math.abs(a[1]))[0][0] : 'اقتصاد البلد', spark(kh.map(x => x.g), '#5fae6e'))}
@@ -1958,6 +1964,7 @@ const HIC = {'💵':'money','💰':'money','🏥':'health','📊':'chart','📈'
     root.querySelectorAll('[data-flt]').forEach(b => b.onclick = () => { const g = G.nav.g.find(x => x.id === +b.dataset.flt); if (!g) return; const [lon, lat] = fleetPos(g); cam.x = MX(lon); cam.y = MY(lat); cam.s = Math.max(cam.s, 900); selF = g; closePanel && closePanel(); navBar(); dirty = true; });
     root.querySelectorAll('[data-cmd]').forEach(b => b.onclick = () => { const r = WCMD.change(G, WD, +b.dataset.cmd); typeof r === 'string' ? toast('❌ ' + r, 'bad') : toast(msg(G.log[G.log.length - 1])[0], r.often ? 'bad' : 'good'); applyCmd(VT()); bar(); openPanel('army', true); save(); });
     root.querySelectorAll('[data-go]').forEach(b => b.onclick = () => openPanel(b.dataset.go));
+    root.querySelectorAll('[data-goib]').forEach(b => b.onclick = () => { openPanel('dip'); const h = [...document.querySelectorAll('#sheet h3')].find(x => /التحالف الإسلامي/.test(x.textContent)); if (h) { h.scrollIntoView({ block: 'start' }); $('#sheet').scrollTop -= 70; } });
     root.querySelectorAll('[data-adv]').forEach(b => b.onclick = () => { const a = (ADVL[+b.dataset.adv] || {}).a || '';
       if (a === 'prod') openPanel('prod'); else if (a === 'eco:home') openPanel('homep'); else if (a.startsWith('eco')) openPanel('me');
       else if (a === 'dip:ctry') openPanel('dip'); else if (a.startsWith('dip') || a === 'ev') openPanel('war');

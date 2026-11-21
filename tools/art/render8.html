@@ -1,0 +1,16 @@
+<!doctype html><html><body style="margin:0;background:transparent">
+<script type="importmap">{"imports":{"three":"./node_modules/three/build/three.module.js","three/addons/":"./node_modules/three/examples/jsm/"}}</script>
+<script type="module">
+import * as THREE from 'three'; import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js'; import { MeshoptDecoder } from 'three/addons/libs/meshopt_decoder.module.js';
+const P = new URLSearchParams(location.search), M = P.get('m'), F0 = +(P.get('f0') || 0), S = +(P.get('s') || 160), EL = +(P.get('el') || 48);
+const R = new THREE.WebGLRenderer({ alpha: true, antialias: true, preserveDrawingBuffer: true }); R.setSize(S * 8, S); R.setClearColor(0, 0); R.outputColorSpace = THREE.SRGBColorSpace; document.body.append(R.domElement);
+const scene = new THREE.Scene(); scene.add(new THREE.HemisphereLight(0xf4efe4, 0x6b5a40, 1.5)); const sun = new THREE.DirectionalLight(0xfff2dc, 2.4); sun.position.set(-3, 6, -2); scene.add(sun); const fill = new THREE.DirectionalLight(0xdfe8ff, .6); fill.position.set(3, 2, 4); scene.add(fill);
+const L = new GLTFLoader(); L.setMeshoptDecoder(MeshoptDecoder);
+L.load('./models/' + M + '.glb', g => { const o = g.scene, box = new THREE.Box3().setFromObject(o), c = box.getCenter(new THREE.Vector3()), sz = box.getSize(new THREE.Vector3());
+  const piv = new THREE.Group(); o.position.sub(c); o.position.y += sz.y / 2; piv.add(o); scene.add(piv);
+  const r = Math.max(sz.x, sz.z) * .62 + sz.y * .2, cam = new THREE.OrthographicCamera(-r, r, r, -r, .01, 1000), el = EL * Math.PI / 180, D = r * 6;
+  cam.position.set(0, Math.sin(el) * D, Math.cos(el) * D); cam.lookAt(0, sz.y * .35, 0);
+  R.setScissorTest(true); window.DIM = { x: sz.x, y: sz.y, z: sz.z };
+  for (let i = 0; i < 8; i++) { const th = i * Math.PI / 4; piv.rotation.y = F0 * Math.PI / 180 - th; R.setViewport(i * S, 0, S, S); R.setScissor(i * S, 0, S, S); R.render(scene, cam); }
+  window.DONE = R.domElement.toDataURL('image/png'); }, undefined, e => { window.DONE = 'ERR ' + e.message; });
+</script></body></html>

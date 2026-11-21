@@ -26,4 +26,11 @@ let offers = G.log.filter(l => l.k === 'fund' && l.a === 'offer').length;
 const H = S.load(S.save(G), WD); if (!H.fund3 || H.fund3.bonds !== G.fund3.bonds) no('الحفظ');
 const old = JSON.parse(S.save(S.init(WD, 'IRQ', { seed: 1 }))); old.v = 13; const G3 = S.load(JSON.stringify(old), WD); if (G3.v != null && G3.v < 14) no('ترقية V13');
 console.log(`ربح سنتين ${inc.toFixed(2)} مليار · مؤشر الأسهم ${G.fund3.idx} · عروض شركات ${offers} · الصندوق ${tot0.toFixed(1)} → ${F.total(G).toFixed(1)}`);
+// I-140: قرض الطوارئ — العراق من صندوق النقد (الشارع يزعل)، مرة بالسنة؛ إيران (عقوبات) من صديق أو محد
+{ const B = S.init(WD, 'IRQ', { seed: 4 }); N.init(B, WD); const c0 = B.nat.eco[0].cash, d0 = B.C.IRQ.debt, st0 = B.nat.home.fac.street;
+  if (F.lenderOf(B, WD, S) !== 'IMF') no('العراق المفروض يقترض من صندوق النقد: ' + F.lenderOf(B, WD, S));
+  const r = F.borrow(B, WD, S); if (typeof r === 'string') no('القرض: ' + r); if (!(B.nat.eco[0].cash > c0 && B.C.IRQ.debt > d0)) no('القرض ما وصل');
+  if (!(B.nat.home.fac.street < st0)) no('شروط صندوق النقد ما أثرت'); if (typeof F.borrow(B, WD, S) !== 'string') no('القرض تكرر بنفس السنة');
+  const I = S.init(WD, 'IRN', { seed: 4 }); N.init(I, WD); if (F.lenderOf(I, WD, S) === 'IMF') no('إيران تحت العقوبات وتقترض من صندوق النقد؟'); }
+
 console.log(bad ? `❌ ${bad} مشاكل` : '✅ الصندوق السيادي تمام'); process.exit(bad ? 1 : 0);

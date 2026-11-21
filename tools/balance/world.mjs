@@ -4,7 +4,7 @@ import fs from 'fs'; import { createRequire } from 'module';
 const require = createRequire(import.meta.url);
 const window = {}; new Function('window', fs.readFileSync(new URL('../../prototypes/world/world-data.js', import.meta.url), 'utf8'))(window);
 const WD = window.WD, S = require('../../prototypes/world/wsim.js'), N = require('../../prototypes/world/nation.js'), P = require('../../prototypes/world/wpol.js'), M = require('../../prototypes/world/wmkt.js');
-const HOME = require('../../prototypes/world/gwhome.js');
+const HOME = require('../../prototypes/world/gwhome.js'), FUND = require('../../prototypes/world/wfund.js'), RES = require('../../prototypes/world/wres.js');
 const YEARS = +(process.argv[2] || 10), SEEDS = +(process.argv[3] || 6);
 const CS = (process.argv[4] || 'IRQ,USA,IRN,EGY,TUR,DEU,LBN,YEM,JOR,BRA').split(',');
 // ===== البوتات =====
@@ -16,12 +16,18 @@ const BOTS = {
   idle: () => {},
   manager: (G, ev) => {
     const c = G.C[G.me], e = G.nat.eco[0], H = G.nat.home;
-    if (ev.month) { if (e.cash < 0) { c.tax = 'high'; c.civ = e.cash < -G.nat.lim * .5 ? 'cut' : 'mid'; } else if (e.cash > G.nat.lim * 2) { c.tax = 'mid'; c.civ = 'more'; } else { c.tax = 'mid'; c.civ = 'mid'; }
+    if (ev.month) {
+      // I-140: يستعمل الصندوق السيادي — الفائض يروح سندات، والعجز يتسدد منه قبل الضرايب
+      if (!process.env.NOFUND) { const F = FUND.ensure(G); if (e.cash < 0) for (const k of ['bonds', 'stocks']) if (e.cash < 0 && F[k] > 0) FUND.take(G, k, Math.min(F[k], -e.cash + G.nat.lim * .5));
+        if (e.cash < 0 && !FUND.borrowOk(G, WD, S)) FUND.borrow(G, WD, S);
+        if (e.cash > G.nat.lim * 3) FUND.put(G, 'bonds', +((e.cash - G.nat.lim * 2) * .5).toFixed(2));
+        if (e.cash > G.nat.lim) RES.fill(G, WD); }
+      if (e.cash < 0) { c.tax = 'high'; c.civ = e.cash < -G.nat.lim * .5 ? 'cut' : 'mid'; } else if (e.cash > G.nat.lim * 2) { c.tax = 'mid'; c.civ = 'more'; } else { c.tax = 'mid'; c.civ = 'mid'; }
       e.prio = c.stab < 40 ? 'civ' : 'bal';
       while (G.offers.length) S.answerOffer(G, WD, 0, true); while (G.mkt.offers.length) M.answer(G, WD, S, 0, true);
       if (G.ap >= 2 && G.t - G.unT >= 180) S.unSummit(G);
       // v3 E: يبني مشروع إذا الخزينة تتحمّل (كهرباء أول إذا ناقصة، بعدين نفط، بعدين مصانع)
-      { const EC = S.ECO, run = G.eco3 ? G.eco3.proj.filter(q => q.id === G.me && !q.done).length : 9; if (EC && run < 2 && !process.env.NOBUILD) { const k = EC.elecDef(G, G.me) > .1 ? 'power' : c.oil > 0 ? 'oil' : 'fact', cd = EC.card(G, WD, G.me, k); if (e.cash > cd.cost * 1.5 && !EC.can(G, WD, G.me, k)) EC.start(G, WD, G.me, k); } }
+      { const EC = S.ECO, run = G.eco3 ? G.eco3.proj.filter(q => q.id === G.me && !q.done).length : 9; if (EC && run < 2 && !process.env.NOBUILD) { const k = EC.elecDef(G, G.me) > .1 ? 'power' : c.oil > 0 ? 'oil' : 'fact', cd = EC.card(G, WD, G.me, k); if (e.cash > cd.cost + G.nat.lim * (process.env.NOFUND ? .5 : 1.5) && !EC.can(G, WD, G.me, k)) EC.start(G, WD, G.me, k); } }
       for (const w of G.wars.filter(w => w.offer && (w.a.includes(G.me) || w.b.includes(G.me)))) { if (G.ap >= 1) S.offerPeace(G, WD, w.id); }
       if (CUR !== 'warmonger') for (const w of G.wars.filter(w => (w.a.includes(G.me) || w.b.includes(G.me)) && (w.a.includes(G.me) ? w.score : -w.score) < 0)) if (G.ap >= 1) S.offerPeace(G, WD, w.id); }
     while (H.iss.length) { const q = H.iss[0], I = HOME.ISS[q.k]; const j = e.cash > G.nat.lim * .2 ? 0 : I.o.length - 1; HOME.choose(G.nat, 0, Math.min(j, I.o.length - 1)); }
@@ -44,6 +50,7 @@ for (const me of CS) for (const bot of Object.keys(BOTS)) {
       if (bot === 'idle') { while (G.pev.length) P.choose(G, 0, 0); }
       CUR = bot; BOTS[bot](G, { month });
       if (month) stabs.push(G.C[me].stab);
+      if (month && process.env.TRACE && sd === 1 && G.t % 180 < 31) console.error(me, bot, Math.round(G.t / 30), Object.entries(G.nat.home.fac).map(([k, v]) => k + Math.round(v)).join(' '), 'stab', Math.round(G.C[me].stab), 'cash', G.nat.eco[0].cash.toFixed(1), 'tax', G.C[me].tax, G.C[me].civ, 'wars', G.wars.filter(w => w.a.includes(me) || w.b.includes(me)).map(w => w.id + ':' + Math.round(w.score)).join(','));
       for (const l of G.log) if (l.t === G.t && l.k === 'elect' && l.me) (world.el ||= []).push(me + ':' + bot + ':' + l.sc + ' ' + JSON.stringify(Object.fromEntries(Object.entries(G.nat.home.fac).map(([k, v]) => [k, Math.round(v)]))) + ' mor' + Math.round(G.nat.eco[0].mor) + ' cash' + Math.round(G.nat.eco[0].cash) + ' g' + G.C[me].g.toFixed(1) + ' tax ' + G.C[me].tax + ' civ ' + G.C[me].civ);
       if (bot === 'idle' && sd === 1) for (const l of G.log) if (l.t === G.t) { if (l.k === 'war' && l.byAI) { aiWar.set(l.id, G.t); world.aiW++; world.aiWn = (world.aiWn || []).concat(WD.cs[l.a].ar + '←' + WD.cs[l.b].ar); } if (l.k === 'peace' && aiWar.has(l.war)) { if (G.t - aiWar.get(l.war) <= 730) world.aiWpeace24++; aiWar.delete(l.war); } }
     }

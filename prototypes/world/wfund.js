@@ -40,6 +40,17 @@
     const L = loanTerms(G, x); if (cashOf(G) - L.amt < 0) return 'الخزينة ما تكفي'; pay(G, -L.amt); c.debt += L.amt;
     F.loans.push({ id: F.nid++, x, amt: L.amt, left: L.amt, rate: L.rate, mo: L.mo, t0: G.t }); S.addRel(G, G.me, x, 10); G.log.push({ t: G.t, k: 'fund', a: 'loan', x, v: L.amt }); return { ok: true };
   }
+  // I-140: قرض طوارئ — صندوق النقد بشروط تقشف (الشارع يزعل)، أو دولة صديقة (علاقة 40+) إذا العقوبات تسد باب الصندوق؛ مرة بالسنة
+  function lenderOf(G, WD, S) { const me = G.me, sanc = WD.cs[me].sanc === 'heavy' || G.sanc.some(s => s[0] === 'USA' && s[1] === me);
+    if (!sanc && S.rel(G, me, 'USA') > -40) return 'IMF';
+    return ['CHN', 'RUS', 'SAU', 'ARE', 'QAT', 'TUR', 'IND'].filter(x => x !== me && G.C[x] && !S.atWar(G, me, x) && S.rel(G, me, x) >= 40).sort((a, b) => S.rel(G, me, b) - S.rel(G, me, a))[0] || null; }
+  function borrowTerms(G, WD, S) { return { L: lenderOf(G, WD, S), amt: +(G.nat.lim * 1.5).toFixed(1) }; }
+  function borrowOk(G, WD, S) { const F = ensure(G), T = borrowTerms(G, WD, S), c = G.C[G.me];
+    if (!T.L) return 'محد يقرضنا: صندوق النقد مسدود (العقوبات) وماكو صديق علاقته 40+'; if (G.t - (F.brT ?? -9999) < 365) return 'أخذنا قرض طوارئ هالسنة'; if (c.debt / c.gdp > 1.6) return 'الدين فوق 160٪: محد يقرضنا'; return null; }
+  function borrow(G, WD, S) { const err = borrowOk(G, WD, S); if (err) return err; const F = ensure(G), T = borrowTerms(G, WD, S), c = G.C[G.me];
+    pay(G, T.amt); c.debt += T.amt * 1.1; F.brT = G.t;   // +10٪ رسوم وفوائد مقدمة
+    if (T.L === 'IMF') { const H = G.nat.home; if (H && H.fac && H.fac.street != null) H.fac.street = Math.max(0, H.fac.street - 6); c.stab = clamp(c.stab - 2, 0, 100); } else S.addRel(G, G.me, T.L, 5);
+    G.log.push({ t: G.t, k: 'fund', a: 'borrow', x: T.L, v: T.amt }); return { ok: true }; }
   // كل شهر: العوائد للخزينة، الأسهم تتذبذب، المشاريع برّا تنخسر بالحرب أو الخلاف، القروض تترجع أو تتعثر، وعروض الشركات
   function month(G, WD, S) {
     if (!G.nat) return; const F = ensure(G), r = rng(G); let inc = 0;
@@ -76,6 +87,6 @@
     const ECO = root.WECO || require('./weco.js'), r = ECO.start(G, WD, G.me, o.k); if (!r.ok) return r;
     r.q.cost = 0; r.q.share = .4; r.q.fx = o.from; S.addRel(G, G.me, o.from, 8); G.log.push({ t: G.t, k: 'fund', a: 'accept', x: o.from, pk: o.k, v: o.v }); return { ok: true };
   }
-  const API = { ABROAD, FIRMS, ensure, total, put, take, okAbroad, invest, loanTerms, lend, month, answer };
+  const API = { ABROAD, FIRMS, ensure, total, put, take, okAbroad, invest, loanTerms, lend, month, answer, lenderOf, borrowTerms, borrowOk, borrow };
   if (typeof module !== 'undefined') module.exports = API; else root.WFUND = API;
 })(typeof window !== 'undefined' ? window : globalThis);

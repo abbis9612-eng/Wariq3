@@ -4,7 +4,7 @@
 (function (root) {
   'use strict';
   const START = Date.UTC(2026, 10, 20);   // 20 تشرين الثاني 2026: الوضع الحقيقي (D-048)
-  const V = 20;                              // إصدار حفظ «العالم» (9: البحرية الحقيقية W12؛ 2: الصواريخ والدفاع الجوي؛ 3: البحرية والمضائق؛ 4: طبقة الدولة؛ 5: التكتلات والتوتر والعروض والأمم المتحدة؛ 6: الانتخابات والانقلابات والاحتلال والأحداث؛ 7: البحث لكل الدول وسوق السلاح؛ 8: قائد القوات المسلحة)
+  const V = 21;                              // إصدار حفظ «العالم» (9: البحرية الحقيقية W12؛ 2: الصواريخ والدفاع الجوي؛ 3: البحرية والمضائق؛ 4: طبقة الدولة؛ 5: التكتلات والتوتر والعروض والأمم المتحدة؛ 6: الانتخابات والانقلابات والاحتلال والأحداث؛ 7: البحث لكل الدول وسوق السلاح؛ 8: قائد القوات المسلحة)
   const mulberry = a => () => { a |= 0; a = a + 0x6D2B79F5 | 0; let t = Math.imul(a ^ a >>> 15, 1 | a); t = t + Math.imul(t ^ t >>> 7, 61 | t) ^ t; return ((t ^ t >>> 14) >>> 0) / 4294967296; };
   const clamp = (v, a, b) => v < a ? a : v > b ? b : v;
   const POL = root.WPOL || (typeof require !== 'undefined' ? require('./wpol.js') : null);   // W7: السياسة والأحداث
@@ -186,7 +186,7 @@
     for (const w of W.wars.slice()) war(W, WD, w);
     if (CAS) { for (const w of W.wars) CAS.warMonth(W, WD, w); CAS.month(W); }
     // الصواريخ: إنتاج شهري، تصليح النفط المضروب، والذكاء بالحرب يرمي 15٪ من مخزونه على الخصم
-    for (const id of W.ids) { const c = W.C[id]; if (c.msl == null) continue; c.msl += c.mslP; c.drn += c.drnP; c.oilDmg = Math.max(0, (c.oilDmg || 0) * .9 - .01); }
+    for (const id of W.ids) { const c = W.C[id]; if (c.msl == null) continue; c.msl += c.mslP; c.drn += c.drnP; c.oilDmg = Math.max(0, (c.oilDmg || 0) * (W.wars.some(w => w.a.includes(id) || w.b.includes(id)) ? .9 : .8) - .01); }   // بالسلم التصليح أسرع (~6 أشهر)
     for (const w of W.wars) for (const [mine, oth] of [[w.a, w.b], [w.b, w.a]]) for (const id of mine.slice(0, 2)) {
       if (id === W.me || !W.C[id] || !(W.C[id].msl + W.C[id].drn)) continue;
       const tgt = oth.find(o => W.C[o]); if (!tgt) continue;
@@ -294,8 +294,8 @@
     if (fb.length && r / fort > 1.3) take(fb, w.a, r / fort);
     else if (fa.length && 1 / r / fort > 1.3) take(fa, w.b, 1 / r / fort);
     w.score = clamp(w.score + (r > 1 ? 1 : -1) * Math.min(3, Math.abs(Math.log(r)) * 2), -100, 100);
-    // حرب استنزاف قديمة (fort0): المجتمع متعود، التعب يصعد نص السرعة (أوكرانيا 4 سنين وما وقفت)
-    const wk = w.fort0 ? .5 : 1;
+    // حرب الاستنزاف الطويلة (أوكرانيا، 4 سنين وما وقفت): المجتمع متعود، التعب يصعد نص السرعة
+    const wk = w.id === 'ukraine' ? .5 : 1;
     for (const id of [...w.a, ...w.b]) { const mine = w.a.includes(id) ? w.score : -w.score; w.weary[id] = clamp((w.weary[id] || 0) + (1.5 + (mine < 0 ? 1.5 : 0)) * wk, 0, 100); }
     return peaceTalk(W, WD, w);
   }
@@ -534,6 +534,7 @@
     if (o.v < 19) o.v = 19;
     // 19 ← 20: المخزون الاستراتيجي (nat.stock)، معرض السلاح (nat.fairY)، التجسس (nat.spyT) — تنبني لحالها
     if (o.v < 20) o.v = 20;
+    if (o.v < 21) o.v = 21;   // I-140: قرض الطوارئ (fund3.brT ينبني لما ينحتاج)
     o.base = WD.rel; o.rnd = mulberry(o.rs); dipInit(o, WD); if (POL) POL.ensure(o, WD); if (MKT) MKT.ensure(o, WD); if (CMD) CMD.ensure(o, WD); if (ECO) ECO.ensure(o, WD); if (POP) POP.ensure(o, WD); if (NAV) NAV.ensure(o, WD); return o;
   }
   const API = { V, K, START, TENSION, POL, MKT, CMD, NAV, ECO, init, addRel, answerOffer, unSummit, unVote, council, tenTarget, napOf, blocsOf, P5, navy, straits, step, month, act, can, offerPeace, declare, endWar, strike, playerStrike, rank, save, load, date, rel, atWar, allied, sancOf: (W, WD, id) => sancOn(WD, W, id), COST, TAX, CIV };

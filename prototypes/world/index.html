@@ -105,9 +105,12 @@ const role = r => !r ? '' : ROLE[r] || (/President/.test(r) ? 'الرئيس' : /
 const trName = t => t.startsWith('PACT_') ? 'معاهدة دفاع ويا ' + nameOf(t.slice(5)) : (WD.trn[t] || t), cfName = k => WD.cfn[k] || k;
 const nameOf = k => !k ? 'أرض محايدة' : CS[k] ? CS[k].ar : ENT[k] ? ENT[k].ar : k;
 // v5-1 (I-152): الأعلام الحقيقية (flag-icons، MIT) داخل اللعبة — صورة صغيرة جنب الاسم، وبالشعار بدل الحرف
-const FLG = (k, cls = 'flg') => CS[k] ? `<img class="${cls}" src="flags/${k}.webp" alt="" loading="lazy" onerror="this.remove()">` : '';
+// كل الأعلام بصورة وحدة (flags/flags.webp، شبكة 16×10) حتى تبقى خفيفة؛ الموقع بالنسبة المئوية فيشتغل بأي حجم
+const FLK = 'AFGAGOALBAREARGARMAUSAUTAZEBDIBELBENBFABGDBGRBHRBIHBLRBOLBRABWACAFCANCHECHLCHNCIVCMRCODCOGCOLCRICUBCYPCZEDEUDJIDNKDOMDZAECUEGYERIESPESTETHFINFRAGABGBRGEOGHAGINGMBGNBGNQGRCGTMHNDHRVHTIHUNIDNINDIRLIRNIRQISRITAJAMJORJPNKAZKENKGZKHMKORKWTLAOLBNLBRLBYLKALSOLTULVAMARMDAMDGMEXMKDMLIMMRMNGMOZMRTMWIMYSNAMNERNGANICNLDNORNPLNZLOMNPAKPANPERPHLPNGPOLPRKPRTPRYPSXQATROURUSRWASAUSDNSDSSENSGPSLESLVSOMSRBSVKSVNSWESWZSYRTCDTGOTHATJKTKMTLSTTOTUNTURTWNTZAUGAUKRURYUSAUZBVENVNMYEMZAFZMBZWE', FLC = 16, FLR = 10;
+const flPos = k => { const i = FLK.indexOf(k) / 3; return i % 1 || i < 0 ? null : `background-position:${(i % FLC) / (FLC - 1) * 100}% ${Math.floor(i / FLC) / (FLR - 1) * 100}%`; };
+const FLG = (k, cls = 'flg') => { const ps = CS[k] && flPos(k); return ps ? `<i class="${cls} flgs" style="${ps}" role="img" aria-label="${CS[k].ar}"></i>` : ''; };
 const nmF = k => FLG(k) + nameOf(k);
-const EMB = k => CS[k] ? `<span class="emb femb" title="${CS[k].ar}"><img src="flags/${k}.webp" alt="${CS[k].ar}" onerror="this.parentNode.textContent='${(CS[k].ar || '؟')[0]}'"></span>` : '';
+const EMB = k => { const ps = CS[k] && flPos(k); return ps ? `<span class="emb femb flgs" title="${CS[k].ar}" style="${ps}"></span>` : `<span class="emb">${((CS[k] || {}).ar || '؟')[0]}</span>`; };
 
 // ألوان الدول: تلوين جشع على جيرة الدول (ما تتشابه دولتين متجاورات)
 const PAL = ['#7f9c6b', '#b49a6a', '#8a7fa6', '#6f97a3', '#a9786a', '#9aa46a', '#7a8fb5', '#b08aa0', '#6fa38c', '#a59580'];
@@ -513,8 +516,9 @@ html[data-skin="news"] .cab,html[data-skin="news"] .mcard{background:transparent
 html[data-skin="news"] .ibx{background:transparent;box-shadow:none;border-radius:0;border-top:3px solid var(--ink);border-inline-start:0}
 html[data-skin] #bar .spn{font:500 11px/1 var(--f-body);color:var(--dim);margin-inline-start:6px}
 .ibi .flg.big{width:30px;height:22px;margin:0}
-.flg{width:20px;height:15px;object-fit:cover;border-radius:3px;vertical-align:-2px;margin-inline-end:5px;box-shadow:0 0 0 1px rgba(0,0,0,.12)}
-.emb.femb{background:var(--chip)!important;overflow:hidden;padding:0;border:0}.emb.femb img{width:100%;height:100%;object-fit:cover}
+.flgs{background-image:url(flags/flags.webp);background-size:1600% 1000%;background-repeat:no-repeat}
+.flg{display:inline-block;width:20px;height:15px;border-radius:3px;vertical-align:-2px;margin-inline-end:5px;box-shadow:0 0 0 1px rgba(0,0,0,.12)}
+.emb.femb{background-color:var(--chip)!important;overflow:hidden;padding:0;border:0}
 html[data-skin] body.play #top .emb.femb{width:44px;height:33px;border-radius:7px;box-shadow:0 0 0 1px rgba(0,0,0,.15)}
 html[data-skin] #start{background:var(--bg)}
 html[data-skin] #start h1,html[data-skin] .sth{font-family:var(--f-head)}

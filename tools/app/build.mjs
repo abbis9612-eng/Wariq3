@@ -14,7 +14,7 @@ for (const s of styles) cp(path.join(W, s), s);
 if (fs.existsSync(path.join(W, 'fonts'))) for (const f of fs.readdirSync(path.join(W, 'fonts'))) if (/\.(woff2|woff|ttf|css|txt)$/i.test(f) && !files.includes('fonts/' + f)) cp(path.join(W, 'fonts', f), 'fonts/' + f);
 cp(path.join(W, 'index.html'), 'index.html'); cp(path.join(W, 'manifest.webmanifest'), 'manifest.webmanifest');
 for (const f of fs.readdirSync(path.join(W, 'icons'))) cp(path.join(W, 'icons', f), 'icons/' + f);
-if (fs.existsSync(path.join(W, 'flags'))) for (const f of fs.readdirSync(path.join(W, 'flags'))) if (/\.(webp|txt)$/i.test(f)) cp(path.join(W, 'flags', f), 'flags/' + f);   // v5-1: الأعلام
+if (fs.existsSync(path.join(W, 'flags'))) for (const f of fs.readdirSync(path.join(W, 'flags'))) if (/\.(webp|txt)$/i.test(f)) cp(path.join(W, 'flags', f), 'flags/' + f);   // v5-1: الأعلام (صورة وحدة flags.webp)
 if (fs.existsSync(path.join(W, 'map'))) for (const f of fs.readdirSync(path.join(W, 'map'))) if (/\.(webp|png|jpg)$/i.test(f)) cp(path.join(W, 'map', f), 'map/' + f);
 // 2) الصور والأصوات (مشهد المعركة والجو): كل webp بـ img/ (و img/bv/) وكل الأصوات
 const walk = (d, base) => { for (const f of fs.readdirSync(d)) { const p = path.join(d, f); if (fs.statSync(p).isDirectory()) walk(p, base + f + '/'); else if (/\.(webp|mp3|ogg|wav|m4a)$/i.test(f)) cp(p, base + f); } };

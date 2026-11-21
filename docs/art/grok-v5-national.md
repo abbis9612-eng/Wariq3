@@ -9,6 +9,8 @@
 
 وحط الصور بمجلد `docs/art/out/v5-national/`. إذا صورة طلعت مثل لعبة أو رسم، ارجعها وقله: «make it look like a real military press photograph, not a 3D render».
 
+**الصور رجعت (I-134):** [`out/v5-national/`](out/v5-national/) — 32 صورة، نسخة وحدة لكل اسم.
+
 ---
 
 ## INSTRUCTIONS FOR GROK (apply to every image)

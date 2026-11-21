@@ -55,6 +55,8 @@
       const c = G.C[l.x]; if ((c.crisis || c.stab < 20) && r() < .05) { F.loans.splice(F.loans.indexOf(l), 1); pay(G, l.left * .4); G.log.push({ t: G.t, k: 'fund', a: 'default', x: l.x, v: +(l.left * .6).toFixed(2) }); continue; }
       const back = l.amt / l.mo; inc += l.left * l.rate / 12; l.left = Math.max(0, l.left - back); pay(G, back); c.debt = Math.max(0, c.debt - back);
       if (l.left <= 1e-6) { F.loans.splice(F.loans.indexOf(l), 1); G.log.push({ t: G.t, k: 'fund', a: 'repaid', x: l.x }); } }
+    // بحث «الخدمات المالية» يزيد الربح
+    inc *= 1 + ((G.C[G.me] && G.C[G.me].fundK) || 0);
     pay(G, inc); F.inc = +inc.toFixed(3);
     // E4: عروض الشركات تجي أكثر إذا الاستقرار عالي، ماكو عقوبات، كفاءة أعلى، وكهرباء كافية
     F.offers = F.offers.filter(o => o.until > G.t);

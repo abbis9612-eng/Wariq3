@@ -37,7 +37,8 @@
   const MAXRUN = 2;
   function ensure(G) { if (!G.ars) G.ars = { done: {}, run: [] }; return G.ars; }
   const kOf = G => (G.nat && G.nat.ind[0].k) || 1;
-  const costOf = (G, k) => +(FL[k].cost * kOf(G)).toFixed(1);
+  // بحث «صاروخ الفضاء الوطني» يرخّص قمر الرقيب −30٪
+  const costOf = (G, k) => +(FL[k].cost * kOf(G) * (k === 'space' && G.res3 && G.res3.done && G.res3.done.launch ? .7 : 1)).toFixed(1);
   const coast = (G, WD) => WD.r.some((r, i) => G.ctl[i] === G.me && (r[8] || []).length);
   function can(G, WD, k) {
     const f = FL[k], A = ensure(G); if (!f) return 'غلط'; if (A.done[k]) return 'بالخدمة'; if (A.run.some(q => q.k === k)) return 'ينبني';

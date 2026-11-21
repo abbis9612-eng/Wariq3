@@ -15,11 +15,19 @@
     agri:  { s: 'eco', ic: '🌾', img: 'rs_agri', n: 'زراعة ذكية وري بالتنقيط', cost: 1, d: 'أمن غذائي: الناتج +0.5٪ والاستقرار +1', fx: { core: .005, stab: 1 } },
     manuf: { s: 'eco', ic: '⚙', img: 'rs_manuf', n: 'تصنيع متقدم', cost: 2.5, d: 'مصانع أحدث: النمو +0.1٪ دائم، والإنتاج الحربي أسرع +5٪', fx: { g: .1, prod: .05 }, req: ['agri'] },
     tele:  { s: 'eco', ic: '📶', img: 'rs_telecom', n: 'اتصالات وإنترنت سريع', cost: 1.5, d: 'خدمات رقمية: النمو +0.1٪ دائم', fx: { g: .1 } },
+    desal: { s: 'eco', ic: '💧', img: 'rs_desal', n: 'تحلية المياه', cost: 2, d: 'ماي للمدن والزراعة: الاستقرار +1 والناتج +0.5٪', fx: { stab: 1, core: .005 }, need: 'sea' },
+    lithium:{ s: 'eco', ic: '⛏', img: 'rs_lithium', n: 'الليثيوم والتعدين', cost: 2.5, d: 'معادن البطاريات والصناعة: الناتج +1٪', fx: { core: .01 }, req: ['manuf'] },
+    tourism:{ s: 'eco', ic: '🕌', img: 'rs_tourism', n: 'السياحة والمواقع التاريخية', cost: 1, d: 'زوار ودخل: الناتج +0.8٪ والإيرادات +0.5٪', fx: { core: .008, rev: .005 } },
+    finance:{ s: 'eco', ic: '🏦', img: 'rs_finance', n: 'الخدمات المالية', cost: 1.5, d: 'بورصة وبنوك قوية: ربح الصندوق السيادي +25٪ والنمو +0.05٪', fx: { fundK: .25, g: .05 }, req: ['tele'] },
+    civai: { s: 'eco', ic: '🤖', img: 'rs_civai', n: 'الذكاء الاصطناعي المدني', cost: 3, d: 'إنتاجية أعلى: النمو +0.1٪ والبحث أسرع +5٪', fx: { g: .1, rs: .05 }, req: ['tele'] },
     // 👥 مجتمع
     med:   { s: 'soc', ic: '💊', img: 'rs_med', n: 'طب حديث', cost: 1, d: 'الصحة +5 والعمر المتوقع يرتفع', fx: { hea: .05 } },
     med2:  { s: 'soc', ic: '🧬', img: 'rs_med2', n: 'أدوية ولقاحات محلية', cost: 2, d: 'الصحة +5 ثاني، وجرحى الحرب يرجعون أسرع', fx: { hea: .05, heal: 1 }, req: ['med'] },
     edu:   { s: 'soc', ic: '📚', img: 'rs_edu', n: 'إصلاح التعليم', cost: 1, d: 'التعليم +5، والبحث أسرع +10٪', fx: { edu: .05, rs: .1 } },
     girls: { s: 'soc', ic: '👩‍🎓', img: 'rs_girls', n: 'تعليم البنات وتشغيل النساء', cost: 1, d: 'التعليم +4، قوة العمل أكبر (النمو +0.1٪)، والخصوبة تنزل أسرع', fx: { edu: .04, g: .1 }, req: ['edu'] },
+    food:  { s: 'soc', ic: '🌾', img: 'rs_food', n: 'الأمن الغذائي', cost: 1, d: 'مخازن حبوب وصوامع: الاستقرار +2', fx: { stab: 2 }, req: ['agri'] },
+    anticorr:{ s: 'soc', ic: '⚖', img: 'rs_anticorr', n: 'مكافحة الفساد', cost: 2, d: 'المشاريع أرخص وأسرع −10٪ ثاني، والإيرادات +1٪', fx: { effK: .1, rev: .01 }, req: ['gov'] },
+    softpower:{ s: 'soc', ic: '🎭', img: 'rs_softpower', n: 'الإعلام والقوة الناعمة', cost: 1.5, d: 'صورتنا بالعالم أحسن: العلاقة ويا كل الدول اللي تحبنا +5', fx: { soft: 5 } },
     gov:   { s: 'soc', ic: '🏛', img: 'rs_gov', n: 'إدارة وحوكمة إلكترونية', cost: 1.5, d: 'فساد أقل: المشاريع أرخص وأسرع −10٪، والإيرادات +1٪', fx: { effK: .1, rev: .01 } },
     // 🧪 استراتيجي
     nucp:  { s: 'str', ic: '⚛', img: 'rs_nuclear', n: 'طاقة نووية سلمية', cost: 4, d: 'مفاعل كهرباء: قدرة الشبكة +15٪ من الطلب. تحت رقابة الوكالة الدولية (بدون عقوبات)', fx: { elec: .15 }, req: ['edu', 'solar'] },
@@ -37,6 +45,8 @@
     swarm: { s: 'mil', ic: '🐝', img: 'rs_swarm', n: 'أسراب المسيّرات', cost: 5, d: 'إنتاج المسيّرات +40٪', fx: { drn: .4 }, reqT: ['uav', 6] },
     aimil: { s: 'mil', ic: '🧠', img: 'rs_ai', n: 'ذكاء اصطناعي بالقيادة', cost: 5, d: 'البحث أسرع +10٪ وقوة الجيش +3٪', fx: { rs: .1, pwK: .03 }, reqT: ['ew', 6] },
     g6:    { s: 'mil', ic: '✈', img: 'rs_6gen', n: 'مقاتلة الجيل السادس', cost: 9, d: 'قوة الجيش +6٪', fx: { pwK: .06 }, reqT: ['ind', 6], req: ['stealth'] },
+    launch:{ s: 'str', ic: '🚀', img: 'rs_launch', n: 'صاروخ الفضاء الوطني', cost: 5, d: 'نطلق أقمارنا بنفسنا: البحث أسرع +5٪ والنمو +0.05٪، ويفتح مشروع «قمر الرقيب» أرخص', fx: { rs: .05, g: .05 }, req: ['space'] },
+    enrich:{ s: 'str', ic: '⚛', img: 'rs_enrich', n: 'تخصيب اليورانيوم', cost: 0, d: 'مقفول: حساس جداً (عقوبات وتهديد بالحرب) — ينتظر قرارك عن النووي', lock: 1 },
     nucw:  { s: 'str', ic: '☢', img: 'rs_nukew', n: 'برامج حساسة', cost: 0, d: 'مقفول: ينتظر قرارك عن النووي (مو بهاللعبة لحد ما تقرر)', lock: 1 },
   };
   const SEC = { mil: ['⚔', 'عسكري'], eco: ['💰', 'اقتصادي'], soc: ['👥', 'مجتمع'], str: ['🧪', 'استراتيجي'] };
@@ -68,6 +78,7 @@
   function can(G, WD, k) {
     const t = T[k], R = ensure(G); if (!t) return 'غلط'; if (t.lock) return 'مقفول'; if (R.done[k]) return 'مكتمل';
     if (t.need === 'oil' && !(G.C[G.me].oil > 0)) return 'ماكو نفط عدنا';
+    if (t.need === 'sea' && WD && !WD.r.some((r, i) => G.ctl[i] === G.me && (r[8] || []).length)) return 'ماكو ساحل';
     if (t.reqT && G.nat && (G.nat.ind[0].tech[t.reqT[0]] || 0) < t.reqT[1]) { const IND = root.IND || require('./gwind.js'); return `يحتاج «${IND.BR[t.reqT[0]].n}» مستوى ${t.reqT[1]}`; }
     const miss = (t.req || []).filter(r => !R.done[r]); if (miss.length) return 'يحتاج قبله: ' + miss.map(r => T[r].n).join('، ');
     return null;
@@ -121,6 +132,8 @@
     if (f.hyp) c.hyp = (c.hyp || 0) + f.hyp;
     if (f.drn) c.drnP = (c.drnP || 0) * (1 + f.drn);
     if (f.sat) c.sat = 1;
+    if (f.fundK) c.fundK = (c.fundK || 0) + f.fundK;
+    if (f.soft) { const S = root.WSIM || require('./wsim.js'); for (const x of G.ids) if (x !== G.me && S.rel(G, G.me, x) > 0) S.addRel(G, G.me, x, f.soft); }
     G.log.push({ t: G.t, k: 'res', r: k, id: G.me });
   }
   // الأيام المتوقعة بالميزانية الحالية (لخانة وحدة)

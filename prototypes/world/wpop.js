@@ -53,7 +53,7 @@
     // الخصوبة تنزل ببطء ويا تعليم المرأة (أقوى عامل) والدخل والتمدّن — 3٪ من الفرق بالسنة
     const tfrT = clamp(1.3 + 3.4 * (1 - p.edu) / (1 + pc / 20000), 1, 7); p.tfr = +(p.tfr + (tfrT - p.tfr) * .03 / 12).toFixed(3);
     // التعليم والصحة يتحسنون ببطء ويا الدخل والمشاريع (كل جامعة +3٪، كل شبكة مستشفيات +3٪)
-    const eduT = clamp(eduOf(pc) + .03 * (c.univ || 0) + (c.socR || 0), .2, 1), heaT = clamp((p.le0 ?? (p.le0 = p.le)) / 85 - .2 + .03 * (c.hosp || 0) + (c.socR || 0), .1, 1);
+    const eduT = clamp(eduOf(pc) + .03 * (c.univ || 0) + (c.eduR || 0), .2, 1), heaT = clamp((p.le0 ?? (p.le0 = p.le)) / 85 - .2 + .03 * (c.hosp || 0) + (c.heaR || 0), .1, 1);
     p.edu = +(p.edu + (eduT - p.edu) * .05 / 12).toFixed(4); p.hea = +(p.hea + (heaT - p.hea) * .05 / 12).toFixed(4);
     p.le = +clamp(p.le + ((45 + 40 * p.hea) - p.le) * .02 / 12 - (war ? .05 : 0), 40, 88).toFixed(2);
     // البطالة: النمو أقل من العادي = بطالة أكثر (قانون أوكن تقريباً)، والتعبئة تسحب عاطلين

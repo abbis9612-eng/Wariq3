@@ -4,7 +4,7 @@
 (function (root) {
   'use strict';
   const START = Date.UTC(2026, 10, 20);   // 20 تشرين الثاني 2026: الوضع الحقيقي (D-048)
-  const V = 12;                              // إصدار حفظ «العالم» (9: البحرية الحقيقية W12؛ 2: الصواريخ والدفاع الجوي؛ 3: البحرية والمضائق؛ 4: طبقة الدولة؛ 5: التكتلات والتوتر والعروض والأمم المتحدة؛ 6: الانتخابات والانقلابات والاحتلال والأحداث؛ 7: البحث لكل الدول وسوق السلاح؛ 8: قائد القوات المسلحة)
+  const V = 13;                              // إصدار حفظ «العالم» (9: البحرية الحقيقية W12؛ 2: الصواريخ والدفاع الجوي؛ 3: البحرية والمضائق؛ 4: طبقة الدولة؛ 5: التكتلات والتوتر والعروض والأمم المتحدة؛ 6: الانتخابات والانقلابات والاحتلال والأحداث؛ 7: البحث لكل الدول وسوق السلاح؛ 8: قائد القوات المسلحة)
   const mulberry = a => () => { a |= 0; a = a + 0x6D2B79F5 | 0; let t = Math.imul(a ^ a >>> 15, 1 | a); t = t + Math.imul(t ^ t >>> 7, 61 | t) ^ t; return ((t ^ t >>> 14) >>> 0) / 4294967296; };
   const clamp = (v, a, b) => v < a ? a : v > b ? b : v;
   const POL = root.WPOL || (typeof require !== 'undefined' ? require('./wpol.js') : null);   // W7: السياسة والأحداث
@@ -86,7 +86,7 @@
   const rate = (c, dp) => (c.gdp / c.pop * 1e9 > 30000 ? .012 : .035) + .0002 * Math.max(0, dp - 90);
   // ===== النفط =====
   const oilGDP = (kbd, P) => kbd * 1000 * 365 * P / 1e9;   // مليار $ بالسنة
-  function oilOf(W, WD, id) { let o = 0; const add = (W.eco3 && W.eco3.oilAdd) || {}; for (let i = 0; i < WD.r.length; i++) if (W.ctl[i] === id) o += (WD.r[i][10] || 0) + (add[i] || 0); return o * (1 - ((W.C && W.C[id] && W.C[id].oilDmg) || 0)) * (1 - .6 * ((W.C && W.C[id] && W.C[id].blk) || 0)); }
+  function oilOf(W, WD, id) { let o = 0; const add = (W.eco3 && W.eco3.oilAdd) || {}; for (let i = 0; i < WD.r.length; i++) if (W.ctl[i] === id) o += (WD.r[i][10] || 0) + (add[i] || 0); return o * ((W.C && W.C[id] && W.C[id].oilK) || 1) * (1 - ((W.C && W.C[id] && W.C[id].oilDmg) || 0)) * (1 - .6 * ((W.C && W.C[id] && W.C[id].blk) || 0)); }
   function price(W, WD) { let disrupt = 0; const ST = (WD && WD.st) || [];
     for (const k in W.stx || {}) { const st = ST.find(x => x.id === k); disrupt += (st ? st.oilPct / 100 : .2) * W.stx[k]; }
     W.hormuz = (W.stx || {}).hormuz || 0; W.oilP = K.oilBase * (1 + K.oilDisrupt * disrupt) + Math.max(0, (W.ten || 0) - 30) * .15 + (W.oilShock && W.oilShock.until > W.t ? W.oilShock.v : 0); return W.oilP; }   // التوتر فوق 30 يزيد السعر [تقدير]
@@ -508,6 +508,8 @@
     if (o.v < 11) o.v = 11;
     // 11 ← 12 (v3 P): السكان (POP.ensure يبنيها من البيانات)
     if (o.v < 12) o.v = 12;
+    // 12 ← 13 (v3 R): شجرة البحث (WRES.ensure يبنيها أول ما تنفتح؛ فرع «civ» جديد)
+    if (o.v < 13) o.v = 13;
     o.base = WD.rel; o.rnd = mulberry(o.rs); dipInit(o, WD); if (POL) POL.ensure(o, WD); if (MKT) MKT.ensure(o, WD); if (CMD) CMD.ensure(o, WD); if (ECO) ECO.ensure(o, WD); if (POP) POP.ensure(o, WD); if (NAV) NAV.ensure(o, WD); return o;
   }
   const API = { V, K, START, TENSION, POL, MKT, CMD, NAV, ECO, init, addRel, answerOffer, unSummit, unVote, council, tenTarget, napOf, blocsOf, P5, navy, straits, step, month, act, can, offerPeace, declare, endWar, strike, playerStrike, rank, save, load, date, rel, atWar, allied, COST, TAX, CIV };

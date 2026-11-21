@@ -343,6 +343,7 @@ body.sheeton #toast{top:calc(var(--toph, 100px) + 4px) !important;bottom:auto !i
 <script src="livefx.js"></script>
 <script src="weco.js"></script>
 <script src="wpop.js"></script>
+<script src="wres.js"></script>
 <script src="wsim.js"></script>
 <script src="gwsim.js"></script>
 <script src="theater.js"></script>
@@ -926,6 +927,7 @@ body.sheeton #toast{top:calc(var(--toph, 100px) + 4px) !important;bottom:auto !i
   function msg(l) {
     const n = k => nameOf(k);
     switch (l.k) {
+      case 'res': return [`🔬 خلص بحث «${(WRES.T[l.r] || {}).n || l.r}»: ${(WRES.T[l.r] || {}).d || ''}`, 'good'];
       case 'proj': { const P = WECO.P[l.pk] || {}, w = byId.get(l.r)?.n || ''; return l.a === 'done' ? [`${P.ic || '🏗'} كمل مشروع «${P.n}»${l.id === me ? '' : ' عند ' + n(l.id)}${w ? ' بـ' + w : ''}`, l.id === me ? 'good' : ''] : [`${P.ic || '🏗'} ${l.id === me ? 'بدينا' : n(l.id) + ' بدت'} مشروع «${P.n}»${w ? ' بـ' + w : ''} (${(l.cost.toFixed(1))} مليار، ${(l.mo)} شهر)`, l.id === me ? 'good' : '']; }
       case 'war': return [`⚔ ${n(l.a)} أعلنت الحرب على ${n(l.b)}${l.join && l.join.length ? ' — ودخلت وياها ' + l.join.map(n).join('، ') : ''}`, 'bad'];
       case 'peace': return [`🕊 انتهت ${l.n}${l.kept ? ` (تغيرت السيطرة على ${l.kept} منطقة)` : ''}`, 'good'];
@@ -1103,30 +1105,56 @@ body.sheeton #toast{top:calc(var(--toph, 100px) + 4px) !important;bottom:auto !i
     <div class="note">نخسر إذا: القوة المسلحة تحت 20 لأسبوعين (انقلاب)، أو الاستقرار تحت 15 لأسبوعين (ثورة)، أو الدين فوق حده بنص لشهر (إفلاس). القضايا اللي ما ترد عليها 5 أيام، المستشارين يحلوها لحالهم.</div>`;
   }
   const fkArmed = () => { const f = G.nat.home.fk; return ['army', 'irgc', 'royal', 'security', 'party'].find(k => f.includes(k) && G.nat.home.fac[k] < 20) || 'army'; };
-  function pProd() {
-    const NW = G.nat, e = NW.eco[0], P = ECON.PRIO[e.prio], sp = P.prod * (NW.indF ? NW.indF[0].prod : 1) * (e.mor < 30 ? .75 : 1), its = NT.items(), cat = c => its.filter(k => ECON.ITEMS[k].cat === c);
-    const btn = k => { const it = ECON.ITEMS[k], c = ECON.costOf(k, 0, NW), d = ECON.daysOf(k, 0, NW), err = ECON.canBuy(NW, 0, k), sup = ECON.SUPPLY[0][k], pf = ECON.parts(NW, 0, k);
-      return `<button data-buy="${k}" ${err ? 'disabled' : ''} style="text-align:right"><b>${it.ic} ${it.n}</b><br><small>${C$(c)} $ · ${Math.round(d / sp)} يوم · ${sup ? (ECON.SUP_N[sup] || sup) + (pf < 1 ? ` <b class="neg">قطع ${Math.round(pf * 100)}٪</b>` : '') : 'محلي'}${err ? ' · ' + err : ''}</small></button>`; };
-    const grid = a => a.length ? `<div class="acts">${a.map(btn).join('')}</div>` : '<div class="note">ماكو</div>';
-    return `<div class="note">الخزينة ${B$(e.cash)} · ${e.lines} خطوط إنتاج تشتغل على أول ${e.lines} طلبات · السرعة ×${sp.toFixed(2)} (${P.n}${e.mor < 30 ? '، والمعنويات نازلة' : ''})</div>
-    <h3>الطابور (${e.q.length})</h3>${e.q.length ? e.q.map((o, i) => { const it = ECON.ITEMS[o.k] || { ic: '?', n: o.k }, act = i < e.lines; return `<div class="line"><span>${it.ic} ${it.n}</span><span>${act ? 'باقي ~' + Math.max(1, Math.ceil(o.left / sp)) + ' يوم' : '⏳ ينتظر خط'} <button data-can="${o.id}" aria-label="ألغي الطلب">✕</button></span></div>${barV((1 - o.left / o.tot) * 100, 'var(--gold)')}`; }).join('') : '<div class="note">ما اكو طلبات.</div>'}
-    <h3>فرق جديدة</h3>${grid(cat('div'))}<div class="note">${T ? 'بالحرب: الفرقة تطلع بأكبر مدينة مزودة بالمسرح.' : 'بالسلم: قوة الجيش تكبر.'}</div>
-    <h3>طيارات</h3>${grid(cat('plane'))}<h3>صواريخ دفاع جوي</h3>${grid(cat('sam'))}<h3>المصانع</h3>${grid(cat('line'))}
-    <div class="note">السلاح المستورد يعتمد على العلاقة ويا المورّد: إذا نزلت، قطع الغيار تقل والسعر يغلى (أو يوقف). المحلي يفتحه البحث.</div>`;
+  // ===== M (I-122): 🏭 الإنتاج المحلي الواضح — كل خط: الشي اللي ينصنع، التقدم، متى يخلص، ووين يروح؛ ومقارنة «تصنع ↔ تشتري» =====
+  // الأسماء العراقية («بابل»، «صقر»، التاجي) للعراق بس
+  const nmIt = it => me === 'IRQ' ? it.n : it.n.replace(/\s*«[^»]*»/g, '');
+  const dsIt = it => me === 'IRQ' ? (it.d || '') : (it.d || '').replace(/\s*بالتاجي/g, '').replace(/T-72 محلي/, 'دبابات محلي');
+  const GOES = it => it.cat === 'div' ? (G.wars.some(w => w.a.includes(me) || w.b.includes(me)) ? '🗺 فرقة جديدة بأكبر مدينة مزودة' : '🪖 قوة الجيش تكبر (وتطلع فرقة بالحرب الجاية)') : it.cat === 'plane' ? '✈ أقرب مطار عدنا' : it.cat === 'sam' ? '🚀 مخزون بطاريات الدفاع الجوي' : it.cat === 'line' ? '🏭 خط إنتاج جديد' : '📦 المخازن';
+  // أرخص بديل بالسوق لنفس النوع (للمقارنة)
+  function altBuy(it) {
+    const want = it.cat === 'div' ? 'tank' : it.cat; let best = null;
+    for (const x of WMKT.sellers(G)) { if (x === me) continue; for (const o of WMKT.SELL[x]) if (o.cat === want && !WMKT.can(G, S, x, o) && (!best || o.price < best.o.price)) best = { x, o }; }
+    return best;
   }
+  function pProd() {
+    const NW = G.nat, e = NW.eco[0], P = ECON.PRIO[e.prio], sp = P.prod * (NW.indF ? NW.indF[0].prod : 1) * (e.mor < 30 ? .75 : 1) * (1 + (G.C[me].prodK || 0)), its = NT.items(), cat = c => its.filter(k => ECON.ITEMS[k].cat === c);
+    const btn = k => { const it = ECON.ITEMS[k], c = ECON.costOf(k, 0, NW), d = ECON.daysOf(k, 0, NW), err = ECON.canBuy(NW, 0, k), sup = ECON.SUPPLY[0][k], pf = ECON.parts(NW, 0, k), loc = !sup, alt = loc && it.req ? altBuy(it) : null;
+      return `<button data-buy="${k}" ${err ? 'disabled' : ''} style="text-align:right"><b style="font-size:15px">${it.ic} ${nmIt(it)}</b><br><small>${loc ? '🏭 <b>تصنعها محلي</b>' : '📦 مستورد من ' + (ECON.SUP_N[sup] || sup)}: ${C$(c)} $ · ${Math.round(d / sp)} يوم${pf < 1 && !loc ? ` <b class="neg">قطع ${Math.round(pf * 100)}٪</b>` : ''}</small>${alt ? `<br><small>↔ تشتريها: ${alt.o.n} ${alt.o.price} مليار $، ${Math.round(alt.o.days / 30)} شهر، من ${nameOf(alt.x)}</small>` : ''}${err ? `<br><small class="neg">⛔ ${err}</small>` : ''}</button>`; };
+    const grid = a => a.length ? `<div class="acts">${a.map(btn).join('')}</div>` : '<div class="note">ماكو</div>';
+    const q = e.q.map((o, i) => { const it = ECON.ITEMS[o.k] || { ic: '?', n: o.k }, act = i < e.lines, f = 1 - o.left / o.tot;
+      return `<div class="pj" style="${act ? 'border-color:var(--gold)' : 'opacity:.75'}"><div class="line"><span style="font-size:15px"><span style="font-size:26px;vertical-align:middle">${it.ic}</span> <b>${nmIt(it)}</b></span><button data-can="${o.id}" aria-label="ألغي الطلب">✕</button></div>${barV(f * 100, 'var(--gold)')}<div class="note">${act ? `⚙ خط ${i + 1} · ${Math.round(f * 100)}٪ · <b>يخلص بعد ${Math.max(1, Math.ceil(o.left / sp))} يوم</b>` : `⏳ ينتظر خط فاضي (قدامه ${i - e.lines + 1})`} · يروح لـ: ${GOES(it)}</div></div>`; }).join('');
+    return `<div class="grid"><div class="st"><i>الخزينة</i><b>${B$(e.cash)}</b></div><div class="st"><i>خطوط الإنتاج</i><b>${Math.min(e.lines, e.q.length)}/${e.lines} تشتغل</b></div><div class="st"><i>السرعة</i><b>×${sp.toFixed(2)}</b></div><div class="st"><i>بالطابور</i><b>${e.q.length}</b></div></div>
+    <div class="note">السرعة من أولوية الاقتصاد (${P.n})${e.mor < 30 ? '، والمعنويات نازلة' : ''}، وقطاع الصناعة الحربية، وبحث «التصنيع المتقدم». خطوط أكثر = «مصنع حربي» من 🏗 المشاريع أو «المصانع» تحت.</div>
+    <h3>⚙ الخطوط والطابور</h3>${q || '<div class="note">ما اكو طلبات. اطلب من تحت.</div>'}
+    <h3>🪖 فرق جديدة</h3>${grid(cat('div'))}
+    <h3>✈ طيارات ومسيّرات</h3>${grid(cat('plane'))}<h3>🚀 صواريخ دفاع جوي</h3>${grid(cat('sam'))}<h3>🏭 المصانع</h3>${grid(cat('line'))}
+    <div class="note">🏭 المحلي يفتحه البحث (🔬 العسكري)، وما يوقف إذا المورّد زعل. 📦 المستورد يعتمد على العلاقة: إذا نزلت، قطع الغيار تقل والسعر يغلى (أو يوقف).</div>`;
+  }
+  // ===== R (I-121): 🔬 شجرة البحث الموحّدة — 4 أقسام، كل بحث بطاقة (يفتح شنو، الكلفة، المدة، شنو يحتاج قبله) =====
+  let rdSec = 'mil';
   function pRd() {
-    const NW = G.nat, I = NW.ind[0], N = I.nat, nx = IND.NAT[N.st];
-    return `<div class="note">الميزانية تروح للفرع المختار. كل مستوى إله أثر بالحرب، ويفتح منتجات محلية (🏭 الإنتاج).</div>
-    <h3>ميزانية البحث باليوم</h3><div class="seg">${IND.BUD.map(([v, n], i) => `<button data-bud="${i}" class="${I.bud === i ? 'on' : ''}">${n}${v ? ' ' + C$(v * (I.k || 1)) : ''}</button>`).join('')}</div>
-    ${IND.BRK.map(k => { const Bk = IND.BR[k], l = I.tech[k], on = I.rb === k, nd = IND.need(l); return `<div class="st" style="margin:6px 0;${on ? 'border-color:var(--gold)' : ''}"><div class="line"><span>${Bk.ic} <b>${Bk.n}</b></span><b>${'■'.repeat(l)}${'□'.repeat(5 - l)} ${l}/5</b></div><div class="note">${Bk.d}</div>
-      ${l < 5 ? (on ? `${barV(I.rp / nd * 100, 'var(--gold)')}<div class="note">🔬 يشتغل: ${I.rp.toFixed(2)} من ${nd} مليار${IND.BUD[I.bud][0] ? ` · باقي ~${Math.ceil((nd - I.rp) / (IND.BUD[I.bud][0] * (I.k || 1)))} يوم` : ' · الميزانية متوقفة'}</div>` : `<button data-rb="${k}">ابحث هنا (المستوى الجاي ${nd} مليار)</button>`) : '<div class="note pos">✅ أعلى مستوى</div>'}</div>`; }).join('')}
-    <h3>⭐ السلاح الوطني ${N.st >= 3 && N.name ? '«' + N.name + '»' : '(المرحلة ' + N.st + ' من 4)'}</h3>
-    <div class="note">${IND.NAT.map((x, i) => `${i < N.st ? '✅' : i === N.st ? '▶' : '·'} ${x.n}: ${x.d}`).join('<br>')}</div>
-    ${N.run ? `<div class="note">⏳ «${nx.n}» باقي ${N.run.left} يوم</div>` : nx ? `<button id="natGo">ابدأ «${nx.n}» (${nx.cost} مليار، ${nx.days} يوم، بحث ${nx.req}+)</button>` : ''}
-    ${N.st >= 2 ? `<div class="row"><input id="natName" maxlength="16" placeholder="اسم السلاح" value="${(N.name || '').replace(/"/g, '')}" style="flex:1;min-height:36px"><button id="natSave">احفظ الاسم</button></div>` : ''}
-    <h3>🏗 مشاريع كبرى</h3>${Object.entries(IND.MEGA).map(([k, M]) => { const done = I.mega && I.mega[k], run = I.megaRun && I.megaRun.k === k; return `<div class="st" style="margin:6px 0"><div class="line"><b>${M.n}</b><span>${done ? 'مكتمل ✓' : run ? 'باقي ' + I.megaRun.left + ' يوم' : M.cost + ' مليار · ' + M.days + ' يوم'}</span></div><div class="note">${M.d}</div>${done || run ? '' : `<button data-mega="${k}" ${I.megaRun ? 'disabled' : ''}>ابدأ المشروع</button>`}</div>`; }).join('')}
-    <h3>🏗 القطاعات</h3>${Object.entries(IND.SEC).map(([k, Sc]) => `<div class="st" style="margin:6px 0"><div class="line"><span>${Sc.ic} <b>${Sc.n}</b></span><b>${I.sec[k]}/5</b></div><div class="note">${Sc.d}</div>
-      ${I.secRun && I.secRun.k === k ? `<div class="note">⏳ يتطوّر: باقي ${I.secRun.left} يوم</div>` : I.sec[k] < 5 ? `<button data-sec="${k}" ${I.secRun ? 'disabled' : ''}>طوّر (${IND.secCost(I.sec[k])} مليار، ${IND.SEC_DAYS} يوم)</button>` : ''}</div>`).join('')}`;
+    const NW = G.nat, I = NW.ind[0], N = I.nat, nx = IND.NAT[N.st], R = WRES.ensure(G), c = G.C[me], sp = WRES.speed(G, me), pp = G.pop3 && G.pop3[me];
+    const bud = IND.BUD[I.bud][0] * (I.k || 1);
+    let h = `<div class="pj"><div class="line"><span>⚡ <b>سرعة البحث</b></span><b>×${sp.toFixed(2)}</b></div><div class="note">= الجامعات ×${(c.rdK || 1).toFixed(2)} (من 🏗 المشاريع) · التعليم ${pp ? Math.round(pp.edu * 100) : '–'}/100${R.rs ? ` · إصلاح التعليم +${Math.round(R.rs * 100)}٪` : ''}. الدول القوية بالبحث تصرف فوق 4٪ من ناتجها (إسرائيل وكوريا).</div></div>`;
+    h += `<h3>💵 ميزانية البحث باليوم</h3><div class="seg">${IND.BUD.map(([v, n], i) => `<button data-bud="${i}" class="${I.bud === i ? 'on' : ''}">${n}${v ? ' ' + C$(v * (I.k || 1)) : ''}</button>`).join('')}</div>`;
+    // شنو يشتغل هسه
+    if (I.rb === 'civ' && R.cur) { const t = WRES.T[R.cur], nd = WRES.costOf(G, R.cur), dd = WRES.days(G, R.cur); h += `<div class="pj" style="border-color:var(--gold)"><div class="line"><span>🔬 يشتغل هسه: ${t.ic} <b>${t.n}</b></span><b>${Math.round(R.p / nd * 100)}٪</b></div>${barV(R.p / nd * 100, 'var(--gold)')}<div class="note">${dd ? 'يخلص بعد ~' + dd + ' يوم' : '⛔ الميزانية متوقفة'}</div></div>`; }
+    else if (IND.BR[I.rb] && I.tech[I.rb] < 5) { const Bk = IND.BR[I.rb], nd = IND.need(I.tech[I.rb]); h += `<div class="pj" style="border-color:var(--gold)"><div class="line"><span>🔬 يشتغل هسه: ${Bk.ic} <b>${Bk.n}</b> (المستوى ${I.tech[I.rb] + 1})</span><b>${Math.round(I.rp / nd * 100)}٪</b></div>${barV(I.rp / nd * 100, 'var(--gold)')}<div class="note">${bud ? 'يخلص بعد ~' + Math.ceil((nd - I.rp) / (bud * sp)) + ' يوم' : '⛔ الميزانية متوقفة'}</div></div>`; }
+    h += `<div class="seg gnav">${Object.entries(WRES.SEC).map(([k, [ic, n]]) => `<button data-rsec="${k}" class="${rdSec === k ? 'on' : ''}">${ic} ${n}</button>`).join('')}</div>`;
+    const node = k => { const t = WRES.T[k], done = R.done[k], on = R.cur === k && I.rb === 'civ', err = WRES.can(G, WD, k), dd = WRES.days(G, k);
+      return `<div class="pj" style="${on ? 'border-color:var(--gold)' : done ? 'opacity:.75' : ''}"><div class="line"><span style="font-size:15px">${t.ic} <b>${t.n}</b></span><b>${done ? '✅' : t.lock ? '🔒' : on ? '▶' : C$(WRES.costOf(G, k)) + ' $'}</b></div><div class="note">${t.d}</div>${t.req ? `<div class="note">يحتاج قبله: ${t.req.map(r => (R.done[r] ? '✅ ' : '· ') + WRES.T[r].n).join('، ')}</div>` : ''}${done || on || t.lock ? '' : err ? (t.req && err.startsWith('يحتاج') ? '' : `<div class="note">⛔ ${err}</div>`) : `<button data-rs="${k}">ابحث هنا${dd ? ' (~' + dd + ' يوم)' : ''}</button>`}</div>`; };
+    if (rdSec === 'mil') {
+      h += `<div class="note">كل مستوى إله أثر بالحرب، ويفتح منتجات محلية (🏭 الإنتاج).</div>` + IND.BRK.map(k => { const Bk = IND.BR[k], l = I.tech[k], on = I.rb === k, nd = IND.need(l); return `<div class="pj" style="${on ? 'border-color:var(--gold)' : ''}"><div class="line"><span style="font-size:15px">${Bk.ic} <b>${Bk.n}</b></span><b>${'■'.repeat(l)}${'□'.repeat(5 - l)} ${l}/5</b></div><div class="note">${Bk.d}</div>${l >= 5 ? '<div class="note pos">✅ أعلى مستوى</div>' : on ? '' : `<button data-rb="${k}">ابحث هنا (المستوى ${l + 1}: ${nd} مليار)</button>`}</div>`; }).join('');
+      h += `<h3>⭐ السلاح الوطني ${N.st >= 3 && N.name ? '«' + N.name + '»' : '(المرحلة ' + N.st + ' من 4)'}</h3><div class="note">${IND.NAT.map((x, i) => `${i < N.st ? '✅' : i === N.st ? '▶' : '·'} ${x.n}: ${x.d.replace('سلاح عراقي', me === 'IRQ' ? 'سلاح عراقي' : 'سلاح وطني')}`).join('<br>')}</div>
+      ${N.run ? `<div class="note">⏳ «${nx.n}» باقي ${N.run.left} يوم</div>` : nx ? `<button id="natGo">ابدأ «${nx.n}» (${nx.cost} مليار، ${nx.days} يوم، بحث ${nx.req}+)</button>` : ''}
+      ${N.st >= 2 ? `<div class="row"><input id="natName" maxlength="16" placeholder="اسم السلاح" value="${(N.name || '').replace(/"/g, '')}" style="flex:1;min-height:36px"><button id="natSave">احفظ الاسم</button></div>` : ''}`;
+      h += `<h3>🛡 مشاريع حربية</h3>${Object.entries(IND.MEGA).map(([k, M]) => { const done = I.mega && I.mega[k], run = I.megaRun && I.megaRun.k === k, d = me === 'IRQ' ? M.d : ({ pipe: 'أنابيب وموانئ بديلة: إذا انغلق المضيق أو انضرب الميناء يطلع جزء أكبر من نفطنا', fort: 'ضربات العدو على مدننا وقواتنا بالمدن أضعف 25٪، والمعنويات أثبت' })[k] || M.d; return `<div class="pj"><div class="line"><b>${M.n}</b><span>${done ? 'مكتمل ✓' : run ? 'باقي ' + I.megaRun.left + ' يوم' : M.cost + ' مليار · ' + M.days + ' يوم'}</span></div><div class="note">${d}</div>${done || run ? '' : `<button data-mega="${k}" ${I.megaRun ? 'disabled' : ''}>ابدأ</button>`}</div>`; }).join('')}`;
+    } else {
+      h += Object.keys(WRES.T).filter(k => WRES.T[k].s === rdSec).map(node).join('');
+      if (rdSec === 'eco') h += `<h3>🏭 تطوير الصناعة</h3>${Object.entries(IND.SEC).map(([k, Sc]) => `<div class="pj"><div class="line"><span>${Sc.ic} <b>${Sc.n}</b></span><b>${I.sec[k]}/5</b></div><div class="note">${Sc.d}</div>${I.secRun && I.secRun.k === k ? `<div class="note">⏳ يتطوّر: باقي ${I.secRun.left} يوم</div>` : I.sec[k] < 5 ? `<button data-sec="${k}" ${I.secRun ? 'disabled' : ''}>طوّر (${IND.secCost(I.sec[k])} مليار، ${IND.SEC_DAYS} يوم)</button>` : ''}</div>`).join('')}`;
+      if (rdSec === 'str') h += '<div class="note">النووي العسكري ينتظر قرارك. النووي السلمي تحت رقابة الوكالة الدولية وما يجيب عقوبات.</div>';
+    }
+    return h;
   }
   function pMkt() {
     const M = WMKT, NW = G.nat, cash = NW.eco[0].cash, live = G.mkt.deals.filter(d => !d.done), A = NW.arms || {};
@@ -1299,7 +1327,9 @@ body.sheeton #toast{top:calc(var(--toph, 100px) + 4px) !important;bottom:auto !i
     root.querySelectorAll('[data-buy]').forEach(b => b.onclick = () => { const k = b.dataset.buy, r = NT.buy(G, k); re(r, `🏭 طلبنا ${ECON.ITEMS[k].n}`); });
     root.querySelectorAll('[data-can]').forEach(b => b.onclick = () => { const back = NT.cancel(G, +b.dataset.can); re(0, `↩ ألغينا الطلب ورجع ${C$(back || 0)}`); });
     root.querySelectorAll('[data-bud]').forEach(b => b.onclick = () => { IND.setBudget(NW, 0, +b.dataset.bud); re(0); });
-    root.querySelectorAll('[data-rb]').forEach(b => b.onclick = () => { IND.setBranch(NW, 0, b.dataset.rb); re(0, `🔬 البحث هسه على ${IND.BR[b.dataset.rb].n}`); });
+    root.querySelectorAll('[data-rsec]').forEach(b => b.onclick = () => { rdSec = b.dataset.rsec; openPanel('rd', true); });
+    root.querySelectorAll('[data-rs]').forEach(b => b.onclick = () => re(WRES.pick(G, WD, b.dataset.rs), `🔬 البحث هسه على «${WRES.T[b.dataset.rs].n}»`));
+    root.querySelectorAll('[data-rb]').forEach(b => b.onclick = () => { WRES.back(G, b.dataset.rb); re(0, `🔬 البحث هسه على ${IND.BR[b.dataset.rb].n}`); });
     root.querySelectorAll('[data-mega]').forEach(b => b.onclick = () => re(IND.megaGo(NW, 0, b.dataset.mega), `🏗 بدينا «${IND.MEGA[b.dataset.mega].n}»`));
     root.querySelectorAll('[data-sec]').forEach(b => b.onclick = () => re(IND.secGo(NW, 0, b.dataset.sec), `🏗 بدينا نطوّر ${IND.SEC[b.dataset.sec].n}`));
     const ng0 = root.querySelector('#natGo'); if (ng0) ng0.onclick = () => re(IND.natGo(NW, 0), '⭐ بدت مرحلة جديدة بالسلاح الوطني');

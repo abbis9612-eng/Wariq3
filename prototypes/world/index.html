@@ -486,6 +486,19 @@ html[data-skin] .pcard{display:grid;grid-template-columns:92px 1fr auto;gap:10px
 .pcard .pgo{font:700 12.5px/1 var(--f-body);padding:9px 12px;border-radius:var(--rb);background:var(--act);color:var(--onact)}.pcard .pgo:empty{display:none}
 html[data-skin="news"] .pcard{background:transparent;box-shadow:none;border-top:1px solid var(--line);border-radius:0}
 html[data-skin] .apchip{font:700 13px/1 var(--f-head);padding:6px 9px;border-radius:9px;background:var(--chip);display:inline-flex;align-items:center;gap:3px;margin-inline-start:4px}html[data-skin] .apchip .hic{color:var(--warn)}
+/* v5-10: مجلس الوزراء */
+.cab{background:var(--card);box-shadow:var(--cardsh);border-radius:var(--r);padding:10px 12px;display:flex;flex-direction:column;gap:8px}
+.cabh{display:flex;align-items:center;justify-content:space-between}.cabh b{font:700 14px/1.3 var(--f-head)}.cabh button{min-height:34px;font-size:12px}
+.why{display:flex;flex-direction:column;gap:6px}.why div{display:grid;grid-template-columns:auto 1fr;gap:2px 8px;align-items:start;font-size:13px;line-height:1.45}
+.why div b{grid-row:span 2;font-size:12px;padding-top:2px}.why div.bad b{color:var(--neg)}.why div.good b{color:var(--good)}.why small{color:var(--dim);font-size:11px}
+.cabp{display:flex;align-items:center;justify-content:space-between;gap:8px;font-weight:700;font-size:13px;padding:8px 10px;border-radius:10px;background:color-mix(in srgb,var(--warn) 16%,transparent)}.cabp .big{min-height:34px;padding:0 12px}
+.crow{display:flex;align-items:center;gap:6px;font-size:12.5px;flex-wrap:wrap}.crow i{font-style:normal;color:#fff;font:800 10px/18px var(--f-body);min-width:18px;height:18px;border-radius:9px;text-align:center}.crow span{color:var(--dim);flex-basis:100%;padding-inline-start:24px}
+.mcard{background:var(--card);box-shadow:var(--cardsh);border-radius:var(--r);padding:10px 12px;margin:8px 0;display:flex;flex-direction:column;gap:6px}
+.mtop{display:flex;align-items:center;gap:10px}.mt{flex:1;min-width:0;display:flex;flex-direction:column}.mt b{font:700 14px/1.3 var(--f-head)}.mt span{font-weight:600}.mt small{color:var(--dim);font-size:11.5px}
+.mav{width:44px;height:44px;border-radius:50%;flex:none;display:grid;place-items:center;font:800 15px/1 var(--f-head);color:#fff;background:hsl(var(--h) 38% 38%)}
+.mst{color:#e3a21a;letter-spacing:1px}.mst i{font-style:normal;color:var(--line2)}
+.mdot{font-style:normal;color:#fff;font:800 11px/22px var(--f-body);min-width:22px;height:22px;border-radius:11px;text-align:center}
+html[data-skin="news"] .cab,html[data-skin="news"] .mcard{background:transparent;box-shadow:none;border-top:3px solid var(--ink);border-radius:0}
 html[data-skin] #start{background:var(--bg)}
 html[data-skin] #start h1,html[data-skin] .sth{font-family:var(--f-head)}
 html[data-skin] .sth{color:var(--ink)}
@@ -524,6 +537,7 @@ html[data-skin] .hero b{color:var(--act)}
 <script src="wpop.js"></script>
 <script src="wres.js"></script>
 <script src="wfund.js"></script>
+<script src="wcab.js"></script>
 <script src="wcas.js"></script>
 <script src="warsenal.js"></script>
 <script src="wsim.js"></script>
@@ -1220,6 +1234,7 @@ html[data-skin] .hero b{color:var(--act)}
     const n = k => nameOf(k);
     switch (l.k) {
       case 'res': if (String(l.r).startsWith('m:')) { const B = IND.BR[l.r.slice(2)] || {}; return [`🔬 وصلنا ${B.ic || ''} ${B.n || ''} المستوى ${l.l}`, 'good']; } return [`🔬 خلص بحث «${(WRES.T[l.r] || {}).n || l.r}»: ${(WRES.T[l.r] || {}).d || ''}`, 'good'];
+      case 'cab': return l.a ? [l.a, l.warn ? '' : 'good'] : l.warn ? [`🏛 الوزراء: ${l.warn} وزارة تحتاج انتباهك — شوف القيادة`, ''] : null;
       case 'fair': return [`🎪 معرض السلاح السنوي: ${l.n} دول تريد تشتري سلاحنا الوطني — شوف 🛒 السوق ← التصدير`, 'good'];
       case 'spy': return l.ok ? [`🕵 التجسس نجح: سرقنا تقنية من ${n(l.x)}، بحثنا تقدم`, 'good'] : [`🕵 انكشف جاسوسنا عند ${n(l.x)}: فضيحة والعلاقة نزلت`, 'bad'];
       case 'natsell': return [`📦 بعنا ${l.n} لـ${n(l.x)} بـ${l.v} مليار`, 'good'];
@@ -1289,7 +1304,7 @@ html[data-skin] .hero b{color:var(--act)}
   // ===== الألواح =====
   $('#tabs').querySelectorAll('button').forEach(b => b.onclick = () => TABOF[panel] === b.dataset.p ? closePanel() : openPanel(b.dataset.p));
   function closePanel() { document.body.classList.remove('sheeton'); panel = null; $('#sheet').hidden = true; $('#tabs').querySelectorAll('button').forEach(x => x.classList.remove('on')); }
-  const TABOF = { cmd: 'cmd', me: 'me', flow: 'me', build: 'me', pop: 'me', fund: 'me', homep: 'me', army: 'army', prod: 'army', mkt: 'army', rd: 'rd', dip: 'dip', war: 'dip', ops: 'dip', world: 'dip', news: 'dip' };
+  const TABOF = { cmd: 'cmd', cab: 'cmd', me: 'me', flow: 'me', build: 'me', pop: 'me', fund: 'me', homep: 'me', army: 'army', prod: 'army', mkt: 'army', rd: 'rd', dip: 'dip', war: 'dip', ops: 'dip', world: 'dip', news: 'dip' };
   const GROUPS = { me: [['me', '💰 الاقتصاد'], ['flow', '💸 الفلوس'], ['build', '🏗 المشاريع'], ['fund', '🏦 الاستثمار'], ['pop', '👥 السكان'], ['homep', '🏛 الداخل']], army: [['army', '🪖 الجيش'], ['prod', '🏭 الإنتاج'], ['mkt', '🛒 السوق']], dip: [['dip', '🤝 العلاقات'], ['war', '⚔ الحروب'], ['ops', '🎖 العمليات'], ['world', '🌍 الترتيب'], ['news', '📜 الأخبار']] };
 const HIC = {'💵':'money','💰':'money','🏥':'health','📊':'chart','📈':'chart','🏆':'trophy','🚀':'rocket','📦':'box','⚓':'anchor','✈':'plane','⚙':'gear','⏳':'hour','🌍':'globe','📨':'mail','🏭':'factory','🛒':'cart','🗳':'vote','🏗':'crane','⚡':'bolt','🌡':'temp','🧭':'compass','⭐':'star','💼':'case','🗂':'folder','🧑‍🤝‍🧑':'people','🤝':'@i-dip','🛡':'@i-army','🧪':'@i-rd','⚔':'swords','🎖':'medal','🏛':'@i-cmd','🏦':'bank','👥':'people','💸':'money','📜':'scroll','🔬':'@i-rd','🪖':'@i-army','📅':'cal','✅':'check','❌':'xmark','✖':'xmark','⚠':'warn','⛔':'warn','🔒':'lock','🔧':'wrench','🎯':'target','🔁':'repeat','🕵':'spy','🛢':'oil','💳':'cardp','♻':'recycle','🔔':'bell','📤':'upl','📥':'dnl','🎓':'edu','🗺':'layers','📍':'target','🧑‍🎓':'edu','🇺🇳':'globe','🚙':'@i-army'}, HRE = new RegExp('<(h[23])>(' + Object.keys(HIC).sort((a, b) => b.length - a.length).join('|') + ')\\uFE0F?\\s*', 'g'), ERE = new RegExp('>(' + Object.keys(HIC).sort((a, b) => b.length - a.length).join('|') + ')\\uFE0F?\\s*', 'g');
   // V5 (I-140): رموز العناوين بأيقونات SVG بخط واحد (الإيموجي يختلف من تلفون لتلفون)
@@ -1301,7 +1316,7 @@ const HIC = {'💵':'money','💰':'money','🏥':'health','📊':'chart','📈'
     const sh = $('#sheet'), keep = refresh ? sh.scrollTop : 0; panel = p; sel = null; $('#card').hidden = true;
     $('#tabs').querySelectorAll('button').forEach(x => x.classList.toggle('on', x.dataset.p === TABOF[p]));
     // V1 (I-117): 5 تبويبات؛ كل تبويب إله أقسام بشريط فوق (الاقتصاد/الداخل، الجيش/الإنتاج/السوق، الدبلوماسية/الحروب/الترتيب/الأخبار)
-    const PN = { cmd: pCmd, me: pMe, flow: pFlow, build: pBuild, pop: pPop, fund: pFund, homep: () => '<h2>🏛 الداخل والشعب</h2>' + pHome(), army: pArmy, prod: () => '<h2>🏭 الإنتاج الحربي</h2>' + pProd(), mkt: () => '<h2>🛒 سوق السلاح</h2>' + pMkt(), rd: () => '<h2>🔬 البحث والصناعة</h2>' + pRd(), dip: pDip, war: pWar, ops: pOps, world: pWorld, news: pNews };
+    const PN = { cmd: pCmd, cab: pCab, me: pMe, flow: pFlow, build: pBuild, pop: pPop, fund: pFund, homep: () => '<h2>🏛 الداخل والشعب</h2>' + pHome(), army: pArmy, prod: () => '<h2>🏭 الإنتاج الحربي</h2>' + pProd(), mkt: () => '<h2>🛒 سوق السلاح</h2>' + pMkt(), rd: () => '<h2>🔬 البحث والصناعة</h2>' + pRd(), dip: pDip, war: pWar, ops: pOps, world: pWorld, news: pNews };
     let html = (PN[p] || pCmd)(); const grp = GROUPS[TABOF[p]];
     if (grp) html = html.replace(/(<\/h2>)/, `$1<div class="seg gnav">${grp.map(([k, t]) => `<button data-gp="${k}" class="${k === p ? 'on' : ''}">${t}</button>`).join('')}</div>`);
     sh.innerHTML = svgHeads(html); sh.hidden = false; sh.scrollTop = keep;
@@ -1334,6 +1349,26 @@ const HIC = {'💵':'money','💰':'money','🏥':'health','📊':'chart','📈'
   let a11y = (() => { try { return JSON.parse(localStorage.getItem(A11Y_KEY)) || {}; } catch (e) { return {}; } })();
   const a11yApply = () => { document.documentElement.classList.toggle('big', !!a11y.big); document.documentElement.classList.toggle('cb', !!a11y.cb); dirty = true; };
   a11yApply();
+  // ===== v5-10 (I-154): مجلس الوزراء =====
+  const STC = { ok: ['✓', 'var(--good)'], warn: ['!', 'var(--warn)'], bad: ['!!', 'var(--neg)'] };
+  const avatar = (m, k) => `<span class="mav" style="--h:${(WCAB.MK.indexOf(k) * 40) % 360}">${m.n.split(' ').map(x => x.replace(/^ال/, '')[0]).join('')}</span>`;
+  const stars = n => '★'.repeat(n) + '<i>' + '★'.repeat(5 - n) + '</i>';
+  const whyHtml = () => { const L = WCAB.why(G); return L.length ? `<div class="why">${L.map(x => `<div class="${x.bad ? 'bad' : 'good'}"><b>${x.bad ? '▼' : '▲'}</b><span>${x.t}</span><small>${WCAB.MIN[x.k].n}</small></div>`).join('')}</div>` : '<div class="note">التقرير يطلع بعد أول شهرين.</div>'; };
+  function cabCard() { if (!G.nat) return ''; const C = WCAB.ensure(G), R = C.rep, bad = R ? R.rows.filter(r => r.st !== 'ok') : [];
+    return `<h3>🏛 مجلس الوزراء</h3><div class="cab"><div class="cabh"><b>شنو صاير بالبلد؟</b><button data-go="cab">كل الوزراء ←</button></div>${whyHtml()}
+      ${C.props.length ? `<div class="cabp">📨 ${C.props.length} اقتراح ينتظر موافقتك <button data-go="cab" class="big">شوفها</button></div>` : ''}
+      ${R ? R.rows.filter(r => r.st !== 'ok').slice(0, 3).map(r => `<div class="crow"><i style="background:${STC[r.st][1]}">${STC[r.st][0]}</i>${WCAB.MIN[r.k].ic} <b>${WCAB.MIN[r.k].n}</b><span>${r.t}</span></div>`).join('') + (bad.length ? '' : '<div class="note">✓ كل الوزارات ماشية زين هالشهر.</div>') : '<div class="note">أول تقرير للوزراء بنهاية هالشهر.</div>'}</div>`; }
+  function pCab() { const C = WCAB.ensure(G), R = C.rep, F = (HOME && HOME.FAC) || {}, MD = { me: 'أنا أقرر', ask: 'يقترح وأوافق', auto: 'تلقائي' };
+    let h = `<h2>🏛 مجلس الوزراء</h2><div class="note">كل وزير يراقب ملفه. «تلقائي» يشتغل لحاله، «يقترح» يجهّز قرار تضغط عليه وافق، و«أنا أقرر» ينصح بس. القرارات الكبيرة (حرب، نظام، تحالفات) تبقى إلك.</div>`;
+    h += `<h3>📊 ليش نخسر أو نربح؟</h3>${whyHtml()}`;
+    if (C.props.length) h += `<h3>📨 اقتراحات تنتظرك</h3>` + C.props.map(p => `<div class="pj"><div class="line"><span>${WCAB.MIN[p.k].ic} <b>${WCAB.MIN[p.k].n}</b></span><small class="note">${C.m[p.k].n}</small></div><div>${p.t}</div><div class="seg"><button class="big" data-cabp="${p.id}:1">✔ وافق</button><button data-cabp="${p.id}:0">✖ ارفض</button></div></div>`).join('');
+    h += `<h3>👥 الوزراء</h3>` + WCAB.MK.map(k => { const m = C.m[k], row = R && R.rows.find(r => r.k === k), M = WCAB.MIN[k];
+      return `<div class="mcard"><div class="mtop">${avatar(m, k)}<div class="mt"><b>${M.ic} ${M.n}</b><span>${m.n}</span><small><span class="mst">${stars(m.sk)}</span> · ${WCAB.TR[m.tr]}${m.caught ? ' <b class="neg">(انكشف يختلس)</b>' : ''} · محسوب على ${(F[m.fac] || {}).n || m.fac} · ${Math.floor(m.xp / 12)} سنة بالوزارة</small></div>${row ? `<i class="mdot" style="background:${STC[row.st][1]}">${STC[row.st][0]}</i>` : ''}</div>
+        <div class="note">${M.d}${row ? '<br><b>هالشهر:</b> ' + row.t : ''}</div>
+        <div class="seg">${['me', 'ask', 'auto'].map(x => `<button data-cmode="${k}:${x}" class="${C.mode[k] === x ? 'on' : ''}">${MD[x]}</button>`).join('')}</div></div>`; }).join('');
+    if (C.cand.length) h += `<h3>👤 مرشحين</h3><div class="note">ناس أكفأ يطلعون كل فترة. تعيينه يرضّي فئته (+4) ويزعّل فئة الوزير القديم (−6).</div>` + C.cand.map(p => { const cur = C.m[p.k]; return `<div class="mcard"><div class="mtop">${avatar(p, p.k)}<div class="mt"><b>${WCAB.MIN[p.k].ic} لوزارة ${WCAB.MIN[p.k].n}</b><span>${p.n}</span><small><span class="mst">${stars(p.sk)}</span> · ${WCAB.TR[p.tr]} · محسوب على ${(F[p.fac] || {}).n || p.fac} · الحالي ${cur.sk}★</small></div></div><button class="big" data-cand="${p.id}" style="width:100%">عيّنه بدل ${cur.n}</button></div>`; }).join('');
+    if (C.log.length) h += `<h3>📜 شنو سووا</h3><div class="log">${C.log.slice(0, 12).map(t => `<div>${t}</div>`).join('')}</div>`;
+    return h; }
   function pCmd() {
     const c = G.C[me], NW = G.nat, e = NW ? NW.eco[0] : { cash: 0, hist: [] }, H = NW ? NW.home : { stab: c.stab }, kh = G.kh || [];
     const hc = e.hist || [], c30 = hc.length > 30 ? e.cash - hc[hc.length - 31][1] : null, months = c30 != null && c30 < 0 ? Math.max(0, e.cash / -c30) : null;
@@ -1341,6 +1376,7 @@ const HIC = {'💵':'money','💰':'money','🏥':'health','📊':'chart','📈'
     const tile = (go, ic, lab, val, cls, sub, sp) => `<button class="kpi ${cls}" data-go="${go}"><span class="kl">${ic} ${lab}</span><b class="kv">${val}</b>${sp || ''}<span class="ks">${sub}</span></button>`;
     let h = `<h2>🏛 ${CS[me].ar}</h2>`;
     if (G.over) h += `<div class="pill warn">💥 ${OVER[G.over.why] || OVER.collapse} (${ar(S.date(G.over.t))}). ابدأ لعبة جديدة من شاشة البداية.</div><div class="row"><button class="big" id="newg">لعبة جديدة</button></div>`;
+    h += cabCard();
     h += `<div class="kpis">
       ${tile('me', '💰', 'الخزينة', money(e.cash), e.cash < 0 ? 'bad' : c30 != null && c30 < 0 ? 'warn' : 'good', c30 == null ? 'بالشهر الجاي يبين الاتجاه' : (c30 >= 0 ? '↑ +' : '↓ −') + money(Math.abs(c30)) + ' بالشهر' + (months != null && months < 36 ? ` · تكفي ~${Math.max(1, Math.round(months))} شهر` : ''), spark(hc.slice(-120).map(x => x[1]), '#d6a54a'))}
       ${tile('me', '📈', 'النمو', sgn(c.g) + '٪', c.g >= 2 ? 'good' : c.g >= 0 ? 'warn' : 'bad', (c.why || []).slice().sort((a, b) => Math.abs(b[1]) - Math.abs(a[1]))[0] ? 'أكبر سبب: ' + c.why.slice().sort((a, b) => Math.abs(b[1]) - Math.abs(a[1]))[0][0] : 'اقتصاد البلد', spark(kh.map(x => x.g), '#5fae6e'))}
@@ -1770,6 +1806,9 @@ const HIC = {'💵':'money','💰':'money','🏥':'health','📊':'chart','📈'
     root.querySelectorAll('[data-can]').forEach(b => b.onclick = () => { const back = NT.cancel(G, +b.dataset.can); re(0, `↩ ألغينا الطلب ورجع ${C$(back || 0)}`); });
     root.querySelectorAll('[data-bud]').forEach(b => b.onclick = () => { IND.setBudget(NW, 0, +b.dataset.bud); re(0); });
     root.querySelectorAll('[data-rsec]').forEach(b => b.onclick = () => { rdSec = b.dataset.rsec; openPanel('rd', true); });
+    root.querySelectorAll('[data-cabp]').forEach(b => b.onclick = () => { const [id, y] = b.dataset.cabp.split(':'); const r = WCAB.answer(G, WD, S, +id, y === '1'); if (typeof r === 'string') toast('❌ ' + r, 'bad'); else if (r.t) toast('✔ ' + r.t, 'good'); openPanel(panel, true); bar(); save(); });
+    root.querySelectorAll('[data-cmode]').forEach(b => b.onclick = () => { const [k, m] = b.dataset.cmode.split(':'); WCAB.setMode(G, k, m); openPanel(panel, true); save(); });
+    root.querySelectorAll('[data-cand]').forEach(b => b.onclick = () => { const r = WCAB.appoint(G, +b.dataset.cand); if (typeof r === 'string') toast('❌ ' + r, 'bad'); openPanel(panel, true); save(); });
     root.querySelectorAll('[data-skin]').forEach(b => b.onclick = () => { setSkin(b.dataset.skin); openPanel(panel, true); });
     root.querySelectorAll('[data-spy]').forEach(b => b.onclick = () => { const r = WARS.spy(G, WD); if (typeof r === 'string') toast('❌ ' + r, 'bad'); else toast(msg(G.log[G.log.length - 1])[0], r.win ? 'good' : 'bad'); openPanel(panel, true); save(); });
     root.querySelectorAll('[data-rsnode]').forEach(g => g.onclick = () => { const el = root.querySelector('#rs-' + g.dataset.rsnode); if (el) { el.scrollIntoView({ behavior: 'smooth', block: 'center' }); el.style.outline = '2px solid var(--gold)'; setTimeout(() => el.style.outline = '', 1500); } });

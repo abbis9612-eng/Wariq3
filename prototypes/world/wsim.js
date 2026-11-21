@@ -4,14 +4,15 @@
 (function (root) {
   'use strict';
   const START = Date.UTC(2026, 10, 20);   // 20 تشرين الثاني 2026: الوضع الحقيقي (D-048)
-  const V = 22;                              // إصدار حفظ «العالم» (9: البحرية الحقيقية W12؛ 2: الصواريخ والدفاع الجوي؛ 3: البحرية والمضائق؛ 4: طبقة الدولة؛ 5: التكتلات والتوتر والعروض والأمم المتحدة؛ 6: الانتخابات والانقلابات والاحتلال والأحداث؛ 7: البحث لكل الدول وسوق السلاح؛ 8: قائد القوات المسلحة)
+  const V = 23;                              // إصدار حفظ «العالم» (9: البحرية الحقيقية W12؛ 2: الصواريخ والدفاع الجوي؛ 3: البحرية والمضائق؛ 4: طبقة الدولة؛ 5: التكتلات والتوتر والعروض والأمم المتحدة؛ 6: الانتخابات والانقلابات والاحتلال والأحداث؛ 7: البحث لكل الدول وسوق السلاح؛ 8: قائد القوات المسلحة)
   const mulberry = a => () => { a |= 0; a = a + 0x6D2B79F5 | 0; let t = Math.imul(a ^ a >>> 15, 1 | a); t = t + Math.imul(t ^ t >>> 7, 61 | t) ^ t; return ((t ^ t >>> 14) >>> 0) / 4294967296; };
   const clamp = (v, a, b) => v < a ? a : v > b ? b : v;
   const POL = root.WPOL || (typeof require !== 'undefined' ? require('./wpol.js') : null);   // W7: السياسة والأحداث
   const MKT = root.WMKT || (typeof require !== 'undefined' ? require('./wmkt.js') : null);   // W8: البحث وسوق السلاح
   const CMD = root.WCMD || (typeof require !== 'undefined' ? require('./wcmd.js') : null);   // I-108: قائد القوات المسلحة
   const ECO = root.WECO || (typeof require !== 'undefined' ? require('./weco.js') : null);   // v3 E: المشاريع والكهرباء
-  const FUND = root.WFUND || (typeof require !== 'undefined' ? require('./wfund.js') : null);   // v3 E3+E4: الصندوق السيادي
+  const FUND = root.WFUND || (typeof require !== 'undefined' ? require('./wfund.js') : null);
+  const CABM = () => root.WCAB || (typeof require !== 'undefined' ? require('./wcab.js') : null);   // v5-10: مجلس الوزراء (يتحمّل وقت الحاجة: يحتاج الصندوق والمشاريع)   // v3 E3+E4: الصندوق السيادي
   const CAS = root.WCAS || (typeof require !== 'undefined' ? require('./wcas.js') : null);   // v3 C1: القتلى والجرحى
   const ARS = root.WARS || (typeof require !== 'undefined' ? require('./warsenal.js') : null);   // v4 I-135: الترسانة الوطنية
   const POP = root.WPOP || (typeof require !== 'undefined' ? require('./wpop.js') : null);   // v3 P (I-120): السكان
@@ -197,6 +198,7 @@
     for (const id of W.ids) if (id !== W.me) ai(W, WD, id);
     dipMonth(W, WD);
     if (FUND && W.nat) FUND.month(W, WD, API);
+    if (W.nat && CABM()) CABM().month(W, WD, API);
     if (ARS && W.nat) ARS.month(W, WD);
     if (POL) POL.month(W, WD, API);
     if (MKT) MKT.month(W, WD, API);
@@ -535,7 +537,8 @@
     // 19 ← 20: المخزون الاستراتيجي (nat.stock)، معرض السلاح (nat.fairY)، التجسس (nat.spyT) — تنبني لحالها
     if (o.v < 20) o.v = 20;
     if (o.v < 21) o.v = 21;
-    if (o.v < 22) { if (o.nat) delete o.nat.natOpen; o.v = 22; }   // I-143: الصنع الوطني بمصنع (warsenal.natOpen يحسبه: المصنوع وبخط الإنتاج يبقى مفتوح)   // I-140: قرض الطوارئ (fund3.brT ينبني لما ينحتاج)
+    if (o.v < 22) { if (o.nat) delete o.nat.natOpen; o.v = 22; }
+    if (o.v < 23) o.v = 23;   // v5-10: مجلس الوزراء (WCAB.ensure يبنيه بوزراء متوسطين أول شهر)   // I-143: الصنع الوطني بمصنع (warsenal.natOpen يحسبه: المصنوع وبخط الإنتاج يبقى مفتوح)   // I-140: قرض الطوارئ (fund3.brT ينبني لما ينحتاج)
     o.base = WD.rel; o.rnd = mulberry(o.rs); dipInit(o, WD); if (POL) POL.ensure(o, WD); if (MKT) MKT.ensure(o, WD); if (CMD) CMD.ensure(o, WD); if (ECO) ECO.ensure(o, WD); if (POP) POP.ensure(o, WD); if (NAV) NAV.ensure(o, WD); return o;
   }
   const API = { V, K, START, TENSION, POL, MKT, CMD, NAV, ECO, init, addRel, answerOffer, unSummit, unVote, council, tenTarget, napOf, blocsOf, P5, navy, straits, step, month, act, can, offerPeace, declare, endWar, strike, playerStrike, rank, save, load, date, rel, atWar, allied, sancOf: (W, WD, id) => sancOn(WD, W, id), COST, TAX, CIV };

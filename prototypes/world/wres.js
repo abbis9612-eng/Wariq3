@@ -103,9 +103,9 @@
   // التوافق ويا الواجهة القديمة: «ابحث هنا» بفرع عسكري
   function back(G, b) { return pick(G, null, 'm:' + b); }
   // شغّل كل الخانات الفاضية: الفرع العسكري الأوطى أول، وبعدين أرخص بحث مفتوح
-  function fill(G, WD) { const R = ensure(G), IND = root.IND || require('./gwind.js'), I = G.nat.ind[0];
-    for (const b of IND.BRK.slice().sort((a, c) => (I.tech[a] || 0) - (I.tech[c] || 0))) { if (R.slots.length >= slotsMax(G)) break; if ((I.tech[b] || 0) < MAXL) pick(G, WD, 'm:' + b); }
-    for (const k of Object.keys(T).filter(k => !can(G, WD, k)).sort((a, c) => T[a].cost - T[c].cost)) { if (R.slots.length >= slotsMax(G)) break; pick(G, WD, k); }
+  function fill(G, WD, n = 99) { const R = ensure(G), IND = root.IND || require('./gwind.js'), I = G.nat.ind[0], lim = Math.min(slotsMax(G), R.slots.length + n);
+    for (const b of IND.BRK.slice().sort((a, c) => (I.tech[a] || 0) - (I.tech[c] || 0))) { if (R.slots.length >= lim) break; if ((I.tech[b] || 0) < MAXL) pick(G, WD, 'm:' + b); }
+    for (const k of Object.keys(T).filter(k => !can(G, WD, k)).sort((a, c) => T[a].cost - T[c].cost)) { if (R.slots.length >= lim) break; pick(G, WD, k); }
     return { ok: true }; }
   // كل يوم بعد IND.daily: gwind جمع ميزانية خانة وحدة بـ I.rp؛ الخانات الثانية تدفع من الخزينة؛ كل خانة تتقدم بالسرعة
   function daily(G, WD) {

@@ -95,7 +95,21 @@
   const PRIO_G = { civ: .2, bal: 0, war: -.5 };   // أثر أولوية الاقتصاد على النمو السنوي ٪ [تقدير]
   // ===== كل يوم =====
   // X = { S: wsim، SIM: محرك الحرب، T: المسرح أو null، before: طول سجل العالم قبل اليوم }
+  // ===== I-156: «وين راحت الفلوس؟» — كل تغيير بالخزينة ينسجل بسببه (من الملف اللي غيّره)، شهر بشهر =====
+  const LEDC = { net: ['💵', 'الدخل الصافي (ضرايب ونفط − رواتب وخدمات وجيش)'], rd: ['🔬', 'البحث (خانات البحث)'], fundIn: ['🏦', 'حطّينا بالصندوق السيادي (فلوسنا، تنسحب وقت ما نريد)'], fundOut: ['🏦', 'سحبنا من الصندوق السيادي'],
+    fundY: ['🏦', 'أرباح الصندوق'], loan: ['🆘', 'قرض'], iss: ['🏛', 'قضايا الداخل (اللي انحلت بفلوس)'], proj: ['🏗', 'أقساط المشاريع'], prod: ['🏭', 'الإنتاج الحربي'], arms: ['🛒', 'سوق السلاح (شراء وبيع)'], nat: ['⭐', 'الصنع الوطني'],
+    corrupt: ['🕳', 'سرقة وزير فاسد'], ins: ['🏴', 'الجماعات المسلحة'], drill: ['🎖', 'تدريب الجيش'], evt: ['🌍', 'أحداث'], geo: ['🗺', 'تعويض وجزية'], dip: ['🤝', 'مساعدات دبلوماسية'], you: ['👆', 'قراراتك'], other: ['•', 'أخرى'] };
+  const LEDF = { gwind: 'rd', wres: 'rd', gwhome: 'iss', weco: 'proj', gwecon: 'prod', wmkt: 'arms', warsenal: 'nat', wcab: 'corrupt', wins: 'ins', wcmd: 'drill', wpol: 'evt', wgeo: 'geo', index: 'you' };
+  const monKey = t => { const d = new Date(Date.UTC(2026, 10, 20) + t * 864e5); return d.getUTCFullYear() * 12 + d.getUTCMonth(); };
+  function catOf(stack) { const L = String(stack || '').split('\n'); for (let i = 1; i < L.length; i++) { const m = L[i].match(/([\w-]+)\.(?:js|html)[^\d]*:\d+/); if (!m || m[1] === 'nation') continue; const f = m[1], fn = (L[i].match(/(?:at\s+(?:Object\.|Array\.)?|^)([\w$]+)/) || [])[1] || '';
+      if (f === 'wsim') return /econ/.test(L[i]) ? 'net' : 'dip'; if (f === 'wfund') return /\bput\b|invest|lend/.test(L[i]) ? 'fundIn' : /take/.test(L[i]) ? 'fundOut' : /borrow/.test(L[i]) ? 'loan' : 'fundY';
+      return LEDF[f] || 'other'; } return 'other'; }
+  function ledger(G) { const NW = G.nat; if (!NW) return; const e = NW.eco[0], dsc = Object.getOwnPropertyDescriptor(e, 'cash'); if (dsc && dsc.get) return;
+    if (!NW.led) NW.led = { k: monKey(G.t), cur: {}, prev: null }; let v = e.cash;
+    Object.defineProperty(e, 'cash', { configurable: true, enumerable: true, get: () => v, set: x => { const d = x - v; v = x; if (!d || !isFinite(d)) return; const L = NW.led, k = monKey(G.t);
+      if (k !== L.k) { L.prev = L.cur; L.k = k; L.cur = {}; } const c = catOf(new Error().stack); L.cur[c] = +((L.cur[c] || 0) + d).toFixed(4); } }); }
   function daily(G, WD, X) {
+    ledger(G);
     const NW = G.nat; if (!NW) return; const S = X.S, T = X.T, me = G.me, c = G.C[me], e = NW.eco[0];
     if (!NW.home.base) NW.home.base = Object.fromEntries(Object.keys(NW.home.fac).map(k => [k, 55]));
     NW.home.revR = .02; NW.home.gap = NW.home.gap || [18, 14]; NW.home.costK = Math.max(.1, Math.min(20, c.gdp / 250)); NW.ind[0].k = +Math.pow(NW.home.costK, .6).toFixed(3)   /* R2: البحث يكبر أبطأ من الاقتصاد (أمريكا ×6 مو ×20) حتى ميزانية الخانة تبقى معقولة */;
@@ -211,6 +225,6 @@
     return { mil: Math.round(mil), eco: Math.round(eco), dip: Math.round(dip), pop: Math.round(pop) };
   }
   function grade(G, WD, S) { const p = paths(G, WD, S); return GRADE.grade(view(G, null), null, { paths: () => p }, 0); }
-  const API = { init, catalog, daily, buy, canBuy, cancel, items, advice, paths, grade, GR: GRADE.GR, FACS, NI, supOf };
+  const API = { LEDC, ledger, init, catalog, daily, buy, canBuy, cancel, items, advice, paths, grade, GR: GRADE.GR, FACS, NI, supOf };
   if (typeof module !== 'undefined') module.exports = API; else root.NATION = API;
 })(this);

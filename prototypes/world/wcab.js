@@ -17,7 +17,7 @@
     int: { n: 'الداخلية', ic: '🏛', d: 'القضايا الداخلية والاستقرار', mode: 'auto' },
     frn: { n: 'الخارجية', ic: '🤝', d: 'العروض الدبلوماسية', mode: 'ask' },
     svc: { n: 'الخدمات', ic: '🏥', d: 'المستشفيات والجامعات والسكن', mode: 'auto' },
-    rd: { n: 'البحث', ic: '🧪', d: 'خانات البحث', mode: 'auto' },
+    rd: { n: 'البحث', ic: '🧪', d: 'خانات البحث (كل خانة تصرف من الخزينة كل يوم، فيقترح وإنت توافق)', mode: 'ask' },
   };
   const MK = Object.keys(MIN);
   const TR = { honest: 'نزيه', corrupt: 'فاسد', bold: 'جريء', careful: 'حذر', expert: 'خبير' };
@@ -57,7 +57,7 @@
       // التقشف مؤقت: أول ما الخزينة ترجع، نرجّع الإنفاق والضرايب (الحذر يستنى أكثر)
       else if (c.civ === 'cut' && e.cash > fl * (m.tr === 'careful' ? .8 : .5) && net >= 0) add('civ:mid', 'الخزينة رجعت: نرجّع الإنفاق المدني عادي والناس ترتاح', 2);
       else if (c.tax === 'high' && e.cash > fl * (m.tr === 'careful' ? 1.2 : .8) && net >= 0) add('tax:mid', 'الخزينة رجعت: نرجّع الضرايب عادية والنمو يتحسن', 2);
-      else if (e.cash > fl * 3 && net >= 0) add('fund:put', `نحط ${((e.cash - fl * 2) * .5).toFixed(1)} مليار فائض بالسندات (3.5٪ بالسنة)`, 1);
+      else if (e.cash > fl * 5 && net >= 0) add('fund:put', `نحط ${((e.cash - fl * 2) * .5).toFixed(1)} مليار فائض بالسندات (3.5٪ بالسنة)`, 1);
     } else if (k === 'oil') {
       if (EC && EC.elecDef(G, me) > .08 && startOk('power') && e.cash > cost('power') + fl * 1.5) add('proj:power', `محطة كهرباء: النقص ${Math.round(EC.elecDef(G, me) * 100)}٪ يأكل النمو`, 2);
       else if (c.oil > 0 && startOk('oil') && e.cash > cost('oil') * 1.2 + fl * 2) add('proj:oil', 'نوسّع حقل نفط: +250 ألف برميل باليوم بعد 3 سنين', 1);
@@ -79,7 +79,7 @@
       else if (P && P.edu < .6 && startOk('univ') && e.cash > cost('univ') + fl * 2) add('proj:univ', `جامعة: التعليم ${Math.round(P.edu * 100)} من 100`, 1);
     } else if (k === 'rd') {
       const R = RES() && RES().ensure(G); if (R && R.slots.length > 1 && e.cash < fl * .6 && netOf(G) < .5) add('res:drop', `الخزينة ضيقة: نوقف خانة بحث (${R.slots.length} شغّالة، كل وحدة تصرف كل يوم)`, 2);
-      else if (R && R.slots.length < RES().slotsMax(G) && e.cash > fl * 1.5) add('res:fill', 'نشغّل خانات البحث الفاضية', 1);
+      else if (R && R.slots.length < RES().slotsMax(G) && e.cash > fl * 2) { const I = G.nat.ind[0], sc = (I.bud ? [0, .02, .05, .1][I.bud] : .02) * (I.k || 1) * 30; if (R.slots.length === 0 || netOf(G) > sc * 1.5) add('res:fill', `نشغّل خانة بحث (تكلف ~${sc.toFixed(2)} مليار بالشهر)`, 1); }
     }
     return out;
   }
@@ -99,7 +99,7 @@
       if (a === 'offer') { S.answerOffer(G, WD, 0, true); return true; }
       if (a === 'mkt') { MKT().answer(G, WD, S, 0, true); return true; }
       if (a === 'ins') return typeof INS().act(G, WD, S, code.split(':')[2], 'pay') !== 'string';
-      if (a === 'res') { if (b === 'drop') { const R = RES().ensure(G); return typeof RES().drop(G, R.slots.length - 1) !== 'string'; } RES().fill(G, WD); return true; }
+      if (a === 'res') { if (b === 'drop') { const R = RES().ensure(G); return typeof RES().drop(G, R.slots.length - 1) !== 'string'; } RES().fill(G, WD, 1); return true; }
     } catch (err) { return false; }
     return false;
   }

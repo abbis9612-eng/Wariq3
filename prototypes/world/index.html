@@ -284,6 +284,7 @@ body.play #card{bottom:calc(64px + env(safe-area-inset-bottom))}body.play #perf{
 .note.clamp{display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;position:relative;cursor:pointer;padding-bottom:1px}.note.clamp::after{content:'المزيد ▾';position:absolute;inset-inline-end:0;bottom:0;padding-inline-start:14px;background:linear-gradient(to left,var(--card,#fff) 70%,transparent);color:var(--act,#1a6);font-weight:700}.note.clamp.open{display:block;-webkit-line-clamp:unset}.note.clamp.open::after{content:none}
 #tut .tutc{display:flex;gap:10px;align-items:center}#tut .tutc img{width:78px;height:58px;object-fit:cover;border-radius:10px;flex:none}
 details.govd>summary{cursor:pointer;font-weight:700;color:var(--act,#1a6);padding:8px 0;list-style:none}details.govd>summary::-webkit-details-marker{display:none}
+.led .lrow{position:relative;display:flex;justify-content:space-between;gap:8px;padding:5px 2px;font-size:13px;border-bottom:1px solid var(--line)}.led .lrow i{position:absolute;bottom:0;inset-inline-start:0;height:2px;opacity:.7}.led .lrow.tot{font-weight:700;border-bottom:0}.led .lrow b{font-variant-numeric:tabular-nums;white-space:nowrap}
 .ins4{display:grid;grid-template-columns:1fr 1fr;gap:6px}.ins4 button{display:flex;flex-direction:column;align-items:flex-start;text-align:start;padding:7px 9px;margin:0}.ins4 button small{font-size:11px;opacity:.75;font-weight:400;margin-top:2px}
 html[data-skin] button.dang,button.dang{color:var(--neg);border-color:var(--neg)}.pj.ins{border-inline-start:3px solid #2a2a2a}.pj.ins .grid{grid-template-columns:repeat(3,1fr);gap:6px}.pj.ins .st{padding:5px 8px}
 .pj{border:1px solid var(--line);border-radius:10px;padding:6px 8px;margin:6px 0;background:var(--chip)}.pj button{margin-top:4px}
@@ -1379,7 +1380,7 @@ html[data-skin] .hero b{color:var(--act)}
     const mU = v => { const t = String(money(v)), i = t.search(/\s/); return i < 0 ? `<b>${t}</b>` : `<b>${t.slice(0, i)}<u>${t.slice(i + 1)}</u></b>`; }, SI = n => `<svg class="hic" aria-hidden="true"><use href="#h-${n}"/></svg>`;
     b.innerHTML = `<span class="date"><i class="${speed ? 'run' : ''}"></i>${ar(S.date(G.t))}<small class="spn">${SPN[speed]}</small></span><span class="ap" title="نقاط القرار">${SI('star')}${G.ap}</span>
       <div class="spd">${[['pause', 'وقف'], ['play', 'يوم بالثانية'], ['ff', 'أسبوع بالثانية'], ['fff', 'شهر بالثانية']].map(([x, n], i) => `<button data-s="${i}" class="${speed === i ? 'on' : ''}" aria-label="${n}">${SI(x)}</button>`).join('')}</div>`;
-    $('#top h1').innerHTML = `${EMB(me)}<span class="hres">${cash != null ? `<span class="hr ${cash < 0 ? 'neg' : ''}">${mU(cash)}<small>${SI('bank')}الخزينة</small></span>` : ''}<span class="hr">${mU(c.gdp)}<small>${SI('chart')}الناتج</small></span><span class="hr"><b style="color:${stc}">${st}</b><small>${SI('shield')}الاستقرار</small></span></span>`;
+    $('#top h1').innerHTML = `${EMB(me)}<span class="hres">${cash != null ? `<span class="hr ${cash < 0 ? 'neg' : ''}">${mU(cash)}<small>${SI('bank')}الخزينة${window.__G && __G.G && __G.G.fund3 && ((__G.G.fund3.bonds || 0) + (__G.G.fund3.stocks || 0)) > .05 ? ' +' + ((__G.G.fund3.bonds || 0) + (__G.G.fund3.stocks || 0)).toFixed(0) + ' صندوق' : ''}</small></span>` : ''}<span class="hr">${mU(c.gdp)}<small>${SI('chart')}الناتج</small></span><span class="hr"><b style="color:${stc}">${st}</b><small>${SI('shield')}الاستقرار</small></span></span>`;
     b.querySelectorAll('button').forEach(x => x.onclick = () => { speed = +x.dataset.s; if (window.VIEW && T) VIEW.SND.init(); bar(); });
     placeLegend();
     const wd = G.wars.some(w => w.offer && (w.a.includes(me) || w.b.includes(me)));
@@ -1469,6 +1470,14 @@ const HIC = {'💵':'money','💰':'money','🏥':'health','📊':'chart','📈'
         <div class="seg"><button data-gov="${k}:reform" ${eR ? 'disabled' : ''} title="${eR || ''}">إصلاح ⭐3 · ${WGOV.monthsOf(G, WD, k)} شهر</button><button data-gov="${k}:coup" class="dang" ${eC ? 'disabled' : ''}>${k === 'mil' ? 'انقلاب' : 'تغيير سريع'} ⭐2 · نجاح ${Math.round(WGOV.coupP(G, k) * 100)}٪</button></div>${eR && !/نقاط/.test(eR) ? `<div class="note neg">الإصلاح: ${eR}</div>` : ''}</div>`; }).join('')}</div></details>`;
     return h; }
   let govOpen = false;
+  // I-156: «وين راحت الفلوس؟» — الشهر الماضي (والشهر هسه لحد اليوم) بسبب كل تغيير
+  const fundOf = () => { const F = G.fund3; return F ? (F.bonds || 0) + (F.stocks || 0) + (F.inv || []).reduce((t, q) => t + (q.amt || 0), 0) : 0; };
+  function ledRows(o) { const C = NT.LEDC, L = Object.entries(o || {}).filter(([, v]) => Math.abs(v) >= .005).sort((a, b) => a[1] - b[1]), mx = Math.max(.01, ...L.map(([, v]) => Math.abs(v))), tot = L.reduce((t, [, v]) => t + v, 0);
+    return L.map(([k, v]) => `<div class="lrow"><span>${(C[k] || C.other)[0]} ${(C[k] || C.other)[1]}</span><b dir="ltr" class="${v < 0 ? 'neg' : 'pos'}">${v > 0 ? '+' : '−'}${Math.abs(v).toFixed(2)}</b><i style="width:${Math.abs(v) / mx * 100}%;background:${v < 0 ? 'var(--neg)' : 'var(--good,#3a8)'}"></i></div>`).join('') + `<div class="lrow tot"><span>المجموع</span><b class="${tot < 0 ? 'neg' : 'pos'}">${tot >= 0 ? '+' : '−'}${Math.abs(tot).toFixed(2)} مليار</b></div>`; }
+  function ledCard(full) { const Lg = G.nat && G.nat.led; if (!Lg) return ''; const o = Lg.prev || Lg.cur, fd = fundOf();
+    return `<h3>💸 وين راحت الفلوس؟ <small class="note">${Lg.prev ? 'الشهر الماضي' : 'هالشهر لحد هسه'} · بالمليار</small></h3><div class="pj led">${ledRows(o)}
+      ${fd > .05 ? `<div class="note">🏦 بالصندوق السيادي: <b>${fd.toFixed(1)} مليار</b> — هاي فلوسنا مو ضايعة، تسحبها من 💰 الاقتصاد ← الاستثمار.</div>` : ''}
+      ${full && Lg.prev ? `<div class="note"><b>هالشهر لحد هسه:</b></div>${ledRows(Lg.cur)}` : ''}<div class="note">الأحمر يطلع من الخزينة، والأخضر يدخل. البحث والمشاريع تقدر توقفها. «الدخل الصافي» يمشي ويا سعر النفط: هسه <b>${Math.round(G.oilP || 0)}$</b> للبرميل${G.oilP && G.oilP < 85 ? ' (نزل من 97$ لما هدأت أزمة هرمز، فدخلنا قل)' : ''}.</div></div>`; }
   // بطاقة بالقيادة: الحكم والجماعات والتحالف الإسلامي بضغطة وحدة (I-155)
   function govCard() { if (!G.nat || !window.WGOV || !window.WINS) return ''; const I = WINS.ensure(G, WD), gv = WGOV.ensure(G), b = WGOV.inBloc(G, me), hot = I.g.filter(g => g.hit > G.t - 60).length, isOIC = ((WD.bl || {}).OIC || { m: [] }).m.includes(me);
     return `<h3>🏛 الحكم والداخل</h3><div class="pj"><div class="line"><span>🏛 النظام: <b>${WGOV.nameOf(G, WD, me)}</b>${gv.tr ? ` <small class="note">(إصلاح نحو ${WGOV.GOV[gv.tr.to].n})</small>` : ''}</span></div>
@@ -1536,9 +1545,9 @@ const HIC = {'💵':'money','💰':'money','🏥':'health','📊':'chart','📈'
     let h = `<h2>🏛 ${CS[me].ar}</h2>`;
     if (G.over) h += `<div class="pill warn">💥 ${OVER[G.over.why] || OVER.collapse} (${ar(S.date(G.over.t))}). ابدأ لعبة جديدة من شاشة البداية.</div><div class="row"><button class="big" id="newg">لعبة جديدة</button></div>`;
     { const L = inbox(); h += `<h3>📥 يحتاجك هسه${L.length ? ` <span class="ibn">${L.length}</span>` : ''}</h3>` + inboxHtml(L); }
-    h += govCard() + cabCard() + riseCard();
+    h += ledCard() + govCard() + cabCard() + riseCard();
     h += `<div class="kpis">
-      ${tile('me', '💰', 'الخزينة', money(e.cash), e.cash < 0 ? 'bad' : c30 != null && c30 < 0 ? 'warn' : 'good', c30 == null ? 'بالشهر الجاي يبين الاتجاه' : (c30 >= 0 ? '↑ +' : '↓ −') + money(Math.abs(c30)) + ' بالشهر' + (months != null && months < 36 ? ` · تكفي ~${Math.max(1, Math.round(months))} شهر` : ''), spark(hc.slice(-120).map(x => x[1]), '#d6a54a'))}
+      ${tile('flow', '💰', 'الخزينة' + (fundOf() > .05 ? ` <small>+ ${fundOf().toFixed(1)} بالصندوق</small>` : ''), money(e.cash), e.cash < 0 ? 'bad' : c30 != null && c30 < 0 ? 'warn' : 'good', c30 == null ? 'بالشهر الجاي يبين الاتجاه' : (c30 >= 0 ? '↑ +' : '↓ −') + money(Math.abs(c30)) + ' بالشهر' + (months != null && months < 36 ? ` · تكفي ~${Math.max(1, Math.round(months))} شهر` : ''), spark(hc.slice(-120).map(x => x[1]), '#d6a54a'))}
       ${tile('me', '📈', 'النمو', sgn(c.g) + '٪', c.g >= 2 ? 'good' : c.g >= 0 ? 'warn' : 'bad', (c.why || []).slice().sort((a, b) => Math.abs(b[1]) - Math.abs(a[1]))[0] ? 'أكبر سبب: ' + c.why.slice().sort((a, b) => Math.abs(b[1]) - Math.abs(a[1]))[0][0] : 'اقتصاد البلد', spark(kh.map(x => x.g), '#5fae6e'))}
       ${tile('homep', '🙂', 'الاستقرار', Math.round(H.stab) + ' من 100', H.stab >= 50 ? 'good' : H.stab >= 30 ? 'warn' : 'bad', H.stab < 30 ? '⚠️ خطر: ثورة أو انقلاب' : NW && NW.home.iss.length ? NW.home.iss.length + ' قضية تنتظر قرارك' : 'الشعب والفئات', spark(kh.map(x => x.st), '#6aa0d8'))}
       ${tile('army', '🪖', 'قوة الجيش', Math.round(c.pw).toLocaleString('en'), 'good', `الترتيب ${rk} بالعالم`, spark(kh.map(x => x.pw), '#9a8fd0'))}
@@ -1587,7 +1596,7 @@ const HIC = {'💵':'money','💰':'money','🏥':'health','📊':'chart','📈'
   // ===== E (I-119): 💸 تدفق الفلوس — منين تجي ووين تروح، بالشهر =====
   function pFlow() {
     const c = G.C[me], b = c.budget || {}, E = G.eco3 || {}, sp = (E.spend || {})[me] || 0, NW = G.nat, row = (t, v, cl, d) => `<div class="line"><span>${t}${d ? `<br><small class="note">${d}</small>` : ''}</span><b class="${cl || ''}">${v >= 0 ? '+' : '−'}${money(Math.abs(v))}</b></div>`;
-    let h = `<h2>💸 تدفق الفلوس</h2><div class="note">كل الأرقام <b>بالشهر</b>. الدولة عدها جيبين: <b>الدين العام</b> (عجز البلد القديم يتمول بالاستدانة مثل كل الدول) و<b>الخزينة</b> (بيدك: منها الطلبات والبحث والمشاريع).</div>`;
+    let h = `<h2>💸 تدفق الفلوس</h2>${ledCard(1)}<div class="note">كل الأرقام <b>بالشهر</b>. الدولة عدها جيبين: <b>الدين العام</b> (عجز البلد القديم يتمول بالاستدانة مثل كل الدول) و<b>الخزينة</b> (بيدك: منها الطلبات والبحث والمشاريع).</div>`;
     h += `<h3>⬇ الإيرادات</h3>${row('🛢 حصة الدولة من النفط', b.oilR || 0, 'pos', `${(Math.round(c.oil || 0))} ألف برميل باليوم × ${(Math.round(G.oilP))}$`)}${row('🧾 الضرايب والرسوم', (b.rev || 0) - (b.oilR || 0), 'pos', 'من باقي الاقتصاد (تتغير ويا الضرايب بتبويب الداخل)')}`;
     h += `<h3>⬆ المصاريف</h3>${row('🪖 الجيش', -(b.mil || 0), 'neg', `${((c.milPct || 0).toFixed(1))}٪ من الناتج`)}${row('🏥 الرواتب والخدمات', -(b.civ || 0), 'neg')}${row('🏦 فوائد الدين', -(b.intr || 0), 'neg', c.crisis ? '⚠ أزمة دين: الفوائد واصلة ربع الإيرادات' : `الدين ${(Math.round(c.debt / c.gdp * 100))}٪ من الناتج`)}`;
     const bal = (b.rev || 0) - (b.mil || 0) - (b.civ || 0) - (b.intr || 0);

@@ -68,9 +68,10 @@
   }
   // الاحتلال: كل منطقة مأخوذة (صاحبها دولة) تكلّف المحتل −0.05٪ نمو (لحد −1.5) و−0.15 استقرار (لحد −3) بالشهر؛ بعد سنة 1٪ بالشهر تثور وترجع إذا صاحبها مو بحرب ويا المحتل
   function occupation(W, WD, S) {
-    const n = {}; for (let i = 0; i < WD.r.length; i++) { const o = WD.r[i][1], k = W.ctl[i]; if (!k || k === o || !W.C[o] || !W.C[k]) { delete W.occT[i]; continue; }
+    const GEO = root.WGEO || (typeof require !== 'undefined' ? require('./wgeo.js') : null);
+    const n = {}; for (let i = 0; i < WD.r.length; i++) { const o = WD.r[i][1], k = W.ctl[i]; if (!k || k === o || !W.C[o] || !W.C[k] || (GEO && GEO.integrated(W, o, k))) { delete W.occT[i]; continue; }   // v5-2: المضموم يندمج بعد 3 سنين
       if (W.occT[i] == null) W.occT[i] = W.t; n[k] = (n[k] || 0) + 1;
-      if (W.t - W.occT[i] > 365 && !S.atWar(W, k, o) && W.rnd() < .01) { W.ctl[i] = o; delete W.occT[i]; W.log.push({ t: W.t, k: 'revolt', r: WD.r[i][0], from: k, to: o }); } }
+      if (W.t - W.occT[i] > 365 && !S.atWar(W, k, o) && W.rnd() < .01) { if (GEO && GEO.isAnnexed(W, o)) { W.C[k].stab = clamp(W.C[k].stab - 2, 0, 100); W.log.push({ t: W.t, k: 'resist', r: WD.r[i][0], by: k, o }); continue; } W.ctl[i] = o; delete W.occT[i]; W.log.push({ t: W.t, k: 'revolt', r: WD.r[i][0], from: k, to: o }); } }   // المضموم ما يرجع لدولة انمحت: مقاومة
     for (const id of W.ids) { const c = W.C[id]; c.occG = n[id] ? -Math.min(1.5, n[id] * .05) : 0; if (n[id]) c.stab = clamp(c.stab - Math.min(3, n[id] * .15), 0, 100); c.occN = n[id] || 0; }
   }
   // ===== الأحداث العالمية =====

@@ -387,7 +387,7 @@
       if (mode === 'ter') return TCOL[r.t];
       if (mode === 'rel') return relCol(r.ctl);
       if (mode === 'res') return fillRes(r, light);
-      if ((mode === 'eco' || mode === 'mil') && ctx.fillX) return ctx.fillX(r, light);
+      if ((mode === 'eco' || mode === 'mil' || mode === 'ally') && ctx.fillX) return ctx.fillX(r, light);
       return polCol(r.ctl);
     };
     const useLOD = far && mode === 'pol' && !window.MAPCHANGED;
@@ -397,7 +397,7 @@
         ? (far ? (light ? .42 : .38) : Math.max(light ? .22 : .20, (light ? .38 : .34) - (cam.s - 500) / 9500))
         : .95);
 
-    const dataL = mode === 'eco' || mode === 'mil';   // طبقات البيانات: لون أقوى حتى يبين
+    const dataL = mode === 'eco' || mode === 'mil' || mode === 'ally';   // طبقات البيانات: لون أقوى حتى يبين
     g.save();
     if (hasTex && light && mode !== 'res' && !dataL) g.globalCompositeOperation = 'multiply';
     g.globalAlpha = dataL ? (hasTex ? .62 : .95) : polAlpha;

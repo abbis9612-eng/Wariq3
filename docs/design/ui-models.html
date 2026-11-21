@@ -2,186 +2,245 @@
 <meta name="claude:viewport-fit-sides" content="cover">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Alexandria:wght@500;700;800&family=IBM+Plex+Sans+Arabic:wght@400;500;600;700&family=Noto+Kufi+Arabic:wght@600;700;800&family=Noto+Sans+Arabic:wght@400;500;600;700&family=Readex+Pro:wght@400;500;600;700&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Alexandria:wght@500;600;700;800;900&family=IBM+Plex+Sans+Arabic:wght@400;500;600;700&family=Noto+Kufi+Arabic:wght@500;600;700;800;900&family=Noto+Sans+Arabic:wght@400;500;600;700&family=Readex+Pro:wght@300;400;500;600;700&display=swap">
 <style>
-/* التخطيط: صفحة مراجعة (مشاكل الواجهة الحالية بالأرقام) ← 3 اتجاهات، كل اتجاه = نفس 3 شاشات تلفون جنب بعض للمقارنة */
+/* التخطيط: 3 اتجاهات عالية الدقة (كل واحد 4 شاشات تلفون بصور اللعبة الحقيقية) ← المراجعة (12 مشكلة) تحت */
 :root{
-  --bg:#eef0ec; --surface:#ffffff; --ink:#1b211c; --muted:#5b665d; --line:#d5dad3; --accent:#2f6b3a; --bad:#b3362b;
+  --bg:#eceee9; --surface:#ffffff; --ink:#1a1f1b; --muted:#5a655c; --line:#d3d8d0; --accent:#2f6b3a; --bad:#b3362b;
   --f-ui:"IBM Plex Sans Arabic",Tahoma,sans-serif; --f-head:"Alexandria","IBM Plex Sans Arabic",Tahoma,sans-serif;
 }
-@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#121612;--surface:#1b201b;--ink:#e8ece6;--muted:#9aa59b;--line:#2c342c;--accent:#7cc48a;--bad:#ff8a7a;color-scheme:dark}}
-:root[data-theme="dark"]{--bg:#121612;--surface:#1b201b;--ink:#e8ece6;--muted:#9aa59b;--line:#2c342c;--accent:#7cc48a;--bad:#ff8a7a;color-scheme:dark}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#111411;--surface:#1a1e1a;--ink:#e8ece6;--muted:#9aa59b;--line:#2b322b;--accent:#7cc48a;--bad:#ff8a7a;color-scheme:dark}}
+:root[data-theme="dark"]{--bg:#111411;--surface:#1a1e1a;--ink:#e8ece6;--muted:#9aa59b;--line:#2b322b;--accent:#7cc48a;--bad:#ff8a7a;color-scheme:dark}
 *{box-sizing:border-box}
 html{direction:rtl}
-body{background:var(--bg);color:var(--ink);font:400 15px/1.7 var(--f-ui);padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));padding-block:28px 60px}
-.wrap{max-width:1240px;margin:0 auto;display:flex;flex-direction:column;gap:48px}
-h1{font:800 clamp(26px,4vw,40px)/1.25 var(--f-head);margin:0;text-wrap:balance}
-h2{font:700 24px/1.35 var(--f-head);margin:0;text-wrap:balance}
-h3{font:700 17px/1.4 var(--f-head);margin:0}
-p{margin:0;max-width:68ch}
+body{background:var(--bg);color:var(--ink);font:400 15px/1.7 var(--f-ui);padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));padding-block:28px 64px}
+.wrap{max-width:1480px;margin:0 auto;display:flex;flex-direction:column;gap:56px}
+h1{font:900 clamp(28px,4.2vw,46px)/1.2 var(--f-head);margin:0;text-wrap:balance}
+h2{font:800 26px/1.3 var(--f-head);margin:0;text-wrap:balance}
+h3{font:700 16px/1.4 var(--f-head);margin:0}
+p{margin:0;max-width:72ch}
 .lede{color:var(--muted);font-size:16px}
-.tag{display:inline-block;font:600 12px/1 var(--f-ui);padding:6px 10px;border-radius:999px;background:color-mix(in srgb,var(--accent) 14%,transparent);color:var(--accent)}
-/* المراجعة */
-.audit{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,340px),1fr));gap:14px}
-.issue{background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:14px 16px;display:grid;grid-template-columns:auto 1fr;gap:4px 12px;align-items:start}
-.issue b.n{grid-row:span 2;font:800 20px/1 var(--f-head);color:var(--bad);font-variant-numeric:tabular-nums;min-width:28px}
-.issue h3{font-size:15px}
-.issue p{color:var(--muted);font-size:14px;line-height:1.65}
+.tag{align-self:flex-start;font:600 12px/1 var(--f-ui);padding:7px 11px;border-radius:999px;background:color-mix(in srgb,var(--accent) 14%,transparent);color:var(--accent)}
+.audit{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,330px),1fr));gap:12px}
+.issue{background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:13px 15px;display:grid;grid-template-columns:auto 1fr;gap:3px 12px}
+.issue b.n{grid-row:span 2;font:800 20px/1 var(--f-head);color:var(--bad);font-variant-numeric:tabular-nums;min-width:26px}
+.issue h3{font-size:15px}.issue p{color:var(--muted);font-size:14px;line-height:1.6}
 .now{display:flex;gap:14px;overflow-x:auto;padding-bottom:6px}
 .now figure{margin:0;flex:0 0 auto;display:flex;flex-direction:column;gap:6px}
-.now img{width:220px;border-radius:14px;border:1px solid var(--line);display:block}
+.now img{width:200px;border-radius:14px;border:1px solid var(--line);display:block}
 .now figcaption{font-size:13px;color:var(--muted)}
-/* الاتجاهات */
-.dir{display:flex;flex-direction:column;gap:18px}
-.dirhead{display:flex;flex-wrap:wrap;gap:10px 18px;align-items:baseline}
-.dirhead .key{font:800 15px/1 var(--f-head);background:var(--ink);color:var(--bg);border-radius:8px;padding:8px 11px}
+.dir{display:flex;flex-direction:column;gap:16px}
+.dirhead{display:flex;flex-wrap:wrap;gap:10px 16px;align-items:center}
+.dirhead .key{font:900 18px/1 var(--f-head);background:var(--ink);color:var(--bg);border-radius:10px;width:40px;height:40px;display:grid;place-items:center}
 .rules{display:flex;flex-wrap:wrap;gap:8px}
 .rules span{font-size:13px;border:1px solid var(--line);background:var(--surface);border-radius:999px;padding:5px 11px;color:var(--muted)}
-.phones{display:flex;gap:22px;overflow-x:auto;padding:4px 2px 14px;scroll-snap-type:x mandatory}
-.ph{flex:0 0 auto;width:340px;max-width:100%;scroll-snap-align:start;display:flex;flex-direction:column;gap:8px}
+.phones{display:flex;gap:24px;overflow-x:auto;padding:6px 2px 16px;scroll-snap-type:x mandatory}
+.ph{flex:0 0 auto;width:350px;max-width:100%;scroll-snap-align:start;display:flex;flex-direction:column;gap:8px}
 .ph>.cap{font-size:13px;color:var(--muted);text-align:center}
-.screen{height:700px;border-radius:30px;overflow:hidden;position:relative;display:flex;flex-direction:column;box-shadow:0 1px 0 var(--line),0 18px 40px -20px rgba(0,0,0,.45);border:6px solid #0d0f0d}
-svg.i{width:20px;height:20px;fill:none;stroke:currentColor;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round;flex:none}
-.num{font-variant-numeric:tabular-nums}
-bdi{unicode-bidi:isolate}
-
-/* ===== مكوّنات مشتركة (كل اتجاه يغيّر الشكل بالـtokens) ===== */
-.S{--h:var(--S-head);font-family:var(--S-body);color:var(--S-ink);background:var(--S-bg)}
-.hud{display:flex;align-items:center;gap:8px;padding:10px 12px;background:var(--S-bar);color:var(--S-barink);position:relative;z-index:2}
-.hud .flag{width:30px;height:30px;border-radius:8px;display:grid;place-items:center;font:800 14px/1 var(--h);background:var(--S-accent);color:var(--S-onaccent)}
-.hud .res{display:flex;gap:10px;flex:1;min-width:0;justify-content:flex-start}
-.hud .r{display:flex;flex-direction:column;line-height:1.1}
-.hud .r b{font:700 15px/1.1 var(--h);font-variant-numeric:tabular-nums}
-.hud .r small{font-size:10.5px;opacity:.72}
-.hud .r.warn b{color:var(--S-warn)}
-.clock{display:flex;align-items:center;gap:6px;padding:6px 10px;background:var(--S-bar2);color:var(--S-barink);font-size:12.5px;z-index:2;position:relative}
-.clock .date{font:600 13px/1 var(--h);flex:1}
-.clock .sp{direction:ltr;display:flex;gap:2px;background:var(--S-chip);border-radius:9px;padding:2px}
-.clock .sp button{all:unset;width:34px;height:28px;display:grid;place-items:center;border-radius:7px;color:var(--S-barink);cursor:pointer}
-.clock .sp button.on{background:var(--S-accent);color:var(--S-onaccent)}
-.clock .ap{display:flex;align-items:center;gap:4px;font-weight:700;font-variant-numeric:tabular-nums}
-.map{flex:1;position:relative;background:var(--S-map);overflow:hidden}
-.map .cty{position:absolute;font:600 11.5px/1 var(--S-body);color:var(--S-maplabel);text-shadow:var(--S-halo)}
-.map .cty.cap::before{content:"";display:inline-block;width:6px;height:6px;border-radius:50%;background:var(--S-maplabel);margin-inline-end:4px;vertical-align:1px}
-.unit{position:absolute;display:flex;align-items:center;gap:4px;padding:3px 6px 3px 4px;border-radius:7px;font:700 11px/1 var(--S-body);color:#fff;box-shadow:0 2px 6px rgba(0,0,0,.35)}
-.unit svg.i{width:15px;height:15px}
-.unit.me{background:var(--S-me)} .unit.foe{background:var(--S-foe)}
-.unit .n{font-variant-numeric:tabular-nums;opacity:.9}
-.toast{position:absolute;inset-inline:12px;bottom:12px;display:flex;gap:10px;align-items:flex-start;padding:10px 12px;border-radius:12px;background:var(--S-card);color:var(--S-ink);box-shadow:0 8px 20px -8px rgba(0,0,0,.5);border-inline-start:4px solid var(--S-warn);font-size:13px;line-height:1.5}
-.toast b{font-family:var(--h)}
-.fab{position:absolute;inset-inline-start:10px;top:10px;display:flex;flex-direction:column;gap:6px}
-.fab button{all:unset;width:38px;height:38px;border-radius:11px;display:grid;place-items:center;background:var(--S-card);color:var(--S-ink);box-shadow:0 2px 8px rgba(0,0,0,.25)}
-.tabs{display:grid;grid-template-columns:repeat(5,1fr);background:var(--S-bar);color:var(--S-tabink);padding:6px 4px 10px;position:relative;z-index:2}
-.tabs a{display:flex;flex-direction:column;align-items:center;gap:3px;font:600 11px/1.2 var(--S-body);text-decoration:none;color:inherit;position:relative;padding-top:4px}
-.tabs a svg.i{width:22px;height:22px}
-.tabs a.on{color:var(--S-tabon)}
-.tabs a.on::before{content:"";position:absolute;top:-6px;width:28px;height:3px;border-radius:2px;background:var(--S-tabon)}
-.tabs .dot{position:absolute;top:0;inset-inline-start:calc(50% + 6px);min-width:16px;height:16px;border-radius:8px;background:var(--S-warn);color:#111;font:700 10px/16px var(--S-body);text-align:center;padding:0 4px}
-.sheet{flex:1;overflow:hidden;display:flex;flex-direction:column;background:var(--S-bg)}
-.sh-head{display:flex;align-items:center;gap:10px;padding:14px 16px 8px}
-.sh-head h4{margin:0;font:800 20px/1.2 var(--h);flex:1}
-.sh-head .x{all:unset;width:34px;height:34px;border-radius:10px;display:grid;place-items:center;background:var(--S-chip)}
-.seg{display:flex;gap:6px;padding:4px 16px 10px;overflow-x:auto;scrollbar-width:none}
-.seg span{flex:none;padding:7px 13px;border-radius:999px;font:600 13px/1 var(--S-body);background:var(--S-chip);color:var(--S-muted);white-space:nowrap}
-.seg span.on{background:var(--S-ink);color:var(--S-bg)}
-.body{padding:2px 16px 16px;display:flex;flex-direction:column;gap:12px;overflow:hidden}
-.lbl{font:700 12px/1 var(--S-body);color:var(--S-muted);letter-spacing:.2px}
-.kpis{display:grid;grid-template-columns:1fr 1fr;gap:8px}
-.kpi{background:var(--S-card);border-radius:var(--S-r);padding:10px 12px;display:flex;flex-direction:column;gap:2px;border:1px solid var(--S-line)}
-.kpi .t{display:flex;align-items:center;gap:6px;font-size:12px;color:var(--S-muted)}
-.kpi .t svg.i{width:16px;height:16px;color:var(--S-accent)}
-.kpi .v{font:700 22px/1.15 var(--h);font-variant-numeric:tabular-nums}
-.kpi .v small{font:600 12px var(--S-body);color:var(--S-muted);margin-inline-start:3px}
-.kpi .d{font-size:11.5px;font-weight:600}
-.up{color:var(--S-good)} .down{color:var(--S-bad)}
-.bar{height:5px;border-radius:3px;background:var(--S-line);overflow:hidden}
-.bar i{display:block;height:100%;background:var(--S-accent);border-radius:3px}
-.todo{background:var(--S-card);border-radius:var(--S-r);border:1px solid var(--S-line);display:flex;flex-direction:column}
-.todo .it{display:flex;gap:10px;align-items:center;padding:10px 12px}
-.todo .it+.it{border-top:1px solid var(--S-line)}
-.todo .ic{width:32px;height:32px;border-radius:9px;display:grid;place-items:center;flex:none}
-.todo .ic.w{background:color-mix(in srgb,var(--S-warn) 22%,transparent);color:var(--S-warnink)}
-.todo .ic.b{background:color-mix(in srgb,var(--S-bad) 16%,transparent);color:var(--S-bad)}
-.todo .ic.g{background:color-mix(in srgb,var(--S-good) 16%,transparent);color:var(--S-good)}
-.todo .tx{flex:1;min-width:0;font-size:13px;line-height:1.45}
-.todo .tx b{display:block;font:700 13.5px/1.35 var(--h)}
-.todo .tx span{color:var(--S-muted);font-size:12px}
-.go{all:unset;font:700 12px/1 var(--S-body);padding:8px 11px;border-radius:9px;background:var(--S-accent);color:var(--S-onaccent);white-space:nowrap}
-.go.ghost{background:transparent;color:var(--S-accent);box-shadow:inset 0 0 0 1.5px var(--S-accent)}
-.lock{border:1.5px dashed var(--S-line2);border-radius:var(--S-r);padding:12px;display:flex;gap:10px;align-items:flex-start;background:var(--S-card)}
-.lock .ic{width:36px;height:36px;border-radius:10px;display:grid;place-items:center;background:var(--S-chip);color:var(--S-muted);flex:none}
-.lock .tx{flex:1;font-size:12.5px;line-height:1.5;color:var(--S-muted)}
-.lock .tx b{display:block;color:var(--S-ink);font:700 14px/1.35 var(--h);margin-bottom:2px}
-.steps{display:flex;gap:4px;margin-top:8px}
-.steps i{flex:1;height:5px;border-radius:3px;background:var(--S-line)}
-.steps i.ok{background:var(--S-good)} .steps i.cur{background:var(--S-warn)}
-.stepl{display:flex;justify-content:space-between;font-size:10.5px;margin-top:4px;color:var(--S-muted)}
-.units{display:flex;flex-direction:column;gap:8px}
-.ucard{display:grid;grid-template-columns:92px 1fr auto;gap:10px;align-items:center;background:var(--S-card);border-radius:var(--S-r);padding:8px 10px;border:1px solid var(--S-line)}
-.ucard .img{height:56px;border-radius:8px;background:var(--S-imgbg);display:grid;place-items:center;color:var(--S-muted);overflow:hidden}
-.ucard .img svg{width:70px;height:40px}
-.ucard .nm{font:700 14px/1.3 var(--h)}
-.ucard .meta{display:flex;gap:10px;font-size:11.5px;color:var(--S-muted);margin-top:2px;font-variant-numeric:tabular-nums}
-.ucard .src{font-size:11px;font-weight:600;padding:2px 7px;border-radius:6px;display:inline-block;margin-top:4px}
-.src.loc{background:color-mix(in srgb,var(--S-good) 16%,transparent);color:var(--S-good)}
-.src.imp{background:color-mix(in srgb,var(--S-warn) 22%,transparent);color:var(--S-warnink)}
-.queue{background:var(--S-card);border-radius:var(--S-r);border:1px solid var(--S-line);padding:10px 12px;display:flex;flex-direction:column;gap:8px}
-.qrow{display:flex;align-items:center;gap:10px;font-size:12.5px}
-.qrow .bar{flex:1}
-.qrow b{font-family:var(--h);min-width:84px}
-
-/* ===== أ: غرفة القيادة — ليلي تكتيكي، زيتوني فحمي، إشارات كهرمانية ===== */
-.A{--S-head:"Alexandria","IBM Plex Sans Arabic",sans-serif;--S-body:"IBM Plex Sans Arabic",Tahoma,sans-serif;
-  --S-bg:#151a16;--S-ink:#e9eee5;--S-muted:#98a596;--S-card:#1e251f;--S-line:#2d372e;--S-line2:#4a574a;--S-chip:#263027;
-  --S-bar:#0e120f;--S-bar2:#121713;--S-barink:#dfe7da;--S-tabink:#7f8d7e;--S-tabon:#e8b64c;
-  --S-accent:#e8b64c;--S-onaccent:#1a1406;--S-good:#7ccf86;--S-bad:#ff7a66;--S-warn:#e8b64c;--S-warnink:#f0c76b;
-  --S-me:#3f7d46;--S-foe:#a8382b;--S-map:radial-gradient(120% 80% at 70% 30%,#3a4234 0,#262c23 55%,#1b201a 100%);--S-maplabel:#d9dfcf;--S-halo:0 1px 2px #000;--S-imgbg:#2a332b;--S-r:12px}
-.A .hud{border-bottom:1px solid #263027}
-.A .kpi{background:linear-gradient(180deg,#212922,#1b211c)}
-.A .kpi .v{letter-spacing:.2px}
-.A .seg span.on{background:var(--S-accent);color:var(--S-onaccent)}
-.A .map::after{content:"";position:absolute;inset:0;background:repeating-linear-gradient(0deg,rgba(255,255,255,.025) 0 1px,transparent 1px 26px),repeating-linear-gradient(90deg,rgba(255,255,255,.025) 0 1px,transparent 1px 26px);pointer-events:none}
-
-/* ===== ب: الأطلس — نهاري نظيف، حبر كحلي، أخضر وطني واحد ===== */
-.B{--S-head:"Noto Kufi Arabic","Noto Sans Arabic",sans-serif;--S-body:"Noto Sans Arabic",Tahoma,sans-serif;
-  --S-bg:#f6f7f4;--S-ink:#16211c;--S-muted:#5e6b64;--S-card:#ffffff;--S-line:#e2e6e1;--S-line2:#b9c2bb;--S-chip:#eceee9;
-  --S-bar:#ffffff;--S-bar2:#ffffff;--S-barink:#16211c;--S-tabink:#7c8781;--S-tabon:#1f6b3d;
-  --S-accent:#1f6b3d;--S-onaccent:#ffffff;--S-good:#1f7a43;--S-bad:#c0392b;--S-warn:#d99a1e;--S-warnink:#8a5d00;
-  --S-me:#1f6b3d;--S-foe:#b23a2e;--S-map:linear-gradient(160deg,#e7e2d2 0,#dcd5bf 45%,#cfd9c4 100%);--S-maplabel:#2a3a32;--S-halo:0 0 3px #fff,0 0 3px #fff;--S-imgbg:#eef0ec;--S-r:14px}
-.B .hud{box-shadow:0 1px 0 var(--S-line)}
-.B .clock{border-bottom:1px solid var(--S-line)}
-.B .tabs{box-shadow:0 -1px 0 var(--S-line)}
-.B .kpi{border:none;box-shadow:0 1px 2px rgba(20,40,30,.08),0 0 0 1px var(--S-line)}
-.B .ucard,.B .todo,.B .queue{border:none;box-shadow:0 1px 2px rgba(20,40,30,.08),0 0 0 1px var(--S-line)}
-
-/* ===== ج: النشرة — جريء، كل قسم بلونه، أرقام كبيرة ===== */
-.C{--S-head:"Readex Pro",sans-serif;--S-body:"Readex Pro",Tahoma,sans-serif;
-  --S-bg:#f3efe6;--S-ink:#1d1a16;--S-muted:#6c655b;--S-card:#fffdf8;--S-line:#e3dccd;--S-line2:#b8ad97;--S-chip:#ebe5d8;
-  --S-bar:#1d1a16;--S-bar2:#2a2620;--S-barink:#f3efe6;--S-tabink:#a59c8c;--S-tabon:#f3efe6;
-  --S-accent:#0f6e5a;--S-onaccent:#fff;--S-good:#0f7a4a;--S-bad:#c4372a;--S-warn:#e0a21b;--S-warnink:#7a5200;
-  --S-me:#0f6e5a;--S-foe:#c4372a;--S-map:linear-gradient(170deg,#d8cdb3 0,#cbbf9f 60%,#bfb48f 100%);--S-maplabel:#2b2417;--S-halo:0 0 3px #f3efe6;--S-imgbg:#ebe5d8;--S-r:6px}
-.C .kpi{border:none;border-inline-start:4px solid var(--k,var(--S-accent));border-radius:4px}
-.C .kpi .v{font-size:26px;font-weight:700}
-.C .kpi.eco{--k:#0f7a4a}.C .kpi.mil{--k:#5d6b2f}.C .kpi.pol{--k:#2f5d9e}.C .kpi.soc{--k:#8a4fa3}
-.C .tabs a.on{color:#fff}
-.C .tabs a.on::before{background:var(--S-warn)}
-.C .sh-head h4{font-size:24px;font-weight:700}
-.C .sh-head{border-bottom:3px solid var(--S-ink);margin:0 16px;padding-inline:0}
-.C .seg span{border-radius:4px}
-.C .clock .sp{background:#3a352d}
-.C .ucard{border:none;border-bottom:1px solid var(--S-line);border-radius:0;background:transparent;padding-inline:0}
-
-/* زر الاختيار */
-.pick{display:flex;flex-wrap:wrap;gap:12px;align-items:center;background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:16px}
-.pick p{color:var(--muted);font-size:14px}
+.screen{height:740px;border-radius:34px;overflow:hidden;position:relative;display:flex;flex-direction:column;border:7px solid #090a09;box-shadow:0 30px 60px -28px rgba(0,0,0,.6),0 0 0 1px #2a2d2a}
+.pick{display:flex;flex-direction:column;gap:12px;background:var(--surface);border:1px solid var(--line);border-radius:16px;padding:18px}
+.pick p{color:var(--muted);font-size:14.5px}
 :focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+
+/* ===================== مكوّنات الشاشة ===================== */
+svg.i{width:20px;height:20px;fill:none;stroke:currentColor;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round;flex:none}
+bdi{unicode-bidi:isolate}
+.S{font-family:var(--S-body);color:var(--S-ink);background:var(--S-bg);font-size:13px;line-height:1.5}
+.S .num,.S .v,.S b.n{font-variant-numeric:tabular-nums}
+.sb{height:26px;display:flex;align-items:center;justify-content:space-between;padding:0 18px;font:600 11.5px/1 system-ui,sans-serif;background:var(--S-bar);color:var(--S-barink);direction:ltr;flex:none}
+.hud{display:flex;align-items:center;gap:10px;padding:8px 12px 9px;background:var(--S-bar);color:var(--S-barink);position:relative;z-index:3}
+.hud .flag{width:34px;height:34px;border-radius:var(--S-rf);display:grid;place-items:center;font:800 15px/1 var(--S-head);background:var(--S-accent);color:var(--S-onaccent);flex:none}
+.hud .res{display:flex;gap:14px;flex:1;min-width:0}
+.hud .r{display:flex;flex-direction:column;gap:1px;min-width:0}
+.hud .r b{font:700 16px/1.05 var(--S-head);display:flex;align-items:baseline;gap:3px;white-space:nowrap}
+.hud .r b u{text-decoration:none;font:600 10.5px/1 var(--S-body);opacity:.75}
+.hud .r small{font-size:10.5px;opacity:.7;display:flex;align-items:center;gap:3px;white-space:nowrap}
+.hud .r small svg.i{width:12px;height:12px}
+.hud .r .up{color:var(--S-good)}
+.hud .menu{all:unset;width:34px;height:34px;display:grid;place-items:center;border-radius:10px;background:var(--S-chip2);color:var(--S-barink)}
+.clock{display:flex;align-items:center;gap:8px;padding:6px 12px 8px;background:var(--S-bar);color:var(--S-barink);position:relative;z-index:3}
+.clock .date{font:600 13px/1 var(--S-head);flex:1;display:flex;align-items:center;gap:6px}
+.clock .date i{width:7px;height:7px;border-radius:50%;background:var(--S-good);box-shadow:0 0 0 3px color-mix(in srgb,var(--S-good) 25%,transparent)}
+.clock .ap{display:flex;align-items:center;gap:4px;font:700 13px/1 var(--S-head);padding:5px 8px;border-radius:8px;background:var(--S-chip2)}
+.clock .ap svg.i{width:14px;height:14px;color:var(--S-warn)}
+.clock .sp{direction:ltr;display:flex;gap:2px;background:var(--S-chip2);border-radius:10px;padding:2px}
+.clock .sp button{all:unset;width:32px;height:26px;display:grid;place-items:center;border-radius:8px;color:var(--S-barink);opacity:.8}
+.clock .sp button svg.i{width:15px;height:15px}
+.clock .sp button.on{background:var(--S-accent);color:var(--S-onaccent);opacity:1}
+.map{flex:1;position:relative;overflow:hidden;background:#333 center/cover no-repeat}
+.map .shade{position:absolute;inset:0;pointer-events:none;background:var(--S-mapshade)}
+.fab{position:absolute;inset-inline-start:10px;top:12px;display:flex;flex-direction:column;gap:6px;z-index:2}
+.fab button{all:unset;width:40px;height:40px;border-radius:12px;display:grid;place-items:center;background:var(--S-glass);color:var(--S-ink);backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);box-shadow:0 4px 12px rgba(0,0,0,.25)}
+.chipfront{position:absolute;top:12px;inset-inline-end:12px;display:flex;align-items:center;gap:8px;padding:7px 11px;border-radius:12px;background:var(--S-glass);backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);box-shadow:0 4px 12px rgba(0,0,0,.25);z-index:2;font-size:12px;color:var(--S-muted)}
+.chipfront b{font:700 13px/1.2 var(--S-head);display:block;color:var(--S-ink)}
+.chipfront .dot{width:9px;height:9px;border-radius:50%;background:var(--S-bad);box-shadow:0 0 0 4px color-mix(in srgb,var(--S-bad) 25%,transparent)}
+.toast{position:absolute;inset-inline:12px;bottom:12px;display:flex;gap:10px;align-items:center;padding:10px 12px;border-radius:var(--S-r);background:var(--S-glass);color:var(--S-ink);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);box-shadow:0 10px 24px -10px rgba(0,0,0,.6);z-index:2}
+.toast .ic{width:34px;height:34px;border-radius:10px;display:grid;place-items:center;background:color-mix(in srgb,var(--S-warn) 25%,transparent);color:var(--S-warnink);flex:none}
+.toast .tx{flex:1;font-size:12px;color:var(--S-muted);line-height:1.4}
+.toast .tx b{display:block;color:var(--S-ink);font:700 13.5px/1.35 var(--S-head)}
+.tabs{display:grid;grid-template-columns:repeat(5,1fr);background:var(--S-bar);color:var(--S-tabink);padding:8px 4px 16px;position:relative;z-index:3;flex:none}
+.tabs a{display:flex;flex-direction:column;align-items:center;gap:4px;font:600 11px/1.1 var(--S-body);text-decoration:none;color:inherit;position:relative;isolation:isolate}
+.tabs a svg.i{width:23px;height:23px}
+.tabs a.on{color:var(--S-tabon)}
+.tabs a.on svg.i{stroke-width:2.2}
+.tabs a .pill{position:absolute;top:-4px;width:52px;height:31px;border-radius:16px;background:var(--S-tabpill);z-index:-1}
+.tabs .dot{position:absolute;top:-4px;inset-inline-start:calc(50% + 4px);min-width:17px;height:17px;border-radius:9px;background:var(--S-warn);color:#1a1406;font:800 10px/17px var(--S-body);text-align:center;padding:0 4px;box-shadow:0 0 0 2px var(--S-bar)}
+.sheet{flex:1;overflow:hidden;display:flex;flex-direction:column;background:var(--S-bg);position:relative}
+.sh-head{display:flex;align-items:flex-end;gap:10px;padding:14px 16px 10px}
+.sh-head .t{flex:1;min-width:0}
+.sh-head small{display:block;font:600 11px/1 var(--S-body);color:var(--S-muted);margin-bottom:5px;letter-spacing:.3px}
+.sh-head h4{margin:0;font:800 23px/1.15 var(--S-head)}
+.sh-head .x{all:unset;width:36px;height:36px;border-radius:11px;display:grid;place-items:center;background:var(--S-chip);color:var(--S-ink)}
+.seg{display:flex;gap:6px;padding:0 16px 12px;overflow:hidden}
+.seg span{flex:none;display:flex;align-items:center;gap:5px;padding:8px 13px;border-radius:999px;font:600 12.5px/1 var(--S-body);background:var(--S-chip);color:var(--S-muted);white-space:nowrap}
+.seg span svg.i{width:15px;height:15px}
+.seg span.on{background:var(--S-segon);color:var(--S-segonink)}
+.body{padding:0 16px 16px;display:flex;flex-direction:column;gap:12px;overflow:hidden}
+.lbl{display:flex;align-items:center;gap:8px;font:700 12px/1 var(--S-body);color:var(--S-muted);letter-spacing:.3px}
+.lbl::after{content:"";flex:1;height:1px;background:var(--S-line)}
+.lbl em{font-style:normal;color:var(--S-warnink);background:color-mix(in srgb,var(--S-warn) 20%,transparent);border-radius:6px;padding:3px 6px}
+.card{background:var(--S-card);border-radius:var(--S-r);border:1px solid var(--S-line);position:relative}
+.todo .it{display:flex;gap:10px;align-items:center;padding:11px 12px}
+.todo .it+.it{border-top:1px solid var(--S-line)}
+.ic{width:34px;height:34px;border-radius:10px;display:grid;place-items:center;flex:none}
+.ic svg.i{width:18px;height:18px}
+.ic.w{background:color-mix(in srgb,var(--S-warn) 22%,transparent);color:var(--S-warnink)}
+.ic.b{background:color-mix(in srgb,var(--S-bad) 18%,transparent);color:var(--S-bad)}
+.ic.g{background:color-mix(in srgb,var(--S-good) 18%,transparent);color:var(--S-good)}
+.ic.n{background:var(--S-chip);color:var(--S-muted)}
+.tx{flex:1;min-width:0;font-size:12px;line-height:1.45;color:var(--S-muted)}
+.tx b{display:block;font:700 13.5px/1.35 var(--S-head);color:var(--S-ink)}
+.go{all:unset;font:700 12.5px/1 var(--S-body);padding:9px 13px;border-radius:var(--S-rb);background:var(--S-accent);color:var(--S-onaccent);white-space:nowrap;box-shadow:var(--S-goshadow);text-align:center}
+.go.ghost{background:transparent;color:var(--S-ink);box-shadow:inset 0 0 0 1.5px var(--S-line2)}
+.go.big{display:block;padding:14px;font-size:15px}
+.kpis{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.kpi{padding:11px 12px 12px;display:flex;flex-direction:column;gap:3px}
+.kpi .t{display:flex;align-items:center;gap:6px;font-size:11.5px;color:var(--S-muted);font-weight:600}
+.kpi .t svg.i{width:15px;height:15px;color:var(--k,var(--S-accent))}
+.kpi .v{font:800 26px/1.1 var(--S-head);display:flex;align-items:baseline;gap:4px}
+.kpi .v small{font:600 12px var(--S-body);color:var(--S-muted)}
+.kpi .d{font-size:11.5px;font-weight:600;display:flex;align-items:center;gap:4px}
+.up{color:var(--S-good)} .down{color:var(--S-bad)}
+.spark{height:26px;width:100%;margin-top:2px;display:block}
+.bar{height:6px;border-radius:3px;background:var(--S-track);overflow:hidden}
+.bar i{display:block;height:100%;background:var(--k,var(--S-accent));border-radius:3px}
+.elect{display:flex;align-items:center;gap:12px;padding:12px}
+.elect .cd{font:800 22px/1 var(--S-head);text-align:center}
+.elect .cd small{display:block;font:600 10.5px var(--S-body);color:var(--S-muted);margin-top:3px}
+.queue{padding:11px 12px;display:flex;flex-direction:column;gap:9px}
+.qrow{display:flex;align-items:center;gap:10px;font-size:12px;color:var(--S-muted)}
+.qrow b{font:700 13px/1.2 var(--S-head);color:var(--S-ink)}
+.lock{border-style:dashed;border-color:var(--S-line2);padding:12px;display:flex;gap:11px;align-items:flex-start}
+.steps{display:flex;gap:4px;margin-top:9px}
+.steps i{flex:1;height:6px;border-radius:3px;background:var(--S-track)}
+.steps i.ok{background:var(--S-good)} .steps i.cur{background:var(--S-warn)}
+.stepl{display:flex;justify-content:space-between;font-size:10.5px;margin-top:5px;color:var(--S-muted);font-weight:600}
+.stepl span.ok{color:var(--S-good)}
+.units{display:flex;flex-direction:column;gap:8px}
+.ucard{display:grid;grid-template-columns:90px 1fr auto;gap:10px;align-items:center;padding:8px 10px 8px 12px}
+.ucard .img{height:64px;border-radius:calc(var(--S-r) - 4px);background:var(--S-imgbg);display:grid;place-items:center;overflow:hidden}
+.ucard .img img{width:100%;height:100%;object-fit:contain;padding:4px}
+.ucard .nm{font:700 14px/1.3 var(--S-head)}
+.ucard .meta{display:flex;gap:8px;white-space:nowrap;font-size:11px;color:var(--S-muted);margin-top:3px;font-weight:500}
+.ucard .meta span{display:flex;align-items:center;gap:3px}
+.ucard .meta svg.i{width:12px;height:12px}
+.src{font-size:10.5px;font-weight:700;padding:3px 7px;border-radius:6px;display:inline-flex;align-items:center;gap:4px;margin-top:5px}
+.src svg.i{width:11px;height:11px}
+.src.loc{background:color-mix(in srgb,var(--S-good) 16%,transparent);color:var(--S-good)}
+.src.imp{background:color-mix(in srgb,var(--S-warn) 20%,transparent);color:var(--S-warnink)}
+/* بطاقة السلاح */
+.hero{position:relative;height:250px;flex:none;background:#000 center/cover no-repeat;display:flex;flex-direction:column;justify-content:flex-end;padding:14px 16px;color:#fff}
+.hero::before{content:"";position:absolute;inset:0;background:linear-gradient(180deg,rgba(0,0,0,.45) 0,transparent 28%,transparent 45%,rgba(0,0,0,.85) 100%)}
+.hero>*{position:relative}
+.hero .top{position:absolute;top:12px;inset-inline:12px;display:flex;justify-content:space-between;align-items:center}
+.hero .top .x{all:unset;width:36px;height:36px;border-radius:11px;display:grid;place-items:center;background:rgba(0,0,0,.45);color:#fff;backdrop-filter:blur(6px)}
+.hero .badge{font:700 11px/1 var(--S-body);padding:6px 9px;border-radius:8px;background:rgba(0,0,0,.45);backdrop-filter:blur(6px);display:flex;align-items:center;gap:5px}
+.hero .badge svg.i{width:13px;height:13px}
+.hero .code{font:800 15px/1 var(--S-head);letter-spacing:2px;color:var(--S-codecol)}
+.hero h4{margin:4px 0 2px;font:800 28px/1.15 var(--S-head)}
+.hero .gen{display:flex;align-items:center;gap:4px;font-size:12px;opacity:.92}
+.hero .gen svg.i{width:13px;height:13px;color:#f3c34b;fill:#f3c34b}
+.hero .gen svg.i.off{fill:none;opacity:.6}
+.hero .gen span{margin-inline-start:4px}
+.stats{display:grid;grid-template-columns:auto 1fr auto;gap:9px 10px;align-items:center;padding:12px}
+.stats span{font-size:12px;color:var(--S-muted);font-weight:600}
+.stats b{font:700 13px/1 var(--S-head);min-width:26px;text-align:end}
+.stats .bar{height:7px}
+.facts{display:grid;grid-template-columns:repeat(3,1fr)}
+.facts div{padding:10px 8px;text-align:center}
+.facts div+div{border-inline-start:1px solid var(--S-line)}
+.facts b{display:block;font:800 18px/1.1 var(--S-head)}
+.facts small{font-size:10.5px;color:var(--S-muted);font-weight:600}
+.vars{display:flex;gap:6px}
+.vars span{flex:1;text-align:center;padding:9px 4px;border-radius:var(--S-rb);font:600 11.5px/1.3 var(--S-body);background:var(--S-chip);color:var(--S-muted)}
+.vars span b{display:block;font:800 14px/1.1 var(--S-head);color:var(--S-ink)}
+.vars span.on{background:var(--S-segon);color:var(--S-segonink)}
+.vars span.on b{color:inherit}
+.row2{display:grid;grid-template-columns:1fr 2fr;gap:8px}
+
+/* ================= أ: غرفة القيادة ================= */
+.A{--S-head:"Alexandria","IBM Plex Sans Arabic",sans-serif;--S-body:"IBM Plex Sans Arabic",Tahoma,sans-serif;
+  --S-bg:#11150f;--S-ink:#eef2e8;--S-muted:#94a08f;--S-card:#181e16;--S-line:#28311f;--S-line2:#46513c;--S-chip:#1f271b;--S-chip2:#1d241a;--S-track:#2a3324;
+  --S-bar:#0a0d09;--S-barink:#e3e9dc;--S-tabink:#76836f;--S-tabon:#f2c14e;--S-tabpill:rgba(242,193,78,.13);--S-segon:#f2c14e;--S-segonink:#1d1503;
+  --S-accent:#f2c14e;--S-onaccent:#1d1503;--S-good:#86d38f;--S-bad:#ff7b66;--S-warn:#f2c14e;--S-warnink:#f6cf72;--S-glass:rgba(20,26,18,.8);
+  --S-mapshade:linear-gradient(180deg,rgba(10,13,9,.25),transparent 30%,transparent 70%,rgba(10,13,9,.45));--S-imgbg:radial-gradient(circle at 50% 60%,#2b3524,#161b13);
+  --S-r:10px;--S-rb:8px;--S-rf:8px;--S-codecol:#f2c14e;--S-goshadow:0 0 0 1px rgba(242,193,78,.4),0 6px 16px -6px rgba(242,193,78,.55)}
+.A .card{background:linear-gradient(180deg,#1a2117,#151a13)}
+.A .card::before,.A .card::after{content:"";position:absolute;width:10px;height:10px;border:1.5px solid rgba(242,193,78,.55);pointer-events:none}
+.A .card::before{top:-1px;inset-inline-start:-1px;border-bottom:0;border-inline-end:0;border-start-start-radius:var(--S-r)}
+.A .card::after{bottom:-1px;inset-inline-end:-1px;border-top:0;border-inline-start:0;border-end-end-radius:var(--S-r)}
+.A .lbl{font-family:var(--S-head);font-weight:600;letter-spacing:.6px;color:#a7b49f}
+.A .sh-head small{color:var(--S-accent);letter-spacing:1.4px}
+.A .hud{border-bottom:1px solid #1c2318}
+.A .kpi .v{font-weight:700;letter-spacing:.3px}
+
+/* ================= ب: الأطلس ================= */
+.B{--S-head:"Noto Kufi Arabic","Noto Sans Arabic",sans-serif;--S-body:"Noto Sans Arabic",Tahoma,sans-serif;
+  --S-bg:#f4f5f1;--S-ink:#14201a;--S-muted:#5d6a63;--S-card:#ffffff;--S-line:#e4e8e2;--S-line2:#c3cbc4;--S-chip:#eaede7;--S-chip2:#eef1eb;--S-track:#e6eae4;
+  --S-bar:#ffffff;--S-barink:#14201a;--S-tabink:#7a857f;--S-tabon:#17603a;--S-tabpill:#dcefe2;--S-segon:#14201a;--S-segonink:#fff;
+  --S-accent:#17603a;--S-onaccent:#fff;--S-good:#17803f;--S-bad:#c4392c;--S-warn:#e3a21a;--S-warnink:#8b5c00;--S-glass:rgba(255,255,255,.9);
+  --S-mapshade:linear-gradient(180deg,rgba(255,255,255,.18),transparent 25%);--S-imgbg:linear-gradient(180deg,#f3f5f1,#e7ebe5);
+  --S-r:16px;--S-rb:12px;--S-rf:10px;--S-codecol:#9fe3b6;--S-goshadow:0 6px 14px -8px rgba(23,96,58,.8)}
+.B .card{border:none;box-shadow:0 1px 2px rgba(16,40,28,.07),0 0 0 1px var(--S-line)}
+.B .clock{box-shadow:0 1px 0 var(--S-line)}
+.B .tabs{box-shadow:0 -1px 0 var(--S-line)}
+.B .sheet{border-radius:22px 22px 0 0;margin-top:-2px;z-index:2}
+.B .sheet:not(.full)::before{content:"";display:block;width:40px;height:5px;border-radius:3px;background:#cfd5cf;margin:8px auto 0}
+.B .sh-head small{color:var(--S-accent)}
+
+/* ================= ج: النشرة ================= */
+.C{--S-head:"Readex Pro",sans-serif;--S-body:"Readex Pro",Tahoma,sans-serif;
+  --S-bg:#f2ede2;--S-ink:#1b1814;--S-muted:#6a6358;--S-card:#fbf8f1;--S-line:#ddd5c4;--S-line2:#b3a88f;--S-chip:#e7e0d1;--S-chip2:#2e2a23;--S-track:#e2dacb;
+  --S-bar:#1b1814;--S-barink:#f2ede2;--S-tabink:#8f8676;--S-tabon:#ffffff;--S-tabpill:#d9372b;--S-segon:#1b1814;--S-segonink:#f2ede2;
+  --S-accent:#d9372b;--S-onaccent:#fff;--S-good:#1b7a45;--S-bad:#d9372b;--S-warn:#e7a51c;--S-warnink:#7a5100;--S-glass:rgba(251,248,241,.93);
+  --S-mapshade:linear-gradient(180deg,rgba(242,237,226,.15),transparent 30%);--S-imgbg:#e9e2d3;
+  --S-r:4px;--S-rb:4px;--S-rf:4px;--S-codecol:#ffd45a;--S-goshadow:none}
+.C .card{border:none;border-top:3px solid var(--S-ink);border-radius:0;background:transparent}
+.C .todo .it{padding-inline:0}
+.C .kpi{padding-inline:0;border-top:3px solid var(--k);background:transparent}
+.C .kpi .v{font-size:32px;font-weight:600;letter-spacing:-.5px}
+.C .sh-head{border-bottom:5px solid var(--S-ink);margin:0 16px 12px;padding:16px 0 8px}
+.C .sh-head h4{font-size:30px;font-weight:700;letter-spacing:-.5px}
+.C .sh-head small{color:var(--S-accent);font-weight:700}
+.C .seg span{border-radius:2px;background:transparent;box-shadow:inset 0 0 0 1px var(--S-line2)}
+.C .seg span.on{box-shadow:none;background:var(--S-segon)}
+.C .lbl{color:var(--S-ink);font-weight:700;font-size:13px}
+.C .lbl::after{height:2px;background:var(--S-ink)}
+.C .ucard{border-top:1px solid var(--S-line);padding-inline:0}
+.C .ucard .img{border-radius:2px}
+.C .tabs a.on{color:#fff}
+.C .map{filter:sepia(.28) contrast(1.04)}
+.C .tabs a .pill{border-radius:4px;width:46px}
+.C .hero h4{font-size:32px;font-weight:700}
+.C .stats,.C .queue,.C .elect,.C .lock{padding-inline:0}
+.C .lock{border:none;border-top:3px dashed var(--S-line2)}
+.C .facts{border-top:3px solid var(--S-ink)}
 </style>
 
 <svg width="0" height="0" style="position:absolute" aria-hidden="true">
   <symbol id="money" viewBox="0 0 24 24"><rect x="2.5" y="6" width="19" height="12" rx="2"/><circle cx="12" cy="12" r="3"/><path d="M6 9v.01M18 15v.01"/></symbol>
-  <symbol id="oil" viewBox="0 0 24 24"><path d="M12 3s6 6.5 6 11a6 6 0 0 1-12 0c0-4.5 6-11 6-11z"/></symbol>
-  <symbol id="bank" viewBox="0 0 24 24"><path d="M3 10l9-6 9 6M5 10v8M9.5 10v8M14.5 10v8M19 10v8M3 21h18"/></symbol>
   <symbol id="stab" viewBox="0 0 24 24"><path d="M12 3l8 4v5c0 5-3.5 8-8 9-4.5-1-8-4-8-9V7z"/><path d="M9 12l2 2 4-4"/></symbol>
+  <symbol id="trend" viewBox="0 0 24 24"><path d="M3 17l6-6 4 4 8-8M15 7h6v6"/></symbol>
   <symbol id="cmd" viewBox="0 0 24 24"><path d="M3 21h18M5 21V10l7-5 7 5v11M9 21v-6h6v6"/></symbol>
   <symbol id="eco" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M15 9.5c-.5-1-1.6-1.5-3-1.5-1.7 0-3 .9-3 2s1.3 1.7 3 2 3 .9 3 2-1.3 2-3 2c-1.4 0-2.5-.5-3-1.5M12 6.5v11"/></symbol>
   <symbol id="army" viewBox="0 0 24 24"><path d="M12 3l8 4v5c0 5-3.5 8-8 9-4.5-1-8-4-8-9V7z"/></symbol>
@@ -193,7 +252,6 @@ bdi{unicode-bidi:isolate}
   <symbol id="msl" viewBox="0 0 24 24"><path d="M14 4l6 6-9 9-4-2-2-4zM5 15l-2 6 6-2M14 10l-2-2"/></symbol>
   <symbol id="fac" viewBox="0 0 24 24"><path d="M3 21V10l6 4V10l6 4V4h4v17zM2 21h20"/></symbol>
   <symbol id="lock" viewBox="0 0 24 24"><rect x="5" y="11" width="14" height="10" rx="2"/><path d="M8 11V8a4 4 0 0 1 8 0v3"/></symbol>
-  <symbol id="warn" viewBox="0 0 24 24"><path d="M12 4l9 16H3zM12 10v4M12 17v.01"/></symbol>
   <symbol id="vote" viewBox="0 0 24 24"><rect x="4" y="11" width="16" height="10" rx="1"/><path d="M8 11V4h8v7M10 7h4"/></symbol>
   <symbol id="ppl" viewBox="0 0 24 24"><circle cx="8" cy="8" r="3"/><circle cx="17" cy="9" r="2.5"/><path d="M2 20c0-4 3-6 6-6s6 2 6 6M14 20c0-3 1.5-5 4-5s4 2 4 5"/></symbol>
   <symbol id="star" viewBox="0 0 24 24"><path d="M12 3l2.7 5.6 6.1.9-4.4 4.3 1 6.1L12 17l-5.4 2.9 1-6.1-4.4-4.3 6.1-.9z"/></symbol>
@@ -203,111 +261,121 @@ bdi{unicode-bidi:isolate}
   <symbol id="plus" viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></symbol>
   <symbol id="minus" viewBox="0 0 24 24"><path d="M5 12h14"/></symbol>
   <symbol id="layers" viewBox="0 0 24 24"><path d="M12 3l9 5-9 5-9-5zM3 13l9 5 9-5"/></symbol>
+  <symbol id="target" viewBox="0 0 24 24"><circle cx="12" cy="12" r="8"/><circle cx="12" cy="12" r="3"/><path d="M12 2v3M12 19v3M2 12h3M19 12h3"/></symbol>
   <symbol id="x" viewBox="0 0 24 24"><path d="M6 6l12 12M18 6L6 18"/></symbol>
-  <symbol id="bolt" viewBox="0 0 24 24"><path d="M13 2L4 14h7l-1 8 9-12h-7z"/></symbol>
-  <symbol id="chev" viewBox="0 0 24 24"><path d="M15 6l-6 6 6 6"/></symbol>
-  <symbol id="tankpic" viewBox="0 0 70 40"><path d="M6 28h58a5 5 0 0 1 0 10H6a5 5 0 0 1 0-10z" fill="currentColor" opacity=".55" stroke="none"/><path d="M14 28l4-9h26l5 9z" fill="currentColor" opacity=".8" stroke="none"/><rect x="24" y="14" width="14" height="6" rx="2" fill="currentColor" stroke="none"/><path d="M38 16h28" stroke="currentColor" stroke-width="2.5"/></symbol>
-  <symbol id="apcpic" viewBox="0 0 70 40"><path d="M8 18h46l8 8v6H8z" fill="currentColor" opacity=".75" stroke="none"/><circle cx="18" cy="33" r="5" fill="currentColor" stroke="none"/><circle cx="34" cy="33" r="5" fill="currentColor" stroke="none"/><circle cx="50" cy="33" r="5" fill="currentColor" stroke="none"/><rect x="26" y="12" width="12" height="6" rx="2" fill="currentColor" stroke="none"/></symbol>
-  <symbol id="infpic" viewBox="0 0 70 40"><path d="M10 20h30l8 7h12v6H10z" fill="currentColor" opacity=".75" stroke="none"/><circle cx="20" cy="33" r="5" fill="currentColor" stroke="none"/><circle cx="50" cy="33" r="5" fill="currentColor" stroke="none"/><circle cx="62" cy="14" r="3" fill="currentColor" stroke="none"/><path d="M62 17v9" stroke="currentColor" stroke-width="3"/></symbol>
+  <symbol id="clock" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></symbol>
+  <symbol id="menu" viewBox="0 0 24 24"><path d="M4 7h16M4 12h16M4 17h10"/></symbol>
+  <symbol id="flagi" viewBox="0 0 24 24"><path d="M5 21V4M5 4h11l-2 4 2 4H5"/></symbol>
+  <symbol id="wrench" viewBox="0 0 24 24"><path d="M14.5 6.5a4 4 0 0 0 5 5L12 19a2.1 2.1 0 0 1-3-3z"/></symbol>
 </svg>
 
 <div class="wrap">
   <header style="display:flex;flex-direction:column;gap:12px">
-    <span class="tag">مراجعة الواجهة · 22 تشرين الثاني 2026</span>
-    <h1>العالم 2026: ثلاث نماذج لواجهة أوضح</h1>
-    <p class="lede">صوّرت كل الصفحات بمقاس التلفون (5 تبويبات و19 قسم فرعي و40 شاشة تقريباً) وكتبت المشاكل تحت بالأرقام. بعدين ثلاث اتجاهات تصميم، كل واحد مطبّق على نفس الشاشات الثلاثة: الخريطة، القيادة، والإنتاج الحربي. الأرقام بالنماذج من لعبتك (العراق، 10 كانون الأول 2026). اختار واحد، أو گول «أ بس بألوان ج»، وأنفّذه على اللعبة كلها.</p>
+    <span class="tag">مراجعة الواجهة · النسخة الثانية · 22 تشرين الثاني 2026</span>
+    <h1>العالم 2026: ثلاث نماذج بشكلها الحقيقي</h1>
+    <p class="lede">كل نموذج مبني على خريطتك الحقيقية وصور سلاحك الحقيقية وأرقام لعبتك (العراق بحرب ويا إيران، 10 كانون الأول 2026)، بأربع شاشات بحجم التلفون: الخريطة، القيادة، الإنتاج الحربي، وبطاقة سلاح. القطع على الخريطة بعدها بالشكل الحالي؛ تتغير وياها بالنموذج اللي تختاره. على التلفون اسحب الشاشات يمين ويسار.</p>
   </header>
 
+  <section class="dir" id="dirA" data-dir="A"></section>
+  <section class="dir" id="dirB" data-dir="B"></section>
+  <section class="dir" id="dirC" data-dir="C"></section>
+
   <section style="display:flex;flex-direction:column;gap:16px">
-    <h2>شنو شفت بالواجهة الحالية</h2>
+    <h2>ليش لازم تتغير: 12 مشكلة بالواجهة الحالية</h2>
     <div class="now">
       <figure><img src="img/now-map.webp" alt="الخريطة الحالية" loading="lazy"><figcaption>هسه: الخريطة</figcaption></figure>
       <figure><img src="img/now-cmd.webp" alt="القيادة الحالية" loading="lazy"><figcaption>هسه: القيادة</figcaption></figure>
       <figure><img src="img/now-prod.webp" alt="الإنتاج الحالي" loading="lazy"><figcaption>هسه: الإنتاج</figcaption></figure>
     </div>
     <div class="audit">
-      <div class="issue"><b class="n">1</b><h3>ماكو تسلسل بالأهمية</h3><p>كل شي بنفس الوزن: نفس البطاقة البيج بنفس الحد ونفس حجم الخط. العين ما تعرف وين تبدي، والرقم المهم (الخزينة سالبة؟ انتخابات قريبة؟) يضيع بين الشروح.</p></div>
-      <div class="issue"><b class="n">2</b><h3>الشريط الفوقاني ياكل ربع الشاشة</h3><p>سطرين: العلم و3 كبسولات أرقام، وتحتها أزرار السرعة والتاريخ والنجمة. حوالي 110 بكسل، وزر الإيقاف الذهبي الكبير يبين أهم زر باللعبة.</p></div>
-      <div class="issue"><b class="n">3</b><h3>ثلاث طبقات تنقّل</h3><p>تبويب تحت ← لوحة ← أقسام فرعية بشبكة أزرار تنكسر لسطرين (4 فوق و2 تحت بالاقتصاد) ← فلاتر. المستخدم يضيع وين هو.</p></div>
-      <div class="issue"><b class="n">4</b><h3>جدار نصوص</h3><p>تحت كل عنوان فقرة رمادية صغيرة (12–13 بكسل) تشرح النظام. الشرح مكانه «؟» أو المرة الأولى بس، مو كل مرة.</p></div>
-      <div class="issue"><b class="n">5</b><h3>الإيموجي بكل مكان</h3><p>💰🏗🛢🪖 بالأزرار والتبويبات والقوائم: يطلع مختلف من تلفون لتلفون، ألوانه تتعارك ويا التصميم، ويخلي اللعبة تبين بسيطة. الأيقونات SVG موجودة بالتبويبات وبعض العناوين بس.</p></div>
-      <div class="issue"><b class="n">6</b><h3>الأرقام مو مقروءة</h3><p>«22 مليار $» و«$ 251 مليار» و«4.4 مليون ب/ي» بأشكال مختلفة، والوحدة بنفس حجم الرقم. بالقوائم الرقم بأقصى اليسار والاسم بأقصى اليمين، والعين لازم تعبر الشاشة.</p></div>
-      <div class="issue"><b class="n">7</b><h3>الأزرار ستة أنواع</h3><p>كبسولة، ذهبي عريض، إطار، شريحة، سهم، رابط. ما تعرف شنو الزر الأساسي بالشاشة.</p></div>
-      <div class="issue"><b class="n">8</b><h3>الألوان بلا معنى ثابت</h3><p>ذهبي، أخضر، بنفسجي (تقدم البحث)، أحمر، أزرق (قواتنا قبل التوحيد). الأخضر مرة «زين» ومرة «إحنا» ومرة «اقتصاد».</p></div>
-      <div class="issue"><b class="n">9</b><h3>الخط صغير وضعيف</h3><p>IBM Plex Sans Arabic خط زين، بس العناوين صغيرة وبنفس العائلة، فماكو شخصية. أرقام البطاقات أصغر من اللازم لتلفون.</p></div>
-      <div class="issue"><b class="n">10</b><h3>الخريطة مزدحمة بالتنبيهات</h3><p>تنبيهات تطلع فوق الخريطة ووسطها، والمستشار يغطي نص الشاشة، و5 أزرار بيضاء كبيرة على اليسار.</p></div>
-      <div class="issue"><b class="n">11</b><h3>قوائم طويلة بلا تلخيص</h3><p>21 شريحة «× 1 مشاة · بغداد · 100٪» بالجيش، وشجرة البحث 6,700 بكسل تمرير. لازم ملخص فوق والتفاصيل عند الطلب.</p></div>
-      <div class="issue"><b class="n">12</b><h3>الحالة ما تنشاف بلمحة</h3><p>شنو مقفول، شنو شغّال، شنو يحتاجني هسه؟ لازم شكل (شارة، شريط خطوات، لون جانبي) مو بس كلام.</p></div>
+      <div class="issue"><b class="n">1</b><h3>ماكو تسلسل بالأهمية</h3><p>كل شي نفس البطاقة البيج ونفس الخط. العين ما تعرف وين تبدي.</p></div>
+      <div class="issue"><b class="n">2</b><h3>الشريط الفوقاني ياكل ربع الشاشة</h3><p>سطرين بحوالي 110 بكسل، وزر الإيقاف الذهبي الكبير يبين أهم زر باللعبة.</p></div>
+      <div class="issue"><b class="n">3</b><h3>ثلاث طبقات تنقّل</h3><p>تبويب ← لوحة ← شبكة أقسام تنكسر لسطرين ← فلاتر.</p></div>
+      <div class="issue"><b class="n">4</b><h3>جدار نصوص</h3><p>فقرة رمادية صغيرة تحت كل عنوان تشرح النظام كل مرة.</p></div>
+      <div class="issue"><b class="n">5</b><h3>الإيموجي بكل مكان</h3><p>يطلع مختلف من تلفون لتلفون ويخلي اللعبة تبين بسيطة.</p></div>
+      <div class="issue"><b class="n">6</b><h3>الأرقام مو مقروءة</h3><p>كل رقم مكتوب بشكل، والوحدة بحجم الرقم، والرقم بعيد عن اسمه.</p></div>
+      <div class="issue"><b class="n">7</b><h3>ستة أنواع أزرار</h3><p>ما تعرف شنو الزر الأساسي بالشاشة.</p></div>
+      <div class="issue"><b class="n">8</b><h3>الألوان بلا معنى ثابت</h3><p>الأخضر مرة «زين» ومرة «إحنا» ومرة «اقتصاد».</p></div>
+      <div class="issue"><b class="n">9</b><h3>الخط صغير وبلا شخصية</h3><p>العناوين والنص نفس العائلة ونفس الحجم تقريباً.</p></div>
+      <div class="issue"><b class="n">10</b><h3>الخريطة مزدحمة بالتنبيهات</h3><p>تنبيهات وسط الخريطة، والمستشار يغطي نصها، و5 أزرار بيضاء كبيرة.</p></div>
+      <div class="issue"><b class="n">11</b><h3>قوائم طويلة بلا تلخيص</h3><p>21 شريحة فرق بالجيش، وشجرة البحث 6,700 بكسل تمرير.</p></div>
+      <div class="issue"><b class="n">12</b><h3>الحالة ما تنشاف بلمحة</h3><p>المقفول والشغّال واللي ينتظرك كله كلام، بلا شكل.</p></div>
     </div>
   </section>
 
   <section class="pick">
-    <h2 style="flex-basis:100%">القواعد اللي تمشي بالنماذج الثلاثة كلها</h2>
-    <div class="rules">
-      <span>شريط فوقاني سطر واحد + سطر وقت رفيع</span><span>تنقّل طبقتين بس: تبويب ← شرائح تنسحب أفقياً</span><span>«شنو يحتاجني هسه» أول شي بكل لوحة</span><span>رقم كبير + وحدة صغيرة</span><span>أيقونات خطية وحدة بدل كل الإيموجي</span><span>زر أساسي واحد لكل شاشة</span><span>ألوان بمعنى ثابت: أخضر = زين، أحمر = خطر، كهرماني = ينتظرك</span><span>الشرح يروح لـ«؟»</span><span>المقفول يبين خطواته بشريط</span><span>خط عناوين غير عن خط النص</span>
-    </div>
-  </section>
-
-  <section class="dir" id="dirA" data-dir="A"></section>
-  <section class="dir" id="dirB" data-dir="B"></section>
-  <section class="dir" id="dirC" data-dir="C"></section>
-
-  <section class="pick">
-    <h2 style="flex-basis:100%">الخطوة الجاية</h2>
-    <p>گلّي الحرف (أ أو ب أو ج)، أو اخلط («أ بس النهار ب»). بعدها أكتب نظام التصميم (ألوان، خطوط، أيقونات، أزرار) وأطبّقه على كل اللوحات قسم قسم، وأصوّر كل شاشة قبل وبعد. الحفظ ما يتأثر لأن التغيير بالشكل بس.</p>
+    <h2>الخطوة الجاية</h2>
+    <p>گلّي الحرف (أ أو ب أو ج)، أو اخلط («أ بالليل وب بالنهار»، «ج بس أهدأ»). بعدها أكتب نظام التصميم كامل وأطبّقه على كل اللوحات قسم قسم، وأصوّر كل شاشة قبل وبعد. حفظك ما يتأثر لأن التغيير بالشكل بس.</p>
   </section>
 </div>
 
 <script>
 const ic = (n, c = '') => `<svg class="i ${c}" aria-hidden="true"><use href="#${n}"/></svg>`;
 const DIRS = {
-  A: { key: 'أ', name: 'غرفة القيادة', d: 'ليلي تكتيكي: فحمي زيتوني وإشارات كهرمانية مثل شاشة عمليات. الأرقام كبيرة وواضحة بالظلام، والكهرماني بس للي ينتظرك. يريّح العين بالليل ويعطي هيبة عسكرية.', r: ['خط العناوين: Alexandria', 'النص: IBM Plex Sans Arabic', 'ثيم ليلي أساسي', 'شبكة إحداثيات خفيفة على الخريطة'] },
-  B: { key: 'ب', name: 'الأطلس', d: 'نهاري نظيف مثل تطبيق حديث: أبيض وحبر كحلي، وأخضر وطني واحد للفعل. أوضح شي بالشمس، وأسهل شي للي أول مرة يلعب.', r: ['خط العناوين: Noto Kufi Arabic', 'النص: Noto Sans Arabic', 'ظلال ناعمة بدل الحدود', 'لون فعل واحد'] },
-  C: { key: 'ج', name: 'النشرة', d: 'جريء مثل نشرة أخبار: شريط أسود فوق وتحت، كل قسم إله لون (اقتصاد أخضر، جيش زيتوني، سياسة أزرق، مجتمع بنفسجي)، والأرقام كبيرة. أكثر شخصية، يتميز عن أي لعبة ثانية.', r: ['خط واحد بأوزان: Readex Pro', 'لون لكل قسم', 'خطوط فاصلة بدل البطاقات', 'زوايا حادة'] },
+  A: { key: 'أ', name: 'غرفة القيادة', map: 'map-dark', d: 'ليلي تكتيكي: فحمي زيتوني وإشارات كهرمانية، وزوايا تصويب على البطاقات مثل شاشة عمليات. الكهرماني بس للي ينتظرك ولزر الفعل. هيبة عسكرية ويريّح العين بالليل.', r: ['عناوين Alexandria', 'نص IBM Plex Sans Arabic', 'ليلي أساسي', 'زوايا تصويب', 'زجاج شفاف فوق الخريطة'] },
+  B: { key: 'ب', name: 'الأطلس', map: 'map-light', d: 'نهاري نظيف مثل تطبيق حديث: أبيض وحبر كحلي وأخضر وطني واحد للفعل، واللوحات تطلع من تحت مثل ورقة فوق الخريطة. أوضح شي بالشمس وأسهل شي للي أول مرة يلعب.', r: ['عناوين Noto Kufi Arabic', 'نص Noto Sans Arabic', 'نهاري أساسي', 'ظلال ناعمة', 'لون فعل واحد'] },
+  C: { key: 'ج', name: 'النشرة', map: 'map-light', d: 'جريء مثل نشرة أخبار عسكرية: شريط أسود فوق وتحت، خطوط فاصلة سميكة بدل البطاقات، أرقام كبيرة، وكل قسم إله لون (اقتصاد أخضر، جيش زيتوني، سياسة أزرق، مجتمع بنفسجي). أحمر للفعل. أكثر واحد بيه شخصية.', r: ['خط واحد Readex Pro بأوزان', 'لون لكل قسم', 'خطوط سميكة', 'زوايا حادة', 'أحمر للفعل'] },
 };
-const hud = () => `<div class="hud"><div class="flag">ع</div><div class="res">
-  <div class="r">${''}<b class="num">22<small style="font-size:11px"> مليار $</small></b><small>الخزينة · +2.6/شهر</small></div>
-  <div class="r"><b class="num">57</b><small>الاستقرار</small></div>
-  <div class="r"><b class="num">+2.1٪</b><small>النمو</small></div></div>${ic('bank')}</div>
-  <div class="clock"><span class="date">10 كانون الأول 2026</span><span class="ap">${ic('star')}6</span><div class="sp"><button aria-label="إيقاف">${ic('pause')}</button><button class="on" aria-label="تشغيل">${ic('play')}</button><button aria-label="أسرع">${ic('ff')}</button></div></div>`;
-const tabs = (on, dot) => `<nav class="tabs">${[['cmd', 'القيادة'], ['eco', 'الاقتصاد'], ['army', 'القوات'], ['rd', 'البحث'], ['globe', 'العالم']].map(([k, n]) => `<a class="${k === on ? 'on' : ''}" href="#">${ic(k)}${n}${dot && k === 'cmd' ? '<span class="dot">2</span>' : ''}</a>`).join('')}</nav>`;
-const S1 = () => `${hud()}<div class="map">
-  <div class="fab"><button aria-label="كبّر">${ic('plus')}</button><button aria-label="صغّر">${ic('minus')}</button><button aria-label="طبقات">${ic('layers')}</button></div>
-  <span class="cty cap" style="top:28%;right:46%">بغداد</span><span class="cty" style="top:12%;right:58%">الموصل</span><span class="cty" style="top:20%;right:34%">كركوك</span><span class="cty" style="top:52%;right:24%">العمارة</span><span class="cty cap" style="top:70%;right:14%">البصرة</span><span class="cty" style="top:18%;right:8%">كرمانشاه</span>
-  <span class="unit me" style="top:16%;right:52%">${ic('tank')}<span class="n">3</span></span><span class="unit me" style="top:33%;right:40%">${ic('tank')}<span class="n">2</span></span><span class="unit me" style="top:47%;right:30%">${ic('ppl')}<span class="n">4</span></span><span class="unit me" style="top:62%;right:22%">${ic('tank')}<span class="n">1</span></span>
-  <span class="unit foe" style="top:24%;right:16%">${ic('tank')}<span class="n">5</span></span><span class="unit foe" style="top:45%;right:8%">${ic('tank')}<span class="n">3</span></span>
-  <div class="toast">${ic('warn')}<div><b>قضية: غلاء وانقطاع كهرباء</b><br>الشارع ينتظر قرارك. <u>شوف القضية</u></div></div></div>${tabs('', true)}`;
-const S2 = () => `${hud()}<div class="sheet"><div class="sh-head"><h4>القيادة</h4><button class="x" aria-label="سد">${ic('x')}</button></div>
+const sb = () => `<div class="sb"><span>11:24</span><span>●●● 79%</span></div>`;
+const hud = () => `${sb()}<div class="hud"><div class="flag">ع</div><div class="res">
+  <div class="r"><b>22<u>مليار $</u></b><small>${ic('money')}الخزينة <span class="up">+2.6</span></small></div>
+  <div class="r"><b>57</b><small>${ic('stab')}الاستقرار</small></div>
+  <div class="r"><b>+2.1٪</b><small>${ic('trend')}النمو</small></div></div><button class="menu" aria-label="القائمة">${ic('menu')}</button></div>
+  <div class="clock"><span class="date"><i></i>10 كانون الأول 2026</span><span class="ap">${ic('star')}6</span><div class="sp"><button aria-label="إيقاف">${ic('pause')}</button><button class="on" aria-label="تشغيل">${ic('play')}</button><button aria-label="أسرع">${ic('ff')}</button></div></div>`;
+const tabs = (on, dot) => `<nav class="tabs">${[['cmd', 'القيادة'], ['eco', 'الاقتصاد'], ['army', 'القوات'], ['rd', 'البحث'], ['globe', 'العالم']].map(([k, n]) => `<a class="${k === on ? 'on' : ''}" href="#">${k === on ? '<span class="pill"></span>' : ''}${ic(k)}${n}${dot && k === 'cmd' ? '<span class="dot">3</span>' : ''}</a>`).join('')}</nav>`;
+const spark = (pts, col) => { const mx = Math.max(...pts), mn = Math.min(...pts), d = pts.map((v, i) => `${(100 - i / (pts.length - 1) * 100).toFixed(1)},${(24 - (v - mn) / (mx - mn || 1) * 20).toFixed(1)}`).join(' ');
+  return `<svg class="spark" viewBox="0 0 100 26" preserveAspectRatio="none" aria-hidden="true"><polygon points="100,26 ${d} 0,26" fill="${col}" fill-opacity=".14"/><polyline points="${d}" fill="none" stroke="${col}" stroke-width="1.8" vector-effect="non-scaling-stroke"/></svg>`; };
+const S1 = D => `${hud()}<div class="map" style="background-image:url(img/${D.map}.webp)"><div class="shade"></div>
+  <div class="fab"><button aria-label="كبّر">${ic('plus')}</button><button aria-label="صغّر">${ic('minus')}</button><button aria-label="طبقات">${ic('layers')}</button><button aria-label="غرفة العمليات">${ic('target')}</button></div>
+  <div class="chipfront"><span class="dot"></span><div><b>حرب إيران · الجبهة</b>ميزان القوة 1 : 1.3</div></div>
+  <div class="toast"><span class="ic">${ic('vote')}</span><div class="tx"><b>الشارع ينتظر قرارك</b>غلاء وانقطاع كهرباء · باقي 12 يوم</div><button class="go">قرّر</button></div></div>${tabs('', true)}`;
+const S2 = () => `${hud()}<div class="sheet"><div class="sh-head"><div class="t"><small>لوحة القيادة</small><h4>العراق</h4></div><button class="x" aria-label="سد">${ic('x')}</button></div>
   <div class="body">
-  <span class="lbl">يحتاجك هسه</span>
-  <div class="todo">
-    <div class="it"><span class="ic w">${ic('vote')}</span><div class="tx"><b>قضية: غلاء وانقطاع كهرباء</b><span>الشارع ينتظر قرارك · ينتهي بـ12 يوم</span></div><button class="go">قرّر</button></div>
-    <div class="it"><span class="ic b">${ic('warn')}</span><div class="tx"><b>قطع غيار روسيا 70٪</b><span>طيارات محبوسة. حسّن العلاقة أو اشتري بديل</span></div><button class="go ghost">السياسة</button></div>
-    <div class="it"><span class="ic g">${ic('fac')}</span><div class="tx"><b>4 خطوط إنتاج فاضية</b><span>اطلب فرق أو صواريخ</span></div><button class="go ghost">الإنتاج</button></div>
+  <span class="lbl">يحتاجك هسه <em>3</em></span>
+  <div class="card todo">
+    <div class="it"><span class="ic w">${ic('vote')}</span><div class="tx"><b>غلاء وانقطاع كهرباء</b>الشارع ينتظر قرارك · 12 يوم</div><button class="go">قرّر</button></div>
+    <div class="it"><span class="ic b">${ic('wrench')}</span><div class="tx"><b>قطع غيار روسيا 70٪</b>طيارات محبوسة على الأرض</div><button class="go ghost">حلّها</button></div>
+    <div class="it"><span class="ic g">${ic('fac')}</span><div class="tx"><b>3 خطوط إنتاج فاضية</b>تگدر تطلب فرق أو صواريخ</div><button class="go ghost">اطلب</button></div>
   </div>
   <span class="lbl">البلد بلمحة</span>
   <div class="kpis">
-    <div class="kpi eco"><span class="t">${ic('money')}الخزينة</span><span class="v">22<small>مليار $</small></span><span class="d up">▲ 2.6 بالشهر</span></div>
-    <div class="kpi pol"><span class="t">${ic('stab')}الاستقرار</span><span class="v">57<small>/ 100</small></span><div class="bar"><i style="width:57%"></i></div></div>
-    <div class="kpi mil"><span class="t">${ic('army')}قوة الجيش</span><span class="v">660</span><span class="d" style="color:var(--S-muted)">الترتيب 34 بالعالم</span></div>
-    <div class="kpi soc"><span class="t">${ic('ppl')}السكان</span><span class="v">47.1<small>مليون</small></span><span class="d up">▲ 1.9٪ بالسنة</span></div>
+    <div class="card kpi" style="--k:var(--S-good)"><span class="t">${ic('money')}الخزينة</span><span class="v">22<small>مليار $</small></span>${spark([14, 15, 17, 16, 18, 19, 21, 22], 'var(--S-good)')}<span class="d up">▲ 2.6 بالشهر</span></div>
+    <div class="card kpi" style="--k:#4f86d6"><span class="t">${ic('stab')}الاستقرار</span><span class="v">57<small>/ 100</small></span><div class="bar" style="margin-top:8px"><i style="width:57%"></i></div><span class="d" style="color:var(--S-muted);margin-top:4px">الشارع 62 · الأحزاب 57</span></div>
+    <div class="card kpi" style="--k:#8fa35a"><span class="t">${ic('army')}قوة الجيش</span><span class="v">660</span><span class="d" style="color:var(--S-muted)">الترتيب 34 بالعالم</span></div>
+    <div class="card kpi" style="--k:#a77cc4"><span class="t">${ic('ppl')}السكان</span><span class="v">47.1<small>مليون</small></span><span class="d up">▲ 1.9٪ بالسنة</span></div>
   </div>
-  <div class="todo"><div class="it"><span class="ic w">${ic('vote')}</span><div class="tx"><b>الانتخابات: تشرين الثاني 2029</b><span>تعتمد على الشارع والأحزاب والمعنويات</span></div><span class="num" style="font:700 15px var(--S-head)">3 سنين</span></div></div>
+  <div class="card elect"><span class="ic n">${ic('vote')}</span><div class="tx"><b>الانتخابات الجاية</b>تشرين الثاني 2029 · تعتمد على الشارع والأحزاب</div><div class="cd num">2.9<small>سنة</small></div></div>
   </div></div>${tabs('cmd', true)}`;
-const S3 = () => `${hud()}<div class="sheet"><div class="sh-head"><h4>الإنتاج الحربي</h4><button class="x" aria-label="سد">${ic('x')}</button></div>
-  <div class="seg"><span class="on">بر</span><span>جو</span><span>صواريخ ودفاع</span><span>بحر</span><span>مصانع</span></div>
+const S3 = () => `${hud()}<div class="sheet"><div class="sh-head"><div class="t"><small>القوات</small><h4>الإنتاج الحربي</h4></div><button class="x" aria-label="سد">${ic('x')}</button></div>
+  <div class="seg"><span class="on">${ic('tank')}بر</span><span>${ic('plane')}جو</span><span>${ic('msl')}صواريخ</span><span>${ic('ship')}بحر</span></div>
   <div class="body">
-  <div class="queue"><div class="qrow"><b>الخطوط 1 / 4</b><span style="color:var(--S-muted)">السرعة ×1.00</span></div>
-    <div class="qrow"><b>فرقة آلية</b><div class="bar"><i style="width:62%"></i></div><span class="num">11 يوم</span></div></div>
-  <div class="lock"><span class="ic">${ic('lock')}</span><div class="tx"><b>صنع وطني: مقفول</b>يفتحه بحث «مصنع الدبابات الوطني»
-    <div class="steps"><i class="ok"></i><i class="cur"></i><i></i></div><div class="stepl"><span>الصناعة 2 ✓</span><span>الدروع 3</span><span>المصنع</span></div></div></div>
-  <span class="lbl">اطلب</span>
+  <div class="card queue"><div class="qrow"><b>خط 1</b><span>فرقة آلية · <bdi dir="ltr">BMP-3</bdi></span><span class="num" style="margin-inline-start:auto">باقي 11 يوم</span></div><div class="bar"><i style="width:62%"></i></div>
+    <div class="qrow"><span>الخطوط الشغّالة <b class="num">1 / 4</b></span><span style="margin-inline-start:auto">السرعة ×1.00</span></div></div>
+  <div class="card lock"><span class="ic n">${ic('lock')}</span><div class="tx"><b>صنع وطني: مقفول</b>يفتحه بحث «مصنع الدبابات الوطني»
+    <div class="steps"><i class="ok"></i><i class="cur"></i><i></i></div><div class="stepl"><span class="ok">الصناعة 2 ✓</span><span>الدروع 2 من 3</span><span>المصنع</span></div></div></div>
+  <span class="lbl">اطلب فرقة</span>
   <div class="units">
-    <div class="ucard"><div class="img">${'<svg viewBox="0 0 70 40" aria-hidden="true"><use href="#infpic"/></svg>'}</div><div><div class="nm">فرقة مشاة</div><div class="meta"><span>0.35 مليار $</span><span>14 يوم</span></div><span class="src loc">صنع محلي</span></div><button class="go">اطلب</button></div>
-    <div class="ucard"><div class="img"><svg viewBox="0 0 70 40" aria-hidden="true"><use href="#apcpic"/></svg></div><div><div class="nm">فرقة آلية · <bdi dir="ltr">BMP-1</bdi></div><div class="meta"><span>1.6 مليار $</span><span>28 يوم</span></div><span class="src imp">مستورد من روسيا</span></div><button class="go">اطلب</button></div>
-    <div class="ucard"><div class="img"><svg viewBox="0 0 70 40" aria-hidden="true"><use href="#tankpic"/></svg></div><div><div class="nm">فرقة مدرعة · <bdi dir="ltr">T-72M</bdi></div><div class="meta"><span>2.1 مليار $</span><span>35 يوم</span></div><span class="src imp">مستورد من روسيا</span></div><button class="go">اطلب</button></div>
+    <div class="card ucard"><div class="img"><img src="img/v8_inf_east_v.webp" alt=""></div><div><div class="nm">فرقة مشاة</div><div class="meta"><span>${ic('money')}0.35 مليار</span><span>${ic('clock')}14 يوم</span></div><span class="src loc">${ic('flagi')}صنع محلي</span></div><button class="go">اطلب</button></div>
+    <div class="card ucard"><div class="img"><img src="img/u_bmp3_v.webp" alt=""></div><div><div class="nm">فرقة آلية · <bdi dir="ltr">BMP-3</bdi></div><div class="meta"><span>${ic('money')}1.6 مليار</span><span>${ic('clock')}28 يوم</span></div><span class="src imp">${ic('ship')}مستورد · روسيا</span></div><button class="go">اطلب</button></div>
+    <div class="card ucard"><div class="img"><img src="img/u_t72_v.webp" alt=""></div><div><div class="nm">فرقة مدرعة · <bdi dir="ltr">T-72M</bdi></div><div class="meta"><span>${ic('money')}2.1 مليار</span><span>${ic('clock')}35 يوم</span></div><span class="src imp">${ic('ship')}مستورد · روسيا</span></div><button class="go">اطلب</button></div>
   </div></div></div>${tabs('army')}`;
+const S4 = () => `${sb()}<div class="sheet full">
+  <div class="hero" style="background-image:url(img/v6_fl_tank.webp)"><div class="top"><span class="badge">${ic('flagi')}صنع وطني 100٪</span><button class="x" aria-label="رجوع">${ic('x')}</button></div>
+    <span class="code"><bdi dir="ltr">ZR-10</bdi></span><h4>دبابة زئير</h4><span class="gen">${ic('star')}${ic('star', 'off')}${ic('star', 'off')}${ic('star', 'off')}<span>الجيل الأول · الدروع 4 تفتح <bdi dir="ltr">ZR-20</bdi></span></span></div>
+  <div class="body" style="padding-top:14px">
+    <div class="card facts"><div><b class="num">2.0</b><small>مليار $</small></div><div><b class="num">45</b><small>يوم</small></div><div><b class="num">×1.04</b><small>قوة الجيش</small></div></div>
+    <span class="lbl">الأرقام</span>
+    <div class="card stats">
+      <span>هجوم</span><div class="bar" style="--k:#e8664f"><i style="width:63%"></i></div><b class="num">6.3</b>
+      <span>دفاع</span><div class="bar" style="--k:#4f8fe8"><i style="width:63%"></i></div><b class="num">6.3</b>
+      <span>سرعة</span><div class="bar" style="--k:#5fbf73"><i style="width:35%"></i></div><b class="num">3.5</b>
+      <span>مدى</span><div class="bar" style="--k:#e3b23c"><i style="width:35%"></i></div><b class="num">3.5</b>
+    </div>
+    <span class="lbl">النسخة</span>
+    <div class="vars"><span class="on"><b><bdi dir="ltr">ZR-10</bdi></b>الأساس</span><span><b><bdi dir="ltr">ZR-10K</bdi></b>قيادة</span><span><b><bdi dir="ltr">ZR-10E</bdi></b>تصدير</span></div>
+    <div class="row2"><button class="go ghost big">×5</button><button class="go big">اطلب فرقة</button></div>
+  </div></div>`;
 for (const k of ['A', 'B', 'C']) { const D = DIRS[k], el = document.getElementById('dir' + k);
   el.innerHTML = `<div class="dirhead"><span class="key">${D.key}</span><h2>${D.name}</h2></div><p class="lede">${D.d}</p><div class="rules">${D.r.map(x => `<span>${x}</span>`).join('')}</div>
-  <div class="phones">${[['الخريطة', S1], ['القيادة', S2], ['الإنتاج الحربي', S3]].map(([c, f]) => `<div class="ph"><div class="screen S ${k}">${f()}</div><div class="cap">${D.key} · ${c}</div></div>`).join('')}</div>`; }
+  <div class="phones">${[['الخريطة', S1], ['القيادة', S2], ['الإنتاج الحربي', S3], ['بطاقة السلاح', S4]].map(([c, f]) => `<div class="ph"><div class="screen S ${k}">${f(D)}</div><div class="cap">${D.key} · ${c}</div></div>`).join('')}</div>`; }
 </script>

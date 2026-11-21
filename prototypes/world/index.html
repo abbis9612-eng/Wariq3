@@ -460,6 +460,32 @@ html[data-skin] .todo{background:var(--card);border:0;box-shadow:var(--cardsh);b
 html[data-skin] .todo.bad{box-shadow:inset -3px 0 0 var(--neg),var(--cardsh)}
 html[data-skin] .todo button{background:var(--act);color:var(--onact);border:0;font-weight:700;min-height:36px;box-shadow:0 6px 14px -8px var(--act)}
 html[data-skin="news"] .todo{background:transparent;border-top:3px solid var(--ink);border-radius:0;box-shadow:none}
+/* v5-0: قوائم الجيش */
+html[data-skin] .urow{display:flex;gap:10px;align-items:center;padding:8px 0;border-bottom:1px solid var(--line)}
+html[data-skin] .urow img{width:64px!important;height:44px!important}
+.ut{flex:1;min-width:0;display:flex;flex-direction:column}.ut b{font-family:var(--f-head);font-size:14px}.ut small{color:var(--dim);font-size:11.5px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.un{font:800 17px/1 var(--f-head);font-variant-numeric:tabular-nums}
+.ugrp{background:var(--card);box-shadow:var(--cardsh);border-radius:var(--r);margin:8px 0;overflow:hidden}
+.ugrp summary{display:flex;gap:10px;align-items:center;padding:10px 12px;cursor:pointer;list-style:none}.ugrp summary::-webkit-details-marker{display:none}
+.ugrp summary img{width:88px;height:56px;object-fit:contain;flex:none}
+.uc{text-align:center}.uc b{display:block;font:800 24px/1 var(--f-head);font-variant-numeric:tabular-nums}.uc small{font-size:11px;color:var(--dim)}
+.ubar{display:flex;align-items:center;gap:8px;padding:0 12px 10px;font-size:12px;color:var(--dim)}.ubar>div{flex:1}.ubar b{color:var(--ink);font-variant-numeric:tabular-nums}
+.ulist{display:grid;grid-template-columns:1fr 1fr;gap:6px;padding:0 12px 12px}
+.ulist button{display:flex;flex-direction:column;align-items:flex-start;gap:2px;text-align:start;padding:7px 9px;position:relative;overflow:hidden;min-height:44px}
+.ulist button span{font-size:12.5px;font-weight:700}.ulist button small{font-size:11px;color:var(--dim)}
+.ulist button i{position:absolute;inset-inline-start:0;bottom:0;height:3px;width:var(--v);background:var(--good)}
+html[data-skin="news"] .ugrp{background:transparent;box-shadow:none;border-top:3px solid var(--ink);border-radius:0}
+/* v5-0: بطاقات الطلب بالإنتاج */
+.plist{display:flex;flex-direction:column;gap:8px;margin:6px 0}
+html[data-skin] .pcard{display:grid;grid-template-columns:92px 1fr auto;gap:10px;align-items:center;text-align:start;padding:8px 10px;background:var(--card);border:0;box-shadow:var(--cardsh);border-radius:var(--r);min-height:76px}
+.pcard .pimg{height:58px;border-radius:10px;background:var(--chip);display:grid;place-items:center;overflow:hidden}.pcard .pimg img{width:100%;height:100%;object-fit:contain;padding:3px}.pcard .pimg i{font-style:normal;font-size:26px}
+.pcard .ptx{display:flex;flex-direction:column;gap:2px;min-width:0}.pcard .ptx b{font:700 14px/1.3 var(--f-head)}
+.pcard .md{font-size:11.5px;color:var(--dim);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.pcard .pm{font-size:11.5px;color:var(--dim)}.pcard em{font-style:normal;font-weight:700}
+.pcard .src{align-self:flex-start;font-size:10.5px;font-weight:700;padding:2px 7px;border-radius:6px;margin-top:2px}
+.src.loc{background:color-mix(in srgb,var(--good) 16%,transparent);color:var(--good)}.src.imp{background:color-mix(in srgb,var(--warn) 22%,transparent);color:var(--warnink)}
+.pcard .pgo{font:700 12.5px/1 var(--f-body);padding:9px 12px;border-radius:var(--rb);background:var(--act);color:var(--onact)}.pcard .pgo:empty{display:none}
+html[data-skin="news"] .pcard{background:transparent;box-shadow:none;border-top:1px solid var(--line);border-radius:0}
+html[data-skin] .apchip{font:700 13px/1 var(--f-head);padding:6px 9px;border-radius:9px;background:var(--chip);display:inline-flex;align-items:center;gap:3px;margin-inline-start:4px}html[data-skin] .apchip .hic{color:var(--warn)}
 html[data-skin] #start{background:var(--bg)}
 html[data-skin] #start h1,html[data-skin] .sth{font-family:var(--f-head)}
 html[data-skin] .sth{color:var(--ink)}
@@ -1265,7 +1291,7 @@ html[data-skin] .hero b{color:var(--act)}
   function closePanel() { document.body.classList.remove('sheeton'); panel = null; $('#sheet').hidden = true; $('#tabs').querySelectorAll('button').forEach(x => x.classList.remove('on')); }
   const TABOF = { cmd: 'cmd', me: 'me', flow: 'me', build: 'me', pop: 'me', fund: 'me', homep: 'me', army: 'army', prod: 'army', mkt: 'army', rd: 'rd', dip: 'dip', war: 'dip', ops: 'dip', world: 'dip', news: 'dip' };
   const GROUPS = { me: [['me', '💰 الاقتصاد'], ['flow', '💸 الفلوس'], ['build', '🏗 المشاريع'], ['fund', '🏦 الاستثمار'], ['pop', '👥 السكان'], ['homep', '🏛 الداخل']], army: [['army', '🪖 الجيش'], ['prod', '🏭 الإنتاج'], ['mkt', '🛒 السوق']], dip: [['dip', '🤝 العلاقات'], ['war', '⚔ الحروب'], ['ops', '🎖 العمليات'], ['world', '🌍 الترتيب'], ['news', '📜 الأخبار']] };
-const HIC = {'💵':'money','💰':'money','🏥':'health','📊':'chart','📈':'chart','🏆':'trophy','🚀':'rocket','📦':'box','⚓':'anchor','✈':'plane','⚙':'gear','⏳':'hour','🌍':'globe','📨':'mail','🏭':'factory','🛒':'cart','🗳':'vote','🏗':'crane','⚡':'bolt','🌡':'temp','🧭':'compass','⭐':'star','💼':'case','🗂':'folder','🧑‍🤝‍🧑':'people','🤝':'@i-dip','🛡':'@i-army','🧪':'@i-rd','⚔':'swords','🎖':'medal','🏛':'@i-cmd','🏦':'bank','👥':'people','💸':'money','📜':'scroll','🔬':'@i-rd','🪖':'@i-army','📅':'cal','✅':'check','❌':'xmark','✖':'xmark','⚠':'warn','⛔':'warn','🔒':'lock','🔧':'wrench','🎯':'target','🔁':'repeat','🕵':'spy','🛢':'oil','💳':'cardp','♻':'recycle','🔔':'bell','📤':'upl','📥':'dnl','🎓':'edu','🗺':'layers','📍':'target','🧑‍🎓':'edu'}, HRE = new RegExp('<(h[23])>(' + Object.keys(HIC).sort((a, b) => b.length - a.length).join('|') + ')\\uFE0F?\\s*', 'g'), ERE = new RegExp('>(' + Object.keys(HIC).sort((a, b) => b.length - a.length).join('|') + ')\\uFE0F?\\s*', 'g');
+const HIC = {'💵':'money','💰':'money','🏥':'health','📊':'chart','📈':'chart','🏆':'trophy','🚀':'rocket','📦':'box','⚓':'anchor','✈':'plane','⚙':'gear','⏳':'hour','🌍':'globe','📨':'mail','🏭':'factory','🛒':'cart','🗳':'vote','🏗':'crane','⚡':'bolt','🌡':'temp','🧭':'compass','⭐':'star','💼':'case','🗂':'folder','🧑‍🤝‍🧑':'people','🤝':'@i-dip','🛡':'@i-army','🧪':'@i-rd','⚔':'swords','🎖':'medal','🏛':'@i-cmd','🏦':'bank','👥':'people','💸':'money','📜':'scroll','🔬':'@i-rd','🪖':'@i-army','📅':'cal','✅':'check','❌':'xmark','✖':'xmark','⚠':'warn','⛔':'warn','🔒':'lock','🔧':'wrench','🎯':'target','🔁':'repeat','🕵':'spy','🛢':'oil','💳':'cardp','♻':'recycle','🔔':'bell','📤':'upl','📥':'dnl','🎓':'edu','🗺':'layers','📍':'target','🧑‍🎓':'edu','🇺🇳':'globe','🚙':'@i-army'}, HRE = new RegExp('<(h[23])>(' + Object.keys(HIC).sort((a, b) => b.length - a.length).join('|') + ')\\uFE0F?\\s*', 'g'), ERE = new RegExp('>(' + Object.keys(HIC).sort((a, b) => b.length - a.length).join('|') + ')\\uFE0F?\\s*', 'g');
   // V5 (I-140): رموز العناوين بأيقونات SVG بخط واحد (الإيموجي يختلف من تلفون لتلفون)
   const icoOf = e => { const v = HIC[e]; return `<svg class="hic" aria-hidden="true"><use href="#${v[0] === '@' ? v.slice(1) : 'h-' + v}"/></svg>`; };
   // I-144: أي إيموجي ببداية عنصر (زر، شريحة، عنوان، تسمية) يصير أيقونة SVG بلون الشكل
@@ -1446,9 +1472,11 @@ const HIC = {'💵':'money','💰':'money','🏥':'health','📊':'chart','📈'
     : it.cat === 'plane' ? (it.plane === 'ch4' ? 'v4_p_wingloong' : it.plane === 'm6' ? 'v4_p_mohajer6' : 'u_' + (planeKey(it.plane, it.n, me) || it.plane) + '_v') : it.cat === 'sam' ? (/PAC/.test(it.pool) ? 'v4_ps_patriot' : /48N6|40N6/.test(it.pool) ? 'v4_ps_s400' : /57E6/.test(it.pool) ? 'u_pantsir_v' : null) : it.cat === 'line' ? 'rs_ind' : null);
   function pProd() {
     const NW = G.nat, e = NW.eco[0], P = ECON.PRIO[e.prio], sp = P.prod * (NW.indF ? NW.indF[0].prod : 1) * (e.mor < 30 ? .75 : 1) * (1 + (G.C[me].prodK || 0)), its = NT.items(), cat = c => its.filter(k => ECON.ITEMS[k].cat === c);
-    const btn = k => { const it = ECON.ITEMS[k], ii = itemImg(k, it), c = ECON.costOf(k, 0, NW), d = ECON.daysOf(k, 0, NW), err = ECON.canBuy(NW, 0, k), sup = ECON.SUPPLY[0][k], pf = ECON.parts(NW, 0, k), loc = !sup, alt = loc && it.req ? altBuy(it) : null;
-      return `<button data-buy="${k}" ${err ? 'disabled' : ''} style="text-align:right">${ii ? `<div style="height:54px;display:flex;align-items:center;justify-content:center"><img src="${IMGB}${ii}.webp" alt="" loading="lazy" style="max-width:100%;max-height:52px;object-fit:contain" onerror="this.style.visibility='hidden'"></div>` : ''}<b style="font-size:15px">${it.ic} ${nmIt(it)}</b><br><small>${loc ? '🏭 <b>تصنعها محلي</b>' : '📦 مستورد من ' + (ECON.SUP_N[sup] || sup)}: ${C$(c)} $ · ${Math.round(d / sp)} يوم${pf < 1 && !loc ? ` <b class="neg">قطع ${Math.round(pf * 100)}٪</b>` : ''}</small>${alt ? `<br><small>↔ تشتريها: ${alt.o.n} ${alt.o.price} مليار $، ${Math.round(alt.o.days / 30)} شهر، من ${nameOf(alt.x)}</small>` : ''}${err ? `<br><small class="neg">⛔ ${err}</small>` : ''}</button>`; };
-    const grid = a => a.length ? `<div class="acts">${a.map(btn).join('')}</div>` : '<div class="note">ماكو</div>';
+    // v5-0: بطاقة طلب بسطر — صورة، اسم قصير والطراز تحته، سعر ومدة، المصدر، وزر واضح (بدل شبكة عمودين بأسماء تنكسر)
+    const splitN = n => { const m = /^(.*?)\s*[(（]([^()]*)[)）]\s*$/.exec(n); return m ? [m[1], m[2]] : [n, '']; };
+    const btn = k => { const it = ECON.ITEMS[k], ii = itemImg(k, it) || (it.cat === 'div' ? unitImg(me, it.kind || k) : null), c = ECON.costOf(k, 0, NW), d = ECON.daysOf(k, 0, NW), err = ECON.canBuy(NW, 0, k), sup = ECON.SUPPLY[0][k], pf = ECON.parts(NW, 0, k), loc = !sup, alt = loc && it.req ? altBuy(it) : null, [nm, md] = splitN(nmIt(it));
+      return `<button class="pcard" data-buy="${k}" ${err ? 'disabled' : ''}><span class="pimg">${ii ? `<img src="${IMGB}${ii}.webp" alt="" loading="lazy" onerror="this.style.visibility='hidden'">` : `<i>${it.ic}</i>`}</span><span class="ptx"><b>${nm}</b>${md ? `<small class="md" dir="auto">${md}</small>` : ''}<small class="pm">💵 ${C$(c)} $ · ${Math.round(d / sp)} يوم${pf < 1 && !loc ? ` · <em class="neg">قطع ${Math.round(pf * 100)}٪</em>` : ''}</small><span class="src ${loc ? 'loc' : 'imp'}">${loc ? 'صنع محلي' : 'مستورد · ' + (ECON.SUP_N[sup] || sup)}</span>${alt ? `<small class="pm">↔ أو تشتريها: ${alt.o.n} ${alt.o.price} مليار من ${nameOf(alt.x)}</small>` : ''}${err ? `<small class="neg">⛔ ${err}</small>` : ''}</span><span class="pgo">${err ? '' : 'اطلب'}</span></button>`; };
+    const grid = a => a.length ? `<div class="plist">${a.map(btn).join('')}</div>` : '<div class="note">ماكو</div>';
     const q = e.q.map((o, i) => { const it = ECON.ITEMS[o.k] || { ic: '?', n: o.k }, act = i < e.lines, f = 1 - o.left / o.tot;
       return `<div class="pj" style="${act ? 'border-color:var(--gold)' : 'opacity:.75'}"><div class="line"><span style="font-size:15px">${it.img ? `<img src="${IMGB}${it.img}.webp" alt="" style="width:72px;height:40px;object-fit:cover;border-radius:6px;vertical-align:middle">` : `<span style="font-size:26px;vertical-align:middle">${it.ic}</span>`} <b>${nmIt(it)}</b></span><button data-can="${o.id}" aria-label="ألغي الطلب">✕</button></div>${barV(f * 100, 'var(--gold)')}<div class="note">${act ? `⚙ خط ${i + 1}${e.le && e.le[i] && e.le[i].k === o.k && e.le[i].f > 1.01 ? ` · ⚡ كفاءة ×${e.le[i].f.toFixed(2)}` : ''} · ${Math.round(f * 100)}٪ · <b>يخلص بعد ${Math.max(1, Math.ceil(o.left / sp / ((e.le && e.le[i] && e.le[i].k === o.k) ? e.le[i].f : 1)))} يوم</b>` : `⏳ ينتظر خط فاضي (قدامه ${i - e.lines + 1})`} · يروح لـ: ${GOES(it)}</div></div>`; }).join('');
     return `<div class="grid"><div class="st"><i>الخزينة</i><b>${B$(e.cash)}</b></div><div class="st"><i>خطوط الإنتاج</i><b>${Math.min(e.lines, e.q.length)}/${e.lines} تشتغل</b></div><div class="st"><i>السرعة</i><b>×${sp.toFixed(2)}</b></div><div class="st"><i>بالطابور</i><b>${e.q.length}</b></div></div>
@@ -1566,12 +1594,15 @@ const HIC = {'💵':'money','💰':'money','🏥':'health','📊':'chart','📈'
     h += `<div class="row" style="margin:8px 0"><button class="big" id="armyMap">🗺 شوف الجيش على الخريطة</button></div><div class="note">${war ? '⚔ بالحرب: هذا جيشنا بالجبهة.' : 'بالسلم: أرضنا مقسومة خلايا مثل «الحرب الكبرى». قرّب الخريطة: ⬭ مدرعة، ⊗ آلية، ✕ مشاة؛ ✈ مطاراتنا بطياراتها، ◆ بطاريات الدفاع الجوي ودائرة مداها. اضغط فرقة وبعدين خلية حتى تتحرك. لما تصير حرب، الجبهة تنبني من نفس الجيش.'}</div>`;
     const sc = (V.ob && V.ob[0] && V.ob[0].scale) || 1;
     h += `<h3>القوات البرية: ${my.length} فرقة${sc > 1.05 ? ` <small class="note">(كل فرقة بالخريطة ≈ ${sc.toFixed(1)} فرقة حقيقية)</small>` : ''}</h3>`;
-    const row = (img, t, n, d) => `<div style="display:flex;gap:8px;align-items:center;margin:5px 0">${img}<div style="flex:1"><b>${t}</b> <span class="note">${d || ''}</span></div><b>${n}</b></div>`;
-    h += row(imgOf('u_' + tankKey(me) + '_v'), 'فرق مدرعة', kinds.arm.length, (K('tank')[1] || []).slice(0, 2).join('، '));
-    h += row(imgOf('bmp'), 'فرق آلية', kinds.mec.length, (K('afv')[1] || []).slice(0, 2).join('، '));
-    h += row(imgOf('truck'), 'فرق مشاة', kinds.inf.length, '');
-    h += row(imgOf('grad'), 'مدفعية', fmt(K('art')[0]), (K('art')[1] || []).slice(0, 2).join('، '));
-    h += `<div class="note" style="margin-top:4px">${my.slice(0, 40).map(d => { const cl = V.cells[d.cell]; return `<button class="pill" data-div="${d.id}">${KS[d.kind]} ${d.n.replace('الفرقة ', '')} · ${cl.city || byId.get(WD.r[cl.reg][0])?.n || ''} · ${Math.round(d.str * 100)}٪</button>`; }).join(' ')}${my.length > 40 ? ' …' : ''}</div>`;
+    const row = (img, t, n, d) => `<div class="urow">${img}<div class="ut"><b>${t}</b><small>${d || ''}</small></div><b class="un">${n}</b></div>`;
+    // v5-0 (I-151): الفرق مجمّعة حسب النوع — صورة حقيقية، العدد، القوة، الأماكن، والوحدات تنفتح بالضغط (بدل 21 شريحة)
+    const where = L => { const m = new Map(); for (const d of L) { const cl = V.cells[d.cell], n = cl.city || byId.get(WD.r[cl.reg][0])?.n || '؟'; m.set(n, (m.get(n) || 0) + 1); } return [...m].sort((a, b) => b[1] - a[1]).slice(0, 3).map(([n, k]) => `${n} ${k}`).join(' · '); };
+    const grp = (kd, t, models) => { const L = kinds[kd]; if (!L.length) return ''; const str = L.reduce((a, d) => a + d.str, 0) / L.length;
+      return `<details class="ugrp"><summary><img src="${IMGB}${unitImg(me, kd)}.webp" alt="" onerror="this.style.visibility='hidden'"><div class="ut"><b>${t}</b><small>${models || ''}</small><small>📍 ${where(L)}</small></div><div class="uc"><b>${L.length}</b><small>فرقة</small></div></summary>
+        <div class="ubar"><span>الجاهزية</span>${barV(str * 100, str > .7 ? 'var(--good)' : str > .4 ? 'var(--warn)' : 'var(--neg)')}<b>${Math.round(str * 100)}٪</b></div>
+        <div class="ulist">${L.map(d => { const cl = V.cells[d.cell]; return `<button data-div="${d.id}"><span>${d.n}</span><small>${cl.city || byId.get(WD.r[cl.reg][0])?.n || ''}</small><i style="--v:${Math.round(d.str * 100)}%"></i></button>`; }).join('')}</div></details>`; };
+    h += grp('arm', 'فرق مدرعة', (K('tank')[1] || []).slice(0, 2).join('، ')) + grp('mec', 'فرق آلية', (K('afv')[1] || []).slice(0, 2).join('، ')) + grp('inf', 'فرق مشاة', 'مشاة بآليات خفيفة');
+    h += row(imgOf('v8_howitzer_t'), 'مدفعية', fmt(K('art')[0]), (K('art')[1] || []).slice(0, 2).join('، '));
     if (A) { const bs = A.bases.filter(b => b.side === 0), sm = A.sams.filter(x => x.side === 0);
       h += `<h3>✈ القوة الجوية: ${bs.reduce((t, b) => t + b.n0, 0)} طيارة بـ${new Set(bs.map(b => b.ll.join())).size} مطار</h3>` + bs.map(b => row(planeImg(b.type, b.nm, b.cc), b.nm || (AIR.PLANES[b.type] || {}).n || b.type, b.n0, b.n)).join('');
       const g = {}; for (const x of sm) g[x.sys] = (g[x.sys] || 0) + 1;
@@ -1584,7 +1615,7 @@ const HIC = {'💵':'money','💰':'money','🏥':'health','📊':'chart','📈'
   function relList() { const m = G.rel[me] || {}; return Object.keys(m).filter(k => CS[k]).sort((a, b) => m[b] - m[a]); }
   function pDip() {
     const m = G.rel[me] || {}, L = relList(), tr = G.trade.filter(p => p.includes(me)).map(p => p[0] === me ? p[1] : p[0]), al = G.ids.filter(x => x !== me && S.allied(G, me, x));
-    let h = `<h2>🤝 الدبلوماسية <small class="note">⭐ ${G.ap} نقاط قرار (+2 كل شهر)</small></h2>`;
+    let h = `<h2>🤝 الدبلوماسية <span class="apchip" title="نقاط القرار (+2 كل شهر)">⭐ ${G.ap}</span></h2>`;
     h += `<div class="note">اضغط أي دولة بالخريطة حتى تتعامل وياها. العلاقات ترجع ببطء لأساسها إذا ما اشتغلت عليها.</div>`;
     const tn = Math.round(G.ten || 0);
     h += `<h3>🌡 التوتر العالمي: ${tn} ${tn >= 70 ? '(خطير)' : tn >= 45 ? '(عالي)' : tn >= 25 ? '(متوسط)' : '(هادئ)'}</h3>${barV(tn, tn >= 70 ? 'var(--neg)' : tn >= 45 ? 'var(--gold)' : '#5fae6e')}<div class="note">يصعد بالحروب (أكثر إذا بيها دولة نووية) وضرب المدن والمضائق المقطوعة، وينزل بالسلام والقمم. التوتر العالي يرفع احتمال الحروب وسعر النفط.</div>`;

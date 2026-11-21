@@ -53,6 +53,7 @@
   // كل شهر: قسط من الخزينة، والمشروع اللي كمل يدخل الخدمة
   function month(G, WD) {
     if (!G.nat) return; const A = ensure(G), e = G.nat.eco[0];
+    stockMonth(G); fairMonth(G, WD);
     for (const q of A.run.slice()) { const inst = q.cost / q.mo; e.cash -= inst; q.paid += inst;
       if (G.t - q.t0 >= q.mo * 30.4 - 1) { A.run.splice(A.run.indexOf(q), 1); A.done[q.k] = G.t; apply(G, WD, q.k); G.log.push({ t: G.t, k: 'ars', a: 'done', f: q.k }); } }
   }
@@ -101,11 +102,12 @@
   // الجيل من مستوى البحث: 1 ← جيل 1، 2–3 ← 2، 4 ← 3، 5–6 ← 4
   const genOf = (G, br) => { const t = (G.nat && G.nat.ind[0].tech[br]) || 0; return t >= 5 ? 4 : t >= 4 ? 3 : t >= 2 ? 2 : t >= 1 ? 1 : 0; };
   function register(G, WD, ECON) {
+    registerStock(G, ECON);
     for (const code in PROD) { const P = PROD[code], f = FAM.find(x => x.code === code), g = genOf(G, P.br), key = 'nf_' + code;
       if (g < 1 || (P.cat === 'nav' && !coast(G, WD))) { delete ECON.ITEMS[key]; continue; }
       const k = .7 + .15 * g;
       ECON.ITEMS[key] = { n: `${code}-${g * 10} ${f.kind} ${f.name}`, ic: ({ land: '🛡', air: '✈', sea: '⚓', msl: '🚀' })[f.dom] || '⭐', cat: P.cat, kind: P.kind, plane: P.plane, q: P.q, pool: P.pool, side: 0,
-        cost: +(P.cost * k).toFixed(3), days: P.days, nat: code, gen: g, img: f.img, pwF: +(P.pw * (.6 + .2 * g)).toFixed(2), d: `${P.d} · صنع وطني 100٪ (ما يحتاج قطع من برّا)` };
+        cost: +(P.cost * k).toFixed(3), days: P.cat === 'nav' ? Math.round(P.days * (G.C[G.me].yard ? .6 : 1.25)) : P.days, nat: code, gen: g, img: f.img, pwF: +(P.pw * (.6 + .2 * g)).toFixed(2), d: `${P.d} · صنع وطني 100٪ (ما يحتاج قطع من برّا)` };
       // النسخ (مثل T-90A/M/S): M مطوّرة (جيل 3+)، K قيادة (للفرق)، E تصدير (تنباع لدولة صديقة أول ما تخلص)
       const base = ECON.ITEMS[key], V = { M: g >= 3, K: P.cat === 'div', E: P.cat !== 'msl' };
       for (const v of ['M', 'K', 'E']) { const vk = key + '_' + v; if (!V[v]) { delete ECON.ITEMS[vk]; continue; }
@@ -114,6 +116,7 @@
   }
   // التسليم (ينادى من nation.deliver للمنتجات الوطنية)
   function deliver(G, WD, it, T) {
+    if (it.stk) { const s = G.nat.stock || (G.nat.stock = { ammo: 100, fuel: 100 }); s.ammo = Math.min(100, s.ammo + 25); s.fuel = Math.min(100, s.fuel + 25); return; }
     const c = G.C[G.me], P = PROD[it.nat], NW = G.nat; NW.arms = NW.arms || { jets: {}, sam: {}, tank: null };
     // نسخة التصدير: تنباع فوراً لأقرب صديق (علاقة 25+ ومو بحرب ويانا)
     if (it.var === 'E') { const S = root.WSIM || require('./wsim.js'), buyer = G.ids.filter(x => x !== G.me && S.rel(G, G.me, x) >= 25 && !S.atWar(G, G.me, x)).sort((a, b) => S.rel(G, G.me, b) - S.rel(G, G.me, a))[0];
@@ -127,10 +130,34 @@
     else if (it.cat === 'nav' && G.nav) addShips(G, WD, P.ships);
     else if (it.cat === 'msl') { if (P.msl) c.msl = (c.msl || 0) + P.msl; if (P.drn) c.drn = (c.drn || 0) + P.drn; if (P.asm && G.nav) { G.nav.asm = G.nav.asm || {}; G.nav.asm[G.me] = (G.nav.asm[G.me] || 0) + P.asm; } }
   }
+  // ===== القسم 6 (I-127…): المخزون الاستراتيجي، معرض السلاح السنوي، والتجسس الصناعي =====
+  // المخزون (٪): الذخيرة والوقود ينزلون بالحرب كل شهر؛ تحت 30٪ قواتنا أضعف. يتعبّى من 🏭 الإنتاج («ذخيرة ووقود»)
+  function stockMonth(G) { if (!G.nat) return; const N = G.nat, s = N.stock || (N.stock = { ammo: 100, fuel: 100 }), war = G.wars.some(w => w.a.includes(G.me) || w.b.includes(G.me));
+    if (war) { s.ammo = Math.max(0, s.ammo - 12); s.fuel = Math.max(0, s.fuel - 8); } else { s.ammo = Math.min(100, s.ammo + 2); s.fuel = Math.min(100, s.fuel + 3); } }
+  const stockK = G => { const s = G.nat && G.nat.stock; if (!s) return 1; return (s.ammo < 30 ? .8 : 1) * (s.fuel < 30 ? .9 : 1); };
+  function registerStock(G, ECON) { ECON.ITEMS.stk = { n: 'ذخيرة ووقود (مخزون +25٪)', ic: '📦', cat: 'line', side: 0, cost: +(.3 * kOf(G)).toFixed(2), days: 20, stk: 1, d: 'يعبّي المخزون الاستراتيجي: بالحرب الذخيرة −12٪ والوقود −8٪ كل شهر' }; }
+  // معرض السلاح السنوي (شباط، مثل IDEX بأبوظبي): إذا عدنا سلاح وطني، دول تطلب تشتري
+  function fairMonth(G, WD) {
+    if (!G.nat || !G.mkt) return; const S = root.WSIM || require('./wsim.js'), mo = S.date(G.t).getUTCMonth(); if (mo !== 1 || G.nat.fairY === S.date(G.t).getUTCFullYear()) return;
+    const have = Object.keys(G.nat.natHave || {}).length + Object.keys((G.ars || {}).done || {}).length; if (!have) return; G.nat.fairY = S.date(G.t).getUTCFullYear();
+    const L = G.ids.filter(x => x !== G.me && G.C[x] && G.C[x].gdp > 30 && S.rel(G, G.me, x) >= 20 && !S.atWar(G, G.me, x) && !G.mkt.offers.some(o => o.from === x)).sort((a, b) => S.rel(G, G.me, b) - S.rel(G, G.me, a)).slice(0, Math.min(3, 1 + Math.floor(have / 3)));
+    for (const x of L) G.mkt.offers.push({ from: x, kind: 'nat', v: +Math.min(4, Math.max(.2, G.C[x].gdp * .0008 * (1 + have / 6))).toFixed(2), t: G.t });
+    G.log.push({ t: G.t, k: 'fair', n: L.length });
+  }
+  // التجسس الصناعي: مرة كل 6 أشهر — ينجح 65٪ (البحث الشغّال يتقدم +35٪ من كلفته)، ويفشل 35٪ (فضيحة: العلاقة ويا الهدف −20)
+  function spy(G, WD) {
+    const N = G.nat, S = root.WSIM || require('./wsim.js'), R = G.res3; if (!N || !R || !R.slots.length) return 'ماكو بحث شغّال نسرق إله';
+    if (N.spyT && G.t - N.spyT < 180) return `باقي ${Math.ceil(180 - (G.t - N.spyT))} يوم للعملية الجاية`;
+    const cost = +(.3 * kOf(G)).toFixed(2); if (N.eco[0].cash < cost) return 'الفلوس ما تكفي';
+    const tgt = G.ids.filter(x => x !== G.me && G.C[x] && !S.allied(G, G.me, x)).sort((a, b) => G.C[b].gdp - G.C[a].gdp)[0]; N.eco[0].cash -= cost; N.spyT = G.t;
+    const RES = root.WRES || require('./wres.js'), ok = ((G.t * 7919 + 13) % 100) < 65;
+    if (ok) { for (const q of R.slots) q.p += RES.costOf(G, q.k) * .35; G.log.push({ t: G.t, k: 'spy', ok: 1, x: tgt }); return { ok: true, win: true }; }
+    S.addRel(G, G.me, tgt, -20); G.log.push({ t: G.t, k: 'spy', ok: 0, x: tgt }); return { ok: true, win: false };
+  }
   // للمسرح: هجوم الدروع ودقة الدفاع الجوي (nation.js يضربها بـ indF كل يوم)
-  function indF(G, F) { const A = G.ars; if (!A || !F) return; if (A.done.tank) F.armAtk *= 1 + FL.tank.fx.armAtk; if (A.done.ad) F.samPk *= 1 + FL.ad.fx.samPk; }
+  function indF(G, F) { if (F) { const k = stockK(G); F.armAtk *= k; F.samPk *= k; } const A = G.ars; if (!A || !F) return; if (A.done.tank) F.armAtk *= 1 + FL.tank.fx.armAtk; if (A.done.ad) F.samPk *= 1 + FL.ad.fx.samPk; }
   // الخسائر: الروبوتات تنقص خسائرنا البشرية
   const casK = G => (G.ars && G.ars.done.ugv ? 1 - FL.ugv.fx.cas : 1);
-  const API = { FL, FAM, DOM, PROD, STAT, stats, addShips, genOf, register, deliver, title, MAXRUN, ensure, costOf, can, start, month, apply, indF, casK };
+  const API = { stockK, spy, FL, FAM, DOM, PROD, STAT, stats, addShips, genOf, register, deliver, title, MAXRUN, ensure, costOf, can, start, month, apply, indF, casK };
   if (typeof module !== 'undefined') module.exports = API; else root.WARS = API;
 })(typeof window !== 'undefined' ? window : globalThis);

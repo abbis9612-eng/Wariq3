@@ -161,7 +161,7 @@
   function deliver(G, WD, o, X) {
     const it = ECON.ITEMS[o.k], c = G.C[G.me], NW = G.nat, T = X.T; if (!it) return;
     // M2: المنتجات الوطنية (عائلة السلاح، I-138)
-    if (it.nat && ARS) { if (T && ['div', 'plane', 'sam'].includes(it.cat)) { T.W.num = T.W.num || [100, 200]; ECON.deliver(T.W, T.A, 0, o, X.SIM); } ARS.deliver(G, WD, it, T); NW.log.push({ t: NW.t, side: 0, k: 'built', it: o.k }); return; }
+    if ((it.nat || it.stk) && ARS) { if (T && ['div', 'plane', 'sam'].includes(it.cat)) { T.W.num = T.W.num || [100, 200]; ECON.deliver(T.W, T.A, 0, o, X.SIM); } ARS.deliver(G, WD, it, T); NW.log.push({ t: NW.t, side: 0, k: 'built', it: o.k }); return; }
     if (it.cat === 'line') { NW.eco[0].lines++; NW.log.push({ t: NW.t, side: 0, k: 'built', it: o.k }); return; }
     if (T && (it.cat === 'div' || it.cat === 'plane' || it.cat === 'sam')) { T.W.num = T.W.num || [100, 200]; ECON.deliver(T.W, T.A, 0, o, X.SIM); }
     NW.arms = NW.arms || { jets: {}, sam: {}, tank: null };

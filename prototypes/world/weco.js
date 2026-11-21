@@ -18,6 +18,7 @@
     house: { n: 'مجمعات سكنية', ic: '🏠', img: 'pj_housing', cost: 2, mo: 24, d: 'الشارع يرضى: استقرار +3', stab: 3 },
     hosp:  { n: 'شبكة مستشفيات', ic: '🏥', img: 'pj_hospital', cost: 1.2, mo: 18, d: 'صحة: استقرار +1، والجرحى بالحرب يتعالجون', stab: 1, health: 1 },
     univ:  { n: 'جامعات ومراكز بحث', ic: '🎓', img: 'pj_university', cost: 1.2, mo: 36, d: 'البحث أسرع +8٪، وعمال أمهر', rd: .08 },
+    yard:  { n: 'حوض بناء سفن', ic: '⚓', img: 'rs_navy', cost: 4, mo: 36, d: 'نبني سفننا أسرع: بناء السفن الوطنية −40٪ وقت', need: 'sea', yard: 1 },
     arms:  { n: 'مصنع حربي', ic: '🪖', img: 'pj_arms', cost: 2, mo: 30, d: 'خط إنتاج حربي جديد', lines: 1 },
   };
   // الكفاءة والفساد: الدول الأفقر تكلّف وتتأخر أكثر (×1 للغنية لحد ×1.45) [تقدير]
@@ -90,6 +91,7 @@
     if (p.stab && q.id === G.me && G.nat) { const b = G.nat.home.base || (G.nat.home.base = {}); b.street = Math.min(80, (b.street || 55) + p.stab); }
     else if (p.stab) c.stab = Math.min(100, c.stab + p.stab);
     if (p.lines && q.id === G.me && G.nat) G.nat.eco[0].lines += p.lines;
+    if (p.yard) c.yard = 1;
     if (p.rd) { c.rdK = (c.rdK || 1) + p.rd; c.univ = (c.univ || 0) + 1; }
     if (p.health) c.hosp = (c.hosp || 0) + 1;
   }

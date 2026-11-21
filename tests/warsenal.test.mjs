@@ -3,7 +3,7 @@
 import fs from 'fs'; import { createRequire } from 'module';
 const require = createRequire(import.meta.url);
 const window = {}; new Function('window', fs.readFileSync(new URL('../prototypes/world/world-data.js', import.meta.url), 'utf8'))(window);
-const WD = window.WD, S = require('../prototypes/world/wsim.js'), N = require('../prototypes/world/nation.js'), A = require('../prototypes/world/warsenal.js');
+const WD = window.WD, S = require('../prototypes/world/wsim.js'), N = require('../prototypes/world/nation.js'), A = require('../prototypes/world/warsenal.js'), R = require('../prototypes/world/wres.js');
 let bad = 0; const no = m => { console.log('❌ ' + m); bad++; };
 if (A.FAM.length !== 31) no('العائلات مو 31'); if (Object.keys(A.FL).some(k => !A.FL[k].code || !A.FL[k].name)) no('سلاح بلا رمز أو اسم');
 const codes = A.FAM.map(f => f.code); if (new Set(codes).size !== codes.length) no('رموز مكررة: ' + codes.filter((c, i) => codes.indexOf(c) !== i));
@@ -58,5 +58,13 @@ if (!Z.log.some(l => l.k === 'arms' && l.a === 'tt')) no('نقل التقنية 
 const R2 = S.init(WD, 'TUR', { seed: 8 }); N.init(R2, WD); day(R2); R2.nat.eco[0].cash = 90; const e2 = R2.nat.eco[0]; e2.rep = { nf_SK: true }; N.buy(R2, 'nf_SK');
 let built = 0, maxF = 1; for (let i = 0; i < 120; i++) { day(R2); built = R2.nat.log.filter(l => l.k === 'built' && l.it === 'nf_SK').length; if (e2.le && e2.le[0]) maxF = Math.max(maxF, e2.le[0].f); }
 if (built < 2) no(`التكرار ما رجّع الطلب (${built})`); if (!(maxF > 1.1)) no('كفاءة الخط ما زادت ' + maxF);
+// القسم 6: المخزون، المعرض، التجسس، حوض السفن
+const F6 = S.init(WD, 'TUR', { seed: 9 }); N.init(F6, WD); day(F6); F6.nat.eco[0].cash = 50; F6.nat.natHave = { ZR: 2 };
+F6.wars.push({ id: 'tst', n: 'تجربة', a: ['TUR'], b: ['GRC'], t0: F6.t, weary: {}, score: 0, months: 0, taken: {} });
+for (let i = 0; i < 100; i++) day(F6); if (!(F6.nat.stock && F6.nat.stock.ammo < 80)) no('المخزون ما نزل بالحرب ' + JSON.stringify(F6.nat.stock));
+const am = F6.nat.stock.ammo; if (typeof N.buy(F6, 'stk') === 'string') no('ما گدرنا نطلب ذخيرة'); for (let i = 0; i < 25; i++) day(F6); if (!(F6.nat.stock.ammo > am)) no('الذخيرة ما تعبّت');
+F6.wars.pop(); for (let i = 0; i < 400; i++) day(F6); if (!F6.log.some(l => l.k === 'fair')) no('ما صار معرض سلاح');
+R.pick(F6, WD, 'agri'); const sp = A.spy(F6, WD); if (typeof sp === 'string') no('التجسس: ' + sp); if (typeof A.spy(F6, WD) !== 'string') no('التجسس تكرر بنفس الوقت');
+if (!require('../prototypes/world/weco.js').P.yard) no('ماكو حوض سفن');
 console.log(`زئير وعُقبة دخلوا الخدمة · قوة الجيش ×${pw0} → ×${G.C.USA.pwK.toFixed(2)} · مدمرات ${dd0} → ${dd1} · رموز ${codes.length} بلا تكرار`);
 console.log(bad ? `❌ ${bad} مشاكل` : '✅ الترسانة الوطنية تمام'); process.exit(bad ? 1 : 0);

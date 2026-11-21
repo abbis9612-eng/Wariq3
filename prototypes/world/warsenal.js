@@ -22,7 +22,18 @@
   };
   // I-137: الاسم اللي يطلع = النوع + الاسم («دبابة زئير»، «مدمرة الطوفان») ويا الرمز فوقه
   const title = k => { const f = FL[k]; return f.name ? `${f.kind} ${f.name}` : f.n; };
-  const DOM = { land: ['🛡', 'البر'], air: ['✈', 'الجو'], sea: ['⚓', 'البحر'], space: ['🛰', 'الفضاء'] };
+  // I-138: عائلات السلاح الوطني (31 نوع) — الرمز = حرفين + الجيل×10 (50 = الترسانة ⭐). img = صورة الإعلان (v6 للترسانة، v7 للباقي)
+  const FAM = [
+    ['land', 'دبابة', 'ZR', 'زئير', 'v6_fl_tank', 'tank'], ['land', 'دبابة خفيفة', 'DH', 'ضِرار', 'v7_fm_dh'], ['land', 'مدرعة', 'LT', 'الليث', 'v7_fm_lt'], ['land', 'ناقلة جنود', 'SK', 'الصخرة', 'v7_fm_sk'],
+    ['land', 'مدفعية', 'HT', 'حِطّين', 'v7_fm_ht'], ['land', 'راجمة', 'WB', 'الوابل', 'v7_fm_wb'], ['land', 'روبوت', 'DB', 'الذئب', 'v6_fl_ugv', 'ugv'],
+    ['air', 'مقاتلة', 'SF', 'سيف الله', 'v6_fl_fighter', 'fighter'], ['air', 'مقاتلة خفيفة', 'NS', 'نسر', 'v7_fm_ns'], ['air', 'طيارة هجوم', 'ZB', 'الزبير', 'v7_fm_zb'], ['air', 'قاذفة', 'YB', 'اليرموك', 'v6_fl_bomber', 'bomber'],
+    ['air', 'مروحية', 'AF', 'العاصفة', 'v7_fm_af'], ['air', 'طيارة تدريب', 'SB', 'الشِّبل', 'v7_fm_sb'], ['air', 'طيارة نقل', 'RH', 'الرحّال', 'v7_fm_rh'], ['air', 'مسيّرة', 'ZL', 'الظل', 'v7_fm_zl'], ['air', 'سرب', 'QD', 'القادسية', 'v6_fl_swarm', 'swarm'],
+    ['sea', 'حاملة', 'FQ', 'الفاروق', 'v6_fl_dronecarrier', 'carrier'], ['sea', 'مدمرة', 'UQ', 'عُقبة', 'v6_fl_destroyer', 'destroyer'], ['sea', 'فرقاطة', 'MJ', 'الموج', 'v7_fm_mj'], ['sea', 'كورفيت', 'AS', 'الإعصار', 'v7_fm_as'],
+    ['sea', 'غواصة', 'TR', 'طارق', 'v6_fl_sub', 'sub'], ['sea', 'زوارق', 'DS', 'ذات الصواري', 'v6_fl_usv', 'usv'], ['sea', 'سفينة إنزال', 'JS', 'الجسر', 'v7_fm_js'],
+    ['msl', 'صاروخ', 'TQ', 'الثاقب', 'v6_fl_hyper', 'hyper'], ['msl', 'صاروخ باليستي', 'NZ', 'النيزك', 'v7_fm_nz'], ['msl', 'صاروخ كروز', 'SH', 'السهم', 'v7_fm_sh'], ['msl', 'صاروخ مضاد سفن', 'QS', 'القرش', 'v7_fm_qs'],
+    ['msl', 'منظومة', 'HS', 'الحصن', 'v6_fl_ad', 'ad'], ['msl', 'دفاع جوي', 'DR', 'الدرع', 'v7_fm_dr'], ['space', 'قمر', 'RQ', 'الرقيب', 'v6_fl_space', 'space'], ['space', 'صاروخ فضاء', 'MR', 'المعراج', 'v7_fm_mr'],
+  ].map(([dom, kind, code, name, img, fl]) => ({ dom, kind, code, name, img, fl }));
+  const DOM = { land: ['🛡', 'البر'], air: ['✈', 'الجو'], sea: ['⚓', 'البحر'], msl: ['🚀', 'الصواريخ والدفاع الجوي'], space: ['🛰', 'الفضاء'] };
   const MAXRUN = 2;
   function ensure(G) { if (!G.ars) G.ars = { done: {}, run: [] }; return G.ars; }
   const kOf = G => (G.nat && G.nat.ind[0].k) || 1;
@@ -70,6 +81,6 @@
   function indF(G, F) { const A = G.ars; if (!A || !F) return; if (A.done.tank) F.armAtk *= 1 + FL.tank.fx.armAtk; if (A.done.ad) F.samPk *= 1 + FL.ad.fx.samPk; }
   // الخسائر: الروبوتات تنقص خسائرنا البشرية
   const casK = G => (G.ars && G.ars.done.ugv ? 1 - FL.ugv.fx.cas : 1);
-  const API = { FL, DOM, title, MAXRUN, ensure, costOf, can, start, month, apply, indF, casK };
+  const API = { FL, FAM, DOM, title, MAXRUN, ensure, costOf, can, start, month, apply, indF, casK };
   if (typeof module !== 'undefined') module.exports = API; else root.WARS = API;
 })(typeof window !== 'undefined' ? window : globalThis);

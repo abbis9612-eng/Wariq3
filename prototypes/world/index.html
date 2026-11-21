@@ -362,6 +362,7 @@ body.sheeton #toast{top:calc(var(--toph, 100px) + 4px) !important;bottom:auto !i
 <script src="wres.js"></script>
 <script src="wfund.js"></script>
 <script src="wcas.js"></script>
+<script src="warsenal.js"></script>
 <script src="wsim.js"></script>
 <script src="gwsim.js"></script>
 <script src="theater.js"></script>
@@ -589,7 +590,7 @@ body.sheeton #toast{top:calc(var(--toph, 100px) + 4px) !important;bottom:auto !i
   // ===== مشهد المعركة 1:1 (bv.js وbview.js من «الحرب الكبرى») =====
   // V3: صور بطاقات المشاريع والبحث (pj_*، rs_*) — تنضاف هنا لما توصل صور Grok (docs/art/grok-v3.md)
   // I-134: صور السلاح الوطني الحقيقية (docs/art/grok-v5-national.md) — تنضاف هنا لما توصل
-  const NTIMG = new Set([]);
+  const NTIMG = new Set(['v5_nt_ad_g1', 'v5_nt_ad_g2', 'v5_nt_ad_g3', 'v5_nt_ad_g4', 'v5_nt_art_g1', 'v5_nt_art_g2', 'v5_nt_art_g3', 'v5_nt_art_g4', 'v5_nt_boat_g1', 'v5_nt_boat_g2', 'v5_nt_boat_g3', 'v5_nt_boat_g4', 'v5_nt_ifv_g1', 'v5_nt_ifv_g2', 'v5_nt_ifv_g3', 'v5_nt_ifv_g4', 'v5_nt_jet_g1', 'v5_nt_jet_g2', 'v5_nt_jet_g3', 'v5_nt_jet_g4', 'v5_nt_msl_g1', 'v5_nt_msl_g2', 'v5_nt_msl_g3', 'v5_nt_msl_g4', 'v5_nt_tank_g1', 'v5_nt_tank_g2', 'v5_nt_tank_g3', 'v5_nt_tank_g4', 'v5_nt_uav_g1', 'v5_nt_uav_g2', 'v5_nt_uav_g3', 'v5_nt_uav_g4']);
   const ART = new Set(['pj_arms', 'pj_dam', 'pj_factory', 'pj_hospital', 'pj_housing', 'pj_oil', 'pj_port', 'pj_power', 'pj_rail', 'pj_refinery', 'pj_university', 'rs_6gen', 'rs_agri', 'rs_ai', 'rs_aip', 'rs_air', 'rs_anticorr', 'rs_armor', 'rs_bmd', 'rs_civai', 'rs_cyber', 'rs_desal', 'rs_edu', 'rs_enrich', 'rs_ew', 'rs_finance', 'rs_food', 'rs_girls', 'rs_gov', 'rs_hypersonic', 'rs_ind', 'rs_laser', 'rs_launch', 'rs_lithium', 'rs_logistics', 'rs_manuf', 'rs_med', 'rs_med2', 'rs_milsat', 'rs_missile', 'rs_navy', 'rs_nuclear', 'rs_oil', 'rs_oil2', 'rs_refinery', 'rs_sof', 'rs_softpower', 'rs_solar', 'rs_space', 'rs_stealth', 'rs_swarm', 'rs_telecom', 'rs_tourism', 'rs_uav']);
   const IMG = {}, IMGB = location.protocol === 'file:' ? '../grandwar/img/' : 'img/';
   let imgP = null;
@@ -1032,6 +1033,7 @@ body.sheeton #toast{top:calc(var(--toph, 100px) + 4px) !important;bottom:auto !i
     const n = k => nameOf(k);
     switch (l.k) {
       case 'res': if (String(l.r).startsWith('m:')) { const B = IND.BR[l.r.slice(2)] || {}; return [`🔬 وصلنا ${B.ic || ''} ${B.n || ''} المستوى ${l.l}`, 'good']; } return [`🔬 خلص بحث «${(WRES.T[l.r] || {}).n || l.r}»: ${(WRES.T[l.r] || {}).d || ''}`, 'good'];
+      case 'ars': { const f = WARS.FL[l.f] || {}; return l.a === 'done' ? [`🏆 دخل الخدمة: ${f.code} ${WARS.title(l.f)}! ${f.d || ''}`, 'good'] : [`🏗 بدينا مشروع ${f.code} ${WARS.title(l.f)} (${l.v} مليار)`, 'good']; }
       case 'fund': { const A = WFUND.ABROAD[l.pk] || WECO.P[l.pk] || {}; return ({ put: [`🏦 حطينا ${l.v} مليار بـ${l.w === 'bonds' ? 'السندات' : 'الأسهم'}`, 'good'], take: [`🏦 سحبنا ${l.v.toFixed ? l.v.toFixed(1) : l.v} مليار من الصندوق`, ''], inv: [`🌍 استثمرنا ${l.v} مليار بـ${A.n} عند ${n(l.x)}`, 'good'], loan: [`🤝 قرضنا ${n(l.x)} ${l.v} مليار`, 'good'], lost: [`💸 خسرنا استثمارنا (${A.n}) عند ${n(l.x)} بسبب ${l.why}: ${l.v} مليار راحت`, 'bad'], default: [`💸 ${n(l.x)} تعثرت بالقرض: خسرنا ${l.v} مليار`, 'bad'], repaid: [`✅ ${n(l.x)} رجّعت القرض كامل`, 'good'], offer: [`📨 ${n(l.x)}: شركة تعرض تبني ${A.n} (${l.v.toFixed(1)} مليار) — شوف 🏦 الاستثمار`, 'good'], accept: [`🤝 قبلنا عرض ${n(l.x)}: ${A.n} ينبني على حسابهم`, 'good'], reject: [`✋ رفضنا عرض ${n(l.x)}`, ''] })[l.a] || ['🏦', '']; }
       case 'proj': { const P = WECO.P[l.pk] || {}, w = byId.get(l.r)?.n || ''; return l.a === 'done' ? [`${P.ic || '🏗'} كمل مشروع «${P.n}»${l.id === me ? '' : ' عند ' + n(l.id)}${w ? ' بـ' + w : ''}`, l.id === me ? 'good' : ''] : [`${P.ic || '🏗'} ${l.id === me ? 'بدينا' : n(l.id) + ' بدت'} مشروع «${P.n}»${w ? ' بـ' + w : ''} (${(l.cost.toFixed(1))} مليار، ${(l.mo)} شهر)`, l.id === me ? 'good' : '']; }
       case 'war': return [`⚔ ${n(l.a)} أعلنت الحرب على ${n(l.b)}${l.join && l.join.length ? ' — ودخلت وياها ' + l.join.map(n).join('، ') : ''}`, 'bad'];
@@ -1287,10 +1289,11 @@ body.sheeton #toast{top:calc(var(--toph, 100px) + 4px) !important;bottom:auto !i
     R.slots.forEach((q, i) => { const nd = WRES.costOf(G, q.k), dd = WRES.days(G, q.k); h += `<div class="pj" style="border-color:var(--c-rd)"><div class="line"><span>🔬 <b>${WRES.nameOf(G, q.k)}</b></span><button data-rdrop="${i}" aria-label="وقّف">✕</button></div>${barV(q.p / nd * 100, 'var(--c-rd)')}<div class="note">${Math.round(q.p / nd * 100)}٪ · ${dd ? 'يخلص بعد ~' + dd + ' يوم' : '⛔ الميزانية متوقفة'}</div></div>`; });
     for (let i = R.slots.length; i < mx; i++) h += `<div class="pj" style="border-style:dashed;opacity:.7"><div class="note">➕ خانة فاضية — اختار بحث من تحت</div></div>`;
     if (R.slots.length < mx) h += `<button data-rfill="1" class="big">⚡ شغّل كل الخانات الفاضية (الأوطى أول)</button>`;
-    h += `<div class="seg gnav">${Object.entries(WRES.SEC).map(([k, [ic, n]]) => `<button data-rsec="${k}" class="${rdSec === k ? 'on' : ''}">${ic} ${n}</button>`).join('')}</div>`;
+    h += `<div class="seg gnav">${Object.entries(WRES.SEC).map(([k, [ic, n]]) => `<button data-rsec="${k}" class="${rdSec === k ? 'on' : ''}">${ic} ${n}</button>`).join('')}<button data-rsec="ars" class="${rdSec === 'ars' ? 'on' : ''}">🏆 الترسانة</button></div>`;
     const node = k => { const t = WRES.T[k], done = R.done[k], on = R.slots.some(q => q.k === k), err = WRES.can(G, WD, k), dd = WRES.days(G, k);
       return `<div class="pj" style="${on ? 'border-color:var(--gold)' : done ? 'opacity:.75' : ''}">${done || !ART.has(t.img) ? '' : `<img class="cimg" src="${IMGB}${t.img}.webp" alt="">`}<div class="line"><span style="font-size:15px">${t.ic} <b>${t.n}</b></span><b>${done ? '✅' : t.lock ? '🔒' : on ? '▶' : C$(WRES.costOf(G, k)) + ' $'}</b></div><div class="note">${t.d}</div>${t.req ? `<div class="note">يحتاج قبله: ${t.req.map(r => (R.done[r] ? '✅ ' : '· ') + WRES.T[r].n).join('، ')}</div>` : ''}${done || on || t.lock ? (on ? '<div class="note">🔬 شغّال بخانة</div>' : '') : err ? `<div class="note">⛔ ${err}</div>` : `<button data-rs="${k}">ابحث هنا${dd ? ' (~' + dd + ' يوم)' : ''}</button>`}</div>`; };
-    if (rdSec === 'mil') {
+    if (rdSec === 'ars') h += pArs();
+    else if (rdSec === 'mil') {
       h += `<div class="note">الفروع 6 مستويات (الجيل السادس = المستقبل). كل مستوى إله أثر بالحرب ويفتح منتجات محلية (🏭 الإنتاج).</div>` + IND.BRK.map(k => { const Bk = IND.BR[k], l = I.tech[k] || 0, on = R.slots.some(q => q.k === 'm:' + k), nd = IND.need(l); const im = ({ arm: 'rs_armor', uav: 'rs_uav', msl: 'rs_missile', ew: 'rs_ew', ind: 'rs_ind', air: 'rs_air', navy: 'rs_navy' })[k]; return `<div class="pj" style="${on ? 'border-color:var(--c-rd)' : ''}">${ART.has(im) ? `<img class="cimg" src="${IMGB}${im}.webp" alt="">` : ''}<div class="line"><span style="font-size:15px">${Bk.ic} <b>${Bk.n}</b></span><b>${'■'.repeat(l)}${'□'.repeat(WRES.MAXL - l)} ${l}/${WRES.MAXL}</b></div><div class="note">${Bk.d}</div>${l >= WRES.MAXL ? '<div class="note pos">✅ أعلى مستوى</div>' : on ? '<div class="note">🔬 شغّال بخانة</div>' : `<button data-rb="${k}">ابحث هنا (المستوى ${l + 1}: ${WRES.costOf(G, 'm:' + k)} مليار، ~${WRES.days(G, 'm:' + k) || '–'} يوم)</button>`}</div>`; }).join('');
       h += `<h3>🚀 المستقبل</h3>` + Object.keys(WRES.T).filter(k => WRES.T[k].s === 'mil').map(node).join('');
       // I-131/I-133: شكل السلاح الوطني حسب المرحلة (صور Grok بتمويه صحراوي على أخضر، D-056): المرحلة = الجيل
@@ -1307,6 +1310,21 @@ body.sheeton #toast{top:calc(var(--toph, 100px) + 4px) !important;bottom:auto !i
       if (rdSec === 'eco') h += `<h3>🏭 تطوير الصناعة</h3>${Object.entries(IND.SEC).map(([k, Sc]) => `<div class="pj"><div class="line"><span>${Sc.ic} <b>${Sc.n}</b></span><b>${I.sec[k]}/5</b></div><div class="note">${Sc.d}</div>${I.secRun && I.secRun.k === k ? `<div class="note">⏳ يتطوّر: باقي ${I.secRun.left} يوم</div>` : I.sec[k] < 5 ? `<button data-sec="${k}" ${I.secRun ? 'disabled' : ''}>طوّر (${IND.secCost(I.sec[k])} مليار، ${IND.SEC_DAYS} يوم)</button>` : ''}</div>`).join('')}`;
       if (rdSec === 'str') h += '<div class="note">النووي العسكري ينتظر قرارك. النووي السلمي تحت رقابة الوكالة الدولية وما يجيب عقوبات.</div>';
     }
+    return h;
+  }
+  // ===== I-135…I-138: 🏆 الترسانة الوطنية — 12 سلاح نجم (مشاريع سنين) + عائلة السلاح الوطني (31 نوع) =====
+  const heroCard = (img, code, title, sub) => `<div style="position:relative;border-radius:14px;overflow:hidden;box-shadow:0 6px 18px rgba(0,0,0,.35)"><img src="${IMGB}${img}.webp" alt="" loading="lazy" style="display:block;width:100%;aspect-ratio:16/9;object-fit:cover"><div style="position:absolute;inset:auto 0 0 0;padding:26px 12px 9px;background:linear-gradient(0deg,rgba(0,0,0,.85),rgba(0,0,0,0));color:#fff"><div style="font:700 12px/1 'IBM Plex Sans Arabic',Tahoma;color:#e8c66a;letter-spacing:1.5px">${code}</div><div style="font:800 19px/1.25 'IBM Plex Sans Arabic',Tahoma">${title}</div>${sub ? `<div style="font-size:12px;opacity:.9">${sub}</div>` : ''}</div></div>`;
+  function pArs() {
+    const A = WARS.ensure(G), cash = G.nat ? G.nat.eco[0].cash : 0;
+    let h = `<div class="note">🏆 أسلحة نجوم خاصة بدولتنا، كل واحد <b>مشروع استراتيجي</b> ياخذ سنين ويندفع أقساط شهرية. لما يدخل الخدمة إله أثر كبير بالحرب، والشعب يفخر والحلفاء يقربون. يشتغل مشروعين بالمرة. الخزينة ${money(cash)}.</div>`;
+    for (const q of A.run) { const f = WARS.FL[q.k], fr = Math.min(1, (G.t - q.t0) / (q.mo * 30.4)); h += `<div class="pj" style="border-color:var(--gold)"><div class="line"><b>⏳ ${f.code} ${WARS.title(q.k)}</b><span>${Math.round(fr * 100)}٪</span></div>${barV(fr * 100, 'var(--gold)')}<div class="note">باقي ${Math.max(0, Math.ceil(q.mo - (G.t - q.t0) / 30.4))} شهر · قسط ${money(q.cost / q.mo)}/شهر</div></div>`; }
+    for (const [dom, [ic, dn]] of Object.entries(WARS.DOM)) { const ks = Object.keys(WARS.FL).filter(k => (WARS.FL[k].dom === dom) || (dom === 'msl' && (k === 'hyper' || k === 'ad'))).filter(k => dom === 'msl' || !(k === 'hyper' || k === 'ad')); if (!ks.length) continue;
+      h += `<h3>${ic} ${dn}</h3>`;
+      for (const k of ks) { const f = WARS.FL[k], fam = WARS.FAM.find(x => x.fl === k), done = A.done[k], run = A.run.find(q => q.k === k), err = WARS.can(G, WD, k);
+        h += `<div class="pj" style="padding:0;overflow:hidden">${heroCard(fam.img, f.code, WARS.title(k), done ? '✅ بالخدمة' : run ? '⏳ ينبني' : f.ref)}<div style="padding:8px 10px"><div class="note">${f.d}</div>${done || run ? '' : `<div class="line"><span>💰 ${money(WARS.costOf(G, k))} · ⏱ ${f.mo} شهر</span><span>${f.ref}</span></div>${err ? `<div class="note">⛔ ${err}</div>` : `<button data-ars="${k}" class="big">🏗 ابدأ المشروع</button>`}`}</div></div>`; } }
+    // عائلة السلاح الوطني: 31 نوع بصورها ورموزها
+    h += `<h3>🗂 عائلة سلاحنا الوطني (${WARS.FAM.length} نوع)</h3><div class="note">كل نوع يكبر رقمه ويا جيله (10، 20، 30، 40)، و⭐ رقمه 50 = الترسانة. النسخ: M مطوّرة، K قيادة، E تصدير.</div><div style="display:grid;grid-template-columns:1fr 1fr;gap:8px">`;
+    h += WARS.FAM.map(f => `<div style="position:relative;border-radius:10px;overflow:hidden"><img src="${IMGB}${f.img}.webp" alt="" loading="lazy" style="display:block;width:100%;aspect-ratio:16/10;object-fit:cover"><div style="position:absolute;inset:auto 0 0 0;padding:14px 7px 5px;background:linear-gradient(0deg,rgba(0,0,0,.85),rgba(0,0,0,0));color:#fff"><div style="font:700 10px/1 Tahoma;color:#e8c66a">${f.code}-${f.fl ? 50 : 40}${f.fl ? ' ⭐' : ''}</div><div style="font:800 13px/1.3 'IBM Plex Sans Arabic',Tahoma">${f.kind} ${f.name}</div></div></div>`).join('') + '</div>';
     return h;
   }
   function pMkt() {
@@ -1514,6 +1532,7 @@ body.sheeton #toast{top:calc(var(--toph, 100px) + 4px) !important;bottom:auto !i
     root.querySelectorAll('[data-can]').forEach(b => b.onclick = () => { const back = NT.cancel(G, +b.dataset.can); re(0, `↩ ألغينا الطلب ورجع ${C$(back || 0)}`); });
     root.querySelectorAll('[data-bud]').forEach(b => b.onclick = () => { IND.setBudget(NW, 0, +b.dataset.bud); re(0); });
     root.querySelectorAll('[data-rsec]').forEach(b => b.onclick = () => { rdSec = b.dataset.rsec; openPanel('rd', true); });
+    root.querySelectorAll('[data-ars]').forEach(b => b.onclick = () => re(WARS.start(G, WD, b.dataset.ars), `🏗 بدينا مشروع ${WARS.FL[b.dataset.ars].code} ${WARS.title(b.dataset.ars)}`));
     root.querySelectorAll('[data-rdrop]').forEach(b => b.onclick = () => re(WRES.drop(G, +b.dataset.rdrop), '⏹ وقّفنا البحث'));
     root.querySelectorAll('[data-rfill]').forEach(b => b.onclick = () => re(WRES.fill(G, WD), '⚡ شغّلنا كل الخانات'));
     root.querySelectorAll('[data-rs]').forEach(b => b.onclick = () => re(WRES.pick(G, WD, b.dataset.rs), `🔬 البحث هسه على «${WRES.T[b.dataset.rs].n}»`));

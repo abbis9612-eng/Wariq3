@@ -118,8 +118,13 @@
     if (T) T.natN = T.W.log.length;
     // الإنتاج (نفس econ.js daily): الخطوط تشتغل على أول الطلبات، والسرعة حسب الأولوية والصناعة والمعنويات
     const P = ECON.PRIO[e.prio], sp = P.prod * (NW.indF ? NW.indF[0].prod : 1) * (e.mor < 30 ? .75 : 1) * (G.cmd ? CMD.mult(G.cmd.c).prod : 1) * (1 + (c.prodK || 0));   // القائد: اللوجستيك يسرّع الإنتاج
-    for (let k = 0; k < Math.min(e.lines, e.q.length); k++) e.q[k].left -= sp * (ECON.ITEMS[e.q[k].k] && ECON.ITEMS[e.q[k].k].cat === 'div' && e.mor < 30 ? .8 : 1);
+    // M2: كفاءة الخط — الخط اللي يصنع نفس الشي يتعلّم ويصير أسرع (لحد +25٪ بعد ~2 شهر)، والتبديل يرجّعه
+    e.le = e.le || [];
+    for (let k = 0; k < Math.min(e.lines, e.q.length); k++) { const L = e.le[k] || (e.le[k] = { k: e.q[k].k, f: 1 }); if (L.k !== e.q[k].k) { L.k = e.q[k].k; L.f = 1; } else L.f = Math.min(1.25, L.f + .004);
+      e.q[k].left -= sp * L.f * (ECON.ITEMS[e.q[k].k] && ECON.ITEMS[e.q[k].k].cat === 'div' && e.mor < 30 ? .8 : 1); }
     for (let k = e.q.length - 1; k >= 0; k--) if (e.q[k].left <= 0) { const o = e.q[k]; deliver(G, WD, o, X); e.q.splice(k, 1); }
+    // «🔁 كرّر»: المنتج المعلّم يرجع للطابور لحاله إذا خلص والفلوس تكفي
+    if (e.rep) for (const k in e.rep) if (e.rep[k] && !e.q.some(o => o.k === k) && ECON.ITEMS[k] && !ECON.canBuy(NW, 0, k)) ECON.buy(NW, 0, k, 'rep');
     MKT.deliver(G, WD, { ECON, AIR });   // W8: عقود سوق السلاح اللي وصلت
     // المعنويات (نفس منطق econ.js morale بأحداث العالم)
     morale(G, NW, !!T || G.wars.some(w => w.a.includes(me) || w.b.includes(me)));

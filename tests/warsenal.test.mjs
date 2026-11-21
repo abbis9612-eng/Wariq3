@@ -54,5 +54,9 @@ if (typeof M.buy(Z, WD, S, 'TUR', 'ada', 'used') !== 'string') no('سفينة م
 if (Math.abs((zc - Z.nat.eco[0].cash) - (1.2 * 1.6 + 1.6 * 1.1 * .3)) > .01) no('الدفعة الأولى غلط');
 for (let i = 0; i < 400; i++) day(Z);
 if (!Z.log.some(l => l.k === 'arms' && l.a === 'tt')) no('نقل التقنية ما رفع البحث'); if (Z.mkt.deals.find(d => d.inst).inst.n !== 0) no('الأقساط ما خلصت');
+// M2: التكرار وكفاءة الخط
+const R2 = S.init(WD, 'TUR', { seed: 8 }); N.init(R2, WD); day(R2); R2.nat.eco[0].cash = 90; const e2 = R2.nat.eco[0]; e2.rep = { nf_SK: true }; N.buy(R2, 'nf_SK');
+let built = 0, maxF = 1; for (let i = 0; i < 120; i++) { day(R2); built = R2.nat.log.filter(l => l.k === 'built' && l.it === 'nf_SK').length; if (e2.le && e2.le[0]) maxF = Math.max(maxF, e2.le[0].f); }
+if (built < 2) no(`التكرار ما رجّع الطلب (${built})`); if (!(maxF > 1.1)) no('كفاءة الخط ما زادت ' + maxF);
 console.log(`زئير وعُقبة دخلوا الخدمة · قوة الجيش ×${pw0} → ×${G.C.USA.pwK.toFixed(2)} · مدمرات ${dd0} → ${dd1} · رموز ${codes.length} بلا تكرار`);
 console.log(bad ? `❌ ${bad} مشاكل` : '✅ الترسانة الوطنية تمام'); process.exit(bad ? 1 : 0);

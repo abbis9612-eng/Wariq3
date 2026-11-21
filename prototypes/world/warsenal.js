@@ -94,6 +94,10 @@
     NZ: { cat: 'msl', msl: 20, br: 'msl', cost: .1, days: 30, pw: 1, d: '20 صاروخ باليستي' }, SH: { cat: 'msl', msl: 12, br: 'msl', cost: .06, days: 25, pw: 1, d: '12 صاروخ كروز' },
     QS: { cat: 'msl', asm: 16, br: 'msl', cost: .05, days: 25, pw: 1, d: '16 صاروخ ضد السفن' }, DR: { cat: 'sam', pool: '57E6', q: 24, br: 'msl', cost: .008, days: 20, pw: 1, d: '24 صاروخ دفاع جوي قصير' },
   };
+  // أرقام كل نوع (0–10): هجوم، دفاع، سرعة، مدى — للعرض، وتكبر ويا الجيل [تقدير]
+  const STAT = { ZR: [9, 9, 5, 5], DH: [6, 5, 8, 5], LT: [6, 7, 6, 4], SK: [3, 7, 6, 2], HT: [8, 4, 4, 9], WB: [9, 3, 5, 10], SF: [9, 7, 9, 8], NS: [7, 5, 8, 6], ZB: [8, 6, 5, 4], AF: [8, 4, 7, 4], ZL: [6, 2, 4, 9], QD: [7, 1, 5, 7],
+    UQ: [9, 9, 6, 10], MJ: [7, 7, 7, 8], AS: [6, 5, 8, 6], TR: [8, 8, 5, 7], JS: [3, 6, 5, 4], NZ: [10, 0, 9, 10], SH: [8, 0, 7, 9], QS: [9, 0, 8, 8], DR: [5, 8, 6, 3] };
+  const stats = (code, g) => (STAT[code] || [5, 5, 5, 5]).map(v => Math.min(10, +(v * (.55 + .15 * g)).toFixed(1)));
   // الجيل من مستوى البحث: 1 ← جيل 1، 2–3 ← 2، 4 ← 3، 5–6 ← 4
   const genOf = (G, br) => { const t = (G.nat && G.nat.ind[0].tech[br]) || 0; return t >= 5 ? 4 : t >= 4 ? 3 : t >= 2 ? 2 : t >= 1 ? 1 : 0; };
   function register(G, WD, ECON) {
@@ -127,6 +131,6 @@
   function indF(G, F) { const A = G.ars; if (!A || !F) return; if (A.done.tank) F.armAtk *= 1 + FL.tank.fx.armAtk; if (A.done.ad) F.samPk *= 1 + FL.ad.fx.samPk; }
   // الخسائر: الروبوتات تنقص خسائرنا البشرية
   const casK = G => (G.ars && G.ars.done.ugv ? 1 - FL.ugv.fx.cas : 1);
-  const API = { FL, FAM, DOM, PROD, addShips, genOf, register, deliver, title, MAXRUN, ensure, costOf, can, start, month, apply, indF, casK };
+  const API = { FL, FAM, DOM, PROD, STAT, stats, addShips, genOf, register, deliver, title, MAXRUN, ensure, costOf, can, start, month, apply, indF, casK };
   if (typeof module !== 'undefined') module.exports = API; else root.WARS = API;
 })(typeof window !== 'undefined' ? window : globalThis);

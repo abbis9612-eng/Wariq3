@@ -15,6 +15,10 @@
   const dayOf = s => Math.round((Date.parse(s) - START) / 864e5);
   const hash = s => { let h = 7; for (const ch of s) h = (h * 31 + ch.charCodeAt(0)) | 0; return Math.abs(h); };
   const isDemo = cs => cs && DEMO.includes(cs.gt) && cs.free >= 1;
+  // v5-4: النظام ممكن يتغيّر باللعبة (WGOV)
+  const GOV = () => root.WGOV || (typeof require !== 'undefined' ? require('./wgov.js') : null);
+  const demoOf = (W, WD, id) => { const g = GOV() && GOV().isDemo(W, WD, id); return g != null ? g : isDemo(WD.cs[id]); };
+  const gtOf = (W, WD, id) => GOV() ? GOV().gtOf(W, WD, id) : WD.cs[id].gt;
   function ensure(W, WD) {
     if (W.elec) return W;
     W.elec = {}; for (const id of W.ids) { const cs = WD.cs[id]; if (!isDemo(cs)) continue; const T = (TERM[cs.gt] || 4) * 365;
@@ -37,10 +41,10 @@
     ensure(W, WD); const me = W.me;
     // الانتخابات
     for (const id in W.elec) { if (W.elec[id] > W.t) { if (id === me && W.elec[id] - W.t <= 31 && !W.pev.some(e => e.id === 'campaign')) W.pev.push({ id: 'campaign', t: W.t }); continue; }
-      const cs = WD.cs[id]; W.elec[id] += (TERM[cs.gt] || 4) * 365; election(W, WD, S, id); }
+      if (!demoOf(W, WD, id)) { delete W.elec[id]; continue; } W.elec[id] += (TERM[gtOf(W, WD, id)] || 4) * 365; election(W, WD, S, id); }
     // الانقلابات (الذكاء) والاحتلال
-    for (const id of W.ids) { const c = W.C[id]; if (id === me || !c) continue; const gt = WD.cs[id].gt;
-      if (c.stab < 30 && W.t - (W.coupT[id] || -999) > 365) { const p = (30 - c.stab) / 300 * (['mil', 'auth', 'trans'].includes(gt) ? 2 : isDemo(WD.cs[id]) ? .3 : 1); if (W.rnd() < p) coup(W, WD, S, id); } }
+    for (const id of W.ids) { const c = W.C[id]; if (id === me || !c) continue; const gt = gtOf(W, WD, id);
+      if (c.stab < 30 && W.t - (W.coupT[id] || -999) > 365) { const p = (30 - c.stab) / 300 * (['mil', 'auth', 'trans'].includes(gt) ? 2 : demoOf(W, WD, id) ? .3 : 1); if (W.rnd() < p) coup(W, WD, S, id); } }
     occupation(W, WD, S);
     // أحداث عالمية: حدث واحد كل شهرين تقريباً
     if (W.rnd() < .5) worldEvent(W, WD, S);
@@ -64,7 +68,7 @@
     const c = W.C[id]; W.coupT[id] = W.t; c.stab = 45; c.low = 0;
     for (const w of W.wars.slice()) if ((w.a.includes(id) || w.b.includes(id)) && w.a[0] !== W.me && w.b[0] !== W.me) { const s = w.a.includes(id) ? w.score : -w.score; if (s < 0 && (w.a[0] === id || w.b[0] === id)) S.endWar(W, WD, w, 'coup'); }
     for (const o in W.rel[id] || {}) W.rel[id][o] = Math.round(W.rel[id][o] * .7 + (W.rnd() * 20 - 10));
-    W.ten = clamp((W.ten || 0) + 2, 0, 100); W.log.push({ t: W.t, k: 'coup', id });
+    W.ten = clamp((W.ten || 0) + 2, 0, 100); W.log.push({ t: W.t, k: 'coup', id }); if (GOV()) GOV().aiCoup(W, WD, S, id);
   }
   // الاحتلال: كل منطقة مأخوذة (صاحبها دولة) تكلّف المحتل −0.05٪ نمو (لحد −1.5) و−0.15 استقرار (لحد −3) بالشهر؛ بعد سنة 1٪ بالشهر تثور وترجع إذا صاحبها مو بحرب ويا المحتل
   function occupation(W, WD, S) {
@@ -84,7 +88,7 @@
     else if (k === 'fin' && !W.gshock) { W.gshock = { v: -1.2, until: W.t + 180, n: 'أزمة مالية عالمية' }; W.log.push({ t: W.t, k: 'fin' }); }
     else if (k === 'pandemic' && !W.gshock) { W.gshock = { v: -.8, until: W.t + 120, n: 'وباء' }; for (const id of W.ids) W.C[id].stab = clamp(W.C[id].stab - 2, 0, 100); W.log.push({ t: W.t, k: 'pandemic' }); }
     else if (k === 'terror') { const id = pick(W, W.ids, x => (W.C[x].stab < 40 ? 3 : 1) * Math.sqrt(W.C[x].pop || 1) / 100), c = W.C[id]; c.stab = clamp(c.stab - 4, 0, 100); W.log.push({ t: W.t, k: 'terror', id }); if (id === me) W.pev.push({ id: 'terror', t: W.t }); }
-    else if (k === 'scandal' && isDemo(WD.cs[me]) && W.rnd() < .5) W.pev.push({ id: 'scandal', t: W.t });
+    else if (k === 'scandal' && demoOf(W, WD, me) && W.rnd() < .5) W.pev.push({ id: 'scandal', t: W.t });
     if (W.pev.length > 3) W.pev.splice(0, W.pev.length - 3);
   }
   // أحداث اللاعب بقرارات (الكلف بحجم الاقتصاد: k = الناتج/250)
@@ -108,6 +112,6 @@
       [() => 'ننكر ونهاجم الإعلام', W => { fac(W, 'street', -6); stab(W, -2); return 'الشارع غاضب (−6)'; }]] },
   };
   function choose(W, i, j) { const q = W.pev[i]; if (!q) return null; W.pev.splice(i, 1); const k = Math.max(.3, Math.min(20, W.C[W.me].gdp / 250)); const r = PEV[q.id].o[j][1](W, k); W.log.push({ t: W.t, k: 'pchose', id: q.id, r }); return r; }
-  const API = { ensure, month, casus, noCause, election, coup, choose, PEV, isDemo, KNOWN };
+  const API = { ensure, month, casus, noCause, election, coup, choose, PEV, isDemo, demoOf, KNOWN };
   if (typeof module !== 'undefined') module.exports = API; else root.WPOL = API;
 })(this);

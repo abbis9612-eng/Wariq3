@@ -229,7 +229,7 @@ function card() {
   if (r.cities.length) h += `<div class="note">المدن: ${r.cities.map(c => c[0] + (c[1] ? ` (${fmt(c[1])})` : '')).join('، ')}</div>`;
   if (r.oil || r.gas) h += `<div class="row">${r.oil ? pill('🛢 <b>' + fmt(r.oil * 1000) + '</b> برميل/يوم', 'gold') : ''}${r.gas ? pill('🔥 <b>' + r.gas + '</b> مليار م³ غاز/سنة', 'gold') : ''}</div><div class="note">${r.fields.join('، ')}</div>`;
   if (c) {
-    h += `<h3>${c.ar}</h3><div class="note">${c.gov || ''}${c.hos ? ` · ${role(c.hosR)}: ${c.hos}` : ''}${c.hog ? ` · ${role(c.hogR)}: ${c.hog}` : ''}</div><div class="grid" style="margin-top:6px">`;
+    h += `<h3>${c.ar}</h3><div class="note">${(window.__G && __G.G && window.WGOV ? WGOV.nameOf(__G.G, WD, k) : c.gov) || ''}${c.hos ? ` · ${role(c.hosR)}: ${c.hos}` : ''}${c.hog ? ` · ${role(c.hogR)}: ${c.hog}` : ''}</div><div class="grid" style="margin-top:6px">`;
     const st = (i, b) => `<div class="st"><i>${i}</i><b>${b}</b></div>`;
     h += st('السكان', fmt(c.pop)) + st('الناتج', c.gdp ? Math.round(c.gdp) + ' مليار $' : '–') + st('ميزانية الجيش', c.mb ? c.mb.toFixed(1) + ' مليار $' : '–') + st('الجيش العامل', fmt(c.act)) + st('دبابات', fmt(c.tanks)) + st('طائرات قتال', fmt(c.air)) + (c.nuke ? st('رؤوس نووية', fmt(c.nuke)) : '') + st('الاستقرار', c.stab ?? '–') + '</div>';
     if (c.kit) { const KN = { tank: 'دبابات', afv: 'مدرعات', art: 'مدفعية', jet: 'طائرات قتال', heli: 'مروحيات', ad: 'دفاع جوي', navy: 'قطع بحرية' };
@@ -584,6 +584,7 @@ html[data-skin] .hero b{color:var(--act)}
 <script src="wrise.js"></script>
 <script src="wgeo.js"></script>
 <script src="wins.js"></script>
+<script src="wgov.js"></script>
 <script src="wcas.js"></script>
 <script src="warsenal.js"></script>
 <script src="wsim.js"></script>
@@ -1301,6 +1302,8 @@ html[data-skin] .hero b{color:var(--act)}
       case 'puppet': return [`🔗 ${n(l.x)} صارت حكومة تابعة لـ${n(l.by)}`, l.by === me ? 'good' : ''];
       case 'comp': return [`💵 ${n(l.x)} دفعت تعويض ${l.v} مليار لـ${n(l.by)} ورجعت أرضها`, l.by === me ? 'good' : ''];
       case 'pupfree': return [`⛓ ${n(l.x)} تمردت وطلعت من تبعية ${n(l.by)}`, l.by === me ? 'bad' : ''];
+      case 'gov': return l.a === 'start' ? [`🏛 بدا الإصلاح نحو ${WGOV.GOV[l.to].n}`, ''] : l.a === 'fail' ? [`⚠ فشل التغيير السريع نحو ${WGOV.GOV[l.to].n}`, 'bad'] : l.id === me ? [`🏛 صرنا ${WGOV.GOV[l.to].n}`, 'good'] : l.to === 'mil' ? [`🎖 ${n(l.id)} صارت حكم عسكري بعد الانقلاب`, ''] : [`🏛 ${n(l.id)} صارت ${WGOV.GOV[l.to].n}`, ''];
+      case 'ibloc': return l.a === 'found' ? [`🕌 تأسّس ${l.n} بقيادة ${n(l.by)}`, l.by === me ? 'good' : ''] : l.a === 'join' ? [`🕌 ${n(l.x)} انضمت لـ${l.n}`, l.x === me || (WGOV.mine(G) && WGOV.mine(G).n === l.n) ? 'good' : ''] : l.a === 'lvl' ? [`🕌 ${l.n} صار ${WGOV.LVL[l.lvl]}`, ''] : l.a === 'inv' ? [`📨 ${n(l.by)} تدعونا لـ${l.n}`, ''] : l.a === 'no' ? [`🕌 ${n(l.x)} رفضت الانضمام`, 'bad'] : l.a === 'leave' ? [`🕌 طلعنا من ${l.n}`, ''] : [`🕌 انحل ${l.n}`, ''];
       case 'insatk': return [`💥 ${l.g} ${l.big ? 'نفّذت هجوم كبير' : 'ضربت'}${l.r ? ' بـ' + l.r : ''}: الاستقرار ينزل`, 'bad'];
       case 'insbeat': return [`🏳 ${l.g} انهزمت: ${l.num.toLocaleString('ar')} أسير ينتظرون قرارك`, 'good'];
       case 'insnew': return [`🏴 ${l.res ? 'طلعت' : 'تشكّلت'} ${l.g}`, 'bad'];
@@ -1434,6 +1437,7 @@ const HIC = {'💵':'money','💰':'money','🏥':'health','📊':'chart','📈'
   // ===== v5-6 (I-149): مركز القرارات — كل شي يحتاج موافقتك بمكان واحد، بأزراره، ومرتب حسب الاستعجال =====
   function inbox() { if (!G) return []; const out = [], NW = G.nat, H = NW && NW.home, hNow = NW ? NW.t : 0, k = Math.max(.3, Math.min(20, G.C[me].gdp / 250));
     { const P = G.geo && G.geo.post; if (P && G.C[P.x] && !G.C[P.x].dead) { const V = WGEO.preview(G, WD, me, P.x); out.push({ u: 120, ic: FLG(P.x, 'flg big') || '🏳', t: `${nameOf(P.x)} استسلمت: شنو نسوي بيها؟`, s: `<b>ضم:</b> ${V.annex}<br><b>تابعة:</b> ${V.pup}<br><b>تعويض:</b> ${V.comp}`, b: `<button class="big" data-post="annex">ضم</button><button data-post="pup">حكومة تابعة</button><button data-post="comp">تعويض</button>` }); } }
+    (G.ibinv || []).forEach((q, i) => { const b = G.iblocs.find(x => x.id === q.b); if (b) out.push({ u: 75, ic: '🕌', t: `${nameOf(b.founder)} تدعونا لـ${b.n}`, s: `${b.m.length} دول · ${WGOV.LVL[b.lvl]}. ننضم: علاقات ويا الأعضاء أحسن ونمو تجاري${b.lvl >= 2 ? '، ودفاع مشترك (حروبهم حروبنا)' : ''}؛ الغرب يزعل شوية`, b: `<button class="big" data-ibinv="${i}:1">ننضم</button><button data-ibinv="${i}:0">لا</button>` }); });
     if (G.ins) { G.ins.cap.forEach((q, i) => out.push({ u: 110, ic: '⚖', t: `${q.num.toLocaleString('ar')} أسير من ${q.n}: شنو نسوي بيهم؟`, s: Object.entries(WINS.FATE).map(([k, F]) => `<b>${F.n}:</b> ${F.d}`).join('<br>'), b: Object.entries(WINS.FATE).map(([k, F]) => `<button data-fate="${i}:${k}" class="${k === 'jail' ? 'big' : ''}${k === 'exec' ? ' dang' : ''}">${F.n}</button>`).join('') }));
       for (const g of G.ins.g) if (g.hit > G.t - 30 && !g.op) out.push({ u: 65, ic: '🏴', t: `${g.n} تضرب`, s: `${fmtK(g.str)} مقاتل · الرضا ${Math.round(g.sat)}${g.sup ? ' · مدعومة من ' + nameOf(g.sup) : ''}`, b: `<button data-go="homep" class="big">شوف الخيارات</button>` }); }
     for (const w of G.wars) if (w.offer && (w.a.includes(me) || w.b.includes(me))) out.push({ u: 100, ic: FLG(w.offer, 'flg big') || '🕊', t: `${nameOf(w.offer)} تعرض السلام`, s: w.n, b: `<button class="big" data-peace="${w.id}">اقبل السلام</button>` });
@@ -1448,6 +1452,25 @@ const HIC = {'💵':'money','💰':'money','🏥':'health','📊':'chart','📈'
   const inboxHtml = L => L.length ? `<div class="inbox">${L.map(x => `<div class="ibx"><div class="ibt"><span class="ibi">${x.ic}</span><div><b>${x.t}</b>${x.s ? `<small>${x.s}</small>` : ''}</div></div><div class="ibb">${x.b}</div></div>`).join('')}</div>` : '<div class="note">✓ ماكو شي ينتظرك هسه. الوزراء ماسكين الشغل.</div>';
   window.INBOX = () => inbox().length;
   const fmtK = v => v >= 1 ? `~${Math.round(v).toLocaleString('ar')} ألف` : `~${Math.round(v * 1000).toLocaleString('ar')}`;
+  // v5-4 (I-147): نظام الحكم
+  function govHtml() { if (!window.WGOV) return ''; const g = WGOV.ensure(G), cur = WGOV.gtOf(G, WD, me), T = WGOV.GOV[cur];
+    let h = `<h3>🏛 نظام الحكم: ${WGOV.nameOf(G, WD, me)}</h3><div class="note">${T ? T.d : 'نظام خاص بالبيانات (مو من الخمسة): تقدر تغيّره لواحد منهم'}</div>`;
+    if (g.tr) { const f = (G.t - g.tr.t0) / (g.tr.t1 - g.tr.t0) * 100; return h + `<div class="pj"><b>⏳ إصلاح نحو ${WGOV.GOV[g.tr.to].n}</b>${barV(f, 'var(--gold)')}<div class="note">باقي ${Math.ceil((g.tr.t1 - G.t) / 30)} شهر · الاستقرار ينزل شوية كل شهر لحد ما يخلص</div></div>`; }
+    h += `<div class="govl">${WGOV.ORDER.filter(k => k !== cur).map(k => { const O = WGOV.GOV[k], eR = WGOV.canChange(G, WD, k, 'reform'), eC = WGOV.canChange(G, WD, k, 'coup');
+      return `<div class="pj"><div class="line"><b>${O.ic} ${O.n}</b><small class="note">${O.demo ? 'انتخابات' : 'بلا انتخابات'}${O.ap ? ' · +' + (O.ap === 1 ? '1 نقطة/شهر' : O.ap === .5 ? '1 نقطة/شهرين' : '1 نقطة/4 أشهر') : ''}</small></div><div class="note">${O.d}</div>
+        <div class="seg"><button data-gov="${k}:reform" ${eR ? 'disabled' : ''} title="${eR || ''}">إصلاح ⭐3 · ${WGOV.monthsOf(G, WD, k)} شهر</button><button data-gov="${k}:coup" class="dang" ${eC ? 'disabled' : ''}>${k === 'mil' ? 'انقلاب' : 'تغيير سريع'} ⭐2 · نجاح ${Math.round(WGOV.coupP(G, k) * 100)}٪</button></div>${eR && !/نقاط/.test(eR) ? `<div class="note neg">الإصلاح: ${eR}</div>` : ''}</div>`; }).join('')}</div>`;
+    return h; }
+  // v5-4: التحالف الإسلامي (بالدبلوماسية)
+  function iblocHtml() { if (!window.WGOV) return ''; WGOV.ensure(G); const b = WGOV.inBloc(G, me), O = ((WD.bl || {}).OIC || { m: [] }).m; if (!O.includes(me) && !G.iblocs.length) return '';
+    let h = `<h3>🕌 التحالف الإسلامي</h3>`;
+    if (b) { const own = b.founder === me, need = [0, 3, 5][b.lvl];
+      h += `<div class="pj"><div class="line"><b style="color:${b.col}">■ ${b.n}</b><small>${WGOV.LVL[b.lvl]}${own ? ' · إحنا المؤسسين' : ' · بقيادة ' + nameOf(b.founder)}</small></div><div class="row">${b.m.map(x => `<button data-go="${x}" class="pill">${nmF(x)}</button>`).join('')}</div>
+        <div class="note">اقتصادي: نمو تجاري حسب العدد (+${(G.C[me].ibG || 0).toFixed(2)}٪)${b.lvl >= 2 ? ' · دفاعي: أي عضو ينضرب الكل يدخل' : ''}${b.lvl >= 3 ? ' · قيادة موحّدة: +1 نقطة قرار كل شهرين' : ''}</div>
+        ${own ? `<div class="seg">${b.lvl < 3 ? `<button data-ib="up" ${b.m.length < need || G.ap < 2 ? 'disabled' : ''}>⬆ ${WGOV.LVL[b.lvl + 1]} ⭐2${b.m.length < need ? ` (يحتاج ${need} أعضاء)` : ''}</button>` : ''}<button data-ib="leave" class="dang">حل التحالف</button></div>
+        <div class="note">ادعُ دولة (⭐1، القبول حسب العلاقة والنظام؛ دول الناتو صعبة):</div><div class="row">${O.filter(x => G.C[x] && !G.C[x].dead && !b.m.includes(x) && !WGOV.inBloc(G, x)).map(x => [x, WGOV.joinP(G, WD, S, b, x)]).sort((a, c) => c[1] - a[1]).slice(0, 10).map(([x, p]) => `<button data-ibinvite="${x}" class="pill" ${G.ap < 1 ? 'disabled' : ''}>${nmF(x)} ${Math.round(p * 100)}٪</button>`).join('')}</div>` : `<div class="seg"><button data-ib="leave" class="dang">نطلع منه</button></div>`}</div>`; }
+    else { const e = WGOV.canFound(G, WD); h += `<div class="note">تحالف دول إسلامية بثلاث درجات: اقتصادي (تجارة)، دفاعي (دفاع مشترك)، وقيادة موحّدة. يأسّسه نظام إسلامي أو ملكية (تغيّر النظام من 🏛 الداخل). الغرب وإسرائيل يزعلون، والدول الإسلامية تقترب.</div><div class="seg"><button data-ib="found" class="big" ${e ? 'disabled' : ''}>🕌 أسّس تحالف ⭐3</button></div>${e ? `<div class="note">${e}</div>` : ''}`; }
+    const oth = G.iblocs.filter(x => x !== b); if (oth.length) h += oth.map(x => `<div class="note"><b style="color:${x.col}">■ ${x.n}</b> (${WGOV.LVL[x.lvl]}): ${x.m.map(nmF).join('، ')}</div>`).join('');
+    return h; }
   // v5-3 (I-146): الجماعات المسلحة بالداخل
   function insHtml() { if (!G.ins) return ''; const I = G.ins, L = I.g;
     let h = `<h3>🏴 الجماعات المسلحة</h3><div class="note">كل جماعة تضعف الدولة (هجمات، نفط، استقرار). تقدر تحتويها، تفاوضها، أو تحاربها، وكل طريق إله ثمن. القمع الكثير يولّد «غضب» يطلع جماعات جديدة${I.heat > 5 ? ` — <b class="${I.heat > 40 ? 'neg' : ''}">الغضب هسه ${Math.round(I.heat)}</b>` : ''}.</div>`;
@@ -1603,6 +1626,7 @@ const HIC = {'💵':'money','💰':'money','🏥':'health','📊':'chart','📈'
     const H = G.nat.home, W_ = H.warn;
     return `${H.iss.map((q, i) => { const I = HOME.ISS[q.k]; return `<div class="st" style="margin:8px 0;border-color:var(--neg)"><b>🏛 ${I.t}</b>${q.crit ? ' <small class="neg">مصيرية</small>' : ''}<div class="note">${I.x}</div><div class="seg">${I.o.map((o, j) => `<button data-iss="${i}:${j}">${kLab(o[0])}</button>`).join('')}</div></div>`; }).join('')}
     <h3>الاستقرار: ${Math.round(H.stab)}</h3>${barV(H.stab, colV(H.stab))}
+    ${govHtml()}
     ${insHtml()}
     ${W_.coup || W_.rev || W_.bank ? `<div class="pill warn">${W_.coup ? `⚠️ انقلاب بعد ${14 - W_.coup} يوم إذا ${HOME.FAC[fkArmed()].n} يبقى تحت 20. ` : ''}${W_.rev ? `⚠️ ثورة بعد ${14 - W_.rev} يوم إذا الاستقرار يبقى تحت 15. ` : ''}${W_.bank ? `⚠️ إفلاس بعد ${30 - W_.bank} يوم إذا الدين يبقى فوق حده بنص. ` : ''}</div>` : ''}
     <h3>الفئات</h3>${(H.fk || HOME.FK).map(k => { const F = HOME.FAC[k], v = H.fac[k], w = H.why.filter(x => x[0] === k); return `<div style="margin:6px 0"><div class="line"><span>${F.ic} <b>${F.n}</b></span><b>${Math.round(v)}</b></div>${barV(v, colV(v))}<div class="note">${F.d}${w.length ? ' · اليوم: ' + w.map(x => `<span class="${x[1] >= 0 ? 'pos' : 'neg'}">${x[1] >= 0 ? '+' : ''}${x[1].toFixed(1)} ${x[2]}</span>`).join('، ') : ''}</div></div>`; }).join('')}
@@ -1800,6 +1824,7 @@ const HIC = {'💵':'money','💰':'money','🏥':'health','📊':'chart','📈'
     if (G.offers.length) h += `<h3>📨 عروض عليك (${G.offers.length})</h3>` + G.offers.map((o, i) => `<div class="st" style="margin:6px 0"><b>${nmF(o.from)}</b> تعرض ${({ trade: '📦 اتفاقية تجارة (نمو للطرفين)', ally: '🛡 تحالف دفاعي (يدافعون عنا وندافع عنهم)', nap: '🤝 اتفاقية عدم اعتداء (ما يهاجمون بعض)' })[o.what]}<div class="seg"><button data-off="${i}:1">✔ نقبل</button><button data-off="${i}:0">✕ نرفض</button></div></div>`).join('');
     const naps = G.naps.filter(p => p.includes(me)).map(p => p[0] === me ? p[1] : p[0]);
     if (naps.length) h += `<h3>عدم اعتداء (${naps.length})</h3><div class="row">${naps.map(x => `<button data-go="${x}" class="pill">${nmF(x)}</button>`).join('')}</div>`;
+    h += iblocHtml();
     const myB = S.blocsOf(WD, me); h += `<h3>تكتلاتنا</h3><div class="note">${myB.length ? myB.map(k => WD.bl[k].ar + (WD.bl[k].art5 ? ' 🛡 (دفاع مشترك)' : '')).join('، ') : 'ماكو'}</div>`;
     const C = S.council(G), sumL = Math.max(0, 180 - (G.t - G.unT));
     h += `<h3>🇺🇳 الأمم المتحدة</h3><div class="note">مجلس الأمن هسه: ${C.map(x => (S.P5.includes(x) ? '<b>' + nameOf(x) + '</b>' : nameOf(x))).join('، ')} (الغامق = فيتو)</div>
@@ -1948,6 +1973,10 @@ const HIC = {'💵':'money','💰':'money','🏥':'health','📊':'chart','📈'
     root.querySelectorAll('[data-can]').forEach(b => b.onclick = () => { const back = NT.cancel(G, +b.dataset.can); re(0, `↩ ألغينا الطلب ورجع ${C$(back || 0)}`); });
     root.querySelectorAll('[data-bud]').forEach(b => b.onclick = () => { IND.setBudget(NW, 0, +b.dataset.bud); re(0); });
     root.querySelectorAll('[data-rsec]').forEach(b => b.onclick = () => { rdSec = b.dataset.rsec; openPanel('rd', true); });
+    root.querySelectorAll('[data-gov]').forEach(b => b.onclick = () => { const [k, how] = b.dataset.gov.split(':'); if (how === 'coup' && !confirm(`تغيير سريع نحو ${WGOV.GOV[k].n}: إذا فشل الجيش ينقسم والاستقرار ينهار. متأكد؟`)) return; const r = WGOV.change(G, WD, S, k, how); re(r, r && r.t ? (r.fail ? '' : '✔ ') + r.t : ''); bar(); });
+    root.querySelectorAll('[data-ib]').forEach(b => b.onclick = () => { const a = b.dataset.ib; if (a === 'leave' && !confirm('متأكد؟')) return; const r = a === 'found' ? WGOV.found(G, WD, S) : a === 'up' ? WGOV.upgrade(G, WD, S) : WGOV.leave(G, WD, S); re(r, r && r.t ? '🕌 ' + r.t : ''); syncMap(); bar(); });
+    root.querySelectorAll('[data-ibinvite]').forEach(b => b.onclick = () => { const r = WGOV.invite(G, WD, S, b.dataset.ibinvite); re(r, r && r.t ? (r.fail ? '' : '🕌 ') + r.t : ''); syncMap(); bar(); });
+    root.querySelectorAll('[data-ibinv]').forEach(b => b.onclick = () => { const [i, y] = b.dataset.ibinv.split(':'); const r = WGOV.answer(G, WD, S, +i, y === '1'); re(r, r && r.t ? '🕌 ' + r.t : ''); syncMap(); bar(); });
     root.querySelectorAll('[data-ins]').forEach(b => b.onclick = () => { const [id, a] = b.dataset.ins.split(':'); const r = WINS.act(G, WD, S, id, a); re(r, r && r.t ? (/فشل/.test(r.t) ? '' : '✔ ') + r.t : ''); syncMap(); bar(); });
     root.querySelectorAll('[data-fate]').forEach(b => b.onclick = () => { const [i, k] = b.dataset.fate.split(':'); if (k === 'exec' && !confirm('إعدام الأسرى: إدانة دولية وعقوبات وثأر وشارع منقسم. متأكد؟')) return; const r = WINS.fate(G, WD, S, +i, k); re(r, `⚖ قررنا: ${WINS.FATE[k].n}`); bar(); });
     root.querySelectorAll('[data-post]').forEach(b => b.onclick = () => { const r = WGEO.decide(G, WD, S, b.dataset.post); if (typeof r === 'string') toast('❌ ' + r, 'bad'); syncMap(); relabel(); openPanel(panel || 'cmd', true); bar(); save(); });

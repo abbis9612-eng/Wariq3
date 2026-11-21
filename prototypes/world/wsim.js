@@ -4,7 +4,7 @@
 (function (root) {
   'use strict';
   const START = Date.UTC(2026, 10, 20);   // 20 تشرين الثاني 2026: الوضع الحقيقي (D-048)
-  const V = 26;                              // إصدار حفظ «العالم» (9: البحرية الحقيقية W12؛ 2: الصواريخ والدفاع الجوي؛ 3: البحرية والمضائق؛ 4: طبقة الدولة؛ 5: التكتلات والتوتر والعروض والأمم المتحدة؛ 6: الانتخابات والانقلابات والاحتلال والأحداث؛ 7: البحث لكل الدول وسوق السلاح؛ 8: قائد القوات المسلحة)
+  const V = 27;                              // إصدار حفظ «العالم» (9: البحرية الحقيقية W12؛ 2: الصواريخ والدفاع الجوي؛ 3: البحرية والمضائق؛ 4: طبقة الدولة؛ 5: التكتلات والتوتر والعروض والأمم المتحدة؛ 6: الانتخابات والانقلابات والاحتلال والأحداث؛ 7: البحث لكل الدول وسوق السلاح؛ 8: قائد القوات المسلحة)
   const mulberry = a => () => { a |= 0; a = a + 0x6D2B79F5 | 0; let t = Math.imul(a ^ a >>> 15, 1 | a); t = t + Math.imul(t ^ t >>> 7, 61 | t) ^ t; return ((t ^ t >>> 14) >>> 0) / 4294967296; };
   const clamp = (v, a, b) => v < a ? a : v > b ? b : v;
   const POL = root.WPOL || (typeof require !== 'undefined' ? require('./wpol.js') : null);   // W7: السياسة والأحداث
@@ -13,6 +13,7 @@
   const ECO = root.WECO || (typeof require !== 'undefined' ? require('./weco.js') : null);   // v3 E: المشاريع والكهرباء
   const FUND = root.WFUND || (typeof require !== 'undefined' ? require('./wfund.js') : null);
   const GEOM = () => root.WGEO || (typeof require !== 'undefined' ? require('./wgeo.js') : null);   // v5-2: الضم والتابعين
+  const GOVM = () => root.WGOV || (typeof require !== 'undefined' ? require('./wgov.js') : null);   // v5-4: نظام الحكم والتحالف الإسلامي
   const INSM = () => root.WINS || (typeof require !== 'undefined' ? require('./wins.js') : null);   // v5-3: الجماعات المسلحة
   const RISEM = () => root.WRISE || (typeof require !== 'undefined' ? require('./wrise.js') : null);   // v5-7: مسيرتنا
   const CABM = () => root.WCAB || (typeof require !== 'undefined' ? require('./wcab.js') : null);   // v5-10: مجلس الوزراء (يتحمّل وقت الحاجة: يحتاج الصندوق والمشاريع)   // v3 E3+E4: الصندوق السيادي
@@ -102,7 +103,7 @@
   const rel = (W, a, b) => (W.rel[a] && W.rel[a][b]) || 0;
   function addRel(W, a, b, v) { if (a === b) return; for (const [x, y] of [[a, b], [b, a]]) { const m = W.rel[x] ||= {}; m[y] = clamp(Math.round((m[y] || 0) + v), -100, 100); } }
   const atWar = (W, a, b) => W.wars.find(w => (w.a.includes(a) && w.b.includes(b)) || (w.b.includes(a) && w.a.includes(b)));
-  const allied = (W, a, b) => W.pacts.some(p => (p[0] === a && p[1] === b) || (p[0] === b && p[1] === a)) || (W.natoL.includes(a) && W.natoL.includes(b)) || (W.blocs || []).some(m => m.includes(a) && m.includes(b));
+  const allied = (W, a, b) => W.pacts.some(p => (p[0] === a && p[1] === b) || (p[0] === b && p[1] === a)) || (W.natoL.includes(a) && W.natoL.includes(b)) || (W.blocs || []).some(m => m.includes(a) && m.includes(b)) || !!(W.iblocs && W.iblocs.length && GOVM() && GOVM().defAllied(W, a, b));
   const napOf = (W, a, b) => (W.naps || []).some(p => (p[0] === a && p[1] === b) || (p[0] === b && p[1] === a));
   const blocsOf = (WD, id) => Object.keys(WD.bl || {}).filter(k => WD.bl[k].m.includes(id));
   // ===== W6b: التكتلات، التوتر العالمي، العروض، الأمم المتحدة [تقدير] =====
@@ -205,6 +206,7 @@
     if (W.nat && RISEM()) RISEM().month(W, WD, API);
     if (GEOM()) GEOM().month(W, WD, API);
     if (W.nat && INSM()) INSM().month(W, WD, API);
+    if (GOVM()) GOVM().month(W, WD, API);
     if (ARS && W.nat) ARS.month(W, WD);
     if (POL) POL.month(W, WD, API);
     if (MKT) MKT.month(W, WD, API);
@@ -227,6 +229,7 @@
     if (ECO && W.eco3) g += add(ECO.elecG(W, id), 'الكهرباء');
     if (POP && W.pop3) { POP.tick(W, WD, id, ws.some(w => homeFront(W, WD, w, id))); g += add(POP.growth(W, id), 'قوة العمل'); }
     if (c.occG) g += add(c.occG, 'كلفة الاحتلال (' + c.occN + ' منطقة)');
+    if (c.ibG) g += add(c.ibG, 'التحالف الإسلامي (تجارة)');
     if (W.gshock && W.gshock.until > W.t) g += add(W.gshock.v, W.gshock.n);
     const tr = W.trade.filter(p => p[0] === id || p[1] === id).length; if (tr) g += add(Math.min(K.tradeMax, tr * K.tradeG), 'اتفاقيات التجارة');
     const dp = c.debt / c.gdp * 100; if (dp > 110) g += add(-.01 * (dp - 110), 'الدين');
@@ -547,7 +550,8 @@
     if (o.v < 23) o.v = 23;
     if (o.v < 24) o.v = 24;
     if (o.v < 25) o.v = 25;
-    if (o.v < 26) o.v = 26;   // v5-3: G.ins (الجماعات المسلحة) تنبني أول شهر بعد الترقية من بيانات الدولة   // v5-2: G.geo (الضم/التابعين) ينبني لما ينحتاج   // v5-7: مسيرتنا (WRISE.ensure يبدي السجل من أول شهر بعد الترقية)   // v5-10: مجلس الوزراء (WCAB.ensure يبنيه بوزراء متوسطين أول شهر)   // I-143: الصنع الوطني بمصنع (warsenal.natOpen يحسبه: المصنوع وبخط الإنتاج يبقى مفتوح)   // I-140: قرض الطوارئ (fund3.brT ينبني لما ينحتاج)
+    if (o.v < 26) o.v = 26;
+    if (o.v < 27) o.v = 27;   // v5-4: G.gov / G.iblocs / G.ibinv (نظام الحكم والتحالف الإسلامي) تنبني لما ينحتاج؛ بلا تغيير = نظام البيانات   // v5-3: G.ins (الجماعات المسلحة) تنبني أول شهر بعد الترقية من بيانات الدولة   // v5-2: G.geo (الضم/التابعين) ينبني لما ينحتاج   // v5-7: مسيرتنا (WRISE.ensure يبدي السجل من أول شهر بعد الترقية)   // v5-10: مجلس الوزراء (WCAB.ensure يبنيه بوزراء متوسطين أول شهر)   // I-143: الصنع الوطني بمصنع (warsenal.natOpen يحسبه: المصنوع وبخط الإنتاج يبقى مفتوح)   // I-140: قرض الطوارئ (fund3.brT ينبني لما ينحتاج)
     o.base = WD.rel; o.rnd = mulberry(o.rs); dipInit(o, WD); if (POL) POL.ensure(o, WD); if (MKT) MKT.ensure(o, WD); if (CMD) CMD.ensure(o, WD); if (ECO) ECO.ensure(o, WD); if (POP) POP.ensure(o, WD); if (NAV) NAV.ensure(o, WD); return o;
   }
   const API = { V, K, START, TENSION, POL, MKT, CMD, NAV, ECO, init, addRel, answerOffer, unSummit, unVote, council, tenTarget, napOf, blocsOf, P5, navy, straits, step, month, act, can, offerPeace, declare, endWar, strike, playerStrike, rank, save, load, date, rel, atWar, allied, sancOf: (W, WD, id) => sancOn(WD, W, id), COST, TAX, CIV };

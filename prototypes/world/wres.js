@@ -120,7 +120,7 @@
       else finish(G, WD, q.k); }
   }
   function finish(G, WD, k) {
-    const R = ensure(G), t = T[k], f = t.fx || {}, c = G.C[G.me]; R.done[k] = G.t;
+    const R = ensure(G), t = T[k], f = t.fx || {}, c = G.C[G.me]; R.done[k] = Math.max(.01, G.t);   // ما يصير صفر (يوم 0 = «ما خلص»)
     if (f.natOpen && G.nat) { const W = root.WARS || require('./warsenal.js'); W.natOpen(G)[f.natOpen] = G.nat.ind[0].tech[f.natBr] || 1; }   // الرقم = مستوى الفرع يوم الفتح (الجيل الأول)
     if (f.oilK) c.oilK = (c.oilK || 1) + f.oilK;
     if (f.core) c.core *= 1 + f.core;

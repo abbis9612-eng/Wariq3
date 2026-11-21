@@ -590,6 +590,7 @@ html[data-skin] .hero b{color:var(--act)}
 <script src="wgeo.js"></script>
 <script src="wins.js"></script>
 <script src="wgov.js"></script>
+<script src="wcheat.js"></script>
 <script src="wcas.js"></script>
 <script src="warsenal.js"></script>
 <script src="wsim.js"></script>
@@ -1560,7 +1561,7 @@ const HIC = {'💵':'money','💰':'money','🏥':'health','📊':'chart','📈'
     // القرارات والقضايا انتقلت لـ«يحتاجك هسه» فوق
     if (G.elec && G.elec[me] != null) h += `<div class="note">🗳 الانتخابات الجاية: ${ar(S.date(G.elec[me]))} — تعتمد على الشارع والأحزاب ومعنويات الناس والنمو. إذا خسرت تخلص اللعبة.</div>`;
     if (c.occN) h += `<div class="note">✊ نحتل ${c.occN} منطقة: تكلّف نمو واستقرار، وبعد سنة ممكن تثور.</div>`;
-    h += `<h3>⚙ الإعدادات</h3><div class="line"><span>توقف تلقائي لما يجي قرار</span><span class="seg"><button data-a11y="ap:1" class="${a11y.ap !== false ? 'on' : ''}">نعم</button><button data-a11y="ap:0" class="${a11y.ap === false ? 'on' : ''}">لا</button></span></div><div class="line"><span>الشكل</span><span class="seg">${Object.entries(SKINS).map(([k, v]) => `<button data-skin="${k}" class="${skinPref === k ? 'on' : ''}">${v[0]}</button>`).join('')}</span></div><div class="line"><span>حجم الخط</span><span class="seg"><button data-a11y="big:0" class="${a11y.big ? '' : 'on'}">عادي</button><button data-a11y="big:1" class="${a11y.big ? 'on' : ''}">كبير</button></span></div><div class="line"><span>ألوان لعمى الألوان (أزرق/برتقالي بدل أخضر/أحمر)</span><span class="seg"><button data-a11y="cb:0" class="${a11y.cb ? '' : 'on'}">لا</button><button data-a11y="cb:1" class="${a11y.cb ? 'on' : ''}">نعم</button></span></div>${G.tut && G.tut.done ? '<div class="line"><span>التعليم</span><button id="tutAgain">عيده من الأول</button></div>' : ''}`;
+    h += `<h3>⚙ الإعدادات</h3><div class="line"><span>توقف تلقائي لما يجي قرار</span><span class="seg"><button data-a11y="ap:1" class="${a11y.ap !== false ? 'on' : ''}">نعم</button><button data-a11y="ap:0" class="${a11y.ap === false ? 'on' : ''}">لا</button></span></div><div class="line"><span>الشكل</span><span class="seg">${Object.entries(SKINS).map(([k, v]) => `<button data-skin="${k}" class="${skinPref === k ? 'on' : ''}">${v[0]}</button>`).join('')}</span></div><div class="line"><span>حجم الخط</span><span class="seg"><button data-a11y="big:0" class="${a11y.big ? '' : 'on'}">عادي</button><button data-a11y="big:1" class="${a11y.big ? 'on' : ''}">كبير</button></span></div><div class="line"><span>ألوان لعمى الألوان (أزرق/برتقالي بدل أخضر/أحمر)</span><span class="seg"><button data-a11y="cb:0" class="${a11y.cb ? '' : 'on'}">لا</button><button data-a11y="cb:1" class="${a11y.cb ? 'on' : ''}">نعم</button></span></div><details class="govd cheat"${G.cfg && G.cfg.cheat ? ' open' : ''}><summary>🎮 وضع الغش (للتجربة) ▾</summary><div class="note">للتجربة السريعة: كل ضغطة تنسجل${G.cfg && G.cfg.cheat ? ` (استعملته ${G.cfg.cheat} مرة)` : ''}.</div><div class="seg ins4"><button data-cheat="money">💰 +1000 مليار</button><button data-cheat="research">🔬 كمّل كل البحث</button><button data-cheat="debt">🏦 صفّر الدين</button><button data-cheat="ap">⭐ نقاط قرار 99</button><button data-cheat="calm">🕊 استقرار 90</button></div></details>${G.tut && G.tut.done ? '<div class="line"><span>التعليم</span><button id="tutAgain">عيده من الأول</button></div>' : ''}`;
     return h;
   }
   const line = (a, b, cls = '') => `<div class="line"><span>${a}</span><b class="${cls}">${b}</b></div>`;
@@ -1999,6 +2000,7 @@ const HIC = {'💵':'money','💰':'money','🏥':'health','📊':'chart','📈'
     root.querySelectorAll('[data-bud]').forEach(b => b.onclick = () => { IND.setBudget(NW, 0, +b.dataset.bud); re(0); });
     root.querySelectorAll('[data-rsec]').forEach(b => b.onclick = () => { rdSec = b.dataset.rsec; openPanel('rd', true); });
     root.querySelectorAll('details.govd').forEach(d => d.ontoggle = () => { govOpen = d.open; });
+    root.querySelectorAll('[data-cheat]').forEach(b => b.onclick = () => { const a = b.dataset.cheat, r = a === 'research' ? WCHEAT.research(G, WD) : WCHEAT[a](G); re(r, r && r.t ? '🎮 ' + r.t : ''); bar(); });
     root.querySelectorAll('[data-gov]').forEach(b => b.onclick = () => { const [k, how] = b.dataset.gov.split(':'); if (how === 'coup' && !confirm(`تغيير سريع نحو ${WGOV.GOV[k].n}: إذا فشل الجيش ينقسم والاستقرار ينهار. متأكد؟`)) return; const r = WGOV.change(G, WD, S, k, how); re(r, r && r.t ? (r.fail ? '' : '✔ ') + r.t : ''); bar(); });
     root.querySelectorAll('[data-ib]').forEach(b => b.onclick = () => { const a = b.dataset.ib; if (a === 'leave' && !confirm('متأكد؟')) return; const r = a === 'found' ? WGOV.found(G, WD, S) : a === 'up' ? WGOV.upgrade(G, WD, S) : WGOV.leave(G, WD, S); re(r, r && r.t ? '🕌 ' + r.t : ''); syncMap(); bar(); });
     root.querySelectorAll('[data-ibinvite]').forEach(b => b.onclick = () => { const r = WGOV.invite(G, WD, S, b.dataset.ibinvite); re(r, r && r.t ? (r.fail ? '' : '🕌 ') + r.t : ''); syncMap(); bar(); });

@@ -98,8 +98,8 @@
   // ===== I-156: «وين راحت الفلوس؟» — كل تغيير بالخزينة ينسجل بسببه (من الملف اللي غيّره)، شهر بشهر =====
   const LEDC = { net: ['💵', 'الدخل الصافي (ضرايب ونفط − رواتب وخدمات وجيش)'], rd: ['🔬', 'البحث (خانات البحث)'], fundIn: ['🏦', 'حطّينا بالصندوق السيادي (فلوسنا، تنسحب وقت ما نريد)'], fundOut: ['🏦', 'سحبنا من الصندوق السيادي'],
     fundY: ['🏦', 'أرباح الصندوق'], loan: ['🆘', 'قرض'], iss: ['🏛', 'قضايا الداخل (اللي انحلت بفلوس)'], proj: ['🏗', 'أقساط المشاريع'], prod: ['🏭', 'الإنتاج الحربي'], arms: ['🛒', 'سوق السلاح (شراء وبيع)'], nat: ['⭐', 'الصنع الوطني'],
-    corrupt: ['🕳', 'سرقة وزير فاسد'], ins: ['🏴', 'الجماعات المسلحة'], drill: ['🎖', 'تدريب الجيش'], evt: ['🌍', 'أحداث'], geo: ['🗺', 'تعويض وجزية'], dip: ['🤝', 'مساعدات دبلوماسية'], you: ['👆', 'قراراتك'], other: ['•', 'أخرى'] };
-  const LEDF = { gwind: 'rd', wres: 'rd', gwhome: 'iss', weco: 'proj', gwecon: 'prod', wmkt: 'arms', warsenal: 'nat', wcab: 'corrupt', wins: 'ins', wcmd: 'drill', wpol: 'evt', wgeo: 'geo', index: 'you' };
+    corrupt: ['🕳', 'سرقة وزير فاسد'], ins: ['🏴', 'الجماعات المسلحة'], drill: ['🎖', 'تدريب الجيش'], evt: ['🌍', 'أحداث'], geo: ['🗺', 'تعويض وجزية'], dip: ['🤝', 'مساعدات دبلوماسية'], you: ['👆', 'قراراتك'], cheat: ['🎮', 'وضع الغش'], other: ['•', 'أخرى'] };
+  const LEDF = { wcheat: 'cheat', gwind: 'rd', wres: 'rd', gwhome: 'iss', weco: 'proj', gwecon: 'prod', wmkt: 'arms', warsenal: 'nat', wcab: 'corrupt', wins: 'ins', wcmd: 'drill', wpol: 'evt', wgeo: 'geo', index: 'you' };
   const monKey = t => { const d = new Date(Date.UTC(2026, 10, 20) + t * 864e5); return d.getUTCFullYear() * 12 + d.getUTCMonth(); };
   function catOf(stack) { const L = String(stack || '').split('\n'); for (let i = 1; i < L.length; i++) { const m = L[i].match(/([\w-]+)\.(?:js|html)[^\d]*:\d+/); if (!m || m[1] === 'nation') continue; const f = m[1], fn = (L[i].match(/(?:at\s+(?:Object\.|Array\.)?|^)([\w$]+)/) || [])[1] || '';
       if (f === 'wsim') return /econ/.test(L[i]) ? 'net' : 'dip'; if (f === 'wfund') return /\bput\b|invest|lend/.test(L[i]) ? 'fundIn' : /take/.test(L[i]) ? 'fundOut' : /borrow/.test(L[i]) ? 'loan' : 'fundY';

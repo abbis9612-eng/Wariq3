@@ -387,6 +387,7 @@
       if (mode === 'ter') return TCOL[r.t];
       if (mode === 'rel') return relCol(r.ctl);
       if (mode === 'res') return fillRes(r, light);
+      if ((mode === 'eco' || mode === 'mil') && ctx.fillX) return ctx.fillX(r, light);
       return polCol(r.ctl);
     };
     const useLOD = far && mode === 'pol' && !window.MAPCHANGED;
@@ -396,9 +397,10 @@
         ? (far ? (light ? .42 : .38) : Math.max(light ? .22 : .20, (light ? .38 : .34) - (cam.s - 500) / 9500))
         : .95);
 
+    const dataL = mode === 'eco' || mode === 'mil';   // طبقات البيانات: لون أقوى حتى يبين
     g.save();
-    if (hasTex && light && mode !== 'res') g.globalCompositeOperation = 'multiply';
-    g.globalAlpha = polAlpha;
+    if (hasTex && light && mode !== 'res' && !dataL) g.globalCompositeOperation = 'multiply';
+    g.globalAlpha = dataL ? (hasTex ? .62 : .95) : polAlpha;
     // تجميع المرئي حسب اللون → ضربة fill وحدة لكل لون (بدل مئات الضربات)
     const groups = new Map();
     const addG = (col, p) => { let q = groups.get(col); if (!q) { q = new Path2D(); groups.set(col, q); } q.addPath(p); };

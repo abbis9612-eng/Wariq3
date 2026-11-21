@@ -62,7 +62,7 @@ body.fcard #toast{top:calc(var(--toph, 100px) + 4px) !important;bottom:auto !imp
 <canvas id="cv"></canvas>
 <div id="vig"></div>
 <div id="top"><h1>العالم <small>تشرين الثاني 2026</small></h1>
-  <div id="modes"><button data-m="pol" class="on">سياسية</button><button data-m="ter">الأرض</button><button data-m="rel">علاقات</button><button data-m="res">نفط وغاز</button></div>
+  <div id="modes"><button data-m="pol" class="on">سياسية</button><button data-m="eco">💰 اقتصاد</button><button data-m="mil">🪖 جيش</button><button data-m="ter">الأرض</button><button data-m="rel">علاقات</button><button data-m="res">نفط وغاز</button></div>
 </div>
 <div id="zoom"><button id="zin" aria-label="كبّر">+</button><button id="zout" aria-label="صغّر">−</button><button id="zhome" aria-label="العالم كله">⌂</button><button id="ztheme" aria-label="تبديل الإضاءة (ليلي/أطلس)">☀️</button><button id="zlay" aria-label="طبقات الخريطة">🗺</button></div>
 <div id="legend" hidden></div>
@@ -158,6 +158,12 @@ function path(rings, add) {   // add: نضيف للمسار الحالي (نجم
 }
 function relCol(k) { if (!me || !k) return '#6b6e66'; if (k === me) return css('--me'); const v = ((window.__G && window.__G.G ? window.__G.G.rel : WD.rel)[me] || {})[k] || 0; if (ENT[k]) return '#7a5a5a';
   const t = Math.max(-1, Math.min(1, v / 80)); return t >= 0 ? `hsl(${100 + 20 * t},${20 + 35 * t}%,${50 - 8 * t}%)` : `hsl(8,${25 + 45 * -t}%,${50 - 6 * -t}%)`; }
+// I-140: طبقات بزر واحد — اقتصاد (دخل الفرد) وجيش (قوة الجيش)، حسب الدولة المسيطرة
+function layVal(k, m) { if (!k || !CS[k]) return null; const G0 = window.__G && window.__G.G, c = G0 && G0.C && G0.C[k];
+  if (m === 'eco') { const gdp = c ? c.gdp : CS[k].gdp, pop = c ? c.pop : CS[k].pop; return gdp && pop ? Math.max(0, Math.min(1, (Math.log10(gdp * 1e9 / pop) - 3) / 1.9)) : null; }
+  const pw = c ? c.pw : (CS[k].act || 0) / 1000; return pw ? Math.max(0, Math.min(1, Math.log10(pw + 1) / 3.6)) : null; }
+function fillX(r, light) { const v = layVal(r.ctl, mode); if (v == null) return light ? '#9a9d94' : '#4a504b';
+  return mode === 'eco' ? `hsl(${45 + v * 95},${45 + v * 25}%,${light ? 62 - v * 30 : 30 + v * 14}%)` : `hsl(${50 - v * 50},${50 + v * 30}%,${light ? 66 - v * 30 : 28 + v * 16}%)`; }
 function fillRes(r, light) { return r.oil || r.gas ? `hsl(36,${52 + Math.min(44, (r.oil + r.gas * 6) / 35)}%,${54 - Math.min(24, (r.oil + r.gas * 6) / 110)}%)` : (light ? '#8f9288' : '#4a504b'); }
 
 // ===== الرسم (محرك mapfx.js الهجين: تضاريس 4K + حدود متدرجة + كاش سريع + طبقة اللعب) =====
@@ -169,7 +175,7 @@ function draw() {
   const stxKey = G0 && G0.stx ? Object.keys(G0.stx).sort().join(',') : '';
   MAPFX.drawMap({
     cx, W, H, DPR, cam, mode, light: lt, R, S, LOD, WD, CS, ENT, LBL, frontSegs, sel, me, G: G0,
-    colIdx, relCol, fillRes, TCOL, MX, MY, nameOf, mapRev, stxKey, css
+    colIdx, relCol, fillRes, fillX, TCOL, MX, MY, nameOf, mapRev, stxKey, css
   });
   if (window.GAME && window.GAME.overlay) window.GAME.overlay(cx, far);
   MAPFX.drawScaleAndCompass(cx, cam, W, H, lt, document.body.classList.contains('play') ? 64 : 36);
@@ -187,7 +193,9 @@ const up = e => { if (pts.size === 1 && moved < 8) tap(e.clientX, e.clientY); pt
 cv.addEventListener('pointerup', up); cv.addEventListener('pointercancel', e => { pts.delete(e.pointerId); pinch = null; });
 cv.addEventListener('wheel', e => { e.preventDefault(); zoomAt(e.clientX, e.clientY, Math.exp(-e.deltaY * .0015)); }, { passive: false });
 function zoomAt(sx, sy, f) { const [wx, wy] = toW(sx, sy); cam.s = Math.max(W / 7, Math.min(60000, cam.s * f)); const [nx, ny] = toW(sx, sy); cam.x += wx - nx; cam.y += wy - ny; dirty = true; }
-$('#zlay').onclick = () => { document.body.classList.toggle('layers'); legend(); }; document.querySelectorAll('#modes button').forEach(b => b.addEventListener('click', () => document.body.classList.remove('layers')));
+const LAY3 = [['pol', '🏳 سياسية'], ['eco', '💰 اقتصاد'], ['mil', '🪖 جيش']];
+$('#zlay').onclick = () => { if (!document.body.classList.contains('play')) { document.body.classList.toggle('layers'); legend(); return; }
+  const i = LAY3.findIndex(x => x[0] === mode), nx = LAY3[(i + 1) % LAY3.length]; setMode(nx[0]); document.body.classList.remove('layers'); legend(); $('#zlay').textContent = nx[0] === 'pol' ? '🗺' : nx[1].split(' ')[0]; }; document.querySelectorAll('#modes button').forEach(b => b.addEventListener('click', () => document.body.classList.remove('layers')));
 $('#zin').onclick = () => zoomAt(W / 2, H / 2, 1.6); $('#zout').onclick = () => zoomAt(W / 2, H / 2, 1 / 1.6); $('#zhome').onclick = home; $('#ztheme').onclick = () => applyTheme(isLight() ? 'dark' : 'light');
 function inPoly(rings, x, y) { let c = false; for (const f of rings) for (let i = 0, j = f.length - 2; i < f.length; j = i, i += 2) { const yi = f[i + 1], yj = f[j + 1]; if ((yi > y) !== (yj > y) && x < (f[j] - f[i]) * (y - yi) / (yj - yi) + f[i]) c = !c; } return c; }
 function tap(sx, sy) { if (window.GAME && window.GAME.tapTheater && window.GAME.tapTheater(sx, sy)) { dirty = true; return; } const [x, y] = toW(sx, sy); const r = R.find(r => x >= r.bb[0] && x <= r.bb[2] && y >= r.bb[1] && y <= r.bb[3] && inPoly(r.p, x, y)); sel = r || null; dirty = true; card(); }
@@ -222,9 +230,13 @@ function legend() {
   const L = $('#legend'); let h = '';
   if (mode === 'ter') h = Object.entries(TAR).map(([k, v]) => `<div><span style="background:${TCOL[k]}"></span>${v}</div>`).join('');
   else if (mode === 'rel') h = me ? `<div><b>من عيون ${CS[me].ar}</b></div><div><span style="background:${css('--me')}"></span>إنت</div><div><span style="background:hsl(120,55%,42%)"></span>حليف</div><div><span style="background:#6b6e66"></span>محايد</div><div><span style="background:hsl(8,70%,44%)"></span>عدو</div>` : '<div>اضغط دولة وبعدين «شوف العالم من عيونها»</div>';
+  else if (mode === 'eco') h = `<div><b>💰 دخل الفرد</b></div><div><span style="background:${fillX({ ctl: 0 }, isLight())}"></span>ماكو بيانات</div>` + [[1, 'غني (+50 ألف $)'], [.55, 'متوسط (~10 آلاف)'], [.1, 'فقير (~2 ألف)']].map(([v, t]) => `<div><span style="background:hsl(${45 + v * 95},${45 + v * 25}%,${isLight() ? 62 - v * 30 : 30 + v * 14}%)"></span>${t}</div>`).join('');
+  else if (mode === 'mil') h = '<div><b>🪖 قوة الجيش</b></div>' + [[1, 'جيش جبار'], [.6, 'متوسط'], [.2, 'ضعيف']].map(([v, t]) => `<div><span style="background:hsl(${50 - v * 50},${50 + v * 30}%,${isLight() ? 66 - v * 30 : 28 + v * 16}%)"></span>${t}</div>`).join('');
   else if (mode === 'res') h = '<div><span style="background:hsl(35,85%,32%)"></span>نفط وغاز كثير</div><div><span style="background:hsl(35,45%,53%)"></span>قليل</div>';
   else h = `<div><span style="background:#9b4f4f"></span>كيان مسلح (مو دولة)</div><div><span style="background:transparent;border-top:2px dashed var(--front);border-radius:0;height:0"></span>خط تماس</div><div><span style="background:var(--gold);border-radius:50%"></span>مضيق / عاصمة</div>`;
-  L.innerHTML = h; L.hidden = document.body.classList.contains('play') && !document.body.classList.contains('layers'); placeLegend();
+  if (document.body.classList.contains('play')) h += `<div><button id="laymore" style="min-height:32px;font-size:12px">طبقات ثانية ▾</button></div>`;
+  L.innerHTML = h; const lm = L.querySelector('#laymore'); if (lm) lm.onclick = () => { document.body.classList.toggle('layers'); };
+  L.hidden = document.body.classList.contains('play') && !document.body.classList.contains('layers') && mode === 'pol'; placeLegend();
 }
 function placeLegend() { const t = $('#top'); if (!t) return; const h = t.offsetHeight + 8; $('#legend').style.top = h + 'px'; $('#zoom').style.top = h + 'px'; document.documentElement.style.setProperty('--toph', h + 'px'); const db = $('#divbar'); if (db) db.style.top = h + 'px'; const m = $('#modes'); if (document.body.classList.contains('play')) m.style.top = h + 'px'; else m.style.top = ''; }   // I-107: تحت الشريط (كانت مقطوعة)
 addEventListener('resize', () => setTimeout(placeLegend, 50));

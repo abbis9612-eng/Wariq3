@@ -50,7 +50,7 @@
   }
   // كتالوج الطلبات لهالدولة (فوك كتالوج econ.js): الفرق والخطوط نفسها، والطيارات من أنواع قوتها الجوية، والصواريخ لبطارياتها
   function catalog(G, WD) {
-    const me = G.me, cs = WD.cs[me], I = ECON.ITEMS, aw = (WD.aw || {})[me]; IND.register(ECON);
+    const me = G.me, cs = WD.cs[me], I = ECON.ITEMS, aw = (WD.aw || {})[me]; IND.register(ECON); if (ARS && G.nat) ARS.register(G, WD, ECON);
     if (me !== 'IRQ') for (const k of Object.keys(I)) if (I[k].side === 0 && !I[k].req) delete I[k];
     for (const k of Object.keys(I)) if (I[k].side === 1) delete I[k];
     for (const k of Object.keys(I)) if (/^(pl_|sm_)/.test(k)) delete I[k];
@@ -123,6 +123,7 @@
     IND.daily(NW, T ? T.A : null, { SIM: X.SIM, ECON });
     if (RES) RES.daily(G, WD);
     if (ARS && NW.indF) ARS.indF(G, NW.indF[0]);
+    if (ARS) ARS.register(G, WD, ECON);
     // آثار على المسرح: التصنيع (W.indF) والداخل (W.homeF) — sim.js وair.js يقرونها مثل «الحرب الكبرى»
     if (T) { T.W.indF = [NW.indF[0], { armAtk: 1, eye: 1, samPk: 1, ewDef: 1, prod: 1, fort: 1, locCost: 1, oil: 1, fix: 1, sup: 0, br: 1 }]; T.W.homeF = NW.homeF; T.W.eco = undefined; }
     // آثار على اقتصاد العالم: أولوية الاقتصاد على النمو، والسلاح الوطني المصدّر دخل
@@ -149,6 +150,8 @@
   const DIVPW = { inf: 15, mec: 60, arm: 140 };   // قوة تقريبية للفرقة بمقياس wsim [تقدير]
   function deliver(G, WD, o, X) {
     const it = ECON.ITEMS[o.k], c = G.C[G.me], NW = G.nat, T = X.T; if (!it) return;
+    // M2: المنتجات الوطنية (عائلة السلاح، I-138)
+    if (it.nat && ARS) { if (T && ['div', 'plane', 'sam'].includes(it.cat)) { T.W.num = T.W.num || [100, 200]; ECON.deliver(T.W, T.A, 0, o, X.SIM); } ARS.deliver(G, WD, it, T); NW.log.push({ t: NW.t, side: 0, k: 'built', it: o.k }); return; }
     if (it.cat === 'line') { NW.eco[0].lines++; NW.log.push({ t: NW.t, side: 0, k: 'built', it: o.k }); return; }
     if (T && (it.cat === 'div' || it.cat === 'plane' || it.cat === 'sam')) { T.W.num = T.W.num || [100, 200]; ECON.deliver(T.W, T.A, 0, o, X.SIM); }
     NW.arms = NW.arms || { jets: {}, sam: {}, tank: null };

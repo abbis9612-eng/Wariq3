@@ -1263,18 +1263,24 @@ body.sheeton #toast{top:calc(var(--toph, 100px) + 4px) !important;bottom:auto !i
     for (const x of WMKT.sellers(G)) { if (x === me) continue; for (const o of WMKT.SELL[x]) if (o.cat === want && !WMKT.can(G, S, x, o) && (!best || o.price < best.o.price)) best = { x, o }; }
     return best;
   }
+  // M2: أقسام الإنتاج، وبطاقة المنتج الوطني بصورته
+  let prodTab = 'land';
+  const PTABS = [['land', '🛡 بر', it => it.cat === 'div'], ['air', '✈ جو', it => it.cat === 'plane' || (it.cat === 'msl' && it.nat === 'QD')], ['msl', '🚀 صواريخ ودفاع', it => it.cat === 'sam' || (it.cat === 'msl' && it.nat !== 'QD')], ['sea', '⚓ بحر', it => it.cat === 'nav'], ['fac', '🏭 مصانع', it => it.cat === 'line']];
+  const natCard = k => { const it = ECON.ITEMS[k], NW = G.nat, c = ECON.costOf(k, 0, NW), d = ECON.daysOf(k, 0, NW), err = ECON.canBuy(NW, 0, k), [code, ...rest] = it.n.split(' ');
+    return `<div class="pj" style="padding:0;overflow:hidden">${heroCard(it.img, code, rest.join(' '), '⭐'.repeat(it.gen) + ' الجيل ' + it.gen + ' من 4')}<div style="padding:8px 10px"><div class="note">${it.d}</div><div class="line"><span>💰 ${C$(c)} $ · ⏱ ${d} يوم</span><span>💪 قوة ×${it.pwF}</span></div>${err ? `<div class="note neg">⛔ ${err}</div>` : `<button data-buy="${k}" class="big">🏭 اطلب</button>`}</div></div>`; };
   function pProd() {
     const NW = G.nat, e = NW.eco[0], P = ECON.PRIO[e.prio], sp = P.prod * (NW.indF ? NW.indF[0].prod : 1) * (e.mor < 30 ? .75 : 1) * (1 + (G.C[me].prodK || 0)), its = NT.items(), cat = c => its.filter(k => ECON.ITEMS[k].cat === c);
     const btn = k => { const it = ECON.ITEMS[k], c = ECON.costOf(k, 0, NW), d = ECON.daysOf(k, 0, NW), err = ECON.canBuy(NW, 0, k), sup = ECON.SUPPLY[0][k], pf = ECON.parts(NW, 0, k), loc = !sup, alt = loc && it.req ? altBuy(it) : null;
       return `<button data-buy="${k}" ${err ? 'disabled' : ''} style="text-align:right"><b style="font-size:15px">${it.ic} ${nmIt(it)}</b><br><small>${loc ? '🏭 <b>تصنعها محلي</b>' : '📦 مستورد من ' + (ECON.SUP_N[sup] || sup)}: ${C$(c)} $ · ${Math.round(d / sp)} يوم${pf < 1 && !loc ? ` <b class="neg">قطع ${Math.round(pf * 100)}٪</b>` : ''}</small>${alt ? `<br><small>↔ تشتريها: ${alt.o.n} ${alt.o.price} مليار $، ${Math.round(alt.o.days / 30)} شهر، من ${nameOf(alt.x)}</small>` : ''}${err ? `<br><small class="neg">⛔ ${err}</small>` : ''}</button>`; };
     const grid = a => a.length ? `<div class="acts">${a.map(btn).join('')}</div>` : '<div class="note">ماكو</div>';
     const q = e.q.map((o, i) => { const it = ECON.ITEMS[o.k] || { ic: '?', n: o.k }, act = i < e.lines, f = 1 - o.left / o.tot;
-      return `<div class="pj" style="${act ? 'border-color:var(--gold)' : 'opacity:.75'}"><div class="line"><span style="font-size:15px"><span style="font-size:26px;vertical-align:middle">${it.ic}</span> <b>${nmIt(it)}</b></span><button data-can="${o.id}" aria-label="ألغي الطلب">✕</button></div>${barV(f * 100, 'var(--gold)')}<div class="note">${act ? `⚙ خط ${i + 1} · ${Math.round(f * 100)}٪ · <b>يخلص بعد ${Math.max(1, Math.ceil(o.left / sp))} يوم</b>` : `⏳ ينتظر خط فاضي (قدامه ${i - e.lines + 1})`} · يروح لـ: ${GOES(it)}</div></div>`; }).join('');
+      return `<div class="pj" style="${act ? 'border-color:var(--gold)' : 'opacity:.75'}"><div class="line"><span style="font-size:15px">${it.img ? `<img src="${IMGB}${it.img}.webp" alt="" style="width:72px;height:40px;object-fit:cover;border-radius:6px;vertical-align:middle">` : `<span style="font-size:26px;vertical-align:middle">${it.ic}</span>`} <b>${nmIt(it)}</b></span><button data-can="${o.id}" aria-label="ألغي الطلب">✕</button></div>${barV(f * 100, 'var(--gold)')}<div class="note">${act ? `⚙ خط ${i + 1} · ${Math.round(f * 100)}٪ · <b>يخلص بعد ${Math.max(1, Math.ceil(o.left / sp))} يوم</b>` : `⏳ ينتظر خط فاضي (قدامه ${i - e.lines + 1})`} · يروح لـ: ${GOES(it)}</div></div>`; }).join('');
     return `<div class="grid"><div class="st"><i>الخزينة</i><b>${B$(e.cash)}</b></div><div class="st"><i>خطوط الإنتاج</i><b>${Math.min(e.lines, e.q.length)}/${e.lines} تشتغل</b></div><div class="st"><i>السرعة</i><b>×${sp.toFixed(2)}</b></div><div class="st"><i>بالطابور</i><b>${e.q.length}</b></div></div>
     <div class="note">السرعة من أولوية الاقتصاد (${P.n})${e.mor < 30 ? '، والمعنويات نازلة' : ''}، وقطاع الصناعة الحربية، وبحث «التصنيع المتقدم». خطوط أكثر = «مصنع حربي» من 🏗 المشاريع أو «المصانع» تحت.</div>
     <h3>⚙ الخطوط والطابور</h3>${q || '<div class="note">ما اكو طلبات. اطلب من تحت.</div>'}
-    <h3>🪖 فرق جديدة</h3>${grid(cat('div'))}
-    <h3>✈ طيارات ومسيّرات</h3>${grid(cat('plane'))}<h3>🚀 صواريخ دفاع جوي</h3>${grid(cat('sam'))}<h3>🏭 المصانع</h3>${grid(cat('line'))}
+    <div class="seg gnav">${PTABS.map(([k, n]) => `<button data-ptab="${k}" class="${prodTab === k ? 'on' : ''}">${n}</button>`).join('')}</div>
+    ${(() => { const T0 = PTABS.find(t => t[0] === prodTab), ks = its.filter(k => T0[2](ECON.ITEMS[k])), nat = ks.filter(k => ECON.ITEMS[k].nat), oth = ks.filter(k => !ECON.ITEMS[k].nat);
+      return (nat.length ? `<h3>🏆 صنع وطني</h3><div class="note">عائلة سلاحنا بجيلها هسه (الرقم = الجيل×10). البحث بالفرع يرفع الجيل والقوة.</div>` + nat.map(natCard).join('') : '') + (oth.length ? `<h3>${nat.length ? '📦 الباقي' : T0[1]}</h3>${grid(oth)}` : nat.length ? '' : '<div class="note">ماكو شي بهالقسم هسه.</div>'); })()}
     <div class="note">🏭 المحلي يفتحه البحث (🔬 العسكري)، وما يوقف إذا المورّد زعل. 📦 المستورد يعتمد على العلاقة: إذا نزلت، قطع الغيار تقل والسعر يغلى (أو يوقف).</div>`;
   }
   // ===== R (I-121): 🔬 شجرة البحث الموحّدة — 4 أقسام، كل بحث بطاقة (يفتح شنو، الكلفة، المدة، شنو يحتاج قبله) =====
@@ -1532,6 +1538,7 @@ body.sheeton #toast{top:calc(var(--toph, 100px) + 4px) !important;bottom:auto !i
     root.querySelectorAll('[data-can]').forEach(b => b.onclick = () => { const back = NT.cancel(G, +b.dataset.can); re(0, `↩ ألغينا الطلب ورجع ${C$(back || 0)}`); });
     root.querySelectorAll('[data-bud]').forEach(b => b.onclick = () => { IND.setBudget(NW, 0, +b.dataset.bud); re(0); });
     root.querySelectorAll('[data-rsec]').forEach(b => b.onclick = () => { rdSec = b.dataset.rsec; openPanel('rd', true); });
+    root.querySelectorAll('[data-ptab]').forEach(b => b.onclick = () => { prodTab = b.dataset.ptab; openPanel('prod', true); });
     root.querySelectorAll('[data-ars]').forEach(b => b.onclick = () => re(WARS.start(G, WD, b.dataset.ars), `🏗 بدينا مشروع ${WARS.FL[b.dataset.ars].code} ${WARS.title(b.dataset.ars)}`));
     root.querySelectorAll('[data-rdrop]').forEach(b => b.onclick = () => re(WRES.drop(G, +b.dataset.rdrop), '⏹ وقّفنا البحث'));
     root.querySelectorAll('[data-rfill]').forEach(b => b.onclick = () => re(WRES.fill(G, WD), '⚡ شغّلنا كل الخانات'));

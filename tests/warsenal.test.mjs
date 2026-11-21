@@ -23,5 +23,17 @@ const dd1 = G.nav.g.filter(g => g.cc === 'USA').reduce((t, g) => t + (g.s.dd || 
 if (!G.log.some(l => l.k === 'ars' && l.a === 'done' && l.f === 'tank')) no('ماكو خبر');
 const H = S.load(S.save(G), WD); if (!H.ars || !H.ars.done.tank) no('الحفظ');
 const O = JSON.parse(S.save(S.init(WD, 'IRQ', { seed: 1 }))); O.v = 17; delete O.ars; if (S.load(JSON.stringify(O), WD).v < 18) no('ترقية V17');
+// M2: المنتجات الوطنية — الجيل من البحث، والطلب يتسلّم (فرقة، سفينة، صواريخ)
+const SIM = require('../prototypes/world/gwsim.js'), E = require('../prototypes/world/gwecon.js');
+const day = Q => { const b = Q.log.length; S.step(Q, WD, 1); N.daily(Q, WD, { S, SIM, T: null, before: b }); };
+const Q = S.init(WD, 'TUR', { seed: 5 }); N.init(Q, WD); day(Q); Q.nat.eco[0].cash = 80; Q.nat.eco[0].lines = 6;
+const ks = N.items().filter(k => k.startsWith('nf_')); if (ks.length !== 21) no('منتجات تركيا الوطنية ' + ks.length);
+if (E.ITEMS.nf_ZR.gen !== A.genOf(Q, 'arm')) no('جيل زئير مو من البحث');
+const pw1 = Q.C.TUR.pw, msl1 = Q.C.TUR.msl, ff1 = Q.nav.g.filter(g => g.cc === 'TUR').reduce((t, g) => t + (g.s.ff || 0), 0);
+for (const k of ['nf_ZR', 'nf_NZ', 'nf_MJ']) { const r = N.buy(Q, k); if (typeof r === 'string') no(k + ': ' + r); }
+for (let i = 0; i < 460; i++) day(Q);
+const ff2 = Q.nav.g.filter(g => g.cc === 'TUR').reduce((t, g) => t + (g.s.ff || 0), 0);
+for (const k of ['nf_ZR', 'nf_NZ', 'nf_MJ']) if (!Q.nat.log.some(l => l.k === 'built' && l.it === k)) no('ما تسلّمنا ' + k);
+if (!(Q.C.TUR.msl >= msl1 + 20 - 5)) no(`الصواريخ ما وصلت ${msl1} → ${Q.C.TUR.msl}`); if (ff2 < ff1 + 1 - 3) no(`الفرقاطة ما انضافت ${ff1} → ${ff2}`);
 console.log(`زئير وعُقبة دخلوا الخدمة · قوة الجيش ×${pw0} → ×${G.C.USA.pwK.toFixed(2)} · مدمرات ${dd0} → ${dd1} · رموز ${codes.length} بلا تكرار`);
 console.log(bad ? `❌ ${bad} مشاكل` : '✅ الترسانة الوطنية تمام'); process.exit(bad ? 1 : 0);

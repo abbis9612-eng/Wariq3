@@ -77,10 +77,43 @@
       if (z < 0) return; g = { id: Math.max(0, ...G.nav.g.map(x => x.id)) + 1, cc: G.me, s: {}, s0: {}, z, home: z, path: [], prog: 0, mode: 'patrol', dmg: 0, man: 0 }; G.nav.g.push(g); }
     for (const t in ships) { g.s[t] = (g.s[t] || 0) + ships[t]; g.s0[t] = (g.s0[t] || 0) + ships[t]; }
   }
+
+  // ===== M2 (I-128، I-138): الإنتاج الوطني — 21 نوع من العائلة تنطلب من الإنتاج، وجيلها من بحثنا (الرقم = الجيل×10) =====
+  // cat: div فرقة · plane طيارات · sam صواريخ دفاع · nav سفن (تنضاف للأسطول) · msl صواريخ/مسيّرات/ضد سفن (مخزون). br = فرع البحث اللي يحدد الجيل. [تقدير]
+  const PROD = {
+    ZR: { cat: 'div', kind: 'arm', br: 'arm', cost: 2.4, days: 45, pw: 1.3, d: 'فرقة دبابات رئيسية' }, DH: { cat: 'div', kind: 'arm', br: 'arm', cost: 1.6, days: 35, pw: .8, d: 'دبابات خفيفة سريعة للاستطلاع' },
+    LT: { cat: 'div', kind: 'mec', br: 'arm', cost: 1.5, days: 30, pw: 1.1, d: 'مدرعات قتال مشاة' }, SK: { cat: 'div', kind: 'mec', br: 'arm', cost: 1.1, days: 25, pw: .9, d: 'ناقلات جنود محمية' },
+    HT: { cat: 'div', kind: 'mec', br: 'ind', cost: 1.4, days: 30, pw: 1, d: 'كتائب مدفعية ذاتية' }, WB: { cat: 'div', kind: 'mec', br: 'msl', cost: 1.3, days: 28, pw: 1, d: 'كتائب راجمات دقيقة' },
+    SF: { cat: 'plane', plane: 'f16', q: 2, br: 'ew', cost: .45, days: 120, pw: 2.5, d: 'مقاتلات شبحية ×2' }, NS: { cat: 'plane', plane: 'f16', q: 2, br: 'ind', cost: .2, days: 60, pw: 1.3, d: 'مقاتلات خفيفة ×2' },
+    ZB: { cat: 'plane', plane: 'su25', q: 2, br: 'ind', cost: .12, days: 45, pw: 1.1, d: 'طيارات هجوم أرضي ×2' }, AF: { cat: 'plane', plane: 'su25', q: 2, br: 'ind', cost: .08, days: 40, pw: 1, d: 'مروحيات هجومية ×2' },
+    ZL: { cat: 'plane', plane: 'ch4', q: 2, br: 'uav', cost: .03, days: 15, pw: 1, d: 'مسيّرات هجومية كبيرة ×2' }, QD: { cat: 'msl', drn: 60, br: 'uav', cost: .02, days: 10, pw: 1, d: '60 مسيّرة انتحارية' },
+    UQ: { cat: 'nav', ships: { dd: 1 }, br: 'ind', cost: 1.6, days: 540, pw: 1, d: 'مدمرة صواريخ تنضاف لأسطولنا' }, MJ: { cat: 'nav', ships: { ff: 1 }, br: 'ind', cost: .7, days: 420, pw: 1, d: 'فرقاطة تنضاف لأسطولنا' },
+    AS: { cat: 'nav', ships: { fac: 2 }, br: 'ind', cost: .25, days: 240, pw: 1, d: 'كورفيتين' }, TR: { cat: 'nav', ships: { ss: 1 }, br: 'ind', cost: .9, days: 600, pw: 1, d: 'غواصة' }, JS: { cat: 'nav', ships: { amp: 1 }, br: 'ind', cost: .5, days: 420, pw: 1, d: 'سفينة إنزال' },
+    NZ: { cat: 'msl', msl: 20, br: 'msl', cost: .1, days: 30, pw: 1, d: '20 صاروخ باليستي' }, SH: { cat: 'msl', msl: 12, br: 'msl', cost: .06, days: 25, pw: 1, d: '12 صاروخ كروز' },
+    QS: { cat: 'msl', asm: 16, br: 'msl', cost: .05, days: 25, pw: 1, d: '16 صاروخ ضد السفن' }, DR: { cat: 'sam', pool: '57E6', q: 24, br: 'msl', cost: .008, days: 20, pw: 1, d: '24 صاروخ دفاع جوي قصير' },
+  };
+  // الجيل من مستوى البحث: 1 ← جيل 1، 2–3 ← 2، 4 ← 3، 5–6 ← 4
+  const genOf = (G, br) => { const t = (G.nat && G.nat.ind[0].tech[br]) || 0; return t >= 5 ? 4 : t >= 4 ? 3 : t >= 2 ? 2 : t >= 1 ? 1 : 0; };
+  function register(G, WD, ECON) {
+    for (const code in PROD) { const P = PROD[code], f = FAM.find(x => x.code === code), g = genOf(G, P.br), key = 'nf_' + code;
+      if (g < 1 || (P.cat === 'nav' && !coast(G, WD))) { delete ECON.ITEMS[key]; continue; }
+      const k = .7 + .15 * g;
+      ECON.ITEMS[key] = { n: `${code}-${g * 10} ${f.kind} ${f.name}`, ic: ({ land: '🛡', air: '✈', sea: '⚓', msl: '🚀' })[f.dom] || '⭐', cat: P.cat, kind: P.kind, plane: P.plane, q: P.q, pool: P.pool, side: 0,
+        cost: +(P.cost * k).toFixed(3), days: P.days, nat: code, gen: g, img: f.img, pwF: +(P.pw * (.6 + .2 * g)).toFixed(2), d: `${P.d} · صنع وطني 100٪ (ما يحتاج قطع من برّا)` }; }
+  }
+  // التسليم (ينادى من nation.deliver للمنتجات الوطنية)
+  function deliver(G, WD, it, T) {
+    const c = G.C[G.me], P = PROD[it.nat], NW = G.nat; NW.arms = NW.arms || { jets: {}, sam: {}, tank: null };
+    if (it.cat === 'div') c.pw += 30 * it.pwF * (it.kind === 'arm' ? 1.5 : 1);
+    else if (it.cat === 'plane') { c.pw += (it.q || 1) * 3 * it.pwF; if (!T) NW.arms.jets[it.plane] = (NW.arms.jets[it.plane] || 0) + (it.q || 1); }
+    else if (it.cat === 'sam') { NW.samStock = NW.samStock || {}; NW.samStock[it.pool] = (NW.samStock[it.pool] || 0) + it.q; }
+    else if (it.cat === 'nav' && G.nav) addShips(G, WD, P.ships);
+    else if (it.cat === 'msl') { if (P.msl) c.msl = (c.msl || 0) + P.msl; if (P.drn) c.drn = (c.drn || 0) + P.drn; if (P.asm && G.nav) { G.nav.asm = G.nav.asm || {}; G.nav.asm[G.me] = (G.nav.asm[G.me] || 0) + P.asm; } }
+  }
   // للمسرح: هجوم الدروع ودقة الدفاع الجوي (nation.js يضربها بـ indF كل يوم)
   function indF(G, F) { const A = G.ars; if (!A || !F) return; if (A.done.tank) F.armAtk *= 1 + FL.tank.fx.armAtk; if (A.done.ad) F.samPk *= 1 + FL.ad.fx.samPk; }
   // الخسائر: الروبوتات تنقص خسائرنا البشرية
   const casK = G => (G.ars && G.ars.done.ugv ? 1 - FL.ugv.fx.cas : 1);
-  const API = { FL, FAM, DOM, title, MAXRUN, ensure, costOf, can, start, month, apply, indF, casK };
+  const API = { FL, FAM, DOM, PROD, genOf, register, deliver, title, MAXRUN, ensure, costOf, can, start, month, apply, indF, casK };
   if (typeof module !== 'undefined') module.exports = API; else root.WARS = API;
 })(typeof window !== 'undefined' ? window : globalThis);

@@ -1,0 +1,3 @@
+الخطوط هنا كلها من Google Fonts برخصة SIL Open Font License 1.1 (https://openfontlicense.org):
+Noto Kufi Arabic, Noto Sans Arabic (Google), Alexandria (Mohamed Gaber), IBM Plex Sans Arabic (IBM), Readex Pro (Thomas Jockin, Nadine Chahine).
+مقطّعة للعربي واللاتيني بس. تتحمّل من fonts.css (I-144).

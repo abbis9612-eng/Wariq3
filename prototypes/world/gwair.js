@@ -124,7 +124,7 @@
       bases: (opt.bases || BASES).map(b => ({ ...b, p: ll(...b.ll), n0: b.planes, max: b.planes, rein: 0, ready: b.planes, cd: 3 + W.rnd() * 10, mission: { kind: 'auto' }, plan: null, down: 0 })),
       sams: (opt.sams || SAMS).map(x => mkSite(x, ll)), raidSides: opt.raidSides || [1], realDoc: !!opt.realDoc,
       mbases: (opt.mbases || MBASES).map(m => ({ ...m, p: ll(...m.ll), bm0: m.bm, cm0: m.cm, uav0: m.uav })),
-      planes: [], msls: [], ev: [], kills: [0, 0], lostPlanes: [0, 0], queue: [], raids: {}, raidCd: opt.raidCd ?? (30 + W.rnd() * 40),
+      planes: [], msls: [], ev: [], kills: [0, 0], lostPlanes: [0, 0], queue: [], raids: {}, raidCd: opt.raidCd ?? (30 + W.rnd() * 40), raidK: opt.raidK || 1, raidCdK: opt.raidCdK || 1, pkK: opt.pkK || 1,   // «العالم» (I-159): ضربات أكبر وأكثر وطلعات أكبر؛ «الحرب الكبرى» 1
       stat: { tbm: [0, 0], uav: [0, 0], cm: [0, 0] }, // [اعترضنا، وصل]
       // مخزون البلد من صواريخ الدفاع الجوي (غير اللي بالبطاريات) [تقدير]، ينزاد بالإنتاج/الشراء ببطء
       pool: opt.pool || [{ 'PAC-2 GEM-T': 24, 'PAC-3 MSE': 24, '57E6': 72 }, { '48N6E2': 48, 'صياد-4': 24, 'صياد-3': 48, '9M331': 32 }],
@@ -245,7 +245,7 @@
     const tg = raidTarget(A, W, side); if (!tg) return;
     const from = (k, n) => A.mbases.filter(m => m.side === side && m[k] > 0 && d2(m.p, tg.p) < (k === 'bm' ? 700 : MUN[k === 'uav' ? 'shahed' : 'paveh'].range)).sort((a, b) => d2(a.p, tg.p) - d2(b.p, tg.p)).slice(0, n);
     const items = [];
-    const nU = 4 + Math.floor(A.rnd() * 9), nC = Math.floor(A.rnd() * 4), nB = 2 + Math.floor(A.rnd() * 5);
+    const rk = A.raidK || 1, nU = Math.round((4 + Math.floor(A.rnd() * 9)) * rk), nC = Math.round(Math.floor(A.rnd() * 4) * rk + (rk > 1 ? 1 : 0)), nB = Math.round((2 + Math.floor(A.rnd() * 5)) * rk);
     for (const [k, n] of [['uav', nU], ['cm', nC], ['bm', nB]]) { const src = from(k, 2); if (!src.length) continue; for (let i = 0; i < n; i++) { const mb = src[i % src.length]; if (mb[k] <= 0) continue; mb[k]--; const tp = [tg.p[0] + (A.rnd() - .5) * 6, tg.p[1] + (A.rnd() - .5) * 6]; const D = d2(mb.p, tp); const mun = (mb.mun && mb.mun[k]) || (k === 'bm' ? (D < 300 ? 'fateh' : D < 500 ? 'f313' : 'zolf') : k === 'uav' ? 'shahed' : 'paveh'); items.push({ k, mb, tp, mun, T: flightT(k, D) }); } }   // «العالم»: كل موقع ممكن يحدد ذخيرته (mb.mun)
     if (!items.length) return;
     const Tm = Math.max(...items.map(i => i.T)), rid = A.id++;
@@ -279,7 +279,7 @@
     if (A.decoys) { for (const f of A.decoys) { f.t += dt; f.x += f.vx * dt; f.y += f.vy * dt; } A.decoys = A.decoys.filter(f => f.t < .08); }
     A.planes = A.planes.filter(p => p.st !== 'dead');
     // ضربات إيران المركّبة
-    A.raidCd -= dt; if (A.raidCd <= 0) { A.raidCd = 70 + A.rnd() * 90; if (!(W.dip && W.dip.truce > W.t)) planRaid(A, W); }
+    A.raidCd -= dt; if (A.raidCd <= 0) { A.raidCd = (70 + A.rnd() * 90) * (A.raidCdK || 1); if (!(W.dip && W.dip.truce > W.t)) planRaid(A, W); }
     for (let i = A.queue.length - 1; i >= 0; i--) {
       const q = A.queue[i]; if (A.t < q.t) continue;
       if (q.k === 'bm' && q.erect === 0) { q.erect = 1; q.t += .06; emit(A, { k: 'bmerect', side: q.mb.side, x: q.mb.p[0], y: q.mb.p[1] }); continue; }
@@ -312,7 +312,7 @@
     A.prodT = (A.prodT || 0) + dH; if (A.prodT >= 72) { A.prodT = 0; if (!W.eco) for (const s of [0, 1]) for (const k in A.pool[s]) A.pool[s][k] += s ? 6 : 4; } // GW8: مع الاقتصاد الصواريخ تنشترى // إنتاج/شراء: كل 3 أيام شوية
     for (const m of A.mbases) { m.sup = (m.sup || 0) + dH; if (m.sup >= 24) { m.sup = 0; const e = W.eco && W.eco[m.side];
       if (e && e.cash < -8) continue;   // GW8: الدولة مفلسة = مصانع الصواريخ توقف
-      const nb = Math.min(m.bm0, m.bm + 2) - m.bm, nc = Math.min(m.cm0, m.cm + 1) - m.cm, nu = Math.min(m.uav0, m.uav + 6) - m.uav;
+      const rk = A.raidK || 1, nb = Math.min(m.bm0, m.bm + Math.round(2 * rk)) - m.bm, nc = Math.min(m.cm0, m.cm + Math.round(rk)) - m.cm, nu = Math.min(m.uav0, m.uav + Math.round(6 * rk)) - m.uav;
       m.bm += nb; m.cm += nc; m.uav += nu; if (e) { const c = nb * .0008 + nc * .001 + nu * .00004; e.cash -= c; e.msl = (e.msl || 0) + c; } } }
   }
 
@@ -326,7 +326,7 @@
       b.cd = (12 + A.rnd() * 14) * (W.eco ? { low: 1.4, norm: 1, high: .75 }[W.eco[b.side].airL || 'norm'] : 1);   // C8: جاهزية الطيران
       if (!m || m.kind === 'idle' || !m.p) continue;
       const T = PLANES[b.type];
-      const k = Math.min(b.ready, m.kind === 'recon' ? 1 : m.kind === 'cap' ? 2 : m.kind === 'strike' ? 4 : 2); b.ready -= k; A.sor = A.sor || [0, 0]; A.sor[b.side] += k;
+      const k = Math.min(b.ready, m.kind === 'recon' ? 1 : Math.round((m.kind === 'cap' ? 2 : m.kind === 'strike' ? 4 : 2) * (A.pkK || 1))); b.ready -= k; A.sor = A.sor || [0, 0]; A.sor[b.side] += k;
       const fid = A.id++, rh = b.rw, rx = Math.cos(rh), ry = Math.sin(rh);
       for (let i = 0; i < k; i++) A.planes.push({ id: A.id++, fid, slot: i, side: b.side, type: b.type, base: A.bases.indexOf(b), x: b.p[0] - rx * 1.2, y: b.p[1] - ry * 1.2, z: 0, h: rh, v: 0, m: { ...m }, st: 'roll', t: -i * .25, shots: T.aam ? 2 : 0, harm: m.kind === 'strike' && T.harm && i < 2 ? 1 : 0, bombs: T.ag > 1.1 ? 2 : 1, zT: 0, alt: 0, bank: 0, gam: 0, flares: 30, vx: 0, vy: 0, vz: 0, trk: [] });
       emit(A, { k: 'takeoff', side: b.side, x: b.p[0], y: b.p[1], base: b.n, n: k, kind: m.kind });

@@ -1028,6 +1028,12 @@ html[data-skin] .hero b{color:var(--act)}
       cx.fillStyle = 'rgba(255,255,255,.85)'; cx.beginPath(); cx.arc(2, 6, 9, 0, 7); cx.fill();
       cx.strokeStyle = '#1b1b1b'; cx.lineWidth = 1.6; cx.beginPath(); cx.moveTo(-2, 13); cx.lineTo(-2, -1); cx.stroke();
       cx.fillStyle = hot ? '#c0261c' : '#1b1b1b'; cx.beginPath(); cx.moveTo(-2, -1); cx.lineTo(8, 2); cx.lineTo(-2, 6); cx.closePath(); cx.fill(); cx.restore(); } }
+  // I-159: هدف طيارات الحاملة = أقرب منطقة لعدو دولتها (ينحسب مرة باليوم)؛ ماكو حرب = ماكو طلعات
+  const CVT = new Map();
+  function cvTarget(g) { const foes = new Set(G.wars.filter(w => w.a.includes(g.cc) || w.b.includes(g.cc)).flatMap(w => w.a.includes(g.cc) ? w.b : w.a)); if (!foes.size) return null;
+    const c = CVT.get(g.id); if (c && c.t === G.t && c.z === g.z) return c.ll; const p = fleetPos(g); let best = null, bd = 1e9;
+    for (const r of R) if (foes.has(r.ctl)) { const d = (r.ll[0] - p[0]) ** 2 + (r.ll[1] - p[1]) ** 2; if (d < bd) { bd = d; best = r.ll; } }
+    CVT.set(g.id, { t: G.t, z: g.z, ll: best }); return best; }
   function navyLayer(cx) {
     FLT.length = 0; navMoving = false; window.__navMove = false; if (!G || !G.nav || cam.s < 300) return;
     const T0 = performance.now(), dt = Math.min(.2, (T0 - (navT || T0)) / 1000); navT = T0;
@@ -1074,7 +1080,13 @@ html[data-skin] .hero b{color:var(--act)}
         if (g.path.length && k !== 'ss' && k !== 'ssn') { const wk = IMG['nv_wake'], pl = .85 + .15 * Math.sin(T0 / 300 + fx); if (wk && wk.naturalWidth) { cx.save(); cx.translate(ox - ca * L * .62, oy - sa * L * .62); cx.rotate(ang); cx.globalAlpha = .7; const w = L * 1.3 * pl; cx.drawImage(wk, -w / 2, -w * wk.naturalHeight / wk.naturalWidth / 2, w, w * wk.naturalHeight / wk.naturalWidth); cx.restore(); } navMoving = true; }
         if (im && im.naturalWidth) { cx.save(); cx.translate(ox, oy); cx.rotate(ang); cx.globalAlpha = k === 'ss' || k === 'ssn' ? .55 : 1; cx.shadowColor = 'rgba(0,20,40,.45)'; cx.shadowBlur = 5; cx.shadowOffsetX = 2; cx.shadowOffsetY = 3; cx.drawImage(im, -L / 2, -L * im.naturalHeight / im.naturalWidth / 2, L, L * im.naturalHeight / im.naturalWidth); cx.restore(); } }
       // طيارات الحاملة تلف فوق الأسطول
-      if (g.s.cv && cam.s > 2500) for (let q = 0; q < 2; q++) { const ph = T0 / 3200 + q * Math.PI, jx = px + Math.cos(ph) * 60 * zf, jy = py + Math.sin(ph) * 40 * zf; const im = IMG.u_f18_t || IMG.f18; if (im && im.naturalWidth) { cx.save(); cx.translate(jx, jy); cx.rotate(ph + Math.PI / 2); cx.drawImage(im, -8 * zf, -8 * zf, 16 * zf, 16 * zf); cx.restore(); } navMoving = true; }
+      // I-159: طيارات الحاملة ما تلف بلا معنى: بالحرب تطلع طلعات حقيقية — تقلع من السطح، تروح لأقرب أرض للعدو، تضرب، وترجع تنزل؛ بالسلم واقفة على السطح
+      if (g.s.cv && cam.s > 2500) { const tg = cvTarget(g); if (tg) { const [tx, ty] = toS(MX(tg[0]), MY(tg[1])), D = Math.hypot(tx - px, ty - py) || 1, R0 = Math.min(D, 260 * zf), a0 = Math.atan2(ty - py, tx - px), nx = -Math.sin(a0), ny = Math.cos(a0), im = IMG.u_f18_t || IMG.f18;
+        for (let q = 0; q < 4; q++) { const per = 9000, p = ((T0 + q * 650 + g.id * 977) % per) / per; let f, dir; if (p < .5) { f = p / .5; dir = a0; } else if (p < .56) { f = 1; dir = a0; } else { f = 1 - (p - .56) / .44; dir = a0 + Math.PI; }
+          const sp = (q - 1.5) * 7 * zf * Math.min(1, f * 5), jx = px + Math.cos(a0) * R0 * f + nx * sp, jy = py + Math.sin(a0) * R0 * f + ny * sp, al = D > R0 && f > .85 ? Math.max(.15, 1 - (f - .85) * 5) : 1;
+          if (im && im.naturalWidth) { cx.save(); cx.globalAlpha = al; cx.translate(jx, jy); cx.rotate(dir + Math.PI / 2); cx.drawImage(im, -7 * zf, -7 * zf, 14 * zf, 14 * zf); cx.restore(); }
+          if (p >= .48 && p < .6 && D <= R0 * 1.02) { const k = (p - .48) / .12, ex = tx + nx * sp * .6, ey = ty + ny * sp * .6; cx.save(); cx.globalCompositeOperation = 'lighter'; cx.fillStyle = `rgba(255,${150 + 60 * (1 - k) | 0},60,${.9 * (1 - k)})`; cx.beginPath(); cx.arc(ex, ey, (4 + 14 * k) * zf * .6, 0, 7); cx.fill(); cx.restore(); } }
+        navMoving = true; } }
       // اللوحة: العلم + اسم الأسطول + شريط القوة
       const lb = `${FLAG(g.cc)} ${WNAV.name(WD, g)}`; cx.save(); cx.font = '700 11px "IBM Plex Sans Arabic",Tahoma'; cx.textAlign = 'center'; const tw = cx.measureText(lb).width + 14; let ly = py - 44 * zf;
       // اللوحات ما تتراكب: إذا تلزق بلوحة ثانية تصعد فوكها

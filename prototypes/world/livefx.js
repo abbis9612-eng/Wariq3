@@ -68,9 +68,16 @@
       if (sk >= 1) { img('nv_oil-slick', x, y, Lw * 1.4, 0, .85); continue; }
       img(SPK[s.k], x, y, Lw, th + Math.PI + sk * .4, (b.B.SHIP[s.k].sub ? .5 : 1) * (1 - sk * .8));
       if (s.burn > 0) { img('nv_ship-fire', x, y, Lw * .5 * (.6 + s.burn), 0, .75 + .25 * Math.sin(T / 90 + s.id), 'lighter'); smoke(c, x, y, Lw, T, s.burn); } }
-    // C6: الحاملة تطلّع طيارات: دورية جوية (CAP) تلف فوق الأسطول وقت المعركة
-    for (const s of b.S.ships) { if (s.k !== 'cv' || s.sunk) continue; const [x0, y0] = P(s.x, s.y), up = Math.min(1, (T - b.t0) / 4000), R0 = 26 * zf + 40 * up;
-      for (let i = 0; i < 4; i++) { const ph = T / 2600 + i * Math.PI / 2, jx = x0 + Math.cos(ph) * R0 * up, jy = y0 + Math.sin(ph) * R0 * .6 * up - 8 * up; img('u_f18_t', jx, jy, 13 * zf, ph + Math.PI / 2, .95); if (up < 1) { c.fillStyle = `rgba(255,255,255,${.4 * (1 - up)})`; c.beginPath(); c.arc(jx, jy, 2, 0, 7); c.fill(); } } }
+    // I-159: الحاملة تطلّع طيارات اعتراض: تقلع من السطح باتجاه الصواريخ/المهاجم، تطلق، وترجع تنزل (بدل اللف حوالين الأسطول بلا معنى)
+    { const th0 = b.S.msl.filter(m => m.side === 1 && m.st === 'fly'), [ax0, ay0] = th0.length ? [th0.reduce((t, m) => t + m.x, 0) / th0.length, th0.reduce((t, m) => t + m.y, 0) / th0.length] : [null, null];
+      for (const s of b.S.ships) { if (s.k !== 'cv' || s.sunk) continue; const [x0, y0] = P(s.x, s.y); let dir0 = th;   // باتجاه مصدر الهجوم
+        if (ax0 != null) { const [ax, ay] = P(ax0, ay0); dir0 = Math.atan2(ay - y0, ax - x0); }
+        const R0 = 70 * zf, nx = -Math.sin(dir0), ny = Math.cos(dir0);
+        for (let i = 0; i < 4; i++) { const per = 7000, p = ((T - b.t0 + i * 900) % per) / per; if (T - b.t0 < i * 900) continue; let f, dir; if (p < .45) { f = p / .45; dir = dir0; } else if (p < .55) { f = 1; dir = dir0; } else { f = 1 - (p - .55) / .45; dir = dir0 + Math.PI; }
+          const sp = (i - 1.5) * 6 * zf * Math.min(1, f * 4), jx = x0 + Math.cos(dir0) * R0 * f + nx * sp, jy = y0 + Math.sin(dir0) * R0 * f + ny * sp;
+          img('u_f18_t', jx, jy, 13 * zf, dir + Math.PI / 2, .95);
+          if (p >= .45 && p < .55) { const k = (p - .45) / .1; c.save(); c.strokeStyle = `rgba(255,255,255,${.8 * (1 - k)})`; c.lineWidth = 1.4; c.beginPath(); c.moveTo(jx, jy); c.lineTo(jx + Math.cos(dir0) * 30 * zf * k, jy + Math.sin(dir0) * 30 * zf * k); c.stroke(); c.restore(); }
+          if (f < .15) { c.fillStyle = `rgba(255,255,255,${.4 * (1 - f / .15)})`; c.beginPath(); c.arc(jx, jy, 2, 0, 7); c.fill(); } } } }
     if (far) return;
     // خيوط الدخان والصواريخ
     const f = Math.min(1, b.acc);

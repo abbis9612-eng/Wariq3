@@ -48,7 +48,7 @@
           const rear = T.cells.filter(x => (x.own === k || T.kind === 'air') && W.ctrl[T.cells.indexOf(x)] === s).map(x => ({ x, d: dFront(s, x.c) })).filter(o => o.d > 80 && o.d < (T.kind === 'air' ? 2500 : 700)).sort((a, b) => (b.x.vp || 0) - (a.x.vp || 0) || a.d - b.d).slice(0, 2);
           const mun = CAT.munOf(k);
           rear.forEach((o, i) => mbases.push({ n: (i ? 'موقع مسيّرات' : 'قاعدة صواريخ') + ' — ' + (o.x.city || 'المؤخرة'), ll: [o.x.ll[1], o.x.ll[0]], side: s,
-            bm: Math.min(80, Math.round(c.msl * .08 / rear.length)), cm: Math.min(16, Math.round(c.msl * .02 / rear.length)), uav: Math.min(200, Math.round(c.drn * .08 / rear.length)), ...(mun ? { mun } : {}) }));
+            bm: Math.min(200, Math.round(c.msl * .1 / rear.length)), cm: Math.min(40, Math.round(c.msl * .025 / rear.length)), uav: Math.min(400, Math.round(c.drn * .1 / rear.length)),   /* I-159: مخزون أكبر للضربات الأكبر */ ...(mun ? { mun } : {}) }));
         }
       }
       // حد التلفون للطيارات (بنفس النسبة)
@@ -69,7 +69,7 @@
       info[s].sams = sams.filter(x => x.side === s).length;
     }
     if (T.samStock) for (const [k, v] of Object.entries(T.samStock)) pool[0][k] = (pool[0][k] || 0) + v;   // I-158: صواريخ الدفاع الجوي اللي صنعناها بالسلم
-    const A = AIR.create(W, { LL, bases, sams, mbases, pool, raidSides: [0, 1].filter(s => mbases.some(m => m.side === s)), raidCd: 40, realDoc: true });
+    const A = AIR.create(W, { LL, bases, sams, mbases, pool, raidSides: [0, 1].filter(s => mbases.some(m => m.side === s)), raidCd: 20, realDoc: true, raidK: 2.5, raidCdK: .45, pkK: 1.5 });   // I-159: ضربات مركّبة ×2.5 بالحجم وأكثر من ضعف التكرار، وطلعات أكبر ×1.5
     A.info = info; A.LLp = { lon0: T.lon0, lat1: T.lat1, KX: T.KX, KY: T.KY };
     return A;
   }
@@ -100,11 +100,15 @@
     mbases: A.mbases.map(m => ({ bm: m.bm, cm: m.cm, uav: m.uav })) }; }
   function restore(A, o) { if (!o) return A; Object.assign(A, { t: o.t, wt: o.wt, id: o.id, kills: o.kills, lostPlanes: o.lostPlanes, stat: o.stat, raidCd: o.raidCd, raidSides: o.raidSides, pool: o.pool });
     const BM = new Map(A.bases.map((b, i, L) => [bK(b, i, L), b])), SM = new Map(A.sams.map((x, i, L) => [sK(x, i, L), x]));
+    const keyed = o.bases.length && o.bases.every(b => b.k), nb = [];
     o.bases.forEach((b, i) => { let x = b.k ? BM.get(b.k) : A.bases[i];
-      if (!x && b.k) { const [sd, ty] = b.k.split('|'); x = addPlanes(A, +sd, ty, 0, b.cc, true); if (x) x.n = b.k.split('|').slice(2, -1).join('|'); }
-      if (x) { const { k, ll, cc, ...st } = b; Object.assign(x, st); if (x.max == null || x.max < x.n0) x.max = x.n0; } });
-    o.sams.forEach((s, i) => { let x = s.k ? SM.get(s.k) : A.sams[i]; if (!x && s.k && s.sys) { x = addSam(A, s.side, s.sys, s.cc); if (x) { for (const m of AIR.SYS[s.sys].mags) if (!m.gun) A.pool[s.side][m.n] -= m.stock; } }
-      if (!x) return; x.p = s.p; x.down = s.down; x.doc = s.doc; s.mags.forEach((m, j) => x.mags[j] && Object.assign(x.mags[j], m)); });
+      if (!x && b.k) { const [sd, ty] = b.k.split('|'); x = addPlanes(A, +sd, ty, 0, b.cc, true); if (x) { x.n = b.k.split('|').slice(2, -1).join('|'); if (b.ll) { x.ll = b.ll; x.p = llP(A, ...b.ll); } } }
+      if (x) { const { k, ll, cc, ...st } = b; Object.assign(x, st); if (x.max == null || x.max < x.n0) x.max = x.n0; nb.push(x); } });
+    if (keyed) A.bases = nb;   // الحفظ هو الحقيقة: نفس القواعد وبنفس الترتيب (الجبهة تتحرك، فالبناء الجديد ممكن يطلع قواعد ثانية)
+    const skeyed = o.sams.length && o.sams.every(x => x.k), ns = [];
+    o.sams.forEach((s, i) => { let x = s.k ? SM.get(s.k) : A.sams[i]; if (!x && s.k && s.sys) { x = addSam(A, s.side, s.sys, s.cc); if (x) { A.sams.pop(); for (const m of AIR.SYS[s.sys].mags) if (!m.gun) A.pool[s.side][m.n] -= m.stock; if (s.ll) x.ll = s.ll; } }
+      if (!x) return; x.p = s.p; x.down = s.down; x.doc = s.doc; s.mags.forEach((m, j) => x.mags[j] && Object.assign(x.mags[j], m)); ns.push(x); });
+    if (skeyed) A.sams = ns; else for (const x of ns) if (!A.sams.includes(x)) A.sams.push(x);
     o.mbases.forEach((m, i) => A.mbases[i] && Object.assign(A.mbases[i], m)); return A; }
   const API = { build, save, restore, setPlayerRaids, addPlanes, addSam };
   if (typeof module !== 'undefined') module.exports = API; else root.AIRWORLD = API;

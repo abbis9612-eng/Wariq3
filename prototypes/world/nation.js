@@ -57,6 +57,11 @@
     SUP0(); ECON.SUPPLY[0] = {};
     const tsup = supOf(((cs.kit || {}).tank || [0, []])[1].join(' '), me), asup = supOf(((cs.kit || {}).afv || [0, []])[1].join(' '), me);
     if (tsup && tsup !== me) ECON.SUPPLY[0].arm = tsup; if (asup && asup !== me) ECON.SUPPLY[0].mec = asup;
+    // M2: الفرق بأسماء سلاح الدولة الحقيقي (من kit)، والدول اللي تصنع دباباتها بنفسها ما يطلعلها «تجميع محلي»
+    { const cln = m => String(m || '').replace(/\s*\(.*$/, '').replace(/([A-Z])([A-Z][a-z])/g, '$1 $2').replace(/([a-z])([A-Z])/g, '$1 $2').trim(), tk = cln((((cs.kit || {}).tank || [0, []])[1] || [])[0]), af = cln((((cs.kit || {}).afv || [0, []])[1] || [])[0]);
+      if (I.arm) I.arm = { ...I.arm, n: 'فرقة مدرعة' + (tk ? ` (${tk})` : ''), d: tk ? `دبابات ${tk}${tsup && tsup !== me ? ' (من ' + WD.cs[tsup].ar + ')' : ' (صنع محلي)'}` : I.arm.d };
+      if (I.mec) I.mec = { ...I.mec, n: 'فرقة آلية' + (af ? ` (${af})` : ''), d: af ? `مدرعات ${af} ومدفعية وشاحنات` : I.mec.d };
+      if (tsup === me) { delete I.larm; } if (asup === me) { delete I.lmec; } }
     // للعراق: كتالوج «الحرب الكبرى» الأصلي (F-16IQ، باتريوت...) يبقى ويا مورّديه، والإضافات بس للأنواع اللي ما بيه
     if (me === 'IRQ') Object.assign(ECON.SUPPLY[0], SUP0());
     const have = new Set(Object.values(I).filter(x => x.side === 0).map(x => x.plane || x.pool).filter(Boolean));

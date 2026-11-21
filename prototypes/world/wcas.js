@@ -31,12 +31,13 @@
   }
   // خسائر وحدة عسكرية: men = عدد الرجال اللي راحوا من الوحدة
   const unit = (men, pow = .1) => ({ kia: men * .25, wia: men * (.75 - pow), pow: men * pow });
-  // حروب الدول الثانية (المحاكاة المجردة): كل شهر ~2٪ من الجيش العامل خسائر (قتلى+جرحى+أسرى)، أكثر على الأضعف
+  // حروب الدول الثانية (المحاكاة المجردة): كل شهر ~2.5٪ من الجيش العامل خسائر (قتلى+جرحى+أسرى)، أكثر على الأضعف
+  // (المهاجم الأقوى يدفع هم: الأقل ×0.8)
   // (روسيا بأوكرانيا ≈ 25–35 ألف بالشهر بتقديرات 2024–2025) [تقدير بحدود المصادر]
   function warMonth(G, WD, w) {
     if (w.detail) return; const r = w.r || 1;
-    for (const [side, k] of [[w.a, clamp(1 / r, .6, 2)], [w.b, clamp(r, .6, 2)]]) for (const id of side) {
-      const act = (WD.cs[id] && WD.cs[id].act) || G.C[id].pop * .004, men = act * .012 * k * (side.length > 1 && id !== side[0] ? .3 : 1);
+    for (const [side, k] of [[w.a, clamp(1 / r, .8, 1.6)], [w.b, clamp(r, .8, 1.6)]]) for (const id of side) {
+      const act = (WD.cs[id] && WD.cs[id].act) || G.C[id].pop * .004, men = act * .025 * k * (side.length > 1 && id !== side[0] ? .3 : 1);
       add(G, id, { ...unit(men, .06), tk: men / 900 * 3, civ: men * .15 }, { war: w.id });
     }
   }

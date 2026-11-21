@@ -294,7 +294,9 @@
     if (fb.length && r / fort > 1.3) take(fb, w.a, r / fort);
     else if (fa.length && 1 / r / fort > 1.3) take(fa, w.b, 1 / r / fort);
     w.score = clamp(w.score + (r > 1 ? 1 : -1) * Math.min(3, Math.abs(Math.log(r)) * 2), -100, 100);
-    for (const id of [...w.a, ...w.b]) { const mine = w.a.includes(id) ? w.score : -w.score; w.weary[id] = clamp((w.weary[id] || 0) + 1.5 + (mine < 0 ? 1.5 : 0), 0, 100); }
+    // حرب استنزاف قديمة (fort0): المجتمع متعود، التعب يصعد نص السرعة (أوكرانيا 4 سنين وما وقفت)
+    const wk = w.fort0 ? .5 : 1;
+    for (const id of [...w.a, ...w.b]) { const mine = w.a.includes(id) ? w.score : -w.score; w.weary[id] = clamp((w.weary[id] || 0) + (1.5 + (mine < 0 ? 1.5 : 0)) * wk, 0, 100); }
     return peaceTalk(W, WD, w);
   }
   // السلام: الطرف الخسران والتعبان يطلب، والثاني يقبل إذا هو هم تعبان أو ربحان كفاية (اللاعب يقرر بنفسه)
@@ -305,7 +307,8 @@
       if ((wr > 75 && s < 10) || s < -60 || (wr > 60 && Math.abs(s) < 15 && w.months > 6)) {
         const ol = other[0]; if (ol === W.me) { if (!w.offer) { w.offer = lead; note(W, { k: 'peaceOffer', war: w.id, from: lead }); } continue; }
         const os = -s, owr = w.weary[ol];
-        if (owr > 55 || os > 40) return endWar(W, WD, w, 'peace');
+        // المفاوضات تتعثر: كل شهر 25٪ فرصة تنجح (مو أكيد)
+        if ((owr > 55 || os > 40) && W.rnd() < .25) return endWar(W, WD, w, 'peace');
       }
     }
   }

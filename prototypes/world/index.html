@@ -172,7 +172,7 @@ function draw() {
   MAPFX.drawScaleAndCompass(cx, cam, W, H, lt, document.body.classList.contains('play') ? 64 : 36);
   lastMs = performance.now() - t0;
 }
-function loop(t) { if (window.LIVEFX && (LIVEFX.active() || LIVEFX.fires.length)) dirty = true; if (dirty) { dirty = false; draw(); frames++; } if (t - fpsT > 1000) { fps = frames; frames = 0; fpsT = t; $('#perf').textContent = `رسم ${lastMs.toFixed(1)}ms · ${fps}fps · ×${Math.round(cam.s)}`; } requestAnimationFrame(loop); }
+function loop(t) { if ((window.LIVEFX && (LIVEFX.active() || LIVEFX.fires.length)) || (window.__navMove && t - (window.__navT || 0) > 45 && (window.__navT = t))) dirty = true; if (dirty) { dirty = false; draw(); frames++; } if (t - fpsT > 1000) { fps = frames; frames = 0; fpsT = t; $('#perf').textContent = `رسم ${lastMs.toFixed(1)}ms · ${fps}fps · ×${Math.round(cam.s)}`; } requestAnimationFrame(loop); }
 
 // ===== اللمس والفأرة =====
 const pts = new Map(); let drag = null, moved = 0, pinch = null;
@@ -725,35 +725,108 @@ body.sheeton #toast{top:calc(var(--toph, 100px) + 4px) !important;bottom:auto !i
   let selF = null; const FLT = [];
   const shipImg = g => { const m = WNAV.main(g); return 'u_' + (m === 'cv' ? 'carrier' : m === 'dd' ? (g.cc === 'CHN' ? 't055' : g.cc === 'RUS' ? 'kirov' : 'ddg') : m === 'ss' || m === 'ssn' ? 'sub' : m === 'fac' ? 'fac' : 'frigate') + '_v'; };
   const fleetPos = g => { const c = WD.s[g.z][2]; if (!g.path.length) return [c[0], c[1]]; const n = WD.s[g.path[0]][2], d = WNAV.KM(c, n) || 1, f = Math.min(1, g.prog / d); return [c[0] + (n[0] - c[0]) * f, c[1] + (n[1] - c[1]) * f]; };
+  // ===== N4 (I-127): البحر الواضح — رمز أسطول بالعلم من بعيد، التشكيل الحقيقي من قريب، حركة ناعمة، أطراف متفرقة، خطوط تماس، وسفن تجارية بالمضائق =====
+  const ISO2 = (() => { const s = 'LSOLSPRKKPGINGNINDINPRTPTGNQGQMKDMKPHLPHMNGMNIRNIRKENKEGABGAAUTATGHAGHJORJOTURTRMDGMGLTULTDZADZVENVENLDNLKAZKZDNKDKZWEZWMWIMWTTOTTNZLNZLBRLRCMRCMGBRGBSRBRSSWZSZLBNLBHNDHNMLIMLIDNIDCOLCOSAUSALKALKUSAUSBRABRJAMJMGNBGWKGZKGSGPSGLVALVLAOLAURYUYCZECZAGOAOTUNTNFRAFREGYEGBGDBDITAITCIVCIZAFZAECUECMRTMRKHMKHNPLNPCANCATHATHSLVSVDJIDJESPESISRILSDNSDPANPATZATZYEMYEARGARBHRBHNORNOUKRUACAFCFKWTKWCHLCLUGAUGPSXPSGEOGEALBALNGANGBOLBOAREAERUSRUBELBECOGCGCHNCNBIHBASVNSIMEXMXZMBZMROUROBDIBIAZEAZNAMNALBYLYDEUDEBLRBYTCDTDERIERTJKTJHTIHTBGRBGCRICRMOZMZVNMVNBFABFGMBGMTKMTMCUBCUESTEEBENBJGTMGTMMRMMPERPEETHETTLSTLHRVHRSOMSOSVKSKQATQAHUNHUOMNOMFINFIMARMACODCDGRCGRSLESLPOLPLBWABWIRLIECYPCYNICNIPAKPKIRQIQPNGPGPRYPYSDSSSARMAMMYSMYNERNERWARWSENSNSYRSYJPNJPKORKRTWNTWAFGAFSWESEMDAMDTGOTGAUSAUCHECHUZBUZDOMDO', m = {}; for (let k = 0; k < s.length; k += 5) m[s.slice(k, k + 3)] = s.slice(k + 3, k + 5); return m; })();
+  const FLAG = cc => { const c = ISO2[cc]; return c ? String.fromCodePoint(...[...c].map(ch => 0x1F1E6 + ch.charCodeAt(0) - 65)) : '🏳'; };
+  const SIDEC = { me: '#3d8bfd', foe: '#e5484d', ally: '#46a758', neu: '#8f8f86' };
+  const VP = new Map(); let navMoving = false, navT = 0, coastZ = null, coastT = -1;
+  // المناطق البحرية اللي نشوفها: سواحلنا ومنطقتين حوالي أساطيلنا (الباقي ضباب: «❓ تماس مجهول»)
+  function seen(z) {
+    if (coastT !== G.t || !coastZ) { coastT = G.t; coastZ = new Set(); for (const r of R) if (r.ctl === me) for (const sz of r.sea || []) { const k = WD.s.findIndex(q => q[0] === sz); if (k >= 0) coastZ.add(k); }
+      const adj = k => (WD.s[k][3] || []).map(id => WD.s.findIndex(q => q[0] === id)).filter(x => x >= 0);
+      for (const g of G.nav.g) if (g.cc === me || S.allied(G, me, g.cc)) { coastZ.add(g.z); for (const a of adj(g.z)) { coastZ.add(a); for (const b of adj(a)) coastZ.add(b); } } }
+    return coastZ.has(z);
+  }
+  // ممرات التجارة (ناقلات وحاويات تمشي، وتوقف بالحصار)
+  const LANES = [
+    { st: 'hormuz', n: 10, p: [[49.8, 27.6], [52.5, 26.6], [55.2, 26.4], [56.4, 26.55], [57.8, 25.2], [59.8, 23.4], [63.5, 21]] },
+    { st: 'bab', n: 9, p: [[63.5, 21], [57, 15.5], [50, 12.8], [45.5, 12.2], [43.4, 12.6], [41.2, 15.5], [38.5, 20], [35.6, 25.4], [33.8, 28], [32.55, 29.9]] },
+    { st: 'suez', n: 7, p: [[32.55, 29.9], [32.35, 30.5], [32.3, 31.3], [30, 32.3], [25, 33.6], [18, 35.6], [11.5, 37.3], [3, 37.6], [-5.6, 35.95], [-12, 36]] },
+    { st: 'malacca', n: 9, p: [[80.5, 5.6], [92, 6], [97.5, 5.2], [100.5, 3], [103.6, 1.3], [106, 3.5], [110, 8], [114, 15], [118.5, 21.5], [119.5, 24.2], [122, 29.5]] },
+    { st: 'bosporus', n: 4, p: [[29.05, 41.1], [27.2, 40.4], [26.2, 39.6], [25.5, 37.8], [23, 35.8]] },
+  ];
+  const lanePt = (P, f) => { let L = 0; const d = []; for (let k = 1; k < P.length; k++) { const s2 = Math.hypot(P[k][0] - P[k - 1][0], P[k][1] - P[k - 1][1]); d.push(s2); L += s2; } let t = f * L; for (let k = 0; k < d.length; k++) { if (t <= d[k]) { const q = t / d[k]; return [P[k][0] + (P[k + 1][0] - P[k][0]) * q, P[k][1] + (P[k + 1][1] - P[k][1]) * q, Math.atan2(-(P[k + 1][1] - P[k][1]), P[k + 1][0] - P[k][0])]; } t -= d[k]; } const e = P[P.length - 1]; return [e[0], e[1], 0]; };
+  function trade(cx, T0) {
+    if (cam.s < 650) return; const zf = Math.max(.8, Math.min(1.6, cam.s / 2200));
+    for (const ln of LANES) { const st = (WD.st || []).find(q => q.id === ln.st), cut = (G.stx && G.stx[ln.st]) || 0, sll = st ? st.ll : null;
+      // بالحصار: السفن تنقص، واللي باقية توقف قبل المضيق
+      const n = Math.max(0, Math.round(ln.n * (1 - cut)));
+      for (let k = 0; k < ln.n; k++) { const dir = k % 2, f0 = ((T0 / 90000) * (dir ? -1 : 1) + k / ln.n + 10) % 1, f = dir ? 1 - f0 : f0; let [lo, la, an] = lanePt(ln.p, f); if (dir) an += Math.PI;
+        if (k >= n) { if (!sll || Math.hypot(lo - sll[0], la - sll[1]) > 4) continue; const q = (k % 4) * .25; lo = sll[0] - 1.2 - q; la = sll[1] - .3 + (k % 3) * .25; an = 0; }
+        const [x, y] = toS(MX(lo), MY(la)); if (x < -30 || x > W0() + 30 || y < -30 || y > H0() + 30) continue;
+        const kind = k % 3 === 0 ? 'v4_s_container' : k % 3 === 1 ? 'v4_s_tanker' : 'v4_s_lng', im = IMG[kind], L = 17 * zf;
+        navMoving = true; cx.save(); cx.translate(x, y); cx.rotate(an);
+        if (im && im.naturalWidth) cx.drawImage(im, -L / 2, -L * im.naturalHeight / im.naturalWidth / 2, L, L * im.naturalHeight / im.naturalWidth);
+        else { cx.fillStyle = kind === 'v4_s_tanker' ? '#7a2f22' : kind === 'v4_s_lng' ? '#e9e6dc' : '#2f4f6a'; cx.beginPath(); cx.ellipse(0, 0, L / 2, L / 7, 0, 0, 7); cx.fill(); cx.fillStyle = '#f2efe6'; cx.fillRect(-L / 2 + 1, -L / 9, L / 6, L / 4.5);
+          if (kind === 'v4_s_container') { for (let q = 0; q < 4; q++) { cx.fillStyle = ['#b5452f', '#2f7a5a', '#c99a2e', '#3b5f9a'][q]; cx.fillRect(-L / 4 + q * L / 7, -L / 12, L / 8, L / 6); } } }
+        // الرغوة ورا السفينة
+        cx.strokeStyle = 'rgba(255,255,255,.5)'; cx.lineWidth = 1; cx.beginPath(); cx.moveTo(-L / 2, 0); cx.lineTo(-L / 2 - 8 * zf, -2); cx.moveTo(-L / 2, 0); cx.lineTo(-L / 2 - 8 * zf, 2); cx.stroke(); cx.restore(); }
+      // المضيق المقطوع: خط أحمر متقطع وعداد
+      if (cut > .05 && sll) { const [x, y] = toS(MX(sll[0]), MY(sll[1])); cx.save(); cx.strokeStyle = 'rgba(229,72,77,.9)'; cx.lineWidth = 3; cx.setLineDash([6, 5]); cx.lineDashOffset = -(T0 / 60) % 11; cx.beginPath(); cx.moveTo(x - 16, y - 18); cx.lineTo(x + 16, y + 18); cx.stroke(); cx.setLineDash([]);
+        const t = `🚫 ${st.n}: ${Math.round(cut * 100)}٪ واقفة`; cx.font = '700 11px "IBM Plex Sans Arabic",Tahoma'; cx.textAlign = 'center'; cx.lineWidth = 3; cx.strokeStyle = 'rgba(60,0,0,.8)'; cx.strokeText(t, x, y - 24); cx.fillStyle = '#ffd6d6'; cx.fillText(t, x, y - 24); cx.restore(); } }
+  }
   function navyLayer(cx) {
-    FLT.length = 0; if (!G || !G.nav || cam.s < 300) return;
-    const foe = new Set(G.wars.filter(w => w.a.includes(me) || w.b.includes(me)).flatMap(w => w.a.includes(me) ? w.b : w.a)), byZ = new Map();
-    for (const g of G.nav.g) { const mine = g.cc === me, hostile = foe.has(g.cc); if (!mine && WNAV.sub(g)) continue; if (window.LIVEFX && LIVEFX.navalGid(g.id)) continue; if (!mine && !hostile && cam.s < 900) continue;
-      const [lon, lat] = fleetPos(g), [x, y] = toS(MX(lon), MY(lat)); if (x < -60 || x > W0() + 60 || y < -60 || y > H0() + 60) continue;
-      const k = g.z, i = byZ.get(k) || 0; byZ.set(k, i + 1); const ox = i ? Math.cos(i * 2.1) * 58 : 0, oy = i ? Math.sin(i * 2.1) * 44 : 0, px = x + ox, py = y + oy;
-      FLT.push({ g, x: px, y: py });
+    FLT.length = 0; navMoving = false; window.__navMove = false; if (!G || !G.nav || cam.s < 300) return;
+    const T0 = performance.now(), dt = Math.min(.2, (T0 - (navT || T0)) / 1000); navT = T0;
+    trade(cx, T0);
+    const foe = new Set(G.wars.filter(w => w.a.includes(me) || w.b.includes(me)).flatMap(w => w.a.includes(me) ? w.b : w.a));
+    const side = g => g.cc === me ? 'me' : foe.has(g.cc) ? 'foe' : S.allied(G, me, g.cc) ? 'ally' : 'neu';
+    const far = cam.s < 1500, zf = Math.max(1, Math.min(2.2, cam.s / 1800)), LBR = [];
+    // التفريق: كل طرف بجهة من المنطقة (إحنا يسار، العدو يمين، الحلفاء فوق، المحايد جوه)
+    const SLOT = { me: [-1, 0], foe: [1, 0], ally: [0, -1], neu: [0, 1] }, cnt = new Map(), pts = [];
+    for (const g of G.nav.g) { const sd = side(g), mine = sd === 'me'; if (!mine && WNAV.sub(g)) continue; if (window.LIVEFX && LIVEFX.navalGid(g.id)) continue; if (!mine && sd !== 'foe' && cam.s < 900) continue;
+      // الحركة الناعمة: الموقع المرسوم يلحق الموقع الحقيقي بهدوء (بدل القفز كل يوم)
+      const tg = fleetPos(g), v = VP.get(g.id); let lon, lat; if (!v || Math.hypot(v[0] - tg[0], v[1] - tg[1]) > 6) { lon = tg[0]; lat = tg[1]; } else { const k = 1 - Math.exp(-dt * 2.2); lon = v[0] + (tg[0] - v[0]) * k; lat = v[1] + (tg[1] - v[1]) * k; if (Math.hypot(tg[0] - lon, tg[1] - lat) > .003) navMoving = true; } VP.set(g.id, [lon, lat]);
+      let [x, y] = toS(MX(lon), MY(lat)); const key = g.z + sd, n = cnt.get(key) || 0; cnt.set(key, n + 1);
+      const sep = far ? 34 : 80 * zf, sl = SLOT[sd]; const others = G.nav.g.some(o => o !== g && o.z === g.z && side(o) !== sd);
+      if (others) { x += sl[0] * sep; y += sl[1] * sep * .8; } x += n * (far ? 22 : 46 * zf) * (sl[1] ? 1 : 0); y += n * (far ? 20 : 40 * zf) * (sl[0] ? 1 : 0);
+      if (x < -80 || x > W0() + 80 || y < -80 || y > H0() + 80) continue;
+      const det = sd !== 'foe' || seen(g.z); pts.push({ g, sd, x, y, det }); FLT.push({ g, x, y }); }
+    // خطوط التماس بين أساطيلنا وأساطيل العدو القريبة
+    for (const a of pts) if (a.sd === 'me') for (const b of pts) if (b.sd === 'foe' && Math.hypot(a.x - b.x, a.y - b.y) < (far ? 140 : 320)) { cx.save(); cx.strokeStyle = 'rgba(229,72,77,.75)'; cx.lineWidth = 2; cx.setLineDash([7, 6]); cx.lineDashOffset = -(T0 / 50) % 13; cx.beginPath(); cx.moveTo(a.x, a.y); cx.lineTo(b.x, b.y); cx.stroke(); cx.setLineDash([]); cx.font = '14px sans-serif'; cx.textAlign = 'center'; cx.fillText('⚔', (a.x + b.x) / 2, (a.y + b.y) / 2 + 5); cx.restore(); navMoving = true; }
+    for (const { g, sd, x: px, y: py, det } of pts) {
+      const col = SIDEC[sd], mine = sd === 'me';
       // الطريق
-      if (mine && g.path.length) { cx.save(); cx.setLineDash([5, 6]); cx.strokeStyle = g === selF ? 'rgba(255,255,255,.9)' : 'rgba(150,200,255,.55)'; cx.lineWidth = g === selF ? 2.2 : 1.4; cx.beginPath(); cx.moveTo(px, py); for (const z of g.path) { const c = WD.s[z][2], [a, b] = toS(MX(c[0]), MY(c[1])); cx.lineTo(a, b); } cx.stroke(); cx.restore(); }
-      // W13: التشكيل الحقيقي من فوق (صور Grok): الحاملة بالنص والمدمرات حواليها والغواصة قدام، مقدمتها باتجاه الحركة، والرغوة وراها — بلا دوائر
-      const col = mine ? '#9fd0ff' : hostile ? '#ff8a7a' : S.allied(G, me, g.cc) ? '#a6e39a' : 'rgba(235,235,225,.85)';
-      let ang = 0; if (g.path.length) { const c2 = WD.s[g.path[0]][2], [nx2, ny2] = toS(MX(c2[0]), MY(c2[1])); ang = Math.atan2(ny2 - py, nx2 - px); }
-      const zf = Math.max(1, Math.min(1.8, cam.s / 2000)), BASE = { cv: 40, amp: 32, dd: 22, ff: 19, fac: 8, ss: 15, ssn: 18 }, SPK = { cv: g.cc === 'CHN' ? 'nv_cv-china' : 'nv_carrier', amp: 'nv_amphib', dd: g.cc === 'CHN' ? 'nv_t055' : g.cc === 'RUS' ? 'nv_kirov' : 'nv_ddg', ff: g.cc === 'IRN' ? 'nv_moudge' : 'nv_frigate', fac: 'nv_fac', ss: 'nv_sub', ssn: 'nv_sub' };
-      const F = WNAVB.formation(g.s).slice(0, 10), ca = Math.cos(ang), sa = Math.sin(ang), kpx = 5.5 * zf;
-      // بقعة بحر عميق ناعمة تحت التشكيل (نسيج البحر الحقيقي) حتى السفن الرمادية تبين على لون الخريطة الفاتح
-      { const r0 = 40 * zf, oc = IMG.nv_ocean; cx.save(); const gr = cx.createRadialGradient(px, py, r0 * .35, px, py, r0); gr.addColorStop(0, 'rgba(18,42,72,.78)'); gr.addColorStop(1, 'rgba(18,42,72,0)'); cx.fillStyle = gr; cx.beginPath(); cx.ellipse(px, py, r0 * 1.25, r0, ang, 0, 7); cx.fill();
-        if (oc && oc.naturalWidth) { cx.globalAlpha = .35; cx.globalCompositeOperation = 'overlay'; cx.beginPath(); cx.ellipse(px, py, r0 * .95, r0 * .75, ang, 0, 7); cx.clip(); cx.drawImage(oc, px - r0 * 1.3, py - r0 * 1.3, r0 * 2.6, r0 * 2.6); } cx.restore(); }
+      if (mine && g.path.length) { cx.save(); cx.setLineDash([5, 6]); cx.strokeStyle = g === selF ? 'rgba(255,255,255,.9)' : 'rgba(150,200,255,.55)'; cx.lineWidth = g === selF ? 2.2 : 1.4; cx.beginPath(); cx.moveTo(px, py); for (const z of g.path) { const c2 = WD.s[z][2], [qx, qy] = toS(MX(c2[0]), MY(c2[1])); cx.lineTo(qx, qy); } cx.stroke(); cx.restore(); }
+      let ang = 0; if (g.path.length) { const c2 = WD.s[g.path[0]][2], [nx2, ny2] = toS(MX(c2[0]), MY(c2[1])); ang = Math.atan2(ny2 - py, nx2 - px); } else ang = Math.sin(T0 / 9000 + g.id) * .5;
+      const n = WNAV.count(g), hpF = Math.max(0, Math.min(1, 1 - (g.dmg || 0) / Math.max(1, n * 2)));
+      if (far || !det) {
+        // رمز الأسطول: درع بلون الطرف + العلم + نوعه + العدد + شريط القوة
+        const w = 62, h = 30; cx.save(); cx.translate(px, py); cx.shadowColor = 'rgba(0,0,0,.35)'; cx.shadowBlur = 6; cx.fillStyle = det ? col : '#6b6b66'; cx.beginPath(); cx.roundRect(-w / 2, -h / 2, w, h, 8); cx.fill(); cx.shadowBlur = 0;
+        cx.strokeStyle = g === selF ? '#fff' : 'rgba(255,255,255,.75)'; cx.lineWidth = g === selF ? 2.5 : 1.2; cx.stroke();
+        cx.textAlign = 'center'; cx.textBaseline = 'middle'; cx.font = '16px "Noto Color Emoji","Apple Color Emoji",sans-serif';
+        if (det) { cx.fillText(FLAG(g.cc), -w / 2 + 13, 0); cx.font = '13px sans-serif'; cx.fillText(g.s.cv ? '🛳' : g.s.dd || g.s.ff ? '⚓' : '🚤', -2, 0); cx.font = '700 12px "IBM Plex Sans Arabic",Tahoma'; cx.fillStyle = '#fff'; cx.fillText(n, w / 2 - 12, 0);
+          cx.fillStyle = 'rgba(0,0,0,.35)'; cx.fillRect(-w / 2 + 5, h / 2 - 5, w - 10, 3); cx.fillStyle = hpF > .6 ? '#8fe08a' : hpF > .3 ? '#f0c040' : '#ff6b5b'; cx.fillRect(-w / 2 + 5, h / 2 - 5, (w - 10) * hpF, 3); }
+        else { cx.font = '700 13px "IBM Plex Sans Arabic",Tahoma'; cx.fillStyle = '#fff'; cx.fillText('❓ تماس', 0, 0); }
+        // سهم الاتجاه
+        if (g.path.length) { cx.rotate(ang); cx.fillStyle = col; cx.beginPath(); cx.moveTo(w / 2 + 12, 0); cx.lineTo(w / 2 + 3, -6); cx.lineTo(w / 2 + 3, 6); cx.closePath(); cx.fill(); }
+        cx.restore(); continue; }
+      // قريب: التشكيل الحقيقي أكبر ومتباعد، بلا البقعة الغامقة: حلقة بلون الطرف تحته، ورغوة تتحرك
+      const BASE = { cv: 46, amp: 36, dd: 26, ff: 22, fac: 10, ss: 17, ssn: 20 }, SPK = { cv: g.cc === 'CHN' ? 'nv_cv-china' : 'nv_carrier', amp: 'nv_amphib', dd: g.cc === 'CHN' ? 'nv_t055' : g.cc === 'RUS' ? 'nv_kirov' : 'nv_ddg', ff: g.cc === 'IRN' ? 'nv_moudge' : 'nv_frigate', fac: 'nv_fac', ss: 'nv_sub', ssn: 'nv_sub' };
+      const F = WNAVB.formation(g.s).slice(0, 10), ca = Math.cos(ang), sa = Math.sin(ang), kpx = 7.5 * zf;
+      cx.save(); cx.strokeStyle = col; cx.globalAlpha = .55; cx.lineWidth = 2; cx.setLineDash([3, 5]); cx.beginPath(); cx.ellipse(px, py, 48 * zf, 34 * zf, ang, 0, 7); cx.stroke(); cx.restore();
       for (const [k, fx, fy] of F) { if ((k === 'ss' || k === 'ssn') && !mine) continue; const ox = px + (fx * ca - fy * sa) * kpx, oy = py + (fx * sa + fy * ca) * kpx, L = BASE[k] * zf, im = IMG[SPK[k]];
-        if (g.path.length && k !== 'ss' && k !== 'ssn') { const wk = IMG['nv_wake']; if (wk && wk.naturalWidth) { cx.save(); cx.translate(ox - ca * L * .62, oy - sa * L * .62); cx.rotate(ang); cx.globalAlpha = .6; const w = L * 1.1; cx.drawImage(wk, -w / 2, -w * wk.naturalHeight / wk.naturalWidth / 2, w, w * wk.naturalHeight / wk.naturalWidth); cx.restore(); } }
-        if (im && im.naturalWidth) { cx.save(); cx.translate(ox, oy); cx.rotate(ang); cx.globalAlpha = k === 'ss' || k === 'ssn' ? .55 : 1; cx.shadowColor = 'rgba(0,0,0,.35)'; cx.shadowBlur = 3; cx.drawImage(im, -L / 2, -L * im.naturalHeight / im.naturalWidth / 2, L, L * im.naturalHeight / im.naturalWidth); cx.restore(); } }
-      if (g === selF) { cx.save(); cx.strokeStyle = '#fff'; cx.lineWidth = 2; const r0 = 30 * zf; for (const [a, b] of [[-1, -1], [1, -1], [1, 1], [-1, 1]]) { cx.beginPath(); cx.moveTo(px + a * r0, py + b * r0 * .7 - b * 8); cx.lineTo(px + a * r0, py + b * r0 * .7); cx.lineTo(px + a * r0 - a * 8, py + b * r0 * .7); cx.stroke(); } cx.restore(); }
-      cx.save(); cx.font = '600 10px "IBM Plex Sans Arabic",Tahoma'; cx.textAlign = 'center'; cx.lineWidth = 3; cx.strokeStyle = 'rgba(10,25,45,.75)'; const lb = mine ? '' : nameOf(g.cc); if (lb) { cx.strokeText(lb, px, py + 26 * zf); cx.fillStyle = col; cx.fillText(lb, px, py + 26 * zf); } cx.restore(); }
+        if (g.path.length && k !== 'ss' && k !== 'ssn') { const wk = IMG['nv_wake'], pl = .85 + .15 * Math.sin(T0 / 300 + fx); if (wk && wk.naturalWidth) { cx.save(); cx.translate(ox - ca * L * .62, oy - sa * L * .62); cx.rotate(ang); cx.globalAlpha = .7; const w = L * 1.3 * pl; cx.drawImage(wk, -w / 2, -w * wk.naturalHeight / wk.naturalWidth / 2, w, w * wk.naturalHeight / wk.naturalWidth); cx.restore(); } navMoving = true; }
+        if (im && im.naturalWidth) { cx.save(); cx.translate(ox, oy); cx.rotate(ang); cx.globalAlpha = k === 'ss' || k === 'ssn' ? .55 : 1; cx.shadowColor = 'rgba(0,20,40,.45)'; cx.shadowBlur = 5; cx.shadowOffsetX = 2; cx.shadowOffsetY = 3; cx.drawImage(im, -L / 2, -L * im.naturalHeight / im.naturalWidth / 2, L, L * im.naturalHeight / im.naturalWidth); cx.restore(); } }
+      // طيارات الحاملة تلف فوق الأسطول
+      if (g.s.cv && cam.s > 2500) for (let q = 0; q < 2; q++) { const ph = T0 / 3200 + q * Math.PI, jx = px + Math.cos(ph) * 60 * zf, jy = py + Math.sin(ph) * 40 * zf; const im = IMG.u_f18_t || IMG.f18; if (im && im.naturalWidth) { cx.save(); cx.translate(jx, jy); cx.rotate(ph + Math.PI / 2); cx.drawImage(im, -8 * zf, -8 * zf, 16 * zf, 16 * zf); cx.restore(); } navMoving = true; }
+      // اللوحة: العلم + اسم الأسطول + شريط القوة
+      const lb = `${FLAG(g.cc)} ${WNAV.name(WD, g)}`; cx.save(); cx.font = '700 11px "IBM Plex Sans Arabic",Tahoma'; cx.textAlign = 'center'; const tw = cx.measureText(lb).width + 14; let ly = py - 44 * zf;
+      // اللوحات ما تتراكب: إذا تلزق بلوحة ثانية تصعد فوكها
+      for (let tries = 0; tries < 6 && LBR.some(r => Math.abs(r[0] - px) < (r[1] + tw) / 2 && Math.abs(r[2] - ly) < 23); tries++) ly -= 24; LBR.push([px, tw, ly]);
+      cx.fillStyle = 'rgba(12,22,34,.72)'; cx.beginPath(); cx.roundRect(px - tw / 2, ly - 11, tw, 22, 6); cx.fill(); cx.fillStyle = col; cx.fillRect(px - tw / 2, ly - 11, 4, 22);
+      cx.fillStyle = '#fff'; cx.textBaseline = 'middle'; cx.fillText(lb, px, ly - 1); cx.fillStyle = 'rgba(255,255,255,.2)'; cx.fillRect(px - tw / 2 + 6, ly + 7, tw - 12, 2); cx.fillStyle = hpF > .6 ? '#8fe08a' : hpF > .3 ? '#f0c040' : '#ff6b5b'; cx.fillRect(px - tw / 2 + 6, ly + 7, (tw - 12) * hpF, 2); cx.restore();
+      if (g === selF) { cx.save(); cx.strokeStyle = '#fff'; cx.lineWidth = 2; const r0 = 52 * zf; for (const [a, b] of [[-1, -1], [1, -1], [1, 1], [-1, 1]]) { cx.beginPath(); cx.moveTo(px + a * r0, py + b * r0 * .7 - b * 8); cx.lineTo(px + a * r0, py + b * r0 * .7); cx.lineTo(px + a * r0 - a * 8, py + b * r0 * .7); cx.stroke(); } cx.restore(); }
+    }
+    window.__navMove = navMoving;
   }
   function tapNavy(sx, sy) {
     if (window.LIVEFX && liveInit) { const ll = LIVEFX.tap(sx, sy); if (ll) { cam.x = MX(ll[0]); cam.y = MY(ll[1]); cam.s = Math.max(cam.s, 1800); dirty = true; return true; } }
     if (!G || !G.nav || cam.s < 300) return false;
     const near = FLT.filter(o => Math.hypot(o.x - sx, o.y - sy) < 28).sort((a, b) => Math.hypot(a.x - sx, a.y - sy) - Math.hypot(b.x - sx, b.y - sy)), hit = near.find(o => o.g.cc === me) || near[0];   // أساطيلنا أولاً
     if (hit && hit.g.cc === me) { selF = hit.g; navBar(); return true; }
-    if (hit) { const g = hit.g; toast(`⚓ ${nameOf(g.cc)}: ${WNAV.name(WD, g)} (${WNAV.count(g)} قطعة) ببحر ${WD.s[g.z][1]}`, S.atWar(G, me, g.cc) ? 'bad' : ''); return true; }
+    if (hit) { const g = hit.g, en = S.atWar(G, me, g.cc), MD = { block: '⚓ حصار', def: '🛡 حماية', patrol: '🧭 دورية', strike: '🎯 هجوم' }; if (en && !seen(g.z)) { toast('❓ تماس مجهول: سفن عدو بهالمكان بس ما نعرف شنو. قرّب أسطولك حتى ينكشف.', 'bad'); return true; }
+      toast(`${FLAG(g.cc)} ${WNAV.name(WD, g)} · ${WNAV.T.filter(k => g.s[k]).map(k => g.s[k] + ' ' + WNAV.TN[k]).join('، ')} · ${MD[g.mode] || ''} · ببحر ${WD.s[g.z][1]}${g.dmg ? ' · متضرر' : ''}`, en ? 'bad' : ''); return true; }
     if (selF) { const [wx, wy] = toW(sx, sy); let best = -1, bd = 1e9; WD.s.forEach((z, i) => { const d = (MX(z[2][0]) - wx) ** 2 + (MY(z[2][1]) - wy) ** 2; if (d < bd) { bd = d; best = i; } });
       const r = R.find(r => wx >= r.bb[0] && wx <= r.bb[2] && wy >= r.bb[1] && wy <= r.bb[3] && inPoly(r.p, wx, wy)); if (r) { toast('اضغط على البحر مو اليابسة', 'bad'); return true; }
       const res = WNAV.order(G, WD, selF, { go: best }); toast(res === true ? `⚓ ${WNAV.name(WD, selF)} يتحرك لـ${WD.s[best][1]} (${selF.path.length} بحر)` : res, res === true ? 'good' : 'bad'); navBar(); save(); return true; }

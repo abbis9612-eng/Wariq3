@@ -280,6 +280,8 @@ body.play #card{bottom:calc(64px + env(safe-area-inset-bottom))}body.play #perf{
 #sheet[hidden]{display:none}#sheet h2{font-size:16px;margin-bottom:6px;display:flex;align-items:center;gap:6px}#sheet h2 .x{margin-right:auto;width:30px;height:30px;padding:0}
 #sheet h3{font-size:13px;color:var(--gold);margin:12px 0 5px}
 .seg{display:flex;gap:4px;flex-wrap:wrap;margin:4px 0}.seg button{flex:1;min-width:70px}
+.ins4{display:grid;grid-template-columns:1fr 1fr;gap:6px}.ins4 button{display:flex;flex-direction:column;align-items:flex-start;text-align:start;padding:7px 9px;margin:0}.ins4 button small{font-size:11px;opacity:.75;font-weight:400;margin-top:2px}
+html[data-skin] button.dang,button.dang{color:var(--neg);border-color:var(--neg)}.pj.ins{border-inline-start:3px solid #2a2a2a}.pj.ins .grid{grid-template-columns:repeat(3,1fr);gap:6px}.pj.ins .st{padding:5px 8px}
 .pj{border:1px solid var(--line);border-radius:10px;padding:6px 8px;margin:6px 0;background:var(--chip)}.pj button{margin-top:4px}
 .line{display:flex;justify-content:space-between;gap:8px;padding:4px 0;border-bottom:1px solid var(--line);font-size:12.5px}.line:last-child{border:0}.line b{font-variant-numeric:tabular-nums}
 .pos{color:var(--me)}.neg{color:var(--neg)}
@@ -581,6 +583,7 @@ html[data-skin] .hero b{color:var(--act)}
 <script src="wcab.js"></script>
 <script src="wrise.js"></script>
 <script src="wgeo.js"></script>
+<script src="wins.js"></script>
 <script src="wcas.js"></script>
 <script src="warsenal.js"></script>
 <script src="wsim.js"></script>
@@ -1006,6 +1009,14 @@ html[data-skin] .hero b{color:var(--act)}
       if (cut > .05 && sll) { const [x, y] = toS(MX(sll[0]), MY(sll[1])); cx.save(); cx.strokeStyle = 'rgba(229,72,77,.9)'; cx.lineWidth = 3; cx.setLineDash([6, 5]); cx.lineDashOffset = -(T0 / 60) % 11; cx.beginPath(); cx.moveTo(x - 16, y - 18); cx.lineTo(x + 16, y + 18); cx.stroke(); cx.setLineDash([]);
         const t = `🚫 ${st.n}: ${Math.round(cut * 100)}٪ واقفة`; cx.font = '700 11px "IBM Plex Sans Arabic",Tahoma'; cx.textAlign = 'center'; cx.lineWidth = 3; cx.strokeStyle = 'rgba(60,0,0,.8)'; cx.strokeText(t, x, y - 24); cx.fillStyle = '#ffd6d6'; cx.fillText(t, x, y - 24); cx.restore(); } }
   }
+  // v5-3: علم أسود صغير بمناطق الجماعات المسلحة (أحمر يتوهج إذا ضربت قريب، وحلقة إذا عليها عملية)
+  function insLayer(cx) { if (!G.ins || !G.ins.g.length || cam.s < 260) return; const sc = Math.min(1.4, Math.max(.7, cam.s / 1400));
+    for (const g of G.ins.g) for (const i of g.reg.slice(0, 6)) { const r = R[i]; if (!r || !vis(r.bb)) continue; const [x, y] = toS(MX(r.ll[0]), MY(r.ll[1])), hot = g.hit > G.t - 30;
+      cx.save(); cx.translate(x + 12 * sc, y - 4 * sc); cx.scale(sc, sc);
+      if (g.op) { cx.beginPath(); cx.arc(2, 6, 13, 0, 7); cx.strokeStyle = '#d0331a'; cx.lineWidth = 2; cx.setLineDash([4, 3]); cx.stroke(); cx.setLineDash([]); }
+      cx.fillStyle = 'rgba(255,255,255,.85)'; cx.beginPath(); cx.arc(2, 6, 9, 0, 7); cx.fill();
+      cx.strokeStyle = '#1b1b1b'; cx.lineWidth = 1.6; cx.beginPath(); cx.moveTo(-2, 13); cx.lineTo(-2, -1); cx.stroke();
+      cx.fillStyle = hot ? '#c0261c' : '#1b1b1b'; cx.beginPath(); cx.moveTo(-2, -1); cx.lineTo(8, 2); cx.lineTo(-2, 6); cx.closePath(); cx.fill(); cx.restore(); } }
   function navyLayer(cx) {
     FLT.length = 0; navMoving = false; window.__navMove = false; if (!G || !G.nav || cam.s < 300) return;
     const T0 = performance.now(), dt = Math.min(.2, (T0 - (navT || T0)) / 1000); navT = T0;
@@ -1139,7 +1150,7 @@ html[data-skin] .hero b{color:var(--act)}
     for (; i < ev.length; i++) { const e = ev[i]; if (e.k === 'kill') LIVEFX.crash([TV.lon0 + e.x / TV.KX, TV.lat1 - e.y / TV.KY], e.vside === 0); } airEv = ev[ev.length - 1] || airEv; }
   function liveTick() { if (!window.LIVEFX || !liveInit) return; crashes(); if (LIVEFX.active() || LIVEFX.fires.length || (LIVEFX.fpts && LIVEFX.fpts.length && cam.s >= 700)) dirty = true; if (!LIVEFX.active() && slowPrev != null) { speed = slowPrev; slowPrev = null; bar(); } }
   function overlay(cx, far) {
-    navyLayer(cx); foreignArmies(cx); shipments(cx); if (window.LIVEFX && liveInit) { LIVEFX.draw(cx, G.t); liveTick(); }
+    navyLayer(cx); foreignArmies(cx); shipments(cx); insLayer(cx); if (window.LIVEFX && liveInit) { LIVEFX.draw(cx, G.t); liveTick(); }
     const T = VT();
     if (!T || cam.s < 600) return; const W = T.W, me0 = css('--me'), en = css('--neg');
     const r = Math.abs(toS(MX(T.lon0 + T.hs / T.KX), 0)[0] - toS(MX(T.lon0), 0)[0]) / 2;
@@ -1290,6 +1301,14 @@ html[data-skin] .hero b{color:var(--act)}
       case 'puppet': return [`🔗 ${n(l.x)} صارت حكومة تابعة لـ${n(l.by)}`, l.by === me ? 'good' : ''];
       case 'comp': return [`💵 ${n(l.x)} دفعت تعويض ${l.v} مليار لـ${n(l.by)} ورجعت أرضها`, l.by === me ? 'good' : ''];
       case 'pupfree': return [`⛓ ${n(l.x)} تمردت وطلعت من تبعية ${n(l.by)}`, l.by === me ? 'bad' : ''];
+      case 'insatk': return [`💥 ${l.g} ${l.big ? 'نفّذت هجوم كبير' : 'ضربت'}${l.r ? ' بـ' + l.r : ''}: الاستقرار ينزل`, 'bad'];
+      case 'insbeat': return [`🏳 ${l.g} انهزمت: ${l.num.toLocaleString('ar')} أسير ينتظرون قرارك`, 'good'];
+      case 'insnew': return [`🏴 ${l.res ? 'طلعت' : 'تشكّلت'} ${l.g}`, 'bad'];
+      case 'insret': return [`🏴 ${l.g} رجعت للسلاح`, 'bad'];
+      case 'insbreak': return [`⛓ هروب من السجن: ${l.g}`, 'bad'];
+      case 'insreg': return [`🎯 استعدنا ${l.r} من ${l.g}`, 'good'];
+      case 'insgone': return [`✅ ${l.g} انتهت`, 'good'];
+      case 'insfate': return [`⚖ قرار الأسرى (${l.g}): ${(WINS.FATE[l.how] || {}).n || l.how}`, l.how === 'exec' ? 'bad' : ''];
       case 'resist': return l.by === me ? [`✊ مقاومة بالمناطق المضمومة (${l.r}): الاستقرار ينزل`, 'bad'] : null;
       case 'year': return [`📅 تقرير سنة ${l.y}: مؤشر القوة ${l.i0} ← ${l.i1}، ترتيب الجيش ${l.rk0} ← ${l.rk1} — شوف 📈 مسيرتنا`, l.i1 >= l.i0 ? 'good' : 'bad'];
       case 'cab': return l.a ? [l.a, l.warn ? '' : 'good'] : l.warn ? [`🏛 الوزراء: ${l.warn} وزارة تحتاج انتباهك — شوف القيادة`, ''] : null;
@@ -1415,6 +1434,8 @@ const HIC = {'💵':'money','💰':'money','🏥':'health','📊':'chart','📈'
   // ===== v5-6 (I-149): مركز القرارات — كل شي يحتاج موافقتك بمكان واحد، بأزراره، ومرتب حسب الاستعجال =====
   function inbox() { if (!G) return []; const out = [], NW = G.nat, H = NW && NW.home, hNow = NW ? NW.t : 0, k = Math.max(.3, Math.min(20, G.C[me].gdp / 250));
     { const P = G.geo && G.geo.post; if (P && G.C[P.x] && !G.C[P.x].dead) { const V = WGEO.preview(G, WD, me, P.x); out.push({ u: 120, ic: FLG(P.x, 'flg big') || '🏳', t: `${nameOf(P.x)} استسلمت: شنو نسوي بيها؟`, s: `<b>ضم:</b> ${V.annex}<br><b>تابعة:</b> ${V.pup}<br><b>تعويض:</b> ${V.comp}`, b: `<button class="big" data-post="annex">ضم</button><button data-post="pup">حكومة تابعة</button><button data-post="comp">تعويض</button>` }); } }
+    if (G.ins) { G.ins.cap.forEach((q, i) => out.push({ u: 110, ic: '⚖', t: `${q.num.toLocaleString('ar')} أسير من ${q.n}: شنو نسوي بيهم؟`, s: Object.entries(WINS.FATE).map(([k, F]) => `<b>${F.n}:</b> ${F.d}`).join('<br>'), b: Object.entries(WINS.FATE).map(([k, F]) => `<button data-fate="${i}:${k}" class="${k === 'jail' ? 'big' : ''}${k === 'exec' ? ' dang' : ''}">${F.n}</button>`).join('') }));
+      for (const g of G.ins.g) if (g.hit > G.t - 30 && !g.op) out.push({ u: 65, ic: '🏴', t: `${g.n} تضرب`, s: `${fmtK(g.str)} مقاتل · الرضا ${Math.round(g.sat)}${g.sup ? ' · مدعومة من ' + nameOf(g.sup) : ''}`, b: `<button data-go="homep" class="big">شوف الخيارات</button>` }); }
     for (const w of G.wars) if (w.offer && (w.a.includes(me) || w.b.includes(me))) out.push({ u: 100, ic: FLG(w.offer, 'flg big') || '🕊', t: `${nameOf(w.offer)} تعرض السلام`, s: w.n, b: `<button class="big" data-peace="${w.id}">اقبل السلام</button>` });
     (G.pev || []).forEach((q, i) => { const E = WPOL.PEV[q.id]; out.push({ u: 90, ic: '🗳', t: E.n, s: E.x, b: E.o.map((o, j) => `<button data-pev="${i}:${j}">${o[0](k)}</button>`).join('') }); });
     if (H) H.iss.forEach((q, i) => { const I = HOME.ISS[q.k], left = q.crit ? null : Math.max(0, Math.ceil((q.t + 24 * 5 - hNow) / 24)); out.push({ u: q.crit ? 95 : 70, ic: '🏛', t: I.t, s: (q.crit ? 'مصيرية: ما تتحل لحالها' : `الوزير يحلها لحاله بعد ${left} يوم`) + ' · ' + I.x, b: I.o.map((o, j) => `<button data-iss="${i}:${j}">${kLab(o[0])}</button>`).join('') }); });
@@ -1426,6 +1447,20 @@ const HIC = {'💵':'money','💰':'money','🏥':'health','📊':'chart','📈'
     return out.sort((a, b) => b.u - a.u); }
   const inboxHtml = L => L.length ? `<div class="inbox">${L.map(x => `<div class="ibx"><div class="ibt"><span class="ibi">${x.ic}</span><div><b>${x.t}</b>${x.s ? `<small>${x.s}</small>` : ''}</div></div><div class="ibb">${x.b}</div></div>`).join('')}</div>` : '<div class="note">✓ ماكو شي ينتظرك هسه. الوزراء ماسكين الشغل.</div>';
   window.INBOX = () => inbox().length;
+  const fmtK = v => v >= 1 ? `~${Math.round(v).toLocaleString('ar')} ألف` : `~${Math.round(v * 1000).toLocaleString('ar')}`;
+  // v5-3 (I-146): الجماعات المسلحة بالداخل
+  function insHtml() { if (!G.ins) return ''; const I = G.ins, L = I.g;
+    let h = `<h3>🏴 الجماعات المسلحة</h3><div class="note">كل جماعة تضعف الدولة (هجمات، نفط، استقرار). تقدر تحتويها، تفاوضها، أو تحاربها، وكل طريق إله ثمن. القمع الكثير يولّد «غضب» يطلع جماعات جديدة${I.heat > 5 ? ` — <b class="${I.heat > 40 ? 'neg' : ''}">الغضب هسه ${Math.round(I.heat)}</b>` : ''}.</div>`;
+    if (!L.length) h += '<div class="note">✓ ماكو جماعات مسلحة نشطة هسه.</div>';
+    for (const g of L) { const P = WINS.preview(G, WD, g), jih = g.k === 'jih';
+      h += `<div class="pj ins"><div class="line"><span><b>🏴 ${g.n}</b> <small class="note">${WINS.KIND[g.k]}</small></span>${g.sup ? `<small>${FLG(g.sup)} ${nameOf(g.sup)} تدعمها</small>` : ''}</div>
+        <div class="grid"><div class="st"><i>المقاتلين</i><b>${fmtK(g.str)}</b></div><div class="st"><i>الرضا</i><b class="${g.sat < 30 ? 'neg' : ''}">${Math.round(g.sat)}</b></div><div class="st"><i>المناطق</i><b>${g.reg.length}</b></div></div>
+        <div class="note">${g.reg.slice(0, 4).map(i => WD.r[i][3]).join('، ')}${g.ent ? ' (تمسكها)' : ' (تنشط بيها)'}${g.hit > G.t - 60 ? ' · <b class="neg">ضربت قبل ' + Math.max(1, G.t - g.hit) + ' يوم</b>' : ''}</div>
+        ${g.op ? `<div class="pill warn">⚔ عملية أمنية: شهر ${g.op.m} من ~${P.opMo} · خسرنا ${g.op.k.toLocaleString('ar')} (قتيل وجريح) · مدنيين ${g.op.c.toLocaleString('ar')}</div><div class="seg"><button data-ins="${g.id}:stop">وقّف العملية</button></div>`
+        : `<div class="seg ins4"><button data-ins="${g.id}:cont" ${jih || g.sat < 30 ? 'disabled' : ''}>🤝 احتواء ودمج<small>💵 ${P.cont} مليار${jih ? ' · ما يقبلون' : g.sat < 30 ? ' · يحتاج رضا 30' : ''}</small></button><button data-ins="${g.id}:talk" ${G.ap < 2 ? 'disabled' : ''}>🕊 تفاوض وعفو<small>⭐2 · نجاح ${P.talkP}٪</small></button><button data-ins="${g.id}:op" ${G.ap < 1 ? 'disabled' : ''}>⚔ عملية أمنية<small>⭐1 · 💵 ${P.opCash} · ~${P.opMo} شهر</small></button><button data-ins="${g.id}:hit" ${G.ap < 1 ? 'disabled' : ''}>🎯 ضربة استخبارية<small>⭐1 · نجاح ${P.hitP}٪</small></button>${jih ? '' : `<button data-ins="${g.id}:pay">💵 تهدئة<small>${P.pay} مليار · الرضا +12</small></button>`}</div>`}</div>`; }
+    if (I.cap.length) h += I.cap.map((q, i) => `<div class="pj" style="border-color:var(--warn)"><b>⚖ ${q.num.toLocaleString('ar')} أسير من ${q.n}</b>${Object.entries(WINS.FATE).map(([k, F]) => `<div class="note"><b>${F.n}:</b> ${F.d}</div>`).join('')}<div class="seg">${Object.entries(WINS.FATE).map(([k, F]) => `<button data-fate="${i}:${k}" class="${k === 'exec' ? 'dang' : ''}">${F.n}</button>`).join('')}</div></div>`).join('');
+    if (I.jail.length) h += `<div class="note">⛓ بالسجن: ${I.jail.map(j => `${j.n} (${j.num.toLocaleString('ar')})`).join('، ')} — كلفة كل شهر وخطر هروب</div>`;
+    return h; }
   function cabCard() { if (!G.nat) return ''; const C = WCAB.ensure(G), R = C.rep, bad = R ? R.rows.filter(r => r.st !== 'ok') : [];
     return `<h3>🏛 مجلس الوزراء</h3><div class="cab"><div class="cabh"><b>شنو صاير بالبلد؟</b><button data-go="cab">كل الوزراء ←</button></div>${whyHtml()}
       ${C.props.length ? `<div class="cabp">📨 ${C.props.length} اقتراح ينتظر موافقتك <button data-go="cab" class="big">شوفها</button></div>` : ''}
@@ -1568,6 +1603,7 @@ const HIC = {'💵':'money','💰':'money','🏥':'health','📊':'chart','📈'
     const H = G.nat.home, W_ = H.warn;
     return `${H.iss.map((q, i) => { const I = HOME.ISS[q.k]; return `<div class="st" style="margin:8px 0;border-color:var(--neg)"><b>🏛 ${I.t}</b>${q.crit ? ' <small class="neg">مصيرية</small>' : ''}<div class="note">${I.x}</div><div class="seg">${I.o.map((o, j) => `<button data-iss="${i}:${j}">${kLab(o[0])}</button>`).join('')}</div></div>`; }).join('')}
     <h3>الاستقرار: ${Math.round(H.stab)}</h3>${barV(H.stab, colV(H.stab))}
+    ${insHtml()}
     ${W_.coup || W_.rev || W_.bank ? `<div class="pill warn">${W_.coup ? `⚠️ انقلاب بعد ${14 - W_.coup} يوم إذا ${HOME.FAC[fkArmed()].n} يبقى تحت 20. ` : ''}${W_.rev ? `⚠️ ثورة بعد ${14 - W_.rev} يوم إذا الاستقرار يبقى تحت 15. ` : ''}${W_.bank ? `⚠️ إفلاس بعد ${30 - W_.bank} يوم إذا الدين يبقى فوق حده بنص. ` : ''}</div>` : ''}
     <h3>الفئات</h3>${(H.fk || HOME.FK).map(k => { const F = HOME.FAC[k], v = H.fac[k], w = H.why.filter(x => x[0] === k); return `<div style="margin:6px 0"><div class="line"><span>${F.ic} <b>${F.n}</b></span><b>${Math.round(v)}</b></div>${barV(v, colV(v))}<div class="note">${F.d}${w.length ? ' · اليوم: ' + w.map(x => `<span class="${x[1] >= 0 ? 'pos' : 'neg'}">${x[1] >= 0 ? '+' : ''}${x[1].toFixed(1)} ${x[2]}</span>`).join('، ') : ''}</div></div>`; }).join('')}
     <div class="note">نخسر إذا: القوة المسلحة تحت 20 لأسبوعين (انقلاب)، أو الاستقرار تحت 15 لأسبوعين (ثورة)، أو الدين فوق حده بنص لشهر (إفلاس). القضايا اللي ما ترد عليها 5 أيام، المستشارين يحلوها لحالهم.</div>`;
@@ -1912,6 +1948,8 @@ const HIC = {'💵':'money','💰':'money','🏥':'health','📊':'chart','📈'
     root.querySelectorAll('[data-can]').forEach(b => b.onclick = () => { const back = NT.cancel(G, +b.dataset.can); re(0, `↩ ألغينا الطلب ورجع ${C$(back || 0)}`); });
     root.querySelectorAll('[data-bud]').forEach(b => b.onclick = () => { IND.setBudget(NW, 0, +b.dataset.bud); re(0); });
     root.querySelectorAll('[data-rsec]').forEach(b => b.onclick = () => { rdSec = b.dataset.rsec; openPanel('rd', true); });
+    root.querySelectorAll('[data-ins]').forEach(b => b.onclick = () => { const [id, a] = b.dataset.ins.split(':'); const r = WINS.act(G, WD, S, id, a); re(r, r && r.t ? (/فشل/.test(r.t) ? '' : '✔ ') + r.t : ''); syncMap(); bar(); });
+    root.querySelectorAll('[data-fate]').forEach(b => b.onclick = () => { const [i, k] = b.dataset.fate.split(':'); if (k === 'exec' && !confirm('إعدام الأسرى: إدانة دولية وعقوبات وثأر وشارع منقسم. متأكد؟')) return; const r = WINS.fate(G, WD, S, +i, k); re(r, `⚖ قررنا: ${WINS.FATE[k].n}`); bar(); });
     root.querySelectorAll('[data-post]').forEach(b => b.onclick = () => { const r = WGEO.decide(G, WD, S, b.dataset.post); if (typeof r === 'string') toast('❌ ' + r, 'bad'); syncMap(); relabel(); openPanel(panel || 'cmd', true); bar(); save(); });
     root.querySelectorAll('[data-cabp]').forEach(b => b.onclick = () => { const [id, y] = b.dataset.cabp.split(':'); const r = WCAB.answer(G, WD, S, +id, y === '1'); if (typeof r === 'string') toast('❌ ' + r, 'bad'); else if (r.t) toast('✔ ' + r.t, 'good'); openPanel(panel, true); bar(); save(); });
     root.querySelectorAll('[data-cmode]').forEach(b => b.onclick = () => { const [k, m] = b.dataset.cmode.split(':'); WCAB.setMode(G, k, m); openPanel(panel, true); save(); });

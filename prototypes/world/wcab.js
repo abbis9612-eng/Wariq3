@@ -5,7 +5,7 @@
   'use strict';
   const req = n => (typeof require !== 'undefined' ? require(n) : null);
   const ECO = () => root.WECO || req('./weco.js'), FUND = () => root.WFUND || req('./wfund.js'), RES = () => root.WRES || req('./wres.js'),
-    HOME = () => root.HOME || req('./gwhome.js'), ECON = () => root.ECON || req('./gwecon.js'), MKT = () => root.WMKT || req('./wmkt.js');
+    HOME = () => root.HOME || req('./gwhome.js'), INS = () => root.WINS || req('./wins.js'), ECON = () => root.ECON || req('./gwecon.js'), MKT = () => root.WMKT || req('./wmkt.js');
   const clamp = (v, a, b) => Math.max(a, Math.min(b, v));
   // الوزارات: الاسم، الأيقونة، والطريقة الافتراضية (اللي تصرف نقاط قرار أو تغيّر العلاقات تبدي «يقترح»)
   const MIN = {
@@ -68,6 +68,7 @@
       const st = G.nat.stock; if (st && (st.ammo < 55 || st.fuel < 55) && e.cash > fl * .5 && ECON().ITEMS.stk && !e.q.some(o => o.k === 'stk')) add('buy:stk', `نعبّي الذخيرة (${Math.round(st.ammo)}٪) والوقود (${Math.round(st.fuel)}٪)`, 2);
     } else if (k === 'int') {
       if (H && H.iss && H.iss.length) add('iss:auto', `نحل قضية «${HOME().ISS[H.iss[0].k].t}»`, 2);
+      else { const g = G.ins && G.ins.g.find(g => !g.op && g.k !== 'jih' && g.sat < 45 && g.hit > G.t - 60); if (g && e.cash > fl + INS().preview(G, WD, g).pay) add('ins:pay:' + g.id, `نهدّي «${g.n}» بالفلوس والوجهاء (رضاهم ${Math.round(g.sat)}، ضربوا قريب)`, 2); }
     } else if (k === 'frn') {
       if (G.offers && G.offers.length) add('offer:yes', `نقبل عرض ${(WD.cs[G.offers[0].from] || {}).ar || ''}`.trim(), 1);
     } else if (k === 'trd') {
@@ -97,6 +98,7 @@
       if (a === 'iss') { const H = G.nat.home, I = HOME().ISS[H.iss[0].k], sk = ensure(G).m.int.sk; HOME().choose(G.nat, 0, e.cash > G.nat.lim * .2 || sk >= 4 ? 0 : I.o.length - 1); return true; }
       if (a === 'offer') { S.answerOffer(G, WD, 0, true); return true; }
       if (a === 'mkt') { MKT().answer(G, WD, S, 0, true); return true; }
+      if (a === 'ins') return typeof INS().act(G, WD, S, code.split(':')[2], 'pay') !== 'string';
       if (a === 'res') { if (b === 'drop') { const R = RES().ensure(G); return typeof RES().drop(G, R.slots.length - 1) !== 'string'; } RES().fill(G, WD); return true; }
     } catch (err) { return false; }
     return false;

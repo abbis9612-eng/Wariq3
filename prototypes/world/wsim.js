@@ -4,7 +4,7 @@
 (function (root) {
   'use strict';
   const START = Date.UTC(2026, 10, 20);   // 20 تشرين الثاني 2026: الوضع الحقيقي (D-048)
-  const V = 16;                              // إصدار حفظ «العالم» (9: البحرية الحقيقية W12؛ 2: الصواريخ والدفاع الجوي؛ 3: البحرية والمضائق؛ 4: طبقة الدولة؛ 5: التكتلات والتوتر والعروض والأمم المتحدة؛ 6: الانتخابات والانقلابات والاحتلال والأحداث؛ 7: البحث لكل الدول وسوق السلاح؛ 8: قائد القوات المسلحة)
+  const V = 17;                              // إصدار حفظ «العالم» (9: البحرية الحقيقية W12؛ 2: الصواريخ والدفاع الجوي؛ 3: البحرية والمضائق؛ 4: طبقة الدولة؛ 5: التكتلات والتوتر والعروض والأمم المتحدة؛ 6: الانتخابات والانقلابات والاحتلال والأحداث؛ 7: البحث لكل الدول وسوق السلاح؛ 8: قائد القوات المسلحة)
   const mulberry = a => () => { a |= 0; a = a + 0x6D2B79F5 | 0; let t = Math.imul(a ^ a >>> 15, 1 | a); t = t + Math.imul(t ^ t >>> 7, 61 | t) ^ t; return ((t ^ t >>> 14) >>> 0) / 4294967296; };
   const clamp = (v, a, b) => v < a ? a : v > b ? b : v;
   const POL = root.WPOL || (typeof require !== 'undefined' ? require('./wpol.js') : null);   // W7: السياسة والأحداث
@@ -242,7 +242,7 @@
     if (id === W.me && W.nat) { c.budget.b0 = c.balF * c.gdp; c.budget.cash = c.bal - c.budget.b0 + c.gdp * .0025; }
     // الجيش: الميزانية تبني، والصيانة تآكل (التوازن = القوة الحالية إذا الميزانية ما تتغير)
     const eff = c.pw0 * K.upkeep * 12 / Math.max(.01, (WD.cs[id].gdp || c.gdp) * (c.milPct0 ??= c.milPct) / 100);
-    c.pw = Math.max(1, c.pw + mil * 12 * eff / 12 * (MKT ? MKT.techK(W, id) : 1) - c.pw * K.upkeep);   // W8: التقنية الجديدة تبني جيش أقوى بنفس الفلوس
+    c.pw = Math.max(1, c.pw + mil * 12 * eff / 12 * (MKT ? MKT.techK(W, id) : 1) * (c.pwK || 1) - c.pw * K.upkeep);   // W8: التقنية الجديدة تبني جيش أقوى بنفس الفلوس
     // الاستقرار
     let tgt = c.stab0 + tx.s + cv.s + clamp((g - c.g0) * 1.5, -10, 4);
     for (const w of ws) { const home = homeFront(W, WD, w, id); tgt += home ? K.warHomeStab : -2; tgt -= Math.max(0, (w.weary[id] || 0) - 50) / 5; }
@@ -396,7 +396,8 @@
     nm = Math.max(0, Math.min(nm, Math.floor(a.msl))); nd = Math.max(0, Math.min(nd, Math.floor(a.drn))); if (!nm && !nd) return null;
     a.msl -= nm; a.drn -= nd;
     const sat = x => c.adI / (c.adI + x * .3 + 1);   // التشبّع
-    const im = Math.round(nm * Math.min(.9, sat(nm) * 1.1)), id = Math.round(nd * Math.min(.97, sat(nd) * 1.5)), hits = (nm - im) + (nd - id) * .25;
+    // R2: الصواريخ فرط الصوتية (بحث المهاجم) ينعترض منها أقل
+    const im = Math.round(nm * Math.min(.9, sat(nm) * 1.1) * (1 - (a.hyp || 0))), id = Math.round(nd * Math.min(.97, sat(nd) * 1.5)), hits = (nm - im) + (nd - id) * .25;
     if (kind === 'mil') c.pw *= 1 - Math.min(.15, hits * .0004);
     else if (kind === 'city') { c.stab = clamp(c.stab - hits * .05, 0, 100); c.core *= 1 - Math.min(.05, hits * .00005); for (const x of W.ids) if (x !== by && x !== t && rel(W, x, t) > 20) addRel(W, by, x, -Math.min(5, hits / 50)); }
     else if (kind === 'oil') c.oilDmg = Math.min(.7, (c.oilDmg || 0) + hits * .002);
@@ -520,6 +521,8 @@
     if (o.v < 15) o.v = 15;
     // 15 ← 16 (v3 V4): التعليم بأول 10 دقايق — الألعاب القديمة ما تحتاجه
     if (o.v < 16) { o.tut = o.tut || { done: 1 }; o.v = 16; }
+    // 16 ← 17 (v4 R2): خانات البحث — WRES.ensure يحوّل البحث الواحد والفرع العسكري لخانات أول ما ينفتح
+    if (o.v < 17) o.v = 17;
     o.base = WD.rel; o.rnd = mulberry(o.rs); dipInit(o, WD); if (POL) POL.ensure(o, WD); if (MKT) MKT.ensure(o, WD); if (CMD) CMD.ensure(o, WD); if (ECO) ECO.ensure(o, WD); if (POP) POP.ensure(o, WD); if (NAV) NAV.ensure(o, WD); return o;
   }
   const API = { V, K, START, TENSION, POL, MKT, CMD, NAV, ECO, init, addRel, answerOffer, unSummit, unVote, council, tenTarget, napOf, blocsOf, P5, navy, straits, step, month, act, can, offerPeace, declare, endWar, strike, playerStrike, rank, save, load, date, rel, atWar, allied, sancOf: (W, WD, id) => sancOn(WD, W, id), COST, TAX, CIV };

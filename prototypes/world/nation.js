@@ -92,7 +92,7 @@
   function daily(G, WD, X) {
     const NW = G.nat; if (!NW) return; const S = X.S, T = X.T, me = G.me, c = G.C[me], e = NW.eco[0];
     if (!NW.home.base) NW.home.base = Object.fromEntries(Object.keys(NW.home.fac).map(k => [k, 55]));
-    NW.home.revR = .02; NW.home.gap = NW.home.gap || [18, 14]; NW.home.costK = Math.max(.1, Math.min(20, c.gdp / 250)); NW.ind[0].k = NW.home.costK;
+    NW.home.revR = .02; NW.home.gap = NW.home.gap || [18, 14]; NW.home.costK = Math.max(.1, Math.min(20, c.gdp / 250)); NW.ind[0].k = +Math.pow(NW.home.costK, .6).toFixed(3)   /* R2: البحث يكبر أبطأ من الاقتصاد (أمريكا ×6 مو ×20) حتى ميزانية الخانة تبقى معقولة */;
     if (!NW.g0) NW.g0 = snap(G, WD, S);   // لقطة البداية للتقييم
     NW.t = G.t * 24; Object.defineProperty(NW, 'rnd', { value: G.rnd || Math.random, writable: true, enumerable: false, configurable: true });
     NW.lim = Math.max(2, c.gdp * .06); ECON.LAND[0].lim = NW.lim; dipShim(G, WD, S);

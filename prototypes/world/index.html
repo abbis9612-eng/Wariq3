@@ -770,6 +770,18 @@ html[data-skin] .hero b{color:var(--act)}
     W.divs = W.divs.filter(d => !d.gone); SM.supply(W);
     if (moving || T.arrive.length) toast(`🚚 الانتشار: ${moving} فرقة تمشي من ثكناتها للجبهة${T.arrive.length ? ' و' + T.arrive.length + ' جاية من بعيد' : ''} (القائد ${G.cmd.c.n}: المسير ×${m.move.toFixed(2)})`, 'bad');
   }
+  // I-163: فرقة جديدة من الإنتاج بنص الحرب: تطلع من المصنع (العاصمة أو أكبر مدينة صناعية) وتمشي رتل بالطريق، والقائد يختار القاطع اللي يحتاجها أكثر (أقل منا وأكثر منهم)
+  function newDiv(kind, name) { if (!T || T.kind === 'air') return false; const W = T.W, own = T.cells.map((c, i) => i).filter(i => W.ctrl[i] === 0); if (!own.length) return false;
+    const capR = R.find(r => r.ctl === me && r.cap) || R.find(r => r.ctl === me), from = capR ? capR.ll : T.cells[own[0]].ll, city = capR ? (capR.cities[0] || [capR.n])[0] : '';
+    const to = own.reduce((b, i) => KM(from, T.cells[i].ll) < KM(from, T.cells[b].ll) ? i : b, own[0]), alive = SM.alive(W);
+    const need = i => { const nb = W.cells[i].nb || []; const en = alive.filter(d => d.side === 1 && (d.cell === i || nb.includes(d.cell))).length, ow = alive.filter(d => d.side === 0 && (d.cell === i || nb.includes(d.cell))).length; return en ? en - ow * .8 : -9; };
+    const front = own.filter(i => (W.cells[i].nb || []).some(j => W.ctrl[j] === 1)).sort((a, b) => need(b) - need(a))[0];
+    const m = G.cmd ? WCMD.mult(G.cmd.c) : { move: 1 }, km = KM(from, T.cells[to].ll), at = W.t + Math.max(6, Math.round(km / (250 * m.move) * 24)) + 6;   // 6 ساعات تجهيز + المسير
+    W.num = W.num || [100, 200]; const num = W.num[0]++, n = `${SM.KIND_N[kind] || 'فرقة'} ${num} (جديدة)`;
+    T.arrive = T.arrive || []; T.arrive.push({ kind, num, n, from, to, t0: W.t, at, city, front: front != null ? front : to });
+    const fc = front != null ? (T.cells[front].city || 'الجبهة') : 'الجبهة';
+    toast(`🏭 ${n} طالعة من ${city || 'المصنع'} لـ${fc} — توصل بعد ${Math.max(1, Math.round((at - W.t) / 24))} يوم${G.cmd ? ' (أمر القائد ' + G.cmd.c.n + ')' : ''}`, 'good');
+    return true; }
   function arrivals() { if (!T || !T.arrive || !T.arrive.length) return; const W = T.W;
     for (let i = T.arrive.length - 1; i >= 0; i--) { const a = T.arrive[i]; if (W.t < a.at) continue; T.arrive.splice(i, 1); const cell = W.ctrl[a.to] === 0 ? a.to : T.cells.findIndex((c, j) => W.ctrl[j] === 0); if (cell < 0) continue;
       const d = SM.addDiv(W, 0, a.kind, cell, a.num); d.n = a.n; d.org = d.orgMax * .7; SM.joinArmy(W, d); if (a.front != null && a.front !== cell) SM.order(W, d, a.front, T.auto0 === false ? 'manual' : 'auto'); toast(`🚚 وصلت ${a.n} للجبهة${a.city ? ' من ' + a.city : ''}`, 'good'); } }
@@ -800,7 +812,7 @@ html[data-skin] .hero b{color:var(--act)}
   }
   // يوم الدولة: نفس econ/home/ind اليومية من «الحرب الكبرى»، وأخبارها توستات
   function natDay(before) {
-    const NW = G.nat; if (!NW) return; const last = NW.log[NW.log.length - 1]; NT.daily(G, WD, { S, SIM: SM, T, before }); if (T) WDP.daily(G, WD, { S, SIM: SM, T }); else homeArmsRefresh();
+    const NW = G.nat; if (!NW) return; const last = NW.log[NW.log.length - 1]; NT.daily(G, WD, { S, SIM: SM, T, before, newDiv }); if (T) WDP.daily(G, WD, { S, SIM: SM, T }); else homeArmsRefresh();
     for (const l of NW.log.slice(NW.log.indexOf(last) + 1)) { if (l.side === 1) continue;
       if (l.k === 'home' && l.a === 'issue') { toast(`🏛 قضية: ${HOME.ISS[l.i].t}`, 'bad'); if (speed > 1) { speed = 1; bar(); } }
       else if (l.k === 'home' && l.a === 'auto') toast(`🏛 المستشارين حلّوا «${HOME.ISS[l.i].t}» لحالهم`);

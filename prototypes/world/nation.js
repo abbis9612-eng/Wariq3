@@ -177,9 +177,11 @@
     const it = ECON.ITEMS[o.k], c = G.C[G.me], NW = G.nat, T = X.T; if (!it) return;
     // M2: المنتجات الوطنية (عائلة السلاح، I-138)
     if (T && T.A && it.cat === 'plane' && AWLD()) AWLD().addPlanes(T.A, 0, it.plane, 0, G.me);   // نوع طيارة جديد بنص الحرب: سرب جديد بأقرب قاعدة (قبل كانت تنرمي)
-    if ((it.nat || it.stk) && ARS) { if (T && ['div', 'plane', 'sam'].includes(it.cat)) { T.W.num = T.W.num || [100, 200]; ECON.deliver(T.W, T.A, 0, o, X.SIM); } ARS.deliver(G, WD, it, T); NW.log.push({ t: NW.t, side: 0, k: 'built', it: o.k }); return; }
+    // I-163: الفرقة الجديدة بالحرب تطلع من المصنع/العاصمة وتمشي للجبهة (X.newDiv من الواجهة) بدل ما تطلع بمدينة فجأة
+    const routed = T && it.cat === 'div' && X.newDiv ? X.newDiv(it.kind || o.k, it.n) : false;
+    if ((it.nat || it.stk) && ARS) { if (T && !routed && ['div', 'plane', 'sam'].includes(it.cat)) { T.W.num = T.W.num || [100, 200]; ECON.deliver(T.W, T.A, 0, o, X.SIM); } ARS.deliver(G, WD, it, T); NW.log.push({ t: NW.t, side: 0, k: 'built', it: o.k }); return; }
     if (it.cat === 'line') { NW.eco[0].lines++; NW.log.push({ t: NW.t, side: 0, k: 'built', it: o.k }); return; }
-    if (T && (it.cat === 'div' || it.cat === 'plane' || it.cat === 'sam')) { T.W.num = T.W.num || [100, 200]; ECON.deliver(T.W, T.A, 0, o, X.SIM); }
+    if (T && !routed && (it.cat === 'div' || it.cat === 'plane' || it.cat === 'sam')) { T.W.num = T.W.num || [100, 200]; ECON.deliver(T.W, T.A, 0, o, X.SIM); }
     NW.arms = NW.arms || { jets: {}, sam: {}, tank: null };
     if (it.cat === 'div') c.pw += (DIVPW[it.kind || o.k] || 30) * ((it.kind || o.k) === 'arm' && NW.arms.tank ? NW.arms.tank.gen / 3 : 1);
     else if (it.cat === 'plane') { c.pw += (it.q || 1) * 3 * (AIR.PLANES[it.plane] && AIR.PLANES[it.plane].aa > .6 ? 1.5 : 1); NW.arms.jets[it.plane] = (NW.arms.jets[it.plane] || 0) + (it.q || 1); }   // I-158: تبقى بعد الحرب وبالسلم: تنضاف للقواعد بالمسرح الجاي

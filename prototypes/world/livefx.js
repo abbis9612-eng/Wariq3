@@ -72,12 +72,12 @@
     { const th0 = b.S.msl.filter(m => m.side === 1 && m.st === 'fly'), [ax0, ay0] = th0.length ? [th0.reduce((t, m) => t + m.x, 0) / th0.length, th0.reduce((t, m) => t + m.y, 0) / th0.length] : [null, null];
       for (const s of b.S.ships) { if (s.k !== 'cv' || s.sunk) continue; const [x0, y0] = P(s.x, s.y); let dir0 = th;   // باتجاه مصدر الهجوم
         if (ax0 != null) { const [ax, ay] = P(ax0, ay0); dir0 = Math.atan2(ay - y0, ax - x0); }
-        const R0 = 70 * zf, nx = -Math.sin(dir0), ny = Math.cos(dir0);
-        for (let i = 0; i < 4; i++) { const per = 7000, p = ((T - b.t0 + i * 900) % per) / per; if (T - b.t0 < i * 900) continue; let f, dir; if (p < .45) { f = p / .45; dir = dir0; } else if (p < .55) { f = 1; dir = dir0; } else { f = 1 - (p - .55) / .45; dir = dir0 + Math.PI; }
-          const sp = (i - 1.5) * 6 * zf * Math.min(1, f * 4), jx = x0 + Math.cos(dir0) * R0 * f + nx * sp, jy = y0 + Math.sin(dir0) * R0 * f + ny * sp;
-          img('u_f18_t', jx, jy, 13 * zf, dir + Math.PI / 2, .95);
-          if (p >= .45 && p < .55) { const k = (p - .45) / .1; c.save(); c.strokeStyle = `rgba(255,255,255,${.8 * (1 - k)})`; c.lineWidth = 1.4; c.beginPath(); c.moveTo(jx, jy); c.lineTo(jx + Math.cos(dir0) * 30 * zf * k, jy + Math.sin(dir0) * 30 * zf * k); c.stroke(); c.restore(); }
-          if (f < .15) { c.fillStyle = `rgba(255,255,255,${.4 * (1 - f / .15)})`; c.beginPath(); c.arc(jx, jy, 2, 0, 7); c.fill(); } } } }
+        const R0 = 70 * zf, JP = window.__jetPath;
+        for (let i = 0; i < 4; i++) { if (T - b.t0 < i * 900) continue; const key = 'nb' + (b.gid ?? 0) + ':' + s.id + ':' + i;
+          const J = JP ? JP(key, T - b.t0, 7000, i * 900, () => ({ a0: dir0, R0 }), i, 6 * zf, x0, y0) : null; if (!J) continue;   // I-165: الاتجاه ينثبت بالإقلاع، والمقدمة من الحركة الفعلية
+          if (window.__jet3d) window.__jet3d(c, J.x, J.y, 19 * zf, J.dir, .95); else img('u_f18_t', J.x, J.y, 13 * zf, J.dir, .95);
+          if (J.p >= .45 && J.p < .55) { const k = (J.p - .45) / .1; c.save(); c.strokeStyle = `rgba(255,255,255,${.8 * (1 - k)})`; c.lineWidth = 1.4; c.beginPath(); c.moveTo(J.x, J.y); c.lineTo(J.x + Math.cos(J.a0) * 30 * zf * k, J.y + Math.sin(J.a0) * 30 * zf * k); c.stroke(); c.restore(); }
+          if (J.f < .15) { c.fillStyle = `rgba(255,255,255,${.4 * (1 - J.f / .15)})`; c.beginPath(); c.arc(J.x, J.y, 2, 0, 7); c.fill(); } } } }
     if (far) return;
     // خيوط الدخان والصواريخ
     const f = Math.min(1, b.acc);
@@ -96,7 +96,7 @@
       img(m.side ? 'nv_c802' : 'nv_sm2', x, y, m.side ? 16 : 13, ang); }
     const life = q => q.sam ? 2500 : 5000; c.save(); c.lineCap = 'round';
     for (const tr of b.trails) { tr.pts = tr.pts.filter(p => T - p[2] < life(tr)); for (let i = 1; i < tr.pts.length; i++) { const a = 1 - (T - tr.pts[i][2]) / life(tr), [x1, y1] = P(tr.pts[i - 1][0], tr.pts[i - 1][1]), [x2, y2] = P(tr.pts[i][0], tr.pts[i][1]);
-      c.strokeStyle = tr.uw ? `rgba(200,240,255,${a * .55})` : tr.sam ? `rgba(255,255,255,${a * .5})` : `rgba(215,210,200,${a * .45})`; c.lineWidth = (tr.sam ? 1.4 : 2) + (1 - a) * (tr.sam ? 5 : 9); c.beginPath(); c.moveTo(x1, y1); c.lineTo(x2, y2); c.stroke(); } }
+      c.strokeStyle = tr.uw ? `rgba(200,240,255,${a * .55})` : tr.sam ? `rgba(255,255,255,${a * .32})` : `rgba(215,210,200,${a * .3})`; c.lineWidth = (tr.sam ? 1.2 : 1.6) + (1 - a) * (tr.sam ? 1.6 : 2.6); /* I-165: دخان أرفع (قبل يكبر لحد 11 بكسل فيصير شريط أبيض عريض) */ c.beginPath(); c.moveTo(x1, y1); c.lineTo(x2, y2); c.stroke(); } }
     c.restore(); b.trails = b.trails.filter(q => q.pts.length);
     // الأحداث: انفجارات، فالانكس، تشويش، رشّات، إطلاق
     b.fx = b.fx.filter(e => T - e.at < (e.k === 'sink' ? 4000 : 2200));

@@ -1047,6 +1047,21 @@ html[data-skin] .hero b{color:var(--act)}
       cx.strokeStyle = '#1b1b1b'; cx.lineWidth = 1.6; cx.beginPath(); cx.moveTo(-2, 13); cx.lineTo(-2, -1); cx.stroke();
       cx.fillStyle = hot ? '#c0261c' : '#1b1b1b'; cx.beginPath(); cx.moveTo(-2, -1); cx.lineTo(8, 2); cx.lineTo(-2, 6); cx.closePath(); cx.fill(); cx.restore(); } }
   // I-159: هدف طيارات الحاملة = أقرب منطقة لعدو دولتها (ينحسب مرة باليوم)؛ ماكو حرب = ماكو طلعات
+  // I-165: طيارة بنفس صور الـ3D اللي بالمعارك الجوية (f16_sheet، إطار الطيران المستوي 27)؛ كل صور الطيارات بملفاتها مقدمتها لليمين، فالدوران = اتجاه الحركة بالضبط (قبل كان +90° فتطير على جنبها)
+  function jet3d(c, x, y, sz, dir, al = 1) { const sh = IMG.f16_sheet, ph = IMG.u_f18_t || IMG.f18; c.save(); c.globalAlpha = al; c.translate(x, y); c.rotate(dir);
+    if (sh && sh.naturalWidth) c.drawImage(sh, 768, 768, 256, 256, -sz / 2, -sz / 2, sz, sz); else if (ph && ph.naturalWidth) c.drawImage(ph, -sz * .35, -sz * .35, sz * .7, sz * .7); c.restore(); }
+  window.__jet3d = jet3d;
+  // I-165: مسار الطلعة: الاتجاه ينثبت لحظة الإقلاع (للرحلة كلها)، ومقدمة الطيارة تنحسب من حركتها الفعلية (موقعها هسه وبعد لحظة)، فما تطير على جنبها أبداً
+  const SRT = new Map();
+  function jetPath(key, t, per, ofs, aim, i, spK, x0, y0) {
+    const at = tm => { const tt = tm + ofs, cyc = Math.floor(tt / per), p = (tt % per) / per; let st = SRT.get(key);
+      if (!st || st.cyc !== cyc) { const a = aim(); if (!a) return null; st = { cyc, a0: a.a0, R0: a.R0 }; SRT.set(key, st); if (SRT.size > 600) SRT.delete(SRT.keys().next().value); }
+      const f = p < .5 ? p / .5 : p < .56 ? 1 : 1 - (p - .56) / .44, sp = (i - 1.5) * spK * Math.min(1, f * 5), nx = -Math.sin(st.a0), ny = Math.cos(st.a0);
+      return { p, f, a0: st.a0, R0: st.R0, x: x0 + Math.cos(st.a0) * st.R0 * f + nx * sp, y: y0 + Math.sin(st.a0) * st.R0 * f + ny * sp }; };
+    const A = at(t), B = at(t + 40); if (!A) return null; const dx = B ? B.x - A.x : 0, dy = B ? B.y - A.y : 0;
+    A.dir = Math.hypot(dx, dy) > .02 ? Math.atan2(dy, dx) : A.a0 + Math.PI * Math.max(0, Math.min(1, (A.p - .5) / .06));   // بالدوّارة فوق الهدف: تلف 180° وترجع
+    return A; }
+  window.__jetPath = jetPath;
   const CVT = new Map();
   function cvTarget(g) { const foes = new Set(G.wars.filter(w => w.a.includes(g.cc) || w.b.includes(g.cc)).flatMap(w => w.a.includes(g.cc) ? w.b : w.a)); if (!foes.size) return null;
     const c = CVT.get(g.id); if (c && c.t === G.t && c.z === g.z) return c.ll; const p = fleetPos(g); let best = null, bd = 1e9;
@@ -1099,11 +1114,10 @@ html[data-skin] .hero b{color:var(--act)}
         if (im && im.naturalWidth) { cx.save(); cx.translate(ox, oy); cx.rotate(ang); cx.globalAlpha = k === 'ss' || k === 'ssn' ? .55 : 1; cx.shadowColor = 'rgba(0,20,40,.45)'; cx.shadowBlur = 5; cx.shadowOffsetX = 2; cx.shadowOffsetY = 3; cx.drawImage(im, -L / 2, -L * im.naturalHeight / im.naturalWidth / 2, L, L * im.naturalHeight / im.naturalWidth); cx.restore(); } }
       // طيارات الحاملة تلف فوق الأسطول
       // I-159: طيارات الحاملة ما تلف بلا معنى: بالحرب تطلع طلعات حقيقية — تقلع من السطح، تروح لأقرب أرض للعدو، تضرب، وترجع تنزل؛ بالسلم واقفة على السطح
-      if (g.s.cv && cam.s > 2500) { const tg = cvTarget(g); if (tg) { const [tx, ty] = toS(MX(tg[0]), MY(tg[1])), D = Math.hypot(tx - px, ty - py) || 1, R0 = Math.min(D, 260 * zf), a0 = Math.atan2(ty - py, tx - px), nx = -Math.sin(a0), ny = Math.cos(a0), im = IMG.u_f18_t || IMG.f18;
-        for (let q = 0; q < 4; q++) { const per = 9000, p = ((T0 + q * 650 + g.id * 977) % per) / per; let f, dir; if (p < .5) { f = p / .5; dir = a0; } else if (p < .56) { f = 1; dir = a0; } else { f = 1 - (p - .56) / .44; dir = a0 + Math.PI; }
-          const sp = (q - 1.5) * 7 * zf * Math.min(1, f * 5), jx = px + Math.cos(a0) * R0 * f + nx * sp, jy = py + Math.sin(a0) * R0 * f + ny * sp, al = D > R0 && f > .85 ? Math.max(.15, 1 - (f - .85) * 5) : 1;
-          if (im && im.naturalWidth) { cx.save(); cx.globalAlpha = al; cx.translate(jx, jy); cx.rotate(dir + Math.PI / 2); cx.drawImage(im, -7 * zf, -7 * zf, 14 * zf, 14 * zf); cx.restore(); }
-          if (p >= .48 && p < .6 && D <= R0 * 1.02) { const k = (p - .48) / .12, ex = tx + nx * sp * .6, ey = ty + ny * sp * .6; cx.save(); cx.globalCompositeOperation = 'lighter'; cx.fillStyle = `rgba(255,${150 + 60 * (1 - k) | 0},60,${.9 * (1 - k)})`; cx.beginPath(); cx.arc(ex, ey, (4 + 14 * k) * zf * .6, 0, 7); cx.fill(); cx.restore(); } }
+      if (g.s.cv && cam.s > 2500) { const tg = cvTarget(g); if (tg) { const [tx, ty] = toS(MX(tg[0]), MY(tg[1])), D = Math.hypot(tx - px, ty - py) || 1, R0 = Math.min(D, 260 * zf), aim = () => ({ a0: Math.atan2(ty - py, tx - px), R0 });
+        for (let q = 0; q < 4; q++) { const J = jetPath('cv' + g.id + ':' + q, T0, 9000, q * 650 + g.id * 977, aim, q, 7 * zf, px, py); if (!J) continue;
+          const al = D > J.R0 && J.f > .85 ? Math.max(.15, 1 - (J.f - .85) * 5) : 1; jet3d(cx, J.x, J.y, 20 * zf, J.dir, al);
+          if (J.p >= .48 && J.p < .6 && D <= J.R0 * 1.02) { const k = (J.p - .48) / .12; cx.save(); cx.globalCompositeOperation = 'lighter'; cx.fillStyle = `rgba(255,${150 + 60 * (1 - k) | 0},60,${.9 * (1 - k)})`; cx.beginPath(); cx.arc(J.x + Math.cos(J.a0) * 6 * zf, J.y + Math.sin(J.a0) * 6 * zf, (4 + 14 * k) * zf * .6, 0, 7); cx.fill(); cx.restore(); } }
         navMoving = true; } }
       // اللوحة: العلم + اسم الأسطول + شريط القوة
       const lb = `${FLAG(g.cc)} ${WNAV.name(WD, g)}`; cx.save(); cx.font = '700 11px "IBM Plex Sans Arabic",Tahoma'; cx.textAlign = 'center'; const tw = cx.measureText(lb).width + 14; let ly = py - 44 * zf;

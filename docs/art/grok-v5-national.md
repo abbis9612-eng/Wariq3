@@ -23,6 +23,7 @@ All these weapons belong to ONE nation and must look like ONE family, recognizab
 3. **Camouflage:** realistic military **desert sand with olive-green disruptive camouflage**, weathered, dusty, with real paint wear. Ships: dark naval grey with a subtle sand-olive band.
 4. **Emblem:** one **small gold emblem: a crescent embracing a spearhead**, painted on the side. No text, no letters, no numbers, no flags.
 5. Look: **massive, intimidating, majestic, cutting-edge, but engineered and believable** — a real defense-ministry reveal photograph, never a toy or a 3D render.
+**الصور رجعت (I-134):** [`out/v5-national/`](out/v5-national/) — 32 صورة، نسخة وحدة لكل اسم.
 
 ---
 

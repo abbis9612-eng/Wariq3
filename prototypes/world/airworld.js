@@ -68,6 +68,7 @@
         for (const m of AIR.SYS[x.sy].mags) if (!m.gun) pool[s][m.n] = (pool[s][m.n] || 0) + m.stock; });
       info[s].sams = sams.filter(x => x.side === s).length;
     }
+    if (T.samStock) for (const [k, v] of Object.entries(T.samStock)) pool[0][k] = (pool[0][k] || 0) + v;   // I-158: صواريخ الدفاع الجوي اللي صنعناها بالسلم
     const A = AIR.create(W, { LL, bases, sams, mbases, pool, raidSides: [0, 1].filter(s => mbases.some(m => m.side === s)), raidCd: 40, realDoc: true });
     A.info = info; A.LLp = { lon0: T.lon0, lat1: T.lat1, KX: T.KX, KY: T.KY };
     return A;
@@ -75,12 +76,36 @@
   // الضربات المركّبة: الطرف 0 (اللاعب) يقرر بنفسه (A.raidSides يتغير من الواجهة)؛ هنا بس نضبط
   function setPlayerRaids(A, on) { const s = new Set(A.raidSides); if (on) s.add(0); else s.delete(0); A.raidSides = [...s].sort(); }
   // الحفظ: الحالة اللي تتغير بس (الطيارات الجاهزة، البطاريات وذخيرتها، المخازن)، والباقي يتبني من جديد
+  // ===== I-158: السلاح اللي يوصل بنص الحرب (إنتاج أو سوق) يدخل المعركة فوراً =====
+  const llP = (A, lat, lon) => { const L = A.LLp; return L ? [(lon - L.lon0) * L.KX, (L.lat1 - lat) * L.KY] : [0, 0]; };
+  const shortN = t => ((AIR.PLANES[t] || {}).n || t).split(/[ ،/(]/)[0];
+  // سرب جديد: بقاعدة من نفس النوع، وإلا بأقرب قاعدة إلنا (سرب جديد بنفس المطار)
+  function addPlanes(A, s, type, q, cc, fresh) {
+    if (!A || !AIR.PLANES[type]) return null; let b = fresh ? null : A.bases.find(x => x.side === s && x.type === type);
+    if (!b) { const src = A.bases.filter(x => x.side === s && !x.down)[0] || A.bases.find(x => x.side === s); if (!src) return null;
+      b = { ...src, n: src.n.replace(/ \([^)]*\)$/, '') + ` (${shortN(type)})`, type, cc: cc || src.cc, n0: 0, max: 0, ready: 0, rein: 0, cd: 5, mission: { kind: 'auto' }, plan: null, down: 0 }; delete b.nm; A.bases.push(b); }
+    b.n0 += q; b.max = Math.max(b.max, b.n0); b.ready += q; return b;
+  }
+  // بطارية جديدة قرب أول بطارية إلنا (أو أول قاعدة)، وصواريخها بالمخزون
+  function addSam(A, s, sys, cc) {
+    if (!A || !AIR.SYS[sys] || !AIR.mkSite) return null; const ref = A.sams.find(x => x.side === s) || A.bases.find(x => x.side === s); if (!ref || !ref.ll) return null;
+    const j = A.sams.filter(x => x.side === s && x.sys === sys).length, o = { n: `${AIR.SYS[sys].n} — جديدة`, ll: [ref.ll[0] + .06 * (j + 1), ref.ll[1] + .06 * (j + 1)], side: s, sys, cc };
+    const site = AIR.mkSite(o, (lat, lon) => llP(A, lat, lon)); A.sams.push(site);
+    for (const m of AIR.SYS[sys].mags) if (!m.gun) A.pool[s][m.n] = (A.pool[s][m.n] || 0) + m.stock; return site;
+  }
+  // الحفظ: بمفتاح (الطرف|النوع|الاسم) مو بالترتيب، حتى السرب أو البطارية الجديدة ما تخربط الباقي بعد التحميل
+  const bK = (b, i, L) => `${b.side}|${b.type}|${b.n}|${L.slice(0, i).filter(y => y.side === b.side && y.type === b.type && y.n === b.n).length}`, sK = (x, i, L) => `${x.side}|${x.sys}|${x.n}|${L.slice(0, i).filter(y => y.side === x.side && y.sys === x.sys && y.n === x.n).length}`;
   function save(A) { return { t: A.t, wt: A.wt, id: A.id, kills: A.kills, lostPlanes: A.lostPlanes, stat: A.stat, raidCd: A.raidCd, raidSides: A.raidSides, pool: A.pool,
-    bases: A.bases.map(b => ({ ready: b.ready, n0: b.n0, down: b.down, mission: b.mission })), sams: A.sams.map(s => ({ p: s.p, down: s.down, doc: s.doc, mags: s.mags.map(m => ({ ready: m.ready, stock: m.stock, ready0: m.ready0 })) })),
+    bases: A.bases.map((b, i, L) => ({ k: bK(b, i, L), ready: b.ready, n0: b.n0, max: b.max, down: b.down, mission: b.mission, ll: b.ll, cc: b.cc })), sams: A.sams.map((s, i, L) => ({ k: sK(s, i, L), sys: s.sys, side: s.side, cc: s.cc, ll: s.ll, p: s.p, down: s.down, doc: s.doc, mags: s.mags.map(m => ({ ready: m.ready, stock: m.stock, ready0: m.ready0 })) })),
     mbases: A.mbases.map(m => ({ bm: m.bm, cm: m.cm, uav: m.uav })) }; }
   function restore(A, o) { if (!o) return A; Object.assign(A, { t: o.t, wt: o.wt, id: o.id, kills: o.kills, lostPlanes: o.lostPlanes, stat: o.stat, raidCd: o.raidCd, raidSides: o.raidSides, pool: o.pool });
-    o.bases.forEach((b, i) => A.bases[i] && Object.assign(A.bases[i], b)); o.sams.forEach((s, i) => { const x = A.sams[i]; if (!x) return; x.p = s.p; x.down = s.down; x.doc = s.doc; s.mags.forEach((m, j) => x.mags[j] && Object.assign(x.mags[j], m)); });
+    const BM = new Map(A.bases.map((b, i, L) => [bK(b, i, L), b])), SM = new Map(A.sams.map((x, i, L) => [sK(x, i, L), x]));
+    o.bases.forEach((b, i) => { let x = b.k ? BM.get(b.k) : A.bases[i];
+      if (!x && b.k) { const [sd, ty] = b.k.split('|'); x = addPlanes(A, +sd, ty, 0, b.cc, true); if (x) x.n = b.k.split('|').slice(2, -1).join('|'); }
+      if (x) { const { k, ll, cc, ...st } = b; Object.assign(x, st); if (x.max == null || x.max < x.n0) x.max = x.n0; } });
+    o.sams.forEach((s, i) => { let x = s.k ? SM.get(s.k) : A.sams[i]; if (!x && s.k && s.sys) { x = addSam(A, s.side, s.sys, s.cc); if (x) { for (const m of AIR.SYS[s.sys].mags) if (!m.gun) A.pool[s.side][m.n] -= m.stock; } }
+      if (!x) return; x.p = s.p; x.down = s.down; x.doc = s.doc; s.mags.forEach((m, j) => x.mags[j] && Object.assign(x.mags[j], m)); });
     o.mbases.forEach((m, i) => A.mbases[i] && Object.assign(A.mbases[i], m)); return A; }
-  const API = { build, save, restore, setPlayerRaids };
+  const API = { build, save, restore, setPlayerRaids, addPlanes, addSam };
   if (typeof module !== 'undefined') module.exports = API; else root.AIRWORLD = API;
 })(this);

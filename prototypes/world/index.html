@@ -648,9 +648,9 @@ html[data-skin] .hero b{color:var(--act)}
   // V0 (I-117): التنبيهات — اثنين بالأكثر بالشاشة، نفس النوع ينضم («×3»)، والزايد يروح للجرس 🔔 (يفتح الأخبار)
   // v5-6: الجرس = عدد اللي ينتظرك (مو عدد التنبيهات)، ويفتح «يحتاجك هسه»؛ والأخبار كلها بالعالم ← الأخبار
   let bellN = 0; const bell = () => { let b = $('#bell'); if (!b) { b = document.createElement('button'); b.id = 'bell'; b.onclick = () => openPanel('cmd'); document.body.append(b); } const n = window.INBOX ? window.INBOX() : 0; b.hidden = !n; b.innerHTML = '📥 ' + n; };
-  const toast = (m, cls = '') => { const box = $('#toast'), key = String(m).replace(/[0-9٠-٩.,٪%]+/g, '#').slice(0, 26);
+  const toast = (m, cls = '', mine = false) => { const box = $('#toast'), key = String(m).replace(/[0-9٠-٩.,٪%]+/g, '#').slice(0, 26);
     const same = [...box.children].find(d => d.dataset.k === key); if (same) { same.dataset.n = +(same.dataset.n || 1) + 1; same.textContent = m + '  ×' + same.dataset.n; clearTimeout(same._t); same._t = setTimeout(() => same.remove(), 3800); return; }
-    if (box.children.length >= 1) { bell(); if (cls !== 'bad') return; box.lastChild.remove(); }   // v5-6: تنبيه وحد بالشاشة؛ الباقي بالأخبار
+    if (box.children.length >= 1) { if (mine) box.replaceChildren(); else if (cls === 'bad') box.lastChild.remove(); else { bell(); return; } }   // I-158: نتيجة ضغطتك تطلع دائماً (تبدّل القديم)، وأخبار العالم العادية بس إذا الشاشة فاضية   // v5-6: تنبيه وحد بالشاشة؛ الباقي بالأخبار
     const d = document.createElement('div'); d.textContent = m; d.className = cls; d.dataset.k = key; d.style.pointerEvents = 'auto'; d.onclick = () => { d.remove(); if (window.INBOX && window.INBOX()) openPanel('cmd'); }; box.prepend(d); d._t = setTimeout(() => d.remove(), 3800); };
   const ar = d => d.toLocaleDateString('ar-IQ-u-nu-latn', { day: 'numeric', month: 'long', year: 'numeric', timeZone: 'UTC' });
   const money = b => b == null ? '–' : Math.abs(b) >= 1000 ? (b / 1000).toFixed(2) + ' ترليون $' : Math.abs(b) >= 10 ? Math.round(b) + ' مليار $' : b.toFixed(1) + ' مليار $';
@@ -732,7 +732,7 @@ html[data-skin] .hero b{color:var(--act)}
     for (const w of G.wars) { if (!(w.a.includes(me) || w.b.includes(me)) || w.noLand) continue;
       let t = TH.build(G, WD, w, me), isAir = false;
       if (!t) { t = w.noAir ? null : TH.air(G, WD, w, me); if (!t) { w.noLand = true; w.noAir = true; continue; } isAir = true; }   // بلا حدود برية: مسرح جوي
-      const prevHT = HT; T = t; HT = null; w.detail = !isAir; T.vp0 = TH.score(T).vp.slice(); T.aggr0 = 1.6; T.arms = G.nat && G.nat.arms ? JSON.parse(JSON.stringify(G.nat.arms)) : null; T.A = AWLD.build(T, G, WD); WDP.setup(G, WD, S, T); applyCmd(T); if (!isAir) deploy(T, prevHT); viewInit();
+      const prevHT = HT; T = t; HT = null; w.detail = !isAir; T.vp0 = TH.score(T).vp.slice(); T.aggr0 = 1.6; T.arms = G.nat && G.nat.arms ? JSON.parse(JSON.stringify(G.nat.arms)) : null; T.samStock = G.nat && G.nat.samStock ? { ...G.nat.samStock } : null; if (G.nat) G.nat.samStock = {}; T.A = AWLD.build(T, G, WD); WDP.setup(G, WD, S, T); applyCmd(T); if (!isAir) deploy(T, prevHT); viewInit();
       if (isAir) { T.airPrev = { l: [0, 0] }; toast(`✈ ${w.n}: ماكو حدود برية — الحرب جوية: قواعدنا ${T.A.bases.filter(b => b.side === 0).length} وقواعدهم ${T.A.bases.filter(b => b.side === 1).length}، بطاريات ${T.A.sams.filter(x => x.side === 0).length} ضد ${T.A.sams.filter(x => x.side === 1).length}`, 'bad'); const c = T.cells[0]; cam.x = MX(c.ll[0]); cam.y = MY(c.ll[1]); cam.s = Math.max(cam.s, 700); speed = 0; bar(); break; }
       toast(`🗺 ${w.n}: الجبهة انقسمت لـ${T.cells.length} خلية، و${SM.alive(T.W).filter(d => d.side === 0).length} فرقة إلنا ضد ${SM.alive(T.W).filter(d => d.side === 1).length}`, 'bad');
       const c = T.cells[Math.floor(T.cells.length / 2)]; cam.x = MX(c.ll[0]); cam.y = MY(c.ll[1]); cam.s = Math.max(cam.s, 1400); speed = 0; bar(); break; }
@@ -743,8 +743,11 @@ html[data-skin] .hero b{color:var(--act)}
     const war = { ...TH.HOME, a: [me] };
     if (saved && saved.regs && saved.regs.every(r => G.ctl[r] === me)) HT = TH.restore(saved, G, WD, war, me);
     if (!HT) HT = TH.home(G, WD, me); if (!HT) return;
-    HT.arms = G.nat && G.nat.arms ? JSON.parse(JSON.stringify(G.nat.arms)) : null; HT.A = AWLD.build(HT, G, WD); applyCmd(HT); viewInit();
+    HT.arms = G.nat && G.nat.arms ? JSON.parse(JSON.stringify(G.nat.arms)) : null; HT.samStock = G.nat && G.nat.samStock ? { ...G.nat.samStock } : null; HT.A = AWLD.build(HT, G, WD); applyCmd(HT); viewInit(); HT._sg = armsSig();
   }
+  // I-158: لما يوصل سلاح بالسلم (طيارات، بطاريات، صواريخ) خريطة جيشنا تتحدّث فوراً (قبل كانت تنتظر إعادة التحميل)
+  const armsSig = () => G && G.nat ? JSON.stringify([G.nat.arms || null, G.nat.samStock || null]) : '';
+  function homeArmsRefresh() { if (!HT || T || !G.nat) return; const sg = armsSig(); if (HT._sg === sg) return; HT._sg = sg; HT.arms = G.nat.arms ? JSON.parse(JSON.stringify(G.nat.arms)) : null; HT.samStock = G.nat.samStock ? { ...G.nat.samStock } : null; HT.A = AWLD.build(HT, G, WD); applyCmd(HT); viewInit(); dirty = true; }
   function fitTo(V) { if (!V) return; let a = 1e9, b = 1e9, c = -1e9, d = -1e9; for (const cl of V.cells) { const x = MX(cl.ll[0]), y = MY(cl.ll[1]); a = Math.min(a, x); c = Math.max(c, x); b = Math.min(b, y); d = Math.max(d, y); }
     const top = ($('#top') ? $('#top').offsetHeight : 120) + 20, bot = 90; cam.x = (a + c) / 2; cam.y = (b + d) / 2 + ((top - bot) / 2) / Math.max(1, Math.min(innerWidth * .9 / Math.max(1e-6, c - a), (innerHeight - top - bot) / Math.max(1e-6, d - b)));
     cam.s = Math.max(600, Math.min(9000, Math.min(innerWidth * .9 / Math.max(1e-6, c - a), (innerHeight - top - bot) / Math.max(1e-6, d - b)))); cam.y = (b + d) / 2 - ((top - bot) / 2) / cam.s; dirty = true; }
@@ -797,7 +800,7 @@ html[data-skin] .hero b{color:var(--act)}
   }
   // يوم الدولة: نفس econ/home/ind اليومية من «الحرب الكبرى»، وأخبارها توستات
   function natDay(before) {
-    const NW = G.nat; if (!NW) return; const last = NW.log[NW.log.length - 1]; NT.daily(G, WD, { S, SIM: SM, T, before }); if (T) WDP.daily(G, WD, { S, SIM: SM, T });
+    const NW = G.nat; if (!NW) return; const last = NW.log[NW.log.length - 1]; NT.daily(G, WD, { S, SIM: SM, T, before }); if (T) WDP.daily(G, WD, { S, SIM: SM, T }); else homeArmsRefresh();
     for (const l of NW.log.slice(NW.log.indexOf(last) + 1)) { if (l.side === 1) continue;
       if (l.k === 'home' && l.a === 'issue') { toast(`🏛 قضية: ${HOME.ISS[l.i].t}`, 'bad'); if (speed > 1) { speed = 1; bar(); } }
       else if (l.k === 'home' && l.a === 'auto') toast(`🏛 المستشارين حلّوا «${HOME.ISS[l.i].t}» لحالهم`);
@@ -815,12 +818,13 @@ html[data-skin] .hero b{color:var(--act)}
   }
   let ADVL = [];
   function meDot() { bell(); const t = $('#tabs button[data-p=cmd]'), n = inbox().length; let d = t.querySelector('.dot'); if (n && !d) { d = document.createElement('span'); d.className = 'dot'; t.append(d); } if (d) { if (n) d.textContent = n; else d.remove(); } }
-  const HPS = [0, 1 / 6, 1, 6];   // ساعات بالثانية بالحرب (نفس «الحرب الكبرى»)
+  const HPS = [0, 1, 6, 24];   // I-158: ساعات بالثانية بالحرب: ساعة، 6 ساعات، يوم (قبل 10 دقايق/ساعة/6 ساعات والشريط يكتب «يوم/أسبوع/شهر»)
+  const SPNW = ['واقف', 'ساعة بالثانية', '6 ساعات بالثانية', 'يوم بالثانية'];
   let accH = 0;
   function warTick(dt) {
     const rate = HPS[speed]; accH += dt * rate; let n = 0; const m0 = G.log.length, t0 = G.t;
-    while (accH >= 1 && n < 40 && T && !G.over) { TH.step(T, 1); arrivals(); accH -= 1; n++;
-      if (T.W.t % 24 === 0) { theaterDay(); const b = G.log.length; S.step(G, WD, 1); natDay(b); theater(); save(); } }   // بالحرب نحفظ كل يوم (مثل «الحرب الكبرى»)
+    accH = Math.min(accH, 48); while (accH >= 1 && n < 40 && T && !G.over) { TH.step(T, 1); arrivals(); accH -= 1; n++;
+      if (T.W.t % 24 === 0) { theaterDay(); const b = G.log.length; S.step(G, WD, 1); natDay(b); theater(); if (speed < 3 || T.W.t % 72 === 0) save(); } }   // بالحرب نحفظ كل يوم (مثل «الحرب الكبرى»)
     if (T) frontNews();
     if (T && T.A) { const af = Math.min(1.6, Math.max(.3, .25 * rate * 3600 / 38)); AIR.step(T.A, T.W, SM, dt * af); airEvents(); }
     if (G.t > t0) after(m0, t0);
@@ -1379,7 +1383,7 @@ html[data-skin] .hero b{color:var(--act)}
     const NW = G.nat, cash = NW ? NW.eco[0].cash : null, st = Math.round(c.stab), stc = st >= 60 ? 'var(--me)' : st >= 35 ? 'var(--gold)' : 'var(--neg)';
     // I-144: الشريط سطر وحد للموارد (رقم كبير ووحدة صغيرة وتسمية)، وسطر رفيع للوقت والسرعة بأيقونات
     const mU = v => { const t = String(money(v)), i = t.search(/\s/); return i < 0 ? `<b>${t}</b>` : `<b>${t.slice(0, i)}<u>${t.slice(i + 1)}</u></b>`; }, SI = n => `<svg class="hic" aria-hidden="true"><use href="#h-${n}"/></svg>`;
-    b.innerHTML = `<span class="date"><i class="${speed ? 'run' : ''}"></i>${ar(S.date(G.t))}<small class="spn">${SPN[speed]}</small></span><span class="ap" title="نقاط القرار">${SI('star')}${G.ap}</span>
+    b.innerHTML = `<span class="date"><i class="${speed ? 'run' : ''}"></i>${ar(S.date(G.t))}<small class="spn">${(T ? SPNW : SPN)[speed]}</small></span><span class="ap" title="نقاط القرار">${SI('star')}${G.ap}</span>
       <div class="spd">${[['pause', 'وقف'], ['play', 'يوم بالثانية'], ['ff', 'أسبوع بالثانية'], ['fff', 'شهر بالثانية']].map(([x, n], i) => `<button data-s="${i}" class="${speed === i ? 'on' : ''}" aria-label="${n}">${SI(x)}</button>`).join('')}</div>`;
     $('#top h1').innerHTML = `${EMB(me)}<span class="hres">${cash != null ? `<span class="hr ${cash < 0 ? 'neg' : ''}">${mU(cash)}<small>${SI('bank')}الخزينة${window.__G && __G.G && __G.G.fund3 && ((__G.G.fund3.bonds || 0) + (__G.G.fund3.stocks || 0)) > .05 ? ' +' + ((__G.G.fund3.bonds || 0) + (__G.G.fund3.stocks || 0)).toFixed(0) + ' صندوق' : ''}</small></span>` : ''}<span class="hr">${mU(c.gdp)}<small>${SI('chart')}الناتج</small></span><span class="hr"><b style="color:${stc}">${st}</b><small>${SI('shield')}الاستقرار</small></span></span>`;
     b.querySelectorAll('button').forEach(x => x.onclick = () => { speed = +x.dataset.s; if (window.VIEW && T) VIEW.SND.init(); bar(); });
@@ -1949,9 +1953,10 @@ const HIC = {'💵':'money','💰':'money','🏥':'health','📊':'chart','📈'
   function wire(root) {
     root.querySelectorAll('.seg[data-k] button').forEach(b => b.onclick = () => { G.C[me][b.parentNode.dataset.k] = b.dataset.v; openPanel(panel, true); save(); });
     const mil = root.querySelector('#mil'); if (mil) mil.oninput = () => { G.C[me].milPct = +mil.value; root.querySelector('#milv').textContent = (+mil.value).toFixed(1); };
-    root.querySelectorAll('[data-go]').forEach(b => b.onclick = () => { const r = R.find(x => x.ctl === b.dataset.go && x.cap) || R.find(x => x.ctl === b.dataset.go); if (r) { closePanel(); sel = r; cam.x = MX(r.ll[0]); cam.y = MY(r.ll[1]); dirty = true; card(); } });
+    // I-158: زر واحد يعرف: إذا رمز دولة يوديك للدولة ويفتح بطاقتها، وإذا اسم لوحة يفتح اللوحة (قبل كان السطر الثاني يمسح هذا فأزرار الدول ترجّعك للقيادة)
+    root.querySelectorAll('[data-go]').forEach(b => b.onclick = () => { const g = b.dataset.go; if (CS[g] || ENT[g]) { const r = R.find(x => x.ctl === g && x.cap) || R.find(x => x.ctl === g); if (r) { closePanel(); sel = r; cam.x = MX(r.ll[0]); cam.y = MY(r.ll[1]); cam.s = Math.max(cam.s, 700); dirty = true; card(); } else toast('هالدولة ما عدها أرض هسه'); } else openPanel(g); });
     root.querySelectorAll('[data-peace]').forEach(b => b.onclick = () => { const r = S.offerPeace(G, WD, b.dataset.peace); r.ok ? toast('🕊 انتهت الحرب', 'good') : toast(r.why, 'bad'); syncMap(); openPanel('war', true); bar(); save(); });
-    const NW = G.nat, re = (r, ok) => { if (typeof r === 'string') toast('❌ ' + r, 'bad'); else if (ok) toast(ok, 'good'); openPanel(panel || 'cmd', true); save(); };
+    const NW = G.nat, re = (r, ok) => { if (typeof r === 'string') toast('❌ ' + r, 'bad', true); else if (ok) toast(ok, 'good', true); openPanel(panel || 'cmd', true); save(); };
     const dr = (r, ok) => { if (typeof r === 'string') toast('❌ ' + r, 'bad'); else if (ok) toast(ok, 'good'); frontNews(); if (T && T.W.over) theaterDay(); bar(); openPanel('war', true); save(); };
     const DA = f => WDP.act(G, WD, S, T, f);
     root.querySelectorAll('[data-doff]').forEach(b => b.onclick = () => dr(DA(W => DIP.answerOffer(W, b.dataset.doff === '1'))));
@@ -1973,7 +1978,6 @@ const HIC = {'💵':'money','💰':'money','🏥':'health','📊':'chart','📈'
     const cs0 = root.querySelector('#cmdShow'); if (cs0) cs0.onclick = () => { root.querySelector('#cmdC').hidden = !root.querySelector('#cmdC').hidden; };
     root.querySelectorAll('[data-flt]').forEach(b => b.onclick = () => { const g = G.nav.g.find(x => x.id === +b.dataset.flt); if (!g) return; const [lon, lat] = fleetPos(g); cam.x = MX(lon); cam.y = MY(lat); cam.s = Math.max(cam.s, 900); selF = g; closePanel && closePanel(); navBar(); dirty = true; });
     root.querySelectorAll('[data-cmd]').forEach(b => b.onclick = () => { const r = WCMD.change(G, WD, +b.dataset.cmd); typeof r === 'string' ? toast('❌ ' + r, 'bad') : toast(msg(G.log[G.log.length - 1])[0], r.often ? 'bad' : 'good'); applyCmd(VT()); bar(); openPanel('army', true); save(); });
-    root.querySelectorAll('[data-go]').forEach(b => b.onclick = () => openPanel(b.dataset.go));
     root.querySelectorAll('[data-goib]').forEach(b => b.onclick = () => { openPanel('dip'); const h = [...document.querySelectorAll('#sheet h3')].find(x => /التحالف الإسلامي/.test(x.textContent)); if (h) { h.scrollIntoView({ block: 'start' }); $('#sheet').scrollTop -= 70; } });
     root.querySelectorAll('[data-adv]').forEach(b => b.onclick = () => { const a = (ADVL[+b.dataset.adv] || {}).a || '';
       if (a === 'prod') openPanel('prod'); else if (a === 'eco:home') openPanel('homep'); else if (a.startsWith('eco')) openPanel('me');
@@ -2034,9 +2038,9 @@ const HIC = {'💵':'money','💰':'money','🏥':'health','📊':'chart','📈'
       if (!r.ok) { toast(r.why, 'bad'); return; }
       if (k === 'mil' && T && r.r) { const W = T.W, en = W.divs.filter(d => !d.dead && d.side === 1); const cells = [...new Set(en.filter(d => W.cells[d.cell].nb.some(j => W.ctrl[j] === 0)).map(d => d.cell))].slice(0, 6); for (const c of cells) { SM.airHit(W, 0, c, r.r.hits * .05 / cells.length + .5); T.air && T.air.hits.push([c, 0, W.t]); } }
       toast(msg(G.log[G.log.length - 1])[0], 'good'); bar(); openPanel('war', true); save(); dirty = true; });
-    root.querySelectorAll('[data-air]').forEach(b => b.onclick = () => { for (const x of T.A.bases) if (x.side === 0) x.mission = { kind: b.dataset.air }; openPanel('war', true); save(); });
-    root.querySelectorAll('[data-raid]').forEach(b => b.onclick = () => { AWLD.setPlayerRaids(T.A, b.dataset.raid === '1'); openPanel('war', true); save(); });
-    root.querySelectorAll('[data-am]').forEach(b => b.onclick = () => { T.air.mode[0] = b.dataset.am; openPanel('war', true); save(); });
+    root.querySelectorAll('[data-air]').forEach(b => b.onclick = () => { if (!T || !T.A) return toast('ماكو حرب جوية هسه'); for (const x of T.A.bases) if (x.side === 0) x.mission = { kind: b.dataset.air }; openPanel('war', true); save(); });
+    root.querySelectorAll('[data-raid]').forEach(b => b.onclick = () => { if (!T || !T.A) return toast('ماكو حرب جوية هسه'); AWLD.setPlayerRaids(T.A, b.dataset.raid === '1'); openPanel('war', true); save(); });
+    root.querySelectorAll('[data-am]').forEach(b => b.onclick = () => { if (!T || !T.air) return; T.air.mode[0] = b.dataset.am; openPanel('war', true); save(); });
     root.querySelectorAll('[data-tm]').forEach(b => b.onclick = () => { const m = b.dataset.tm; T.auto0 = m !== 'manual'; T.aggr0 = m === 'atk' ? 1.3 : m === 'def' ? 99 : 1.6; openPanel('war', true); save(); });
   }
   // ===== بطاقة دولة ثانية: الأفعال =====
@@ -2078,10 +2082,11 @@ const HIC = {'💵':'money','💰':'money','🏥':'health','📊':'chart','📈'
     fetch('version.txt', { cache: 'no-store' }).catch(() => caches.match('version.txt')).then(r => { if (!r || !r.ok) return;   // version.txt موجود بس بنسخة التطبيق (app/)
       navigator.serviceWorker.register('sw.js').then(reg => {
         const ask = w => { const d = document.createElement('div'); d.id = 'upd'; d.innerHTML = '🆕 أكو تحديث للعبة <button>حدّث هسه</button>'; d.style.cssText = 'position:fixed;left:50%;transform:translateX(-50%);bottom:calc(70px + env(safe-area-inset-bottom));z-index:12;background:var(--panel);border:1px solid var(--gold);border-radius:12px;padding:8px 12px;display:flex;gap:8px;align-items:center;box-shadow:var(--shadow)';
-          d.querySelector('button').onclick = () => { if (G) save(); w.postMessage('skip'); }; if (!$('#upd')) document.body.append(d); };
+          d.querySelector('button').onclick = () => { if (G) save(); window.__updAsked = true; w.postMessage('skip'); }; if (!$('#upd')) document.body.append(d); };
         if (reg.waiting && navigator.serviceWorker.controller) ask(reg.waiting);
         reg.addEventListener('updatefound', () => { const w = reg.installing; w && w.addEventListener('statechange', () => { if (w.state === 'installed' && navigator.serviceWorker.controller) ask(w); }); });
-        let done = false; navigator.serviceWorker.addEventListener('controllerchange', () => { if (!done) { done = true; location.reload(); } });
+        // I-158: نعيد التحميل بس إذا اللاعب ضغط «حدّث هسه» (قبل: أول فتح للتطبيق كان يعيد التحميل لحاله بعد ثواني ويرجّعك لشاشة البداية)
+        let done = false; navigator.serviceWorker.addEventListener('controllerchange', () => { if (!done && window.__updAsked) { done = true; location.reload(); } });
       }).catch(() => {}); }).catch(() => {});
   }
 })();

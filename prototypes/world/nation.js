@@ -7,6 +7,7 @@
 (function (root) {
   'use strict';
   const req = typeof require !== 'undefined' ? require : null;
+  const AWLD = () => root.AIRWORLD || (req ? req('./airworld.js') : null);   // I-158: السلاح يدخل الحرب الجارية
   const CAS = root.WCAS || (req ? req('./wcas.js') : null);   // v3 C1: الخسائر من المسرح
   const ARS = root.WARS || (req ? req('./warsenal.js') : null);   // I-135: الترسانة الوطنية
   const RES = root.WRES || (req ? req('./wres.js') : null);   // v3 R: شجرة البحث الموحّدة
@@ -139,7 +140,7 @@
     for (let k = e.q.length - 1; k >= 0; k--) if (e.q[k].left <= 0) { const o = e.q[k]; deliver(G, WD, o, X); e.q.splice(k, 1); }
     // «🔁 كرّر»: المنتج المعلّم يرجع للطابور لحاله إذا خلص والفلوس تكفي
     if (e.rep) for (const k in e.rep) if (e.rep[k] && !e.q.some(o => o.k === k) && ECON.ITEMS[k] && !ECON.canBuy(NW, 0, k)) ECON.buy(NW, 0, k, 'rep');
-    MKT.deliver(G, WD, { ECON, AIR });   // W8: عقود سوق السلاح اللي وصلت
+    MKT.deliver(G, WD, { ECON, AIR, T, AWLD: AWLD() });   // W8: عقود سوق السلاح اللي وصلت
     // المعنويات (نفس منطق econ.js morale بأحداث العالم)
     morale(G, NW, !!T || G.wars.some(w => w.a.includes(me) || w.b.includes(me)));
     // الداخل والتصنيع (الملفات نفسها)
@@ -175,13 +176,14 @@
   function deliver(G, WD, o, X) {
     const it = ECON.ITEMS[o.k], c = G.C[G.me], NW = G.nat, T = X.T; if (!it) return;
     // M2: المنتجات الوطنية (عائلة السلاح، I-138)
+    if (T && T.A && it.cat === 'plane' && AWLD()) AWLD().addPlanes(T.A, 0, it.plane, 0, G.me);   // نوع طيارة جديد بنص الحرب: سرب جديد بأقرب قاعدة (قبل كانت تنرمي)
     if ((it.nat || it.stk) && ARS) { if (T && ['div', 'plane', 'sam'].includes(it.cat)) { T.W.num = T.W.num || [100, 200]; ECON.deliver(T.W, T.A, 0, o, X.SIM); } ARS.deliver(G, WD, it, T); NW.log.push({ t: NW.t, side: 0, k: 'built', it: o.k }); return; }
     if (it.cat === 'line') { NW.eco[0].lines++; NW.log.push({ t: NW.t, side: 0, k: 'built', it: o.k }); return; }
     if (T && (it.cat === 'div' || it.cat === 'plane' || it.cat === 'sam')) { T.W.num = T.W.num || [100, 200]; ECON.deliver(T.W, T.A, 0, o, X.SIM); }
     NW.arms = NW.arms || { jets: {}, sam: {}, tank: null };
     if (it.cat === 'div') c.pw += (DIVPW[it.kind || o.k] || 30) * ((it.kind || o.k) === 'arm' && NW.arms.tank ? NW.arms.tank.gen / 3 : 1);
-    else if (it.cat === 'plane') { c.pw += (it.q || 1) * 3 * (AIR.PLANES[it.plane] && AIR.PLANES[it.plane].aa > .6 ? 1.5 : 1); if (!T) NW.arms.jets[it.plane] = (NW.arms.jets[it.plane] || 0) + (it.q || 1); }   // بالسلم: تنضاف للقواعد بالمسرح الجاي
-    else if (it.cat === 'sam') { NW.samStock = NW.samStock || {}; NW.samStock[it.pool] = (NW.samStock[it.pool] || 0) + it.q; }
+    else if (it.cat === 'plane') { c.pw += (it.q || 1) * 3 * (AIR.PLANES[it.plane] && AIR.PLANES[it.plane].aa > .6 ? 1.5 : 1); NW.arms.jets[it.plane] = (NW.arms.jets[it.plane] || 0) + (it.q || 1); }   // I-158: تبقى بعد الحرب وبالسلم: تنضاف للقواعد بالمسرح الجاي
+    else if (it.cat === 'sam') { c.adI = (c.adI || 0) + it.q * .03; if (!T) { NW.samStock = NW.samStock || {}; NW.samStock[it.pool] = (NW.samStock[it.pool] || 0) + it.q; } }   // I-158: بالسلم للمخزن (يدخل بطارياتنا بالحرب الجاية)، بالحرب راحت لمخزون المسرح
     NW.log.push({ t: NW.t, side: 0, k: 'built', it: o.k });
   }
   // الطلب (econ.js canBuy/buy/cancel نفسها على دولة اللاعب)
@@ -225,6 +227,6 @@
     return { mil: Math.round(mil), eco: Math.round(eco), dip: Math.round(dip), pop: Math.round(pop) };
   }
   function grade(G, WD, S) { const p = paths(G, WD, S); return GRADE.grade(view(G, null), null, { paths: () => p }, 0); }
-  const API = { LEDC, ledger, init, catalog, daily, buy, canBuy, cancel, items, advice, paths, grade, GR: GRADE.GR, FACS, NI, supOf };
+  const API = { LEDC, ledger, deliver, init, catalog, daily, buy, canBuy, cancel, items, advice, paths, grade, GR: GRADE.GR, FACS, NI, supOf };
   if (typeof module !== 'undefined') module.exports = API; else root.NATION = API;
 })(this);

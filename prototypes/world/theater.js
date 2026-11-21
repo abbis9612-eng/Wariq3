@@ -108,7 +108,7 @@
       }
       T.raw = T.raw || []; T.raw[s] = { inf, mec, arm };
       // الجودة: جيل الدبابات والطيارات (W4) والسيطرة الجوية
-      const g = k => (WD.cs[k] && WD.cs[k].gen) || {}, lead = T.side[s][0], gt = g(lead).tank || 2, gj = g(lead).jet || 2;
+      const g = k => (WD.cs[k] && WD.cs[k].gen) || {}, lead = T.side[s][0], gt = Math.max(g(lead).tank || 2, lead === G.me && G.nat && G.nat.arms && G.nat.arms.tank ? G.nat.arms.tank.gen || 0 : 0), gj = g(lead).jet || 2;   // I-158: رخصة الدبابات (أبرامز، ليوبارد…) ترفع جودة دروعنا بالحرب
       const uav = ((WD.cs[lead] || {}).tech || {}).uav || 1;   // المسيّرات ترفع الهجوم والصمود (أوكرانيا 5، تركيا 5، إيران 4)
       W.qual[s] = { hard: .8 + gt * .1, org: .9 + (gt - 2) * .05 + uav * .02, atk: .85 + gj * .06 + uav * .03 };
     }

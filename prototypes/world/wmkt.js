@@ -110,8 +110,9 @@
     for (const d of W.mkt.deals) { if (d.done || d.at > W.t) continue; d.done = 1; const p = SELL[d.x].find(o => o.k === d.k), c = W.C[W.me]; NW.arms = NW.arms || { jets: {}, sam: {}, tank: null };
       const uk = d.mode === 'used' ? .7 : 1;
       if (d.mode === 'tt' && NW.ind) { const b = ttBr(p), I = NW.ind[0]; I.tech[b] = Math.min(6, (I.tech[b] || 0) + 1); W.log.push({ t: W.t, k: 'arms', a: 'tt', x: d.x, b, l: I.tech[b] }); }
-      if (p.cat === 'plane') { NW.arms.jets[p.t] = (NW.arms.jets[p.t] || 0) + p.q; c.pw += p.q * 3 * uk * (AIR.PLANES[p.t] && AIR.PLANES[p.t].aa > .6 ? 1.5 : 1); unlock(W, WD, X, d.x, p); }
-      else if (p.cat === 'sam') { NW.arms.sam[p.t] = (NW.arms.sam[p.t] || 0) + p.q; c.adI += AIR.SYS[p.t] && Math.max(...AIR.SYS[p.t].mags.map(m => Math.max(...Object.values(m.r)))) > 100 ? 6 * p.q : 3 * p.q; unlock(W, WD, X, d.x, p); }
+      const TA = X.T && X.T.A && X.AWLD ? X.T.A : null;   // I-158: بنص الحرب يدخلون المعركة فوراً
+      if (p.cat === 'plane') { if (TA) X.AWLD.addPlanes(TA, 0, p.t, p.q, W.me); NW.arms.jets[p.t] = (NW.arms.jets[p.t] || 0) + p.q; c.pw += p.q * 3 * uk * (AIR.PLANES[p.t] && AIR.PLANES[p.t].aa > .6 ? 1.5 : 1); unlock(W, WD, X, d.x, p); }
+      else if (p.cat === 'sam') { if (TA) for (let i = 0; i < p.q; i++) X.AWLD.addSam(TA, 0, p.t, W.me); NW.arms.sam[p.t] = (NW.arms.sam[p.t] || 0) + p.q; c.adI += AIR.SYS[p.t] && Math.max(...AIR.SYS[p.t].mags.map(m => Math.max(...Object.values(m.r)))) > 100 ? 6 * p.q : 3 * p.q; unlock(W, WD, X, d.x, p); }
       else if (p.cat === 'grd') { c.pw += 25 * (p.q || 1); NW.arms.grd = (NW.arms.grd || 0) + (p.q || 1); }
       else if (p.cat === 'nav') { const A = (typeof window !== 'undefined' && window.WARS) || require('./warsenal.js'); A.addShips(W, WD, p.ships); }
       else if (p.cat === 'tank') { NW.arms.tank = { x: d.x, gen: p.gen - (d.mode === 'used' ? 1 : 0), n: p.n }; ECON.SUPPLY[0].arm = d.x; ECON.SUP_N[d.x] = WD.cs[d.x].ar; }

@@ -594,6 +594,6 @@
     if (tg.kind === 'troops') SIM.airHit(W, m.side, tg.cell, k);
     if (tg.kind === 'oil' && ECONM && d2(tg.p, [m.x, m.y]) < 8) ECONM.hitOil(W, tg.oil, m.side, .35 * k);
   }
-  const API = { useEcon: m => { ECONM = m; }, create, step, spawn, moveSite, mvLeft, covers, seeR, HOR, PLANES, BASES, SAMS, MBASES, SYS, MUN, MANPADS, CLS_N, LL, SC, KMS };
+  const API = { useEcon: m => { ECONM = m; }, create, mkSite, step, spawn, moveSite, mvLeft, covers, seeR, HOR, PLANES, BASES, SAMS, MBASES, SYS, MUN, MANPADS, CLS_N, LL, SC, KMS };
   if (typeof module !== 'undefined') module.exports = API; else root.AIR = API;
 })(this);

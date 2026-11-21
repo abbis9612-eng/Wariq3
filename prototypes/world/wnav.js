@@ -24,15 +24,17 @@
     WD.r.forEach((r, i) => { for (const zz of r[8] || []) { const z = id.get(zz); if (z != null) coast[z].push(i); } });
     return NET = { WD, id, adj, c, coast, n: WD.s.length };
   }
-  const PC = new Map();   // الشبكة ثابتة، فالطرق تنحفظ
+  const PC = new Map(), SRC = new Map();   // الشبكة ثابتة، فالطرق تنحفظ
   function path(WD, a, b) {   // Dijkstra بالمسافة الحقيقية
     const N = net(WD); if (a === b) return []; const key = a * 1000 + b; if (PC.has(key)) { const c = PC.get(key); return c && c.slice(); }
-    const d = new Float64Array(N.n).fill(Infinity), p = new Int32Array(N.n).fill(-1), done = new Uint8Array(N.n); d[a] = 0;
-    for (;;) { let u = -1, bd = Infinity; for (let i = 0; i < N.n; i++) if (!done[i] && d[i] < bd) { bd = d[i]; u = i; }
-      if (u < 0 || u === b) break; done[u] = 1; for (const v of N.adj[u]) { const nd = d[u] + KM(N.c[u], N.c[v]); if (nd < d[v]) { d[v] = nd; p[v] = u; } } }
-    if (p[b] < 0) { PC.set(key, null); return null; } const out = []; for (let v = b; v !== a; v = p[v]) out.unshift(v); PC.set(key, out); return out.slice();
+    // I-158: شجرة أقصر الطرق من البحر a لكل البحار تنحسب مرة وحدة وتنحفظ (قبل: Dijkstra كامل لكل زوج)
+    let tr = SRC.get(a); if (!tr) { const d = new Float64Array(N.n).fill(Infinity), p = new Int32Array(N.n).fill(-1), done = new Uint8Array(N.n); d[a] = 0;
+      for (;;) { let u = -1, bd = Infinity; for (let i = 0; i < N.n; i++) if (!done[i] && d[i] < bd) { bd = d[i]; u = i; }
+        if (u < 0) break; done[u] = 1; for (const v of N.adj[u]) { const nd = d[u] + KM(N.c[u], N.c[v]); if (nd < d[v]) { d[v] = nd; p[v] = u; } } }
+      tr = { d, p }; SRC.set(a, tr); }
+    const p = tr.p; if (p[b] < 0) { PC.set(key, null); return null; } const out = []; for (let v = b; v !== a; v = p[v]) out.unshift(v); PC.set(key, out); return out.slice();
   }
-  const plen = (WD, a, b) => { const p = path(WD, a, b); if (!p) return 1e9; let d = 0, u = a; for (const v of p) { d += KM(net(WD).c[u], net(WD).c[v]); u = v; } return d; };   // طول الطريق البحري الحقيقي
+  const plen = (WD, a, b) => { if (a === b) return 0; if (!SRC.has(a)) path(WD, a, b); const tr = SRC.get(a); return tr && isFinite(tr.d[b]) ? tr.d[b] : 1e9; };   // طول الطريق البحري الحقيقي (من الشجرة)   // طول الطريق البحري الحقيقي
   const ctlOf = (G, WD, i) => (G.ctl ? G.ctl[i] : WD.r[i][2]);
   const touches = (G, WD, z, cc) => net(WD).coast[z].some(i => ctlOf(G, WD, i) === cc);
   const CZ = { t: -1, m: new Map() };   // تنحسب من جديد كل شهر (السيطرة تتغير بالحرب)
@@ -177,7 +179,7 @@
   // معركة وحدة: النتيجة من wnavb (أو تقدير بسيط إذا ما محمّل)، والغرق ينخصم من الأسطول، وآخر معركة تنحفظ للمشهد
   function battle(G, WD, NV, g, by, att, why, log) {
     const B = root.WNAVB || (typeof require !== 'undefined' ? require('./wnavb.js') : null); if (!B) return;
-    const seed = ((G.rs || 1) * 131 + (G.t || 0) * 977 + g.id * 31) | 0, r = B.resolve({ s: { ...g.s } }, att, seed, 1);   // بدون رسم: خطوة ثانية (فحصت: الإصابات ضمن ~10٪ من خطوة ربع ثانية)
+    const seed = ((G.rs || 1) * 131 + (G.t || 0) * 977 + g.id * 31) | 0, r = B.resolve({ s: { ...g.s } }, att, seed, 2);   // بدون رسم: خطوة ثانيتين (I-158، للسرعة؛ فحص wnav: نفس الغرق تقريباً)
     for (const k in r.sunk) { const n = Math.min(g.s[k] || 0, r.sunk[k]); g.s[k] -= n; for (let i = 0; i < n; i++) { log.push({ t: G.t, k: 'navsink', cc: g.cc, ty: k, by, z: g.z, why }); if (CASN()) CASN().sink(G, g.cc, k, g.z); } }
     g.dmg += r.dmg * .5; NV.last = { t: G.t, z: g.z, def: g.cc, gid: g.id, s0: { ...g.s }, att, by, seed, why, res: r.stat, sunk: r.sunk };
     for (const k of Object.keys(g.s)) if (g.s[k] <= 0) delete g.s[k];

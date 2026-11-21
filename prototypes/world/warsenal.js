@@ -59,7 +59,7 @@
   }
   function apply(G, WD, k) {
     const f = FL[k].fx, c = G.C[G.me];
-    if (f.pwK) c.pwK = (c.pwK || 1) + f.pwK;
+    if (f.pwK) { c.pwK = (c.pwK || 1) + f.pwK; c.pw *= 1 + f.pwK; }   // I-158: الأثر على قوة الجيش فوراً
     if (f.hyp) c.hyp = Math.min(.9, (c.hyp || 0) + f.hyp);
     if (f.strk) c.strk = (c.strk || 1) + f.strk;
     if (f.adI) c.adI = (c.adI || 0) * (1 + f.adI);
@@ -135,8 +135,8 @@
     // نسجّل السلاح الوطني اللي عدنا (للرسم على الخريطة: الدبابة والسفن بشكلها)
     NW.natHave = NW.natHave || {}; NW.natHave[it.nat] = (NW.natHave[it.nat] || 0) + 1;
     if (it.cat === 'div') c.pw += 30 * it.pwF * (it.kind === 'arm' ? 1.5 : 1);
-    else if (it.cat === 'plane') { c.pw += (it.q || 1) * 3 * it.pwF; if (!T) NW.arms.jets[it.plane] = (NW.arms.jets[it.plane] || 0) + (it.q || 1); }
-    else if (it.cat === 'sam') { NW.samStock = NW.samStock || {}; NW.samStock[it.pool] = (NW.samStock[it.pool] || 0) + it.q; }
+    else if (it.cat === 'plane') { c.pw += (it.q || 1) * 3 * it.pwF; NW.arms.jets[it.plane] = (NW.arms.jets[it.plane] || 0) + (it.q || 1); }   // I-158: تبقى بعد الحرب (قبل كانت تنمسح إذا انصنعت بنص حرب)
+    else if (it.cat === 'sam') { c.adI = (c.adI || 0) + it.q * .03; if (!T) { NW.samStock = NW.samStock || {}; NW.samStock[it.pool] = (NW.samStock[it.pool] || 0) + it.q; } }   // بالحرب راحت لمخزون المسرح
     else if (it.cat === 'nav' && G.nav) addShips(G, WD, P.ships);
     else if (it.cat === 'msl') { if (P.msl) c.msl = (c.msl || 0) + P.msl; if (P.drn) c.drn = (c.drn || 0) + P.drn; if (P.asm && G.nav) { G.nav.asm = G.nav.asm || {}; G.nav.asm[G.me] = (G.nav.asm[G.me] || 0) + P.asm; } }
   }

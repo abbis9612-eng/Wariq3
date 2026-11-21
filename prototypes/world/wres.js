@@ -135,7 +135,7 @@
     if (f.prod) c.prodK = (c.prodK || 0) + f.prod;
     if (f.adK) c.adK = (c.adK || 0) + f.adK;
     if (f.heal) c.heal = 1;
-    if (f.pwK) c.pwK = (c.pwK || 1) + f.pwK;
+    if (f.pwK) { c.pwK = (c.pwK || 1) + f.pwK; c.pw *= 1 + f.pwK; }   // I-158: «قوة الجيش +X٪» صارت فعلاً على الرقم (قبل بس على النمو الشهري)
     if (f.adI) c.adI = (c.adI || 0) * (1 + f.adI);
     if (f.hyp) c.hyp = (c.hyp || 0) + f.hyp;
     if (f.drn) c.drnP = (c.drnP || 0) * (1 + f.drn);

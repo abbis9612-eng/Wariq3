@@ -88,7 +88,7 @@
     if (p.stab && q.id === G.me && G.nat) { const b = G.nat.home.base || (G.nat.home.base = {}); b.street = Math.min(80, (b.street || 55) + p.stab); }
     else if (p.stab) c.stab = Math.min(100, c.stab + p.stab);
     if (p.lines && q.id === G.me && G.nat) G.nat.eco[0].lines += p.lines;
-    if (p.rd) c.rdK = (c.rdK || 1) + p.rd;
+    if (p.rd) { c.rdK = (c.rdK || 1) + p.rd; c.univ = (c.univ || 0) + 1; }
     if (p.health) c.hosp = (c.hosp || 0) + 1;
   }
   // الذكاء: الدول الثانية تبني بنفسها (مرة بالسنة تقريباً، حسب الفائض والنقص)

@@ -342,6 +342,7 @@ body.sheeton #toast{top:calc(var(--toph, 100px) + 4px) !important;bottom:auto !i
 <script src="wnav.js"></script>
 <script src="livefx.js"></script>
 <script src="weco.js"></script>
+<script src="wpop.js"></script>
 <script src="wsim.js"></script>
 <script src="gwsim.js"></script>
 <script src="theater.js"></script>
@@ -986,13 +987,13 @@ body.sheeton #toast{top:calc(var(--toph, 100px) + 4px) !important;bottom:auto !i
   // ===== الألواح =====
   $('#tabs').querySelectorAll('button').forEach(b => b.onclick = () => TABOF[panel] === b.dataset.p ? closePanel() : openPanel(b.dataset.p));
   function closePanel() { document.body.classList.remove('sheeton'); panel = null; $('#sheet').hidden = true; $('#tabs').querySelectorAll('button').forEach(x => x.classList.remove('on')); }
-  const TABOF = { cmd: 'cmd', me: 'me', flow: 'me', build: 'me', homep: 'me', army: 'army', prod: 'army', mkt: 'army', rd: 'rd', dip: 'dip', war: 'dip', world: 'dip', news: 'dip' };
-  const GROUPS = { me: [['me', '💰 الاقتصاد'], ['flow', '💸 الفلوس'], ['build', '🏗 المشاريع'], ['homep', '🏛 الداخل']], army: [['army', '🪖 الجيش'], ['prod', '🏭 الإنتاج'], ['mkt', '🛒 السوق']], dip: [['dip', '🤝 العلاقات'], ['war', '⚔ الحروب'], ['world', '🌍 الترتيب'], ['news', '📜 الأخبار']] };
+  const TABOF = { cmd: 'cmd', me: 'me', flow: 'me', build: 'me', pop: 'me', homep: 'me', army: 'army', prod: 'army', mkt: 'army', rd: 'rd', dip: 'dip', war: 'dip', world: 'dip', news: 'dip' };
+  const GROUPS = { me: [['me', '💰 الاقتصاد'], ['flow', '💸 الفلوس'], ['build', '🏗 المشاريع'], ['pop', '👥 السكان'], ['homep', '🏛 الداخل']], army: [['army', '🪖 الجيش'], ['prod', '🏭 الإنتاج'], ['mkt', '🛒 السوق']], dip: [['dip', '🤝 العلاقات'], ['war', '⚔ الحروب'], ['world', '🌍 الترتيب'], ['news', '📜 الأخبار']] };
   function openPanel(p, refresh) {
     const sh = $('#sheet'), keep = refresh ? sh.scrollTop : 0; panel = p; sel = null; $('#card').hidden = true;
     $('#tabs').querySelectorAll('button').forEach(x => x.classList.toggle('on', x.dataset.p === TABOF[p]));
     // V1 (I-117): 5 تبويبات؛ كل تبويب إله أقسام بشريط فوق (الاقتصاد/الداخل، الجيش/الإنتاج/السوق، الدبلوماسية/الحروب/الترتيب/الأخبار)
-    const PN = { cmd: pCmd, me: pMe, flow: pFlow, build: pBuild, homep: () => '<h2>🏛 الداخل والشعب</h2>' + pHome(), army: pArmy, prod: () => '<h2>🏭 الإنتاج الحربي</h2>' + pProd(), mkt: () => '<h2>🛒 سوق السلاح</h2>' + pMkt(), rd: () => '<h2>🔬 البحث والصناعة</h2>' + pRd(), dip: pDip, war: pWar, world: pWorld, news: pNews };
+    const PN = { cmd: pCmd, me: pMe, flow: pFlow, build: pBuild, pop: pPop, homep: () => '<h2>🏛 الداخل والشعب</h2>' + pHome(), army: pArmy, prod: () => '<h2>🏭 الإنتاج الحربي</h2>' + pProd(), mkt: () => '<h2>🛒 سوق السلاح</h2>' + pMkt(), rd: () => '<h2>🔬 البحث والصناعة</h2>' + pRd(), dip: pDip, war: pWar, world: pWorld, news: pNews };
     let html = (PN[p] || pCmd)(); const grp = GROUPS[TABOF[p]];
     if (grp) html = html.replace(/(<\/h2>)/, `$1<div class="seg gnav">${grp.map(([k, t]) => `<button data-gp="${k}" class="${k === p ? 'on' : ''}">${t}</button>`).join('')}</div>`);
     sh.innerHTML = html; sh.hidden = false; sh.scrollTop = keep;
@@ -1015,7 +1016,7 @@ body.sheeton #toast{top:calc(var(--toph, 100px) + 4px) !important;bottom:auto !i
       ${tile('me', '📈', 'النمو', sgn(c.g) + '٪', c.g >= 2 ? 'good' : c.g >= 0 ? 'warn' : 'bad', (c.why || []).slice().sort((a, b) => Math.abs(b[1]) - Math.abs(a[1]))[0] ? 'أكبر سبب: ' + c.why.slice().sort((a, b) => Math.abs(b[1]) - Math.abs(a[1]))[0][0] : 'اقتصاد البلد', spark(kh.map(x => x.g), '#5fae6e'))}
       ${tile('homep', '🙂', 'الاستقرار', Math.round(H.stab) + ' من 100', H.stab >= 50 ? 'good' : H.stab >= 30 ? 'warn' : 'bad', H.stab < 30 ? '⚠️ خطر: ثورة أو انقلاب' : NW && NW.home.iss.length ? NW.home.iss.length + ' قضية تنتظر قرارك' : 'الشعب والفئات', spark(kh.map(x => x.st), '#6aa0d8'))}
       ${tile('army', '🪖', 'قوة الجيش', Math.round(c.pw).toLocaleString('en'), 'good', `الترتيب ${rk} بالعالم`, spark(kh.map(x => x.pw), '#9a8fd0'))}
-      ${tile('homep', '👥', 'السكان', (c.pop / 1e6).toFixed(1) + ' مليون', '', 'دخل الفرد ' + Math.round(c.gdp * 1e9 / c.pop).toLocaleString('en') + ' $', '')}
+      ${tile('pop', '👥', 'السكان', (c.pop / 1e6).toFixed(1) + ' مليون', '', 'دخل الفرد ' + Math.round(c.gdp * 1e9 / c.pop).toLocaleString('en') + ' $' + (G.pop3 && G.pop3[me] ? ' · التنمية ' + G.pop3[me].hdi.toFixed(2) : ''), '')}
       ${tile(myW.length ? 'war' : 'dip', myW.length ? '⚔' : '🕊', myW.length ? 'بحرب' : 'سلام', myW.length ? myW.length + (myW.length > 1 ? ' حروب' : ' حرب') : 'ماكو حروب', myW.length ? (myW.some(w => sc(w) < 0) ? 'bad' : 'warn') : 'good', myW.length ? myW.map(w => `${w.n}: ${sc(w) >= 0 ? 'متقدمين' : 'متأخرين'} (${sgn(Math.round(sc(w)))})`).join(' · ') : 'العلاقات والتحالفات', '')}
     </div>`;
     // شنو أسوي هسه؟ (المستشارين، المهم أول)
@@ -1028,6 +1029,18 @@ body.sheeton #toast{top:calc(var(--toph, 100px) + 4px) !important;bottom:auto !i
     return h;
   }
   const line = (a, b, cls = '') => `<div class="line"><span>${a}</span><b class="${cls}">${b}</b></div>`;
+  // ===== P (I-120): 👥 السكان — ولادات، وفيات، هجرة، أعمار، بطالة، خدمات، ومؤشر التنمية =====
+  function pPop() {
+    const c = G.C[me], p = WPOP.ensure(G, WD)[me], pct = v => (v * 100).toFixed(1) + '٪', yr = v => fmt(Math.round(v * 12));
+    let h = `<h2>👥 السكان والمجتمع</h2><div class="grid"><div class="st"><i>السكان</i><b>${(c.pop / 1e6).toFixed(2)} مليون</b></div><div class="st"><i>مؤشر التنمية</i><b>${p.hdi.toFixed(3)}</b></div><div class="st"><i>العمر المتوقع</i><b>${p.le.toFixed(1)} سنة</b></div><div class="st"><i>الخصوبة</i><b>${p.tfr.toFixed(2)} ولد/امرأة</b></div></div>`;
+    const net = p.b - p.d + p.mig;
+    h += `<h3>📈 بالسنة (حسب هالشهر)</h3><div class="line"><span>👶 ولادات</span><b class="pos">+${yr(p.b)}</b></div><div class="line"><span>⚰ وفيات</span><b class="neg">−${yr(p.d)}</b></div><div class="line"><span>✈ هجرة ${p.mig >= 0 ? 'داخلة' : 'طالعة'}</span><b class="${p.mig >= 0 ? 'pos' : 'neg'}">${p.mig >= 0 ? '+' : '−'}${yr(Math.abs(p.mig))}</b></div>${p.ref ? `<div class="line"><span>🏕 لاجئين طلعوا من الحرب (كلهم)</span><b class="neg">${fmt(p.ref)}</b></div>` : ''}${p.dead ? `<div class="line"><span>🕯 قتلى الحرب (كلهم)</span><b class="neg">${fmt(p.dead)}</b></div>` : ''}<div class="line"><span>= الزيادة</span><b class="${net >= 0 ? 'pos' : 'neg'}">${net >= 0 ? '+' : '−'}${yr(Math.abs(net))} (${pct(net * 12 / c.pop)})</b></div>`;
+    h += `<h3>🧑‍🤝‍🧑 الأعمار</h3><div class="line"><span>👶 أطفال (تحت 15)</span><b>${pct(p.k)}</b></div>${barV(p.k * 100, 'var(--gold)')}<div class="line"><span>👷 عاملين (15–64) = قوة العمل</span><b>${pct(p.w)} · ${fmt(Math.round(p.w * c.pop))}</b></div>${barV(p.w * 100, 'var(--me)')}<div class="line"><span>👴 كبار (65+)</span><b>${pct(p.o)}</b></div>${barV(p.o * 100, 'var(--dim)')}`;
+    h += `<h3>💼 الشغل</h3><div class="line"><span>البطالة</span><b class="${p.un > p.un0 + .01 ? 'neg' : ''}">${pct(p.un)}</b></div><div class="line"><span>بطالة الشباب (تقريباً الضعف)</span><b class="${p.un * 2 > .3 ? 'neg' : ''}">${pct(Math.min(.7, p.un * 2))}</b></div><div class="note">النمو الضعيف يزيد البطالة، والبطالة تزعّل الشارع. الشباب العاطلين = خطر احتجاجات. التعبئة العامة تسحب عاطلين للجيش.</div>`;
+    h += `<h3>🏥 الخدمات</h3><div class="line"><span>🎓 التعليم</span><b>${Math.round(p.edu * 100)}/100</b></div>${barV(p.edu * 100, 'var(--gold)')}<div class="line"><span>🏥 الصحة</span><b>${Math.round(p.hea * 100)}/100</b></div>${barV(p.hea * 100, 'var(--me)')}<div class="line"><span>⚡ الكهرباء</span><b>${100 - Math.round(WECO.elecDef(G, me) * 100)}/100</b></div>`;
+    h += `<div class="note">🎓 <b>تعليم المرأة أقوى شي ينزّل الخصوبة</b>، وبعده الدخل والمدن. الجامعات والمستشفيات من <a href="#" data-go="build">🏗 المشاريع</a> ترفع التعليم والصحة، والصحة ترفع العمر المتوقع. الأرقام: الأمم المتحدة 2024 للدول الكبيرة، والباقي تقدير.</div>`;
+    return h;
+  }
   // ===== E (I-119): 💸 تدفق الفلوس — منين تجي ووين تروح، بالشهر =====
   function pFlow() {
     const c = G.C[me], b = c.budget || {}, E = G.eco3 || {}, sp = (E.spend || {})[me] || 0, NW = G.nat, row = (t, v, cl, d) => `<div class="line"><span>${t}${d ? `<br><small class="note">${d}</small>` : ''}</span><b class="${cl || ''}">${v >= 0 ? '+' : '−'}${money(Math.abs(v))}</b></div>`;

@@ -24,7 +24,7 @@ if (OUT) await p.screenshot({ path: `${OUT}/world_card.png` });
 await p.evaluate(() => { document.querySelector('#card').hidden = true; });
 await p.fill('#q', 'العراق'); await p.click('#clist button[data-c=IRQ]'); await p.click('#go');
 await p.evaluate(() => __G.step(400));
-for (const t of ['me', 'flow', 'build', 'dip', 'war', 'world', 'news']) { const tab = { flow: 'me', build: 'me', war: 'dip', world: 'dip', news: 'dip' }[t]; if (tab) { if (!(await p.isVisible('#sheet [data-gp=' + t + ']'))) await p.click(`#tabs button[data-p=${tab}]`); await p.click(`#sheet [data-gp=${t}]`); } else await p.click(`#tabs button[data-p=${t}]`); if (!(await p.isVisible('#sheet'))) no('اللوح ما انفتح: ' + t); if (OUT) await p.screenshot({ path: `${OUT}/play_${t}.png` }); }
+for (const t of ['me', 'flow', 'build', 'pop', 'dip', 'war', 'world', 'news']) { const tab = { flow: 'me', build: 'me', pop: 'me', war: 'dip', world: 'dip', news: 'dip' }[t]; if (tab) { if (!(await p.isVisible('#sheet [data-gp=' + t + ']'))) await p.click(`#tabs button[data-p=${tab}]`); await p.click(`#sheet [data-gp=${t}]`); } else await p.click(`#tabs button[data-p=${t}]`); if (!(await p.isVisible('#sheet'))) no('اللوح ما انفتح: ' + t); if (OUT) await p.screenshot({ path: `${OUT}/play_${t}.png` }); }
 await p.click('#tabs button[data-p=me]'); await p.click('#sheet .seg[data-k=tax] button[data-v=high]');
 const st = await p.evaluate(() => ({ t: __G.G.t, tax: __G.G.C.IRQ.tax, saved: (() => { try { return !!localStorage.getItem('wariq.world.v1'); } catch (e) { return 'ممنوع'; } })() }));
 if (st.t < 400 || st.tax !== 'high') no('اللعب ما مشى: ' + JSON.stringify(st));

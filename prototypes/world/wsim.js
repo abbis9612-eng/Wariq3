@@ -4,13 +4,14 @@
 (function (root) {
   'use strict';
   const START = Date.UTC(2026, 10, 20);   // 20 تشرين الثاني 2026: الوضع الحقيقي (D-048)
-  const V = 11;                              // إصدار حفظ «العالم» (9: البحرية الحقيقية W12؛ 2: الصواريخ والدفاع الجوي؛ 3: البحرية والمضائق؛ 4: طبقة الدولة؛ 5: التكتلات والتوتر والعروض والأمم المتحدة؛ 6: الانتخابات والانقلابات والاحتلال والأحداث؛ 7: البحث لكل الدول وسوق السلاح؛ 8: قائد القوات المسلحة)
+  const V = 12;                              // إصدار حفظ «العالم» (9: البحرية الحقيقية W12؛ 2: الصواريخ والدفاع الجوي؛ 3: البحرية والمضائق؛ 4: طبقة الدولة؛ 5: التكتلات والتوتر والعروض والأمم المتحدة؛ 6: الانتخابات والانقلابات والاحتلال والأحداث؛ 7: البحث لكل الدول وسوق السلاح؛ 8: قائد القوات المسلحة)
   const mulberry = a => () => { a |= 0; a = a + 0x6D2B79F5 | 0; let t = Math.imul(a ^ a >>> 15, 1 | a); t = t + Math.imul(t ^ t >>> 7, 61 | t) ^ t; return ((t ^ t >>> 14) >>> 0) / 4294967296; };
   const clamp = (v, a, b) => v < a ? a : v > b ? b : v;
   const POL = root.WPOL || (typeof require !== 'undefined' ? require('./wpol.js') : null);   // W7: السياسة والأحداث
   const MKT = root.WMKT || (typeof require !== 'undefined' ? require('./wmkt.js') : null);   // W8: البحث وسوق السلاح
   const CMD = root.WCMD || (typeof require !== 'undefined' ? require('./wcmd.js') : null);   // I-108: قائد القوات المسلحة
   const ECO = root.WECO || (typeof require !== 'undefined' ? require('./weco.js') : null);   // v3 E: المشاريع والكهرباء
+  const POP = root.WPOP || (typeof require !== 'undefined' ? require('./wpop.js') : null);   // v3 P (I-120): السكان
   const NAV = root.WNAV || (typeof require !== 'undefined' ? require('./wnav.js') : null);   // W12 (D-053): البحرية الحقيقية
   // ===== ثوابت [تقدير] =====
   const K = {
@@ -55,7 +56,7 @@
       // نثبّت العجز الأولي على الحقيقي تقريباً (بيانات الإيرادات والمصاريف من سنين مختلفة، فنحصره بين فائض 3٪ وعجز 5٪)
       const dp = c.debt / c.gdp * 100, rev = c.core * c.revCore + oilGDP(c.oil, W.oilP) * K.oilTake, def = clamp(c.spend0 - c.rev0, -.03, .05) * c.gdp;
       c.civ0 = clamp((rev + def - c.gdp * c.milPct / 100 - c.debt * rate(c, dp)) / c.core, .03, .6); }
-    W.rnd = mulberry(W.rs); ix(W, WD); if (POL) POL.ensure(W, WD); if (MKT) MKT.ensure(W, WD); if (CMD) CMD.ensure(W, WD); if (ECO) ECO.ensure(W, WD); if (NAV) NAV.ensure(W, WD); note(W, { k: 'start', me });
+    W.rnd = mulberry(W.rs); ix(W, WD); if (POL) POL.ensure(W, WD); if (MKT) MKT.ensure(W, WD); if (CMD) CMD.ensure(W, WD); if (ECO) ECO.ensure(W, WD); if (POP) POP.ensure(W, WD); if (NAV) NAV.ensure(W, WD); note(W, { k: 'start', me });
     return W;
   }
   // الحروب الجارية بين دول (الحروب ويا الكيانات تبقى استنزاف داخلي): من data/world/conflicts.json
@@ -210,6 +211,7 @@
     if (c.prioG) g += add(c.prioG, 'أولوية الاقتصاد');
     if (c.blk) g += add(-2.5 * c.blk, 'الحصار البحري');
     if (ECO && W.eco3) g += add(ECO.elecG(W, id), 'الكهرباء');
+    if (POP && W.pop3) { POP.tick(W, WD, id, ws.some(w => homeFront(W, WD, w, id))); g += add(POP.growth(W, id), 'قوة العمل'); }
     if (c.occG) g += add(c.occG, 'كلفة الاحتلال (' + c.occN + ' منطقة)');
     if (W.gshock && W.gshock.until > W.t) g += add(W.gshock.v, W.gshock.n);
     const tr = W.trade.filter(p => p[0] === id || p[1] === id).length; if (tr) g += add(Math.min(K.tradeMax, tr * K.tradeG), 'اتفاقيات التجارة');
@@ -240,6 +242,7 @@
     // الاستقرار
     let tgt = c.stab0 + tx.s + cv.s + clamp((g - c.g0) * 1.5, -10, 4);
     for (const w of ws) { const home = homeFront(W, WD, w, id); tgt += home ? K.warHomeStab : -2; tgt -= Math.max(0, (w.weary[id] || 0) - 50) / 5; }
+    if (POP && W.pop3) tgt += POP.stab(W, id);
     if (sl === 'heavy') tgt -= 5; if (c.crisis) tgt -= 8; if (c.blk > .3) tgt -= 4;
     c.stab = clamp(c.stab + (tgt - c.stab) * K.stabMove, 0, 100);
     if (id === W.me && W.nat && W.nat.home) c.stab = W.nat.home.stab;   // الاستقرار للاعب = استقرار الداخل (الفئات، home.js)
@@ -503,7 +506,9 @@
     if (o.v < 10) { o.kh = o.kh || []; o.v = 10; }
     // 10 ← 11 (v3 E): المشاريع والكهرباء (ECO.ensure يبنيها من البيانات)
     if (o.v < 11) o.v = 11;
-    o.base = WD.rel; o.rnd = mulberry(o.rs); dipInit(o, WD); if (POL) POL.ensure(o, WD); if (MKT) MKT.ensure(o, WD); if (CMD) CMD.ensure(o, WD); if (ECO) ECO.ensure(o, WD); if (NAV) NAV.ensure(o, WD); return o;
+    // 11 ← 12 (v3 P): السكان (POP.ensure يبنيها من البيانات)
+    if (o.v < 12) o.v = 12;
+    o.base = WD.rel; o.rnd = mulberry(o.rs); dipInit(o, WD); if (POL) POL.ensure(o, WD); if (MKT) MKT.ensure(o, WD); if (CMD) CMD.ensure(o, WD); if (ECO) ECO.ensure(o, WD); if (POP) POP.ensure(o, WD); if (NAV) NAV.ensure(o, WD); return o;
   }
   const API = { V, K, START, TENSION, POL, MKT, CMD, NAV, ECO, init, addRel, answerOffer, unSummit, unVote, council, tenTarget, napOf, blocsOf, P5, navy, straits, step, month, act, can, offerPeace, declare, endWar, strike, playerStrike, rank, save, load, date, rel, atWar, allied, COST, TAX, CIV };
   if (typeof module !== 'undefined') module.exports = API; else root.WSIM = API;

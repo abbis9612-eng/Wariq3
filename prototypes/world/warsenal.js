@@ -76,6 +76,7 @@
     if (!g) { let z = -1; for (let i = 0; i < WD.r.length && z < 0; i++) if (G.ctl[i] === G.me) for (const sid of WD.r[i][8] || []) { const k = WD.s.findIndex(q => q[0] === sid); if (k >= 0) { z = k; break; } }
       if (z < 0) return; g = { id: Math.max(0, ...G.nav.g.map(x => x.id)) + 1, cc: G.me, s: {}, s0: {}, z, home: z, path: [], prog: 0, mode: 'patrol', dmg: 0, man: 0 }; G.nav.g.push(g); }
     for (const t in ships) { g.s[t] = (g.s[t] || 0) + ships[t]; g.s0[t] = (g.s0[t] || 0) + ships[t]; }
+    if (G.nat) { const N = G.nat.natShips = G.nat.natShips || {}; for (const t in ships) N[t] = (N[t] || 0) + ships[t]; }
   }
 
   // ===== M2 (I-128، I-138): الإنتاج الوطني — 21 نوع من العائلة تنطلب من الإنتاج، وجيلها من بحثنا (الرقم = الجيل×10) =====
@@ -99,11 +100,22 @@
       if (g < 1 || (P.cat === 'nav' && !coast(G, WD))) { delete ECON.ITEMS[key]; continue; }
       const k = .7 + .15 * g;
       ECON.ITEMS[key] = { n: `${code}-${g * 10} ${f.kind} ${f.name}`, ic: ({ land: '🛡', air: '✈', sea: '⚓', msl: '🚀' })[f.dom] || '⭐', cat: P.cat, kind: P.kind, plane: P.plane, q: P.q, pool: P.pool, side: 0,
-        cost: +(P.cost * k).toFixed(3), days: P.days, nat: code, gen: g, img: f.img, pwF: +(P.pw * (.6 + .2 * g)).toFixed(2), d: `${P.d} · صنع وطني 100٪ (ما يحتاج قطع من برّا)` }; }
+        cost: +(P.cost * k).toFixed(3), days: P.days, nat: code, gen: g, img: f.img, pwF: +(P.pw * (.6 + .2 * g)).toFixed(2), d: `${P.d} · صنع وطني 100٪ (ما يحتاج قطع من برّا)` };
+      // النسخ (مثل T-90A/M/S): M مطوّرة (جيل 3+)، K قيادة (للفرق)، E تصدير (تنباع لدولة صديقة أول ما تخلص)
+      const base = ECON.ITEMS[key], V = { M: g >= 3, K: P.cat === 'div', E: P.cat !== 'msl' };
+      for (const v of ['M', 'K', 'E']) { const vk = key + '_' + v; if (!V[v]) { delete ECON.ITEMS[vk]; continue; }
+        const m = { M: [1.25, 1.15, 1.25, 'المطوّرة', 'أقوى +25٪: حماية وإلكترونيات أحدث'], K: [1.3, 1.1, 1.1, 'القيادة', 'نسخة قيادة: اتصالات وتنسيق، كل وحدة ترفع قوة الجيش كله +0.4٪ (لحد 6٪)'], E: [.9, 1, 0, 'للتصدير', 'نسخة تصدير: أول ما تخلص تنباع لدولة صديقة بربح ~45٪ وعلاقة +3'] }[v];
+        ECON.ITEMS[vk] = { ...base, n: `${code}-${g * 10}${v} ${f.kind} ${f.name} ${m[3]}`, cost: +(base.cost * m[0]).toFixed(3), days: Math.round(base.days * m[1]), pwF: +(base.pwF * (m[2] || 0)).toFixed(2), var: v, d: m[4] }; } }
   }
   // التسليم (ينادى من nation.deliver للمنتجات الوطنية)
   function deliver(G, WD, it, T) {
     const c = G.C[G.me], P = PROD[it.nat], NW = G.nat; NW.arms = NW.arms || { jets: {}, sam: {}, tank: null };
+    // نسخة التصدير: تنباع فوراً لأقرب صديق (علاقة 25+ ومو بحرب ويانا)
+    if (it.var === 'E') { const S = root.WSIM || require('./wsim.js'), buyer = G.ids.filter(x => x !== G.me && S.rel(G, G.me, x) >= 25 && !S.atWar(G, G.me, x)).sort((a, b) => S.rel(G, G.me, b) - S.rel(G, G.me, a))[0];
+      if (buyer) { const v = +(it.cost * 1.45).toFixed(3); NW.eco[0].cash += v; S.addRel(G, G.me, buyer, 3); G.log.push({ t: G.t, k: 'natsell', x: buyer, n: it.n, v }); return; } }
+    if (it.var === 'K') c.pwK = Math.min(1.5, (c.pwK || 1) + .004);
+    // نسجّل السلاح الوطني اللي عدنا (للرسم على الخريطة: الدبابة والسفن بشكلها)
+    NW.natHave = NW.natHave || {}; NW.natHave[it.nat] = (NW.natHave[it.nat] || 0) + 1;
     if (it.cat === 'div') c.pw += 30 * it.pwF * (it.kind === 'arm' ? 1.5 : 1);
     else if (it.cat === 'plane') { c.pw += (it.q || 1) * 3 * it.pwF; if (!T) NW.arms.jets[it.plane] = (NW.arms.jets[it.plane] || 0) + (it.q || 1); }
     else if (it.cat === 'sam') { NW.samStock = NW.samStock || {}; NW.samStock[it.pool] = (NW.samStock[it.pool] || 0) + it.q; }

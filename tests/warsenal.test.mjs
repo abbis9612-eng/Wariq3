@@ -27,7 +27,7 @@ const O = JSON.parse(S.save(S.init(WD, 'IRQ', { seed: 1 }))); O.v = 17; delete O
 const SIM = require('../prototypes/world/gwsim.js'), E = require('../prototypes/world/gwecon.js');
 const day = Q => { const b = Q.log.length; S.step(Q, WD, 1); N.daily(Q, WD, { S, SIM, T: null, before: b }); };
 const Q = S.init(WD, 'TUR', { seed: 5 }); N.init(Q, WD); day(Q); Q.nat.eco[0].cash = 80; Q.nat.eco[0].lines = 6;
-const ks = N.items().filter(k => k.startsWith('nf_')); if (ks.length !== 21) no('منتجات تركيا الوطنية ' + ks.length);
+const ks = N.items().filter(k => k.startsWith('nf_') && !E.ITEMS[k].var); if (ks.length !== 21) no('منتجات تركيا الوطنية ' + ks.length);
 if (E.ITEMS.nf_ZR.gen !== A.genOf(Q, 'arm')) no('جيل زئير مو من البحث');
 const pw1 = Q.C.TUR.pw, msl1 = Q.C.TUR.msl, ff1 = Q.nav.g.filter(g => g.cc === 'TUR').reduce((t, g) => t + (g.s.ff || 0), 0);
 for (const k of ['nf_ZR', 'nf_NZ', 'nf_MJ']) { const r = N.buy(Q, k); if (typeof r === 'string') no(k + ': ' + r); }
@@ -35,5 +35,11 @@ for (let i = 0; i < 460; i++) day(Q);
 const ff2 = Q.nav.g.filter(g => g.cc === 'TUR').reduce((t, g) => t + (g.s.ff || 0), 0);
 for (const k of ['nf_ZR', 'nf_NZ', 'nf_MJ']) if (!Q.nat.log.some(l => l.k === 'built' && l.it === k)) no('ما تسلّمنا ' + k);
 if (!(Q.C.TUR.msl >= msl1 + 20 - 5)) no(`الصواريخ ما وصلت ${msl1} → ${Q.C.TUR.msl}`); if (ff2 < ff1 + 1 - 3) no(`الفرقاطة ما انضافت ${ff1} → ${ff2}`);
+// النسخ: E تنباع، K ترفع قوة الجيش، M أغلى وأقوى
+if (!E.ITEMS.nf_ZR_M || !E.ITEMS.nf_ZR_K || !E.ITEMS.nf_ZR_E) no('نسخ زئير ناقصة'); if (!(E.ITEMS.nf_ZR_M.pwF > E.ITEMS.nf_ZR.pwF)) no('M مو أقوى');
+const cashE = Q.nat.eco[0].cash, pwKk = Q.C.TUR.pwK || 1;
+for (const k of ['nf_ZR_E', 'nf_ZR_K']) { const r = N.buy(Q, k); if (typeof r === 'string') no(k + ': ' + r); }
+for (let i = 0; i < 70; i++) day(Q);
+if (!Q.log.some(l => l.k === 'natsell')) no('نسخة التصدير ما انباعت'); if (!((Q.C.TUR.pwK || 1) > pwKk)) no('نسخة القيادة ما رفعت القوة');
 console.log(`زئير وعُقبة دخلوا الخدمة · قوة الجيش ×${pw0} → ×${G.C.USA.pwK.toFixed(2)} · مدمرات ${dd0} → ${dd1} · رموز ${codes.length} بلا تكرار`);
 console.log(bad ? `❌ ${bad} مشاكل` : '✅ الترسانة الوطنية تمام'); process.exit(bad ? 1 : 0);

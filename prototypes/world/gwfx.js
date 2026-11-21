@@ -95,7 +95,7 @@
     }
     for (const p of L.puff) {
       const [x, y] = w2s(p.x, p.y); const k = p.t / p.life; const r = p.r * sc * (1 + k * p.grow) * 1.6; if (!vis(x, y, r)) continue;
-      const a = p.a * (k < .1 ? k / .1 : 1 - (k - .1) / .9); if (a <= .01) continue; const fr = p.f;
+      const a = p.a * (k < .1 ? k / .1 : 1 - (k - .1) / .9); if (a <= .01) continue; const fr = p.f; const tc = tint[p.kind]; if (!tc || !tc.width || !tc.height) continue;   // الصورة لسه ما تحمّلت
       g.save(); g.globalAlpha = a; g.translate(x, y); g.rotate(p.rot + p.t * .15); g.drawImage(tint[p.kind], (fr % 8) * 128, Math.floor(fr / 8) * 128, 128, 128, -r / 2, -r / 2, r, r); g.restore();
     }
     for (const p of L.ex) {

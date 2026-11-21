@@ -417,6 +417,7 @@
     if (e.k === 'samready' && e.side === ME) toast(`✅ ${e.n} نصبت بمكانها الجديد وجاهزة`, 'good');
     if (e.k === 'emcon') toast(e.side === ME ? `📴 ${e.n} طفّى الرادار: صاروخ مضاد رادار جاي (يسلم بس يسكت شوية)` : `📴 ${e.n} ${V.foeAdj || 'الإيرانية'} طفّت رادارها خوفاً من صاروخنا`, e.side === ME ? 'bad' : 'good');
     if (e.k === 'harmlaunch') { SND.at('woosh', e.x, e.y, .6, .2); toast(e.side === ME ? `🚀 ${V.harmBy || 'F-16'} أطلقت HARM على رادار ${e.n}` : `⚠️ صاروخ مضاد رادار على ${e.n}`, e.side === ME ? 'good' : 'bad'); }
+    if (e.k === 'samdead') { FX.explode(e.x, e.y, 'bm', .6); FX.burn(e.x, e.y, .6, 120); SND.at('boom_big', e.x, e.y, 1, .1); toast(e.side === ME ? `🔥 دمّرنا بطارية ${e.n} نهائياً` : `🔥 خسرنا بطارية ${e.n} نهائياً`, e.side === ME ? 'good' : 'bad'); }
     if (e.k === 'harmhit') { FX.explode(e.x, e.y, 'big', .45); FX.burn(e.x, e.y, .4, 50); SND.at('boom_big', e.x, e.y, .8, .1); toast(e.side === ME ? `💥 دمّرنا رادار ${e.n} (معطّل ~يوم ونص)` : `⚠️ رادار ${e.n} انضرب`, e.side === ME ? 'good' : 'bad'); }
     if (e.k === 'harmmiss') toast(e.side === ME ? `HARM خطأ ${e.n}${e.off ? ' (طفّوا الرادار)' : ''}` : `صاروخ مضاد الرادار خطأ ${e.n}`, '');
   };

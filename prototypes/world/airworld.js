@@ -68,9 +68,22 @@
         for (const m of AIR.SYS[x.sy].mags) if (!m.gun) pool[s][m.n] = (pool[s][m.n] || 0) + m.stock; });
       info[s].sams = sams.filter(x => x.side === s).length;
     }
-    if (T.samStock) for (const [k, v] of Object.entries(T.samStock)) pool[0][k] = (pool[0][k] || 0) + v;   // I-158: صواريخ الدفاع الجوي اللي صنعناها بالسلم
-    const A = AIR.create(W, { LL, bases, sams, mbases, pool, raidSides: [0, 1].filter(s => mbases.some(m => m.side === s)), raidCd: 20, realDoc: true, raidK: 2.5, raidCdK: .45, pkK: 1.5 });   // I-159: ضربات مركّبة ×2.5 بالحجم وأكثر من ضعف التكرار، وطلعات أكبر ×1.5
-    A.info = info; A.LLp = { lon0: T.lon0, lat1: T.lat1, KX: T.KX, KY: T.KY };
+    if (T.samStock) for (const [k, v] of Object.entries(T.samStock)) pool[0][k] = (pool[0][k] || 0) + v;
+    // ===== I-160: شلون الدول الكبرى تغلب الدفاع الجوي (حزيران 2025) — لكل طرف حسب قائده =====
+    const techOf = k => (k === G.me && G.nat && G.nat.ind ? G.nat.ind[0].tech : (G.tech && G.tech[k]) || (WD.cs[k] || {}).tech || {});
+    const BIG_EW = { USA: .15, ISR: .12, RUS: .05, CHN: .05, GBR: .05, FRA: .05 };   // طيارات حرب إلكترونية مخصصة (Growler، إيتان…) [تقدير]
+    const MALD = { USA: 60, ISR: 30, GBR: 10, FRA: 10, CHN: 20, RUS: 15 };   // أفخاخ بالمخزن لكل حرب [تقدير]
+    const ew = [0, 1].map(s => { const k = T.side[s][0], e = techOf(k).ew || 0; return Math.min(.6, Math.max(0, (e - 1) / 6) + (BIG_EW[k] || 0)); });
+    const mald = [0, 1].map(s => { const k = T.side[s][0], e = techOf(k).ew || 0; return MALD[k] || (e >= 4 ? 10 : 0); });
+    const sead = [0, 1].map(s => ew[s] >= .3 ? 1 : 0);
+    const regen = [0, 1].map(s => { const k = T.side[s][0], c = G.C[k]; if (!c) return 1; const sanc = (G.sanc || []).filter(x => x[1] === k).length; return +Math.max(.25, Math.min(1.3, Math.log10(Math.max(10, c.gdp)) / 3.5 * (sanc >= 3 ? .6 : 1))).toFixed(2); });
+    // توماهوك من البحر: مدمرات وغواصات الطرف قريبة من المسرح (لحد 1600 كم من أرض العدو) تصير مواقع إطلاق كروز
+    if (G.nav && G.nav.g && WD.s) for (const s of [0, 1]) for (const k of T.side[s]) { const mun = CAT.munOf(k), cmM = (mun && mun.cm) || 'tomahawk';
+      for (const g of G.nav.g) { if (g.cc !== k) continue; const nC = Math.min(160, (g.s.dd || 0) * 8 + (g.s.ssn || 0) * 12 + (g.s.cv ? 0 : 0) + (g.s.ff || 0) * 2); if (nC < 8) continue;
+        const z = WD.s[g.z], ll = [z[2][1], z[2][0]], p = LL(...ll); if (dFront(s, p) > (AIR.MUN[cmM] ? AIR.MUN[cmM].range : 1600) || dFront(s, p) < 30) continue;
+        mbases.push({ n: `${(WD.cs[k] || {}).ar || k}: سفن ${z[1]}`, ll, side: s, bm: 0, cm: nC, uav: 0, mun: { cm: cmM }, sea: 1 }); } }   // I-158: صواريخ الدفاع الجوي اللي صنعناها بالسلم
+    const A = AIR.create(W, { LL, bases, sams, mbases, pool, raidSides: [0, 1].filter(s => mbases.some(m => m.side === s)), raidCd: 20, realDoc: true, raidK: 2.5, raidCdK: .45, pkK: 1.5, ew, mald, sead, regen, alphaH: sead.map(x => x ? 24 : 0), siteKill: true });   // I-159: ضربات مركّبة ×2.5 بالحجم وأكثر من ضعف التكرار، وطلعات أكبر ×1.5
+    A.info = info; A.seadInfo = { ew, mald: mald.slice(), sead, regen }; A.LLp = { lon0: T.lon0, lat1: T.lat1, KX: T.KX, KY: T.KY };
     return A;
   }
   // الضربات المركّبة: الطرف 0 (اللاعب) يقرر بنفسه (A.raidSides يتغير من الواجهة)؛ هنا بس نضبط
@@ -95,10 +108,10 @@
   }
   // الحفظ: بمفتاح (الطرف|النوع|الاسم) مو بالترتيب، حتى السرب أو البطارية الجديدة ما تخربط الباقي بعد التحميل
   const bK = (b, i, L) => `${b.side}|${b.type}|${b.n}|${L.slice(0, i).filter(y => y.side === b.side && y.type === b.type && y.n === b.n).length}`, sK = (x, i, L) => `${x.side}|${x.sys}|${x.n}|${L.slice(0, i).filter(y => y.side === x.side && y.sys === x.sys && y.n === x.n).length}`;
-  function save(A) { return { t: A.t, wt: A.wt, id: A.id, kills: A.kills, lostPlanes: A.lostPlanes, stat: A.stat, raidCd: A.raidCd, raidSides: A.raidSides, pool: A.pool,
-    bases: A.bases.map((b, i, L) => ({ k: bK(b, i, L), ready: b.ready, n0: b.n0, max: b.max, down: b.down, mission: b.mission, ll: b.ll, cc: b.cc })), sams: A.sams.map((s, i, L) => ({ k: sK(s, i, L), sys: s.sys, side: s.side, cc: s.cc, ll: s.ll, p: s.p, down: s.down, doc: s.doc, mags: s.mags.map(m => ({ ready: m.ready, stock: m.stock, ready0: m.ready0 })) })),
+  function save(A) { return { t: A.t, wt: A.wt, id: A.id, kills: A.kills, lostPlanes: A.lostPlanes, stat: A.stat, raidCd: A.raidCd, raidSides: A.raidSides, pool: A.pool, opened: A.opened, mald: A.mald, alphaH: A.alphaH,
+    bases: A.bases.map((b, i, L) => ({ k: bK(b, i, L), ready: b.ready, n0: b.n0, max: b.max, down: b.down, mission: b.mission, ll: b.ll, cc: b.cc })), sams: A.sams.map((s, i, L) => ({ k: sK(s, i, L), sys: s.sys, side: s.side, cc: s.cc, ll: s.ll, p: s.p, down: s.down, doc: s.doc, rd: s.rd || 0, dead: s.dead || 0, mags: s.mags.map(m => ({ ready: m.ready, stock: m.stock, ready0: m.ready0 })) })),
     mbases: A.mbases.map(m => ({ bm: m.bm, cm: m.cm, uav: m.uav })) }; }
-  function restore(A, o) { if (!o) return A; Object.assign(A, { t: o.t, wt: o.wt, id: o.id, kills: o.kills, lostPlanes: o.lostPlanes, stat: o.stat, raidCd: o.raidCd, raidSides: o.raidSides, pool: o.pool });
+  function restore(A, o) { if (!o) return A; Object.assign(A, { t: o.t, wt: o.wt, id: o.id, kills: o.kills, lostPlanes: o.lostPlanes, stat: o.stat, raidCd: o.raidCd, raidSides: o.raidSides, pool: o.pool }); if (o.opened) A.opened = o.opened; else A.opened = [1, 1]; if (o.mald) A.mald = o.mald; if (o.alphaH) A.alphaH = o.alphaH; else A.alphaH = [0, 0];   // حفظ قديم: الضربة الأولى انحسبت خلاص
     const BM = new Map(A.bases.map((b, i, L) => [bK(b, i, L), b])), SM = new Map(A.sams.map((x, i, L) => [sK(x, i, L), x]));
     const keyed = o.bases.length && o.bases.every(b => b.k), nb = [];
     o.bases.forEach((b, i) => { let x = b.k ? BM.get(b.k) : A.bases[i];
@@ -107,7 +120,7 @@
     if (keyed) A.bases = nb;   // الحفظ هو الحقيقة: نفس القواعد وبنفس الترتيب (الجبهة تتحرك، فالبناء الجديد ممكن يطلع قواعد ثانية)
     const skeyed = o.sams.length && o.sams.every(x => x.k), ns = [];
     o.sams.forEach((s, i) => { let x = s.k ? SM.get(s.k) : A.sams[i]; if (!x && s.k && s.sys) { x = addSam(A, s.side, s.sys, s.cc); if (x) { A.sams.pop(); for (const m of AIR.SYS[s.sys].mags) if (!m.gun) A.pool[s.side][m.n] -= m.stock; if (s.ll) x.ll = s.ll; } }
-      if (!x) return; x.p = s.p; x.down = s.down; x.doc = s.doc; s.mags.forEach((m, j) => x.mags[j] && Object.assign(x.mags[j], m)); ns.push(x); });
+      if (!x) return; x.p = s.p; x.down = s.down; x.doc = s.doc; if (s.rd) x.rd = s.rd; if (s.dead) x.dead = 1; s.mags.forEach((m, j) => x.mags[j] && Object.assign(x.mags[j], m)); ns.push(x); });
     if (skeyed) A.sams = ns; else for (const x of ns) if (!A.sams.includes(x)) A.sams.push(x);
     o.mbases.forEach((m, i) => A.mbases[i] && Object.assign(A.mbases[i], m)); return A; }
   const API = { build, save, restore, setPlayerRaids, addPlanes, addSam };

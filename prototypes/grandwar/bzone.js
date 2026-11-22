@@ -188,11 +188,19 @@
     // حطام يدخّن: عمود دخان أسود يصعد ويمشي ويا الريح
     for (let i = smokes.length - 1; i >= 0; i--) { const m = smokes[i]; m.t += rdt * spd; if (m.t > m.life) { smokes.splice(i, 1); continue; } if (R() < .35 * Math.min(1, spd)) FX.puff(m.x + (R() - .5) * 4, m.y + (R() - .5) * 4 - 6, sizePx(9.8) * .28, 6 + R() * 4, R() < .7 ? 'black' : 'grey', .55 * (1 - m.t / m.life), 0, -9, 2.4); }
   }
+  // أشياء الأرض من بلندر (bz_props): 7 بيوت، نخلة، سدرة، 3 سيارات متروكة، سواتر رمل — كل وحدة بتدويرين
+  const PROPS = { oy: [143.5, 148.5, 149.7, 142.1, 149.4, 144.1, 142.5, 160, 145.3, 140.2, 138.9, 137.6, 135.9] };
   function cover(c) {
-    const [x, y] = w2s(c.x, c.y); const s = Math.max(14, c.rad * 1.5 * cam.s); if (x < -s || x > innerWidth + s || y < -s * 1.4 || y > innerHeight + s) return;
-    const n = c.kind === 'house' ? ['h1', 'h2', 'h3', 'h4'][Math.abs(Math.round(c.x)) % 4] : c.kind === 'palm' ? 'palm' : c.kind === 'reed' ? 'tree' : c.kind === 'rock' ? null : 'acacia';
-    if (n && IMG['bv_' + n]) { const im = IMG['bv_' + n]; if (c.kind === 'house') g.drawImage(im, x - s / 2, y - s * KY / 2, s, s * KY); else { g.save(); g.globalAlpha = .3; g.fillStyle = '#000'; g.beginPath(); g.ellipse(x + s * .18, y + s * .05, s * .32, s * .14, 0, 0, 7); g.fill(); g.restore(); g.drawImage(im, x - s / 2, y - s * .85, s, s); } }
-    else { g.fillStyle = 'rgba(95,82,66,.75)'; g.beginPath(); g.ellipse(x, y, s * .34, s * .22, c.x % 3, 0, 7); g.fill(); g.fillStyle = 'rgba(140,125,100,.6)'; g.beginPath(); g.ellipse(x - s * .06, y - s * .05, s * .22, s * .13, c.x % 3, 0, 7); g.fill(); }
+    const im = IMG.bz_props, h = Math.abs(Math.round(c.x * 7 + c.y * 13)), [x, y] = w2s(c.x, c.y);
+    let row, s; // s = حجم 10 وحدات بلندر على الشاشة
+    if (c.kind === 'house') { row = h % 7; s = Math.max(14, c.rad * 1.5 * zs()); }
+    else if (c.kind === 'palm' || c.kind === 'reed') { row = 7; s = Math.max(14, c.rad * 1.7 * zs()); }
+    else if (c.kind === 'rock' && h % 10 < 4) { row = 9 + h % 3; s = 4.6 * E * zs(); }
+    else if (c.kind === 'rock' && h % 10 < 6) { row = 12; s = 3.4 * E * zs(); }
+    else if (c.kind !== 'rock') { row = 8; s = Math.max(14, c.rad * 1.4 * zs()); }
+    const D = s * 1.8; if (x < -D || x > innerWidth + D || y < -D || y > innerHeight + D) return;
+    if (row != null && im && im.naturalWidth) { const k = D / 256; g.drawImage(im, (h >> 3) % 2 * 256, row * 256, 256, 256, x - 128 * k, y - PROPS.oy[row] * k, D, D); return; }
+    s = Math.max(14, c.rad * 1.5 * zs()); g.fillStyle = 'rgba(95,82,66,.75)'; g.beginPath(); g.ellipse(x, y, s * .34, s * .22, c.x % 3, 0, 7); g.fill(); g.fillStyle = 'rgba(140,125,100,.6)'; g.beginPath(); g.ellipse(x - s * .06, y - s * .05, s * .22, s * .13, c.x % 3, 0, 7); g.fill();
   }
   function unit(u, rdt) {
     const T = BV.T[u.type], [x, y] = w2s(u.p.x, u.p.y), D = 1.3 * T.len * E * zs(); if (x < -D || x > innerWidth + D || y < -D || y > innerHeight + D) return;
@@ -247,7 +255,7 @@
   }
   // ===== الأحداث → مؤثرات وأصوات =====
   let lastHot = -99, fb = null;
-  function fastBadge(on) { if (!fb) { fb = document.createElement('div'); fb.style.cssText = 'position:absolute;left:50%;top:118px;transform:translateX(-50%);background:rgba(0,0,0,.55);color:#ffd65a;padding:4px 12px;border-radius:12px;font:700 12px "IBM Plex Sans Arabic";pointer-events:none;z-index:3'; fb.textContent = '⏩ تقدّم سريع… لحد أول اشتباك'; el.append(fb); } fb.style.display = on ? 'block' : 'none'; }
+  function fastBadge(on) { if (!fb) { fb = document.createElement('div'); fb.style.cssText = 'position:absolute;left:50%;top:158px;transform:translateX(-50%);background:rgba(0,0,0,.55);color:#ffd65a;padding:4px 12px;border-radius:12px;font:700 12px "IBM Plex Sans Arabic";pointer-events:none;z-index:3'; fb.textContent = '⏩ تقدّم سريع… لحد أول اشتباك'; el.append(fb); } fb.style.display = on ? 'block' : 'none'; }
   function onEv(e) {
     if ({ gun: 1, can30: 1, atgm: 1, rpg: 1, rifle: 1, artyhit: 1, kill: 1, bombhit: 1, release: 1 }[e.k]) lastHot = B.t;
     const U = sizePx(9.8);

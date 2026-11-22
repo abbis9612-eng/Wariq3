@@ -54,6 +54,31 @@ const skyMat = new SkyMaterial('skyMat', scene);
 Object.assign(skyMat, { backFaceCulling: false, useSunPosition: true, sunPosition: v(scale(SUN, 1000)), turbidity: 5, luminance: 1, rayleigh: 2.4, mieCoefficient: 0.005, mieDirectionalG: 0.8, fogEnabled: false });
 sky.material = skyMat; sky.infiniteDistance = true; sky.isPickable = false;
 scene.fogMode = Scene.FOGMODE_EXP2; scene.fogDensity = 0.000052; scene.fogColor = new Color3(0.83, 0.79, 0.71);
+// ===== I-184: ليل ونهار — دورة 20 دقيقة لعب: شروق ← نهار (~8 د) ← غروب ← ليل (~9 د) ← فجر. المعركة تبدي الصبح =====
+const DAY = 1200, DAY0 = 100;   // طول الدورة، ووين تبدي (100 ث بعد الشروق)
+const lerpC = (a: Color3, b: Color3, t: number) => Color3.Lerp(a, b, clamp(t, 0, 1));
+const C_DAYFOG = new Color3(0.83, 0.79, 0.71), C_DUSKFOG = new Color3(0.78, 0.55, 0.38), C_NIGHTFOG = new Color3(0.045, 0.055, 0.085);
+const C_SUN = new Color3(1, 0.92, 0.8), C_SUNLOW = new Color3(1, 0.58, 0.3), C_MOON = new Color3(0.55, 0.65, 0.95);
+let dayK = 1, dnT = -9, todName = '';
+const emBase = new Map<StandardMaterial, Color3>();
+function dayNight(T: number, force = false) {
+  if (!force && Math.abs(T - dnT) < 0.5) return; dnT = T;
+  const ph = (((T + DAY0) % DAY) + DAY) % DAY / DAY, el = Math.sin(ph * Math.PI * 2) - 0.12;   // ارتفاع الشمس (−1..1)؛ ناقص شوية = الليل أطول
+  const az = ph * Math.PI * 2, alt = el * 1.15;   // تطلع من الشرق (+x) وتغيب بالغرب (−x)؛ أعلى ارتفاع ~58°
+  const sunV = new Vector3(Math.cos(az) * Math.cos(alt), Math.sin(alt), 0.3 * Math.cos(alt)).normalize();
+  dayK = clamp((alt + 0.06) / 0.3, 0, 1); const low = clamp(1 - alt / 0.4, 0, 1) * dayK;   // الشمس واطية = ضوء برتقالي
+  const night = 1 - dayK, moonV = new Vector3(-0.3, 0.75, -0.45).normalize();
+  sun.direction = (dayK > 0.02 ? sunV : moonV).scale(-1);
+  sun.intensity = 0.78 * Math.min(1, Math.max(0, alt) / 0.25 + 0.35) * dayK + 0.32 * night;   // القمر يضوّي شوية حتى تشوف المعركة بالليل sun.diffuse = dayK > 0.02 ? lerpC(C_SUN, C_SUNLOW, low) : C_MOON;
+  hemi.intensity = 0.46 - 0.08 * dayK + 0.1 * low;   // مقاس: 0.2 = سواد، 0.45 = ليل مقمر أزرق تنشاف بيه الأرض hemi.diffuse = lerpC(new Color3(0.36, 0.44, 0.7), new Color3(0.7, 0.76, 0.88), dayK); hemi.groundColor = lerpC(new Color3(0.12, 0.12, 0.16), new Color3(0.45, 0.38, 0.3), dayK);
+  skyMat.sunPosition = sunV.scale(1000); skyMat.luminance = 0.2 + 0.8 * dayK;
+  scene.fogColor = dayK > 0.5 ? lerpC(C_DUSKFOG, C_DAYFOG, 1 - low) : lerpC(C_NIGHTFOG, C_DUSKFOG, dayK * 2);
+  pipe.imageProcessing.exposure = 1.75 + 0.75 * night + 0.2 * low;
+  // دخان وغبار (مو مضيئة) تغمق بالليل، والمواد اللي بيها توهّج خفيف تطفى
+  const k = 0.18 + 0.82 * dayK; for (const p of pools) if (p.ps.blendMode !== ParticleSystem.BLENDMODE_ADD) p.ps.textureMask = new Color4(k, k, k * (0.9 + 0.1 * dayK), 1);
+  for (const m of scene.materials) if (m instanceof StandardMaterial && !m.disableLighting) { let b = emBase.get(m); if (!b) { b = m.emissiveColor.clone(); emBase.set(m, b); } m.emissiveColor = b.scale(0.2 + 0.8 * dayK); }
+  todName = el < -0.25 ? '🌙 ليل' : el < -0.05 ? (ph > 0.5 ? '🌅 فجر' : '🌆 غروب') : el < 0.25 ? (ph > 0.75 || ph < 0.12 ? '🌄 شروق' : '🌇 عصر') : '☀ نهار';
+}
 let shadows: ShadowGenerator | null = null;
 function setupShadows() {
   shadows?.dispose(); shadows = null; if (!HQ) return;
@@ -129,7 +154,7 @@ function updateCamera(dt: number) {
   cam.position.copyFrom(pos);
   cam.setTarget(camTarget.add(new Vector3(Math.sin(shakeT * 1.7) * sh, Math.sin(shakeT * 2.3) * sh, Math.sin(shakeT * 1.1) * sh)));
   // الظلال تتبع مكان الكاميرا
-  if (shadows) { const on = camDist < 1500; sun.shadowEnabled = on; if (on) { sun.position = camTarget.add(v(scale(SUN, 700))); sun.shadowFrustumSize = sideView ? 650 : clamp(camDist * Math.tan(camFov) * 2.2, 90, 1300); } }
+  if (shadows) { const on = camDist < 1500 && dayK > 0.05; sun.shadowEnabled = on; if (on) { sun.position = camTarget.add(sun.direction.scale(-700)); sun.shadowFrustumSize = sideView ? 650 : clamp(camDist * Math.tan(camFov) * 2.2, 90, 1300); } }
 }
 // لمس
 const ptrs = new Map<number, { x: number; y: number }>();
@@ -1228,7 +1253,7 @@ let hudT = 9; const htmlC = new Map<string, string>();
 const setHTML = (id: string, h: string) => { if (htmlC.get(id) !== h) { htmlC.set(id, h); $(id).innerHTML = h; } };
 function hud() {
   const s = W.stats, mm = `${Math.floor(W.T / 60)}:${String(Math.floor(W.T % 60)).padStart(2, '0')}`;
-  if ($('clock').textContent !== mm) $('clock').textContent = mm;
+  const ck = `${mm} · ${todName}`; if ($('clock').textContent !== ck) $('clock').textContent = ck;
   $('phase').textContent = W.air.some(a => a.kind === 'iskander') ? '⚠ صاروخ باليستي بالجو' : W.air.some(a => a.kind === 'shahed') ? 'مسيّرات بالجو' : W.air.some(a => a.kind === 'kh101') ? 'صواريخ كروز بالجو' : ({ march: 'رتل العدو على الطريق', approach: 'العدو يتقدم بقفزات', breach: 'العدو يخترق نحو التلّة', assault: 'اقتحام قرية الطريق', retreat: 'العدو ينسحب', city: '🏙 حرب مدن — مدينة الجسر' } as Record<string, string>)[W.en] + (W.iq === 'line2' ? ' · خطنا الثاني' : W.iq === 'counter' ? ' · هجومنا المعاكس' : '');
   const held = W.houseOwner.filter(o => o === 'en').length;
   setHTML('tally', `<span>T-72 <b class="g">${s.enTanksLost}</b>/${s.enTanks}</span><span>BMP <b class="g">${s.enBmpLost}</b>/${s.enBmp}</span><span>مشاة العدو <b class="g">${s.enMenLost}</b>/${s.enMen}</span>`
@@ -1300,7 +1325,7 @@ function frame() {
   const k = simDt ? simDt / Math.max(1e-4, engine.getDeltaTime() / 1000) : 0;
   for (const p of pools) p.ps.updateSpeed = k / 60;
   heat *= Math.exp(-dtReal * (simSpeed ? 0.35 * Math.max(1, simSpeed) : 0)); sfx.battle(heat, heatPan);
-  tickLights(dtReal * (simDt ? 1 : 0.3)); updateCamera(dtReal);
+  if (W) dayNight(W.T); tickLights(dtReal * (simDt ? 1 : 0.3)); updateCamera(dtReal);
   scene.render();
   for (const p of pools) p.flush();
   if (W) { drawLabels(); drawArrows(); if ((hudT += dtReal) > 0.15) { hudT = 0; followPanel(); hud(); }   /* I-174: اللوحة والأزرار 7 مرات بالثانية مو كل إطار (كل كتابة بالصفحة تعيد الترتيب، ثقيلة بالتلفون) */ const sh = W.air.filter(a => a.kind === 'shahed'); sfx.drones(sh.length ? Math.min(...sh.map(a => sndD(a.p))) : 1e9);

@@ -551,11 +551,13 @@ function addDecal(p: V3, size: number) {
 // ===== الصوت (مولّد) =====
 let simSpeed = 2, slowK = 1;
 // أصوات حقيقية مسجّلة (SoundBible CC BY 3.0 + BigSoundBank CC0): تتأخر حسب المسافة (سرعة الصوت) وتنكتم من بعيد (I-024)
-const sndUrls = { ...import.meta.glob('../../theater/sounds/*.mp3', { query: '?url', import: 'default', eager: true }), ...import.meta.glob(['../../grandwar/sounds/bz_*.mp3', '!../../grandwar/sounds/bz_23_full.mp3', '!../../grandwar/sounds/bz_clash.mp3', '!../../grandwar/sounds/bz_hmg_bed.mp3'], { query: '?url', import: 'default', eager: true }), ...import.meta.glob('../../battle-classic/sounds/{heli_pass,hmg,jet_roar,sonic,boom_bomb,woosh}.mp3', { query: '?url', import: 'default', eager: true }) } as Record<string, string>;   /* I-172: + أصوات مختبر المالك */   // I-170: أصوات المالك الحقيقية (I-168) فوق القديمة
+const sndUrls = { ...import.meta.glob('../../theater/sounds/*.mp3', { query: '?url', import: 'default', eager: true }), ...import.meta.glob(['../../grandwar/sounds/bz_*.mp3', '!../../grandwar/sounds/bz_23_full.mp3'], { query: '?url', import: 'default', eager: true }), ...import.meta.glob('../../battle-classic/sounds/{heli_pass,hmg,jet_roar,sonic,boom_bomb,woosh}.mp3', { query: '?url', import: 'default', eager: true }) } as Record<string, string>;   /* I-172: + أصوات مختبر المالك */   // I-170: أصوات المالك الحقيقية (I-168) فوق القديمة
 const sfx = (() => {
   let ac: AudioContext | null = null, master: GainNode, muted = false, buzz: GainNode | null = null, nb: AudioBuffer;
   // I-170 (من المعركة الكلاسيكية): قناة للأصوات الصغيرة (رصاص) تنخفض لحظة الانفجار الكبير، صدى ساحة (convolver)، جو معركة يدور، وبيس تحت الانفجار
   let small: GainNode, wet: GainNode, amb: GainNode | null = null, engT = 0;
+  // I-179: طبقة «اشتباك درعا» (bz_clash) والرشاش الثقيل البعيد (bz_hmg_bed): تعلى وتنزل حسب شدة القتال القريب، ومن جهته (يمين/يسار)
+  let clashG: GainNode | null = null, bedG: GainNode | null = null, clashPan: StereoPannerNode | null = null;
   const SMALL = new Set(['ak1', 'akburst', 'mg', 'dshk', 'can30', 'ricochet', 'whiz', 'eject', 'hmg', 'bz_hmg', 'bz_hmg_fast', 'bz_mg', 'bz_rifle', 'bz_autocannon']);
   // I-172: اختيار المالك بمختبر الأصوات — صوتين لكل سلاح ولكل طرف (iq = إحنا، en = العدو)؛ الأول أكثر (65%) والثاني للتنويع
   const PICK: Record<string, [string, string]> = {
@@ -600,11 +602,16 @@ const sfx = (() => {
     init() {
       if (ac) { if (ac.state === 'suspended') ac.resume(); return; }
       try { ac = new AudioContext(); } catch { return; }
-      master = ac.createGain(); master.gain.value = muted ? 0 : 0.85; master.connect(ac.destination); nb = noise(4);
+      // I-179: ضاغط على الكل: الأصوات أعلى وأقوى بدون ما تتشقق لما يصير انفجار ورشاش سوا
+      const comp = ac.createDynamicsCompressor(); comp.threshold.value = -20; comp.knee.value = 12; comp.ratio.value = 4; comp.attack.value = 0.004; comp.release.value = 0.28;
+      const mk = ac.createGain(); mk.gain.value = 1.35; comp.connect(mk).connect(ac.destination);
+      master = ac.createGain(); master.gain.value = muted ? 0 : 0.85; master.connect(comp); nb = noise(4);
       small = ac.createGain(); small.gain.value = 0.8; small.connect(master);
       { const ir = ac.createBuffer(2, ac.sampleRate * 2.6, ac.sampleRate); for (let c = 0; c < 2; c++) { const d = ir.getChannelData(c); for (let i = 0; i < d.length; i++) d[i] = (Math.random() * 2 - 1) * Math.pow(1 - i / d.length, 2.6) * (i < ac.sampleRate * 0.06 ? 0 : 1); }
         const conv = ac.createConvolver(); conv.buffer = ir; wet = ac.createGain(); wet.gain.value = 0.28; wet.connect(conv).connect(master); }
       const a = ac; for (const [k, u] of Object.entries(sndUrls)) { const n = k.split('/').pop()!.replace('.mp3', ''); fetch(u).then(r => r.arrayBuffer()).then(b => a.decodeAudioData(b)).then(buf => { smp[n] = buf;
+        if ((n === 'bz_clash' && !clashG) || (n === 'bz_hmg_bed' && !bedG)) { const s = a.createBufferSource(); s.buffer = buf; s.loop = true; s.loopStart = 0; const g = a.createGain(); g.gain.value = 0;
+          if (n === 'bz_clash') { clashPan = a.createStereoPanner(); s.connect(g).connect(clashPan).connect(master); clashG = g; } else { s.connect(g).connect(master); bedG = g; } s.start(0, Math.random() * buf.duration * 0.8); }
         if (n === 'bz_ambience' && !amb) { const s = a.createBufferSource(); s.buffer = buf; s.loop = true; amb = a.createGain(); amb.gain.value = 0.22; s.connect(amb).connect(master); s.start(); } }).catch(() => {}); }
       const s = ac.createBufferSource(); s.buffer = nb; s.loop = true; const f = ac.createBiquadFilter(); f.type = 'bandpass'; f.frequency.value = 420; f.Q.value = 3;
       buzz = ac.createGain(); buzz.gain.value = 0; s.connect(f).connect(buzz).connect(master); s.start();
@@ -629,6 +636,11 @@ const sfx = (() => {
     atgm(d: number) { if (!play(pk('iq_kornet'), d, 0.9, 0.95 + Math.random() * 0.1, 0, false, true)) play('launch', d, 0.8); },
     grenade(d: number) { play('grenade', d, 0.8, 0.9 + Math.random() * 0.2, 0, true); },
     rocket(d: number) { if (!play(pk('en_rpg'), d, 0.5, 0.9 + Math.random() * 0.2, 0, false, true)) hit(d, 1.2, 2200, 400, 0.35); },
+    /** I-179: شدة القتال 0..1 وجهته (−1 يسار، +1 يمين) */
+    battle(I: number, pan: number) { if (!ac) return; const t = ac.currentTime, k = simSpeed ? 1 : 0.15;
+      if (clashG) clashG.gain.setTargetAtTime(Math.min(1, I) * 0.85 * k, t, I > (clashG.gain.value / 0.85) ? 0.25 : 1.6);
+      if (bedG) bedG.gain.setTargetAtTime(Math.max(0, Math.min(1, I) - 0.35) * 0.55 * k, t, 0.8);
+      if (clashPan) clashPan.pan.setTargetAtTime(Math.max(-0.8, Math.min(0.8, pan)), t, 0.6); },
     drones(d: number) { if (ac && buzz) buzz.gain.setTargetAtTime(simSpeed ? vol(d) * 0.12 : 0, ac.currentTime, 0.2); },
   };
 })();
@@ -802,7 +814,16 @@ function syncAir() {
 }
 const camD = (p: V3) => Vector3.Distance(cam.position, v(p));
 const whistled = new Set<number>();
+// I-179: شدة القتال من الطلقات والانفجارات القريبة من الكاميرا (تخفت خلال ~3 ث)
+let heat = 0, heatPan = 0;
+const HEAT: Partial<Record<Fx['k'], number>> = { shot: 0.05, volley: 0.07, round: 0.025, cannon: 0.06, gun: 0.12, boom: 0.14, atgm: 0.1, rlaunch: 0.05 };
+function addHeat(fx: Fx) {
+  const w0 = HEAT[fx.k]; if (!w0) return; const p = (fx as { p?: V3 }).p; if (!p) return;
+  const d = camD(p), k = w0 * Math.max(0, 1 - d / 2600); if (k <= 0) return; heat = Math.min(2, heat + k);
+  const r = cam.getDirection(Vector3.RightReadOnly), rel = v(p).subtract(cam.position); heatPan += (Vector3.Dot(r, rel.normalize()) - heatPan) * Math.min(1, k * 3);
+}
 function handleFx(fx: Fx) {
+  addHeat(fx);
   switch (fx.k) {
     case 'gun': {
       const vis = unitVis.get(fx.unit); if (vis) vis.recoil = 1; fx.p = muzzleAt(fx.unit, fx.p);
@@ -1271,6 +1292,7 @@ function frame() {
   if (W) { syncUnits(dtReal); syncSquads(dtReal); drawSoldiers(dtReal); syncAir(); syncJets(dtReal); if (simDt) { burnFx(simDt); tickDebris(simDt); } directorFrame(); }
   const k = simDt ? simDt / Math.max(1e-4, engine.getDeltaTime() / 1000) : 0;
   for (const p of pools) p.ps.updateSpeed = k / 60;
+  heat *= Math.exp(-dtReal * (simSpeed ? 0.35 * Math.max(1, simSpeed) : 0)); sfx.battle(heat, heatPan);
   tickLights(dtReal * (simDt ? 1 : 0.3)); updateCamera(dtReal);
   scene.render();
   for (const p of pools) p.flush();
@@ -1280,7 +1302,7 @@ function frame() {
   const fps = engine.getFps(); fpsAcc += fps; fpsN++; fpsT += dtReal;
   if (fpsT > 0.5) { const avg = fpsAcc / fpsN; fpsEl.textContent = `${avg.toFixed(0)} FPS · ${HQ ? 'عالية' : 'خفيفة'}`; if (running && W.T > 12 && W.T < 22) fpsHist.push(avg); /* بعد ما يخلص تجهيز الرسم أول مرة */ fpsAcc = fpsN = fpsT = 0; }
   if (!autoQ && running && W.T > 22 && !AUTO) { autoQ = true; const a = fpsHist.reduce((x, y) => x + y, 0) / Math.max(1, fpsHist.length); if (HQ && fpsHist.length > 3 && a < 26) { setQuality(false); toast(`خفّضت الجودة تلقائياً (${a.toFixed(0)} إطار/ث) حتى تبقى سلسة`); } }
-  (window as any).__state = { T: W?.T ?? 0, over: W?.over, stats: W?.stats, dist: camDist, follow: view.follow, fps, log: W?.log.length, slow: slowK < 1, phase: W?.columnPhase };
+  (window as any).__state = { heat: +heat.toFixed(2), T: W?.T ?? 0, over: W?.over, stats: W?.stats, dist: camDist, follow: view.follow, fps, log: W?.log.length, slow: slowK < 1, phase: W?.columnPhase };
 }
 function setQuality(hq: boolean) { HQ = hq; applyRes(); applyPipe(); setupShadows(); $('bQual').setAttribute('aria-pressed', String(hq)); }
 function showEnd() {

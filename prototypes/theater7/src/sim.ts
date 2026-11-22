@@ -34,7 +34,7 @@ export const SPEC: Record<Kind, KindSpec> = {
 export type UState = 'idle' | 'march' | 'deploy' | 'bound' | 'hold' | 'retreat' | 'scoot' | 'return' | 'reposition'
   | 'hide' | 'peek' | 'aim' | 'mounted' | 'dismount' | 'assault' | 'rush' | 'pin' | 'house' | 'counter' | 'overwatch';
 export type Pose = 'stand' | 'run' | 'prone' | 'fire';
-export type Role = 'line' | 'reserve' | 'assault' | 'support' | 'flank' | 'aa' | 'arty' | 'city' | 'sniper';
+export type Role = 'line' | 'reserve' | 'assault' | 'support' | 'flank' | 'aa' | 'arty' | 'city' | 'sniper' | 'zu';
 // I-173: أقل ارتفاع للسبطانتين حتى ما تعبر كابينة الشاص، حسب دوران القاعدة عن قدّام البيكب (كل 5° من -180°)؛ محسوب ببلندر من المجسم (tools/zu23_truck.py)
 export const ZU_ARC: number[] = [-0.2,  -0.198,  -0.191,  -0.188,  -0.185,  -0.147,  -0.145,  -0.144,  -0.144,  -0.146,  -0.158,  -0.2,  -0.2,  -0.2,  -0.2,  -0.2,  -0.2,  -0.2,  -0.2,  -0.2,  -0.2,  -0.2,  -0.2,  -0.2,  -0.2,  -0.2,  -0.2,  0.126,  0.483,  0.508,  0.505,  0.495,  0.498,  0.527,  0.528,  0.52,  0.516,  0.517,  0.521,  0.532,  0.496,  0.501,  0.494,  0.485,  0.469,  0.126,  -0.2,  -0.2,  -0.2,  -0.2,  -0.2,  -0.2,  -0.2,  -0.2,  -0.2,  -0.2,  -0.2,  -0.2,  -0.2,  -0.2,  -0.2,  -0.2,  -0.173,  -0.145,  -0.143,  -0.143,  -0.143,  -0.146,  -0.186,  -0.187,  -0.191,  -0.199];
 export function zuMinPitch(rel: number) { const f = ((rel + Math.PI) / (2 * Math.PI)) * 72, i = Math.floor(f), t = f - i, a = ZU_ARC[((i % 72) + 72) % 72], b = ZU_ARC[(((i + 1) % 72) + 72) % 72]; return a + (b - a) * t; }
@@ -47,6 +47,7 @@ export interface Unit {
   fire: V3[]; hide: V3 | null; fi: number; ammo: number; rpg: number; rpgCd: number; seenT: number; peekShots: number; aimT: number;
   sol: Sol[]; bt: 0 | 1; bT: number; ct: boolean;
   haltT: number; smokeN: number;                  // TH6.5: وقفة قصيرة للرمي، وقاذفات دخان باقية  // TH6.1: جنود الحضيرة، الفريق اللي يتحرك بالتبادل، وقت التبديل، باشتباك؟
+  zuN?: number;                                   // I-177: كم مرة طلع من نفس المخبأ (بعد مرتين يغيّر البناية)
   path?: V3[];                                    // I-175: نقاط بالشوارع (المركبة تمشي بالشارع مو من خلال البيوت)
   cv: number;                                     // TH5.5: رقم نقطة الستر (COVER) اللي ماسكيها الحضيرة، −1 ماكو
   tur: number; aimId: number; aimSeen: number;   // TH5.2: البرج يلف وحده (زاوية مطلقة) ويصوّب على الهدف
@@ -167,7 +168,8 @@ export function newWorld(seed = 11): World {
     U('abrams', 'iq', hide, WEST, 'خط الأبرامز', { state: 'hide', fire, hide, role: 'line', cd: 3 + i * 2 });
   });
   U('dshk', 'iq', [-1870, 0, HIGHWAY_Z - 70], WEST, 'سيطرة الطريق', { role: 'aa' }); U('dshk', 'iq', [-1870, 0, HIGHWAY_Z + 70], WEST, 'سيطرة الطريق', { role: 'aa' });
-  U('zu23', 'iq', [-1790, 0, HIGHWAY_Z - 22], WEST, 'سيطرة الطريق', { role: 'aa' });
+  // I-177: سرية الزو-23 (4 بيكبات): تختبي ورا البيوت، تطلع للزاوية، رشقة أو رشقتين، ترجع وتبدّل البناية
+  for (let i = 0; i < 4; i++) { const sp = zuSpot(w, [-1500 + i * 30, 0, HIGHWAY_Z + (i % 2 ? 60 : -60)], -2400, i); if (sp) U('zu23', 'iq', sp.hide, [0, 0, i % 2 ? 1 : -1], 'سرية الزو-23', { role: 'zu', state: 'hide', hide: sp.hide, fire: sp.fire, zuN: 0, name: 'بيكب زو-23 ' + ['١', '٢', '٣', '٤'][i] }); }
   U('d30', 'iq', [-1050, 0, -720], WEST, 'كتيبة مدفعية', { role: 'arty' }); U('d30', 'iq', [-1050, 0, -600], WEST, 'كتيبة مدفعية', { role: 'arty' });
   // مشاة بالبيوت الغربية من قرية الطريق (كل حضيرة ببيت)
   const westHouses = [...FRONT_HOUSES].sort((a, b) => a.x - b.x);
@@ -677,6 +679,7 @@ function behave(w: World, u: Unit, dt: number) {
   }
   if (u.kind === 'inf' && u.side === 'en' && u.state !== 'retreat') return infAssault(w, u, dt);
   if (u.kind === 'inf' && u.side === 'iq') return infDefend(w, u, dt);
+  if (u.kind === 'zu23' && u.role === 'zu') return zuCycle(w, u);
   if (u.side === 'iq' && isTank(u) && u.hide && (u.role === 'line' || u.role === 'city') && (w.iq !== 'counter' || u.role === 'city')) return peekCycle(w, u);
   if (u.side === 'iq' && u.state === 'counter') {
     if (u.kind === 'bmp' && u.carry && u.goal && dist2d(u.p, u.goal) < 30) { const s = w.units.find(x => x.id === u.carry && x.alive && x.state === 'mounted'); if (s) { dismount(w, u, s); s.role = 'assault'; } }
@@ -693,6 +696,7 @@ function startCity(w: World, why: 'win' | 'loss' | 'draw') {
     if (isTank(u)) { const sp = CITY_TANK_SPOTS[k++ % CITY_TANK_SPOTS.length]; u.role = 'city'; u.hide = sp.hide; u.fire = sp.fire; u.fi = 0; u.state = 'retreat'; u.path = streetPath(u.p, sp.hide); u.goal = u.path.shift()!; continue; }
     if (u.kind === 'bmp') { u.role = 'city'; u.state = 'hold'; u.path = streetPath(u.p, [-760, 0, CITY.zs[3] + 25]); u.goal = u.path.shift()!; continue; }
     if (u.kind === 'kornet') { u.role = 'city'; u.goal = [CITY.x0 + 70, 0, CITY.zs[3] + 12]; continue; }
+    if (u.role === 'zu') continue;   // الزو-23 تختار بناية بالمدينة وحدها (zuCycle)
     if (u.kind === 'inf' && (lost || u.role === 'reserve' || u.role === 'assault')) { if (u.house >= 0) w.houseOwner[u.house] = ''; u.house = -1; u.role = 'city'; u.state = 'retreat'; u.stateT = 0; u.goal = null; releaseCover(w, u); }
   }
   for (const u of w.units) if (u.side === 'en' && u.alive && ground(u) && u.kind !== 'grad' && u.state !== 'retreat' && u.kind !== 'inf') { u.state = 'hold'; u.stateT = 0; u.goal = null; u.path = undefined; }
@@ -776,6 +780,38 @@ function peekCycle(w: World, u: Unit) {
   if (u.state === 'peek') { if (u.goal && dist2d(u.p, u.goal) > 6) return; u.state = 'aim'; u.stateT = 0; u.goal = null; return; }
   if (u.state === 'aim' && (u.peekShots >= 1 + (w.r() < 0.4 ? 1 : 0) || u.stateT > 11 || u.supp > 0.7)) { u.state = 'scoot'; u.stateT = 0; u.goal = u.hide; }
   if (u.state === 'scoot' && u.goal && dist2d(u.p, u.goal) < 8) { u.state = 'hide'; u.stateT = 0; u.goal = null; }
+}
+// ===== I-177: «اضرب واهرب» للزو-23 =====
+/** مخبأ ورا بناية (من جهة الشرق، بعيد عن العدو) وزاويتين يطلع منها؛ البناية 140–650 م ورا أقرب عدو معروف */
+function zuSpot(w: World, near: V3, foeX: number, skip = -1): { hide: V3; fire: V3[]; hi: number } | null {
+  let best: House | null = null, bs = 1e9;
+  const hiX = Math.max(foeX + 650, w.zone === 'city' ? CITY.x0 + 220 : VILLAGE_C[0] + 150);
+  for (const h of zoneHouses(w)) { if (w.houseHp[h.i] <= 0 || w.houseOwner[h.i] === 'en' || h.i === skip || h.x < foeX + 140 || h.x > hiX) continue;
+    if (w.units.some(o => o.alive && o.kind === 'zu23' && o.hide && dist2d(o.hide, [h.x, 0, h.z]) < 30)) continue;
+    const sc = dist2d(near, [h.x, 0, h.z]) + w.r2() * 60; if (sc < bs) { bs = sc; best = h; } }
+  if (!best) return null; const r = Math.max(best.w, best.d) / 2;
+  return { hide: [best.x + r + 9, 0, best.z + (w.r2() - 0.5) * 4], fire: [[best.x + 1, 0, best.z + r + 7], [best.x + 1, 0, best.z - r - 7]], hi: best.i };
+}
+const foeFront = (w: World, side: Side) => { let x = side === 'iq' ? -1e9 : 1e9; for (const id of w.known[side].keys()) { const o = w.units.find(q => q.id === id); if (o && o.alive && ground(o)) x = side === 'iq' ? Math.max(x, o.p[0]) : Math.min(x, o.p[0]); } return x; };
+function zuCycle(w: World, u: Unit) {
+  const go = (to: V3) => { u.path = w.zone === 'city' && (inCity(u.p, 10) || inCity(to, 5)) ? streetPath(u.p, to) : [to]; u.goal = u.path.shift()!; };
+  const atGoal = () => !(u.path && u.path.length) && (!u.goal || dist2d(u.p, u.goal) < 6);
+  // العدو قرّب على المخبأ (أقل من 140 م) أو المرحلة تغيّرت ← بناية جديدة أبعد
+  const fx = foeFront(w, 'iq'), front = fx > -1e8 ? fx : (w.zone === 'city' ? CITY.x0 - 400 : -2400);
+  if (u.state !== 'retreat' && u.hide && (u.hide[0] < front + 120 || (w.zone === 'city' && !inCity(u.hide, 30)) || (u.zuN ?? 0) >= 2)) {
+    const sp = zuSpot(w, u.p, front, -1); if (sp) { u.hide = sp.hide; u.fire = sp.fire; u.zuN = 0; u.state = 'retreat'; u.stateT = 0; go(sp.hide); return; }
+  }
+  if (u.state === 'retreat') { if (atGoal()) { u.state = 'hide'; u.stateT = 0; u.goal = null; } return; }
+  if (u.state === 'hide' || u.state === 'idle' || u.state === 'hold') {
+    u.state = 'hide'; if (u.hide && dist2d(u.p, u.hide) > 8 && atGoal()) { go(u.hide); return; }
+    const foes = [...w.known.iq.keys()].some(id => { const o = w.units.find(q => q.id === id); return !!o && o.alive && dist2d(o.p, u.p) < SPEC.zu23.range && SPEC[o.kind].armor < 1; });
+    const air = w.air.some(a => a.alive && a.side === 'en' && dist2d(a.p, u.p) < 2600) || w.jets.some(j => j.alive && j.side === 'en' && j.st !== 'down' && dist2d(j.p, u.p) < 2800);
+    if ((foes || air) && u.stateT > 5 + w.r() * 6 && u.supp < 0.5 && u.hp > SPEC.zu23.hp * 0.35) { u.fi = (u.fi + 1) % Math.max(1, u.fire.length); u.state = 'peek'; u.stateT = 0; u.peekShots = 0; go(u.fire[u.fi]); }
+    return;
+  }
+  if (u.state === 'peek') { if (!atGoal() && u.stateT < 30) return; u.state = 'aim'; u.stateT = 0; u.goal = null; u.path = undefined; return; }
+  if (u.state === 'aim' && (u.peekShots >= 2 || u.stateT > 12 || u.supp > 0.55 || u.hp < SPEC.zu23.hp * 0.4)) { u.state = 'scoot'; u.stateT = 0; u.zuN = (u.zuN ?? 0) + 1; if (u.hide) go(u.hide); }
+  if (u.state === 'scoot' && atGoal()) { u.state = 'hide'; u.stateT = 0; u.goal = null; }
 }
 // ----- TH6.1: الجنود — كل واحد بمكانه ووضعيته وطلقاته. (المولد w.r2 منفصل: شكل الجنود ما يغيّر نتيجة المعركة) -----
 const SOL_H: Record<SPose, number> = { stand: 1.45, crouch: 0.95, prone: 0.3 };
@@ -1079,7 +1115,7 @@ function fight(w: World, u: Unit, dt: number) {
       if (tU && !u.goal && u.spd < 0.5) { const side = rel > 0 ? 1 : -1, want = yawOf(sub(tp, u.p)) - side * Math.PI * 0.55; u.yaw += clamp(angDiff(u.yaw, want), -spec.turn * dt * 0.6, spec.turn * dt * 0.6); u.spd = 0; }
       u.cd = 0.1; return;
     }
-    u.target = tA ? -tA.id : tU!.id; u.burst = 8 + Math.floor(w.r() * 7); u.burstT = 0; u.cd = tA ? 0.9 + w.r() * 0.8 : 1.6 + w.r() * 1.4; u.firedT = w.T;
+    u.peekShots++; u.target = tA ? -tA.id : tU!.id; u.burst = 8 + Math.floor(w.r() * 7); u.burstT = 0; u.cd = tA ? 0.9 + w.r() * 0.8 : 1.6 + w.r() * 1.4; u.firedT = w.T;
     return;
   }
   if (u.kind === 'technical' || u.kind === 'dshk') {

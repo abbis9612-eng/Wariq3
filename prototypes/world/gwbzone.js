@@ -60,7 +60,7 @@
   function sounds(rdt) {
     if (!SND || !SND.ctx) return;
     if (!amb && SND.buf.bz_ambience) { const s = SND.ctx.createBufferSource(); s.buffer = SND.buf.bz_ambience; s.loop = true; const gn = SND.ctx.createGain(); gn.gain.value = 0; s.connect(gn).connect(SND.master); s.start(); amb = { s, gn }; }
-    if (amb) amb.gn.gain.value = SND.on ? .28 : 0;
+    if (amb) amb.gn.gain.value = SND.on ? .55 : 0;
     engT -= rdt; if (engT <= 0 && spd > 0) { engT = 3.5 + R() * 2; const m = B.units.filter(u => u.st !== 'dead' && u.spd > 1).sort((a, b) => Math.hypot(a.p.x - cam.x, a.p.y - cam.y) - Math.hypot(b.p.x - cam.x, b.p.y - cam.y))[0]; if (m) snd('engine', m.p.x, m.p.y, .4); }
   }
   function close() { if (amb) { try { amb.s.stop(); } catch (e) { } amb = null; } cancelAnimationFrame(raf); el.hidden = true; FX.clear && FX.clear(); const b = B; B = null; onExit && onExit(b); }
@@ -276,7 +276,7 @@
     const U = sizePx(9.8);
     const near = (x, y) => Math.max(0, 1 - Math.hypot(x - cam.x, y - cam.y) * cam.s / innerWidth);
     if (e.k === 'gun') { const u = B.units.find(z => z.id === e.id); const a = u ? u.tur : 0; FX.muzzle(e.x + Math.cos(a) * 9, e.y + Math.sin(a) * 9, a, 1.5); for (let i = 0; i < 4; i++) FX.puff(e.x + Math.cos(a) * 4, e.y + Math.sin(a) * 4, sizePx(9.8) * .22, 2.2, 'dust', .45, (R() - .5) * 40, (R() - .5) * 40, 2.6); snd('tank', e.x, e.y, .85); trauma = Math.min(1, trauma + .18 * near(e.x, e.y)); }
-    else if (e.k === 'can30') snd('can30', e.x, e.y, .45);
+    else if (e.k === 'can30') snd('can30', e.x, e.y, .9);
     else if (e.k === 'atgm' || e.k === 'rpg') { for (let i = 0; i < 5; i++) FX.puff(e.x, e.y, 6, 3, 'grey', .6, (R() - .5) * 30, (R() - .5) * 30, 2.2); snd(e.k === 'atgm' ? 'woosh' : 'launch', e.x, e.y, .7); }
     else if (e.k === 'rifle') snd('rifle', e.x, e.y, .35);
     else if (e.k === 'dismount') snd('mg', e.x, e.y, .15);

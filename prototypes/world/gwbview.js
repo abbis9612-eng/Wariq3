@@ -183,7 +183,7 @@
   function onEv(e) {
     const U = sizePx(9.8);
     if (e.k === 'gun') { const u = B.units.find(z => z.id === e.id); const a = u ? u.tur : 0; FX.muzzle(e.x + Math.cos(a) * 7, e.y + Math.sin(a) * 7, a, 1); snd('tank', e.x, e.y, .7); }
-    else if (e.k === 'can30') snd('can30', e.x, e.y, .45);
+    else if (e.k === 'can30') snd('can30', e.x, e.y, .9);
     else if (e.k === 'atgm' || e.k === 'rpg') { FX.puff(e.x, e.y, 6, 3, 'grey', .6, 0, 0, 2); snd('woosh', e.x, e.y, .5); }
     else if (e.k === 'rifle') snd('mg', e.x, e.y, .25);
     else if (e.k === 'kill') { FX.spark(e.x, e.y, 14, 140); setTimeout(() => { if (!B) return; FX.explode(e.x, e.y, e.type === 'abrams' || e.type === 't72' ? 'cookoff' : 'big', 1); FX.burn(e.x, e.y, 1, 90); snd('boom_big', e.x, e.y, 1); }, 600 / spd); }

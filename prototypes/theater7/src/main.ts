@@ -551,7 +551,7 @@ function addDecal(p: V3, size: number) {
 // ===== الصوت (مولّد) =====
 let simSpeed = 2, slowK = 1;
 // أصوات حقيقية مسجّلة (SoundBible CC BY 3.0 + BigSoundBank CC0): تتأخر حسب المسافة (سرعة الصوت) وتنكتم من بعيد (I-024)
-const sndUrls = { ...import.meta.glob('../../theater/sounds/*.mp3', { query: '?url', import: 'default', eager: true }), ...import.meta.glob('../../grandwar/sounds/bz_*.mp3', { query: '?url', import: 'default', eager: true }), ...import.meta.glob('../../battle-classic/sounds/{heli_pass,hmg,jet_roar,sonic,boom_bomb,woosh}.mp3', { query: '?url', import: 'default', eager: true }) } as Record<string, string>;   /* I-172: + أصوات مختبر المالك */   // I-170: أصوات المالك الحقيقية (I-168) فوق القديمة
+const sndUrls = { ...import.meta.glob('../../theater/sounds/*.mp3', { query: '?url', import: 'default', eager: true }), ...import.meta.glob(['../../grandwar/sounds/bz_*.mp3', '!../../grandwar/sounds/bz_23_full.mp3', '!../../grandwar/sounds/bz_clash.mp3', '!../../grandwar/sounds/bz_hmg_bed.mp3'], { query: '?url', import: 'default', eager: true }), ...import.meta.glob('../../battle-classic/sounds/{heli_pass,hmg,jet_roar,sonic,boom_bomb,woosh}.mp3', { query: '?url', import: 'default', eager: true }) } as Record<string, string>;   /* I-172: + أصوات مختبر المالك */   // I-170: أصوات المالك الحقيقية (I-168) فوق القديمة
 const sfx = (() => {
   let ac: AudioContext | null = null, master: GainNode, muted = false, buzz: GainNode | null = null, nb: AudioBuffer;
   // I-170 (من المعركة الكلاسيكية): قناة للأصوات الصغيرة (رصاص) تنخفض لحظة الانفجار الكبير، صدى ساحة (convolver)، جو معركة يدور، وبيس تحت الانفجار

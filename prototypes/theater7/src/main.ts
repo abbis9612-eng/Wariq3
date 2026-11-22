@@ -1201,7 +1201,7 @@ const setHTML = (id: string, h: string) => { if (htmlC.get(id) !== h) { htmlC.se
 function hud() {
   const s = W.stats, mm = `${Math.floor(W.T / 60)}:${String(Math.floor(W.T % 60)).padStart(2, '0')}`;
   if ($('clock').textContent !== mm) $('clock').textContent = mm;
-  $('phase').textContent = W.air.some(a => a.kind === 'iskander') ? '⚠ صاروخ باليستي بالجو' : W.air.some(a => a.kind === 'shahed') ? 'مسيّرات بالجو' : W.air.some(a => a.kind === 'kh101') ? 'صواريخ كروز بالجو' : ({ march: 'رتل العدو على الطريق', approach: 'العدو يتقدم بقفزات', breach: 'العدو يخترق نحو التلّة', assault: 'اقتحام قرية الطريق', retreat: 'العدو ينسحب' } as Record<string, string>)[W.en] + (W.iq === 'line2' ? ' · خطنا الثاني' : W.iq === 'counter' ? ' · هجومنا المعاكس' : '');
+  $('phase').textContent = W.air.some(a => a.kind === 'iskander') ? '⚠ صاروخ باليستي بالجو' : W.air.some(a => a.kind === 'shahed') ? 'مسيّرات بالجو' : W.air.some(a => a.kind === 'kh101') ? 'صواريخ كروز بالجو' : ({ march: 'رتل العدو على الطريق', approach: 'العدو يتقدم بقفزات', breach: 'العدو يخترق نحو التلّة', assault: 'اقتحام قرية الطريق', retreat: 'العدو ينسحب', city: '🏙 حرب مدن — مدينة الجسر' } as Record<string, string>)[W.en] + (W.iq === 'line2' ? ' · خطنا الثاني' : W.iq === 'counter' ? ' · هجومنا المعاكس' : '');
   const held = W.houseOwner.filter(o => o === 'en').length;
   setHTML('tally', `<span>T-72 <b class="g">${s.enTanksLost}</b>/${s.enTanks}</span><span>BMP <b class="g">${s.enBmpLost}</b>/${s.enBmp}</span><span>مشاة العدو <b class="g">${s.enMenLost}</b>/${s.enMen}</span>`
     + `<span>أبرامز <b>${s.iqTanks - s.iqTanksLost}</b>/${s.iqTanks}</span><span>جنودنا <b>${s.iqMen - s.iqMenLost}</b>/${s.iqMen}</span>${held ? `<span>بيوت بيد العدو <b class="x">${held}</b></span>` : ''}`

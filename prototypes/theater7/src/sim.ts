@@ -13,8 +13,8 @@ import type { House } from './land.ts';
 
 // ===== الوحدات =====
 export type Side = 'iq' | 'en';
-export type Kind = 'abrams' | 't72' | 'bmp' | 'technical' | 'dshk' | 'd30' | 'grad' | 'patriot' | 's400' | 'inf' | 'kornet';
-export const KIND_AR: Record<Kind, string> = { abrams: 'أبرامز M1A1', t72: 'T-72B3', bmp: 'BMP-2', technical: 'بيكب دوشكا', dshk: 'دوشكا 12.7', d30: 'مدفع D-30', grad: 'راجمة غراد BM-21', patriot: 'باتريوت', s400: 'S-400 تريومف', inf: 'حضيرة مشاة', kornet: 'فريق كورنيت' };
+export type Kind = 'abrams' | 't72' | 'bmp' | 'technical' | 'dshk' | 'd30' | 'grad' | 'patriot' | 's400' | 'inf' | 'kornet' | 'zu23';
+export const KIND_AR: Record<Kind, string> = { zu23: 'بيكب زو-23', abrams: 'أبرامز M1A1', t72: 'T-72B3', bmp: 'BMP-2', technical: 'بيكب دوشكا', dshk: 'دوشكا 12.7', d30: 'مدفع D-30', grad: 'راجمة غراد BM-21', patriot: 'باتريوت', s400: 'S-400 تريومف', inf: 'حضيرة مشاة', kornet: 'فريق كورنيت' };
 export const SIDE_AR: Record<Side, string> = { iq: 'العراق', en: 'العدو' };
 interface KindSpec { hp: number; range: number; reload: number; speed: number; aa: number; armor: number; turn: number; eye: number; tall: number }
 export const SPEC: Record<Kind, KindSpec> = {
@@ -23,6 +23,7 @@ export const SPEC: Record<Kind, KindSpec> = {
   bmp: { hp: 1.3, range: 650, reload: 4, speed: 9, aa: 0, armor: 0.5, turn: 0.9, eye: 2.2, tall: 2.2 },
   technical: { hp: 1, range: 700, reload: 1.2, speed: 12, aa: 1200, armor: 0, turn: 1.2, eye: 2.3, tall: 2.1 },
   dshk: { hp: 1, range: 650, reload: 1.0, speed: 2, aa: 1100, armor: 0, turn: 2.5, eye: 1.3, tall: 1.2 },
+  zu23: { hp: 1.1, range: 1800, reload: 1.6, speed: 12, aa: 2500, armor: 0, turn: 1.4, eye: 2.6, tall: 2.6 },   // I-172: بيكب بمدفع زو-23-2 (23 ملم مزدوج): أرض وجو
   d30: { hp: 1, range: 9000, reload: 6, speed: 0, aa: 0, armor: 0, turn: 0.4, eye: 1.5, tall: 1.6 },
   grad: { hp: 1, range: 12000, reload: 999, speed: 9, aa: 0, armor: 0, turn: 0.5, eye: 3, tall: 3 },
   patriot: { hp: 2, range: 0, reload: 0, speed: 0, aa: 0, armor: 0, turn: 0, eye: 5, tall: 9 },
@@ -143,7 +144,7 @@ export function newWorld(seed = 11): World {
     U('abrams', 'iq', hide, WEST, 'خط الأبرامز', { state: 'hide', fire, hide, role: 'line', cd: 3 + i * 2 });
   });
   U('dshk', 'iq', [-1870, 0, HIGHWAY_Z - 70], WEST, 'سيطرة الطريق', { role: 'aa' }); U('dshk', 'iq', [-1870, 0, HIGHWAY_Z + 70], WEST, 'سيطرة الطريق', { role: 'aa' });
-  U('technical', 'iq', [-1790, 0, HIGHWAY_Z - 22], WEST, 'سيطرة الطريق', { role: 'aa' });
+  U('zu23', 'iq', [-1790, 0, HIGHWAY_Z - 22], WEST, 'سيطرة الطريق', { role: 'aa' });
   U('d30', 'iq', [-1050, 0, -720], WEST, 'كتيبة مدفعية', { role: 'arty' }); U('d30', 'iq', [-1050, 0, -600], WEST, 'كتيبة مدفعية', { role: 'arty' });
   // مشاة بالبيوت الغربية من قرية الطريق (كل حضيرة ببيت)
   const westHouses = [...FRONT_HOUSES].sort((a, b) => a.x - b.x);
@@ -161,7 +162,7 @@ export function newWorld(seed = 11): World {
   const rs = U('inf', 'iq', rb.p, [0, 0, -1], 'الاحتياط', { role: 'reserve', state: 'mounted', mount: rb.id }); rb.carry = rs.id;
   U('technical', 'iq', add(site('green').p, [-120, 0, 90]), [0, 0, 1], 'دفاع قرية الوادي', { role: 'aa' });
   U('technical', 'iq', add(site('dora').p, [-140, 0, 110]), [0, 0, 1], 'دفاع الخزانات', { role: 'aa' });
-  U('technical', 'iq', add(site('taji').p, [150, 0, -150]), [0, 0, 1], 'دفاع معسكر التل', { role: 'aa' });
+  U('zu23', 'iq', add(site('taji').p, [150, 0, -150]), [0, 0, 1], 'دفاع معسكر التل', { role: 'aa' });
   U('patriot', 'iq', PATRIOT_POS, [0, 0, 1], 'بطارية باتريوت', { yaw: PATRIOT_YAW, role: 'aa' });
   U('s400', 'iq', S400_POS, [0, 0, 1], 'بطارية S-400', { yaw: S400_YAW, role: 'aa' });
   // --- العدو: سرية دبابات + فصيل BMP بيها مشاة + بيكبات، وراجمتين ---
@@ -231,7 +232,7 @@ function spawnJet(w: World, kind: JetKind, side: Side, p: V3, tgt: V3, wing: num
 }
 // هدف طيران العدو: أقرب تجمّع إلنا للجبهة (الأبرامز، الرشاشات، المدفعية)
 function enemyAirTarget(w: World): V3 | null {
-  const L = w.units.filter(u => u.side === 'iq' && u.alive && (isTank(u) || u.kind === 'dshk' || u.kind === 'technical' || u.kind === 'd30' || u.kind === 'bmp'));
+  const L = w.units.filter(u => u.side === 'iq' && u.alive && (isTank(u) || u.kind === 'dshk' || u.kind === 'technical' || u.kind === 'zu23' || u.kind === 'd30' || u.kind === 'bmp'));
   if (!L.length) return null; const u = L[Math.floor(w.r() * Math.min(L.length, 6))]; return [...u.p] as V3;
 }
 function steer(j: Jet, want: V3, sp: number, k: number, dt: number) { j.v = scale(norm(add(norm(j.v), scale(norm(want), dt * k))), sp); }
@@ -263,7 +264,7 @@ function jets(w: World, dt: number) {
     } else if (j.kind === 'tb2') {   // يحوم بدائرة 900 م ويرمي MAM-L كل ~40 ث على آلية إلنا
       const ang = Math.atan2(j.p[2] - j.c[2], j.p[0] - j.c[0]) + dt * sp / 900, want: V3 = [j.c[0] + Math.cos(ang) * 900 - j.p[0], (JALT.tb2 - j.p[1]) * 0.5, j.c[2] + Math.sin(ang) * 900 - j.p[2]];
       if (j.st === 'out') steer(j, [home[0] - j.p[0], 0, 0], sp * 1.4, 0.6, dt); else steer(j, want, sp, 2, dt);
-      if (j.st === 'hover' && j.t > 8 && j.t > j.fireT && j.ammo > 0) { const tg = w.units.filter(u => u.side === 'iq' && u.alive && (isTank(u) || u.kind === 'technical' || u.kind === 'dshk' || u.kind === 'd30' || u.kind === 'bmp') && dist2d(u.p, j.p) < 5000)[0];
+      if (j.st === 'hover' && j.t > 8 && j.t > j.fireT && j.ammo > 0) { const tg = w.units.filter(u => u.side === 'iq' && u.alive && (isTank(u) || u.kind === 'technical' || u.kind === 'zu23' || u.kind === 'dshk' || u.kind === 'd30' || u.kind === 'bmp') && dist2d(u.p, j.p) < 5000)[0];
         if (tg) { j.ammo--; j.fireT = j.t + 38; const m = spawnAir(w, 'agm', 'en', add(j.p, [0, -3, 0]), add(scale(norm(sub(tg.p, j.p)), 60), [0, -10, 0]), undefined, undefined, add(tg.p, [0, 1.4, 0])); m.tgtUnit = tg.id; m.phase = 'boost';
           w.fx.push({ k: 'jet', jet: j.id, ev: 'release', p: [...j.p] as V3 }); w.log.push({ t: w.T, text: `بيرقدار TB2 المعادية رمت صاروخ MAM-L على ${tg.name}`, good: false, p: tg.p }); } }
       if (j.ammo <= 0 && j.st === 'hover') j.st = 'out'; if (j.st === 'out' && j.p[0] < -7400) j.alive = false;
@@ -348,7 +349,7 @@ export function hullDownSpot(w: World, from: V3, toward: V3, maxAdv = 60): V3 | 
 // ===== أدوات القتال =====
 const isColumn = (u: Unit) => u.group === COLUMN;
 const isTank = (u: Unit) => u.kind === 'abrams' || u.kind === 't72';
-const isVeh = (u: Unit) => SPEC[u.kind].armor > 0 || u.kind === 'technical';
+const isVeh = (u: Unit) => SPEC[u.kind].armor > 0 || u.kind === 'technical' || u.kind === 'zu23';
 const ground = (u: Unit) => u.kind !== 'patriot' && u.kind !== 's400' && u.kind !== 'grad';
 const byName = (u: Unit) => u.side === 'en' ? `${u.name} معادية` : u.name;
 function kill(w: World, u: Unit, by: string) {
@@ -534,7 +535,7 @@ function fallback(w: World, by: string) {
       u.fire = cands.map(c => hullDownSpot(w, c, add(c, [-1500, 0, 0]), 70)).filter(Boolean) as V3[];
       if (!u.fire.length) u.fire = [add(hide, [-40, 0, 0])];
       u.state = 'retreat'; u.goal = hide; u.fi = 0;
-    } else if (u.kind === 'dshk' || u.kind === 'technical') { u.state = 'retreat'; u.goal = [-1560 + (w.r() - 0.5) * 60, 0, u.p[2] + (u.p[2] > HIGHWAY_Z ? 30 : -30)]; }
+    } else if (u.kind === 'dshk' || u.kind === 'technical' || u.kind === 'zu23') { u.state = 'retreat'; u.goal = [-1560 + (w.r() - 0.5) * 60, 0, u.p[2] + (u.p[2] > HIGHWAY_Z ? 30 : -30)]; }
     else if (u.kind === 'kornet') { u.goal = [...KORNET_P2] as V3; }
   }
   w.log.push({ t: w.T, text: `${by}: الأبرامز تنسحب من التلّة لخط ثاني ورا بيوت القرية`, good: null, p: [-2050, 0, HIGHWAY_Z] });
@@ -945,10 +946,20 @@ function move(w: World, u: Unit, dt: number) {
 function fight(w: World, u: Unit, dt: number) {
   const spec = SPEC[u.kind]; u.cd -= dt; u.rpgCd -= dt;
   if (u.kind === 'patriot' || u.kind === 's400' || u.kind === 'grad' || u.state === 'mounted') return;
-  if (u.burst > 0) { u.burstT -= dt; if (u.burstT <= 0) { u.burstT += u.kind === 'bmp' ? 0.32 : 0.1; u.burst--; if (u.kind === 'bmp') cannonRound(w, u); else mgRound(w, u); } return; }
+  if (u.burst > 0) { u.burstT -= dt; if (u.burstT <= 0) { u.burstT += u.kind === 'bmp' ? 0.32 : u.kind === 'zu23' ? 0.06 : 0.1; u.burst--; if (u.kind === 'bmp') cannonRound(w, u); else if (u.kind === 'zu23') zuRound(w, u); else mgRound(w, u); } return; }
   if (u.kind === 'inf') return infFire(w, u);
   if (u.kind === 'kornet') return kornetFire(w, u);
   if (u.cd > 0) return;
+  if (u.kind === 'zu23') {   // I-172: الجو أول (مسيّرات وطيارات العدو)، وبعدها الأرض: مشاة وبيكبات ومدرعات خفيفة
+    let tA: { id: number; p: V3 } | null = null, bd = 1e9;
+    for (const a of w.air) if (a.alive && a.side !== u.side && a.kind === 'shahed') { const d = len(sub(a.p, u.p)); if (d < spec.aa && d < bd) { bd = d; tA = a; } }
+    for (const j of w.jets) if (j.alive && j.side !== u.side && j.st !== 'down') { const d = len(sub(j.p, u.p)); if (d < spec.aa && d < bd) { bd = d; tA = j; } }
+    let tU: Unit | null = null;
+    if (!tA) { const t = nearestFoe(w, u, spec.range, o => SPEC[o.kind].armor < 1 && o.state !== 'mounted' && (o.kind !== 'inf' || dist2d(o.p, u.p) < 700)); if (t && visOf(w, u, t) > 0) tU = t; }
+    if (!tA && !tU) return;
+    u.target = tA ? -tA.id : tU!.id; u.burst = 8 + Math.floor(w.r() * 7); u.burstT = 0; u.cd = tA ? 0.9 + w.r() * 0.8 : 1.6 + w.r() * 1.4; u.firedT = w.T;
+    return;
+  }
   if (u.kind === 'technical' || u.kind === 'dshk') {
     let tA: Air | null = null, bd = 1e9;
     if (u.side === 'iq') for (const a of w.air) if (a.alive && a.kind === 'shahed') { const d = len(sub(a.p, u.p)); if (d < spec.aa && d < bd) { bd = d; tA = a; } }
@@ -1010,12 +1021,13 @@ function fight(w: World, u: Unit, dt: number) {
   if (u.side === 'en' && isTank(u) && w.r() < 0.35) { u.state = 'scoot'; u.stateT = 0; u.goal = add(u.p, scale(dir, -22)); w.schedule.push({ t: w.T + 9, f: () => { if (u.alive && u.state === 'scoot') { u.state = 'overwatch'; u.goal = null; } } }); }
 }
 // ----- البرج: يتابع آخر هدف، وإذا ماكو يدوّر على أقرب عدو معروف، وإلا يرجع لقدّام -----
-const TRAV: Partial<Record<Kind, number>> = { abrams: 0.7, t72: 0.45, bmp: 0.6 };   // راد/ثانية (أبرامز ~40°/ث، T-72 ~24°/ث)
+const TRAV: Partial<Record<Kind, number>> = { abrams: 0.7, t72: 0.45, bmp: 0.6, zu23: 1.6 };   // زو-23: لفّة يدوية سريعة (~90°/ث)   // راد/ثانية (أبرامز ~40°/ث، T-72 ~24°/ث)
 function turret(w: World, u: Unit, dt: number) {
   const tr = TRAV[u.kind]; if (!tr) return;
   let want = u.yaw;
   const a = w.T - u.aimSeen < 3 || u.burst > 0 ? w.units.find(x => x.id === (u.burst > 0 ? u.target : u.aimId) && x.alive) : undefined;
-  if (a) want = yawOf(sub(a.p, u.p));
+  const ap = u.target < 0 && (u.burst > 0 || w.T - u.firedT < 2) ? (w.air.find(x => x.id === -u.target && x.alive) ?? w.jets.find(x => x.id === -u.target && x.alive))?.p : undefined;   /* الزو-23 يلف على الطيارة */
+  if (ap) want = yawOf(sub(ap, u.p)); else if (a) want = yawOf(sub(a.p, u.p));
   else if (u.state !== 'march' && u.state !== 'mounted') {
     let bd = SPEC[u.kind].range * 1.3;
     for (const id of w.known[u.side].keys()) { const o = w.units.find(x => x.id === id); if (!o || !o.alive || o.state === 'mounted') continue; const d = dist2d(o.p, u.p); if (d < bd && (isVeh(o) || d < 500)) { bd = d; want = yawOf(sub(o.p, u.p)); } }
@@ -1038,7 +1050,7 @@ function infFire(w: World, u: Unit) {
     }
   }
   if (u.cd > 0) return;
-  const t = nearestFoe(w, u, SPEC.inf.range, o => o.kind === 'inf' || o.kind === 'kornet' || o.kind === 'technical' || o.kind === 'dshk');
+  const t = nearestFoe(w, u, SPEC.inf.range, o => o.kind === 'inf' || o.kind === 'kornet' || o.kind === 'technical' || o.kind === 'zu23' || o.kind === 'dshk');
   if (!t) return; const v = visOf(w, u, t); if (v <= 0) return;
   u.cd = SPEC.inf.reload * (0.8 + w.r() * 0.6) * (1 + u.supp); u.firedT = w.T; u.target = t.id;
   const d = dist2d(t.p, u.p), cover = t.house >= 0 ? BAL.house : (t.pose === 'prone' ? 0.45 : 1) * coverK(t, 0.5);
@@ -1070,6 +1082,32 @@ function cannonRound(w: World, u: Unit) {
   const by = byName(u);
   w.schedule.push({ t: w.T + tf, f: (w) => { suppress(w, to, 12, 0.18, u.side); if (!hit) return;
     if (o.kind === 'inf') { if (o.house >= 0) { hitHouse(w, o.house, 0.15); if (w.r() < 0.25) casualty(w, o, 1, by); } else casualty(w, o, w.r() < 0.35 * coverK(o, 0.55) ? 1 : 0, by); } else damage(w, o, isTank(o) ? 0.03 : 0.25, by); } });
+}
+// I-172: طلقة زو-23 (السبطانتين بالتناوب): ضد الجو تسقط المسيّرة بإصابة والطيارة بعدة إصابات؛ ضد الأرض تقتل المشاة وتثقب المدرعات الخفيفة
+function zuRound(w: World, u: Unit) {
+  const muzzle = add(u.p, [0, 2.6, 0]); w.stats.rounds++; const tracer = u.shots++ % 2 === 0;
+  if (u.target < 0) {
+    const a = w.air.find(x => x.id === -u.target && x.alive), j = a ? null : w.jets.find(x => x.id === -u.target && x.alive && x.st !== 'down'), t = a ?? j; if (!t) { u.burst = 0; return; }
+    const d = len(sub(t.p, muzzle)), tf = d / 970, lead = add(t.p, scale(t.v, tf));
+    const pk = (a ? 0.03 : j!.kind === 'ah64' || j!.kind === 'tb2' ? 0.03 : 0.018) * Math.max(0.2, 1 - d / SPEC.zu23.aa), hit = w.r() < pk, r = () => (w.r() - 0.5) * (hit ? 3 : 40);
+    const to: V3 = add(lead, [r(), r(), r()]);
+    w.fx.push({ k: 'round', unit: u.id, p: muzzle, dir: norm(sub(to, muzzle)), to, tracer, tf, hit: hit ? 'metal' : 'air' });
+    if (w.r() < 0.12) w.fx.push({ k: 'boom', p: add(to, [0, 0, 0]), size: 0.18, air: true });   // الحارقة المتفجرة تنفجر بالجو بوميض صغير
+    if (hit) w.schedule.push({ t: w.T + tf, f: (w) => {
+      if (a) { if (!a.alive) return; a.alive = false; w.stats.dronesDown++; w.fx.push({ k: 'boom', p: a.p, size: 0.7, air: true }, { k: 'intercept', p: a.p, big: false }, { k: 'mark', p: add(a.p, [0, 25, 0]), text: '✓ أُسقطت', good: true });
+        w.log.push({ t: w.T, text: `${u.name} (23 ملم) أسقطت ${AIR_AR[a.kind]}`, good: u.side === 'iq', p: a.p }); return; }
+      if (!j || j.st === 'down') return; j.hp -= 0.2; w.fx.push({ k: 'boom', p: j.p, size: 0.25, air: true });
+      if (j.hp <= 0) { j.st = 'down'; w.fx.push({ k: 'jet', jet: j.id, ev: 'down', p: [...j.p] as V3 }, { k: 'boom', p: [...j.p] as V3, size: 1.1, air: true }, { k: 'mark', p: add(j.p, [0, 30, 0]), text: '✓ أسقطناها', good: u.side === 'iq' });
+        w.log.push({ t: w.T, text: `${u.name} (23 ملم) أسقط ${JET_AR[j.kind]}`, good: u.side === 'iq', p: j.p }); } } });
+  } else {
+    const o = w.units.find(x => x.id === u.target); if (!o || !o.alive) { u.burst = 0; return; }
+    const d = dist2d(o.p, muzzle), tf = d / 970, hit = w.r() < (o.kind === 'inf' ? (o.pose === 'prone' ? 0.003 : 0.008) * coverK(o, 0.5) : 0.16 - d / 14000);   /* مضبوطة بالمسح (tools/balcmp.ts) */
+    const to: V3 = add(o.p, [(w.r() - 0.5) * (hit ? 2 : 22), hit ? 1.2 : 0, (w.r() - 0.5) * (hit ? 2 : 22)]);
+    w.fx.push({ k: 'round', unit: u.id, p: muzzle, dir: norm(sub(to, muzzle)), to, tracer, tf, hit: hit && o.kind !== 'inf' ? 'metal' : 'ground' });
+    const by = byName(u);
+    w.schedule.push({ t: w.T + tf, f: (w) => { if (w.r() < 0.4) w.fx.push({ k: 'boom', p: to, size: 0.15, air: false }); suppress(w, to, 16, 0.14, u.side); if (!hit) return;
+      if (o.kind === 'inf' || o.kind === 'kornet') { if (o.house < 0 || w.r() < 0.4) casualty(w, o, 1, by); } else damage(w, o, SPEC[o.kind].armor > 0 ? 0.05 : 0.22, by); } });
+  }
 }
 function mgRound(w: World, u: Unit) {
   const muzzle = add(u.p, [0, u.kind === 'dshk' ? 1.1 : 2.4, 0]); w.stats.rounds++;

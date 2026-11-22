@@ -4,7 +4,7 @@
 (function (root) {
   'use strict';
   const START = Date.UTC(2026, 10, 20);   // 20 تشرين الثاني 2026: الوضع الحقيقي (D-048)
-  const V = 29;                              // إصدار حفظ «العالم» (9: البحرية الحقيقية W12؛ 2: الصواريخ والدفاع الجوي؛ 3: البحرية والمضائق؛ 4: طبقة الدولة؛ 5: التكتلات والتوتر والعروض والأمم المتحدة؛ 6: الانتخابات والانقلابات والاحتلال والأحداث؛ 7: البحث لكل الدول وسوق السلاح؛ 8: قائد القوات المسلحة)
+  const V = 30;                              // إصدار حفظ «العالم» (9: البحرية الحقيقية W12؛ 2: الصواريخ والدفاع الجوي؛ 3: البحرية والمضائق؛ 4: طبقة الدولة؛ 5: التكتلات والتوتر والعروض والأمم المتحدة؛ 6: الانتخابات والانقلابات والاحتلال والأحداث؛ 7: البحث لكل الدول وسوق السلاح؛ 8: قائد القوات المسلحة)
   const mulberry = a => () => { a |= 0; a = a + 0x6D2B79F5 | 0; let t = Math.imul(a ^ a >>> 15, 1 | a); t = t + Math.imul(t ^ t >>> 7, 61 | t) ^ t; return ((t ^ t >>> 14) >>> 0) / 4294967296; };
   const clamp = (v, a, b) => v < a ? a : v > b ? b : v;
   const POL = root.WPOL || (typeof require !== 'undefined' ? require('./wpol.js') : null);   // W7: السياسة والأحداث
@@ -563,7 +563,8 @@
     if (o.v < 26) o.v = 26;
     if (o.v < 27) o.v = 27;
     if (o.v < 28) { o.v = 28; if (o.cab && o.cab.mode && o.cab.mode.rd === 'auto') o.cab.mode.rd = 'ask'; }   // I-156: وزير البحث صار يقترح بس (كان يفتح خانات تاكل الخزينة بدون ما تدري)؛ سجل «وين راحت الفلوس» (nat.led) ينبني لحاله   // v5-4: G.gov / G.iblocs / G.ibinv (نظام الحكم والتحالف الإسلامي) تنبني لما ينحتاج؛ بلا تغيير = نظام البيانات   // v5-3: G.ins (الجماعات المسلحة) تنبني أول شهر بعد الترقية من بيانات الدولة   // v5-2: G.geo (الضم/التابعين) ينبني لما ينحتاج   // v5-7: مسيرتنا (WRISE.ensure يبدي السجل من أول شهر بعد الترقية)   // v5-10: مجلس الوزراء (WCAB.ensure يبنيه بوزراء متوسطين أول شهر)   // I-143: الصنع الوطني بمصنع (warsenal.natOpen يحسبه: المصنوع وبخط الإنتاج يبقى مفتوح)   // I-140: قرض الطوارئ (fund3.brT ينبني لما ينحتاج)
-    if (o.v < 29) o.v = 29;   // I-162: W.agen (جيل سلاح الذكاء) وc.fearT ينبنون لحالهم
+    if (o.v < 29) o.v = 29;
+    if (o.v < 30) { o.v = 30; if (o.nat && !o.nat.ob) { o.nat.ob = { inf: 0, mec: 0, arm: 0 }; o.nat.obPw = 0; } }   // I-167: الفرق المصنوعة بعددها (اللي انصنعت قبل تبقى برقم «قوة الجيش» مثل ما كانت)   // I-162: W.agen (جيل سلاح الذكاء) وc.fearT ينبنون لحالهم
     o.base = WD.rel; o.rnd = mulberry(o.rs); dipInit(o, WD); if (POL) POL.ensure(o, WD); if (MKT) MKT.ensure(o, WD); if (CMD) CMD.ensure(o, WD); if (ECO) ECO.ensure(o, WD); if (POP) POP.ensure(o, WD); if (NAV) NAV.ensure(o, WD); return o;
   }
   const API = { V, K, START, TENSION, POL, MKT, CMD, NAV, ECO, init, addRel, answerOffer, unSummit, unVote, council, tenTarget, napOf, blocsOf, P5, navy, straits, step, month, act, can, offerPeace, declare, endWar, strike, playerStrike, rank, save, load, date, rel, atWar, allied, sancOf: (W, WD, id) => sancOn(WD, W, id), COST, TAX, CIV };

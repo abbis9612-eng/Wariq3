@@ -728,7 +728,7 @@ html[data-skin] .hero b{color:var(--act)}
     const sd = A.sams.filter(x => x.side === 1 && x.down).length; if (G.C[en] && sd > (P.sd || 0)) { G.C[en].adI = Math.max(0, G.C[en].adI - (sd - (P.sd || 0)) * 2); P.sd = sd; } }
   function myWar() { return G.wars.find(w => w.a.includes(me) || w.b.includes(me)); }
   function theater() {
-    if (T && !G.wars.some(w => w.id === T.war)) { T = null; selD = null; }
+    if (T && !G.wars.some(w => w.id === T.war)) { NT.warEnd(G, T); T = null; selD = null; }
     if (T) return;
     for (const w of G.wars) { if (!(w.a.includes(me) || w.b.includes(me)) || w.noLand) continue;
       let t = TH.build(G, WD, w, me), isAir = false;
@@ -798,8 +798,8 @@ html[data-skin] .hero b{color:var(--act)}
     const ov = T.W.over;
     if (ov && w && ov.peace) {   // W6: سلام بشروط dip.js — حدود قبل الحرب (sq، تعويضات) أو كلمن يحتفظ باللي بيده (keep)
       if (ov.peace !== 'keep') { for (const r of T.regs) { const k = T.ctl0[r]; if (k && G.ctl[r] !== k) G.ctl[r] = k; } w.taken = {}; }
-      S.endWar(G, WD, w, 'peace'); G.log.push({ t: G.t, k: 'wpeace', war: w.n, term: ov.peace, res: ov.res }); T = null; selD = null; syncMap(); return; }
-    if (ov && w) { const iLost = ov.loser === 0; if (!iLost && T.side[1][0]) { WGEO.ensure(G).post = { x: T.side[1][0], n: w.n, t: G.t }; speed = 0; } S.endWar(G, WD, w, 'capitulate'); if (iLost) { G.C[me].stab = Math.max(0, G.C[me].stab - 20); } G.log.push({ t: G.t, k: 'cap', who: iLost ? me : (T.side[1][0]), war: w.n }); T = null; selD = null; syncMap(); }
+      S.endWar(G, WD, w, 'peace'); G.log.push({ t: G.t, k: 'wpeace', war: w.n, term: ov.peace, res: ov.res }); NT.warEnd(G, T); T = null; selD = null; syncMap(); return; }
+    if (ov && w) { const iLost = ov.loser === 0; if (!iLost && T.side[1][0]) { WGEO.ensure(G).post = { x: T.side[1][0], n: w.n, t: G.t }; speed = 0; } S.endWar(G, WD, w, 'capitulate'); if (iLost) { G.C[me].stab = Math.max(0, G.C[me].stab - 20); } G.log.push({ t: G.t, k: 'cap', who: iLost ? me : (T.side[1][0]), war: w.n }); NT.warEnd(G, T); T = null; selD = null; syncMap(); }
   }
   // بلا حرب: أيام كاملة. بالحرب: نفس سرعات «الحرب الكبرى» (ساعات) والجو مربوط بالساعة مثلها بالضبط
   function advance(n) {

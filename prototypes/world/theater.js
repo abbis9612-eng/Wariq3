@@ -100,11 +100,16 @@
         const cs = WD.cs[k]; if (!cs || !T.cells.some(c => c.own === k)) continue;
         // المدافع على أرضه (الطرف ب بالحرب الأصلية، أو عاصمته بالمسرح) يرمي كل ثقله؛ المهاجم يخلي قوات بباقي حدوده
         const wr = G.wars.find(x => x.id === T.war) || {}, defender = (wr.b || []).includes(k) || (!(wr.a || []).includes(k) && T.regs.some(r => WD.r[r][12] && T.ctl0[r] === k));
-        const commit = k === T.side[s][0] ? (defender ? .9 : .5) : .35, live = (G.C[k] ? G.C[k].pw / G.C[k].pw0 : 1);
+        // I-167: المهاجم الرئيسي يرمي 75٪ (قبل 50٪ فالعراق يطلع بصفر فرق مدرعة)؛ الفرق اللي انشترت تنحسب وحدها (NW.ob) فنشيل أثرها من pw
+        const NW = k === G.me && G.nat ? G.nat : null, obPw = NW ? Math.min(NW.obPw || 0, G.C[k].pw * .6) : 0;
+        const commit = k === T.side[s][0] ? (defender ? .9 : .75) : .35, live = G.C[k] ? Math.max(.3, (G.C[k].pw - obPw) / G.C[k].pw0) : 1;
         // المدافع يعبّي جزء من الاحتياط
         const men = ((cs.act || 0) + (defender ? (cs.res || 0) * .5 : 0)) * commit * live, tanks = (cs.tanks || 0) * commit * live, afv = ((cs.kit && cs.kit.afv && cs.kit.afv[0]) || (cs.tanks || 0) * 2.5) * commit * live;
-        const a = Math.floor(tanks / 240), m = Math.floor(Math.max(0, afv - a * 110) / 220);
+        // كل الدبابات تطلع: 240 دبابة = فرقة مدرعة (تقريب لأقرب فرقة، وأول 80 دبابة تكفي لفرقة)، والباقي يروح للآلية
+        const a = tanks >= 80 ? Math.max(1, Math.round(tanks / 240)) : 0, m = Math.round(Math.max(0, afv + Math.max(0, tanks - a * 240) * 2 - a * 110) / 220);
         arm += a; mec += m; inf += Math.max(1, Math.round((men - (a + m) * 9000) / 12000));
+        // الفرق اللي صنعتها/اشتريتها بالسلم (وبالحروب اللي فاتت وظلت سالمة) تدخل كلها بأرقامها
+        if (NW && NW.ob) { arm += NW.ob.arm || 0; mec += NW.ob.mec || 0; inf += NW.ob.inf || 0; }
       }
       T.raw = T.raw || []; T.raw[s] = { inf, mec, arm };
       // الجودة: جيل الدبابات والطيارات (W4) والسيطرة الجوية
@@ -230,10 +235,12 @@
     homeArmy(T, G, WD); return T;
   }
   function homeArmy(T, G, WD) {
-    const W = T.W, me = T.me, cs = WD.cs[me] || {}, live = G.C[me] ? Math.min(1.5, G.C[me].pw / G.C[me].pw0) : 1, g = cs.gen || {}, uav = (cs.tech || {}).uav || 1;
+    const W = T.W, me = T.me, cs = WD.cs[me] || {}, NW = G.nat, ob = NW && NW.ob || {}, live = G.C[me] ? Math.max(.3, Math.min(1.5, (G.C[me].pw - Math.min(NW && NW.obPw || 0, G.C[me].pw * .6)) / G.C[me].pw0)) : 1, g = cs.gen || {}, uav = (cs.tech || {}).uav || 1;
     W.qual[0] = { hard: .8 + (g.tank || 2) * .1, org: .9 + ((g.tank || 2) - 2) * .05 + uav * .02, atk: .85 + (g.jet || 2) * .06 + uav * .03 };
     const tanks = (cs.tanks || 0) * live, afv = ((cs.kit && cs.kit.afv && cs.kit.afv[0]) || (cs.tanks || 0) * 2.5) * live, men = (cs.act || 0) * live;
-    const a = Math.floor(tanks / 240), m = Math.floor(Math.max(0, afv - a * 110) / 220), i = Math.max(1, Math.round((men - (a + m) * 9000) / 12000));
+    // I-167: نفس حساب الحرب (كل الدبابات تطلع) + الفرق اللي صنعتها تبين على الخريطة بالسلم
+    const a0 = tanks >= 80 ? Math.max(1, Math.round(tanks / 240)) : 0, m0 = Math.round(Math.max(0, afv + Math.max(0, tanks - a0 * 240) * 2 - a0 * 110) / 220);
+    const a = a0 + (ob.arm || 0), m = m0 + (ob.mec || 0), i = Math.max(1, Math.round((men - (a0 + m0) * 9000) / 12000)) + (ob.inf || 0);
     const tot = a + m + i, f = tot > 70 ? 70 / tot : 1;
     T.raw = [{ inf: i, mec: m, arm: a }, { inf: 0, mec: 0, arm: 0 }];
     T.ob = [{ inf: Math.max(1, Math.round(i * f)), mec: Math.round(m * f), arm: Math.round(a * f), scale: 1 / f }, { inf: 0, mec: 0, arm: 0, scale: 1 }];

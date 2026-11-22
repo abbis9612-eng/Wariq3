@@ -173,7 +173,20 @@
   }
   // التوصيل: بالحرب للمسرح نفسه (econ.js deliver: فرقة بأكبر مدينة، طيارات لقواعدها، صواريخ لمخزون الدفاع الجوي)، وبالسلم قوة الجيش تكبر
   const DIVPW = { inf: 15, mec: 60, arm: 140 };   // قوة تقريبية للفرقة بمقياس wsim [تقدير]
+  // I-167: الفرقة اللي تنصنع/تنشترى تنسجّل بعددها (NW.ob) وتدخل الحرب الجاية كاملة، مو بس رقم «قوة الجيش» يضيع بالمعادلة.
+  // obPw = الجزء من pw اللي جابته هالفرق، حتى المسرح يشيله ويحسبها مرة وحدة
   function deliver(G, WD, o, X) {
+    const it = ECON.ITEMS[o.k], c = G.C[G.me], p0 = c ? c.pw : 0; deliver0(G, WD, o, X);
+    const kd = it && it.cat === 'div' ? it.kind || o.k : null;
+    if (c && G.nat && ['inf', 'mec', 'arm'].includes(kd)) { const NW = G.nat; NW.ob = NW.ob || { inf: 0, mec: 0, arm: 0 }; NW.ob[kd]++; NW.obPw = (NW.obPw || 0) + Math.max(0, c.pw - p0); }
+  }
+  // بعد الحرب: الفرق المصنوعة تنقص بنسبة اللي انقتل من فرقنا من نفس النوع
+  function warEnd(G, T) {
+    const NW = G.nat; if (!NW || !NW.ob || !T || !T.W) return; let n = 0, k = 0;
+    for (const kd of ['inf', 'mec', 'arm']) { const all = T.W.divs.filter(d => d.side === 0 && d.kind === kd); if (!all.length) continue; const r = all.filter(d => !d.dead).length / all.length; NW.ob[kd] = Math.round(NW.ob[kd] * r); n += all.length; k += all.length * r; }
+    if (n) NW.obPw = (NW.obPw || 0) * k / n;
+  }
+  function deliver0(G, WD, o, X) {
     const it = ECON.ITEMS[o.k], c = G.C[G.me], NW = G.nat, T = X.T; if (!it) return;
     // M2: المنتجات الوطنية (عائلة السلاح، I-138)
     if (T && T.A && it.cat === 'plane' && AWLD()) AWLD().addPlanes(T.A, 0, it.plane, 0, G.me);   // نوع طيارة جديد بنص الحرب: سرب جديد بأقرب قاعدة (قبل كانت تنرمي)
@@ -229,6 +242,6 @@
     return { mil: Math.round(mil), eco: Math.round(eco), dip: Math.round(dip), pop: Math.round(pop) };
   }
   function grade(G, WD, S) { const p = paths(G, WD, S); return GRADE.grade(view(G, null), null, { paths: () => p }, 0); }
-  const API = { LEDC, ledger, deliver, init, catalog, daily, buy, canBuy, cancel, items, advice, paths, grade, GR: GRADE.GR, FACS, NI, supOf };
+  const API = { LEDC, ledger, deliver, warEnd, init, catalog, daily, buy, canBuy, cancel, items, advice, paths, grade, GR: GRADE.GR, FACS, NI, supOf };
   if (typeof module !== 'undefined') module.exports = API; else root.NATION = API;
 })(this);

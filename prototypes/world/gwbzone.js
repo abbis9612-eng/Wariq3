@@ -26,12 +26,14 @@
   const sizePx = len => Math.max(10, len * E * zs());
   // صوت بالمتر: تأخير سرعة الصوت، يخفت بالبعد عن نص الشاشة، والبعيد مكتوم
   // أصوات «منطقة القتال»: إذا المالك حط bz_*.mp3 بمجلد الأصوات تتحمل وتتقدّم، وإلا القديمة
-  const XS = { tank: 'bz_tank_fire', can30: 'bz_autocannon', mg: 'bz_mg', woosh: 'bz_atgm', boom_big: 'bz_explosion', boom_mid: 'bz_arty_hit', whiz: 'bz_whistle', boom_bomb: 'bz_bomb', jet_roar: 'bz_jet', launch: 'bz_rpg', howitzer: 'bz_howitzer' };
+  // FB: الصوت البديل إذا ملف bz_ مو موجود (null = سكوت)
+  const FB = { rifle: 'mg' };
+  const XS = { rifle: 'bz_rifle', ricochet: 'bz_ricochet', debris: 'bz_debris', engine: 'bz_engine', tank: 'bz_tank_fire', can30: 'bz_autocannon', mg: 'bz_mg', woosh: 'bz_atgm', boom_big: 'bz_explosion', boom_mid: 'bz_arty_hit', whiz: 'bz_whistle', boom_bomb: 'bz_bomb', jet_roar: 'bz_jet', launch: 'bz_rpg', howitzer: 'bz_howitzer' };
   const XTRA = ['bz_tank_fire', 'bz_autocannon', 'bz_mg', 'bz_atgm', 'bz_rpg', 'bz_explosion', 'bz_arty_hit', 'bz_whistle', 'bz_bomb', 'bz_jet', 'bz_howitzer', 'bz_engine', 'bz_ambience', 'bz_rifle', 'bz_ricochet', 'bz_debris'];
   function loadExtra() { if (!SND || !SND.ctx || SND._bz) return; SND._bz = 1; const base = (window.VIEW && VIEW.sndBase) || 'sounds/';
     for (const n of XTRA) fetch(base + n + '.mp3').then(r => r.ok ? r.arrayBuffer() : Promise.reject()).then(b => SND.ctx.decodeAudioData(b)).then(d => { SND.buf[n] = d; }).catch(() => { }); }
   function snd(n, x, y, vol = 1) {
-    if (SND && SND.buf && SND.buf[XS[n]]) n = XS[n];
+    if (SND && SND.buf) n = SND.buf[XS[n]] ? XS[n] : SND.buf[n] ? n : FB[n] || n;
     if (!SND || !SND.ctx || !SND.on || !SND.buf[n]) return; const now = SND.ctx.currentTime; SND.last = SND.last || {};
     if (now - (SND.last['bv' + n] || 0) < .06) return; SND.last['bv' + n] = now;
     const d = Math.hypot(x - cam.x, y - cam.y), view = innerWidth / cam.s; const v = vol * Math.max(0, 1 - d / (view * 2.2)); if (v < .03) return;
@@ -52,7 +54,15 @@
     const nt = document.getElementById('bvNote'); nt.style.opacity = 1; clearTimeout(BW._nt); BW._nt = setTimeout(() => nt.style.opacity = 0, 8000);
     input(); last = performance.now(); cancelAnimationFrame(raf); raf = requestAnimationFrame(frame);
   };
-  function close() { cancelAnimationFrame(raf); el.hidden = true; FX.clear && FX.clear(); const b = B; B = null; onExit && onExit(b); }
+  // جو المعركة (bz_ambience) يدور طول ما انت داخل، وهدير محركات من الآليات الماشية قرب الكاميرا
+  let amb = null, engT = 0;
+  function sounds(rdt) {
+    if (!SND || !SND.ctx) return;
+    if (!amb && SND.buf.bz_ambience) { const s = SND.ctx.createBufferSource(); s.buffer = SND.buf.bz_ambience; s.loop = true; const gn = SND.ctx.createGain(); gn.gain.value = 0; s.connect(gn).connect(SND.master); s.start(); amb = { s, gn }; }
+    if (amb) amb.gn.gain.value = SND.on ? .28 : 0;
+    engT -= rdt; if (engT <= 0 && spd > 0) { engT = 3.5 + R() * 2; const m = B.units.filter(u => u.st !== 'dead' && u.spd > 1).sort((a, b) => Math.hypot(a.p.x - cam.x, a.p.y - cam.y) - Math.hypot(b.p.x - cam.x, b.p.y - cam.y))[0]; if (m) snd('engine', m.p.x, m.p.y, .4); }
+  }
+  function close() { if (amb) { try { amb.s.stop(); } catch (e) { } amb = null; } cancelAnimationFrame(raf); el.hidden = true; FX.clear && FX.clear(); const b = B; B = null; onExit && onExit(b); }
   // ===== إدخال: سحب وتكبير =====
   let ptrs = new Map(), pinch = null, down = null;
   function input() {
@@ -105,6 +115,7 @@
     for (const e of B.ev) if (!e.seen) { e.seen = 1; onEv(e); if (follow) pick(e); }
     // كاميرا «مخرج»: تتابع مركز القتال بنعومة
     if (follow) director(rdt);
+    sounds(rdt);
     FX.update(rdt * spd);
     trauma = Math.max(0, trauma - rdt * 1.6); const sk = trauma * trauma * 14; sh[0] = (R() - .5) * 2 * sk; sh[1] = (R() - .5) * 2 * sk;
     drawGround(); FX.drawGround(); drawTracks(rdt); drawScene(rdt); drawShots(); FX.draw(); drawJets(); drawMarks(); mini(); hud();
@@ -264,10 +275,10 @@
     if (e.k === 'gun') { const u = B.units.find(z => z.id === e.id); const a = u ? u.tur : 0; FX.muzzle(e.x + Math.cos(a) * 9, e.y + Math.sin(a) * 9, a, 1.5); for (let i = 0; i < 4; i++) FX.puff(e.x + Math.cos(a) * 4, e.y + Math.sin(a) * 4, sizePx(9.8) * .22, 2.2, 'dust', .45, (R() - .5) * 40, (R() - .5) * 40, 2.6); snd('tank', e.x, e.y, .85); trauma = Math.min(1, trauma + .18 * near(e.x, e.y)); }
     else if (e.k === 'can30') snd('can30', e.x, e.y, .45);
     else if (e.k === 'atgm' || e.k === 'rpg') { for (let i = 0; i < 5; i++) FX.puff(e.x, e.y, 6, 3, 'grey', .6, (R() - .5) * 30, (R() - .5) * 30, 2.2); snd(e.k === 'atgm' ? 'woosh' : 'launch', e.x, e.y, .7); }
-    else if (e.k === 'rifle') snd('mg', e.x, e.y, .3);
+    else if (e.k === 'rifle') snd('rifle', e.x, e.y, .35);
     else if (e.k === 'dismount') snd('mg', e.x, e.y, .15);
-    else if (e.k === 'kill') { FX.spark(e.x, e.y, 18, 160); const big = e.type === 'abrams' || e.type === 't72' || e.type === 'bmp'; setTimeout(() => { if (!B) return; FX.explode(e.x, e.y, big ? 'cookoff' : 'big', big ? 1.4 : 1); FX.burn(e.x, e.y, 1.2, 140); FX.scorch(e.x, e.y, 26, 400); smokes.push({ x: e.x, y: e.y, t: 0, life: 240 }); snd('boom_big', e.x, e.y, 1); trauma = Math.min(1, trauma + .55 * near(e.x, e.y)); }, 450 / spd); }
-    else if (e.k === 'ricochet') { FX.spark(e.x, e.y, 10, 120); }
+    else if (e.k === 'kill') { FX.spark(e.x, e.y, 18, 160); const big = e.type === 'abrams' || e.type === 't72' || e.type === 'bmp'; setTimeout(() => { if (!B) return; FX.explode(e.x, e.y, big ? 'cookoff' : 'big', big ? 1.4 : 1); FX.burn(e.x, e.y, 1.2, 140); FX.scorch(e.x, e.y, 26, 400); smokes.push({ x: e.x, y: e.y, t: 0, life: 240 }); snd('boom_big', e.x, e.y, 1); trauma = Math.min(1, trauma + .55 * near(e.x, e.y)); setTimeout(() => B && snd('debris', e.x, e.y, .55), 380 / spd); }, 450 / spd); }
+    else if (e.k === 'ricochet') { FX.spark(e.x, e.y, 10, 120); snd('ricochet', e.x, e.y, .6); }
     else if (e.k === 'miss') { FX.dirt(e.x, e.y, .7); }
     else if (e.k === 'dust') { FX.puff(e.x, e.y, 2, 1, 'dust', .4, 0, 0, 1.5); }
     else if (e.k === 'whistle') snd('whiz', e.x, e.y, .6);

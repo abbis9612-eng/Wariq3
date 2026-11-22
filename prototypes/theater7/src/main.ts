@@ -323,7 +323,7 @@ async function loadSoldier() {
   body.thinInstanceSetBuffer('matrix', solMat, 16, false);
   body.thinInstanceRegisterAttribute('bakedVertexAnimationSettingsInstanced', 4); body.thinInstanceSetBuffer('bakedVertexAnimationSettingsInstanced', solSet, 4, false);
   body.thinInstanceRegisterAttribute('color', 4); body.thinInstanceSetBuffer('color', solCol, 4, false);   // لون البدلة حسب الطرف
-  body.thinInstanceCount = 0; body.alwaysSelectAsActiveMesh = true; body.isVisible = true; body.receiveShadows = true; caster(body);
+  body.thinInstanceCount = 0; body.alwaysSelectAsActiveMesh = true; body.isVisible = false; body.receiveShadows = true; caster(body);
   solMesh = body;
   // آر بي جي-7 (TastyTony، CC BY): طوله على x (القذيفة لـ +x بـ glTF = −x ببابلون) ← نلفه للـ +z
   try {
@@ -426,8 +426,8 @@ function drawSoldiers(dt: number) {
       n++;
     }
   }
-  solMesh.thinInstanceCount = n; solMesh.thinInstanceBufferUpdated('matrix'); solMesh.thinInstanceBufferUpdated('bakedVertexAnimationSettingsInstanced'); solMesh.thinInstanceBufferUpdated('color');
-  for (const m of rpgMeshes) { m.thinInstanceCount = nR; m.thinInstanceBufferUpdated('matrix'); }
+  solMesh.isVisible = n > 0; solMesh.thinInstanceCount = n; solMesh.thinInstanceBufferUpdated('matrix');   /* بصفر نسخ Babylon يرسم القطعة الأصلية بحجمها الخام بنص الأرض (جندي عملاق لما الكاميرا بعيدة) */ solMesh.thinInstanceBufferUpdated('bakedVertexAnimationSettingsInstanced'); solMesh.thinInstanceBufferUpdated('color');
+  for (const m of rpgMeshes) { m.isVisible = nR > 0; m.thinInstanceCount = nR; m.thinInstanceBufferUpdated('matrix'); }
 }
 
 // ===== الجسيمات: مجمّعات مشتركة =====
@@ -545,7 +545,7 @@ function addDecal(p: V3, size: number) {
   if (decals.length / 16 > 160) decals.splice(0, 16);
   const n = groundN(p[0], p[2], Math.max(3, size * 0.3)), q = new Quaternion(); Quaternion.FromUnitVectorsToRef(Vector3.UpReadOnly, new Vector3(n[0], n[1], n[2]), q);
   decals.push(...Matrix.Compose(new Vector3(size, 1, size), q.multiply(Quaternion.RotationAxis(Vector3.UpReadOnly, Math.random() * 6.28)), new Vector3(p[0], groundH(p[0], p[2]) + 0.3, p[2])).asArray());
-  decal.thinInstanceSetBuffer('matrix', new Float32Array(decals), 16, false);
+  decal.thinInstanceSetBuffer('matrix', new Float32Array(decals), 16, false); decal.isVisible = decals.length > 0;
 }
 
 // ===== الصوت (مولّد) =====
@@ -1196,20 +1196,22 @@ mini.addEventListener('pointerdown', e => { e.stopPropagation(); setAuto(false);
 
 // ===== الشريط السفلي والأوامر =====
 let tickN = -1;
+let hudT = 9; const htmlC = new Map<string, string>();
+const setHTML = (id: string, h: string) => { if (htmlC.get(id) !== h) { htmlC.set(id, h); $(id).innerHTML = h; } };
 function hud() {
   const s = W.stats, mm = `${Math.floor(W.T / 60)}:${String(Math.floor(W.T % 60)).padStart(2, '0')}`;
-  $('clock').textContent = mm;
+  if ($('clock').textContent !== mm) $('clock').textContent = mm;
   $('phase').textContent = W.air.some(a => a.kind === 'iskander') ? '⚠ صاروخ باليستي بالجو' : W.air.some(a => a.kind === 'shahed') ? 'مسيّرات بالجو' : W.air.some(a => a.kind === 'kh101') ? 'صواريخ كروز بالجو' : ({ march: 'رتل العدو على الطريق', approach: 'العدو يتقدم بقفزات', breach: 'العدو يخترق نحو التلّة', assault: 'اقتحام قرية الطريق', retreat: 'العدو ينسحب' } as Record<string, string>)[W.en] + (W.iq === 'line2' ? ' · خطنا الثاني' : W.iq === 'counter' ? ' · هجومنا المعاكس' : '');
   const held = W.houseOwner.filter(o => o === 'en').length;
-  $('tally').innerHTML = `<span>T-72 <b class="g">${s.enTanksLost}</b>/${s.enTanks}</span><span>BMP <b class="g">${s.enBmpLost}</b>/${s.enBmp}</span><span>مشاة العدو <b class="g">${s.enMenLost}</b>/${s.enMen}</span>`
+  setHTML('tally', `<span>T-72 <b class="g">${s.enTanksLost}</b>/${s.enTanks}</span><span>BMP <b class="g">${s.enBmpLost}</b>/${s.enBmp}</span><span>مشاة العدو <b class="g">${s.enMenLost}</b>/${s.enMen}</span>`
     + `<span>أبرامز <b>${s.iqTanks - s.iqTanksLost}</b>/${s.iqTanks}</span><span>جنودنا <b>${s.iqMen - s.iqMenLost}</b>/${s.iqMen}</span>${held ? `<span>بيوت بيد العدو <b class="x">${held}</b></span>` : ''}`
-    + `<span>جو: <b class="g">${s.dronesDown + s.cruiseDown + s.ballisticDown}</b>/${s.drones + s.cruise + s.ballistic}</span>`;
+    + `<span>جو: <b class="g">${s.dronesDown + s.cruiseDown + s.ballisticDown}</b>/${s.drones + s.cruise + s.ballistic}</span>`);
   if (W.log.length !== tickN) {
     tickN = W.log.length;
     $('ticker').innerHTML = W.log.slice(-2).map((l, i) => `<button data-i="${W.log.length - 2 + i}"><span class="t">${Math.floor(l.t / 60)}:${String(Math.floor(l.t % 60)).padStart(2, '0')}</span><b class="${l.good === true ? 'g' : l.good === false ? 'x' : 'n'}">${l.good === true ? '✓' : l.good === false ? '✗' : '•'}</b><span>${l.text}</span></button>`).join('');
   }
   // TH6.8: زر القيادة + الباقي من المدفعية/الدخان
-  $('bCmd').innerHTML = W.cmd === 'auto' ? '🤖 تلقائي<small>القائد يقرر</small>' : '✋ يدوي<small>القرار بيدك</small>'; $('bCmd').setAttribute('aria-pressed', String(W.cmd === 'manual'));
+  setHTML('bCmd', W.cmd === 'auto' ? '🤖 تلقائي<small>القائد يقرر</small>' : '✋ يدوي<small>القرار بيدك</small>'); $('bCmd').setAttribute('aria-pressed', String(W.cmd === 'manual'));
   document.querySelectorAll<HTMLButtonElement>('#orders button[data-o]').forEach(b => {
     const o = b.dataset.o as Order, left = Math.max(0, W.orderCd[o] - W.T), sm = b.querySelector('small');
     if (sm && (o === 'barrage' || o === 'smoke')) sm.textContent = pendingOrder === o ? 'اضغط على الأرض' : `باقي ${W.ammo[o]}/${AMMO_MAX[o]}`;
@@ -1272,7 +1274,7 @@ function frame() {
   tickLights(dtReal * (simDt ? 1 : 0.3)); updateCamera(dtReal);
   scene.render();
   for (const p of pools) p.flush();
-  if (W) { drawLabels(); drawArrows(); followPanel(); hud(); const sh = W.air.filter(a => a.kind === 'shahed'); sfx.drones(sh.length ? Math.min(...sh.map(a => Vector3.Distance(cam.position, v(a.p)))) : 1e9);
+  if (W) { drawLabels(); drawArrows(); if ((hudT += dtReal) > 0.15) { hudT = 0; followPanel(); hud(); }   /* I-174: اللوحة والأزرار 7 مرات بالثانية مو كل إطار (كل كتابة بالصفحة تعيد الترتيب، ثقيلة بالتلفون) */ const sh = W.air.filter(a => a.kind === 'shahed'); sfx.drones(sh.length ? Math.min(...sh.map(a => Vector3.Distance(cam.position, v(a.p)))) : 1e9);
     if ((miniT += dtReal) > 0.25) { miniT = 0; drawMini(); } }
   if (W?.over && !endShown) { endShown = true; setTimeout(showEnd, 3000); }
   const fps = engine.getFps(); fpsAcc += fps; fpsN++; fpsT += dtReal;
@@ -1297,7 +1299,7 @@ function start() {
   for (const sv of squadVis.values()) sv.kornet?.dispose(); squadVis.clear(); solVis.clear(); deadOrder.length = 0; screens.length = 0;
   for (const u of unitVis.values()) u.root.dispose(); unitVis.clear(); for (const a of airVis.values()) a.n.dispose(); airVis.clear();
   debris.forEach(d => d.m.dispose()); debris.length = 0; burning.length = 0; marks = []; vq.length = 0; slowWins.length = 0; decals = [];
-  decal.thinInstanceSetBuffer('matrix', new Float32Array(16), 16, false); decal.thinInstanceCount = 0;
+  decal.thinInstanceSetBuffer('matrix', new Float32Array(16), 16, false); decal.thinInstanceCount = 0; decal.isVisible = false;
   for (const el of els.values()) el.remove(); els.clear(); for (const el of arrowEls.values()) el.remove(); arrowEls.clear(); pools.forEach(p => p.ps.reset());
   houses.reset();
   siteProps.forEach(sp => { if (!sp.hit) return; sp.hit = false; sp.mat.diffuseColor = sp.mat.diffuseColor.scale(4); sp.mesh.scaling.y /= 0.55; sp.mesh.position.y /= 0.55; });

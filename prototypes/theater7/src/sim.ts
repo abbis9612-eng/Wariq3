@@ -442,6 +442,7 @@ export function order(w: World, o: Order, at?: V3, by = 'أمرك'): string | nu
 export function step(w: World, dt: number) {
   w.T += dt;
   for (const s of w.schedule) if (!s.done && w.T >= s.t) { s.done = true; s.f(w); }
+  if (w.schedule.length > 48) w.schedule = w.schedule.filter(s => !s.done);   /* I-174: اللي انتهى ينشال (كانت تكبر لـ1100+ وتتلف كل خطوة وتثقّل جمع الذاكرة ← تعليق 100 ملّي ثانية) */
   if (w.T - w.spotT > 1) { w.spotT = w.T; spot(w); commanders(w); }
   for (const u of w.units) if (u.alive) { u.supp = Math.max(0, u.supp - dt * (isVeh(u) ? 0.35 : 0.16)); behave(w, u, dt); move(w, u, dt); fight(w, u, dt); turret(w, u, dt); if ((u.kind === 'inf' || u.kind === 'kornet') && ((w.T * 4) | 0) !== (((w.T - dt) * 4) | 0)) updateCover(w, u); }
   for (const u of w.units) if (u.kind === 'inf' || u.kind === 'kornet') solStep(w, u, dt);

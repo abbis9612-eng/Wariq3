@@ -15,6 +15,9 @@ for (let m = 0; m < months; m++) {
     return { t: WSIM.date(G.t).toISOString().slice(0, 10), over: G.over, gdp: Math.round(G.C[G.me].gdp), stab: Math.round(G.C[G.me].stab), T: !!__G.T, HT: !!__G.HT }; });
   if (res.over) break;
 }
+// I-169: الأشهر فوق انلعبت بالوضع السهل (الافتراضي)؛ شاشة القيادة السهلة لازم تطلع، وبعدين نرجع للكامل حتى نفحص كل التبويبات
+{ const ok = await p.evaluate(() => { __G.openPanel('cmd'); return /الوضع السهل/.test(document.querySelector('#sheet').textContent) && getComputedStyle(document.querySelector('#tabs button[data-p=me]')).display === 'none'; }); if (!ok) errors.push('شاشة الوضع السهل ما طلعت أو تبويب الاقتصاد ما اختفى');
+  await p.evaluate(() => { __G.G.cfg.simple = false; document.body.classList.remove('simple'); }); }
 // v3 V1: 5 تبويبات، وكل الأقسام الفرعية
 for (const t of ['cmd', 'me', 'army', 'rd', 'dip']) { await p.click(`#tabs button[data-p=${t}]`); await p.waitForTimeout(150);
   for (const g of await p.$$eval('#sheet [data-gp]', L => L.map(b => b.dataset.gp))) { await p.click(`#sheet [data-gp=${g}]`); await p.waitForTimeout(120); }

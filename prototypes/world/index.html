@@ -41,7 +41,7 @@ button.on{background:var(--chip2);border-color:var(--gold-l);color:var(--gold)}
 /* V3 (I-117): أيقونات SVG موحّدة + ألوان بمعنى ثابت (أخضر زين، أحمر خطر، ذهبي فلوس، أزرق جيش، بنفسجي بحث) */
 :root{--c-money:#c9a227;--c-army:#4a7fc1;--c-rd:#8a6fd1;--c-world:#3f9a6b}
 .hic{width:1.05em;height:1.05em;fill:none;stroke:var(--gold);stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round;vertical-align:-3px;margin-inline-end:6px;display:inline-block}#tabs button i svg{width:23px;height:23px;fill:none;stroke:currentColor;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round;display:block;margin:0 auto}
-#tabs button[data-p=me].on{color:var(--c-money)}#tabs button[data-p=army].on{color:var(--c-army)}#tabs button[data-p=rd].on{color:var(--c-rd)}#tabs button[data-p=dip].on{color:var(--c-world)}
+body.simple #tabs button[data-p=me],body.simple #tabs button[data-p=rd]{display:none}#tabs button[data-p=me].on{color:var(--c-money)}#tabs button[data-p=army].on{color:var(--c-army)}#tabs button[data-p=rd].on{color:var(--c-rd)}#tabs button[data-p=dip].on{color:var(--c-world)}
 #sheet .cimg{display:block;width:100%;height:96px;object-fit:cover;border-radius:8px;margin-bottom:6px}
 /* V4: التعليم */
 #tut{position:fixed;left:62px;right:10px;top:calc(128px + env(safe-area-inset-top));z-index:8;background:var(--panel);border:2px solid var(--gold);border-radius:14px;padding:10px 12px;box-shadow:0 6px 22px rgba(0,0,0,.25);font-size:13.5px}
@@ -591,6 +591,7 @@ html[data-skin] .hero b{color:var(--act)}
 <script src="wins.js"></script>
 <script src="wgov.js"></script>
 <script src="wcheat.js"></script>
+<script src="wsimple.js"></script>
 <script src="wcas.js"></script>
 <script src="warsenal.js"></script>
 <script src="wsim.js"></script>
@@ -687,6 +688,7 @@ html[data-skin] .hero b{color:var(--act)}
   // ===== بداية اللعب =====
   function begin(w) {
     G = w; me = G.me; window.GAME = API; document.body.classList.add('play');
+    G.cfg = G.cfg || {}; if (G.cfg.simple == null) G.cfg.simple = true; document.body.classList.toggle('simple', !!G.cfg.simple);   // I-169: الوضع السهل افتراضي
     $('#start').hidden = true; $('#tabs').hidden = false;
     $('#top h1').innerHTML = `${CS[me].ar} <small></small>`;
     if (!$('#bar')) { const b = document.createElement('div'); b.id = 'bar'; $('#top').append(b); }
@@ -837,9 +839,11 @@ html[data-skin] .hero b{color:var(--act)}
     dirty = true;
   }
   // يوم الدولة: نفس econ/home/ind اليومية من «الحرب الكبرى»، وأخبارها توستات
+  const SDEPS = () => ({ S, FUND: window.WFUND, RES: window.WRES, M: window.WMKT, HOME: window.HOME, P: window.WPOL, WCAB: window.WCAB, WINS: window.WINS });
   function natDay(before) {
-    const NW = G.nat; if (!NW) return; const last = NW.log[NW.log.length - 1]; NT.daily(G, WD, { S, SIM: SM, T, before, newDiv }); if (T) WDP.daily(G, WD, { S, SIM: SM, T }); else homeArmsRefresh();
-    for (const l of NW.log.slice(NW.log.indexOf(last) + 1)) { if (l.side === 1) continue;
+    const NW = G.nat; if (!NW) return; const last = NW.log[NW.log.length - 1]; NT.daily(G, WD, { S, SIM: SM, T, before, newDiv });
+    if (window.WSIMPLE && G.cfg && G.cfg.simple) { WSIMPLE.day(G, WD, SDEPS()); const mo = Math.floor(G.t / 30); if (G.cfg.smo !== mo) { G.cfg.smo = mo; const L = WSIMPLE.month(G, WD, SDEPS()) || []; G.cfg.slog = (G.cfg.slog || []).concat(L.map(t => [G.t, t])).slice(-8); } } if (T) WDP.daily(G, WD, { S, SIM: SM, T }); else homeArmsRefresh();
+    for (const l of NW.log.slice(NW.log.indexOf(last) + 1)) { if (l.side === 1) continue; if (G.cfg && G.cfg.simple && l.k === 'home' && l.a !== 'warn') continue;   // I-169: قضايا الداخل يحلها الوزراء بصمت
       if (l.k === 'home' && l.a === 'issue') { toast(`🏛 قضية: ${HOME.ISS[l.i].t}`, 'bad'); if (speed > 1) { speed = 1; bar(); } }
       else if (l.k === 'home' && l.a === 'auto') toast(`🏛 المستشارين حلّوا «${HOME.ISS[l.i].t}» لحالهم`);
       else if (l.k === 'built' && ECON.ITEMS[l.it]) { const it = ECON.ITEMS[l.it]; if (!T && it.cat === 'div' && HT) homeAddDiv(it.kind || l.it); else if (it.cat === 'plane' && ferry(it)) { } else if (!(T && it.cat === 'div')) toast(`🏭 وصل: ${it.n}`, 'good'); }
@@ -1592,7 +1596,7 @@ const HIC = {'💵':'money','💰':'money','🏥':'health','📊':'chart','📈'
     const F = G.fund3; if (F && F.offers.length) out.push({ u: 45, ic: '🏦', t: `${F.offers.length} عرض شركات تستثمر عندنا`, s: 'تبني مشاريع على حسابها مقابل حصة', b: `<button data-go="fund">شوفها</button>` });
     if (G.mkt && G.mkt.offers.length) out.push({ u: 40, ic: '🛒', t: `${G.mkt.offers.length} دولة تريد تشتري منا`, s: 'سلاح أو عتاد', b: `<button data-go="mkt">شوفها</button>` });
     ADVL.forEach((o, i) => { if (o.w) out.push({ u: 50, ic: '⚠', t: o.t, s: '', b: `<button data-adv="${i}">${o.l}</button>` }); });
-    return out.sort((a, b) => b.u - a.u); }
+    return out.filter(x => !(G.cfg && G.cfg.simple) || x.u >= 75).sort((a, b) => b.u - a.u); }
   const inboxHtml = L => L.length ? `<div class="inbox">${L.map(x => `<div class="ibx"><div class="ibt"><span class="ibi">${x.ic}</span><div><b>${x.t}</b>${x.s ? `<small>${x.s}</small>` : ''}</div></div><div class="ibb">${x.b}</div></div>`).join('')}</div>` : '<div class="note">✓ ماكو شي ينتظرك هسه. الوزراء ماسكين الشغل.</div>';
   window.INBOX = () => inbox().length;
   const fmtK = v => v >= 1 ? `~${Math.round(v).toLocaleString('ar')} ألف` : `~${Math.round(v * 1000).toLocaleString('ar')}`;
@@ -1672,7 +1676,34 @@ const HIC = {'💵':'money','💰':'money','🏥':'health','📊':'chart','📈'
     if (R.yr.length) h += `<h3>📅 تقارير السنين</h3>` + R.yr.slice().reverse().map(y => `<div class="pj"><div class="line"><b>سنة ${y.y}</b><b class="${y.i1 >= y.i0 ? 'pos' : 'neg'}">${y.i0} ← ${y.i1}</b></div><div class="note">الناتج ${y.gdp >= 0 ? '+' : ''}${y.gdp}٪ · الجيش ${y.pw >= 0 ? '+' : ''}${y.pw}٪ · ترتيب الجيش ${y.rk0} ← ${y.rk1}${y.ms.length ? '<br>' + y.ms.join('<br>') : ''}</div></div>`).join('');
     h += `<h3>🏅 الإنجازات</h3>` + (R.ms.length ? R.ms.slice().reverse().map(m => `<div class="line"><span>${m.x}</span><small class="note">${ar(S.date(m.t))}</small></div>`).join('') : '<div class="note">لسه ماكو. أول سلاح وطني، أول حرب تخلص، أول وزير تعيّنه… كلها تنكتب هنا.</div>');
     return h; }
+  // I-169: شاشة القيادة بالوضع السهل — الحالة، اللي يحتاجك، جيشك، حروبك. بس.
+  function pCmdSimple() {
+    const c = G.C[me], NW = G.nat, e = NW.eco[0], H = NW.home, hc = e.hist || [], c30 = hc.length > 30 ? e.cash - hc[hc.length - 31][1] : null;
+    const myW = G.wars.filter(w => w.a.includes(me) || w.b.includes(me)), sc = w => w.a.includes(me) ? w.score : -w.score, rk = S.rank(G, 'pw').indexOf(me) + 1;
+    const tile = (go, ic, lab, val, cls, sub) => `<button class="kpi ${cls}" data-go="${go}"><span class="kl">${ic} ${lab}</span><b class="kv">${val}</b><span class="ks">${sub}</span></button>`;
+    let h = `<h2>🏛 ${CS[me].ar}</h2>`;
+    if (G.over) h += `<div class="pill warn">💥 ${OVER[G.over.why] || OVER.collapse} (${ar(S.date(G.over.t))}).</div><div class="row"><button class="big" id="newg">لعبة جديدة</button></div>`;
+    h += `<div class="note" style="background:color-mix(in srgb,var(--good) 14%,transparent);padding:8px 10px;border-radius:10px">😌 <b>الوضع السهل:</b> الوزراء يمشّون الاقتصاد والبحث والداخل وحدهم. إنت تقرر <b>الحرب والسلام والجيش</b> بس.</div>`;
+    const L = inbox(); h += `<h3>📥 يحتاجك هسه${L.length ? ` <span class="ibn">${L.length}</span>` : ''}</h3>` + (L.length ? inboxHtml(L) : '<div class="note">✔ ماكو شي يحتاجك هسه. شغّل الوقت ▶ وخلّي البلد يمشي.</div>');
+    h += `<div class="kpis">
+      ${tile('flow', '💰', 'الخزينة', money(e.cash), e.cash < 0 ? 'bad' : c30 != null && c30 < 0 ? 'warn' : 'good', c30 == null ? 'الوزراء يديرونها' : (c30 >= 0 ? '↑ +' : '↓ ') + money(Math.abs(c30)) + ' بالشهر')}
+      ${tile('homep', '🙂', 'الاستقرار', Math.round(H.stab) + ' من 100', H.stab >= 50 ? 'good' : H.stab >= 30 ? 'warn' : 'bad', H.stab < 30 ? '⚠️ خطر' : 'الشعب')}
+      ${tile('army', '🪖', 'قوة الجيش', Math.round(c.pw).toLocaleString('en'), 'good', `الترتيب ${rk} بالعالم`)}
+      ${tile('dip', '⚔', 'الحرب', myW.length ? myW.length + ' حرب' : 'سلم', myW.length ? (myW.some(w => sc(w) < 0) ? 'bad' : 'warn') : 'good', myW.length ? 'شوف تحت' : 'اضغط حتى تعلن حرب')}
+    </div>`;
+    // جيشك: شراء بضغطة
+    const buys = ['inf', 'mec', 'arm'].concat(Object.keys(ECON.ITEMS).filter(k => ECON.ITEMS[k].cat === 'plane' && !ECON.ITEMS[k].nat).slice(0, 1));
+    h += `<h3>🛡 قوّي جيشك</h3><div class="note">اللي تشتريه يطلع من المصنع ويروح لمعسكره قدامك على الخريطة، ويدخل الحرب بعدده.</div><div class="seg" style="flex-wrap:wrap">${buys.map(k => { const it = ECON.ITEMS[k], err = NT.canBuy(G, k); return `<button data-buy="${k}" ${err ? 'disabled title="' + err + '"' : ''}>${it.ic || '🛡'} ${it.n}<br><small>${money(ECON.costOf(k, 0, NW))}</small></button>`; }).join('')}</div>`;
+    const q = NW.eco[0].q || []; if (q.length) h += `<div class="note">🏭 بالتصنيع: ${q.map(o => `${ECON.ITEMS[o.k].n} (باقي ${Math.max(0, Math.ceil(o.left))} يوم)`).join('، ')}</div>`;
+    // حروبك
+    if (myW.length) h += `<h3>⚔ حروبك</h3>` + myW.map(w => { const v = sc(w), en = w.a.includes(me) ? w.b[0] : w.a[0]; return `<div class="pj"><div class="line"><b>${FLG(en) || ''} ضد ${nameOf(en)}</b><span class="${v >= 0 ? 'good' : 'bad'}">${v >= 0 ? 'إحنا غالبين' : 'هم غالبين'} (${Math.round(v)})</span></div><div class="row"><button data-go="ops">🗺 غرفة العمليات</button><button data-peace="${w.id}">🕊 اعرض سلام</button></div></div>`; }).join('');
+    // شنو سوّوا الوزراء
+    const sl = (G.cfg.slog || []).slice(-4).reverse(); if (sl.length) h += `<h3>🗒 شنو سوّوا الوزراء</h3><div class="note">${sl.map(x => `${ar(S.date(x[0]))}: ${x[1]}`).join('<br>')}</div>`;
+    h += `<div class="row"><button data-simple="0">⚙ رجّعني للوضع الكامل (كل التفاصيل)</button></div>`;
+    return h;
+  }
   function pCmd() {
+    if (G.cfg && G.cfg.simple && G.nat) return pCmdSimple();
     const c = G.C[me], NW = G.nat, e = NW ? NW.eco[0] : { cash: 0, hist: [] }, H = NW ? NW.home : { stab: c.stab }, kh = G.kh || [];
     const hc = e.hist || [], c30 = hc.length > 30 ? e.cash - hc[hc.length - 31][1] : null, months = c30 != null && c30 < 0 ? Math.max(0, e.cash / -c30) : null;
     const myW = G.wars.filter(w => w.a.includes(me) || w.b.includes(me)), sc = w => w.a.includes(me) ? w.score : -w.score, rk = S.rank(G, 'pw').indexOf(me) + 1;
@@ -1695,7 +1726,7 @@ const HIC = {'💵':'money','💰':'money','🏥':'health','📊':'chart','📈'
     // القرارات والقضايا انتقلت لـ«يحتاجك هسه» فوق
     if (G.elec && G.elec[me] != null) h += `<div class="note">🗳 الانتخابات الجاية: ${ar(S.date(G.elec[me]))} — تعتمد على الشارع والأحزاب ومعنويات الناس والنمو. إذا خسرت تخلص اللعبة.</div>`;
     if (c.occN) h += `<div class="note">✊ نحتل ${c.occN} منطقة: تكلّف نمو واستقرار، وبعد سنة ممكن تثور.</div>`;
-    h += `<h3>⚙ الإعدادات</h3><div class="line"><span>توقف تلقائي لما يجي قرار</span><span class="seg"><button data-a11y="ap:1" class="${a11y.ap !== false ? 'on' : ''}">نعم</button><button data-a11y="ap:0" class="${a11y.ap === false ? 'on' : ''}">لا</button></span></div><div class="line"><span>الشكل</span><span class="seg">${Object.entries(SKINS).map(([k, v]) => `<button data-skin="${k}" class="${skinPref === k ? 'on' : ''}">${v[0]}</button>`).join('')}</span></div><div class="line"><span>حجم الخط</span><span class="seg"><button data-a11y="big:0" class="${a11y.big ? '' : 'on'}">عادي</button><button data-a11y="big:1" class="${a11y.big ? 'on' : ''}">كبير</button></span></div><div class="line"><span>ألوان لعمى الألوان (أزرق/برتقالي بدل أخضر/أحمر)</span><span class="seg"><button data-a11y="cb:0" class="${a11y.cb ? '' : 'on'}">لا</button><button data-a11y="cb:1" class="${a11y.cb ? 'on' : ''}">نعم</button></span></div><details class="govd"><summary>📜 المصادر والرخص ▾</summary><div class="note">صور الدبابات والمدرعات على الخريطة مأخوذة من مجسمات 3D (رخصة CC BY 4.0 من Sketchfab): M1A1 Abrams وT-72B3 — Muhamad Mirza Arrafi؛ BMP-2D — unhappy_nation؛ تويوتا وكراد BM-21 (LOW POLY) — LM3D؛ مدفع D-30 — 42manako؛ الجندي (Modern Army Soldier) — m152027350. بيوت منطقة القتال — sechela و123a9el وAvgust9 وyadrogames؛ النخلة — 00amza؛ السدرة — evolveduk؛ السيارات المتروكة — Rashad Ibrahimli وLeandro Andrade وSkeleton_games؛ سواتر الرمل — Pypunk (كلها CC BY 4.0). الأعلام: flag-icons (MIT). الخطوط: Noto وIBM Plex وAlexandria وReadex (OFL).</div></details><details class="govd cheat"${G.cfg && G.cfg.cheat ? ' open' : ''}><summary>🎮 وضع الغش (للتجربة) ▾</summary><div class="note">للتجربة السريعة: كل ضغطة تنسجل${G.cfg && G.cfg.cheat ? ` (استعملته ${G.cfg.cheat} مرة)` : ''}.</div><div class="seg ins4"><button data-cheat="money">💰 +1000 مليار</button><button data-cheat="research">🔬 كمّل كل البحث</button><button data-cheat="debt">🏦 صفّر الدين</button><button data-cheat="ap">⭐ نقاط قرار 99</button><button data-cheat="calm">🕊 استقرار 90</button></div></details>${G.tut && G.tut.done ? '<div class="line"><span>التعليم</span><button id="tutAgain">عيده من الأول</button></div>' : ''}`;
+    h += `<h3>⚙ الإعدادات</h3><div class="line"><span>الوضع</span><span class="seg"><button data-simple="1" class="${G.cfg && G.cfg.simple ? 'on' : ''}">😌 سهل</button><button data-simple="0" class="${G.cfg && G.cfg.simple ? '' : 'on'}">🧠 كامل</button></span></div><div class="line"><span>توقف تلقائي لما يجي قرار</span><span class="seg"><button data-a11y="ap:1" class="${a11y.ap !== false ? 'on' : ''}">نعم</button><button data-a11y="ap:0" class="${a11y.ap === false ? 'on' : ''}">لا</button></span></div><div class="line"><span>الشكل</span><span class="seg">${Object.entries(SKINS).map(([k, v]) => `<button data-skin="${k}" class="${skinPref === k ? 'on' : ''}">${v[0]}</button>`).join('')}</span></div><div class="line"><span>حجم الخط</span><span class="seg"><button data-a11y="big:0" class="${a11y.big ? '' : 'on'}">عادي</button><button data-a11y="big:1" class="${a11y.big ? 'on' : ''}">كبير</button></span></div><div class="line"><span>ألوان لعمى الألوان (أزرق/برتقالي بدل أخضر/أحمر)</span><span class="seg"><button data-a11y="cb:0" class="${a11y.cb ? '' : 'on'}">لا</button><button data-a11y="cb:1" class="${a11y.cb ? 'on' : ''}">نعم</button></span></div><details class="govd"><summary>📜 المصادر والرخص ▾</summary><div class="note">صور الدبابات والمدرعات على الخريطة مأخوذة من مجسمات 3D (رخصة CC BY 4.0 من Sketchfab): M1A1 Abrams وT-72B3 — Muhamad Mirza Arrafi؛ BMP-2D — unhappy_nation؛ تويوتا وكراد BM-21 (LOW POLY) — LM3D؛ مدفع D-30 — 42manako؛ الجندي (Modern Army Soldier) — m152027350. بيوت منطقة القتال — sechela و123a9el وAvgust9 وyadrogames؛ النخلة — 00amza؛ السدرة — evolveduk؛ السيارات المتروكة — Rashad Ibrahimli وLeandro Andrade وSkeleton_games؛ سواتر الرمل — Pypunk (كلها CC BY 4.0). الأعلام: flag-icons (MIT). الخطوط: Noto وIBM Plex وAlexandria وReadex (OFL).</div></details><details class="govd cheat"${G.cfg && G.cfg.cheat ? ' open' : ''}><summary>🎮 وضع الغش (للتجربة) ▾</summary><div class="note">للتجربة السريعة: كل ضغطة تنسجل${G.cfg && G.cfg.cheat ? ` (استعملته ${G.cfg.cheat} مرة)` : ''}.</div><div class="seg ins4"><button data-cheat="money">💰 +1000 مليار</button><button data-cheat="research">🔬 كمّل كل البحث</button><button data-cheat="debt">🏦 صفّر الدين</button><button data-cheat="ap">⭐ نقاط قرار 99</button><button data-cheat="calm">🕊 استقرار 90</button></div></details>${G.tut && G.tut.done ? '<div class="line"><span>التعليم</span><button id="tutAgain">عيده من الأول</button></div>' : ''}`;
     return h;
   }
   const line = (a, b, cls = '') => `<div class="line"><span>${a}</span><b class="${cls}">${b}</b></div>`;
@@ -2115,6 +2146,7 @@ const HIC = {'💵':'money','💰':'money','🏥':'health','📊':'chart','📈'
       else if (T && (a.startsWith('cell:') || a.startsWith('div:'))) { const i = a.startsWith('cell:') ? +a.slice(5) : (T.W.divs.find(d => d.id === +a.slice(4)) || {}).cell; const c = T.cells[i]; if (c) { closePanel(); cam.x = MX(c.ll[0]); cam.y = MY(c.ll[1]); cam.s = Math.max(cam.s, 1400); dirty = true; } }
       else if (a === 'arrow') { closePanel(); toast(ADVL[+b.dataset.adv].t); } });
     root.querySelectorAll('[data-sub]').forEach(b => b.onclick = () => { meSub = b.dataset.sub; openPanel('me'); });
+    root.querySelectorAll('[data-simple]').forEach(b => b.onclick = () => { G.cfg = G.cfg || {}; G.cfg.simple = b.dataset.simple === '1'; document.body.classList.toggle('simple', G.cfg.simple); toast(G.cfg.simple ? '😌 الوضع السهل: الوزراء يمشّون البلد وإنت قرر الحرب والسلام والجيش' : '🧠 الوضع الكامل: كل التفاصيل بإيدك', 'good'); save(); openPanel('cmd'); });
     root.querySelectorAll('[data-a11y]').forEach(b => b.onclick = () => { const [k, v] = b.dataset.a11y.split(':'); a11y[k] = v === '1'; try { localStorage.setItem(A11Y_KEY, JSON.stringify(a11y)); } catch (e) {} a11yApply(); openPanel(panel || 'cmd', true); });
     const ta = root.querySelector('#tutAgain'); if (ta) ta.onclick = () => { G.tut = { s: 0 }; save(); closePanel(); tutTick(); };
     root.querySelectorAll('[data-replay]').forEach(b => b.onclick = () => { const ll = LIVEFX.replay(+b.dataset.replay); if (!ll) return; closePanel(); cam.x = MX(ll[0]); cam.y = MY(ll[1]); cam.s = Math.max(cam.s, 1100); if (speed > 1) { slowPrev = slowPrev ?? speed; speed = 1; bar(); } dirty = true; });

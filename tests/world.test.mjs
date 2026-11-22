@@ -23,6 +23,7 @@ if (OUT) await p.screenshot({ path: `${OUT}/world_card.png` });
 // W3: لعبة كاملة — تختار العراق، تبدي، سنة تمشي، وكل الألواح تنفتح، وأفعال الدبلوماسية تشتغل
 await p.evaluate(() => { document.querySelector('#card').hidden = true; });
 await p.fill('#q', 'العراق'); await p.click('#clist button[data-c=IRQ]'); await p.click('#go');
+await p.waitForTimeout(300); await p.evaluate(() => { __G.G.cfg.simple = false; document.body.classList.remove('simple'); });   // I-169: هالفحص للوضع الكامل (كل التبويبات)؛ السهل بفحص simple.test وsmoke-world
 await p.evaluate(() => __G.step(400));
 for (const t of ['me', 'flow', 'build', 'pop', 'fund', 'dip', 'war', 'ops', 'world', 'news']) { const tab = { flow: 'me', build: 'me', pop: 'me', fund: 'me', war: 'dip', ops: 'dip', world: 'dip', news: 'dip' }[t]; if (tab) { if (!(await p.isVisible('#sheet [data-gp=' + t + ']'))) await p.click(`#tabs button[data-p=${tab}]`); await p.click(`#sheet [data-gp=${t}]`); } else await p.click(`#tabs button[data-p=${t}]`); if (!(await p.isVisible('#sheet'))) no('اللوح ما انفتح: ' + t); if (OUT) await p.screenshot({ path: `${OUT}/play_${t}.png` }); }
 await p.click('#tabs button[data-p=me]'); await p.click('#sheet .seg[data-k=tax] button[data-v=high]');

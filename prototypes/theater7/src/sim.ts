@@ -101,6 +101,7 @@ export type Fx =
   | { k: 'mark'; p: V3; text: string; good: boolean }
   | { k: 'jet'; jet: number; ev: 'in' | 'atk' | 'down' | 'crash' | 'release'; p: V3 }   // I-170: طيارة دخلت/تنقض/انضربت/وقعت/رمت
   | { k: 'flare'; jet: number; p: V3 }                                         // مشاعل حرارية
+  | { k: 'dig'; p: V3; rot: number; len: number; h: number }                   // I-180: ساتر ترابي جديد ينحفر
 export interface LogLine { t: number; text: string; good: boolean | null; p: V3 }
 export type Order = 'barrage' | 'smoke' | 'retreat' | 'counter' | 'aaPriority' | 'air' | 'heli';
 export const ORDER_CD: Record<Order, number> = { barrage: 45, smoke: 40, retreat: 60, counter: 9999, aaPriority: 5, air: 100, heli: 140 };
@@ -125,6 +126,7 @@ export const FRONT_HOUSES = HOUSES.filter(h => h.vil === 'front');
 export const RESERVE_P: V3 = [-760, 0, 380], COUNTER_P: V3 = [-1260, 0, 60];
 // ===== I-175: حرب المدن — مدينة الجسر (بيوتها بـ land.ts) =====
 export const CITY_HOUSES = HOUSES.filter(h => h.vil === 'city');
+const COVER_BASE = COVER.length;   // I-180: الستر الثابتة؛ اللي بعدها سواتر انحفرت بالمعركة
 const zoneHouses = (w: World) => (w.zone === 'city' ? CITY_HOUSES : FRONT_HOUSES);
 export const inCity = (p: V3, m = 15) => p[0] > CITY.x0 - m && p[0] < CITY.x1 + m && p[2] > CITY.zs[0] - m && p[2] < CITY.zs[CITY.zs.length - 1] + m;
 const nearZ = (z: number) => CITY.zs.reduce((a, b) => (Math.abs(b - z) < Math.abs(a - z) ? b : a));
@@ -151,7 +153,7 @@ function mkUnit(w: World, kind: Kind, side: Side, p: V3, dir: V3, group: string,
 }
 
 export function newWorld(seed = 11): World {
-  for (const h of HOUSES) (h as House & { dead?: boolean }).dead = false;   // البيوت المهدومة من معركة سابقة (نفس الصفحة/الفحص) ترجع
+  for (const h of HOUSES) (h as House & { dead?: boolean }).dead = false; COVER.length = COVER_BASE;   // البيوت المهدومة من معركة سابقة (نفس الصفحة/الفحص) ترجع
   const w: World = {
     T: 0, units: [], air: [], jets: [], fx: [], log: [], r: rng(seed), nextId: 1, schedule: [], over: false, result: '',
     stats: { drones: 0, dronesDown: 0, dronesHit: 0, cruise: 0, cruiseDown: 0, cruiseHit: 0, ballistic: 0, ballisticDown: 0, ballisticHit: 0, enTanks: 0, enTanksLost: 0, iqTanks: 0, iqTanksLost: 0, pacFired: 0, n48Fired: 0, rockets: 0, shells: 0, rounds: 0,
@@ -497,6 +499,7 @@ const inVillage = (p: V3) => Math.hypot((p[0] - VILLAGE_C[0]) * 0.8, p[2] - VILL
 
 // ----- القادة الآليين -----
 function commanders(w: World) {
+  enemyDig(w);
   const en = w.units.filter(u => u.side === 'en' && u.alive && isColumn(u)), enInf = w.units.filter(u => u.side === 'en' && u.alive && u.kind === 'inf');
   const iqLine = w.units.filter(u => u.side === 'iq' && u.alive && u.role === 'line' && isTank(u));
   const front = en.length ? Math.max(...en.map(u => u.p[0])) : -9999;
@@ -527,6 +530,18 @@ function commanders(w: World) {
     if (w.iq !== 'counter' && w.T > 330 && ((enIn >= 2 && en.filter(isTank).length <= 3) || (w.en === 'assault' && w.T - w.enT > 100) || w.T > 470)) counter(w, 'القائد');
     aiSupport(w);
   } else if (w.iq === 'line1' && lostLine && front > -2100 - 200) fallback(w, 'انسحاب اضطراري — الخط انهار');
+}
+/** I-180: العدو اللي مسك القرية يحفر سواتر على طرفها الشرقي (باتجاه المدينة) ويثبّت: 6 قطع خلال دقيقة، كل وحدة تزيد ستر للمشاة */
+function enemyDig(w: World) {
+  if (w.dbg.dug || w.en === 'retreat') return;
+  const held = FRONT_HOUSES.filter(h => w.houseOwner[h.i] === 'en'); if (held.length < 6) return;
+  w.dbg.dug = 1; const x = Math.max(...held.map(h => h.x)) + 28, z0 = VILLAGE_C[2];
+  w.log.push({ t: w.T, text: 'العدو يحفر سواتر ترابية شرق قرية الطريق ويثبّت بيها', good: false, p: [x, 0, z0] });
+  [-110, -75, -40, 40, 75, 110].forEach((dz, i) => w.schedule.push({ t: w.T + 6 + i * 9, f: (w) => {
+    const p: V3 = [x + (w.r() - 0.5) * 8, 0, z0 + dz]; if (HOUSES.some(h => Math.hypot(h.x - p[0], h.z - p[2]) < Math.max(h.w, h.d) * 0.6 + 4)) return;
+    w.fx.push({ k: 'dig', p, rot: 0, len: 14, h: 1.5 });
+    for (let t = -5.5; t <= 5.5; t += 3) COVER.push({ x: p[0] - 2.6, z: p[2] + t, nx: 1, nz: 0 });   // الستر غرب الساتر: محمي من الشرق
+  } }));
 }
 /** I-175: بالمدينة العدو ينسحب إذا خسر أغلب قوته، أو طال القتال وما مسك غير القليل من البيوت */
 function cityCommand(w: World) {

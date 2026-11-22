@@ -815,7 +815,7 @@ function syncAir() {
 const camD = (p: V3) => Vector3.Distance(cam.position, v(p));
 const whistled = new Set<number>();
 // I-179: شدة القتال من الطلقات والانفجارات القريبة من الكاميرا (تخفت خلال ~3 ث)
-let heat = 0, heatPan = 0;
+let heat = 0, heatPan = 0, digMesh: Mesh | null = null, digM: number[] = [];
 const HEAT: Partial<Record<Fx['k'], number>> = { shot: 0.05, volley: 0.07, round: 0.025, cannon: 0.06, gun: 0.12, boom: 0.14, atgm: 0.1, rlaunch: 0.05 };
 function addHeat(fx: Fx) {
   const w0 = HEAT[fx.k]; if (!w0) return; const p = (fx as { p?: V3 }).p; if (!p) return;
@@ -962,6 +962,11 @@ function handleFx(fx: Fx) {
       flashLight(fx.p, 3, 40, 0.12); break;
     }
     case 'siteHit': siteDamage(fx.site, fx.p, fx.big); break;
+    case 'dig': {   // I-180: ساتر جديد ينحفر: يطلع من الأرض ويا غبار
+      if (!digMesh) { const src = scene.getMeshByName('mound'); digMesh = MeshBuilder.CreateIcoSphere('dig', { radius: 0.5, subdivisions: 3 }, scene); digMesh.material = src?.material ?? null; digMesh.receiveShadows = true; digMesh.isPickable = false; caster(digMesh); }
+      const gp = G(fx.p[0], fx.p[2], 0); digM.push(...Matrix.Compose(new Vector3(5.5, fx.h * 2, fx.len), Quaternion.RotationAxis(Vector3.UpReadOnly, fx.rot), new Vector3(gp[0], gp[1] - 0.05, gp[2])).asArray());
+      digMesh.thinInstanceSetBuffer('matrix', new Float32Array(digM), 16, false); digMesh.isVisible = true;
+      dust.emit({ a: G(fx.p[0], fx.p[2], 1), n: Qn(20), spd: [3, 9], up: 0.3, jit: 5 }); break; }
     case 'mark': marks.push({ p: fx.p, text: fx.text, good: fx.good, t: performance.now() }); break;
     case 'flare': { const p = L(fx.p); for (let i = 0; i < 6; i++) flame.emit({ a: add(p, [(Math.random() - 0.5) * 6, -i * 2.5, (Math.random() - 0.5) * 6]), n: 3, jit: 0.8 }); smokeS.emit({ a: p, n: Qn(4), spd: [0, 2], jit: 3 }); flashLight(p, 3, 90, 0.4); break; }   // I-170: مشاعل حرارية
     case 'jet': { const p = L(fx.p); if (fx.ev === 'release') { flashLight(p, 2, 50, 0.15); muzzle.emit({ a: p, n: 3, jit: 1 }); sfx.whump(camD(fx.p)); }
@@ -1322,6 +1327,7 @@ function start() {
   for (const u of unitVis.values()) u.root.dispose(); unitVis.clear(); for (const a of airVis.values()) a.n.dispose(); airVis.clear();
   debris.forEach(d => d.m.dispose()); debris.length = 0; burning.length = 0; marks = []; vq.length = 0; slowWins.length = 0; decals = [];
   decal.thinInstanceSetBuffer('matrix', new Float32Array(16), 16, false); decal.thinInstanceCount = 0; decal.isVisible = false;
+  digM = []; if (digMesh) { digMesh.thinInstanceCount = 0; digMesh.isVisible = false; }
   for (const el of els.values()) el.remove(); els.clear(); for (const el of arrowEls.values()) el.remove(); arrowEls.clear(); pools.forEach(p => p.ps.reset());
   houses.reset();
   siteProps.forEach(sp => { if (!sp.hit) return; sp.hit = false; sp.mat.diffuseColor = sp.mat.diffuseColor.scale(4); sp.mesh.scaling.y /= 0.55; sp.mesh.position.y /= 0.55; });

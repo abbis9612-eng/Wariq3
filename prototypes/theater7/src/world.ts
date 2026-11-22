@@ -36,6 +36,14 @@ const onGround = (x: number, z: number, s: V3, yaw: number, sink = 0, tilt = tru
   return Matrix.Compose(new Vector3(s[0], s[1], s[2]), q, new Vector3(x, groundH(x, z) - sink, z)).asArray();
 };
 
+/** I-180: ساتر ترابي على خط نقاط [x,z]: مقطع شبه منحرف (قاعدة 6 م، قمة 1.6 م، ارتفاع h) يتبع ارتفاع الأرض، مسدود من الطرفين */
+export function makeBerm(scene: Scene, pts: [number, number][], h: number, mat: Material | null) {
+  const path: Vector3[] = []; for (let i = 0; i < pts.length - 1; i++) { const [ax, az] = pts[i], [bx, bz] = pts[i + 1], n = Math.max(1, Math.ceil(Math.hypot(bx - ax, bz - az) / 3)); for (let k = 0; k < n; k++) { const x = ax + (bx - ax) * k / n, z = az + (bz - az) * k / n; path.push(new Vector3(x, groundH(x, z) - 0.15, z)); } }
+  const [lx, lz] = pts[pts.length - 1]; path.push(new Vector3(lx, groundH(lx, lz) - 0.15, lz));
+  const shape = [new Vector3(3, 0, 0), new Vector3(1.6, h * 0.8, 0), new Vector3(0.7, h, 0), new Vector3(-0.7, h, 0), new Vector3(-1.6, h * 0.8, 0), new Vector3(-3, 0, 0)];   // الترتيب يخلي الوجوه لبرّا
+  const m = MeshBuilder.ExtrudeShapeCustom('berm', { shape, path, cap: Mesh.CAP_ALL, scaleFunction: (i: number, d: number) => { const tot = path.length - 1; const e = Math.min(i, tot - i); return Math.min(1, 0.35 + e * 0.22); void d; }, rotationFunction: () => 0, sideOrientation: Mesh.DEFAULTSIDE }, scene);
+  m.material = mat; m.isPickable = false; return m;
+}
 export async function buildWorld(scene: Scene, o: { HQ: boolean; NL: number; caster: (m: AbstractMesh) => void; texUrls: Record<string, string>; keepClear: V3[]; modelUrl: (n: string) => string; prepMat: (m: Material) => void }): Promise<WorldOut> {
   const { HQ, NL, caster } = o, r = rng(77);
   const tex = (n: string, inv = true) => { const t = new Texture(o.texUrls[`../textures/${n}.webp`], scene, false, inv, Texture.TRILINEAR_SAMPLINGMODE); t.anisotropicFilteringLevel = 8; return t; };
@@ -312,8 +320,15 @@ export async function buildWorld(scene: Scene, o: { HQ: boolean; NL: number; cas
   const mound = MeshBuilder.CreateIcoSphere('mound', { radius: 0.5, subdivisions: 3, updatable: true }, scene);
   { const p = mound.getVerticesData(VertexBuffer.PositionKind)!; for (let i = 0; i < p.length; i += 3) { const h = Math.sin(p[i] * 41.3 + p[i + 1] * 17.9 + p[i + 2] * 63.1) * 43758.5453, k = 0.86 + (h - Math.floor(h)) * 0.28; p[i] *= k; p[i + 2] *= k; p[i + 1] = Math.max(-0.05, p[i + 1] * k); }
     mound.updateVerticesData(VertexBuffer.PositionKind, p); const nn: number[] = []; VertexData.ComputeNormals(p, mound.getIndices()!, nn); mound.setVerticesData(VertexBuffer.NormalKind, nn);
-    const mm = plain('moundMat'); const st = tex('sand'); st.uScale = 2; st.vScale = 3; mm.diffuseTexture = st; mm.diffuseColor = new Color3(0.6, 0.56, 0.5); mm.emissiveColor = new Color3(0.06, 0.055, 0.05); mound.material = mm; mound.receiveShadows = true; }
-  const mdm: number[] = []; for (const m of MOUNDS) mdm.push(...Matrix.Compose(new Vector3(5, 2.6, m.len), Quaternion.RotationAxis(Vector3.Up(), m.rot), new Vector3(m.x, groundH(m.x, m.z) - 0.05, m.z)).asArray());
+    const mm = plain('moundMat'); const st = tex('sand'); st.uScale = 2; st.vScale = 5; mm.diffuseTexture = st; mm.diffuseColor = new Color3(0.98, 0.9, 0.76); mm.emissiveColor = new Color3(0.1, 0.09, 0.07);   /* I-180: نفس لون التراب حتى الساتر يبين تراب محفور، مو صخر غامق */ mound.material = mm; mound.receiveShadows = true; }
+  const mdm: number[] = [];
+  // I-180: السواتر الترابية: شريط واحد أملس (مقطع شبه منحرف) يمشي على الأرض لكل قطعة متصلة، بدل كتل متلاصقة
+  { const bm = plain('bermMat'); const st = tex('sand'); st.uScale = 1; st.vScale = 40; bm.diffuseTexture = st; bm.diffuseColor = new Color3(0.86, 0.78, 0.64); bm.emissiveColor = new Color3(0.08, 0.07, 0.055);
+    const runs: { pts: [number, number][]; h: number }[] = []; let prev: (typeof MOUNDS)[number] | null = null, cur: [number, number][] = [];
+    const close = () => { if (cur.length && prev) { const ax = Math.sin(prev.rot), az = Math.cos(prev.rot), f = cur[0], l = cur[cur.length - 1]; runs.push({ pts: [[f[0] - ax * 5, f[1] - az * 5], ...cur, [l[0] + ax * 5, l[1] + az * 5]], h: prev.h ?? 1.3 }); } cur = []; };
+    for (const m of MOUNDS) { if (prev && (m.line !== prev.line || Math.hypot(m.x - prev.x, m.z - prev.z) > 9.5)) close(); cur.push([m.x, m.z]); prev = m; }
+    close();
+    const ms = runs.map(r => makeBerm(scene, r.pts, r.h, bm)); const all = ms.length ? Mesh.MergeMeshes(ms, true, true) : null; if (all) { all.name = 'berms'; all.receiveShadows = true; all.isPickable = false; caster(all); } }
   // خنادق طرف القرية (TH6.6): شق ترابي غامق + ساتر من تراب الحفر على جهة العدو (الغرب)
   const trM: number[] = [], trMat = plain('trenchMat'); trMat.diffuseColor = new Color3(0.26, 0.21, 0.16); trMat.emissiveColor = new Color3(0.02, 0.016, 0.012);
   const trench = MeshBuilder.CreateBox('trench', { size: 1 }, scene); trench.material = trMat; trench.receiveShadows = true;

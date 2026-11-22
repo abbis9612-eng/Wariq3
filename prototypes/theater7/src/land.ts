@@ -163,13 +163,21 @@ export const SANDBAGS: Bag[] = (() => {
   for (const dz of [-6, 6]) bag(-1885 - 10, HIGHWAY_Z + dz * 3.2, 0);
   return out;
 })();
-// تلال ترابية صغيرة (1.3م) متفرقة بطريق الهجوم: ستر للمتقدم والمدافع (الصحراء ما بيها حيطان)
-export interface Mound { x: number; z: number; len: number; rot: number }
+// I-180: سواتر ترابية متصلة بلون الأرض بدل الكتل المتناثرة: ضفاف سواقي الري (سداد) تقطع ممر الهجوم شمال-جنوب، بيها فتحات عبور،
+// وساتر على مدخل المدينة الغربي بفتحات الشوارع. كل ساتر قطع متداخلة (طول 10–13 م) حتى يبين خط واحد
+export interface Mound { x: number; z: number; len: number; rot: number; h?: number; line?: number }
+export const BERM_LINES: { ax: number; az: number; bx: number; bz: number; h: number; gaps: [number, number][] }[] = [
+  { ax: -3010, az: HIGHWAY_Z - 270, bx: -2990, bz: HIGHWAY_Z + 270, h: 1.3, gaps: [[-16, 16], [-150, -130], [118, 136]] },
+  { ax: -2720, az: HIGHWAY_Z - 260, bx: -2700, bz: HIGHWAY_Z + 250, h: 1.3, gaps: [[-16, 16], [-95, -80], [160, 176]] },
+  { ax: -2440, az: HIGHWAY_Z - 240, bx: -2430, bz: HIGHWAY_Z + 240, h: 1.2, gaps: [[-16, 16], [70, 86], [-190, -176]] },
+  { ax: CITY.x0 - 28, az: CITY.zs[0] - 10, bx: CITY.x0 - 28, bz: CITY.zs[CITY.zs.length - 1] + 10, h: 1.9, gaps: CITY.zs.map(z => [z - HIGHWAY_Z - 9, z - HIGHWAY_Z + 9] as [number, number]) },
+];
 export const MOUNDS: Mound[] = (() => {
-  const r = rng(31), out: Mound[] = [];
-  for (let i = 0; i < 9000 && out.length < 210; i++) { const x = -3250 + r() * 1500, z = HIGHWAY_Z - 230 + r() * 460, len = 6 + r() * 7;   // ممر الهجوم حول الطريق
-    if (roadDist(x, z) < 10 || wadiDist(x, z) < 15 || out.some(m => Math.hypot(m.x - x, m.z - z) < 18) || HOUSES.some(h => Math.hypot(h.x - x, h.z - z) < 25)) continue;
-    out.push({ x, z, len, rot: (r() - 0.5) * 0.7 }); }   // rot≈0: طولها شمال-جنوب، يعني تحمي من الشرق والغرب
+  const out: Mound[] = [];
+  for (const L of BERM_LINES) { const dx = L.bx - L.ax, dz = L.bz - L.az, len = Math.hypot(dx, dz), rot = Math.atan2(dx, dz);
+    for (let t = 5; t < len - 4; t += 8.5) { const x = L.ax + dx * t / len, z = L.az + dz * t / len, zr = z - HIGHWAY_Z;
+      if (L.gaps.some(([a, b]) => zr > a - 5 && zr < b + 5) || wadiDist(x, z) < 12 || HOUSES.some(h => Math.hypot(h.x - x, h.z - z) < Math.max(h.w, h.d) * 0.6 + 4)) continue;
+      out.push({ x, z, len: 12, rot, h: L.h, line: BERM_LINES.indexOf(L) } as Mound); } }
   return out;
 })();
 // نقاط الستر: n = اتجاه التهديد اللي النقطة محمية منه (الساتر بين النقطة والتهديد)

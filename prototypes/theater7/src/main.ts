@@ -1380,7 +1380,7 @@ $('bBack').onclick = () => { setAuto(false); endFollow(); }; $('bHome').onclick 
 $('bAuto').onclick = () => setAuto(!auto);
 // I-183: «🎯 الأكشن»: الكاميرا تنزل وتلاحق وحدة رمت هسه (تدور عليها بالتناوب، الآليات أول)
 $('bAct').onclick = () => {
-  if (!W) return; const now = W.T, c = [...fireT].filter(([id, t]) => now - t < 5 && id !== view.follow && W.units.some(u => u.id === id && u.alive && u.state !== 'mounted'))
+  if (!W) return; const now = W.T, c = [...fireT].filter(([id, t]) => now - t < 12 && id !== view.follow && W.units.some(u => u.id === id && u.alive && u.state !== 'mounted'))
     .map(([id, t]) => { const u = W.units.find(x => x.id === id)!; return { u, s: (now - t) - (u.kind !== 'inf' ? 2 : 0) - (u.side === 'iq' ? 0.5 : 0) }; }).sort((a, b) => a.s - b.s);
   const pick = c[0]?.u; if (!pick) { toast('ماكو رمي هسه — جرّب بعد شوية'); return; }
   setAuto(false); startFollow(pick.id, pick.kind === 'inf' ? 16 : pick.kind === 'patriot' || pick.kind === 's400' ? 60 : 24); lastUserT = -1e9; toast(`🎯 ${pick.name} · ${pick.side === 'iq' ? 'إلنا' : 'العدو'}`);

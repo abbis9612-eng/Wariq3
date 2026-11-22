@@ -68,7 +68,10 @@ for k in range(72):
         if pe>0.32: continue
         need=max(need, math.atan2(rel.z+0.1, al))
     arc.append(round(need,3))
+# I-174: نلم كل القطع بقطعة وحدة (192 قطعة = 192 رسمة بالكارت؛ بعد اللم = قطعة لكل لون ~20)
+bpy.ops.object.select_all(action='DESELECT')
 for o in meshes: o.select_set(True)
+bpy.context.view_layer.objects.active=meshes[0]; bpy.ops.object.join(); meshes=[bpy.context.view_layer.objects.active]; meshes[0].name='zu23_truck'
 bpy.ops.export_scene.gltf(filepath=OUT+'/zu23_truck.glb', export_format='GLB', use_selection=True)
 json.dump({'pivot':PIV,'arc_deg_from':-180,'arc_step':5,'arc':arc,'faces':tot,'faces0':tot0}, open(OUT+'/zu23_truck.json','w'))
 print('DONE faces', tot0, '->', tot, 'arc', arc)

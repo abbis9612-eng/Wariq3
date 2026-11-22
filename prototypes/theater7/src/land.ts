@@ -14,16 +14,22 @@ const poly = (pts: [number, number][], hw: number, kind: number): Seg[] => pts.s
 const G = site('green').p, AP = site('airport').p, TJ = site('taji').p, DR = site('dora').p, RS = site('rasheed').p;
 export const HIGHWAY_END = riverX(HIGHWAY_Z) - 150;
 export const STRIP_ROT = 0.18, STRIP_LEN = 1500;
+// I-175: مدينة الجسر — شبكة شوارع على الطريق العام بين قرية الطريق والنهر (الأرض هنا مستوية 2–5 م)
+export const CITY = { x0: -980, x1: -680, zs: [HIGHWAY_Z - 150, HIGHWAY_Z - 75, HIGHWAY_Z, HIGHWAY_Z + 75, HIGHWAY_Z + 150], xs: [-980, -880, -780, -680], name: 'مدينة الجسر' };
+export const CITY_C: V3 = [(CITY.x0 + CITY.x1) / 2, 0, HIGHWAY_Z];
 const sx = Math.sin(STRIP_ROT) * STRIP_LEN / 2, sz = Math.cos(STRIP_ROT) * STRIP_LEN / 2;
 export const ROADS: Seg[] = [
   [-6500, HIGHWAY_Z, HIGHWAY_END, HIGHWAY_Z, 8, 0],
   ...poly([[HIGHWAY_END, HIGHWAY_Z], [G[0] - 60, G[2] - 40]], 5, 1),
-  ...poly([[-700, HIGHWAY_Z], [-760, 500], [-820, 1500], [TJ[0] + 60, TJ[2] - 120]], 4, 1),
+  ...poly([[-680, HIGHWAY_Z + 150], [-760, 500], [-820, 1500], [TJ[0] + 60, TJ[2] - 120]], 4, 1),   // I-175: يطلع من زاوية المدينة الشمالية الشرقية
   ...poly([[-760, 600], [PATRIOT_POS[0] - 30, PATRIOT_POS[2] - 10]], 3.5, 1),
   ...poly([[G[0] + 40, G[2] - 60], [riverX(-900), -900], [DR[0] - 120, DR[2] + 60], [RS[0] - 100, RS[2] + 40]], 4, 1),
   ...poly([[AP[0] + 60, HIGHWAY_Z], [AP[0] + 150, AP[2] + 500]], 4, 1),
   ...poly([[riverX(900) + 20, 900], [S400_POS[0] - 20, S400_POS[2] - 30]], 3.5, 1),
   [AP[0] - sx, AP[2] - sz, AP[0] + sx, AP[2] + sz, 16, 2],
+  // شوارع المدينة: موازية للطريق العام، وعرضية
+  ...CITY.zs.filter(z => z !== HIGHWAY_Z).map(z => [CITY.x0, z, CITY.x1, z, 4.5, 1] as Seg),
+  ...CITY.xs.map(x => [x, CITY.zs[0], x, CITY.zs[CITY.zs.length - 1], 4.5, 1] as Seg),
 ];
 // وديان فرعية (تصب بالوادي الرئيسي): نقاط + عرض + عمق
 export const WADIS: { pts: [number, number][]; w: number; d: number }[] = [
@@ -115,6 +121,23 @@ export const HOUSES: House[] = (() => {
       const a = r() * 6.28, d = Math.sqrt(r()) * v.rad;
       if (add(v, v.x + Math.cos(a) * d, v.z + Math.sin(a) * d, v.rot + (r() < 0.5 ? 0 : Math.PI / 2) + (r() - 0.5) * 0.25)) k++;
     }
+  }
+  // I-175: المدينة (بعد القرى وبمولّد منفصل حتى بيوت القرى تبقى بمكانها): بيوت لاصقة بصفوف على جانبي كل شارع، وجهها للشارع،
+  // والوسط حوش وأزقة. البيوت الخفيفة أكثر (بطابقين وأقواس) حتى التلفون يتحمّل
+  { const rc = rng(7175), CW = [0, 0.06, 0.12, 0, 0.57, 0.25, 0], cityType = () => { let x = rc(); for (let i = 0; i < CW.length; i++) { x -= CW[i]; if (x <= 0) return i; } return 4; };
+    const corners = (x: number, z: number, rot: number, w: number, d: number) => { const c = Math.cos(rot), s = Math.sin(rot); return [[-1, -1], [1, -1], [1, 1], [-1, 1]].map(([a, b]) => [x + a * w / 2 * c + b * d / 2 * s, z - a * w / 2 * s + b * d / 2 * c]); };
+    const sep = (A: number[][], B: number[][]) => { for (const P of [A, B]) for (let k = 0; k < 2; k++) { const ex = P[k + 1][0] - P[k][0], ez = P[k + 1][1] - P[k][1], nx = -ez, nz = ex;
+      const pa = A.map(q => q[0] * nx + q[1] * nz), pb = B.map(q => q[0] * nx + q[1] * nz); if (Math.max(...pa) <= Math.min(...pb) || Math.max(...pb) <= Math.min(...pa)) return true; } return false; };
+    const fits = (x: number, z: number, rot: number, w: number, d: number) => { const C = corners(x, z, rot, w + 0.6, d + 0.6);
+      return C.every(([cx, cz]) => roadDist(cx, cz) > 0.8 && wadiDist(cx, cz) > 20) && out.every(h => Math.hypot(h.x - x, h.z - z) > (Math.hypot(h.w, h.d) + Math.hypot(w, d)) / 2 || sep(C, corners(h.x, h.z, h.rot, h.w, h.d))); };
+    const row = (len0: number, len1: number, at: (u: number, d: number) => [number, number], rot: number) => {
+      for (let u = len0 + 3; u < len1 - 3;) { const t = cityType(), T = HOUSE_TYPES[t], [x, z] = at(u + T.w / 2, T.d);
+        if (rc() < 0.92 && fits(x, z, rot, T.w, T.d)) { out.push({ i: out.length, x, z, rot, t, w: T.w, d: T.d, h: T.h, vil: 'city', yard: false }); u += T.w + 0.3 + (rc() < 0.08 ? 7 : 0); } else u += 4; } };
+    const { zs, xs, x0, x1 } = CITY;
+    for (const z of zs) for (const side of [-1, 1]) { if ((z === zs[0] && side < 0) || (z === zs[zs.length - 1] && side > 0)) continue;   // صف على جنب الشارع (جنوب: وجهه لفوق rot 0)
+      const off = (z === HIGHWAY_Z ? 8 : 4.5) + 2.5; row(x0, x1, (u, d) => [u, z + side * (off + d / 2)], side < 0 ? 0 : Math.PI); }
+    for (const x of xs) for (const side of [-1, 1]) { if ((x === xs[0] && side < 0) || (x === xs[xs.length - 1] && side > 0)) continue;
+      row(zs[0], zs[zs.length - 1], (u, d) => [x + side * (7 + d / 2), u], side < 0 ? Math.PI / 2 : -Math.PI / 2); }
   }
   return out;
 })();

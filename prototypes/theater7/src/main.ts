@@ -965,7 +965,7 @@ function zuFx(fx: Extract<Fx, { k: 'round' }>, vis: UVis) {
   const Mw = vis.slide!.computeWorldMatrix(true), sx = vis.bar ? ZU_BX : -ZU_BX;
   const mz = Vector3.TransformCoordinates(new Vector3(sx, 0, ZU_MZ), Mw), br = Vector3.TransformCoordinates(new Vector3(sx, -0.12, 0.35), Mw), fw = Vector3.TransformCoordinates(new Vector3(sx, 0, ZU_MZ + 1), Mw);
   const p: V3 = [mz.x, mz.y, mz.z], to = fx.to, dir = norm(sub(to, p)), bdir = norm([fw.x - mz.x, fw.y - mz.y, fw.z - mz.z]), TR = tracerFor(fx.unit), d = len(sub(to, p)), tf = d / 970;
-  canFlash.emit({ a: p, n: 1, jit: 0.05 }); hmgFlash.emit({ a: add(p, scale(bdir, 0.6)), n: 1, jit: 0.05 });
+  hmgFlash.emit({ a: add(p, scale(bdir, 0.3)), n: 1, jit: 0.05 });   /* ومضة 23 ملم ~1.5–2 م (ومضة الـ30 ملم كانت تغطي البيكب من قريب) */
   casings.emit({ a: [br.x, br.y, br.z], n: 1, dir: norm([bdir[2] * (vis.bar ? 1 : -1) * 0.4, -1, -bdir[0] * (vis.bar ? 1 : -1) * 0.4]), spd: [2, 4], spread: 0.4, jit: 0.05 });
   if (Math.random() < 0.35) puffs.emit({ a: add(p, scale(bdir, 0.8)), n: 1, spd: [0.6, 1.6], up: 0.6, jit: 0.2 });
   if (fx.tracer) TR.emit({ a: p, n: 1, dir, spd: [970, 970], life: tf, jit: 0.04 });

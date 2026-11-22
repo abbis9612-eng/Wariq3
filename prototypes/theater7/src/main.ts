@@ -59,10 +59,10 @@ const DAY = 1200, DAY0 = 100;   // طول الدورة، ووين تبدي (100 
 const lerpC = (a: Color3, b: Color3, t: number) => Color3.Lerp(a, b, clamp(t, 0, 1));
 const C_DAYFOG = new Color3(0.83, 0.79, 0.71), C_DUSKFOG = new Color3(0.78, 0.55, 0.38), C_NIGHTFOG = new Color3(0.045, 0.055, 0.085);
 const C_SUN = new Color3(1, 0.92, 0.8), C_SUNLOW = new Color3(1, 0.58, 0.3), C_MOON = new Color3(0.55, 0.65, 0.95);
-let dayK = 1, dnT = -9, todName = '';
+let dayK = 1, dnT = -9, todName = '', lastMatK = -1;
 const emBase = new Map<StandardMaterial, Color3>();
 function dayNight(T: number, force = false) {
-  if (!force && Math.abs(T - dnT) < 0.5) return; dnT = T;
+  if (!force && Math.abs(T - dnT) < 1) return; dnT = T;
   const ph = (((T + DAY0) % DAY) + DAY) % DAY / DAY, el = Math.sin(ph * Math.PI * 2) - 0.12;   // ارتفاع الشمس (−1..1)؛ ناقص شوية = الليل أطول
   const az = ph * Math.PI * 2, alt = el * 1.15;   // تطلع من الشرق (+x) وتغيب بالغرب (−x)؛ أعلى ارتفاع ~58°
   const sunV = new Vector3(Math.cos(az) * Math.cos(alt), Math.sin(alt), 0.3 * Math.cos(alt)).normalize();
@@ -75,9 +75,10 @@ function dayNight(T: number, force = false) {
   scene.fogColor = dayK > 0.5 ? lerpC(C_DUSKFOG, C_DAYFOG, 1 - low) : lerpC(C_NIGHTFOG, C_DUSKFOG, dayK * 2);
   pipe.imageProcessing.exposure = 1.75 + 0.75 * night + 0.2 * low;
   // دخان وغبار (مو مضيئة) تغمق بالليل، والمواد اللي بيها توهّج خفيف تطفى
+  todName = el < -0.25 ? '🌙 ليل' : el < -0.05 ? (ph < 0.75 ? '🌆 غروب' : '🌅 فجر') : el < 0.25 ? (ph > 0.75 || ph < 0.25 ? '🌄 شروق' : '🌇 عصر') : '☀ نهار';
+  if (!force && Math.abs(dayK - lastMatK) < 0.03) return; lastMatK = dayK;   // I-186: المواد والدخان بس لما الضوء يتغير فعلاً
   const k = 0.18 + 0.82 * dayK; for (const p of pools) if (p.ps.blendMode !== ParticleSystem.BLENDMODE_ADD) p.ps.textureMask = new Color4(k, k, k * (0.9 + 0.1 * dayK), 1);
   for (const m of scene.materials) if (m instanceof StandardMaterial && !m.disableLighting) { let b = emBase.get(m); if (!b) { b = m.emissiveColor.clone(); emBase.set(m, b); } m.emissiveColor = b.scale(0.2 + 0.8 * dayK); }
-  todName = el < -0.25 ? '🌙 ليل' : el < -0.05 ? (ph > 0.5 ? '🌅 فجر' : '🌆 غروب') : el < 0.25 ? (ph > 0.75 || ph < 0.12 ? '🌄 شروق' : '🌇 عصر') : '☀ نهار';
 }
 let shadows: ShadowGenerator | null = null;
 function setupShadows() {
@@ -154,8 +155,8 @@ function updateCamera(dt: number) {
   pos.y = Math.max(pos.y, groundH(pos.x, pos.z) + (chase ? 1.8 : 4));
   // إذا تلّة تسد النظر بين الكاميرا والهدف، نرفع الكاميرا
   for (let it = 0; it < 7; it++) { let blocked = false; for (let q = 0.12; q < 0.95; q += 0.11) { const x = lerp(pos.x, camTarget.x, q), z = lerp(pos.z, camTarget.z, q); if (groundH(x, z) + 2.5 > lerp(pos.y, camTarget.y, q)) { blocked = true; break; } } if (!blocked) break; pos.y += camDist * 0.07 + 2; }
-  trauma = Math.max(0, trauma - dt * 1.4); shakeT += dt * 30;
-  const sh = trauma * trauma * camDist * 0.007;
+  trauma = Math.max(0, trauma - dt * 2.4); shakeT += dt * 30;
+  const sh = trauma * trauma * Math.min(camDist, 260) * 0.0035;   /* I-186: اهتزاز خفيف وقصير (قبل كان لحد 6 م من بعيد) */
   cam.position.copyFrom(pos);
   cam.setTarget(camTarget.add(new Vector3(Math.sin(shakeT * 1.7) * sh, Math.sin(shakeT * 2.3) * sh, Math.sin(shakeT * 1.1) * sh)));
   // الظلال تتبع مكان الكاميرا
@@ -500,7 +501,8 @@ class Pool {
 const fxTex = (n: string) => { const t = new Texture(texUrls[`../textures/${n}.webp`], scene, false, true, Texture.TRILINEAR_SAMPLINGMODE); t.hasAlpha = true; return t; };
 const texExplo1 = fxTex('fx_explo1'), texExplo2 = fxTex('fx_explo2'), texCloud = fxTex('fx_cloud'), texFire = fxTex('fx_fire'), texFlame = fxTex('fx_flame');
 const SH_CLOUD = { cw: 128, ch: 128, n: 64, rand: true }, SH_FIRE = { cw: 64, ch: 64, n: 64, rand: true };
-const Qn = (n: number) => Math.max(1, Math.round(n * (HQ ? 1 : 0.55)));
+let loadK = 1;   // I-186: لما الإطارات تنزل تحت 30 بلحظات القتال الثقيل، الدخان والشرار يقلّون لحد النص، ويرجعون لما ترتاح
+const Qn = (n: number) => Math.max(1, Math.round(n * (HQ ? 1 : 0.55) * loadK));
 const C4 = (r: number, g: number, b: number, a: number) => new Color4(r, g, b, a);
 const fireS = new Pool('fireS', 1000, texFire, true, { sheet: SH_FIRE,  life: [0.3, 0.8], size: [[0, 2], [0.4, 6], [1, 8]], damp: 0.85, colors: [[0, C4(2.6, 2.1, 1.6, 1)], [0.5, C4(1.6, 1, 0.6, 0.8)], [1, C4(0.3, 0.15, 0.08, 0)]] });
 const fireL = new Pool('fireL', 800, texFire, true, { sheet: SH_FIRE,  life: [0.6, 1.5], size: [[0, 7], [0.3, 22], [1, 30]], damp: 0.85, colors: [[0, C4(2.6, 2.1, 1.6, 1)], [0.4, C4(1.7, 1, 0.55, 0.85)], [0.8, C4(0.6, 0.3, 0.12, 0.4)], [1, C4(0.1, 0.05, 0.03, 0)]] });
@@ -870,7 +872,7 @@ function handleFx(fx: Fx) {
       // حلقة غبار حول الدبابة من ضغط الطلقة
       const u = W.units.find(x => x.id === fx.unit); if (u) dust.emit({ a: add(L(u.p), [0, 0.6, 0]), n: Qn(26), spd: [8, 18], up: -0.45, jit: 3 });
       smokeS.emit({ a: add(fx.p, scale(fx.dir, 3)), n: Qn(5), spd: [3, 8], jit: 1.5 });
-      flashLight(fx.p, 4, 60, 0.15); trauma = Math.min(1, trauma + clamp(0.25 - camD(fx.p) / 2000, 0, 0.25)); sfx.gun(sndD(fx.p), !!u && u.kind === 'd30', u?.side === 'en'); break;
+      flashLight(fx.p, 4, 60, 0.15); trauma = Math.min(0.6, trauma + clamp(0.12 - camD(fx.p) / 1500, 0, 0.12)); sfx.gun(sndD(fx.p), !!u && u.kind === 'd30', u?.side === 'en'); break;
     }
     case 'round': {
       const vis = unitVis.get(fx.unit); if (vis?.elev && !vis.wreck) { zuFx(fx, vis); break; }
@@ -897,7 +899,7 @@ function handleFx(fx: Fx) {
       sparks.emit({ a: fx.p, n: Qn((fx.metal ? 45 : 26) * s), spd: [40, 140 * s], jit: 1 });
       if (!fx.air) { dust.emit({ a: fx.p, n: Qn(14 * s + 4), spd: [8, 26 * s], up: 0.1, jit: 3 }); addDecal(fx.p, 4 + 7 * s); }
       flashLight(fx.p, 3 + 5 * s, 50 + 90 * s, 0.3 + 0.3 * s);
-      trauma = Math.min(1, trauma + clamp(0.55 - camD(fx.p) / 3500, 0, 0.55) * s); sfx.boom(sndD(fx.p), s); break;
+      trauma = Math.min(0.6, trauma + clamp(0.3 - camD(fx.p) / 1400, 0, 0.3) * Math.min(1, s)); sfx.boom(sndD(fx.p), s); break;
     }
     case 'plaunch': {
       // إطلاق ساخن: غطا الحاوية يطير، لهب من ورا الحاوية، غيمة ضخمة على الأرض
@@ -906,7 +908,7 @@ function handleFx(fx: Fx) {
       cloud.emit({ a: fx.muzzle, n: Qn(16), dir: fx.dir, spd: [3, 10], spread: 1.2, jit: 1 });
       fireS.emit({ a: fx.muzzle, n: Qn(12), dir: fx.dir, spd: [8, 25], spread: 0.6, jit: 0.6 });
       throwDebris(capMesh, fx.muzzle, add(scale(fx.dir, 18), [(Math.random() - 0.5) * 6, 6, (Math.random() - 0.5) * 6]), 4);
-      flashLight(fx.muzzle, 6, 120, 0.7); trauma = Math.min(1, trauma + clamp(0.6 - camD(fx.muzzle) / 1500, 0, 0.6)); sfx.launch(sndD(fx.muzzle)); break;
+      flashLight(fx.muzzle, 6, 120, 0.7); trauma = Math.min(0.6, trauma + clamp(0.3 - camD(fx.muzzle) / 1200, 0, 0.3)); sfx.launch(sndD(fx.muzzle)); break;
     }
     case 'eject': {
       // إطلاق بارد: «طكّة» غاز بيضاء، والغطا يطير، بدون لهب
@@ -1341,7 +1343,7 @@ function frame() {
     if ((miniT += dtReal) > 0.25) { miniT = 0; drawMini(); } }
   if (W?.over && !endShown) { endShown = true; setTimeout(showEnd, 3000); }
   const fps = engine.getFps(); fpsAcc += fps; fpsN++; fpsT += dtReal;
-  if (fpsT > 0.5) { const avg = fpsAcc / fpsN; fpsEl.textContent = `${avg.toFixed(0)} FPS · ${HQ ? 'عالية' : 'خفيفة'}`; if (running && W.T > 12 && W.T < 22) fpsHist.push(avg); /* بعد ما يخلص تجهيز الرسم أول مرة */ fpsAcc = fpsN = fpsT = 0; }
+  if (fpsT > 0.5) { const avg = fpsAcc / fpsN; if (running) loadK = clamp(loadK + (avg < 28 ? -0.12 : avg > 40 ? 0.06 : 0), 0.45, 1); fpsEl.textContent = `${avg.toFixed(0)} FPS · ${HQ ? 'عالية' : 'خفيفة'}`; if (running && W.T > 12 && W.T < 22) fpsHist.push(avg); /* بعد ما يخلص تجهيز الرسم أول مرة */ fpsAcc = fpsN = fpsT = 0; }
   if (!autoQ && running && W.T > 22 && !AUTO) { autoQ = true; const a = fpsHist.reduce((x, y) => x + y, 0) / Math.max(1, fpsHist.length); if (HQ && fpsHist.length > 3 && a < 26) { setQuality(false); toast(`خفّضت الجودة تلقائياً (${a.toFixed(0)} إطار/ث) حتى تبقى سلسة`); } }
   (window as any).__state = { heat: +heat.toFixed(2), T: W?.T ?? 0, over: W?.over, stats: W?.stats, dist: camDist, follow: view.follow, fps, log: W?.log.length, slow: slowK < 1, phase: W?.columnPhase };
 }

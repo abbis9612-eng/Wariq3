@@ -132,7 +132,12 @@ function updateCamera(dt: number) {
   const k = 1 - Math.exp(-dt * 5);
   let tgt = new Vector3(view.tx, groundH(view.tx, view.tz) + targetY, view.tz), want = view.dist, pitch = view.pitch > 0 ? view.pitch : classic ? oldPitchFor(view.dist) : pitchFor(view.dist);
   const f = view.follow ? findEntity(view.follow) : null;
+  let chase = false;
   if (f) { tgt = v(f.p); want = view.fDist; pitch = f.air ? 0.2 : CLOSE_PITCH; view.tx = tgt.x; view.tz = tgt.z;
+    // I-183: كاميرا مطاردة: قريب من الآلية (أقل من 70 م) تنزل واطية وتصير وراها، باتجاه سبطانتها، حتى تشوف شلون ترمي
+    const fu = !f.air ? W.units.find(x => x.id === view.follow) : undefined;
+    if (fu && view.fDist < 70 && !sideView && !classic) { chase = true; tgt.y += fu.kind === 'inf' ? 0.5 : 1.5; pitch = lerp(0.16, 0.5, clamp((view.fDist - 8) / 62, 0, 1));
+      if (performance.now() - lastUserT > 4000) { const hy = fu.kind === 'inf' ? fu.yaw : (unitVis.get(fu.id)?.tyaw ?? fu.tur); view.yaw = camYaw + angDiff(camYaw, hy + 0.35) * (1 - Math.exp(-dt * 1.5)); } }
     if (sideView && !f.air) { want = Math.min(view.fDist, 75); pitch = SIDE_PITCH; }
     if (classic && !f.air) pitch = 0.42;
     if (f.air && f.vel && len(f.vel) > 5) view.yaw = camYaw + angDiff(camYaw, Math.atan2(f.vel[0], f.vel[2])) * (1 - Math.exp(-dt * 2)); }
@@ -140,13 +145,13 @@ function updateCamera(dt: number) {
   else camTarget = Vector3.Lerp(camTarget, tgt, k);
   if (sideView && !f) { want = sideDist; pitch = SIDE_PITCH; tgt.y += 3; }
   if (classic && !f) { if (view.pitch > 0) pitch = Math.min(view.pitch, 0.45); if (auto) want *= 0.55; }   // لقطات المخرج القديمة: أوطى وأقرب
-  if (!(f && f.air) && !sideView && !classic) pitch = Math.max(pitch, lerp(0.3, 0.78, closeK(want)));   // بالمعركة القريبة ما نخلي الكاميرا تنزل وتبين السما
+  if (!(f && f.air) && !sideView && !classic && !chase) pitch = Math.max(pitch, lerp(0.3, 0.78, closeK(want)));   // بالمعركة القريبة ما نخلي الكاميرا تنزل وتبين السما
   camDist = lerp(camDist, want, k); camPitch = lerp(camPitch, pitch, k); camYaw = camYaw + angDiff(camYaw, view.yaw) * k;
   const fovW = f && f.air || classic ? WIDE_FOV : sideView ? SIDE_FOV : lerp(WIDE_FOV, CLOSE_FOV, closeK(camDist)); camFov = lerp(camFov, fovW, k);
   // الشاشة بالطول: نثبت الزاوية الأفقية حتى ما يطلع الهدف برّا
   cam.fovMode = portrait() ? FreeCamera.FOVMODE_HORIZONTAL_FIXED : FreeCamera.FOVMODE_VERTICAL_FIXED; cam.fov = portrait() ? camFov * 1.15 : camFov;
   const cp = Math.cos(camPitch) * camDist, pos = new Vector3(camTarget.x - Math.sin(camYaw) * cp, camTarget.y + Math.sin(camPitch) * camDist, camTarget.z - Math.cos(camYaw) * cp);
-  pos.y = Math.max(pos.y, groundH(pos.x, pos.z) + 4);
+  pos.y = Math.max(pos.y, groundH(pos.x, pos.z) + (chase ? 1.8 : 4));
   // إذا تلّة تسد النظر بين الكاميرا والهدف، نرفع الكاميرا
   for (let it = 0; it < 7; it++) { let blocked = false; for (let q = 0.12; q < 0.95; q += 0.11) { const x = lerp(pos.x, camTarget.x, q), z = lerp(pos.z, camTarget.z, q); if (groundH(x, z) + 2.5 > lerp(pos.y, camTarget.y, q)) { blocked = true; break; } } if (!blocked) break; pos.y += camDist * 0.07 + 2; }
   trauma = Math.max(0, trauma - dt * 1.4); shakeT += dt * 30;
@@ -160,7 +165,9 @@ function updateCamera(dt: number) {
 const ptrs = new Map<number, { x: number; y: number }>();
 let pinch0 = 0, angle0 = 0, moved = 0;
 canvas.addEventListener('pointerdown', e => { setAuto(false); canvas.setPointerCapture(e.pointerId); ptrs.set(e.pointerId, { x: e.clientX, y: e.clientY }); moved = 0; if (ptrs.size === 2) { const [a, b] = [...ptrs.values()]; pinch0 = Math.hypot(a.x - b.x, a.y - b.y); angle0 = Math.atan2(b.y - a.y, b.x - a.x); } });
+let lastUserT = -1e9;   // I-183: آخر مرة اللاعب حرّك الكاميرا بإيده (الكاميرا ما تلف وحدها 4 ث بعدها)
 canvas.addEventListener('pointermove', e => {
+  if (ptrs.has(e.pointerId)) lastUserT = performance.now();
   const p = ptrs.get(e.pointerId); if (!p) return;
   const dx = e.clientX - p.x, dy = e.clientY - p.y; p.x = e.clientX; p.y = e.clientY; moved += Math.abs(dx) + Math.abs(dy);
   if (ptrs.size === 1) {
@@ -187,7 +194,7 @@ document.addEventListener('pointerup', e => {
 }, true);
 canvas.addEventListener('pointerup', up); canvas.addEventListener('pointercancel', up);
 canvas.addEventListener('wheel', e => { e.preventDefault(); setAuto(false); zoomBy(Math.exp(e.deltaY * 0.0012)); }, { passive: false });
-function zoomBy(f: number) { if (view.follow) view.fDist = clamp(view.fDist * f, classic ? 8 : 25, 1500); else if (sideView) sideDist = clamp(sideDist * f, 50, 800); else if (classic) { view.pitch = -1; view.dist = clamp(view.dist * f, 25, 9000); } else { view.pitch = -1; view.dist = clamp(view.dist * f, 120, 9000); } }
+function zoomBy(f: number) { lastUserT = performance.now(); if (view.follow) view.fDist = clamp(view.fDist * f, 8, 1500);   /* I-183: تگدر تنزل لحد 8 م من الآلية */ else if (sideView) sideDist = clamp(sideDist * f, 50, 800); else if (classic) { view.pitch = -1; view.dist = clamp(view.dist * f, 25, 9000); } else { view.pitch = -1; view.dist = clamp(view.dist * f, 120, 9000); } }
 
 // ===== معالجة الصورة =====
 const pipe = new DefaultRenderingPipeline('pipe', true, scene, [cam]);
@@ -503,12 +510,12 @@ const smokeL = new Pool('smokeL', 1600, texCloud, false, { sheet: SH_CLOUD,  lif
 const dust = new Pool('dust', 2200, texSmoke, false, { life: [2, 4.5], size: [[0, 2.5], [1, 14]], damp: 0.86, gravity: 0.5, colors: [[0, C4(0.72, 0.6, 0.44, 0)], [0.06, C4(0.7, 0.58, 0.43, 0.7)], [1, C4(0.78, 0.68, 0.55, 0)]] });
 const trackDust = new Pool('trackDust', 900, texSmoke, false, { life: [1.5, 3], size: [[0, 1.5], [1, 6]], damp: 0.9, gravity: 0.2, colors: [[0, C4(0.72, 0.62, 0.47, 0)], [0.1, C4(0.72, 0.62, 0.47, 0.32)], [1, C4(0.78, 0.7, 0.58, 0)]] });
 const sparks = new Pool('sparks', 1000, texSoft, true, { life: [0.4, 1.2], size: [[0, 1], [1, 0.35]], gravity: -9.8, stretched: true, colors: [[0, C4(5, 4, 2.4, 1)], [0.6, C4(3, 1.2, 0.3, 0.9)], [1, C4(1, 0.2, 0, 0)]] });
-const muzzle = new Pool('muzzle', 600, texFlare, true, { life: [0.04, 0.09], size: [[0, 2.5], [1, 4]], colors: [[0, C4(7, 5.5, 3, 1)], [1, C4(3, 1.4, 0.3, 0)]] });
+const muzzle = new Pool('muzzle', 600, texFlare, true, { life: [0.05, 0.11], size: [[0, 3.2], [1, 5.2]], colors: [[0, C4(7, 5.5, 3, 1)], [1, C4(3, 1.4, 0.3, 0)]] });
 // TH6.4: أجزاء حاضن القذيفة الخارقة (3 قطع تنفصل قرب الفوهة) + خط مضيء أقوى لقذيفة الدبابة
 const petals = new Pool('petals', 240, texSoft, false, { life: [0.9, 1.4], size: [[0, 0.55], [1, 0.45]], gravity: -9.8, spin: 6, colors: [[0, C4(0.12, 0.11, 0.1, 1)], [0.85, C4(0.15, 0.14, 0.12, 1)], [1, C4(0.15, 0.14, 0.12, 0)]] });
 // ===== TH6.3: الطلقات حسب السلاح — ومضات بحجم كل سلاح، متتبعات خضر (ذخيرة روسية/العدو) وحمر (العراق)، وأثر حسب السطح =====
-const rifleFlash = new Pool('rifleFlash', 500, texFlare, true, { life: [0.025, 0.05], size: [[0, 0.45], [1, 0.75]], colors: [[0, C4(8, 6.5, 3.5, 1)], [1, C4(4, 2, 0.5, 0)]] });
-const mgFlash = new Pool('mgFlash', 400, texFlare, true, { life: [0.03, 0.06], size: [[0, 0.8], [1, 1.2]], colors: [[0, C4(8, 6, 3, 1)], [1, C4(4, 1.8, 0.4, 0)]] });
+const rifleFlash = new Pool('rifleFlash', 500, texFlare, true, { life: [0.03, 0.06], size: [[0, 0.7], [1, 1.1]],   /* I-182: أوضح */ colors: [[0, C4(8, 6.5, 3.5, 1)], [1, C4(4, 2, 0.5, 0)]] });
+const mgFlash = new Pool('mgFlash', 400, texFlare, true, { life: [0.035, 0.07], size: [[0, 1.1], [1, 1.6]], colors: [[0, C4(8, 6, 3, 1)], [1, C4(4, 1.8, 0.4, 0)]] });
 const hmgFlash = new Pool('hmgFlash', 300, texFlare, true, { life: [0.04, 0.07], size: [[0, 1.6], [1, 2.4]], colors: [[0, C4(8, 6, 3, 1)], [1, C4(4, 1.6, 0.3, 0)]] });
 const zuFlash = new Pool('zuFlash', 200, texFlare, true, { life: [0.03, 0.05], size: [[0, 0.9], [1, 1.4]], colors: [[0, C4(8, 6, 3, 1)], [1, C4(4, 1.6, 0.3, 0)]] });   // I-173: ومضة 23 ملم
 const canFlash = new Pool('canFlash', 200, texFlare, true, { life: [0.05, 0.09], size: [[0, 2.6], [1, 3.6]], colors: [[0, C4(8, 6, 3, 1)], [1, C4(4, 1.5, 0.3, 0)]] });
@@ -844,7 +851,9 @@ const whistled = new Set<number>();
 // I-179: شدة القتال من الطلقات والانفجارات القريبة من الكاميرا (تخفت خلال ~3 ث)
 let heat = 0, heatPan = 0, digMesh: Mesh | null = null, digM: number[] = [];
 const HEAT: Partial<Record<Fx['k'], number>> = { shot: 0.05, volley: 0.07, round: 0.025, cannon: 0.06, gun: 0.12, boom: 0.14, atgm: 0.1, rlaunch: 0.05 };
+const fireT = new Map<number, number>();   // I-183: آخر وقت رمت بيه كل وحدة (لزر الأكشن)
 function addHeat(fx: Fx) {
+  const un = (fx as { unit?: number }).unit; if (un && W && (fx.k === 'gun' || fx.k === 'cannon' || fx.k === 'round' || fx.k === 'shot' || fx.k === 'atgm' || fx.k === 'volley' || fx.k === 'rlaunch')) fireT.set(un, W.T);
   const w0 = HEAT[fx.k]; if (!w0) return; const p = (fx as { p?: V3 }).p; if (!p) return;
   const d = sndD(p), k = w0 * Math.max(0, 1 - d / 1400); if (k <= 0) return; heat = Math.min(2, heat + k);
   const r = cam.getDirection(Vector3.RightReadOnly), rel = v(p).subtract(cam.position); heatPan += (Vector3.Dot(r, rel.normalize()) - heatPan) * Math.min(1, k * 3);
@@ -1369,6 +1378,13 @@ $('bStart').onclick = start; $('bAgain').onclick = start;
 $('bExplore').onclick = () => { ($('end') as HTMLElement).hidden = true; setAuto(false); toast('حرّك الخريطة واضغط على أي اسم'); };
 $('bBack').onclick = () => { setAuto(false); endFollow(); }; $('bHome').onclick = () => { setAuto(false); endFollow(); view.tx = -1900; view.tz = -330; view.dist = 1000; view.yaw = 0; view.pitch = -1; targetY = 0; };
 $('bAuto').onclick = () => setAuto(!auto);
+// I-183: «🎯 الأكشن»: الكاميرا تنزل وتلاحق وحدة رمت هسه (تدور عليها بالتناوب، الآليات أول)
+$('bAct').onclick = () => {
+  if (!W) return; const now = W.T, c = [...fireT].filter(([id, t]) => now - t < 5 && id !== view.follow && W.units.some(u => u.id === id && u.alive && u.state !== 'mounted'))
+    .map(([id, t]) => { const u = W.units.find(x => x.id === id)!; return { u, s: (now - t) - (u.kind !== 'inf' ? 2 : 0) - (u.side === 'iq' ? 0.5 : 0) }; }).sort((a, b) => a.s - b.s);
+  const pick = c[0]?.u; if (!pick) { toast('ماكو رمي هسه — جرّب بعد شوية'); return; }
+  setAuto(false); startFollow(pick.id, pick.kind === 'inf' ? 16 : pick.kind === 'patriot' || pick.kind === 's400' ? 60 : 24); lastUserT = -1e9; toast(`🎯 ${pick.name} · ${pick.side === 'iq' ? 'إلنا' : 'العدو'}`);
+};
 $('bSide').onclick = () => { sideView = !sideView; if (sideView) classic = false; $('bSide').setAttribute('aria-pressed', String(sideView)); $('bClassic').setAttribute('aria-pressed', String(classic)); };
 $('bClassic').onclick = () => { classic = !classic; if (classic) sideView = false; $('bClassic').setAttribute('aria-pressed', String(classic)); $('bSide').setAttribute('aria-pressed', String(sideView)); if (!classic) view.dist = Math.max(view.dist, 300); };
 $('bRotL').onclick = () => (view.yaw += 0.5); $('bRotR').onclick = () => (view.yaw -= 0.5);

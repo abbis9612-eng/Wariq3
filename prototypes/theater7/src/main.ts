@@ -485,6 +485,7 @@ const petals = new Pool('petals', 240, texSoft, false, { life: [0.9, 1.4], size:
 const rifleFlash = new Pool('rifleFlash', 500, texFlare, true, { life: [0.025, 0.05], size: [[0, 0.45], [1, 0.75]], colors: [[0, C4(8, 6.5, 3.5, 1)], [1, C4(4, 2, 0.5, 0)]] });
 const mgFlash = new Pool('mgFlash', 400, texFlare, true, { life: [0.03, 0.06], size: [[0, 0.8], [1, 1.2]], colors: [[0, C4(8, 6, 3, 1)], [1, C4(4, 1.8, 0.4, 0)]] });
 const hmgFlash = new Pool('hmgFlash', 300, texFlare, true, { life: [0.04, 0.07], size: [[0, 1.6], [1, 2.4]], colors: [[0, C4(8, 6, 3, 1)], [1, C4(4, 1.6, 0.3, 0)]] });
+const zuFlash = new Pool('zuFlash', 200, texFlare, true, { life: [0.03, 0.05], size: [[0, 0.9], [1, 1.4]], colors: [[0, C4(8, 6, 3, 1)], [1, C4(4, 1.6, 0.3, 0)]] });   // I-173: ومضة 23 ملم
 const canFlash = new Pool('canFlash', 200, texFlare, true, { life: [0.05, 0.09], size: [[0, 2.6], [1, 3.6]], colors: [[0, C4(8, 6, 3, 1)], [1, C4(4, 1.5, 0.3, 0)]] });
 const tracerG = new Pool('tracerG', 600, texSoft, true, { life: [0.4, 0.4], size: [[0, 0.32], [1, 0.32]], stretched: true, colors: [[0, C4(1.6, 7, 2, 1)], [1, C4(1.2, 5, 1.4, 1)]] });
 const tracerR = new Pool('tracerR', 600, texSoft, true, { life: [0.4, 0.4], size: [[0, 0.32], [1, 0.32]], stretched: true, colors: [[0, C4(8, 2.2, 1, 1)], [1, C4(6, 1.4, 0.6, 1)]] });
@@ -965,7 +966,7 @@ function zuFx(fx: Extract<Fx, { k: 'round' }>, vis: UVis) {
   const Mw = vis.slide!.computeWorldMatrix(true), sx = vis.bar ? ZU_BX : -ZU_BX;
   const mz = Vector3.TransformCoordinates(new Vector3(sx, 0, ZU_MZ), Mw), br = Vector3.TransformCoordinates(new Vector3(sx, -0.12, 0.35), Mw), fw = Vector3.TransformCoordinates(new Vector3(sx, 0, ZU_MZ + 1), Mw);
   const p: V3 = [mz.x, mz.y, mz.z], to = fx.to, dir = norm(sub(to, p)), bdir = norm([fw.x - mz.x, fw.y - mz.y, fw.z - mz.z]), TR = tracerFor(fx.unit), d = len(sub(to, p)), tf = d / 970;
-  hmgFlash.emit({ a: add(p, scale(bdir, 0.3)), n: 1, jit: 0.05 });   /* ومضة 23 ملم ~1.5–2 م (ومضة الـ30 ملم كانت تغطي البيكب من قريب) */
+  zuFlash.emit({ a: add(p, scale(bdir, 0.25)), n: 1, jit: 0.03 });   /* ومضة 23 ملم ~1.5–2 م (ومضة الـ30 ملم كانت تغطي البيكب من قريب) */
   casings.emit({ a: [br.x, br.y, br.z], n: 1, dir: norm([bdir[2] * (vis.bar ? 1 : -1) * 0.4, -1, -bdir[0] * (vis.bar ? 1 : -1) * 0.4]), spd: [2, 4], spread: 0.4, jit: 0.05 });
   if (Math.random() < 0.35) puffs.emit({ a: add(p, scale(bdir, 0.8)), n: 1, spd: [0.6, 1.6], up: 0.6, jit: 0.2 });
   if (fx.tracer) TR.emit({ a: p, n: 1, dir, spd: [970, 970], life: tf, jit: 0.04 });

@@ -787,7 +787,32 @@ html[data-skin] .hero b{color:var(--act)}
     for (let i = T.arrive.length - 1; i >= 0; i--) { const a = T.arrive[i]; if (W.t < a.at) continue; T.arrive.splice(i, 1); const cell = W.ctrl[a.to] === 0 ? a.to : T.cells.findIndex((c, j) => W.ctrl[j] === 0); if (cell < 0) continue;
       const d = SM.addDiv(W, 0, a.kind, cell, a.num); d.n = a.n; d.org = d.orgMax * .7; SM.joinArmy(W, d); if (a.front != null && a.front !== cell) SM.order(W, d, a.front, T.auto0 === false ? 'manual' : 'auto'); toast(`🚚 وصلت ${a.n} للجبهة${a.city ? ' من ' + a.city : ''}`, 'good'); } }
   // فرقة جديدة من 🏭 الإنتاج بالسلم: تطلع بالعاصمة (أكبر مدينة)
-  function homeAddDiv(kind) { if (!HT) return; const W = HT.W, k = HT.cells.reduce((b, c, i) => (c.vp || 0) > (HT.cells[b].vp || 0) ? i : b, 0), num = 1 + SM.alive(W).reduce((m, d) => Math.max(m, d.num || 0), 0); const d = SM.addDiv(W, 0, kind, k, num); d.org = d.orgMax * .6; }
+  // I-167 ب: تطلع من مدينة المصنع (أكبر مدينة) وتمشي بالطرق لمعسكرها: خلية حدود بيها أقل فرق، وتنشاف على الخريطة وهي ماشية
+  function homeAddDiv(kind) { if (!HT) return; const W = HT.W, k = HT.cells.reduce((b, c, i) => (c.vp || 0) > (HT.cells[b].vp || 0) ? i : b, 0), num = 1 + SM.alive(W).reduce((m, d) => Math.max(m, d.num || 0), 0);
+    const d = SM.addDiv(W, 0, kind, k, num); d.org = d.orgMax * .6; d.n = `${SM.KIND_N[kind] || 'فرقة'} ${num} (جديدة)`; d.fresh = G.t;
+    const idx = new Map(WD.r.map((r, j) => [r[0], j])), cnt = new Map(); for (const x of SM.alive(W)) cnt.set(x.cell, (cnt.get(x.cell) || 0) + 1);
+    // المعسكر: خلية حدود برية (مو بحر) بعيدة عن المصنع (150+ كم)، تواجه أقوى جار، وبيها وحواليها أقل فرق
+    const thr = i => { let m = 0; for (const n of WD.r[HT.cells[i].reg][7]) { const o = G.ctl[idx.get(n)]; if (o && o !== me && G.C[o]) m = Math.max(m, G.C[o].pw * (S.rel(G, me, o) < 0 ? 2 : 1)); } return m; };
+    const near = i => SM.alive(W).filter(x => x.side === 0 && (x.cell === i || (W.cells[i].nb || []).includes(x.cell))).length;
+    const bord = HT.cells.map((c, i) => i).filter(i => i !== k && thr(i) > 0 && W.dist(k, i) > 150);
+    const camp = bord.map(i => [i, thr(i) / (1 + near(i) * 1.5)]).sort((a, b) => b[1] - a[1])[0]?.[0];
+    const city = HT.cells[k].city || 'العاصمة';
+    if (camp != null) { SM.order(W, d, camp, 'manual'); const dest = HT.cells[camp].city || byId.get(WD.r[HT.cells[camp].reg][0])?.n || 'الحدود', days = Math.max(1, Math.round(W.dist(k, camp) / 250));
+      toast(`🏭 ${d.n} طلعت من مصنع ${city} وماشية لمعسكرها بـ${dest} — توصل بعد ~${days} يوم. تشوفها بالخريطة (حلقة صفرة)`, 'good'); }
+    else toast(`🏭 ${d.n} طلعت من مصنع ${city} وبقت بيها`, 'good');
+    dirty = true; }
+  // I-167 ب: الطيارة اللي تنصنع تطير قدامك من مدينة المصنع لقاعدتها (8 ثواني)، وبعدها رقم القاعدة يزيد
+  const FERRY = [];
+  function ferry(it) { const V = VT(); if (!V || !V.A) return false; const capR = R.find(r => r.ctl === me && r.cap) || R.find(r => r.ctl === me); if (!capR) return false;
+    const bs = V.A.bases.filter(b => b.side === 0); if (!bs.length) return false; const b = bs.find(x => x.type === it.plane) || bs.reduce((m, x) => KM(capR.ll, [x.ll[1], x.ll[0]]) < KM(capR.ll, [m.ll[1], m.ll[0]]) ? x : m, bs[0]);
+    const q = Math.max(1, Math.min(4, it.q || 1)); for (let i = 0; i < q; i++) FERRY.push({ from: capR.ll, to: [b.ll[1], b.ll[0]], t0: performance.now() + i * 450, dur: 8000 });
+    toast(`✈ ${it.q || 1} ${it.n} طلعت من مصنع ${(capR.cities[0] || [capR.n])[0]} وطايرة لقاعدة ${b.n} — شوفها بالخريطة`, 'good'); dirty = true; return true; }
+  // I-167 ب: شنو داخل الفرقة بالأرقام الحقيقية (نفس حساب المسرح: مدرعة = 240 دبابة + 110 مدرعة، آلية = 220 مدرعة، مشاة = 12 ألف)، × قوتها هسه × ضغط التلفون
+  const KITN = (k, t) => { const c = WD.cs[k], a = c && c.kit && c.kit[t] && c.kit[t][1] && c.kit[t][1][0]; return a ? String(a).replace(/\s*\(.*\)/, '').replace(/Lion of Babylon/, ' أسد بابل').slice(0, 22) : ''; };
+  function divEq(d, V) { const sc = (V && V.ob && V.ob[d.side] && V.ob[d.side].scale) || 1, f = Math.max(0, d.str) * sc, K = { arm: [240, 110, 9000], mec: [25, 220, 9000], inf: [0, 20, 12000] }[d.kind] || [0, 0, 9000];
+    return { tanks: Math.round(K[0] * f), afv: Math.round(K[1] * f), men: Math.round(K[2] * f / 100) * 100 }; }
+  function eqTxt(e, k) { const n = x => x.toLocaleString('en'); return [e.tanks ? `${n(e.tanks)} دبابة ${KITN(k, 'tank')}` : '', e.afv ? `${n(e.afv)} مدرعة ${KITN(k, 'afv')}` : '', e.men ? `${n(e.men)} جندي` : ''].filter(Boolean).join(' · '); }
+  function sideEq(ds, V) { return ds.reduce((o, d) => { const e = divEq(d, V); o.tanks += e.tanks; o.afv += e.afv; o.men += e.men; return o; }, { tanks: 0, afv: 0, men: 0 }); }
   // نهاية يوم بالمسرح: السيطرة ترجع للخريطة، سير الحرب، والاستسلام
   function theaterDay() {
     if (T.kind === 'air') { airWarDay(); return; }
@@ -817,7 +842,7 @@ html[data-skin] .hero b{color:var(--act)}
     for (const l of NW.log.slice(NW.log.indexOf(last) + 1)) { if (l.side === 1) continue;
       if (l.k === 'home' && l.a === 'issue') { toast(`🏛 قضية: ${HOME.ISS[l.i].t}`, 'bad'); if (speed > 1) { speed = 1; bar(); } }
       else if (l.k === 'home' && l.a === 'auto') toast(`🏛 المستشارين حلّوا «${HOME.ISS[l.i].t}» لحالهم`);
-      else if (l.k === 'built' && ECON.ITEMS[l.it]) { toast(`🏭 وصل: ${ECON.ITEMS[l.it].n}`, 'good'); const it = ECON.ITEMS[l.it]; if (!T && it.cat === 'div') homeAddDiv(it.kind || l.it); }
+      else if (l.k === 'built' && ECON.ITEMS[l.it]) { const it = ECON.ITEMS[l.it]; if (!T && it.cat === 'div' && HT) homeAddDiv(it.kind || l.it); else if (it.cat === 'plane' && ferry(it)) { } else if (!(T && it.cat === 'div')) toast(`🏭 وصل: ${it.n}`, 'good'); }
       else if (l.k === 'tech') toast(`🔬 البحث: ${IND.BR[l.b].n} وصل مستوى ${l.l}`, 'good');
       else if (l.k === 'mega') toast(`🏗 خلص المشروع: ${IND.MEGA[l.m].n}`, 'good');
       else if (l.k === 'sec') toast(`🏗 قطاع ${IND.SEC[l.sec].n} وصل مستوى ${l.l}`, 'good');
@@ -897,7 +922,7 @@ html[data-skin] .hero b{color:var(--act)}
     const W = T.W, b = W.battles.get(tg); if (!b) return false; const c = T.cells[tg], mine = b.side === 0;
     const A = SM.alive(W).filter(d => d.path[0] === tg && d.side === b.side), D = SM.alive(W).filter(d => d.cell === tg && d.side !== b.side), win = mine ? b.win : 1 - b.win;
     const el = $('#card'); sel = null; el.innerHTML = `<h2>⚔ معركة ${c.city || byId.get(WD.r[c.reg][0])?.n || SM.TERR[c.t].n}<button class="x" aria-label="سدّ">✕</button></h2><div class="sub">${mine ? 'إحنا نهاجم' : 'العدو يهاجم'} · ${A.length} فرق ضد ${D.length} · ${win > .55 ? 'إحنا غالبين' : win < .45 ? 'العدو غالب' : 'متعادلة'} · ${SM.TERR[c.t].n}</div>
-      <div class="note">ادخل وشوف المعركة نفسها: بالمتر والثانية الحقيقية، الدبابات والمدرعات والمشاة والمدفعية والطيارات. الخريطة توقف وانت داخل.</div><div class="row"><button class="big" id="bIn">⚔ ادخل المعركة</button></div>${nxt ? '<div class="note">⏭ الجبهة الجاية: الخريطة وقفت لأن بدت معركة جديدة. ✕ يكمّل الحرب بدون ما يوقف عند كل معركة.</div>' : ''}`;
+      <div class="note">⚔ ${mine ? 'إحنا' : 'هم'}: ${eqTxt(sideEq(A, T), mine ? me : T.side[1][0])}<br>🛡 ${mine ? 'هم' : 'إحنا'}: ${eqTxt(sideEq(D, T), mine ? T.side[1][0] : me)}</div><div class="note">ادخل وشوف المعركة نفسها: بالمتر والثانية الحقيقية، الدبابات والمدرعات والمشاة والمدفعية والطيارات. الخريطة توقف وانت داخل.</div><div class="row"><button class="big" id="bIn">⚔ ادخل المعركة</button></div>${nxt ? '<div class="note">⏭ الجبهة الجاية: الخريطة وقفت لأن بدت معركة جديدة. ✕ يكمّل الحرب بدون ما يوقف عند كل معركة.</div>' : ''}`;
     if (nxt) el.querySelector('h2').insertAdjacentHTML('afterbegin', '⏭ ');
     el.hidden = false; el.querySelector('.x').onclick = () => { el.hidden = true; if (nxt) { chain = null; toast('▶ نكمّل بدون توقف عند المعارك'); } }; $('#bIn').onclick = () => enterBattle(tg, b, A, D); return true;
   }
@@ -1311,10 +1336,17 @@ html[data-skin] .hero b{color:var(--act)}
     for (const d of moving) { const tgt = posOf(d), cur = T.disp.get(d.id) || tgt, a = Math.min(1, fdt * 6), nx = cur[0] + (tgt[0] - cur[0]) * a, ny = cur[1] + (tgt[1] - cur[1]) * a;
       if (Math.abs(nx - tgt[0]) + Math.abs(ny - tgt[1]) > .5) anim = true; T.disp.set(d.id, [nx, ny]); token(nx, ny, [d], 0, 0); }
     for (const id of [...T.disp.keys()]) if (!moving.some(d => d.id === id)) T.disp.delete(id);
+    // I-167 ب: الفرقة الجديدة (أول 10 أيام) عليها حلقة صفرة تنبض حتى تعرف وين هي
+    for (const d of vis) if (d.fresh != null && d.side === 0 && G.t - d.fresh < 10) { const [x, y] = T.disp.get(d.id) || posOf(d); cx.save(); cx.strokeStyle = 'rgba(255,214,90,.95)'; cx.lineWidth = 3; cx.beginPath(); cx.arc(x, y, 20 + 4 * Math.sin(now / 180), 0, 7); cx.stroke(); cx.restore(); anim = true; }
     // I-108: الأرتال بالطريق للجبهة: خط من مدينتها للجبهة، والقطعة تمشي عليه حسب الوقت
     for (const a of T.arrive || []) { const [fx, fy] = toS(MX(a.from[0]), MY(a.from[1])), tc = T.cells[a.to], [tx, ty] = toS(MX(tc.ll[0]), MY(tc.ll[1])), f = Math.max(0, Math.min(1, (W.t - a.t0) / Math.max(1, a.at - a.t0)));
       cx.save(); cx.setLineDash([3, 6]); cx.lineDashOffset = -(now / 50) % 9; cx.strokeStyle = 'rgba(120,200,255,.8)'; cx.lineWidth = 2; cx.beginPath(); cx.moveTo(fx, fy); cx.lineTo(tx, ty); cx.stroke(); cx.restore();
       token(fx + (tx - fx) * f, fy + (ty - fy) * f, [{ kind: a.kind, org: 1, orgMax: 1 }], 0, 0); anim = true; }
+    // I-167 ب: طيارات جديدة طايرة من المصنع للقاعدة
+    for (let i = FERRY.length - 1; i >= 0; i--) { const f = FERRY[i], k = (now - f.t0) / f.dur; if (k > 1) { FERRY.splice(i, 1); continue; } if (k < 0) { anim = true; continue; }
+      const [ax, ay] = toS(MX(f.from[0]), MY(f.from[1])), [bx, by] = toS(MX(f.to[0]), MY(f.to[1])), e = k * k * (3 - 2 * k), x = ax + (bx - ax) * e, y = ay + (by - ay) * e - Math.sin(k * Math.PI) * 18;
+      cx.save(); cx.setLineDash([2, 5]); cx.strokeStyle = 'rgba(255,255,255,.6)'; cx.lineWidth = 1.5; cx.beginPath(); cx.moveTo(ax, ay); cx.lineTo(x, y + Math.sin(k * Math.PI) * 18); cx.stroke(); cx.restore();
+      jet3d(cx, x, y, 22, Math.atan2(by - ay, bx - ax)); anim = true; }
     if (anim) dirty = true;
   }
   const W0 = () => innerWidth, H0 = () => innerHeight;
@@ -1338,7 +1370,8 @@ html[data-skin] .hero b{color:var(--act)}
     let el = $('#divbar'); if (!el) { el = document.createElement('div'); el.id = 'divbar'; document.body.append(el); }
     if (!selD || !selD.length) { el.hidden = true; return; }
     const L = selD.filter(d => !d.dead);
-    el.innerHTML = `<b>${L.length} فرقة</b> · ${L.map(d => d.n + ' ' + Math.round(d.org / d.orgMax * 100) + '٪').join('، ')}<div class="row"><span class="note">اضغط خلية حتى يروحون لها</span><button id="dauto">🤖 رجّعهم للذكاء</button><button id="dx">✕</button></div>`;
+    const V = VT(), kk = d => d.side ? (V && V.side[1][0]) : me;
+    el.innerHTML = `<b>${L.length} فرقة</b> · ${L.map(d => d.n + ' ' + Math.round(d.org / d.orgMax * 100) + '٪').join('، ')}<div class="note">${L.length <= 3 ? L.map(d => `<b>${d.n}:</b> ${eqTxt(divEq(d, V), kk(d))}`).join('<br>') : 'المجموع: ' + eqTxt(sideEq(L, V), me)}</div><div class="row"><span class="note">اضغط خلية حتى يروحون لها</span><button id="dauto">🤖 رجّعهم للذكاء</button><button id="dx">✕</button></div>`;
     if (PLAN) el.innerHTML = `<b>➹ خطة هجوم: ${L.length} فرقة</b> · ${PLAN.length - 1} نقطة<div class="row"><span class="note">اضغط الخلايا على طريق الهجوم لحد الهدف</span><button id="pgo" class="big">✔ نفّذ</button><button id="px">✕</button></div><div class="note">رأس الحربة (الدروع والآليات) يتجمّع أول، وبعدين يهاجم خلية خلية على السهم، ويوقف إذا تعب.</div>`;
     else el.querySelector('.row').insertAdjacentHTML('afterbegin', '<button id="dplan">➹ خطة بسهم</button>');
     el.hidden = false;
@@ -2134,7 +2167,7 @@ const HIC = {'💵':'money','💰':'money','🏥':'health','📊':'chart','📈'
     if (PLAN) { PLAN = null; divBar(); } else if (selD) { selD = null; divBar(); } else if (panel) closePanel(); else if (!$('#card').hidden) { $('#card').hidden = true; sel = null; dirty = true; } else used = false;
     if (used || Date.now() - backT > 2000) { if (!used) { backT = Date.now(); toast('اضغط رجوع مرة ثانية حتى تطلع (اللعبة محفوظة)'); save(); } backTrap(); } else { save(); history.back(); }
   });
-  window.__G = { liveAdd, get G() { return G; }, get T() { return T; }, get HT() { return HT; }, get FLT() { return FLT.map(o => ({ id: o.g.id, cc: o.g.cc, x: o.x, y: o.y })); }, get selF() { return selF && selF.id; }, begin, step: n => { const m0 = G.log.length, t0 = G.t; advance(n); after(m0, t0); }, openPanel, tapTheater, look: (lon, lat, z) => { cam.x = MX(lon); cam.y = MY(lat); if (z) cam.s = z; dirty = true; } };
+  window.__G = { get ferryN() { return FERRY.length; }, liveAdd, get G() { return G; }, get T() { return T; }, get HT() { return HT; }, get FLT() { return FLT.map(o => ({ id: o.g.id, cc: o.g.cc, x: o.x, y: o.y })); }, get selF() { return selF && selF.id; }, begin, step: n => { const m0 = G.log.length, t0 = G.t; advance(n); after(m0, t0); }, openPanel, tapTheater, look: (lon, lat, z) => { cam.x = MX(lon); cam.y = MY(lat); if (z) cam.s = z; dirty = true; } };
   // ===== GW9: تطبيق بدون نت (service worker من tools/app/build.mjs) =====
   if ('serviceWorker' in navigator && /^https?:$/.test(location.protocol) && document.querySelector('link[rel=manifest]')) {
     fetch('version.txt', { cache: 'no-store' }).catch(() => caches.match('version.txt')).then(r => { if (!r || !r.ok) return;   // version.txt موجود بس بنسخة التطبيق (app/)

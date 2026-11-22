@@ -1325,17 +1325,50 @@ html[data-skin] .hero b{color:var(--act)}
     // المكدسة بخلية (واقفة) قطعة وحدة؛ اللي تتحرك كل وحدة لحالها بمكانها بين الخليتين
     const still = new Map(), moving = [];
     for (const d of vis) { if (d.side === 0 && d.path.length && d.prog > 0) moving.push(d); else { const k = d.cell * 2 + d.side; if (!still.has(k)) still.set(k, []); still.get(k).push(d); } }
+    // I-167 ج: خط الجبهة — بين كل خلية إلنا وخلية للعدو جنبها خط قصير عمودي بنص المسافة، فيطلع خط متصل واضح
+    if (!tiny) { cx.save(); cx.lineCap = 'round'; const seg = [];
+      for (let i = 0; i < W.N; i++) { if (W.ctrl[i] !== 0) continue; const a = T.cells[i]; for (const j of W.cells[i].nb || []) { if (W.ctrl[j] !== 1) continue; const b = T.cells[j];
+        const [ax, ay] = toS(MX(a.ll[0]), MY(a.ll[1])), [bx, by] = toS(MX(b.ll[0]), MY(b.ll[1])), mx = (ax + bx) / 2, my = (ay + by) / 2; if (mx < -30 || mx > W0() + 30 || my < -30 || my > H0() + 30) continue;
+        const nx = -(by - ay) * .3, ny = (bx - ax) * .3;   /* نص ضلع السداسي ≈ 0.29 من المسافة بين المراكز */ seg.push([mx - nx, my - ny, mx + nx, my + ny]); } }
+      for (const [w, col] of [[7, 'rgba(40,15,10,.55)'], [3.2, 'rgba(255,90,50,.95)']]) { cx.lineWidth = w; cx.strokeStyle = col; cx.beginPath(); for (const q of seg) { cx.moveTo(q[0], q[1]); cx.lineTo(q[2], q[3]); } cx.stroke(); }
+      cx.restore(); }
     // خطوط الحركة: من الفرقة لهدفها، متقطعة وتمشي (حتى تبين إنها بالطريق)
     cx.save(); cx.setLineDash([7, 6]); cx.lineDashOffset = -(now / 40) % 13; cx.lineWidth = 2.2; cx.strokeStyle = 'rgba(255,209,102,.85)';
     for (const d of vis) if (d.side === 0 && d.path.length) { const [x, y] = T.disp.get(d.id) || posOf(d); cx.beginPath(); cx.moveTo(x, y); for (const c of d.path) { const cl = T.cells[c], [px, py] = toS(MX(cl.ll[0]), MY(cl.ll[1])); cx.lineTo(px, py); } cx.stroke(); anim = true;
       const tc = T.cells[d.path[d.path.length - 1]], [tx, ty] = toS(MX(tc.ll[0]), MY(tc.ll[1])); cx.setLineDash([]); cx.beginPath(); cx.arc(tx, ty, 5 + 2 * Math.sin(now / 200), 0, 7); cx.stroke(); cx.setLineDash([7, 6]); }
     cx.restore();
+    // I-167 ج: لما تبعد والقطع تتراكب، القطع المكدسة جنب بعض (نفس الطرف) تنجمع بقطعة وحدة عليها عددها
+    const clus = !tiny && r * 1.75 < 34, GRD = TW * 2.3, grp = new Map();
     for (const [k, L] of still) { const s = k & 1, i = k >> 1, c = T.cells[i]; let [x, y] = toS(MX(c.ll[0]), MY(c.ll[1])); if (x < -40 || x > W0() + 40 || y < -40 || y > H0() + 40) continue;
       if (still.has(i * 2 + (1 - s))) x += (s ? 1 : -1) * TW * .55;
-      token(x, y, L, s, L.some(d => d.ghost) ? Math.max(.3, .62 - (L[0].ghost || 0) / 200) : 0); }
+      if (!clus || (selD && L.some(d => selD.includes(d)))) { token(x, y, L, s, L.some(d => d.ghost) ? Math.max(.3, .62 - (L[0].ghost || 0) / 200) : 0); continue; }
+      const gk = s + ':' + Math.floor(x / GRD) + ':' + Math.floor(y / GRD); let q = grp.get(gk); if (!q) grp.set(gk, q = { s, x: 0, y: 0, n: 0, L: [] }); q.x += x; q.y += y; q.n++; q.L.push(...L); }
+    for (const q of grp.values()) token(q.x / q.n, q.y / q.n, q.L, q.s, q.L.every(d => d.ghost) ? .5 : 0);
     for (const d of moving) { const tgt = posOf(d), cur = T.disp.get(d.id) || tgt, a = Math.min(1, fdt * 6), nx = cur[0] + (tgt[0] - cur[0]) * a, ny = cur[1] + (tgt[1] - cur[1]) * a;
       if (Math.abs(nx - tgt[0]) + Math.abs(ny - tgt[1]) > .5) anim = true; T.disp.set(d.id, [nx, ny]); token(nx, ny, [d], 0, 0); }
     for (const id of [...T.disp.keys()]) if (!moving.some(d => d.id === id)) T.disp.delete(id);
+    // I-167 ج: المعارك نفسها — خطوط رمي متحركة من المهاجمين للخلية، ومضات بالهدف، وشريط «مين غالب» فوقها
+    if (!tiny && T.W.battles && T.W.battles.size) { const al = SM.alive(W); cx.save();
+      for (const [tg, b] of T.W.battles) { const c = T.cells[tg]; if (!c) continue; const [x, y] = toS(MX(c.ll[0]), MY(c.ll[1])); if (x < -60 || x > W0() + 60 || y < -60 || y > H0() + 60) continue;
+        const atk = al.filter(d => d.path[0] === tg && d.side === b.side), mineAtk = b.side === 0, hh = tg * 7.31;
+        for (const [n, d] of atk.entries()) { const [ax, ay] = T.disp.get(d.id) || posOf(d); for (let k = 0; k < 3; k++) { const ph = (now / 520 + k / 3 + n * .21 + hh) % 1, px = ax + (x - ax) * ph, py = ay + (y - ay) * ph;
+            cx.strokeStyle = mineAtk ? 'rgba(255,225,120,.95)' : 'rgba(255,120,90,.95)'; cx.lineWidth = 2.8; cx.beginPath(); cx.moveTo(px, py); cx.lineTo(px + (x - ax) * .13, py + (y - ay) * .13); cx.stroke(); }
+          if ((now / 260 + n) % 1 < .25) { cx.fillStyle = 'rgba(255,240,180,.9)'; cx.beginPath(); cx.arc(ax + (x - ax) * .12, ay + (y - ay) * .12, 3, 0, 7); cx.fill(); } }
+        // ومضات وانفجارات بالخلية المضروبة
+        for (let k = 0; k < 3; k++) { const ph = (now / 700 + k * .33 + hh) % 1; if (ph < .3) { const ex = x + Math.sin(hh + k * 2.3) * TW * .45, ey = y + Math.cos(hh * 1.7 + k) * TH * .5, rr = (4 + 9 * ph / .3); cx.globalAlpha = 1 - ph / .3; cx.fillStyle = 'rgba(255,170,60,.9)'; cx.beginPath(); cx.arc(ex, ey, rr, 0, 7); cx.fill(); cx.fillStyle = 'rgba(255,250,220,.95)'; cx.beginPath(); cx.arc(ex, ey, rr * .45, 0, 7); cx.fill(); cx.globalAlpha = 1; } }
+        // شريط مين غالب: أخضر = إحنا، أحمر = هم
+        const win = mineAtk ? b.win : 1 - b.win, bw = Math.max(46, TW * 1.6), by = y - TH * .5 - 16;
+        cx.fillStyle = 'rgba(0,0,0,.55)'; cx.beginPath(); cx.roundRect(x - bw / 2 - 2, by - 2, bw + 4, 9, 4); cx.fill(); cx.fillStyle = '#c0392b'; cx.fillRect(x - bw / 2, by, bw, 5); cx.fillStyle = '#3fa34d'; cx.fillRect(x - bw / 2, by, bw * Math.max(0, Math.min(1, win)), 5);
+        cx.font = '700 11px "IBM Plex Sans Arabic",Tahoma'; cx.textAlign = 'center'; cx.lineWidth = 3; cx.strokeStyle = 'rgba(0,0,0,.7)'; const lb = '⚔ ' + Math.round(win * 100) + '٪'; cx.strokeText(lb, x, by - 4); cx.fillStyle = win >= .5 ? '#bff0a0' : '#ffb3a6'; cx.fillText(lb, x, by - 4); }
+      cx.restore(); anim = true; }
+    // I-167 ج: أرقام الخسائر تطلع من الفرقة وتصعد: «−6 دبابة» (أحمر = خسائرنا، ذهبي = خسائرهم)
+    T.strP = T.strP || new Map(); T.lossAcc = T.lossAcc || new Map(); T.floats = T.floats || [];
+    for (const d of W.divs) { const p0 = T.strP.get(d.id); T.strP.set(d.id, d.dead ? 0 : d.str); if (p0 == null || d.dead && p0 === 0) continue; const dr = p0 - (d.dead ? 0 : d.str); if (dr <= 0) continue;
+      const a = (T.lossAcc.get(d.id) || 0) + dr; if (a < .015) { T.lossAcc.set(d.id, a); continue; } T.lossAcc.set(d.id, 0);
+      const e = divEq({ ...d, str: a }, T), txt = e.tanks >= 1 ? `−${e.tanks} دبابة` : e.afv >= 1 ? `−${e.afv} مدرعة` : `−${e.men} جندي`, c = T.cells[d.cell]; if (c) T.floats.push({ ll: c.ll, txt, ours: d.side === 0, t0: now, dx: (Math.random() - .5) * 20 }); }
+    if (T.floats.length > 40) T.floats.splice(0, T.floats.length - 40);
+    for (let i = T.floats.length - 1; i >= 0; i--) { const f = T.floats[i], k = (now - f.t0) / 2600; if (k > 1) { T.floats.splice(i, 1); continue; } if (tiny) continue; const [x, y] = toS(MX(f.ll[0]), MY(f.ll[1]));
+      cx.save(); cx.globalAlpha = k < .8 ? 1 : (1 - k) / .2; cx.font = '800 13px "IBM Plex Sans Arabic",Tahoma'; cx.textAlign = 'center'; cx.lineWidth = 3.5; cx.strokeStyle = 'rgba(0,0,0,.75)'; cx.strokeText(f.txt, x + f.dx, y - 18 - k * 34); cx.fillStyle = f.ours ? '#ff6b5b' : '#ffd65a'; cx.fillText(f.txt, x + f.dx, y - 18 - k * 34); cx.restore(); anim = true; }
     // I-167 ب: الفرقة الجديدة (أول 10 أيام) عليها حلقة صفرة تنبض حتى تعرف وين هي
     for (const d of vis) if (d.fresh != null && d.side === 0 && G.t - d.fresh < 10) { const [x, y] = T.disp.get(d.id) || posOf(d); cx.save(); cx.strokeStyle = 'rgba(255,214,90,.95)'; cx.lineWidth = 3; cx.beginPath(); cx.arc(x, y, 20 + 4 * Math.sin(now / 180), 0, 7); cx.stroke(); cx.restore(); anim = true; }
     // I-108: الأرتال بالطريق للجبهة: خط من مدينتها للجبهة، والقطعة تمشي عليه حسب الوقت

@@ -3,7 +3,7 @@ import { NodeIO } from '@gltf-transform/core';
 import { ALL_EXTENSIONS } from '@gltf-transform/extensions';
 import fs from 'fs';
 const [src, dst] = process.argv.slice(2);
-if (!src) { fs.mkdirSync("models", { recursive: true }); const M = "../theater/models"; for (const n of fs.readdirSync(M).filter(f => f.endsWith(".glb"))) { const d = "models/" + n.replace(".glb", ".gltf.json"); if (!fs.existsSync(d)) await convert(M + "/" + n, d); } process.exit(0); }   // I-170: من المسرح المجمّد، بدون نسخ الـglb
+if (!src) { fs.mkdirSync("models", { recursive: true }); for (const M of ["../theater/models", "../battle3d/models"]) for (const n of fs.readdirSync(M).filter(f => f.endsWith(".glb"))) { const d = "models/" + n.replace(".glb", ".gltf.json"); if (!fs.existsSync(d)) await convert(M + "/" + n, d); } /* + طيارات «معركة الهجوم 3D» (I-170) */ process.exit(0); }   // I-170: من المسرح المجمّد، بدون نسخ الـglb
 await convert(src, dst);
 async function convert(src, dst) {
 const io = new NodeIO().registerExtensions(ALL_EXTENSIONS);

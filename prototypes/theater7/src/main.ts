@@ -11,7 +11,7 @@ import { SkyMaterial } from '@babylonjs/materials/sky';
 import { CustomMaterial } from '@babylonjs/materials/custom';
 import {
   V3, add, sub, scale, len, norm, lerp, clamp, rng, World, newWorld, step, order, Order, ORDER_CD, AMMO_MAX, Unit, Air, Fx, SITES, riverX, RIVER_W, CITY_R,
-  HIGHWAY_Z, BERMS, AIR_AR, SIDE_AR, PATRIOT_POS, S400_POS, S400_SCALE, dist2d, site, angDiff,
+  HIGHWAY_Z, BERMS, AIR_AR, JET_AR, SIDE_AR, PATRIOT_POS, S400_POS, S400_SCALE, dist2d, site, angDiff,
 } from './sim';
 import type { Sol } from './sim';
 import { groundH, groundN, ROADS, HOUSES, COVER } from './land';
@@ -180,6 +180,8 @@ const MODEL: Record<string, { scale: number; yaw: number; y?: number; center?: b
   d30: { scale: 0.22, yaw: Math.PI }, grad: { scale: 1, yaw: 0 }, patriot: { scale: 1, yaw: 0 }, s400: { scale: S400_SCALE, yaw: 0, y: 0.502 * S400_SCALE },
   shahed: { scale: 1.45, yaw: 0 }, kh101: { scale: 1, yaw: Math.PI },
   bmp: { scale: 0.24, yaw: 0, center: true }, kornet: { scale: 0.2, yaw: Math.PI / 2, center: true },
+  // I-170: الطيارات والهليكوبتر من «معركة الهجوم 3D» (نفس المقاسات والاتجاهات)
+  su25: { scale: 0.19, yaw: Math.PI / 2, center: true }, f16: { scale: 0.0163, yaw: Math.PI / 2, center: true }, ah64: { scale: 7.1, yaw: Math.PI / 2, center: true }, tb2: { scale: 4.3, yaw: 0, center: true },
 };
 const containers: Record<string, AssetContainer> = {};
 // ===== البرج منفصل (TH5.2): المجسمات قطعها حسب الخامة مو حسب الجزء، فنقسم المثلثات بالمكان (البرج فوق خط القطع وداخل حلقته + السبطانة).
@@ -530,7 +532,7 @@ function addDecal(p: V3, size: number) {
 // ===== الصوت (مولّد) =====
 let simSpeed = 2, slowK = 1;
 // أصوات حقيقية مسجّلة (SoundBible CC BY 3.0 + BigSoundBank CC0): تتأخر حسب المسافة (سرعة الصوت) وتنكتم من بعيد (I-024)
-const sndUrls = { ...import.meta.glob('../../theater/sounds/*.mp3', { query: '?url', import: 'default', eager: true }), ...import.meta.glob('../../grandwar/sounds/bz_*.mp3', { query: '?url', import: 'default', eager: true }) } as Record<string, string>;   // I-170: أصوات المالك الحقيقية (I-168) فوق القديمة
+const sndUrls = { ...import.meta.glob('../../theater/sounds/*.mp3', { query: '?url', import: 'default', eager: true }), ...import.meta.glob('../../grandwar/sounds/bz_*.mp3', { query: '?url', import: 'default', eager: true }), ...import.meta.glob('../../battle-classic/sounds/heli_pass.mp3', { query: '?url', import: 'default', eager: true }) } as Record<string, string>;   // I-170: أصوات المالك الحقيقية (I-168) فوق القديمة
 const sfx = (() => {
   let ac: AudioContext | null = null, master: GainNode, muted = false, buzz: GainNode | null = null, nb: AudioBuffer;
   // I-170 (من المعركة الكلاسيكية): قناة للأصوات الصغيرة (رصاص) تنخفض لحظة الانفجار الكبير، صدى ساحة (convolver)، جو معركة يدور، وبيس تحت الانفجار
@@ -582,8 +584,10 @@ const sfx = (() => {
       buzz = ac.createGain(); buzz.gain.value = 0; s.connect(f).connect(buzz).connect(master); s.start();
     },
     toggle() { muted = !muted; if (ac) master.gain.setTargetAtTime(muted ? 0 : 0.85, ac.currentTime, 0.05); return muted; },
-    boom(d: number, size: number) { if (ac && (size >= 1.3 || d < 900)) duck(size >= 1.3 ? 0.25 : 0.5); if (size >= 0.9) thump(d, size); if (size >= 1.2 && d < 1600) play('bz_debris', d, 0.5, 0.95 + Math.random() * 0.1, 0.35); const r = 0.9 + Math.random() * 0.2; if (!play(d > 1800 ? 'boom_far' : size >= 1.3 ? 'boom_big' : 'boom_mid', d, d > 1800 ? 1.6 : 0.6 + size * 0.35, size < 0.6 ? r * 1.15 : r)) hit(d, 1.1 + size * 0.8, 2400, 55, 0.45 + size * 0.3, 50); else if (size >= 1) hit(d, 0.9, 300, 40, 0.25 * size, 42); },
+    boom(d: number, size: number) { if (size >= 2.3 && play('bz_bomb', d, 1.3, 0.95 + Math.random() * 0.1, 0, true)) { if (ac) { duck(0.2); thump(d, size); play('bz_debris', d, 0.6, 1, 0.4); } return; } if (ac && (size >= 1.3 || d < 900)) duck(size >= 1.3 ? 0.25 : 0.5); if (size >= 0.9) thump(d, size); if (size >= 1.2 && d < 1600) play('bz_debris', d, 0.5, 0.95 + Math.random() * 0.1, 0.35); const r = 0.9 + Math.random() * 0.2; if (!play(d > 1800 ? 'boom_far' : size >= 1.3 ? 'boom_big' : 'boom_mid', d, d > 1800 ? 1.6 : 0.6 + size * 0.35, size < 0.6 ? r * 1.15 : r)) hit(d, 1.1 + size * 0.8, 2400, 55, 0.45 + size * 0.3, 50); else if (size >= 1) hit(d, 0.9, 300, 40, 0.25 * size, 42); },
     gun(d: number, how = false) { if (how && play('bz_howitzer', d, 1, 0.95 + Math.random() * 0.1, 0, true)) return; if (!play('tank', d, 1, 0.92 + Math.random() * 0.14, 0, true)) hit(d, 0.6, 3200, 140, 0.75, 65); },
+    jet(d: number) { play('bz_jet', d * 0.6, 1.1, 0.95 + Math.random() * 0.1); },
+    heli(d: number) { play('heli_pass', d * 0.7, 0.9, 0.95 + Math.random() * 0.1); },
     engine(d: number) { if (!ac || d > 900 || ac.currentTime - engT < 3.5) return; engT = ac.currentTime; play('bz_engine', d, 0.5, 0.9 + Math.random() * 0.15); },
     round(d: number) { if (!play('dshk', d, 0.42, 0.85 + Math.random() * 0.12)) hit(d, 0.07, 2600, 500, 0.32, 95); },
     launch(d: number) { if (!play('launch', d, 1)) hit(d, 3, 1500, 180, 0.8, 55); },
@@ -670,6 +674,7 @@ function syncUnits(dt: number) {
   }
 }
 function airBody(a: Air): { body: TransformNode | null; glow: AbstractMesh | null; L: number } {
+  if (a.kind === 's8' || a.kind === 'agm' || a.kind === 'bomb') return airBody({ ...a, kind: a.kind === 's8' ? 'rocket' : a.kind === 'agm' ? 'atgm' : 'shell' } as Air);   // I-170: صواريخ وقنابل الطيارات بنفس أشكال الموجود
   if (a.kind === 'shahed' || a.kind === 'kh101') { const m = spawnModel(a.kind); return { body: m.root, glow: null, L: a.kind === 'kh101' ? 7.4 : 3.5 }; }
   const inst = (src: Mesh, name: string) => { const i = src.createInstance(name); i.isVisible = true; return i; };
   if (a.kind === 'pac2' || a.kind === 'n48' || a.kind === 'iskander') {
@@ -687,6 +692,37 @@ function airBody(a: Air): { body: TransformNode | null; glow: AbstractMesh | nul
     return { body: holder, glow: g, L };
   }
   const g = inst(dotMesh, 'g' + a.id); g.billboardMode = Mesh.BILLBOARDMODE_ALL; g.scaling.setAll(a.kind === 'rocket' ? 2.4 : a.kind === 'smoke' ? 0.5 : 1.6); return { body: null, glow: g, L: 2 };
+}
+// ===== I-170: الطيارات والهليكوبتر =====
+interface JVis { root: TransformNode; rotor: Mesh | null; tail: Mesh | null; yaw: number; roll: number; lp: V3; snd: boolean }
+const jetVis = new Map<number, JVis>(); let rotorMat: StandardMaterial | null = null;
+function syncJets(dt: number) {
+  const seen = new Set<number>(), cp = cam.position;
+  for (const j of W.jets) {
+    seen.add(j.id); let jv = jetVis.get(j.id);
+    if (!jv) { const m = spawnModel(j.kind); let rotor: Mesh | null = null, tail: Mesh | null = null;
+      if (j.kind === 'ah64') { if (!rotorMat) { rotorMat = new StandardMaterial('rotor', scene); rotorMat.diffuseColor = new Color3(0.08, 0.08, 0.08); rotorMat.alpha = 0.32; rotorMat.specularColor = Color3.Black(); rotorMat.backFaceCulling = false; }
+        rotor = MeshBuilder.CreateDisc('rd', { radius: 7.3, tessellation: 28 }, scene); rotor.rotation.x = Math.PI / 2; rotor.bakeCurrentTransformIntoVertices(); rotor.material = rotorMat; rotor.parent = m.root; rotor.position.set(0.3, 4.15, 0); rotor.isPickable = false;
+        tail = MeshBuilder.CreateDisc('td', { radius: 1.4, tessellation: 16 }, scene); tail.material = rotorMat; tail.parent = m.root; tail.position.set(0, 3.2, -8.6); tail.rotation.y = Math.PI / 2; tail.isPickable = false; }
+      jv = { root: m.root, rotor, tail, yaw: Math.atan2(j.v[0], j.v[2]), roll: 0, lp: L(j.p), snd: false }; jetVis.set(j.id, jv); }
+    const lp = L(j.p); jv.root.position.set(lp[0], lp[1], lp[2]);
+    // الاتجاه من الحركة (الهليكوبتر الحايمة تبقى بآخر اتجاه)، والميلان بالفتلة
+    const hs = Math.hypot(j.v[0], j.v[2]); if (hs > 3) { const y = Math.atan2(j.v[0], j.v[2]); let dy = y - jv.yaw; while (dy > Math.PI) dy -= 2 * Math.PI; while (dy < -Math.PI) dy += 2 * Math.PI;
+      jv.yaw += dy * Math.min(1, dt * 4); jv.roll += (clamp(-dy / Math.max(dt, 1e-3) * 0.35, -1.1, 1.1) - jv.roll) * Math.min(1, dt * 2.5); }
+    const pitch = j.st === 'down' ? 0.5 : -Math.atan2(j.v[1], Math.max(1, hs)) * 0.8;
+    jv.root.rotation.set(pitch, jv.yaw, j.kind === 'ah64' ? Math.sin(W.T * 0.7 + j.id) * 0.05 - hs * 0.002 : jv.roll);
+    // الطيارة تبقى مبيّنة من بعيد (ما تصغر تحت ~0.6٪ من المسافة)
+    const d = Vector3.Distance(cp, jv.root.position); jv.root.scaling.setAll(Math.max(1, d * 0.014 / 14));   /* تبقى مبيّنة من بعيد مثل الصواريخ */
+    if (jv.rotor) jv.rotor.rotation.y += dt * 30; if (jv.tail) jv.tail.rotation.x += dt * 40;
+    const back = add(lp, [-Math.sin(jv.yaw) * 9, 0.6, -Math.cos(jv.yaw) * 9]);
+    if (j.kind === 'su25' || j.kind === 'f16') flame.emit({ a: back, n: 1, jit: 0.25 });
+    if (j.st === 'down') { smokeS.emit({ a: lp, n: Qn(3), spd: [1, 4], jit: 2 }); flame.emit({ a: lp, n: 2, jit: 1.2 }); }
+    if (j.kind === 'ah64' && j.p[1] < 25) dust.emit({ a: [lp[0], lp[1] - j.p[1] + 0.5, lp[2]], n: 1, spd: [8, 14], up: -0.1, jit: 6 });
+    if (!jv.snd && d < 2500) { jv.snd = true; if (j.kind === 'ah64') sfx.heli(d); else if (j.kind !== 'tb2') sfx.jet(d); }
+    if (jv.snd && d > 3500) jv.snd = false;
+    jv.lp = lp;
+  }
+  for (const [id, jv] of jetVis) if (!seen.has(id)) { jv.root.dispose(); jetVis.delete(id); }
 }
 function syncAir() {
   const seen = new Set<number>(), cp = cam.position;
@@ -707,6 +743,8 @@ function syncAir() {
     }
     if (a.kind === 'n48' && !a.ign) puffs.emit({ a: tail, n: 2, spd: [1, 3], jit: 0.5 });
     if (a.kind === 'iskander') thinTrail.emit({ a: prev, b: lp, n: Qn(dd * 0.06), jit: 1.5, spd: [0, 1] });
+    if (a.kind === 's8' && a.t < 2) rocketTrail.emit({ a: prev, b: lp, n: Qn(dd * 0.14), jit: 0.3, spd: [0, 1] });
+    if (a.kind === 'agm') { thinTrail.emit({ a: prev, b: tail, n: Qn(dd * 0.2), jit: 0.2, spd: [0, 0.4] }); motorFlame.emit({ a: tail, n: 1, dir: scale(dirV, -1), spd: [4, 9], spread: 0.15, jit: 0.05 }); }
     if (a.kind === 'rocket' && a.t < 3) rocketTrail.emit({ a: prev, b: lp, n: Qn(dd * 0.14), jit: 0.3, spd: [0, 1] });
     if (a.kind === 'rpg') {
       // PG-7V: بشحنة الطرد بس نفخة رمادية؛ بعد ~11م المحرك: لهب ودخان أبيض كثيف، والقذيفة تلف حول نفسها
@@ -864,6 +902,9 @@ function handleFx(fx: Fx) {
     }
     case 'siteHit': siteDamage(fx.site, fx.p, fx.big); break;
     case 'mark': marks.push({ p: fx.p, text: fx.text, good: fx.good, t: performance.now() }); break;
+    case 'flare': { const p = L(fx.p); for (let i = 0; i < 6; i++) flame.emit({ a: add(p, [(Math.random() - 0.5) * 6, -i * 2.5, (Math.random() - 0.5) * 6]), n: 3, jit: 0.8 }); smokeS.emit({ a: p, n: Qn(4), spd: [0, 2], jit: 3 }); flashLight(p, 3, 90, 0.4); break; }   // I-170: مشاعل حرارية
+    case 'jet': { const p = L(fx.p); if (fx.ev === 'release') { flashLight(p, 2, 50, 0.15); muzzle.emit({ a: p, n: 3, jit: 1 }); sfx.whump(camD(fx.p)); }
+      else if (fx.ev === 'down') { sfx.boom(camD(fx.p), 1.2); flashLight(p, 6, 200, 0.5); } break; }
     default: break;
   }
 }
@@ -938,6 +979,8 @@ function labelItems(): Item[] {
     if (a.kind === 'shahed' || a.kind === 'kh101' || a.kind === 'iskander') out.push({ key: 'a' + a.id, text: `${AIR_AR[a.kind]} · ${SIDE_AR[a.side]} ← ${a.siteName}`, cls: `${a.side} air`, p: add(a.p, [0, 14, 0]), prio: 5, follow: a.id });
     else if (a.kind === 'pac2' || a.kind === 'n48') out.push({ key: 'a' + a.id, text: a.kind === 'pac2' ? 'معترض PAC-2 · باتريوت' : 'معترض 48N6 · S-400', cls: 'iq air', p: add(a.p, [0, 12, 0]), prio: 4, follow: a.id });
   }
+  // I-170: اسم كل طيارة/هليكوبتر فوقها، وشنو تسوي
+  for (const j of W.jets) out.push({ key: 'j' + j.id, text: `${j.kind === 'ah64' ? '🚁' : '✈'} ${JET_AR[j.kind]} · ${SIDE_AR[j.side]}${j.st === 'atk' ? ' — تنقض' : j.st === 'hover' && j.kind === 'ah64' ? ' — ترمي' : j.st === 'down' ? ' — انضربت' : ''}`, cls: `${j.side} air`, p: add(j.p, [0, 18, 0]), prio: 6, follow: j.id });
   const rk = W.air.filter(a => a.kind === 'rocket'); if (rk.length) out.push({ key: 'rk', text: `رشقة غراد ×${rk.length}`, cls: 'en air', p: scale(rk.reduce((s, a) => add(s, a.p), [0, 0, 0] as V3), 1 / rk.length), prio: 4 });
   const now = performance.now(); marks = marks.filter(m => now - m.t < 4200);
   for (const m of marks) out.push({ key: 'm' + m.t + m.text, text: m.text, cls: `mark ${m.good ? 'good' : 'bad'}`, p: add(m.p, [0, (now - m.t) / 1000 * 15, 0]), prio: 9 });
@@ -992,6 +1035,8 @@ function findEntity(id: number): { p: V3; vel?: V3; air: boolean; name: string; 
   const u = W.units.find(x => x.id === id);
   if (u && (u.kind === 'inf' || u.kind === 'kornet')) return { p: L(add(u.p, [0, 1.5, 0])), air: false, name: `${u.name} · ${SIDE_AR[u.side]}`, info: u.alive ? `${u.group} · ${u.men} جنود · ${({ house: 'يقاتلون من بيت', rush: 'يركضون للساتر الجاي', pin: 'منبطحين تحت النار', fire: 'يرمون', retreat: 'ينسحبون', mounted: 'راكبين بالناقلة', hold: 'بمواقعهم', counter: 'هجوم معاكس' } as Record<string, string>)[u.state] ?? 'بمواقعهم'}${u.supp > 0.6 ? ' · تحت ضغط' : ''}` : 'انقضى عليهم' };
   if (u) return { p: L(add(u.p, [0, 2, 0])), air: false, name: `${u.name} · ${SIDE_AR[u.side]}`, info: u.alive ? `${u.group} · ${u.spd > 1 ? `يتحرك ${Math.round(u.spd * 3.6)} كم/س` : 'بموقعه'}${u.cover ? ' · ورا ساتر' : ''}` : 'محطّمة' };
+  const jj = W.jets.find(x => x.id === id);
+  if (jj) return { p: L(jj.p), vel: jj.v, air: true, name: `${JET_AR[jj.kind]} · ${SIDE_AR[jj.side]}`, info: `${Math.round(len(jj.v) * 3.6).toLocaleString('en')} كم/س · ارتفاع ${Math.round(jj.p[1]).toLocaleString('en')} م${jj.ammo ? ' · ذخيرة ' + jj.ammo : ''}` };
   const a = W.air.find(x => x.id === id);
   if (a) return { p: L(a.p), vel: a.v, air: true, name: `${AIR_AR[a.kind]} · ${SIDE_AR[a.side]}`, info: `${Math.round(len(a.v) * 3.6).toLocaleString('en')} كم/س · ارتفاع ${Math.round(a.p[1]).toLocaleString('en')} م${a.siteName ? ' · الهدف: ' + a.siteName : ''}${a.kind === 'n48' && !a.ign ? ' · مقذوف بالغاز' : ''}` };
   return null;
@@ -1057,6 +1102,7 @@ function directorFx(fx: Fx) {
     case 'plaunch': if ((AIRCAM || classic) && claim(6, 1.2)) { closeShot(fx.muzzle, add(fx.muzzle, scale(fx.dir, -50)), 190, 0.6, 6, 1.2); pendingFollow = { id: fx.air, at: nowS() + 0.9, dist: 40 }; } break;
     case 'eject': if ((AIRCAM || classic) && claim(7, 3)) { endFollow(); view.tx = fx.p[0]; view.tz = fx.p[2]; targetY = 8; view.dist = 70; view.pitch = 0.2; view.yaw = Math.atan2(fx.dir[0], fx.dir[2]) + Math.PI / 2; pendingFollow = { id: fx.air, at: nowS() + 2.2, dist: 45 }; } break;
     case 'intercept': if (view.follow && fx.big) slowWins.push({ t0: W.T - 0.05, t1: W.T + 0.9 }); break;
+    case 'jet': if ((fx.ev === 'atk' || (fx.ev === 'in' && fx.p[0] > 0)) && claim(fx.ev === 'atk' ? 6 : 4, 7)) { startFollow(fx.jet, 120); } else if (fx.ev === 'down' && claim(7, 4)) { startFollow(fx.jet, 160); } break;   // I-170: الكاميرا تلاحق الطيارة وهي تنقض أو تطيح
     case 'rlaunch': { const g = W.units.find(u => u.id === fx.unit); if (g && W.T - lastSalvoShot > 30) { lastSalvoShot = W.T; twoShot(g.p, [-2000, 0, HIGHWAY_Z], 5, 6); } break; }
     case 'phase': { const vc: V3 = [-1600, 0, HIGHWAY_Z]; if (fx.phase === 'counter') { closeShot(G(fx.p[0], fx.p[2], 3), [-760, 0, 380], 520, CLOSE_PITCH, 7, 8); } else twoShot(fx.p, vc, 5, 7); break; }
     case 'dismount': if (claim(4, 6)) { endFollow(); view.tx = fx.p[0]; view.tz = fx.p[2]; targetY = 2; view.dist = 230; view.pitch = CLOSE_PITCH; view.yaw = Math.PI / 2 + 0.4; } break;
@@ -1106,6 +1152,7 @@ function hud() {
   document.querySelectorAll<HTMLButtonElement>('#orders button[data-o]').forEach(b => {
     const o = b.dataset.o as Order, left = Math.max(0, W.orderCd[o] - W.T), sm = b.querySelector('small');
     if (sm && (o === 'barrage' || o === 'smoke')) sm.textContent = pendingOrder === o ? 'اضغط على الأرض' : `باقي ${W.ammo[o]}/${AMMO_MAX[o]}`;
+    if (sm && (o === 'air' || o === 'heli')) sm.textContent = `باقي ${W.ammo[o]}/${AMMO_MAX[o]}`;
     if (sm && o === 'counter') sm.textContent = pendingOrder === o ? 'اضغط الجهة' : 'الاحتياط يطلع';
     if (o !== 'aaPriority') b.setAttribute('aria-pressed', String(pendingOrder === o));
     (b.lastChild as HTMLElement).style.width = `${(left / ORDER_CD[o]) * 100}%`; b.disabled = left > 0 && o !== 'aaPriority';
@@ -1158,7 +1205,7 @@ function frame() {
   }
   ($('slow') as HTMLElement).hidden = slowK === 1;
   if (ring.isEnabled()) { ring.rotation.y += dtReal * 0.6; if (W && W.T > ringUntil) ring.setEnabled(false); }
-  if (W) { syncUnits(dtReal); syncSquads(dtReal); drawSoldiers(dtReal); syncAir(); if (simDt) { burnFx(simDt); tickDebris(simDt); } directorFrame(); }
+  if (W) { syncUnits(dtReal); syncSquads(dtReal); drawSoldiers(dtReal); syncAir(); syncJets(dtReal); if (simDt) { burnFx(simDt); tickDebris(simDt); } directorFrame(); }
   const k = simDt ? simDt / Math.max(1e-4, engine.getDeltaTime() / 1000) : 0;
   for (const p of pools) p.ps.updateSpeed = k / 60;
   tickLights(dtReal * (simDt ? 1 : 0.3)); updateCamera(dtReal);
@@ -1194,6 +1241,7 @@ function start() {
   houses.reset();
   siteProps.forEach(sp => { if (!sp.hit) return; sp.hit = false; sp.mat.diffuseColor = sp.mat.diffuseColor.scale(4); sp.mesh.scaling.y /= 0.55; sp.mesh.position.y /= 0.55; });
   W = newWorld(seed); seed = 1 + Math.floor(Math.random() * 9999); running = true; endShown = false; tickN = -1; impactReady = 0; lastSalvoShot = -99;
+  { const t0 = +(qs.get('t') || 0); while (W.T < t0 && !W.over) { step(W, 0.05); W.fx.length = 0; } (window as any).__W = W; }   /* I-170: ?t=ثواني يقفز للحظة معينة (للصور والتجربة) */
   setAuto(true); overview(true);
   for (const id of ['intro', 'end']) ($(id) as HTMLElement).hidden = true;
   for (const id of ['top', 'bottom', 'sideBtns', 'fps', 'mini']) ($(id) as HTMLElement).hidden = false;

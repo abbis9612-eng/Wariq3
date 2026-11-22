@@ -46,8 +46,12 @@ export interface Unit {
   cv: number;                                     // TH5.5: رقم نقطة الستر (COVER) اللي ماسكيها الحضيرة، −1 ماكو
   tur: number; aimId: number; aimSeen: number;   // TH5.2: البرج يلف وحده (زاوية مطلقة) ويصوّب على الهدف
 }
-export type AirKind = 'shahed' | 'kh101' | 'iskander' | 'pac2' | 'n48' | 'rocket' | 'shell' | 'atgm' | 'rpg' | 'smoke';
-export const AIR_AR: Record<AirKind, string> = { shahed: 'شاهد-136', kh101: 'كروز Kh-101', iskander: 'باليستي إسكندر', pac2: 'معترض PAC-2', n48: 'معترض 48N6 · S-400', rocket: 'صاروخ غراد', shell: 'قذيفة 122 ملم', atgm: 'صاروخ كورنيت', rpg: 'قذيفة RPG-7', smoke: 'قذيفة دخان' };
+export type AirKind = 'shahed' | 'kh101' | 'iskander' | 'pac2' | 'n48' | 'rocket' | 'shell' | 'atgm' | 'rpg' | 'smoke' | 's8' | 'bomb' | 'agm';
+export const AIR_AR: Record<AirKind, string> = { shahed: 'شاهد-136', kh101: 'كروز Kh-101', iskander: 'باليستي إسكندر', pac2: 'معترض PAC-2', n48: 'معترض 48N6 · S-400', rocket: 'صاروخ غراد', shell: 'قذيفة 122 ملم', atgm: 'صاروخ كورنيت', rpg: 'قذيفة RPG-7', smoke: 'قذيفة دخان', s8: 'صاروخ S-8', bomb: 'قنبلة Mk-82', agm: 'صاروخ جو-أرض' };
+// I-170 خطوة 2: الطيارات والهليكوبتر (من «معركة الهجوم 3D»): سوخوي-25 وبيرقدار TB2 للعدو، F-16 وأباتشي إلنا
+export type JetKind = 'su25' | 'tb2' | 'f16' | 'ah64';
+export const JET_AR: Record<JetKind, string> = { su25: 'سوخوي-25', tb2: 'بيرقدار TB2', f16: 'F-16IQ', ah64: 'أباتشي AH-64' };
+export interface Jet { id: number; kind: JetKind; side: Side; p: V3; v: V3; st: 'in' | 'atk' | 'hover' | 'out' | 'down'; t: number; hp: number; tgt: V3; ammo: number; fireT: number; wing: number; alive: boolean; shotsAt: number; c: V3; hoverT: number; aaT: number }
 export interface Air {
   id: number; kind: AirKind; side: Side; p: V3; v: V3; alive: boolean; t: number; aim: V3; siteName?: string; siteId?: string;
   tgtAir?: number; miss: number; dive?: boolean; shotsAt: number; phase: 'eject' | 'boost' | 'cruise'; ign: boolean;
@@ -88,21 +92,23 @@ export type Fx =
   | { k: 'threat'; air: number; tti: number }                                 // تهديد قريب يضرب (للمخرج)
   | { k: 'intercept'; p: V3; big: boolean }
   | { k: 'phase'; side: Side; phase: string; p: V3 }                          // تغيّر مرحلة (للمخرج)
-  | { k: 'mark'; p: V3; text: string; good: boolean };
+  | { k: 'mark'; p: V3; text: string; good: boolean }
+  | { k: 'jet'; jet: number; ev: 'in' | 'atk' | 'down' | 'crash' | 'release'; p: V3 }   // I-170: طيارة دخلت/تنقض/انضربت/وقعت/رمت
+  | { k: 'flare'; jet: number; p: V3 }                                         // مشاعل حرارية
 export interface LogLine { t: number; text: string; good: boolean | null; p: V3 }
-export type Order = 'barrage' | 'smoke' | 'retreat' | 'counter' | 'aaPriority';
-export const ORDER_CD: Record<Order, number> = { barrage: 45, smoke: 40, retreat: 60, counter: 9999, aaPriority: 5 };
+export type Order = 'barrage' | 'smoke' | 'retreat' | 'counter' | 'aaPriority' | 'air' | 'heli';
+export const ORDER_CD: Record<Order, number> = { barrage: 45, smoke: 40, retreat: 60, counter: 9999, aaPriority: 5, air: 100, heli: 140 };
 export type EnPhase = 'march' | 'approach' | 'breach' | 'assault' | 'retreat';
 export type IqPhase = 'line1' | 'line2' | 'counter';
 
 export interface World {
-  T: number; units: Unit[]; air: Air[]; fx: Fx[]; log: LogLine[]; r: () => number; nextId: number; over: boolean; result: '' | 'win' | 'loss' | 'draw';
+  T: number; units: Unit[]; air: Air[]; jets: Jet[]; fx: Fx[]; log: LogLine[]; r: () => number; nextId: number; over: boolean; result: '' | 'win' | 'loss' | 'draw';
   stats: { drones: number; dronesDown: number; dronesHit: number; cruise: number; cruiseDown: number; cruiseHit: number; ballistic: number; ballisticDown: number; ballisticHit: number;
     enTanks: number; enTanksLost: number; iqTanks: number; iqTanksLost: number; pacFired: number; n48Fired: number; rockets: number; shells: number; rounds: number;
     enBmpLost: number; enBmp: number; enMen: number; enMenLost: number; iqMen: number; iqMenLost: number; housesLost: number; atgm: number; rpg: number; counterT: number; fallbackT: number };
   schedule: { t: number; f: (w: World) => void; done?: boolean }[];
   orderCd: Record<Order, number>; aaPriority: boolean;
-  /* TH6.8: القيادة تلقائي/يدوي، عدد المدفعية والدخان، وقت قرار القائد الآلي */ cmd: 'auto' | 'manual'; ammo: { barrage: number; smoke: number }; aiT: number; columnPhase: string; boundTeam: number; boundT: number;
+  /* TH6.8: القيادة تلقائي/يدوي، عدد المدفعية والدخان، وقت قرار القائد الآلي */ cmd: 'auto' | 'manual'; ammo: { barrage: number; smoke: number; air: number; heli: number }; aiT: number; columnPhase: string; boundTeam: number; boundT: number;
   en: EnPhase; iq: IqPhase; enT: number; iqT: number; smoke: Smoke[]; known: Record<Side, Map<number, number>>; houseHp: number[]; houseOwner: (Side | '')[]; spotT: number; dbg: Record<string, number>; coverOwner: Map<number, number>; r2: () => number; nextSol: number; solCover: Map<number, number>;
 }
 const WEST: V3 = [-1, 0, 0], EAST: V3 = [1, 0, 0];
@@ -113,10 +119,10 @@ export const RESERVE_P: V3 = [-760, 0, 380], COUNTER_P: V3 = [-1260, 0, 60];
 
 export function newWorld(seed = 11): World {
   const w: World = {
-    T: 0, units: [], air: [], fx: [], log: [], r: rng(seed), nextId: 1, schedule: [], over: false, result: '',
+    T: 0, units: [], air: [], jets: [], fx: [], log: [], r: rng(seed), nextId: 1, schedule: [], over: false, result: '',
     stats: { drones: 0, dronesDown: 0, dronesHit: 0, cruise: 0, cruiseDown: 0, cruiseHit: 0, ballistic: 0, ballisticDown: 0, ballisticHit: 0, enTanks: 0, enTanksLost: 0, iqTanks: 0, iqTanksLost: 0, pacFired: 0, n48Fired: 0, rockets: 0, shells: 0, rounds: 0,
       enBmpLost: 0, enBmp: 0, enMen: 0, enMenLost: 0, iqMen: 0, iqMenLost: 0, housesLost: 0, atgm: 0, rpg: 0, counterT: 0, fallbackT: 0 },
-    orderCd: { barrage: 0, smoke: 0, retreat: 0, counter: 0, aaPriority: 0 }, aaPriority: false, cmd: 'auto', ammo: { barrage: 4, smoke: 3 }, aiT: 0, columnPhase: 'march', boundTeam: 0, boundT: 0,
+    orderCd: { barrage: 0, smoke: 0, retreat: 0, counter: 0, aaPriority: 0, air: 0, heli: 0 }, aaPriority: false, cmd: 'auto', ammo: { barrage: 4, smoke: 3, air: 2, heli: 1 }, aiT: 0, columnPhase: 'march', boundTeam: 0, boundT: 0,
     en: 'march', iq: 'line1', enT: 0, iqT: 0, smoke: [], known: { iq: new Map(), en: new Map() }, houseHp: HOUSES.map(() => 3), houseOwner: HOUSES.map(() => ''), spotT: 0, dbg: {}, coverOwner: new Map(), r2: rng(seed * 7 + 991), nextSol: 1, solCover: new Map(),
   };
   const U = (kind: Kind, side: Side, p: V3, dir: V3, group: string, extra: Partial<Unit> = {}) => {
@@ -205,9 +211,85 @@ export function newWorld(seed = 11): World {
     const a = spawnAir(w, 'shell', 'en', [aim[0] - 600, 900, aim[2]], [600 / 6, -150, 0], undefined, undefined, aim); void a; } });
     w.log.push({ t: w.T, text: 'مدفعية العدو تقصف التلّة حتى تغطي تقدم الدبابات', good: false, p: [-2060, 0, HIGHWAY_Z] }); } });
   arty(110, 10); arty(175, 10); arty(235, 8);
+  // I-170: طيران العدو — بيرقدار TB2 يحوم ويرمي صواريخ، وسوخوي-25 بموجتين (طيارتين) يضربون بصواريخ S-8
+  w.schedule.push({ t: 45, f: (w) => spawnJet(w, 'tb2', 'en', [-4200, 1100, HIGHWAY_Z + 300], [-2300, 0, HIGHWAY_Z], 0) });
+  for (const t0 of [150, 380]) w.schedule.push({ t: t0, f: (w) => { const tg = enemyAirTarget(w); if (!tg) return; for (let i = 0; i < 2; i++) spawnJet(w, 'su25', 'en', [-6500 - i * 300, 100, tg[2] + (i ? 120 : -120)], add(tg, [(w.r() - 0.5) * 80, 0, (w.r() - 0.5) * 80]), i);
+    w.log.push({ t: w.T, text: 'طيارتين سوخوي-25 معادية جاية تضرب مواقعنا', good: false, p: tg }); } });
   return w;
 }
 
+// ===== I-170 خطوة 2: الطيارات والهليكوبتر =====
+// العدو يجي من الغرب (x سالب) وإحنا نصد باتجاه الغرب، فطيارات العدو تدخل من الغرب وطياراتنا من الشرق (ورا خطوطنا) وترجع له.
+const JSPD: Record<JetKind, number> = { su25: 200, f16: 240, tb2: 45, ah64: 70 };
+const JALT: Record<JetKind, number> = { su25: 100, f16: 650, tb2: 1100, ah64: 35 };   // السوخوي تجي واطية (100 م) تحت الباتريوت، مثل الحقيقة
+function spawnJet(w: World, kind: JetKind, side: Side, p: V3, tgt: V3, wing: number): Jet {
+  const dir = norm([tgt[0] - p[0], 0, tgt[2] - p[2]]);
+  const j: Jet = { id: w.nextId++, kind, side, p: [...p] as V3, v: scale(dir, JSPD[kind]), st: kind === 'tb2' ? 'hover' : 'in', t: 0, hp: kind === 'ah64' ? 1.4 : 1, tgt: [...tgt] as V3,
+    ammo: kind === 'su25' ? 16 : kind === 'f16' ? 2 : kind === 'tb2' ? 4 : 4, fireT: 0, wing, alive: true, shotsAt: 0, c: [...tgt] as V3, hoverT: 0, aaT: 0 };
+  if (kind === 'ah64') j.c = add(tgt, [2700, 0, (wing ? 140 : -140)]);   // موقع الحوم: ورا خطنا 2.7 كم من الدروع
+  w.jets.push(j); w.fx.push({ k: 'jet', jet: j.id, ev: 'in', p: [...p] as V3 }); return j;
+}
+// هدف طيران العدو: أقرب تجمّع إلنا للجبهة (الأبرامز، الرشاشات، المدفعية)
+function enemyAirTarget(w: World): V3 | null {
+  const L = w.units.filter(u => u.side === 'iq' && u.alive && (isTank(u) || u.kind === 'dshk' || u.kind === 'technical' || u.kind === 'd30' || u.kind === 'bmp'));
+  if (!L.length) return null; const u = L[Math.floor(w.r() * Math.min(L.length, 6))]; return [...u.p] as V3;
+}
+function steer(j: Jet, want: V3, sp: number, k: number, dt: number) { j.v = scale(norm(add(norm(j.v), scale(norm(want), dt * k))), sp); }
+function jets(w: World, dt: number) {
+  for (const j of w.jets) {
+    if (!j.alive) continue; j.t += dt;
+    if (j.st === 'down') {   // انضربت: تهوي بدخان وتنفجر بالأرض
+      j.v = add(j.v, [0, -9.81 * dt * (j.kind === 'ah64' ? 1 : 0.6), 0]); j.p = add(j.p, scale(j.v, dt));
+      if (j.p[1] <= 0.5) { j.alive = false; j.p[1] = 0.3; w.fx.push({ k: 'boom', p: j.p, size: 1.8, air: false }, { k: 'jet', jet: j.id, ev: 'crash', p: [...j.p] as V3 }); blast(w, j.p, 25, 8, 0.6, 0.4, JET_AR[j.kind], j.side === 'iq' ? 'en' : 'iq'); }
+      continue;
+    }
+    const sp = JSPD[j.kind], home: V3 = j.side === 'en' ? [-7500, 0, j.p[2]] : [6500, 0, j.p[2]];
+    if (j.kind === 'su25' || j.kind === 'f16') {
+      const d = dist2d(j.p, j.tgt), alt = j.st === 'atk' && j.kind === 'su25' ? 140 : j.st === 'out' ? 900 : JALT[j.kind];
+      if (j.st === 'in') { steer(j, [j.tgt[0] - j.p[0], (alt - j.p[1]) * 3, j.tgt[2] - j.p[2]], sp, 1.4, dt); if (d < (j.kind === 'su25' ? 2300 : 3200)) { j.st = 'atk'; w.fx.push({ k: 'jet', jet: j.id, ev: 'atk', p: [...j.p] as V3 }); } }
+      else if (j.st === 'atk') {
+        if (j.kind === 'su25') {   // انقضاض واطي ورشقة صواريخ S-8 (16 صاروخ بثانية ونص)
+          steer(j, [j.tgt[0] - j.p[0], (alt - j.p[1]) * 2, j.tgt[2] - j.p[2]], sp, 1.6, dt);
+          if (d < 1500 && j.ammo > 0 && j.t > j.fireT) { j.ammo--; j.fireT = j.t + 0.09; const aim = add(j.tgt, [(w.r() - 0.5) * 90, 0, (w.r() - 0.5) * 90]), dv = norm(sub(aim, j.p));
+            const r = spawnAir(w, 's8', j.side, add(j.p, scale(dv, 6)), add(scale(dv, 600), [0, 30, 0]), undefined, undefined, aim); r.phase = 'boost'; if (j.ammo === 15) w.fx.push({ k: 'jet', jet: j.id, ev: 'release', p: [...j.p] as V3 }); }
+          if (j.ammo <= 0 || d < 450) { j.st = 'out'; for (let i = 0; i < 3; i++) w.schedule.push({ t: w.T + i * 0.35, f: (w) => w.fx.push({ k: 'flare', jet: j.id, p: [...j.p] as V3 }) }); }
+        } else {   // F-16: طيران مستوي على 650 م، ترمي قنبلتين بنقطة الرمي المحسوبة (القنبلة تكمل بسرعة الطيارة)
+          steer(j, [j.tgt[0] - j.p[0], (alt - j.p[1]) * 2, j.tgt[2] - j.p[2]], sp, 1.2, dt);
+          const rel = sp * Math.sqrt(2 * j.p[1] / 9.81);
+          if (d < rel + 40 && j.ammo > 0 && j.t > j.fireT) { j.ammo--; j.fireT = j.t + 0.25; const b = spawnAir(w, 'bomb', j.side, add(j.p, [0, -2, 0]), [...j.v] as V3, undefined, undefined, j.tgt); b.phase = 'boost'; w.fx.push({ k: 'jet', jet: j.id, ev: 'release', p: [...j.p] as V3 }); }
+          if (j.ammo <= 0) { j.st = 'out'; w.log.push({ t: w.T, text: `F-16 رمت قنابلها على العدو وراجعة`, good: true, p: j.tgt }); for (let i = 0; i < 2; i++) w.schedule.push({ t: w.T + 0.5 + i * 0.4, f: (w) => w.fx.push({ k: 'flare', jet: j.id, p: [...j.p] as V3 }) }); }
+        }
+      } else { steer(j, [home[0] - j.p[0], (alt - j.p[1]) * 2, (j.wing ? 300 : -300)], sp * 1.1, 1.1, dt); if (Math.abs(j.p[0]) > 7400) j.alive = false; }
+    } else if (j.kind === 'tb2') {   // يحوم بدائرة 900 م ويرمي MAM-L كل ~40 ث على آلية إلنا
+      const ang = Math.atan2(j.p[2] - j.c[2], j.p[0] - j.c[0]) + dt * sp / 900, want: V3 = [j.c[0] + Math.cos(ang) * 900 - j.p[0], (JALT.tb2 - j.p[1]) * 0.5, j.c[2] + Math.sin(ang) * 900 - j.p[2]];
+      if (j.st === 'out') steer(j, [home[0] - j.p[0], 0, 0], sp * 1.4, 0.6, dt); else steer(j, want, sp, 2, dt);
+      if (j.st === 'hover' && j.t > 8 && j.t > j.fireT && j.ammo > 0) { const tg = w.units.filter(u => u.side === 'iq' && u.alive && (isTank(u) || u.kind === 'technical' || u.kind === 'dshk' || u.kind === 'd30' || u.kind === 'bmp') && dist2d(u.p, j.p) < 5000)[0];
+        if (tg) { j.ammo--; j.fireT = j.t + 38; const m = spawnAir(w, 'agm', 'en', add(j.p, [0, -3, 0]), add(scale(norm(sub(tg.p, j.p)), 60), [0, -10, 0]), undefined, undefined, add(tg.p, [0, 1.4, 0])); m.tgtUnit = tg.id; m.phase = 'boost';
+          w.fx.push({ k: 'jet', jet: j.id, ev: 'release', p: [...j.p] as V3 }); w.log.push({ t: w.T, text: `بيرقدار TB2 المعادية رمت صاروخ MAM-L على ${tg.name}`, good: false, p: tg.p }); } }
+      if (j.ammo <= 0 && j.st === 'hover') j.st = 'out'; if (j.st === 'out' && j.p[0] < -7400) j.alive = false;
+    } else {   // أباتشي: تطير واطي لموقعها ورا التلال، تصعد تحوم 60 م، ترمي هيلفاير كل 6 ث، وترجع
+      if (j.st === 'in') { steer(j, [j.c[0] - j.p[0], (JALT.ah64 - j.p[1]) * 2, j.c[2] - j.p[2]], sp, 1.5, dt); if (dist2d(j.p, j.c) < 90) { j.st = 'hover'; j.hoverT = 0; } }
+      else if (j.st === 'hover') { j.hoverT += dt; j.v = scale(j.v, Math.max(0, 1 - dt * 1.5)); j.v[1] = (60 - j.p[1]) * 0.8;
+        if (j.hoverT > 3 && j.t > j.fireT && j.ammo > 0) { const foes = w.units.filter(u => u.side === 'en' && u.alive && (isTank(u) || u.kind === 'bmp') && dist2d(u.p, j.p) < 5200).sort((a, b) => dist2d(a.p, j.p) - dist2d(b.p, j.p));
+          const tg = foes[(j.wing + (4 - j.ammo)) % Math.max(1, foes.length)]; if (tg) { j.ammo--; j.fireT = j.t + 6; const m = spawnAir(w, 'agm', 'iq', add(j.p, [0, -1.5, 0]), add(scale(norm(sub(tg.p, j.p)), 80), [0, 8, 0]), undefined, undefined, add(tg.p, [0, 1.4, 0])); m.tgtUnit = tg.id; m.phase = 'boost';
+            w.fx.push({ k: 'jet', jet: j.id, ev: 'release', p: [...j.p] as V3 }); if (j.ammo === 3) w.log.push({ t: w.T, text: `الأباتشي ${j.wing + 1} ترمي هيلفاير على ${tg.name}`, good: true, p: tg.p }); } }
+        if (j.ammo <= 0 || j.hoverT > 70) j.st = 'out'; }
+      else { steer(j, [home[0] - j.p[0], (JALT.ah64 - j.p[1]) * 2, 0], sp, 1.2, dt); if (j.p[0] > 6400) j.alive = false; }
+      if (j.st !== 'hover') j.p = add(j.p, scale(j.v, dt)); else j.p = add(j.p, scale(j.v, dt));
+      continue;
+    }
+    j.p = add(j.p, scale(j.v, dt));
+  }
+  // دفاع جوي قصير: رشاشات الدوشكا والبيكبات (والـBMP على الهليكوبتر) يرمون على الطيارات القريبة؛ كل إصابة تنقص ثلث
+  for (const j of w.jets) {
+    if (!j.alive || j.st === 'down' || j.p[1] > 1500 || w.T < j.aaT) continue; j.aaT = w.T + 0.5;
+    const foe = j.side === 'en' ? 'iq' : 'en', sh = w.units.filter(u => u.side === foe && u.alive && (SPEC[u.kind].aa > 0 || (j.kind === 'ah64' && (u.kind === 'bmp' || u.kind === 'technical'))) && len(sub(j.p, u.p)) < (SPEC[u.kind].aa || 2200) * 1.3);
+    for (const u of sh) { if (w.r() > 0.3) continue; w.fx.push({ k: 'round', unit: u.id, p: add(u.p, [0, 2, 0]), dir: norm(sub(j.p, u.p)), to: add(j.p, [(w.r() - 0.5) * 30, (w.r() - 0.5) * 20, (w.r() - 0.5) * 30]), tracer: true, tf: len(sub(j.p, u.p)) / 850, hit: 'air' });
+      if (w.r() < (j.kind === 'ah64' ? 0.07 : 0.05)) { j.hp -= 0.34; if (j.hp <= 0) { j.st = 'down'; w.fx.push({ k: 'jet', jet: j.id, ev: 'down', p: [...j.p] as V3 }, { k: 'boom', p: [...j.p] as V3, size: 1, air: true });
+        w.log.push({ t: w.T, text: `${u.name} أسقط ${JET_AR[j.kind]}${j.side === 'iq' ? ' إلنا' : ' المعادية'}`, good: j.side === 'en', p: j.p }); break; } } }
+  }
+  w.jets = w.jets.filter(j => j.alive);
+}
 function spawnAir(w: World, kind: AirKind, side: Side, p: V3, v: V3, s?: Site, tgtAir?: number, aim?: V3): Air {
   const a: Air = { id: w.nextId++, kind, side, p: [...p] as V3, v, alive: true, t: 0, aim: aim ?? (s ? [...s.p] as V3 : [0, 0, 0]), siteName: s?.name, siteId: s?.id, tgtAir, miss: 1e9, shotsAt: 0, phase: 'cruise', ign: true };
   w.air.push(a); return a;
@@ -321,19 +403,24 @@ function blast(w: World, p: V3, rSoft: number, rHard: number, dmgSoft: number, d
 }
 
 // ===== أوامر اللاعب (I-033): خمسة أوامر قليلة =====
-export const AMMO_MAX = { barrage: 4, smoke: 3 };
+export const AMMO_MAX = { barrage: 4, smoke: 3, air: 2, heli: 1 };
 /** TH6.9: مقابض التوازن (تتضبط بالمسح: tools/balance.ts). 1 = القيم الأصلية */
 export const BAL = { enInf: 1.6, iqInf: 0.8, house: 0.4, abrams: 0.9, t72Dmg: 1.3, enMen: 9, enBreak: 0.22, enArmor: 1.1 };   // مضبوطة بالمسح: يدوي بدون أوامر ~نص بنص، تلقائي ~80٪ فوز
 export function order(w: World, o: Order, at?: V3, by = 'أمرك'): string | null {
   if ((o === 'barrage' || o === 'smoke') && w.ammo[o] <= 0) return o === 'barrage' ? 'المدفعية خلّصت رماياتها' : 'قذائف الدخان خلصت';
+  if ((o === 'air' || o === 'heli') && w.ammo[o] <= 0) return o === 'air' ? 'طلعات الـF-16 خلصت' : 'الهليكوبتر طلعت وما بقت';
   if (w.orderCd[o] > w.T) return o === 'counter' ? 'الهجوم المعاكس صار أو الاحتياط ما بقى' : `الأمر يرجع متاح بعد ${Math.ceil(w.orderCd[o] - w.T)} ثانية`;
   if (o === 'counter' && w.iq === 'counter') return 'الهجوم المعاكس شغّال';
   if (o === 'retreat' && w.iq !== 'line1') return 'المدافعين أصلاً بالخط الثاني';
   const foes = w.units.filter(u => u.side === 'en' && u.alive && ground(u) && u.kind !== 'grad' && u.state !== 'mounted');
   const target = at ?? (foes.length ? scale(foes.reduce((s, u) => add(s, u.p), [0, 0, 0] as V3), 1 / foes.length) : null);
-  if ((o === 'barrage' || o === 'smoke') && !target) return 'ماكو هدف';
+  if ((o === 'barrage' || o === 'smoke' || o === 'air' || o === 'heli') && !target) return 'ماكو هدف';
   if (o === 'smoke' && !w.units.some(u => u.kind === 'd30' && u.alive)) return 'المدفعية ما بقت';
-  w.orderCd[o] = w.T + ORDER_CD[o]; if (o === 'barrage' || o === 'smoke') w.ammo[o]--;
+  w.orderCd[o] = w.T + ORDER_CD[o]; if (o === 'barrage' || o === 'smoke' || o === 'air' || o === 'heli') w.ammo[o]--;
+  if (o === 'air') { for (let i = 0; i < 2; i++) spawnJet(w, 'f16', 'iq', [5200 + i * 260, 650, target![2] + (i ? 90 : -90)], add(target!, [i * 60, 0, (w.r() - 0.5) * 60]), i);
+    w.log.push({ t: w.T, text: `${by}: طلعة F-16 (طيارتين، 4 قنابل Mk-82) على تجمّع العدو (باقي ${w.ammo.air})`, good: null, p: target! }); }
+  if (o === 'heli') { for (let i = 0; i < 2; i++) spawnJet(w, 'ah64', 'iq', [3600 + i * 120, 35, HIGHWAY_Z + 600 + i * 160], target!, i);
+    w.log.push({ t: w.T, text: `${by}: أباتشي (طيارتين، 8 صواريخ هيلفاير) تطلع على دروع العدو`, good: null, p: target! }); }
   if (o === 'barrage') {
     w.units.filter(u => u.kind === 'd30' && u.alive).forEach((g, gi) => { for (let i = 0; i < 6; i++) w.schedule.push({ t: w.T + i * 1.4 + gi * 0.5, f: (w) => { if (g.alive) fireShell(w, g, add(target!, [(w.r() - 0.5) * 110, 0, (w.r() - 0.5) * 110])); } }); });
     w.log.push({ t: w.T, text: `${by}: رشقة مدفعية مركّزة (باقي ${w.ammo.barrage})`, good: null, p: target! });
@@ -354,7 +441,7 @@ export function step(w: World, dt: number) {
   if (w.T - w.spotT > 1) { w.spotT = w.T; spot(w); commanders(w); }
   for (const u of w.units) if (u.alive) { u.supp = Math.max(0, u.supp - dt * (isVeh(u) ? 0.35 : 0.16)); behave(w, u, dt); move(w, u, dt); fight(w, u, dt); turret(w, u, dt); if ((u.kind === 'inf' || u.kind === 'kornet') && ((w.T * 4) | 0) !== (((w.T - dt) * 4) | 0)) updateCover(w, u); }
   for (const u of w.units) if (u.kind === 'inf' || u.kind === 'kornet') solStep(w, u, dt);
-  air(w, dt);
+  air(w, dt); jets(w, dt);
   w.smoke = w.smoke.filter(s => s.until > w.T);
   checkEnd(w);
 }
@@ -418,6 +505,11 @@ function aiSupport(w: World) {
       if (sc > bs && sc >= 3 && !ours.some(o => dist2d(o.p, f.p) < 160)) { bs = sc; best = scale(near.reduce((a, o) => add(a, o.p), [0, 0, 0] as V3), 1 / near.length); } }
     if (best) { order(w, 'barrage', best, 'القائد'); return; }
   }
+  // I-170: القائد الآلي يطلب F-16 على تجمّع دروع مكشوف، وأباتشي لما العدو يقتحم
+  if (w.ammo.air > 0 && w.orderCd.air <= w.T && w.T > 80) { const arm = foes.filter(f => isVeh(f)); let best: V3 | null = null, bs = 0;
+    for (const f of arm) { const near = arm.filter(o => dist2d(o.p, f.p) < 220); if (near.length > bs && !ours.some(o => dist2d(o.p, f.p) < 350)) { bs = near.length; best = scale(near.reduce((a, o) => add(a, o.p), [0, 0, 0] as V3), 1 / near.length); } }
+    if (best && bs >= 3) { order(w, 'air', best, 'القائد'); return; } }
+  if (w.ammo.heli > 0 && w.orderCd.heli <= w.T && (w.en === 'breach' || w.en === 'assault')) { const arm = foes.filter(f => isTank(f) || f.kind === 'bmp'); if (arm.length >= 2) { order(w, 'heli', scale(arm.reduce((a, o) => add(a, o.p), [0, 0, 0] as V3), 1 / arm.length), 'القائد'); return; } }
   if (w.ammo.smoke > 0 && w.orderCd.smoke <= w.T) {
     const fleeing = w.units.find(u => u.side === 'iq' && u.alive && u.state === 'retreat' && u.kind === 'inf' && foes.some(f => dist2d(f.p, u.p) < 320));
     if (fleeing) { const f = foes.reduce((a, b) => (dist2d(a.p, fleeing.p) < dist2d(b.p, fleeing.p) ? a : b)); order(w, 'smoke', scale(add(f.p, fleeing.p), 0.5), 'القائد'); }
@@ -1019,6 +1111,15 @@ function air(w: World, dt: number) {
       if (k === 0) w.log.push({ t: w.T, text: `الباتريوت أطلق ${n === 2 ? 'معترضين' : 'معترض'} على ${AIR_AR[a.kind]} المتجه نحو ${a.siteName}`, good: null, p: m });
     } });
   }
+  // I-170: الباتريوت يضرب طيارات العدو (سوخوي وبيرقدار) — مرة لكل طيارة، ونص المرات بس (مرات تكون واطية أو ورا التلال)
+  if (pat) for (const j of w.jets) {
+    if (j.side !== 'en' || j.st === 'down' || j.shotsAt || j.t < 15 || j.p[1] < 120 || dist2d(j.p, pat.p) > 9000) continue;   // 15 ث حتى الرادار يكشفها
+    j.shotsAt = 1; if (w.r() > 0.5) continue;
+    w.schedule.push({ t: w.T + 1, f: (w) => { if (j.st === 'down') return; const mi = (w.stats.pacFired++) % 4, m = add(pat.p, rotY(PATRIOT_MUZZLES[mi], pat.yaw)), dir = rotY(PATRIOT_LAUNCH_LOCAL, pat.yaw);
+      const rear = add(pat.p, rotY([PATRIOT_REAR[0], PATRIOT_REAR[1] - (mi > 1 ? 1.4 : 0), PATRIOT_MUZZLES[mi][2]], pat.yaw));
+      const i = spawnAir(w, 'pac2', 'iq', m, scale(dir, 40), undefined, j.id); i.phase = 'boost'; w.fx.push({ k: 'plaunch', muzzle: m, rear, dir, air: i.id });
+      w.log.push({ t: w.T, text: `الباتريوت أطلق على ${JET_AR[j.kind]}`, good: null, p: m }); } });
+  }
   // S-400: الباليستي أولاً، وبعدين الكروز اللي فلت من الباتريوت
   if (s4) for (const a of w.air) {
     if (!a.alive || a.shotsAt > 0 || !(a.kind === 'iskander' || (a.kind === 'kh101' && dist2d(a.p, a.aim) < 2500))) continue;
@@ -1047,7 +1148,7 @@ function air(w: World, dt: number) {
       a.v = scale(norm(add(norm(a.v), scale(norm(sub(a.aim, a.p)), dt * 0.4))), 1450);  // تصحيح نهائي بسيط
       if (!a.dive && a.p[1] < 5500) { a.dive = true; w.fx.push({ k: 'threat', air: a.id, tti: a.p[1] / 1450 }); }
     } else if (a.kind === 'pac2' || a.kind === 'n48') interceptor(w, a, dt);
-    else if (a.kind === 'atgm' || a.kind === 'rpg') missile(w, a, dt);
+    else if (a.kind === 'atgm' || a.kind === 'rpg' || a.kind === 'agm') missile(w, a, dt);
     else a.v = add(a.v, [0, -9.81 * dt, 0]);          // غراد + قذائف: بالستي
     if (!a.alive) continue;
     a.p = add(a.p, scale(a.v, dt));
@@ -1057,7 +1158,7 @@ function air(w: World, dt: number) {
 }
 const ACC = { pac2: { thrust: 260, burn: 9, g: 320, fuze: 9 }, n48: { thrust: 300, burn: 10, g: 380, fuze: 18 } };
 function interceptor(w: World, a: Air, dt: number) {
-  const P = ACC[a.kind as 'pac2' | 'n48'], tgt = w.air.find(o => o.id === a.tgtAir);
+  const P = ACC[a.kind as 'pac2' | 'n48'], tgt: any = w.air.find(o => o.id === a.tgtAir) ?? w.jets.find(o => o.id === a.tgtAir && o.st !== 'down');
   const sp = len(a.v), dir = norm(a.v);
   // إطلاق بارد: أول ~0.9 ثانية الصاروخ مقذوف بالغاز بلا محرك، يتباطأ، وبعدين يشتعل ويلف
   if (a.phase === 'eject') { a.v = add(a.v, [0, -9.81 * dt, 0]); if (a.t > 0.9) { a.phase = 'boost'; a.ign = true; w.fx.push({ k: 'ignite', air: a.id, p: [...a.p] as V3 }); } return; }
@@ -1081,11 +1182,14 @@ function interceptor(w: World, a: Air, dt: number) {
     const vr2 = sub(tgt.v, a.v), tc = clamp(-dot(rr, vr2) / Math.max(1e-6, dot(vr2, vr2)), 0, dt), dmin = len(add(rr, scale(vr2, tc)));
     a.miss = Math.min(a.miss, dmin);
     if (dmin < P.fuze || (d < 60 && d > a.miss + 2)) {
-      a.alive = false; tgt.alive = false;
+      a.alive = false;
+      if (tgt.st) { tgt.st = 'down'; tgt.hp = 0; w.fx.push({ k: 'boom', p: a.p, size: 1.4, air: true }, { k: 'intercept', p: a.p, big: true }, { k: 'jet', jet: tgt.id, ev: 'down', p: [...tgt.p] as V3 }, { k: 'mark', p: add(a.p, [0, 40, 0]), text: '✓ أسقطناها', good: true });
+        w.log.push({ t: w.T, text: `${a.kind === 'n48' ? 'S-400' : 'الباتريوت'} أسقط ${JET_AR[tgt.kind as JetKind]} المعادية`, good: true, p: a.p }); return; }
+      tgt.alive = false;
       const big = tgt.kind !== 'shahed';
       if (tgt.kind === 'kh101') w.stats.cruiseDown++; else if (tgt.kind === 'iskander') w.stats.ballisticDown++; else w.stats.dronesDown++;
       w.fx.push({ k: 'boom', p: a.p, size: big ? 1.7 : 0.8, air: true }, { k: 'intercept', p: a.p, big }, { k: 'mark', p: add(a.p, [0, 40, 0]), text: '✓ اعتُرض', good: true });
-      w.log.push({ t: w.T, text: `${a.kind === 'n48' ? 'S-400' : 'الباتريوت'} اعترض ${AIR_AR[tgt.kind]} على ارتفاع ${Math.round(a.p[1] / 100) / 10} كم قبل ما يوصل ${tgt.siteName}`, good: true, p: a.p });
+      w.log.push({ t: w.T, text: `${a.kind === 'n48' ? 'S-400' : 'الباتريوت'} اعترض ${AIR_AR[tgt.kind as AirKind]} على ارتفاع ${Math.round(a.p[1] / 100) / 10} كم قبل ما يوصل ${tgt.siteName}`, good: true, p: a.p });
       return;
     }
   } else if (a.t > 3) { a.alive = false; w.fx.push({ k: 'boom', p: a.p, size: 0.5, air: true }); return; } // تدمير ذاتي
@@ -1102,6 +1206,8 @@ function impact(w: World, a: Air) {
   } else if (a.kind === 'rocket') { w.fx.push({ k: 'boom', p: a.p, size: 0.55, air: false }); blast(w, a.p, 20, 5, 1, 0.6, 'راجمات الغراد', 'en'); }
   else if (a.kind === 'shell') { w.fx.push({ k: 'boom', p: a.p, size: 0.65, air: false }); blast(w, a.p, 26, 9, a.side === 'iq' ? 1 : 0.8, a.side === 'iq' ? 1.2 : 0.6, a.side === 'iq' ? 'مدفعية D-30' : 'مدفعية العدو', a.side); }
   else if (a.kind === 'smoke') { w.fx.push({ k: 'boom', p: a.p, size: 0.2, air: false }); addSmoke(w, a.p, 48, 65); }
+  else if (a.kind === 's8') { w.fx.push({ k: 'boom', p: a.p, size: 0.6, air: false }); blast(w, a.p, 18, 5, 0.9, 0.5, 'صواريخ سوخوي', a.side); }
+  else if (a.kind === 'bomb') { w.fx.push({ k: 'boom', p: a.p, size: 2.4, air: false }); blast(w, a.p, 70, 22, 1, 1.6, 'قنبلة F-16', a.side); }
   else if (a.kind === 'atgm' || a.kind === 'rpg') { w.fx.push({ k: 'boom', p: a.p, size: 0.35, air: false }); suppress(w, a.p, 12, 0.3, a.side); }
   else w.fx.push({ k: 'boom', p: a.p, size: 0.5, air: false });
 }
@@ -1109,6 +1215,12 @@ function impact(w: World, a: Air) {
 /** كورنيت موجّه بالليزر (يحتاج الرامي يشوف الهدف لحد الإصابة) و RPG غير موجّه */
 function missile(w: World, a: Air, dt: number) {
   const t = w.units.find(u => u.id === a.tgtUnit), own = w.units.find(u => u.id === a.owner);
+  if (a.kind === 'agm') {   // هيلفاير / MAM-L: نار وانسى، يلاحق الهدف لحد ما يوصل
+    if (t && t.alive) a.aim = add(t.p, [0, 1.4, 0]);
+    const sp = Math.min(380, len(a.v) + 260 * dt), want = norm(sub(a.aim, a.p)); a.v = scale(norm(add(norm(a.v), scale(want, dt * (a.t < 0.5 ? 1.5 : 5)))), sp);
+    if (len(sub(a.aim, a.p)) < 5) { a.alive = false; w.fx.push({ k: 'boom', p: a.p, size: 1.1, air: false, metal: true }); if (t && t.alive && w.r() < 0.85) damage(w, t, isTank(t) ? 2.6 : 2.2, a.side === 'iq' ? 'هيلفاير الأباتشي' : 'صاروخ بيرقدار'); else blast(w, a.p, 12, 4, 0.8, 0.6, AIR_AR.agm, a.side); return; }
+    if (a.t > 40) { a.alive = false; w.fx.push({ k: 'boom', p: a.p, size: 0.4, air: false }); } return;
+  }
   if (a.kind === 'atgm') {
     const guided = !!(own && own.alive && own.supp < 0.85 && t && t.alive && visOf(w, own, t) > 0);
     if (guided && t) a.aim = add(t.p, [0, 1.4, 0]);

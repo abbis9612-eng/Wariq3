@@ -698,12 +698,15 @@ function startCity(w: World, why: 'win' | 'loss' | 'draw') {
   for (const u of w.units) if (u.side === 'en' && u.alive && ground(u) && u.kind !== 'grad' && u.state !== 'retreat' && u.kind !== 'inf') { u.state = 'hold'; u.stateT = 0; u.goal = null; u.path = undefined; }
   // الموجة الثانية: 5 دبابات، 5 BMP بيها مشاة، بيكبين — من الغرب على الطريق العام
   const n0 = w.units.length;
-  for (let i = 0; i < 5; i++) mkUnit(w, 't72', 'en', [-2450 - i * 45, 0, HIGHWAY_Z + (i % 2 ? 8 : -8)], EAST, COLUMN, { state: 'hold', team: i % 2, role: 'assault', name: 'T-72B3' });
-  for (let i = 0; i < 5; i++) { const b = mkUnit(w, 'bmp', 'en', [-2650 - i * 45, 0, HIGHWAY_Z + (i % 2 ? 8 : -8)], EAST, COLUMN, { state: 'hold', team: 2, role: 'assault' });
+  for (let i = 0; i < 5; i++) mkUnit(w, 't72', 'en', [-2150 - i * 45, 0, HIGHWAY_Z + (i % 2 ? 8 : -8)], EAST, COLUMN, { state: 'hold', team: i % 2, role: 'assault', name: 'T-72B3' });
+  for (let i = 0; i < 5; i++) { const b = mkUnit(w, 'bmp', 'en', [-2330 - i * 45, 0, HIGHWAY_Z + (i % 2 ? 8 : -8)], EAST, COLUMN, { state: 'hold', team: 2, role: 'assault' });
     const sq = mkUnit(w, 'inf', 'en', b.p, EAST, 'مشاة العدو', { state: 'mounted', mount: b.id, role: 'assault', team: i, men: BAL.enMen, menMax: BAL.enMen, hp: BAL.enMen }); b.carry = sq.id; }
-  for (let i = 0; i < 2; i++) mkUnit(w, 'technical', 'en', [-2900 - i * 45, 0, HIGHWAY_Z + (i ? 8 : -8)], EAST, COLUMN, { state: 'hold', team: 3, role: 'support' });
+  for (let i = 0; i < 2; i++) mkUnit(w, 'technical', 'en', [-2600 - i * 45, 0, HIGHWAY_Z + (i ? 8 : -8)], EAST, COLUMN, { state: 'hold', team: 3, role: 'support' });
   const nu = w.units.slice(n0); w.stats.enTanks += nu.filter(isTank).length; w.stats.enBmp += nu.filter(u => u.kind === 'bmp').length; w.stats.enMen += nu.filter(u => u.kind === 'inf').reduce((a, u) => a + u.men, 0);
   w.s0c = strength(w, 'en');
+  // القيادة ترسل إسناد للمدينة (المرحلة الأولى غالباً تخلص الذخيرة)
+  w.ammo.barrage = Math.min(AMMO_MAX.barrage, w.ammo.barrage + 2); w.ammo.smoke = Math.min(AMMO_MAX.smoke, w.ammo.smoke + 2); w.ammo.air = Math.min(AMMO_MAX.air, w.ammo.air + 1);
+  w.log.push({ t: w.T, text: 'القيادة أرسلت إسناد للمدينة: رشقتين مدفعية، دخان، وطلعة F-16', good: true, p: CITY_C });
   const text = why === 'win' ? 'الرتل الأول انكسر بالقرية — بس الموجة الثانية للعدو جاية لمدينة الجسر' : 'قرية الطريق سقطت — قواتنا ترجع لمدينة الجسر وتقاتل شارع بشارع';
   w.en = 'city'; w.enT = w.T; w.log.push({ t: w.T, text, good: why === 'win' ? null : false, p: CITY_C });
   w.fx.push({ k: 'phase', side: 'en', phase: 'city', p: [CITY.x0 - 100, 0, HIGHWAY_Z] }, { k: 'mark', p: add(CITY_C, [0, 40, 0]), text: '🏙 حرب المدن: مدينة الجسر', good: false });

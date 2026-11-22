@@ -12,7 +12,7 @@ const seeds = arg === 'all' ? Array.from({ length: 20 }, (_, i) => i + 1) : [+ar
 const rows: Record<string, number | string>[] = []; const dbgAll: Record<string, number> = {};
 for (const seed of seeds) {
   const w = newWorld(seed); if (manual) w.cmd = 'manual'; const dt = 1 / 60, t0 = performance.now(); let maxStep = 0, logN = 0; const phases: string[] = []; let lastEn = '', lastIq = '';
-  while (!w.over && w.T < 900) {
+  while (!w.over && w.T < 2400) {
     const a = performance.now(); step(w, dt); maxStep = Math.max(maxStep, performance.now() - a);
     if (orders && Math.abs(w.T - 200) < dt / 2) order(w, 'smoke');
     if (orders && Math.abs(w.T - 260) < dt / 2) order(w, 'barrage');

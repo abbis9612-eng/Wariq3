@@ -240,6 +240,7 @@ async function loadModels(progress: (t: string) => void) {
     c.addAllToScene(); c.meshes.forEach(m => { m.isVisible = false; m.isPickable = false; });
     if (MODEL[n].center) { let mn = new Vector3(1e9, 1e9, 1e9), mx = new Vector3(-1e9, -1e9, -1e9); c.meshes.forEach(m => { if (!m.getTotalVertices()) return; m.computeWorldMatrix(true); const bb = m.getBoundingInfo().boundingBox; mn = Vector3.Minimize(mn, bb.minimumWorld); mx = Vector3.Maximize(mx, bb.maximumWorld); });
       MODEL[n].off = [-(mn.x + mx.x) / 2, -mn.y, -(mn.z + mx.z) / 2]; }
+    if (n === 'zu23_mount' || n === 'zu23_elev') c.materials.forEach(m => { if (m instanceof PBRMaterial) m.albedoColor = new Color3(0.55, 0.6, 0.46); });   /* I-172: الأخضر الزيتوني باهت بالشمس؛ نغمّقه ويا وسخ البيكب */
     if (TURRET[n]) splitTurret(n, c);
     containers[n] = c; progress(`يحمّل المجسمات… ${++done}/${names.length}`);
   }));

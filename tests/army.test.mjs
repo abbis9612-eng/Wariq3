@@ -28,4 +28,11 @@ N.warEnd(G1, T1); if (G1.nat.ob.arm !== Math.round(2 * (arms.length - Math.ceil(
 const L = S.load(S.save(G1), WD); if (!L.nat.ob || L.nat.ob.mec !== G1.nat.ob.mec) no('الحفظ ضيّع الفرق المصنوعة');
 const old = JSON.parse(S.save(mk())); old.v = 29; delete old.nat.ob; delete old.nat.obPw; const L2 = S.load(JSON.stringify(old), WD);
 if (L2.v < 30 || !L2.nat.ob || L2.nat.ob.arm !== 0) no('ترقية V29');
+// 6) المشهد (I-167 د): 5 فرق مدرعة تنضغط لـ45 آلية، والتعزيزات توصل بوقتها وتنحسب
+const BV = require('../prototypes/world/gwbv.js');
+const B2 = BV.create({ seed: 3, terr: 'plain', me: 0, att: { side: 1, divs: [1, 2, 3, 4, 5].map(i => ({ kind: 'arm', str: 1, n: 'a' + i })) }, def: { side: 0, divs: [{ kind: 'inf', str: 1, n: 'd' }] } });
+const na = B2.units.filter(u => u.side === 1).length; if (na > 48 || na < 35) no('آليات 5 فرق مدرعة بالمشهد: ' + na);
+const B3 = BV.create({ seed: 3, terr: 'plain', me: 0, att: { side: 1, divs: [{ kind: 'arm', str: 1, n: 'A1' }], reinf: [{ kind: 'arm', str: .8, n: 'R1', at: 100 }] }, def: { side: 0, divs: [{ kind: 'mec', str: 1, n: 'D1' }] } });
+const u0 = B3.units.filter(u => u.side === 1).length, i0 = B3.init[1]; for (let t = 0; t < 120; t += .05) BV.step(B3, .05);
+if (!B3.arrived.includes('R1') || B3.units.filter(u => u.side === 1).length <= u0 || !(B3.init[1] > i0)) no('التعزيزات ما وصلت للمشهد');
 console.log(bad ? `❌ ${bad} مشاكل` : '✅ الجيش يطلع كامل والفرق المصنوعة تدخل الحرب'); process.exit(bad ? 1 : 0);

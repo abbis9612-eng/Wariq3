@@ -928,11 +928,17 @@ html[data-skin] .hero b{color:var(--act)}
   }
   async function enterBattle(tg, b, A, D) {
     const prev = speed; speed = 0; bar(); $('#card').hidden = true; if (window.VIEW && VIEW.SND) VIEW.SND.init(); await loadImgs();
-    const W = T.W, c = T.cells[tg], terr = { fort: 'hills' }[c.t] || c.t, fill = ds => ds.slice(0, 3).map(d => ({ kind: d.kind, str: d.str, n: d.n }));
+    const W = T.W, c = T.cells[tg], terr = { fort: 'hills' }[c.t] || c.t, fill = ds => ds.slice(0, 5).map(d => ({ kind: d.kind, str: d.str, n: d.n }));   // I-167 د: لحد 5 فرق للطرف (قبل 3)، والمحرك يضغط الآليات لـ~45
     const ready = s => T.A ? T.A.bases.filter(x => x.side === s).reduce((n, x) => n + x.ready, 0) : 0;
     const tank = [tankOf(T.side[0][0]), tankOf(T.side[1][0])];
-    const battle = window.BV.create({ seed: (W.t * 7 + tg) | 0, terr, me: 0, myAir: Math.min(3, Math.floor(ready(0) / 3)), tank, att: { side: b.side, divs: fill(A) }, def: { side: 1 - b.side, divs: fill(D) }, air: { att: ready(b.side) > 2 ? 2 : 0, def: ready(1 - b.side) > 2 ? 1 : 0 } });
-    const place = c.city || byId.get(WD.r[c.reg][0])?.n || ''; (window.BZONE || window.BVIEW).open(battle, { title: `⚔ معركة ${place} · ${SM.TERR[c.t].n}`, me: 0, names: [nameOf(T.side[0][0]), nameOf(T.side[1][0])], onExit: Bt => { applyBattle(Bt, b, A, D, c); dirty = true; chain = { seen: new Set(T.W.battles.keys()) }; chain.seen.delete(tg);
+    // I-167 د: التعزيزات — فرق الطرف المهاجم اللي بالطريق لهالخلية (مو أول خطوة)، واحتياط المدافع بالخلايا اللي جنبها؛ توصل بعد 1.5–4 دقايق حسب بعدها
+    const al = SM.alive(W), nb = W.cells[tg].nb || [], used = new Set([...A, ...D].map(d => d.id));
+    const RA = al.filter(d => d.side === b.side && !used.has(d.id) && d.path.includes(tg)).slice(0, 2), RD = al.filter(d => d.side !== b.side && !used.has(d.id) && nb.includes(d.cell) && !d.path.length).slice(0, 2);
+    const rf = ds => ds.map((d, i) => ({ kind: d.kind, str: d.str, n: d.n, id: d.id, at: 90 + i * 60 + Math.min(120, W.dist(d.cell, tg) / 4) }));
+    const battle = window.BV.create({ seed: (W.t * 7 + tg) | 0, terr, me: 0, myAir: Math.min(3, Math.floor(ready(0) / 3)), tank, att: { side: b.side, divs: fill(A), reinf: rf(RA) }, def: { side: 1 - b.side, divs: fill(D), reinf: rf(RD) }, air: { att: ready(b.side) > 2 ? 2 : 0, def: ready(1 - b.side) > 2 ? 1 : 0 } });
+    const place = c.city || byId.get(WD.r[c.reg][0])?.n || ''; const realT = sideEq(A.slice(0, 5), T), scT = battle.units.filter(u => u.side === b.side && u.type !== 'truck').length, per = Math.max(1, Math.round((realT.tanks + realT.afv) / Math.max(1, scT)));
+    const note = `كل آلية بالمشهد ≈ ${per} آلية حقيقية · ${A.length + D.length} فرق بالمعركة${RA.length + RD.length ? ' · ' + (RA.length + RD.length) + ' فرق تعزيز بالطريق' : ''}`;
+    (window.BZONE || window.BVIEW).open(battle, { note, title: `⚔ معركة ${place} · ${SM.TERR[c.t].n}`, me: 0, names: [nameOf(T.side[0][0]), nameOf(T.side[1][0])], onExit: Bt => { const arr = new Set(Bt && Bt.arrived || []), add = ds => ds.filter(d => arr.has(d.n)); applyBattle(Bt, b, [...A, ...add(RA)], [...D, ...add(RD)], c); dirty = true; chain = { seen: new Set(T.W.battles.keys()) }; chain.seen.delete(tg);
       // إذا أكو معركة ثانية هسه بالجبهة نعرضها فوراً (أقرب وحدة)، وإلا نكمّل والمعركة الجاية توقفنا
       const nb = nextBattle(c); if (nb != null && nb !== tg) { chain.seen.add(nb); const cc = T.cells[nb]; look(cc.ll[0], cc.ll[1], 3000); battleCard(nb, true); speed = 0; } else { chain.seen.add(tg); speed = prev || 1; toast('⏭ نكمّل الحرب: المعركة الجاية بالجبهة توقف الخريطة وتعرضها عليك'); } bar(); } });
   }

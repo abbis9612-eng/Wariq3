@@ -1,4 +1,4 @@
-// نسخة مولّدة من prototypes/grandwar/bv.js (cp) — لا تعدّلها هنا؛ عدّل الأصل وانسخ
+
 // «مشهد المعركة الحقيقي» BV1 (I-085): محرك معركة بالمتر والثانية الحقيقية. بدون رسم؛ ينفحص بـ Node (tests/bv.test.mjs).
 // مأخوذ من «الحرب من فوق» WM10 (topdown/src/sim2.ts، مجمّد — نسخنا الأفكار والأرقام بس) و«المعركة الكلاسيكية» BC4:
 //  - سياقة دبابة: تسارع وفرملة، لفة بمكانها لما بطيئة، رجوع لورا لو الهدف خلفها وقريب، تتجنب الجيران.
@@ -31,21 +31,31 @@
     // غطاء الأرض (نخل/بيوت/صخور) يقلل الإصابة ويخفي
     const nCov = { city: 60, marsh: 34, hills: 24, mount: 30, plain: 16, desert: 8 }[B.terr] ?? 14;
     for (let i = 0; i < nCov; i++) B.cover.push({ x: (r() - .5) * W_DIM.w * .9, y: (r() - .5) * W_DIM.h * .8, rad: 25 + r() * 60, kind: B.terr === 'city' ? 'house' : B.terr === 'marsh' ? 'reed' : B.terr === 'desert' ? 'rock' : r() < .5 ? 'palm' : 'rock' });
-    const mk = (side, att) => {
-      const F = att ? o.att : o.def; let plt = side * 100;
-      F.divs.forEach((dv, di) => {
-        const st = clamp(dv.str ?? 1, .1, 1); const cx = (di - (F.divs.length - 1) / 2) * 750; // قطاع من المعركة (~2 كم جبهة)
-        const add = (type0, n, row) => { const type = type0 === 'tank' ? ((o.tank && o.tank[side]) || (side ? 't72' : 'abrams')) : type0; const n2 = Math.max(1, Math.round(n * st)); plt++; for (let i = 0; i < n2; i++) { const x = cx + (i - (n2 - 1) / 2) * (type === 'truck' ? 70 : 105) + (r() - .5) * 30; const y = att ? 3300 + row * 200 + (r() - .5) * 50 : -1300 - row * 170 + (r() - .5) * 50;   // «العالم»: نوع الدبابة حسب الدولة (o.tank)
+    B.o = { tank: o.tank }; B.plt = [0, 100]; B.vk = [1, 1];
+    // «العالم» I-167 د: حد الآليات للتلفون (~45 للطرف) — إذا الفرق أكثر، كل فرقة تنزل بآليات أقل بنفس النسبة
+    for (const F of [o.att, o.def]) { const nom = F.divs.reduce((t, dv) => t + ({ arm: 17, mec: 11, inf: 6 }[dv.kind] || 6) * clamp(dv.str ?? 1, .1, 1), 0); B.vk[F.side] = Math.min(1, 45 / Math.max(1, nom)); }
+    const mk = (side, att) => { const F = att ? o.att : o.def; F.divs.forEach((dv, di) => addDiv(B, side, att, dv, (di - (F.divs.length - 1) / 2) * 750, 0)); };
+    B.inf = [];
+    mk(o.att.side, true); mk(o.def.side, false);
+    for (const s of [0, 1]) { B.init[s] = B.units.filter(u => u.side === s && u.type !== 'truck').length + B.inf.filter(q => q.side === s).length * .3; B.lost[s] = 0; }
+    // I-167 د: التعزيزات — فرق بالطريق للمعركة (أو احتياط جنبها) تدخل من طرف الساحة بوقتها
+    B.reinf = [...(o.att.reinf || []).map(dv => ({ dv, side: o.att.side, att: true, at: dv.at || 90 })), ...(o.def.reinf || []).map(dv => ({ dv, side: o.def.side, att: false, at: dv.at || 90 }))]; B.arrived = [];
+    return finish(B, o);
+  }
+  function addDiv(B, side, att, dv, cx, back) {
+    const r = B.r, st = clamp(dv.str ?? 1, .1, 1), o = B.o, vk = B.vk[side] || 1; let plt = B.plt[side];
+    {
+        const add = (type0, n, row) => { const type = type0 === 'tank' ? ((o.tank && o.tank[side]) || (side ? 't72' : 'abrams')) : type0; const n2 = Math.max(1, Math.round(n * st * vk)); plt++; for (let i = 0; i < n2; i++) { const x = cx + (i - (n2 - 1) / 2) * (type === 'truck' ? 70 : 105) + (r() - .5) * 30; const y = att ? 3300 + back + row * 200 + (r() - .5) * 50 : -1300 - back - row * 170 + (r() - .5) * 50;   // «العالم»: نوع الدبابة حسب الدولة (o.tank)
           const u = { id: B.nid++, side, att, type, div: dv.n, plt, p: { x, y }, hd: att ? -Math.PI / 2 : Math.PI / 2, tur: att ? -Math.PI / 2 : Math.PI / 2, spd: 0, hp: 1, st: 'ok', reload: 2 + r() * 5, dug: !att, man: '', manP: null, manT: 0, troops: T[type].troops ? T[type].troops : 0, atgm: type === 'bmp' ? 2 : 0, burn: 0, home: { x, y }, spr: type === 'truck' ? 'truck' : type === 'bmp' ? 'bmp' : side ? 't72' : 'abrams' };
           B.units.push(u); } };
         if (dv.kind === 'arm') { add('tank', 8, 0); add('tank', 6, 1); add('bmp', 3, 2); }
         if (dv.kind === 'mec') { add('bmp', 7, 0); add('tank', 4, 1); }
-        if (dv.kind === 'inf') { add('truck', 4, 1); add('bmp', 2, 0); B.inf.push(...Array.from({ length: Math.round(6 * st) }, (_, i) => ({ id: B.nid++, side, att, p: { x: cx + (i - 2.5) * 110, y: att ? 3250 : -1200 + (r() - .5) * 60 }, n: 8, rpg: 2, atgm: i % 3 === 0 ? 1 : 0, manpad: i === 2 ? 2 : 0, st: 'ok', reload: r() * 4, dug: !att, goal: null, div: dv.n }))); }
-      });
-    };
-    B.inf = [];
-    mk(o.att.side, true); mk(o.def.side, false);
-    for (const s of [0, 1]) { B.init[s] = B.units.filter(u => u.side === s && u.type !== 'truck').length + B.inf.filter(q => q.side === s).length * .3; B.lost[s] = 0; }
+        if (dv.kind === 'inf') { add('truck', 4, 1); add('bmp', 2, 0); B.inf.push(...Array.from({ length: Math.max(2, Math.round(6 * st * vk)) }, (_, i) => ({ id: B.nid++, side, att, p: { x: cx + (i - 2.5) * 110, y: att ? 3250 + back : -1200 - back + (r() - .5) * 60 }, n: 8, rpg: 2, atgm: i % 3 === 0 ? 1 : 0, manpad: i === 2 ? 2 : 0, st: 'ok', reload: r() * 4, dug: !att && !back, goal: null, div: dv.n }))); }
+    }
+    B.plt[side] = plt;
+  }
+  function finish(B, o) {
+    const r = B.r;
     // جو: طلعات إسناد لكل طرف حسب ما عنده بالمعركة
     B.airQ = [];
     for (const [s, n] of [[o.att.side, o.air?.att || 0], [o.def.side, o.air?.def || 0]]) for (let i = 0; i < n; i++) B.airQ.push({ side: s, at: 70 + i * 55 + r() * 30, type: s ? 'su25' : 'su25' });
@@ -105,6 +115,10 @@
     B.t += dt;
     const A = B.side.att;
     if (B.phase === 'prep' && B.t > 42) { B.phase = 'attack'; emit(B, 'advance', { x: 0, y: 1500 }); }
+    // I-167 د: وصول التعزيزات من ورا خط كل طرف
+    if (B.reinf && B.reinf.length && !B.over) for (let i = B.reinf.length - 1; i >= 0; i--) { const q = B.reinf[i]; if (B.t < q.at) continue; B.reinf.splice(i, 1);
+      const n0 = B.units.length, i0 = B.inf.length, cx = (B.r() - .5) * 2400; addDiv(B, q.side, q.att, q.dv, cx, 500);
+      B.init[q.side] += B.units.slice(n0).filter(u => u.type !== 'truck').length + (B.inf.length - i0) * .3; B.arrived.push(q.dv.n); emit(B, 'reinf', { x: cx, y: q.att ? 3800 : -1800 }, { side: q.side, n: q.dv.n }); }
     // ===== الآليات =====
     for (const g of B.units) {
       if (!alive(g)) { g.burn += dt; continue; }

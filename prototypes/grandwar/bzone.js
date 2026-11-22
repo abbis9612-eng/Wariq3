@@ -50,6 +50,7 @@
     const A = B.units.filter(u => u.att); cam.x = A.reduce((s, u) => s + u.p.x, 0) / A.length; cam.y = A.reduce((s, u) => s + u.p.y, 0) / A.length - 400; cam.s = .85 * innerWidth / 412; shot = null; follow = true;
     FX.init({ g, cam: { get s() { return cam.s; }, get x() { return cam.x; }, get y() { return cam.y; } }, w2s, IMG }); FX.clear && FX.clear();
     FX.U = () => sizePx(9.8) / 30; FX.WIND = [6, -4];
+    if (o.note) banner('ℹ ' + o.note, 9000);
     const nt = document.getElementById('bvNote'); nt.style.opacity = 1; clearTimeout(BW._nt); BW._nt = setTimeout(() => nt.style.opacity = 0, 8000);
     input(); last = performance.now(); cancelAnimationFrame(raf); raf = requestAnimationFrame(frame);
   };
@@ -265,6 +266,8 @@
       if (j.st === 'fall' && R() < .8) FX.puff(j.p.x, j.p.y - j.z * KZ / KY, 6, 4, 'black', .6, 0, 0, 2); }
   }
   // ===== الأحداث → مؤثرات وأصوات =====
+  // شريط خبر صغير تحت الرأس (تعزيزات، مقياس المشهد)
+  let bnr = null; function banner(t, ms = 4500) { if (!bnr) { bnr = document.createElement('div'); bnr.style.cssText = 'position:absolute;left:50%;top:190px;transform:translateX(-50%);max-width:92%;background:rgba(20,30,20,.78);color:#e8f5d0;padding:5px 12px;border-radius:12px;font:600 12px "IBM Plex Sans Arabic";pointer-events:none;z-index:3;text-align:center;transition:opacity .4s'; el.append(bnr); } bnr.textContent = t; bnr.style.opacity = 1; clearTimeout(bnr._t); bnr._t = setTimeout(() => { if (bnr) bnr.style.opacity = 0; }, ms); }
   let lastHot = -99, fb = null;
   function fastBadge(on) { if (!fb) { fb = document.createElement('div'); fb.style.cssText = 'position:absolute;left:50%;top:158px;transform:translateX(-50%);background:rgba(0,0,0,.55);color:#ffd65a;padding:4px 12px;border-radius:12px;font:700 12px "IBM Plex Sans Arabic";pointer-events:none;z-index:3'; fb.textContent = '⏩ تقدّم سريع… لحد أول اشتباك'; el.append(fb); } fb.style.display = on ? 'block' : 'none'; }
   function onEv(e) {
@@ -289,6 +292,7 @@
     else if (e.k === 'jetkill') { FX.explode(e.x, e.y - (e.z || 0) * .25, 'air', 1.2); snd('boom_big', e.x, e.y, .9); }
     else if (e.k === 'airburst') FX.explode(e.x, e.y - (e.z || 0) * .25, 'air', .5);
     else if (e.k === 'crash') { FX.explode(e.x, e.y, 'big', 1.3); FX.burn(e.x, e.y, 1, 70); snd('boom_big', e.x, e.y, 1); }
+    else if (e.k === 'reinf') { const mine = e.side === info.me; banner(`🚚 ${mine ? 'وصلت تعزيزاتنا' : 'وصلت تعزيزات العدو'}: ${e.n}`, 5000); snd('engine', e.x, e.y, .8); if (follow) { shot = { p: 7, k: 'pt', x: e.x, y: e.y, s: .7, until: B.t + 4, cut: 1 }; } }
     else if (e.k === 'over') showRes();
     else if (e.k === 'artyfire' && e.side === info.me) snd('howitzer', cam.x, cam.y + 2500, .35);
   }

@@ -12,6 +12,7 @@ import { CustomMaterial } from '@babylonjs/materials/custom';
 import {
   V3, add, sub, scale, len, norm, lerp, clamp, rng, World, newWorld, step, order, Order, ORDER_CD, AMMO_MAX, Unit, Air, Fx, SITES, riverX, RIVER_W, CITY_R,
   HIGHWAY_Z, BERMS, AIR_AR, JET_AR, SIDE_AR, PATRIOT_POS, S400_POS, S400_SCALE, dist2d, site, angDiff,
+  zuMinPitch,
 } from './sim';
 import type { Sol } from './sim';
 import { groundH, groundN, ROADS, HOUSES, COVER } from './land';
@@ -181,8 +182,8 @@ const MODEL: Record<string, { scale: number; yaw: number; y?: number; center?: b
   shahed: { scale: 1.45, yaw: 0 }, kh101: { scale: 1, yaw: Math.PI },
   bmp: { scale: 0.24, yaw: 0, center: true }, kornet: { scale: 0.2, yaw: Math.PI / 2, center: true },
   // I-170: الطيارات والهليكوبتر من «معركة الهجوم 3D» (نفس المقاسات والاتجاهات)
-  // I-172: بيكب تويوتا (LM3D) عليه زو-23-2 حقيقي (LuckySkink9661): الشاحنة + القاعدة اللي تلف + السبطانتين اللي ترتفع (tools/zu23_compose.py). «zu23» نفسه يتركّب منها
-  zu23: { scale: 0.8, yaw: 0 }, zu23_truck: { scale: 1, yaw: 0 }, zu23_mount: { scale: 1, yaw: 0 }, zu23_elev: { scale: 1, yaw: 0 },
+  // I-172/I-173: شاص لاندكروزر 79 (DR1KING100K، tools/zu23_truck.py) عليه زو-23-2 حقيقي (LuckySkink9661): الشاحنة + القاعدة اللي تلف + السبطانتين اللي ترتفع (tools/zu23_compose.py). «zu23» نفسه يتركّب منها
+  zu23: { scale: 1, yaw: 0 }, zu23_truck: { scale: 1, yaw: 0 }, zu23_mount: { scale: 1, yaw: 0 }, zu23_elev: { scale: 1, yaw: 0 },
   su25: { scale: 0.19, yaw: Math.PI / 2, center: true }, f16: { scale: 0.0163, yaw: Math.PI / 2, center: true }, ah64: { scale: 7.1, yaw: Math.PI / 2, center: true }, tb2: { scale: 4.3, yaw: 0, center: true },
 };
 const containers: Record<string, AssetContainer> = {};
@@ -246,8 +247,8 @@ async function loadModels(progress: (t: string) => void) {
   }));
 }
 const blobMat = new StandardMaterial('blobMat', scene); blobMat.diffuseTexture = texBlob; blobMat.opacityTexture = texBlob; blobMat.disableLighting = true; blobMat.emissiveColor = Color3.Black(); blobMat.specularColor = Color3.Black();
-// I-172: مركز الدوران (القاعدة) والمحور (السبطانتين) بإحداثيات الشاحنة، من zu23.json (بلندر x,y,z ← بابيلون -x,z,-y)
-const ZU_PIV = new Vector3(0, 0.834, -2.25), ZU_TRN = new Vector3(0, 0.85, 0.375), ZU_MZ = 3.53, ZU_BX = 0.175;
+// I-173: مركز الدوران (وسط صندوق الشاص، بالمتر) والمحور (السبطانتين، بوحدات المدفع اللي تتصغّر ×0.8 للحجم الحقيقي)؛ بلندر x,y,z ← بابيلون -x,z,-y
+const ZU_PIV = new Vector3(0, 0.87, -1.42), ZU_TRN = new Vector3(0, 0.85, 0.375), ZU_MZ = 3.53, ZU_BX = 0.175;
 function instInto(kind: string, par: TransformNode, wreck: boolean) {
   const inst = containers[kind].instantiateModelsToScene(n => n, wreck, { doNotInstantiate: wreck }); inst.rootNodes.forEach(r => { r.parent = par; });
   par.getChildMeshes().forEach(m => { m.isPickable = false; m.isVisible = true; caster(m); if (wreck && m.material instanceof PBRMaterial) { m.material.albedoColor = new Color3(0.09, 0.085, 0.08); m.material.metallic = 0; m.material.roughness = 1; m.material.emissiveColor = Color3.Black(); } });
@@ -258,7 +259,7 @@ function spawnModel(kind: string, wreck = false): { root: TransformNode; inner: 
   if (kind === 'zu23') {
     // الشاحنة ثابتة، القاعدة (tur) تلف حول محورها، والسبطانتين (elev) ترتفع حول المحور الأفقي، وslide ترجع لورا ويا كل طلقة
     const truck = new TransformNode('zuTruck', scene); truck.parent = inner; instInto('zu23_truck', truck, wreck);
-    const tur = new TransformNode('tur', scene); tur.parent = inner; tur.position.copyFrom(ZU_PIV); instInto('zu23_mount', tur, wreck);
+    const tur = new TransformNode('tur', scene); tur.parent = inner; tur.position.copyFrom(ZU_PIV); tur.scaling.setAll(0.8); instInto('zu23_mount', tur, wreck);
     const elev = new TransformNode('elev', scene); elev.parent = tur; elev.position.copyFrom(ZU_TRN);
     const slide = new TransformNode('slide', scene); slide.parent = elev; instInto('zu23_elev', slide, wreck);
     return { root, inner, tur, elev, slide };
@@ -670,9 +671,9 @@ function zuAim(u: Unit, vis: UVis, dt: number) {
   let tp: V3 | null = null;
   if (u.target < 0) { const a = W.air.find(x => x.id === -u.target && x.alive) ?? W.jets.find(x => x.id === -u.target); if (a) tp = a.p; }
   else if (u.target > 0) { const o = W.units.find(x => x.id === u.target); if (o) tp = G(o.p[0], o.p[2], 1.2); }
-  const e = vis.elev!.getAbsolutePosition(); let want = 0.06;
-  if (tp) want = clamp(Math.atan2(tp[1] - e.y, Math.hypot(tp[0] - e.x, tp[2] - e.z)), -0.08, 1.45);
-  vis.pitch = (vis.pitch ?? 0.06) + (want - (vis.pitch ?? 0.06)) * Math.min(1, dt * 5); vis.elev!.rotation.x = -vis.pitch;
+  const e = vis.elev!.getAbsolutePosition(), lo = zuMinPitch(vis.tur ? vis.tur.rotation.y : 0) + 0.03; let want = Math.max(0.06, lo);   // I-173: فوق الكابينة ترتفع، على الجنب والورا تنزل
+  if (tp) want = clamp(Math.atan2(tp[1] - e.y, Math.hypot(tp[0] - e.x, tp[2] - e.z)), Math.max(-0.17, lo), 1.45);
+  vis.pitch = (vis.pitch ?? 0.06) + (want - (vis.pitch ?? 0.06)) * Math.min(1, dt * 5); vis.pitch = Math.max(vis.pitch, lo); vis.elev!.rotation.x = -vis.pitch;
   vis.kick = Math.max(0, (vis.kick ?? 0) - dt * 14); vis.slide!.position.z = -0.13 * vis.kick;
 }
 function syncUnits(dt: number) {
@@ -984,7 +985,7 @@ function killVisual(id: number, turret: boolean) {
     // انفجار الذخيرة: البرج يطير وعمود نار (jack-in-the-box) وانفجارات متتالية
     // البرج الحقيقي (المحروق) يطير من مكانه؛ إذا المجسم ما بيه برج منفصل نستعمل قطعة بديلة
     let ch: TransformNode;
-    if (vis.tur) { const t = vis.tur, sc = MODEL[u.kind].scale; t.setParent(null); t.rotationQuaternion = null; t.rotation.set(0, vis.tyaw + MODEL[u.kind].yaw, 0); t.scaling.setAll(sc); t.name = 'turret'; vis.tur = null; ch = t; }
+    if (vis.tur) { const t = vis.tur, sc = u.kind === 'zu23' ? 0.8 : MODEL[u.kind].scale; t.setParent(null); t.rotationQuaternion = null; t.rotation.set(0, vis.tyaw + MODEL[u.kind].yaw, 0); t.scaling.setAll(sc); t.name = 'turret'; vis.tur = null; ch = t; }
     else { const cm = chunkMesh.clone('turret', null)!; cm.isVisible = true; cm.material = (chunkMesh.material as StandardMaterial); caster(cm); ch = cm; }
     const p0 = add(up, [0, 2.6, 0]); ch.position.set(...p0);
     debris.push({ m: ch, p: p0, v: [(Math.random() - 0.5) * 9, 21 + Math.random() * 6, (Math.random() - 0.5) * 9], spin: [Math.random() * 5, Math.random() * 3, Math.random() * 5], until: W.T + 2 });

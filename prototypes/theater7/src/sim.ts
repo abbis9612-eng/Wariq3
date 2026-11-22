@@ -35,6 +35,9 @@ export type UState = 'idle' | 'march' | 'deploy' | 'bound' | 'hold' | 'retreat' 
   | 'hide' | 'peek' | 'aim' | 'mounted' | 'dismount' | 'assault' | 'rush' | 'pin' | 'house' | 'counter' | 'overwatch';
 export type Pose = 'stand' | 'run' | 'prone' | 'fire';
 export type Role = 'line' | 'reserve' | 'assault' | 'support' | 'flank' | 'aa' | 'arty';
+// I-173: أقل ارتفاع للسبطانتين حتى ما تعبر كابينة الشاص، حسب دوران القاعدة عن قدّام البيكب (كل 5° من -180°)؛ محسوب ببلندر من المجسم (tools/zu23_truck.py)
+export const ZU_ARC: number[] = [-0.2, -0.198, -0.191, -0.187, -0.185, -0.146, -0.144, -0.143, -0.144, -0.145, -0.158, -0.2, -0.2, -0.2, -0.2, -0.2, -0.2, -0.2, -0.2, -0.2, -0.2, -0.2, -0.2, -0.2, -0.2, -0.2, -0.2, 0.126, 0.483, 0.508, 0.505, 0.495, 0.526, 0.527, 0.517, 0.511, 0.514, 0.522, 0.52, 0.532, 0.494, 0.501, 0.494, 0.485, 0.469, 0.126, -0.2, -0.2, -0.2, -0.2, -0.2, -0.2, -0.2, -0.2, -0.2, -0.2, -0.2, -0.2, -0.2, -0.2, -0.2, -0.2, -0.158, -0.146, -0.144, -0.143, -0.144, -0.147, -0.186, -0.187, -0.191, -0.199];
+export function zuMinPitch(rel: number) { const f = ((rel + Math.PI) / (2 * Math.PI)) * 72, i = Math.floor(f), t = f - i, a = ZU_ARC[((i % 72) + 72) % 72], b = ZU_ARC[(((i + 1) % 72) + 72) % 72]; return a + (b - a) * t; }
 export interface Unit {
   id: number; kind: Kind; side: Side; name: string; group: string; p: V3; yaw: number; spd: number; hp: number; alive: boolean;
   cd: number; target: number; state: UState; goal: V3 | null; home: V3; team: number; slot: V3; cover: boolean;
@@ -957,6 +960,12 @@ function fight(w: World, u: Unit, dt: number) {
     let tU: Unit | null = null;
     if (!tA) { const t = nearestFoe(w, u, spec.range, o => SPEC[o.kind].armor < 1 && o.state !== 'mounted' && (o.kind !== 'inf' || dist2d(o.p, u.p) < 700)); if (t && visOf(w, u, t) > 0) tU = t; }
     if (!tA && !tU) return;
+    // I-173: قدّام الكابينة السبطانة ما تنزل؛ الهدف الأرضي لازم يصير على الجنب أو الورا ← البيكب يلف بمكانه (إذا واقف) ويرمي بعدين
+    const tp = tA ? tA.p : tU!.p, rel = angDiff(u.yaw, yawOf(sub(tp, u.p))), pitch = Math.atan2(tp[1] - (u.p[1] + 1.6), Math.max(1, dist2d(tp, u.p)));
+    if (pitch < zuMinPitch(rel) + 0.02) {
+      if (tU && !u.goal && u.spd < 0.5) { const side = rel > 0 ? 1 : -1, want = yawOf(sub(tp, u.p)) - side * Math.PI * 0.55; u.yaw += clamp(angDiff(u.yaw, want), -spec.turn * dt * 0.6, spec.turn * dt * 0.6); u.spd = 0; }
+      u.cd = 0.1; return;
+    }
     u.target = tA ? -tA.id : tU!.id; u.burst = 8 + Math.floor(w.r() * 7); u.burstT = 0; u.cd = tA ? 0.9 + w.r() * 0.8 : 1.6 + w.r() * 1.4; u.firedT = w.T;
     return;
   }

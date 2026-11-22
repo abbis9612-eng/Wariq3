@@ -58,7 +58,8 @@ tools/balance/world.mjs   موازنة «العالم» بالبوتات (idle/m
 prototypes/wardesigns/        «أربع نماذج حرب» 2D (WD، D-038): محافظات، لوحة جبهة، مدن وطرق، خطة القائد — للمقارنة واختيار المالك
 prototypes/oblique/           تجربة «2D مايل» (D-031): S-400 وباتريوت وباليستي بالحجم والسرعة الحقيقية على صور أقمار
 prototypes/warmap/            تجربة: شهر حرب حي على خريطة الدول (مطارات، دفاع جوي، باليستي، دروع، جبهة)
-prototypes/theater/           تجربة 3D: مسرح العمليات (راجع README داخلها). الأرض: `npm run land` يولّدها من `src/land.ts`
+prototypes/theater/           تجربة 3D: مسرح العمليات v6 (مجمّد D-023). الأرض: `npm run land` يولّدها من `src/land.ts`
+prototypes/theater7/          مسرح العمليات v7 (I-170، D-066): الأساس الجديد لمشهد المعركة؛ يقرا مجسمات وقوام ../theater بدون نسخ. `npm ci && npm run build`، فحص `node tools/simtest.ts 3`
 .claude/skills/               المهارات
 ```
 
